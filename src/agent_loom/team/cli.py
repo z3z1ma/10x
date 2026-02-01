@@ -47,6 +47,9 @@ from agent_loom.team.core import (
     objective_append,
     objective_set,
     objective_show,
+    sprint_show,
+    sprint_set,
+    sprint_clear,
     mark_retirable,
     prep_sprint,
     retire,
@@ -491,6 +494,8 @@ def cmd_status(args: argparse.Namespace) -> None:
         print(f"run_dir: {res.run_dir}")
     if res.tickets_dir:
         print(f"tickets_dir: {res.tickets_dir} ({ENV_TICKET_DIR})")
+    if res.sprint and res.sprint.get("name"):
+        print(f"sprint: {res.sprint.get('name')} tag={res.sprint.get('tag')}")
     print(
         f"inbox: unacked_to_manager={res.inbox.get('unacked_to_manager', 0)} unacked_total={res.inbox.get('unacked_total', 0)}"
     )
@@ -917,6 +922,47 @@ def cmd_prep_sprint(args: argparse.Namespace) -> None:
     print(f"prep_ticket: {res.ticket_id}")
     if res.spawned:
         print(f"investigator: {res.worker_id}")
+
+
+def cmd_sprint_show(args: argparse.Namespace) -> None:
+    res = sprint_show(
+        team=args.team,
+        repo=Path(args.repo).resolve() if args.repo else None,
+    )
+    if args.json:
+        emit_json_result(res)
+        return
+    sprint = res.sprint or {}
+    if not sprint:
+        print("(none)")
+        return
+    print(f"name: {sprint.get('name')}")
+    print(f"tag: {sprint.get('tag')}")
+    print(f"rev: {res.rev}")
+
+
+def cmd_sprint_set(args: argparse.Namespace) -> None:
+    res = sprint_set(
+        team=args.team,
+        name=str(args.name or "").strip(),
+        tag=str(args.tag or "").strip() or None,
+        repo=Path(args.repo).resolve() if args.repo else None,
+    )
+    if args.json:
+        emit_json_result(res)
+        return
+    print("ok")
+
+
+def cmd_sprint_clear(args: argparse.Namespace) -> None:
+    res = sprint_clear(
+        team=args.team,
+        repo=Path(args.repo).resolve() if args.repo else None,
+    )
+    if args.json:
+        emit_json_result(res)
+        return
+    print("ok")
 
 
 def cmd_bounce(args: argparse.Namespace) -> None:
@@ -1677,6 +1723,23 @@ def build_parser() -> argparse.ArgumentParser:
         help="Ticket priority for prep ticket (default: 1)",
     )
     ps.set_defaults(func=cmd_prep_sprint)
+
+    spr = sub.add_parser("sprint", help="Sprint lifecycle commands")
+    spr.add_argument("team", help="Team name")
+    spr_sub = spr.add_subparsers(
+        dest="sprint_cmd", required=True, parser_class=TeamArgumentParser
+    )
+
+    spr_show = spr_sub.add_parser("show", help="Show current sprint")
+    spr_show.set_defaults(func=cmd_sprint_show)
+
+    spr_set = spr_sub.add_parser("set", help="Set/Update sprint name and/or tag")
+    spr_set.add_argument("--name", required=True, help="Sprint name")
+    spr_set.add_argument("--tag", help="Sprint tag (default: sprint:<slug>)")
+    spr_set.set_defaults(func=cmd_sprint_set)
+
+    spr_clear = spr_sub.add_parser("clear", help="Clear current sprint")
+    spr_clear.set_defaults(func=cmd_sprint_clear)
 
     bn = sub.add_parser(
         "bounce",

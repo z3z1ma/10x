@@ -142,6 +142,9 @@ from agent_loom.team.models import (
     JanitorResult,
     MarkRetirableResult,
     PrepSprintResult,
+    SprintShowResult,
+    SprintSetResult,
+    SprintClearResult,
     MergeDoneResult,
     MergeEnqueueResult,
     MergeListResult,
@@ -239,6 +242,9 @@ __all__ = [
     "merge_list",
     "merge_next",
     "prep_sprint",
+    "sprint_show",
+    "sprint_set",
+    "sprint_clear",
     "objective_append",
     "objective_set",
     "objective_show",
@@ -4675,11 +4681,106 @@ def prep_sprint(
 
     return PrepSprintResult(
         team=paths.team,
-        sprint=dict((run2.get("sprint") or {})),
+        sprint=sprint,
         ticket_id=str(created.id),
-        worker_id=str(wid),
-        spawned=bool(spawned),
+        worker_id=wid,
+        spawned=spawned,
     )
+
+
+def sprint_show(
+    *,
+    team: str,
+    repo: Optional[Path] = None,
+) -> SprintShowResult:
+    """Show current sprint metadata."""
+    paths = _paths_for(team=team, repo=repo)
+    with locked_run(paths) as run:
+        sprint = run.get("sprint") if isinstance(run.get("sprint"), dict) else {}
+        return SprintShowResult(
+            team=paths.team,
+            sprint=dict(sprint or {}),
+            rev=int((sprint or {}).get("rev") or 0),
+        )
+
+
+def sprint_set(
+    *,
+    team: str,
+    name: str,
+    tag: Optional[str] = None,
+    repo: Optional[Path] = None,
+) -> SprintSetResult:
+    """Update sprint metadata (name and/or tag) without spawning tickets."""
+    paths = _paths_for(team=team, repo=repo)
+    sprint_name = str(name or "").strip()
+    if not sprint_name:
+        raise TeamError("Sprint name is required", code="ARG", exit_code=2)
+
+    slug = _sprint_slug(sprint_name)
+    if not slug:
+        raise TeamError("Invalid sprint name", code="ARG", exit_code=2)
+
+    sprint_tag = str(tag or "").strip()
+    if not sprint_tag:
+        sprint_tag = f"sprint:{slug}"
+
+    with locked_run(paths) as run:
+        existing = run.get("sprint") if isinstance(run.get("sprint"), dict) else {}
+        rev = int((existing or {}).get("rev") or 0) + 1
+        sprint = {
+            "name": sprint_name,
+            "slug": slug,
+            "tag": sprint_tag,
+            "rev": rev,
+            "started_at": (existing or {}).get("started_at") or _iso_z(),
+            "updated_at": _iso_z(),
+        }
+        run["sprint"] = sprint
+        charter_path = _write_charter(paths=paths, run=run)
+
+        write_event(
+            paths,
+            event_type="sprint.updated",
+            run=run,
+            summary=f"Sprint updated name={sprint_name} tag={sprint_tag}",
+            refs={"sprint": sprint_name, "tag": sprint_tag, "rev": rev},
+        )
+
+        return SprintSetResult(
+            team=paths.team,
+            sprint=sprint,
+            rev=rev,
+            charter=str(charter_path.resolve()),
+        )
+
+
+def sprint_clear(
+    *,
+    team: str,
+    repo: Optional[Path] = None,
+) -> SprintClearResult:
+    """Clear sprint metadata from the run."""
+    paths = _paths_for(team=team, repo=repo)
+    with locked_run(paths) as run:
+        existing = run.get("sprint") if isinstance(run.get("sprint"), dict) else {}
+        rev = int((existing or {}).get("rev") or 0) + 1
+        run["sprint"] = {}
+        charter_path = _write_charter(paths=paths, run=run)
+
+        write_event(
+            paths,
+            event_type="sprint.cleared",
+            run=run,
+            summary="Sprint cleared",
+            refs={"rev": rev},
+        )
+
+        return SprintClearResult(
+            team=paths.team,
+            rev=rev,
+            charter=str(charter_path.resolve()),
+        )
 
 
 def spawn_integrator(
@@ -5133,6 +5234,7 @@ def status(*, team: str, repo: Optional[Path] = None) -> StatusResult:
         "repo_root": str(run.get("repo_root") or ""),
         "run_dir": str(run.get("run_dir") or paths.run_dir),
         "tickets_dir": str(run.get("tickets_dir") or ""),
+        "sprint": dict(run.get("sprint") or {}),
         "inbox": {
             "unacked_to_manager": inbox_unacked_mgr,
             "unacked_total": inbox_unacked_all,
@@ -5188,6 +5290,7 @@ def status(*, team: str, repo: Optional[Path] = None) -> StatusResult:
         repo_root=str(payload.get("repo_root") or ""),
         run_dir=str(payload.get("run_dir") or ""),
         tickets_dir=str(payload.get("tickets_dir") or ""),
+        sprint=dict(payload.get("sprint") or {}),
         inbox=dict(payload.get("inbox") or {}),
         merge_queue=dict(payload.get("merge_queue") or {}),
         manager=dict(payload.get("manager") or {}),

@@ -135,6 +135,7 @@ class StatusResult:
     repo_root: str
     run_dir: str
     tickets_dir: str
+    sprint: Dict[str, Any]
     inbox: Dict[str, Any]
     merge_queue: Dict[str, Any]
     manager: Dict[str, Any]
@@ -245,6 +246,28 @@ class PrepSprintResult:
 
 
 @dataclass(frozen=True)
+class SprintShowResult:
+    team: str
+    sprint: Dict[str, Any]
+    rev: int
+
+
+@dataclass(frozen=True)
+class SprintSetResult:
+    team: str
+    sprint: Dict[str, Any]
+    rev: int
+    charter: str
+
+
+@dataclass(frozen=True)
+class SprintClearResult:
+    team: str
+    rev: int
+    charter: str
+
+
+@dataclass(frozen=True)
 class BounceResult:
     team: str
     worker_id: str
@@ -298,6 +321,9 @@ __all__ = [
     "JanitorResult",
     "MarkRetirableResult",
     "PrepSprintResult",
+    "SprintShowResult",
+    "SprintSetResult",
+    "SprintClearResult",
     "MergeDoneResult",
     "MergeEnqueueResult",
     "MergeListResult",
