@@ -930,6 +930,23 @@
           "sessionID": "ses_3e4fa7035ffef9fueirYdJRAWg"
         }
       ]
+    },
+    {
+      "id": "ticket-edits-require-dep-status-sanity",
+      "title": "Ticket Edits Require Dep/Status Sanity",
+      "trigger": "When a change set primarily touches `.tickets/*.md` (creating/updating multiple tickets).",
+      "action": "Treat tickets as the execution graph: validate dependency edges and status transitions with `loom ticket dep <id>`, keep status consistent with deps (don't mark `in_progress` if blocked), and add a short note explaining any dep/status change rationale.",
+      "tags": [],
+      "confidence": 0.64,
+      "status": "active",
+      "created_at": "2026-02-01T21:38:42.412Z",
+      "updated_at": "2026-02-01T21:38:42.412Z",
+      "evidence": [
+        {
+          "ts": "2026-02-01T21:38:42.412Z",
+          "sessionID": "ses_3e4e1cdd2ffeV0Mgs0S3Z7BhfF"
+        }
+      ]
     }
   ]
 }

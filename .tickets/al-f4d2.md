@@ -24,3 +24,9 @@ Add explicit commands to inspect and manage sprint state outside of prep-sprint.
 - Add `loom team sprint set` to set/rename sprint and update run.json + CHARTER.md.
 - Add `loom team sprint clear` to unset sprint (with a safety prompt/flag if needed).
 - Add/adjust tests for run state mutations and CLI parsing.
+
+## Notes
+
+**2026-02-01T21:38:03Z**
+
+Triage: Relevant for better team management. Maintaining as P3.

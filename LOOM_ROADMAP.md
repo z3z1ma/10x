@@ -5,11 +5,9 @@ High-level direction and priorities.
 This is an evolving, empirical compass. Keep it short and stable.
 
 <!-- BEGIN:compound:roadmap-backlog -->
-- # Tickets (5)
-- - `al-2a06` P2 open - Ticket: UX polish + flexible input normalization
-- - `al-b110` P2 in_progress - Sprint tag: consistent ticket creation
-- - `al-f351` P2 open - Team: audit inbox sprint prefix/meta coverage
+- # Tickets (3)
 - - `al-8a52` P3 open - UI: improve sprint surfacing
+- - `al-f351` P3 open - Team: audit inbox sprint prefix/meta coverage
 - - `al-f4d2` P3 open - Team: sprint lifecycle commands (show/set/clear)
 <!-- END:compound:roadmap-backlog -->
 
@@ -27,6 +25,7 @@ It tracks changes to skills, instincts, and core context files.
 It is intentionally bounded. Do not write entries like "no changes".
 
 <!-- BEGIN:compound:changelog-entries -->
+- 2026-02-01T21:38:43.454Z Add an instinct + skill to keep `.tickets/` changes consistent with dependency graph and status transitions.
 - 2026-02-01T21:18:49.063Z Clarify Compound install/workflow doc mirroring and call out `.opencode/commands`/`.opencode/skills` as install-contract surfaces.
 - 2026-02-01T21:05:39.423Z Clarify that compound_apply consumes prior JSON-only output (no args) and reinforce .opencode as the canonical skills location.
 - 2026-02-01T18:01:22.323Z Clarify compound-apply-spec: background autolearn outputs JSON only (no compound_apply call).

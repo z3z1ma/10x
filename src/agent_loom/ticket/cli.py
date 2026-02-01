@@ -55,7 +55,11 @@ from agent_loom.ticket.core import (
     view,
 )
 from agent_loom.ticket.models import TicketListResult, TicketShowResult
-from agent_loom.ticket.normalize import normalize_priority
+from agent_loom.ticket.normalize import (
+    normalize_priority,
+    normalize_status,
+    normalize_ticket_ref,
+)
 from agent_loom.ticket.errors import TicketArgError, TicketUserErrorMixin
 from agent_loom.ticket.store import AuditLogger, LockError, TicketStore
 
@@ -67,6 +71,14 @@ class ArgParseError(RuntimeError):
 class TicketArgumentParser(argparse.ArgumentParser):
     def error(self, message: str) -> NoReturn:
         raise ArgParseError(message)
+
+
+def _arg_status(v: str) -> str:
+    return normalize_status(v)
+
+
+def _arg_ticket_ref(v: str) -> str:
+    return normalize_ticket_ref(v)
 
 
 def _arg_priority(v: str) -> int:
@@ -388,20 +400,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     sp = sub.add_parser("status", parents=[common], help="Set ticket status")
-    sp.add_argument("ticket")
-    sp.add_argument("new_status")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
+    sp.add_argument("new_status", type=_arg_status)
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("start", parents=[common], help="Set status=in_progress")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("close", parents=[common], help="Set status=closed")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("reopen", parents=[common], help="Set status=open")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("list", parents=[common], help="List tickets")
@@ -456,13 +468,13 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("-T", "--tag", default="")
 
     sp = sub.add_parser("show", parents=[common], help="Show a ticket")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--raw", action="store_true")
 
     sp = sub.add_parser("update", parents=[common], help="Atomically update a ticket")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--title", default="")
-    sp.add_argument("--status", default="")
+    sp.add_argument("--status", type=_arg_status, default="")
     sp.add_argument("--priority", type=_arg_priority, default=None)
     sp.add_argument("--type", default="")
     sp.add_argument("--assignee", default="")
@@ -479,7 +491,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("add-note", parents=[common], help="Append a note")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("note", nargs="?", default="")
     sp.add_argument(
         "--note",
@@ -491,7 +503,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("note", parents=[common], help="Alias for add-note")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("note", nargs="?", default="")
     sp.add_argument(
         "--note",
@@ -503,46 +515,46 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("dep", parents=[common], help="Show dependency tree")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--max-depth", type=int, default=0)
 
     sp = sub.add_parser("dep-add", parents=[common], help="Add dependency")
-    sp.add_argument("ticket")
-    sp.add_argument("dependency")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
+    sp.add_argument("dependency", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("dep-rm", parents=[common], help="Remove dependency")
-    sp.add_argument("ticket")
-    sp.add_argument("dependency")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
+    sp.add_argument("dependency", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
 
     sub.add_parser("dep-cycle", parents=[common], help="Find dep cycles")
 
     sp = sub.add_parser("link", parents=[common], help="Link tickets")
-    sp.add_argument("tickets", nargs="+")
+    sp.add_argument("tickets", nargs="+", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("unlink", parents=[common], help="Unlink tickets")
-    sp.add_argument("ticket")
-    sp.add_argument("target")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
+    sp.add_argument("target", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("view", parents=[common], help="Orchestration view")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--max-depth", type=int, default=0)
 
     sp = sub.add_parser("claim", parents=[common], help="Claim a ticket")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--ttl", default="30m")
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("heartbeat", parents=[common], help="Heartbeat for claim")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--extend", dest="extend", action="store_true", default=True)
     sp.add_argument("--no-extend", dest="extend", action="store_false")
 
     sp = sub.add_parser("release", parents=[common], help="Release claim")
-    sp.add_argument("ticket")
+    sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("swarm", parents=[common], help="Show swarm activity")

@@ -75,6 +75,9 @@ The source of truth is `.opencode/memory/instincts.json`.
 - **cli-environment-output-must-be-sanitized** (64%)
   - Trigger: When adding CLI output that prints runtime environment or model identifiers (e.g., model id, working directory, platform, dates)
   - Action: Avoid secrets and machine-specific absolute paths; prefer minimal, stable fields; keep formatting deterministic; add/adjust a contract test asserting stable invariants rather than full dumps.
+- **ticket-edits-require-dep-status-sanity** (64%)
+  - Trigger: When a change set primarily touches `.tickets/*.md` (creating/updating multiple tickets).
+  - Action: Treat tickets as the execution graph: validate dependency edges and status transitions with `loom ticket dep <id>`, keep status consistent with deps (don't mark `in_progress` if blocked), and add a sh…
 - **ui-changes-require-lsp-ruff-and-targeted-tests** (62%)
   - Trigger: After editing Python UI code under src/agent_loom/ui/ (for example src/agent_loom/ui/ticket_ui.py)
   - Action: Run lsp_diagnostics on touched UI files, fix all findings, then run `uv run ruff check .` and the smallest relevant `uv run pytest ...` subset (or full suite if unsure).
