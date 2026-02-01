@@ -1284,7 +1284,7 @@ This block is intentionally *small and stable*. Only update it when a principle 
 - Prefer agent-native primitives: ticket, memory, workspace, team.
 - Governance loop: Plan → Work → Review → Compound → Repeat.
 
-@ LOOM_ROADMAP.md
+@LOOM_ROADMAP.md
 `);
 }
 

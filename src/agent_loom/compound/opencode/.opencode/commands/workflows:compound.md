@@ -15,7 +15,7 @@ Goals:
 - Store recallable memory notes (loom memory) so future planning retrieves them automatically.
 - Create/update skills under `.opencode/skills/` (and mirror to `.claude/skills/`).
 - Update AI-managed blocks in AGENTS + LOOM docs.
-- Append an agent-optimized entry to LOOM_CHANGELOG.
+- Append an agent-optimized entry to LOOM_ROADMAP.
 
 Process:
 1) Run `compound_bootstrap`.
