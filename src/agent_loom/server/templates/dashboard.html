@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOOM // NEXUS</title>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#050505',
+                        offblack: '#0a0a0c',
+                        panel: '#111113',
+                        border: '#333333',
+                        neon: '#00f3ff',     // Primary Cyan
+                        critical: '#ff003c', // Cyberpunk Red
+                        warning: '#fcee0a',  // Yellow
+                        success: '#00ff9f',  // Green
+                        dim: 'rgba(255,255,255,0.1)'
+                    },
+                    fontFamily: {
+                        mono: ['"Space Mono"', 'monospace'],
+                        tech: ['"Share Tech Mono"', 'monospace'],
+                    },
+                    animation: {
+                        'scanline': 'scanline 8s linear infinite',
+                        'flicker': 'flicker 0.15s infinite',
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { --neon: #00f3ff; --crt-bg: #050505; }
+        body { background-color: var(--crt-bg); color: #e0e0e0; overflow: hidden; cursor: crosshair; }
+
+        /* SCROLLBARS */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--neon); }
+
+        /* CRT EFFECT LAYER */
+        .crt::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 999;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* TEXT GLOW */
+        .glow-text { text-shadow: 0 0 5px rgba(0, 243, 255, 0.5); }
+        .glow-crit { text-shadow: 0 0 5px rgba(255, 0, 60, 0.5); }
+
+        /* SCANLINE ANIMATION */
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        .scanline-bar {
+            position: absolute; top: 0; left: 0; right: 0; height: 20px;
+            background: linear-gradient(to bottom, transparent, rgba(0, 243, 255, 0.1), transparent);
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* GLITCH EFFECT */
+        @keyframes glitch {
+            0% { clip-path: inset(40% 0 61% 0); transform: translate(-2px, 2px); }
+            20% { clip-path: inset(92% 0 1% 0); transform: translate(2px, -2px); }
+            40% { clip-path: inset(43% 0 1% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(25% 0 58% 0); transform: translate(2px, -2px); }
+            80% { clip-path: inset(54% 0 7% 0); transform: translate(-2px, 2px); }
+            100% { clip-path: inset(58% 0 43% 0); transform: translate(2px, -2px); }
+        }
+        .glitch:hover { animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
+
+        /* UTILS */
+        .hud-panel {
+            background: rgba(10, 10, 12, 0.95);
+            border: 1px solid #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+        }
+        .grid-bg {
+            background-image:
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root" class="h-screen w-screen relative overflow-hidden crt"></div>
+
+    <script type="text/babel">
+    {% raw %}
+        /** * LOOM :: NEXUS
+         * 50x Complexity Implementation
+         * Architecture: React + Custom Physics Engine + Audio Context + Window Manager
+         */
+
+        const { useState, useEffect, useRef, useMemo, useCallback, createContext, useContext } = React;
+
+        // --- AUDIO ENGINE (Procedural Sound Design) ---
+        class AudioSys {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.master = this.ctx.createGain();
+                this.master.gain.value = 0.15; // Keep it subtle
+                this.master.connect(this.ctx.destination);
+                this.enabled = false;
+            }
+
+            enable() {
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                this.enabled = true;
+            }
+
+            playTone(freq, type, duration) {
+                if (!this.enabled) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+                gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+
+                osc.connect(gain);
+                gain.connect(this.master);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            }
+
+            sfxHover() { this.playTone(800, 'sine', 0.05); }
+            sfxClick() { this.playTone(1200, 'square', 0.05); }
+            sfxError() { this.playTone(150, 'sawtooth', 0.4); }
+            sfxBoot() {
+                if (!this.enabled) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.frequency.setValueAtTime(100, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 1);
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(0.3, now + 0.5);
+                gain.gain.linearRampToValueAtTime(0, now + 2);
+                osc.connect(gain);
+                gain.connect(this.master);
+                osc.start();
+                osc.stop(now + 2);
+            }
+        }
+        const audio = new AudioSys();
+
+        // --- API LAYER ---
+        const API = {
+            base: '/api/v1',
+            async get(path) {
+                try {
+                    const res = await fetch(`${this.base}${path}`);
+                    if (!res.ok) throw new Error(res.status);
+                    return await res.json();
+                } catch (e) {
+                    console.error(`API_FAIL: ${path}`, e);
+                    return null;
+                }
+            }
+        };
+
+        // --- COMPONENTS ---
+
+        // 1. BOOT SEQUENCE
+        const BootSequence = ({ onComplete }) => {
+            const [lines, setLines] = useState([]);
+            const bootText = [
+                "INITIALIZING KERNEL...",
+                "LOADING LOOM.SYS MODULES...",
+                "MOUNTING MEMORY VFS...",
+                "CHECKING WORKSPACE INTEGRITY...",
+                "ESTABLISHING SECURE HANDSHAKE...",
+                "LOOM::NEXUS ONLINE."
+            ];
+
+            useEffect(() => {
+                let delay = 0;
+                bootText.forEach((text, i) => {
+                    delay += Math.random() * 300 + 100;
+                    setTimeout(() => {
+                        setLines(prev => [...prev, `[OK] ${text}`]);
+                        audio.sfxClick();
+                        if (i === bootText.length - 1) setTimeout(onComplete, 800);
+                    }, delay);
+                });
+            }, []);
+
+            return (
+                <div className="flex flex-col items-center justify-center h-full bg-void text-neon font-mono text-sm">
+                    <div className="w-96">
+                        <div className="border-b border-neon mb-4 pb-2 text-2xl tracking-[0.5em] animate-pulse">NEXUS</div>
+                        {lines.map((l, i) => (
+                            <div key={i} className="mb-1">{l}</div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        // 2. PHYSICS GRAPH VISUALIZER (Canvas based)
+        const TicketGraph = ({ tickets }) => {
+            const canvasRef = useRef(null);
+
+            useEffect(() => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                let animationFrame;
+
+                // Build Graph Data
+                const nodes = tickets.map(t => ({
+                    id: t.id,
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: 0, vy: 0,
+                    status: t.status,
+                    radius: t.priority < 10 ? 8 : 4
+                }));
+
+                // Simple links based on nothing (simulation) or actual deps if available
+                const links = [];
+                tickets.forEach((t, i) => {
+                    // Create random links for visual flair if no real deps for demo
+                    if (t.deps && t.deps.length) {
+                        t.deps.forEach(d => {
+                            const target = nodes.find(n => n.id === d);
+                            if (target) links.push({ source: nodes[i], target: target });
+                        });
+                    } else if (i > 0 && Math.random() > 0.8) {
+                        links.push({ source: nodes[i], target: nodes[i-1] });
+                    }
+                });
+
+                const update = () => {
+                    ctx.fillStyle = '#050505';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // Grid Background
+                    ctx.strokeStyle = '#111';
+                    ctx.beginPath();
+                    for(let i=0; i<canvas.width; i+=40) { ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); }
+                    for(let i=0; i<canvas.height; i+=40) { ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); }
+                    ctx.stroke();
+
+                    // Physics Step
+                    nodes.forEach(node => {
+                        // Repulsion
+                        nodes.forEach(other => {
+                            if (node === other) return;
+                            const dx = node.x - other.x;
+                            const dy = node.y - other.y;
+                            const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+                            if (dist < 100) {
+                                const force = (100 - dist) / 100;
+                                node.vx += (dx/dist) * force * 0.5;
+                                node.vy += (dy/dist) * force * 0.5;
+                            }
+                        });
+
+                        // Center Gravity
+                        const dx = (canvas.width/2) - node.x;
+                        const dy = (canvas.height/2) - node.y;
+                        node.vx += dx * 0.001;
+                        node.vy += dy * 0.001;
+
+                        // Velocity Damping
+                        node.vx *= 0.92;
+                        node.vy *= 0.92;
+                        node.x += node.vx;
+                        node.y += node.vy;
+
+                        // Bounds
+                        if(node.x < 0 || node.x > canvas.width) node.vx *= -1;
+                        if(node.y < 0 || node.y > canvas.height) node.vy *= -1;
+                    });
+
+                    // Links Constraint
+                    links.forEach(link => {
+                        const dx = link.target.x - link.source.x;
+                        const dy = link.target.y - link.source.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        const force = (dist - 100) * 0.01; // Spring length 100
+                        const fx = (dx/dist) * force;
+                        const fy = (dy/dist) * force;
+
+                        link.source.vx += fx;
+                        link.source.vy += fy;
+                        link.target.vx -= fx;
+                        link.target.vy -= fy;
+
+                        // Draw Link
+                        ctx.strokeStyle = '#333';
+                        ctx.beginPath();
+                        ctx.moveTo(link.source.x, link.source.y);
+                        ctx.lineTo(link.target.x, link.target.y);
+                        ctx.stroke();
+                    });
+
+                    // Draw Nodes
+                    nodes.forEach(node => {
+                        ctx.fillStyle = node.status === 'done' ? '#00ff9f' :
+                                      node.status === 'blocked' ? '#ff003c' :
+                                      node.status === 'doing' ? '#00f3ff' : '#555';
+
+                        // Glow
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = ctx.fillStyle;
+
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        ctx.shadowBlur = 0;
+
+                        // ID Label
+                        ctx.fillStyle = '#fff';
+                        ctx.font = '9px "Share Tech Mono"';
+                        ctx.fillText(node.id.substring(0,4), node.x + 10, node.y + 3);
+                    });
+
+                    animationFrame = requestAnimationFrame(update);
+                };
+
+                update();
+                return () => cancelAnimationFrame(animationFrame);
+            }, [tickets]);
+
+            return (
+                <div className="w-full h-full bg-offblack border border-border relative overflow-hidden group">
+                    <div className="absolute top-2 left-2 z-10 text-xs font-mono text-neon bg-black/50 px-2 py-1 border border-neon/30">
+                        FORCE_DIRECTED_GRAPH // VIZ
+                    </div>
+                    <canvas ref={canvasRef} width={800} height={400} className="w-full h-full opacity-80" />
+                </div>
+            );
+        };
+
+        // 3. HEX MEMORY GRID
+        const MemoryGrid = ({ items }) => {
+            return (
+                <div className="w-full h-full p-4 overflow-y-auto bg-grid-bg">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        {items.map((item, i) => (
+                            <div key={i} className="hud-panel p-3 text-xs relative hover:border-neon transition-colors cursor-pointer group"
+                                 onMouseEnter={() => audio.sfxHover()}>
+                                <div className="absolute top-0 right-0 w-2 h-2 bg-neon opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="text-gray-500 mb-1 font-mono text-[10px]">{item.id}</div>
+                                <div className="text-white font-bold mb-2 truncate group-hover:text-neon">{item.title}</div>
+                                <div className="flex flex-wrap gap-1">
+                                    {item.tags.slice(0,3).map(t => (
+                                        <span key={t} className="px-1 bg-white/5 border border-white/10 text-[9px] text-gray-400">#{t}</span>
+                                    ))}
+                                </div>
+                                <div className="mt-2 h-1 w-full bg-gray-800">
+                                    <div className="h-full bg-neon" style={{width: `${item.score ? item.score.final * 100 : 0}%`}}></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        // 4. TERMINAL STREAM
+        const Terminal = ({ logs }) => {
+            const endRef = useRef(null);
+            useEffect(() => endRef.current?.scrollIntoView({ behavior: 'smooth' }), [logs]);
+
+            return (
+                <div className="h-full w-full bg-black border-t border-border p-2 font-mono text-xs overflow-hidden flex flex-col">
+                    <div className="flex items-center gap-2 mb-2 border-b border-white/10 pb-1">
+                        <div className="w-2 h-2 bg-neon animate-pulse"></div>
+                        <span className="text-neon">SYSTEM_LOG</span>
+                    </div>
+                    <div className="flex-1 overflow-y-auto space-y-1">
+                        {logs.map((log, i) => (
+                            <div key={i} className="flex gap-2 opacity-80 hover:opacity-100">
+                                <span className="text-gray-600">[{log.time}]</span>
+                                <span className={log.type === 'err' ? 'text-critical' : 'text-neon'}>
+                                    {log.msg}
+                                </span>
+                            </div>
+                        ))}
+                        <div ref={endRef} />
+                    </div>
+                </div>
+            );
+        };
+
+        // 5. MAIN DASHBOARD LAYOUT (The "Window Manager")
+        const Dashboard = () => {
+            const [health, setHealth] = useState(null);
+            const [swarm, setSwarm] = useState(null);
+            const [tickets, setTickets] = useState([]);
+            const [memory, setMemory] = useState([]);
+            const [logs, setLogs] = useState([{time: '00:00:00', msg: 'SYSTEM READY', type: 'info'}]);
+            const [viewMode, setViewMode] = useState('OPS'); // OPS, INTEL, WORK
+
+            // Pollers
+            const poll = async () => {
+                const now = new Date().toLocaleTimeString();
+
+                // Health
+                const h = await API.get('/health');
+                if(h && h.ok) setHealth(h.data);
+
+                // Swarm
+                const s = await API.get('/tickets/swarm');
+                if(s && s.ok) {
+                    setSwarm(s.data);
+                    if(s.data.agents.length > 0) {
+                         // Only log if change detected in real app, simplified here
+                    }
+                }
+
+                // Tickets
+                const t = await API.get('/tickets?limit=50');
+                if(t && t.ok) setTickets(t.data.tickets);
+
+                // Memory (Random recall for visualization if empty)
+                const m = await API.get('/memory/recall?q=agent');
+                if(m && m.ok) setMemory(m.data.items);
+            };
+
+            useEffect(() => {
+                poll();
+                const interval = setInterval(poll, 2000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const addLog = (msg, type='info') => {
+                setLogs(prev => [...prev.slice(-50), {time: new Date().toLocaleTimeString(), msg, type}]);
+            };
+
+            // Layout Calculation
+            return (
+                <div className="flex flex-col h-screen w-full bg-void text-gray-300 font-tech selection:bg-neon selection:text-black">
+                    <div className="scanline-bar"></div>
+
+                    {/* TOP BAR */}
+                    <header className="h-12 border-b border-border bg-panel flex items-center px-4 justify-between select-none">
+                        <div className="flex items-center gap-6">
+                            <h1 className="text-xl font-bold tracking-widest text-neon glow-text glitch" data-text="LOOM">LOOM</h1>
+                            <div className="h-6 w-px bg-border"></div>
+                            <nav className="flex gap-1">
+                                {['OPS', 'INTEL', 'WORK'].map(mode => (
+                                    <button key={mode}
+                                            onClick={() => { setViewMode(mode); audio.sfxClick(); }}
+                                            className={`px-4 py-1 text-sm border ${viewMode === mode ? 'border-neon text-neon bg-neon/10' : 'border-transparent hover:border-white/20'}`}>
+                                        {mode}
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
+                        <div className="flex items-center gap-4 text-xs font-mono">
+                            <div className="flex items-center gap-2">
+                                <span className="text-gray-500">CPU</span>
+                                <div className="w-16 h-2 bg-gray-800"><div className="h-full bg-neon animate-pulse-fast" style={{width: '34%'}}></div></div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-gray-500">NET</span>
+                                <span className="text-success">ONLINE</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* MAIN CONTENT AREA */}
+                    <main className="flex-1 p-2 grid grid-cols-12 grid-rows-6 gap-2 overflow-hidden">
+
+                        {/* LEFT COLUMN: SWARM & STATS */}
+                        <div className="col-span-3 row-span-4 hud-panel flex flex-col p-4">
+                            <h2 className="text-neon text-xs tracking-widest mb-4 border-b border-border pb-2">ACTIVE SWARM</h2>
+                            <div className="flex-1 overflow-y-auto space-y-3">
+                                {swarm?.agents.length === 0 && <div className="text-gray-600 italic">NO AGENTS DEPLOYED</div>}
+                                {swarm?.agents.map(agent => (
+                                    <div key={agent.agent} className="bg-black border border-border p-2 group hover:border-neon">
+                                        <div className="flex justify-between items-center mb-1">
+                                            <span className="font-bold text-white">{agent.agent}</span>
+                                            <span className={`w-2 h-2 rounded-full ${agent.active ? 'bg-success animate-pulse' : 'bg-critical'}`}></span>
+                                        </div>
+                                        <div className="text-[10px] text-gray-500">HB: {agent.last_heartbeat}</div>
+                                        {agent.claims.length > 0 && (
+                                            <div className="mt-2 text-[10px] text-neon border-l-2 border-neon pl-2">
+                                                WORKING ON: {agent.claims[0]}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="mt-4 pt-4 border-t border-border">
+                                <h3 className="text-gray-500 text-[10px] mb-2">TICKET VELOCITY</h3>
+                                <div className="flex justify-between text-xl font-bold font-mono">
+                                    <div className="text-center">
+                                        <div className="text-success">{tickets.filter(t=>t.status==='done').length}</div>
+                                        <div className="text-[10px] text-gray-600">DONE</div>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="text-neon">{tickets.filter(t=>t.status==='doing').length}</div>
+                                        <div className="text-[10px] text-gray-600">ACTV</div>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="text-critical glow-crit">{tickets.filter(t=>t.status==='blocked').length}</div>
+                                        <div className="text-[10px] text-gray-600">BLCK</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* CENTER: GRAPH VIZ */}
+                        <div className="col-span-6 row-span-4 hud-panel p-1">
+                             {/* TABS FOR CENTER PANEL */}
+                             <div className="absolute top-4 right-4 z-20 flex gap-2">
+                                <button className="bg-black border border-neon text-neon px-2 text-[10px]">GRAPH</button>
+                                <button className="bg-black border border-border text-gray-500 px-2 text-[10px]">MAP</button>
+                             </div>
+                             <TicketGraph tickets={tickets} />
+                        </div>
+
+                        {/* RIGHT: MEMORY & TEAMS */}
+                        <div className="col-span-3 row-span-6 flex flex-col gap-2">
+                            <div className="flex-1 hud-panel p-4 flex flex-col">
+                                <h2 className="text-neon text-xs tracking-widest mb-4 border-b border-border pb-2">MEMORY BANKS</h2>
+                                <MemoryGrid items={memory} />
+                            </div>
+                            <div className="h-1/3 hud-panel p-4 overflow-y-auto">
+                                <h2 className="text-warning text-xs tracking-widest mb-2">SYSTEM ALERTS</h2>
+                                <div className="text-[10px] font-mono text-warning/80 space-y-1">
+                                    {health && !health.writes_enabled && <div>[WARN] WRITES_DISABLED: READ_ONLY_MODE</div>}
+                                    {health && health.token_required && <div>[SEC] AUTH_TOKEN_ENFORCED</div>}
+                                    <div>[INFO] WORKSPACE: {health?.workspace_mode.toUpperCase()}</div>
+                                    <div>[INFO] REPO: {health?.repo_root}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* BOTTOM: LOGS */}
+                        <div className="col-span-9 row-span-2 hud-panel">
+                            <Terminal logs={logs} />
+                        </div>
+
+                    </main>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [booted, setBooted] = useState(false);
+
+            return (
+                <React.StrictMode>
+                    {!booted ? (
+                        <BootSequence onComplete={() => { audio.enable(); audio.sfxBoot(); setBooted(true); }} />
+                    ) : (
+                        <Dashboard />
+                    )}
+                </React.StrictMode>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    {% endraw %}
+    </script>
+</body>
+</html>

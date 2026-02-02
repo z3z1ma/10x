@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import importlib
+import os
 import platform
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, Request, jsonify, request
+from flask import Flask, Request, jsonify, render_template, request
 
 from agent_loom.server.auth import authorize_request
 from agent_loom.server.compound_fs import list_skills, read_instincts, read_skill
@@ -20,6 +21,9 @@ from agent_loom.server.workspace_read import (
     services_index,
     workspace_meta,
 )
+
+SERVER_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE_DIR = os.path.join(SERVER_DIR, "templates")
 
 
 def _is_loopback(host: str) -> bool:
@@ -63,8 +67,12 @@ def _require_auth(
 
 
 def create_app(*, cfg: ServerConfig) -> Flask:
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder=TEMPLATE_DIR)
     app.config["LOOM_SERVER_CFG"] = cfg
+
+    @app.route("/")
+    def dashboard() -> Any:
+        return render_template("dashboard.html")
 
     @app.get("/api/v1/health")
     def health() -> Any:

@@ -5,7 +5,8 @@ High-level direction and priorities.
 This is an evolving, empirical compass. Keep it short and stable.
 
 <!-- BEGIN:compound:roadmap-backlog -->
-- # Tickets (0)
+- # Tickets (1)
+- - `al-768c` P1 open - Sprint prep: Documentation Foundation
 <!-- END:compound:roadmap-backlog -->
 
 <!-- BEGIN:compound:roadmap-ai-notes -->
