@@ -117,9 +117,9 @@ This block is maintained by the compound plugin.
 - Greenfield: prioritize clarity and determinism; no backwards compatibility.
 - Tooling: use `uv run ...` for all Python commands; gate is basedpyright → ruff → targeted pytest.
 - Contracts: CLI output and prompts are deterministic and locked by focused contract tests.
+- Tickets: treat ticket runtime + CLI as public API; keep output deterministic and cover with `tests/test_ticket_ux.py`.
 - Compound: Plan → Work → Review → Compound; extract durable procedure into skills.
 - Skills: treat `.opencode/skills/*` as canonical; avoid maintaining duplicates under `.claude/skills/*`.
-- Compound apply: output JSON-only CompoundSpec v2, then run `compound_apply()` (no args; consumes prior output).
 <!-- END:compound:loom-core-context -->
 
 <!-- BEGIN:compound:instincts-index -->

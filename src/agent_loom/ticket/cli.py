@@ -77,6 +77,13 @@ def _arg_status(v: str) -> str:
     return normalize_status(v)
 
 
+def _arg_status_optional(v: str) -> str:
+    s = str(v or "")
+    if not s.strip():
+        return ""
+    return normalize_status(s)
+
+
 def _arg_ticket_ref(v: str) -> str:
     return normalize_ticket_ref(v)
 
@@ -474,7 +481,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("update", parents=[common], help="Atomically update a ticket")
     sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--title", default="")
-    sp.add_argument("--status", type=_arg_status, default="")
+    sp.add_argument("--status", type=_arg_status_optional, default="")
     sp.add_argument("--priority", type=_arg_priority, default=None)
     sp.add_argument("--type", default="")
     sp.add_argument("--assignee", default="")

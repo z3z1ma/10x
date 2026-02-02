@@ -964,6 +964,23 @@
           "sessionID": "ses_3e4e1cdd2ffeV0Mgs0S3Z7BhfF"
         }
       ]
+    },
+    {
+      "id": "ticket-cli-output-is-a-contract",
+      "title": "Ticket CLI output is a contract",
+      "trigger": "When changing any user-visible output/formatting in src/agent_loom/ticket/cli.py.",
+      "action": "Make output deterministic (explicit ordering; avoid nondeterministic/machine-specific values) and lock invariants in tests/test_ticket_ux.py; verify with uv run basedpyright, uv run ruff check ., uv run pytest tests/test_ticket_ux.py.",
+      "tags": [],
+      "confidence": 0.72,
+      "status": "active",
+      "created_at": "2026-02-02T04:02:11.056Z",
+      "updated_at": "2026-02-02T04:02:11.056Z",
+      "evidence": [
+        {
+          "ts": "2026-02-02T04:02:11.056Z",
+          "sessionID": "ses_3e3909915ffeQPxpsEGARkmO6s"
+        }
+      ]
     }
   ]
 }

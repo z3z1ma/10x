@@ -66,6 +66,9 @@ The source of truth is `.opencode/memory/instincts.json`.
 - **compound-apply-follows-json-output** (72%)
   - Trigger: You just produced a CompoundSpec v2 JSON payload for learning updates
   - Action: Immediately call `compound_apply()` next; assume it consumes the prior JSON-only assistant output (no args).
+- **ticket-cli-output-is-a-contract** (72%)
+  - Trigger: When changing any user-visible output/formatting in src/agent_loom/ticket/cli.py.
+  - Action: Make output deterministic (explicit ordering; avoid nondeterministic/machine-specific values) and lock invariants in tests/test_ticket_ux.py; verify with uv run basedpyright, uv run ruff check ., uv r…
 - **idle-autolearn-avoid-churn** (70%)
   - Trigger: Background autolearn runs with no git diffstat and no concrete new work artifacts.
   - Action: Do not propose skill/doc edits; at most create a small instinct if it prevents future failures (e.g., JSON-only output discipline). Otherwise emit an empty spec with docs.sync=false.
