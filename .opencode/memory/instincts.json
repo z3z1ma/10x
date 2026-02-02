@@ -445,10 +445,10 @@
       "trigger": "System reminder says Plan Mode ACTIVE / READ-ONLY phase",
       "action": "Do not edit/create/delete files or run write-capable commands; only inspect/read/search and produce an execution plan or required JSON payload.",
       "tags": [],
-      "confidence": 0.9800000000000002,
+      "confidence": 0.9900000000000002,
       "status": "active",
       "created_at": "2026-01-31T04:25:38.114Z",
-      "updated_at": "2026-02-02T04:29:13.973Z",
+      "updated_at": "2026-02-02T05:46:49.849Z",
       "evidence": [
         {
           "ts": "2026-01-31T04:25:38.114Z",
@@ -508,6 +508,11 @@
           "ts": "2026-02-02T04:29:13.973Z",
           "sessionID": "ses_3e3909915ffeQPxpsEGARkmO6s",
           "note": "System reminder reiterated read-only constraints; reinforces that learning/spec output is allowed but no file/system modifications."
+        },
+        {
+          "ts": "2026-02-02T05:46:49.849Z",
+          "sessionID": "ses_3e3909915ffeQPxpsEGARkmO6s",
+          "note": "Session included a Plan Mode READ-ONLY reminder explicitly forbidding file edits and write-capable commands; reinforces that plan/autolearn responses must remain non-modifying."
         }
       ]
     },

@@ -1,34 +1,36 @@
 # Loom
 
-Loom is an agent-native operating system for terminal AI development. It turns a repo into a place where agents can plan, work, coordinate, remember, and learn over long horizons. Everything is Git-backed Markdown on disk, with deterministic outputs and a fail-forward CLI that accepts a wide set of plausible inputs.
+**The agent-native operating system for terminal AI development.**
 
-The team module is the grail of this creation. Think Ralph Wiggum on steroids, but for terminal agents that can work all night, clock out, and resume in the morning.
+Loom turns a Git repo into a place where agents can plan, work, coordinate, remember, and learn over long horizons. It is intentionally Unixy: plain files on disk, deterministic outputs, and a fail-forward CLI that accepts a wide set of plausible inputs.
+
+> Think of the ralph-wiggum loop, but it grows smarter over time, self organizes into teams, and iterates with builtin isolation and safety.
 
 ## Why Loom
 
-- Agentic UX: forgiving command normalization, rich hints, and safe defaults that keep agents moving.
-- Natural alignment: public concepts match common mental models and training data, so agents generalize fast.
-- Deterministic and sticky: stable outputs, JSON-first ergonomics, and Git as the source of truth.
-- Multi-agent by design: durable inbox, merge queue, and tmux-native orchestration.
-- Learning loop built in: Obsidian-like memory plus a compounding system that writes skills.
+- Persistence: intent, state, and lessons live in Git-backed files, not ephemeral prompts.
+- Isolation: worktrees and snapshots keep `main` safe even under aggressive agent iteration.
+- Coordination: tmux-native teams with durable inbox and merge queues.
+- Learning: Obsidian-like memory plus compounding into skills.
+- Agentic UX: forgiving argument normalization, actionable errors, JSON-first output.
 
 ## The stack (5 subsystems + server)
 
-- Ticket (`.tickets/`): graph-based intent and execution state. Tickets replaces Beads (https://github.com/steveyegge/beads) and is 1000x better.
-- Team (`.team/`): tmux-native orchestration with roles, inbox, merge queue, sprints, and pause/resume. Team replaces Gastown (https://github.com/steveyegge/gastown) and is 1000x better.
-- Memory (`.memory/`): Obsidian-like, open-ended memory with YAML frontmatter and link graph. SQLite is a derived cache.
-- Workspace (`workspace.json`, `.loom/`, `.loom-repo/`): isolation, safety, worktree lifecycle, sandboxing, and service mesh management for multi-repo systems.
-- Compound (`.opencode/`): passive and active learning. Plan -> Work -> Review -> Compound writes skill markdown as procedural memory.
-- Server (`loom server`): HTTP API for dashboards and operational visibility. Spec: `docs/openapi.yaml`.
+Everything is plain files on disk:
 
-Everything above is plain files on disk and git-backed by default.
+- Ticket (`.tickets/`): Markdown tickets with YAML frontmatter, dependency graph, claims.
+- Team (`.team/`): tmux-native orchestration and run state (JSON on disk).
+- Memory (`.memory/`): Markdown notes with YAML frontmatter; SQLite cache is derived.
+- Workspace (`workspace.json`, `.loom/`, `.loom-repo/`): worktrees, snapshots, multi-repo service mesh.
+- Compound (`.opencode/`): passive and active learning; skills are Markdown.
+- Server (`loom server`): HTTP API for dashboards. Spec: `docs/openapi.yaml`.
 
 ## Quickstart (single repo)
 
-Install the CLI:
+Install from source:
 
 ```bash
-uv tool install --force --reinstall agent-loom
+uv tool install agent-loom
 ```
 
 Initialize all subsystems (non-interactive):
@@ -37,21 +39,13 @@ Initialize all subsystems (non-interactive):
 loom init --yes --workspace-mode repo
 ```
 
-Create intent, isolate work, and spin up a team:
+Define intent, isolate work, and spawn a team:
 
 ```bash
 loom ticket create "Ship agent dashboard" --type task --priority 1
 loom workspace worktree ensure agent-dashboard --base-ref main
 loom team start core --objective "Build the Loom dashboard"
-loom team spawn core <ticket-id>
-```
-
-Memory and learning loop:
-
-```bash
-loom memory add --title "Workspace safety" --body "Always snapshot before force-clean"
-loom memory recall "workspace safety" --context
-loom compound init
+loom team spawn core <ticket-id> # note: the manager will do this automatically too
 ```
 
 Pause/resume a team (clock out/in):
@@ -63,28 +57,28 @@ loom team clock-in core
 
 ## Agentic UX (fail forward)
 
-Loom is intentionally forgiving. The CLI normalizes plausible inputs and gives actionable errors.
+Loom accepts a wide range of plausible inputs and normalizes them safely.
 
-- `loom team clock in core` works (normalized to `clock-in`).
-- `loom team inbox core --unread` is accepted (normalized to `--unacked`).
-- `loom ticket update <id> --add-note "Progress"` routes to add-note safely.
-- `loom memory --json` or `--jsonl` is accepted (normalized to `--format`).
+- `loom team clock in core` -> `clock-in`
+- `loom team inbox core --unread` -> `--unacked`
+- `loom ticket update <id> --add-note "Progress"` -> `add-note`
+- `loom memory --json` / `--jsonl` -> `--format json|jsonl`
 
-Most commands support `--json` for machine-readable output.
+Most commands support `--json` output. When in doubt: `loom <cmd> -h`.
 
-## The learning system
+## The learning loop
 
 Loom runs two learning channels in parallel:
 
-- Passive: the OpenCode plugin tracks observations and compacts learnings into skills.
-- Active: the workflow Plan -> Work -> Review -> Compound turns solved problems into procedural memory.
+- Passive: OpenCode compounding captures observations into skills.
+- Active: Plan -> Work -> Review -> Compound writes SKILL.md files as procedural memory.
 
-Skill files live in `.opencode/skills/<name>/SKILL.md` and are first-class, durable knowledge.
+Memory and skills are complementary: memory is associative context, skills are reusable procedures.
 
-## Workspace modes (repo and poly)
+## Workspace modes
 
-- Repo mode: one repo, multiple worktrees, snapshots, safe merges.
-- Poly mode: multi-repo service mesh with sets, tags, and worktree groups across microservices.
+- Repo mode: one repo, many worktrees.
+- Poly mode: multi-repo service mesh with sets, tags, and group worktrees.
 
 Example poly flow:
 
@@ -96,15 +90,24 @@ loom workspace worktree add sprint-42 --all
 loom workspace deps show api
 ```
 
+## Lineage (Beads, Gastown, and the Loom tradeoffs)
+
+Loom is built in the same problem space as Beads and Gastown, but with different tradeoffs.
+
+- Tickets vs Beads: Loom keeps tickets as Markdown documents so agents and humans can read them directly. If you want JSONL-first issue storage with a whole Dolt db and hundreds of thousands of lines of code, Beads is in that family; Loom intentionally optimizes for simple document-shaped reasoning.
+- Team vs Gastown: Loom keeps tmux visible, operational, and ephemeral. If you want deeper metaphor layers, Gastown explores that; Loom stays close to Unix primitives.
+
+These are opinionated choices, not claims about correctness. Loom is optimized for agent reasoning, not abstraction density.
+
 ## Server API
 
-Run the server:
+This is really just an internal API that will soon power an operator dashboard.
 
 ```bash
 loom server start --host 127.0.0.1 --port 8764
 ```
 
-The OpenAPI spec lives at `docs/openapi.yaml`.
+The (ai generated) OpenAPI spec is at `docs/openapi.yaml`.
 
 ## Development
 
