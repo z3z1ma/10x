@@ -111,7 +111,7 @@
       "confidence": 1,
       "status": "active",
       "created_at": "2026-01-30T19:57:13.467Z",
-      "updated_at": "2026-02-02T04:29:13.973Z",
+      "updated_at": "2026-02-02T15:47:24.303Z",
       "evidence": [
         {
           "ts": "2026-01-30T19:57:13.467Z",
@@ -176,6 +176,11 @@
           "ts": "2026-02-02T04:29:13.973Z",
           "sessionID": "ses_3e3909915ffeQPxpsEGARkmO6s",
           "note": "Background autolearn prompt explicitly required JSON-only output; reinforces strict output-discipline as a hard contract."
+        },
+        {
+          "ts": "2026-02-02T15:47:24.303Z",
+          "sessionID": "ses_3e3909915ffeQPxpsEGARkmO6s",
+          "note": "Background autolearn prompt reiterates JSON-only output requirement; complying here reinforces the contract."
         }
       ]
     },

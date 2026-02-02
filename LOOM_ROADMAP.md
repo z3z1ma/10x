@@ -6,7 +6,7 @@ This is an evolving, empirical compass. Keep it short and stable.
 
 <!-- BEGIN:compound:roadmap-backlog -->
 - # Tickets (1)
-- - `al-768c` P1 open - Sprint prep: Documentation Foundation
+- - `al-768c` P1 in_progress - Sprint prep: Documentation Foundation
 <!-- END:compound:roadmap-backlog -->
 
 <!-- BEGIN:compound:roadmap-ai-notes -->
@@ -23,6 +23,7 @@ It tracks changes to skills, instincts, and core context files.
 It is intentionally bounded. Do not write entries like "no changes".
 
 <!-- BEGIN:compound:changelog-entries -->
+- 2026-02-02T15:47:25.765Z Reinforced JSON-only discipline for Compound background autolearn responses.
 - 2026-02-02T05:46:51.173Z Reinforce plan-mode read-only discipline during autolearn/idle sessions; no new durable procedures identified from README-only edits.
 - 2026-02-02T04:29:15.307Z Reinforced strict JSON-only learning output and plan-mode read-only discipline via instinct confidence bumps.
 - 2026-02-02T04:02:12.117Z Add ticket-runtime test/UX contract instincts; clarify ticket contract expectations in always-on context.
