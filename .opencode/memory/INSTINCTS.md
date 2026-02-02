@@ -15,18 +15,30 @@ The source of truth is `.opencode/memory/instincts.json`.
 - **cli-output-is-a-contract** (100%)
   - Trigger: When changing any CLI/user-facing output formatting (especially ticket/team UX)
   - Action: Make output deterministic (explicit ordering, stable formatting) and add a focused pytest contract test for the rendered text.
+- **plan-mode-readonly-no-edits** (100%)
+  - Trigger: System reminder says Plan Mode ACTIVE / READ-ONLY phase
+  - Action: Do not edit/create/delete files or run write-capable commands; only inspect/read/search and produce an execution plan or required JSON payload.
+- **server-template-output-is-a-contract** (100%)
+  - Trigger: When changing src/agent_loom/server/templates/*.html (especially large refactors like dashboard.html).
+  - Action: Treat rendered HTML as a deterministic UX contract: ensure stable ordering/no nondeterministic values, add/update a focused pytest contract test for required markers/sections, then run `uv run basedpy…
+- **dashboard-template-changes-require-server-contract-test** (100%)
+  - Trigger: You change src/agent_loom/server/templates/dashboard.html (especially large refactors or section reshuffles).
+  - Action: Update/add request-level invariants in tests/test_server_api_contract.py (stable markers/sections + deterministic ordering; avoid full-HTML snapshots) and verify with: uv run basedpyright; uv run ruff…
 - **prompt-changes-require-prompt-tests** (99%)
   - Trigger: When editing agent prompts or prompt assembly code
   - Action: Update/add focused tests covering the prompt contract and run the prompt test suite.
-- **plan-mode-readonly-no-edits** (99%)
-  - Trigger: System reminder says Plan Mode ACTIVE / READ-ONLY phase
-  - Action: Do not edit/create/delete files or run write-capable commands; only inspect/read/search and produce an execution plan or required JSON payload.
+- **compound-template-mirror-must-stay-in-sync** (94%)
+  - Trigger: When editing Compound plugin/skill/docs behavior that is shipped via a template (for example .opencode/plugins/compound_engineering.ts or .opencode/skills/*) and the repo contains a scaffold copy unde…
+  - Action: Update both the repo-root .opencode/* sources and the scaffolded template under src/agent_loom/compound/opencode/.opencode/* to keep installation output deterministic; add/adjust tests/test_compound_i…
+- **large-template-refactor-diff-hygiene** (92%)
+  - Trigger: You are about to make a large refactor in src/agent_loom/server/templates/*.html (especially dashboard.html) that could produce a huge diff.
+  - Action: Minimize formatting-only churn, preserve/introduce stable data-* anchors, and update tests/test_server_api_contract.py in the same change to assert invariant markers/sections (avoid full HTML snapshot…
 - **workspace-cli-output-is-a-contract** (90%)
   - Trigger: When changing user-visible output/flags/formatting in src/agent_loom/workspace/cli.py
   - Action: Make output deterministic (explicit ordering; no timestamps/randomness/absolute paths). Add/update a focused contract test (prefer tests/test_workspace_cli_ux.py). Verify with: uv run basedpyright, uv…
-- **compound-template-mirror-must-stay-in-sync** (88%)
-  - Trigger: When editing Compound plugin/skill/docs behavior that is shipped via a template (for example .opencode/plugins/compound_engineering.ts or .opencode/skills/*) and the repo contains a scaffold copy unde…
-  - Action: Update both the repo-root .opencode/* sources and the scaffolded template under src/agent_loom/compound/opencode/.opencode/* to keep installation output deterministic; add/adjust tests/test_compound_i…
+- **server-html-changes-require-api-contract-test** (88%)
+  - Trigger: When changing server-rendered HTML behavior (templates or the route that serves them), especially large refactors in src/agent_loom/server/templates/*.html
+  - Action: Add/update a request-level contract test (prefer tests/test_server_api_contract.py) that asserts stable markers/sections and deterministic ordering; avoid brittle full-HTML snapshots; verify via uv ru…
 - **team-prompts-need-section-level-contracts** (86%)
   - Trigger: When adding or restructuring sections in src/agent_loom/team/prompts.py (or prompt assembly in src/agent_loom/team/core.py).
   - Action: Make prompt rendering deterministic (explicit ordering, stable headings) and add/expand section-level contract tests in tests/test_team_prompts.py that assert required sections/ordering without relyin…
@@ -69,9 +81,18 @@ The source of truth is `.opencode/memory/instincts.json`.
 - **ticket-cli-output-is-a-contract** (72%)
   - Trigger: When changing any user-visible output/formatting in src/agent_loom/ticket/cli.py.
   - Action: Make output deterministic (explicit ordering; avoid nondeterministic/machine-specific values) and lock invariants in tests/test_ticket_ux.py; verify with uv run basedpyright, uv run ruff check ., uv r…
+- **server-html-tests-should-assert-markers-not-whitespace** (72%)
+  - Trigger: You write or modify tests that validate server-rendered HTML.
+  - Action: Assert stable markers (data-* hooks, headings/labels) and ordering for repeated items; avoid brittle full-string/whitespace snapshots unless explicitly intended as the contract.
+- **instincts-store-changes-require-doc-sync** (72%)
+  - Trigger: When editing .opencode/memory/instincts.json or .opencode/memory/INSTINCTS.md
+  - Action: Prefer making the change via a CompoundSpec v2 (skills/instincts/docs) with docs.sync: true so derived indexes stay consistent; avoid manual drift between the JSON store and the markdown index.
 - **idle-autolearn-avoid-churn** (70%)
   - Trigger: Background autolearn runs with no git diffstat and no concrete new work artifacts.
   - Action: Do not propose skill/doc edits; at most create a small instinct if it prevents future failures (e.g., JSON-only output discipline). Otherwise emit an empty spec with docs.sync=false.
+- **server-template-changes-require-ux-contract-test** (70%)
+  - Trigger: You changed server-rendered HTML templates under src/agent_loom/server/templates/ (especially large diffs like dashboard.html).
+  - Action: Treat rendered HTML as a contract: add/update a focused pytest that renders/requests the template and asserts stable markers/ordering; avoid nondeterministic output (timestamps/random ids) and machine…
 - **core-docs-are-contracts** (68%)
   - Trigger: When proposing or making changes to AGENTS.md, LOOM_PROJECT.md, or LOOM_ROADMAP.md (especially deletions or restructures)
   - Action: Treat these files as contracts: avoid large deletions without replacement; keep always-on blocks short/stable; update AI-managed blocks via CompoundSpec v2 (docs.blocks.upsert + docs.sync); keep paths…

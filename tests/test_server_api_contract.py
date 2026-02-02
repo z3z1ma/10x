@@ -120,3 +120,15 @@ def test_introspect_ticket_core(client):
     assert payload["ok"] is True
     assert payload["data"]["module"].endswith("agent_loom.ticket.core")
     assert isinstance(payload["data"]["symbols"], list)
+
+
+def test_dashboard_template_contract(client):
+    res = client.get("/")
+    assert res.status_code == 200
+    html = res.get_data(as_text=True)
+    assert "<!doctype html>" in html
+    assert 'id="connText"' in html
+    assert 'id="globalSearch"' in html
+    assert 'id="content"' in html
+    assert 'id="liveBtn"' in html
+    assert "const $ =" in html

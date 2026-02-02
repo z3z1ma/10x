@@ -1,32 +1,3045 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOOM // NEXUS</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="dark light"/>
+  <title>Loom Dashboard</title>
+  <style>
+    /* Atom One (dark + light) inspired. No gradients. No theatrics. */
+    :root{
+      /* Deep Atom Dark */
+      --bg: #21252b;
+      --panel: #282c34;
+      --panel2: #2c313a;
+      --border: #3b4048;
+      --border2: #4b5263;
 
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+      --fg: #abb2bf;
+      --fg2: #dcdfe4;
+      --muted: #5c6370;
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+      /* "Beautiful Accents" - slightly more vibrant/pastel against dark */
+      --red: #ff7b86;
+      --green: #a7df79;
+      --yellow: #e5c07b;
+      --blue: #61afef;
+      --purple: #d57ced;
+      --cyan: #56b6c2;
+      --orange: #d19a66;
 
-    <script>
-        tailwind.config = {}
-    </script>
+      --shadow: 0 4px 12px rgba(0,0,0,.35);
+      --r: 6px;
+      --r2: 4px;
 
-    <style>
-    </style>
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --fs: 13px;
+      --lh: 1.5;
+
+      --pad: 12px;
+      --gap: 12px;
+
+      --btn: #353b45;
+      --btnHover: #3e4451;
+      --btnBorder: #3e4451;
+
+      --focus: rgba(97,175,239,.35);
+      --sel: #3e4451;
+
+      --ok: var(--green);
+      --warn: var(--yellow);
+      --bad: var(--red);
+      --info: var(--blue);
+    }
+
+    :root[data-theme="light"]{
+      --bg: #fafafa;
+      --panel: #ffffff;
+      --panel2: #f0f1f4;
+      --border: #d0d3d8;
+      --border2: #c0c4cc;
+
+      --fg: #383a42;
+      --fg2: #202227;
+      --muted: #9ca3af;
+
+      --red: #e45649;
+      --green: #50a14f;
+      --yellow: #986801;
+      --blue: #4078f2;
+      --purple: #a626a4;
+      --cyan: #0184bc;
+      --orange: #c18401;
+
+      --shadow: 0 4px 12px rgba(0,0,0,.08);
+
+      --btn: #f2f3f5;
+      --btnHover: #e5e7eb;
+      --btnBorder: #d0d3d8;
+
+      --focus: rgba(64,120,242,.24);
+      --sel: #e5e7eb;
+
+      --ok: var(--green);
+      --warn: var(--yellow);
+      --bad: var(--red);
+      --info: var(--blue);
+    }
+
+    *{
+      box-sizing:border-box;
+      scrollbar-color: var(--border2) var(--panel);
+      scrollbar-width: thin;
+    }
+    *::-webkit-scrollbar{ width:10px; height:10px; }
+    *::-webkit-scrollbar-track{ background: var(--panel); }
+    *::-webkit-scrollbar-thumb{
+      background: var(--border2);
+      border-radius: 8px;
+      border: 2px solid var(--panel);
+    }
+    :root[data-theme="light"] *::-webkit-scrollbar-thumb{ background: var(--border); }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--fg);
+      font: var(--fs)/var(--lh) var(--sans);
+      overflow:hidden;
+    }
+    a{ color: var(--blue); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+    button,input,select,textarea{ font: inherit; color:inherit; }
+    code,pre{ font-family: var(--mono); }
+
+    .app{
+      height:100%;
+      display:grid;
+      grid-template-columns: 240px 1fr;
+    }
+
+    /* Sidebar */
+    .side{
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display:flex;
+      flex-direction:column;
+      min-width: 220px;
+    }
+    .brand{
+      padding: 12px 12px 8px;
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo{
+      width: 26px; height: 26px;
+      border-radius: 7px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      display:grid; place-items:center;
+      color: var(--blue);
+      font-weight: 800;
+      font-family: var(--mono);
+      box-shadow: none;
+      user-select:none;
+    }
+    .brandTitle{
+      display:flex;
+      flex-direction:column;
+      gap: 1px;
+      min-width:0;
+    }
+    .brandTitle .t{
+      font-weight: 750;
+      letter-spacing:.2px;
+      color: var(--fg2);
+      font-size: 13px;
+    }
+    .brandTitle .s{
+      color: var(--muted);
+      font-size: 12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .nav{
+      padding: 8px;
+      display:flex;
+      flex-direction:column;
+      gap: 3px;
+      overflow:auto;
+      flex: 1 1 auto;
+    }
+    .nav a{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 7px 8px;
+      border-radius: 8px;
+      color: var(--fg);
+      border: 1px solid transparent;
+      user-select:none;
+    }
+    .nav a:hover{
+      background: var(--panel2);
+      border-color: var(--border);
+      text-decoration:none;
+    }
+    .nav a.active{
+      background: var(--sel);
+      border-color: var(--border2);
+    }
+    .nav .k{
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      margin-left:auto;
+    }
+
+    .sideFooter{
+      padding: 10px 12px;
+      border-top: 1px solid var(--border);
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+    .statusRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      display:inline-block;
+      margin-right: 8px;
+      background: var(--muted);
+    }
+    .dot.ok{ background: var(--ok); }
+    .dot.warn{ background: var(--warn); }
+    .dot.bad{ background: var(--bad); }
+
+    /* Main */
+    .main{
+      display:flex;
+      flex-direction:column;
+      height:100%;
+      overflow:hidden;
+    }
+    .top{
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px;
+      display:flex;
+      gap: 10px;
+      align-items:center;
+    }
+    .viewTitle{
+      font-weight: 760;
+      letter-spacing:.2px;
+      color: var(--fg2);
+      margin-right: 6px;
+      white-space:nowrap;
+    }
+    .topRight{
+      margin-left:auto;
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      min-width: 0;
+    }
+    .pill{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: var(--btn);
+      border: 1px solid var(--btnBorder);
+      cursor:pointer;
+      user-select:none;
+    }
+    .pill:hover{ background: var(--btnHover); }
+    .pill:active{ transform: translateY(1px); }
+    .pill.small{ padding: 5px 7px; font-size: 12px; }
+    .pill.ghost{ background: transparent; }
+    .pill.bad{ border-color: var(--red); color: var(--red); }
+    .pill.ok{ border-color: var(--green); color: var(--green); }
+    .pill.info{ border-color: var(--blue); color: var(--blue); }
+
+    .kbd{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .input{
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      padding: 7px 8px;
+      outline:none;
+      min-width: 0;
+    }
+    :root[data-theme="light"] .input{ background: var(--panel2); }
+    .input:focus{
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--focus);
+    }
+
+    .content{
+      padding: 12px;
+      overflow:auto;
+      height:100%;
+      background: var(--bg);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--gap);
+    }
+
+    .card{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      box-shadow: none;
+      overflow:hidden;
+    }
+    .cardHeader{
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 8px;
+    }
+    .cardTitle{
+      font-weight: 720;
+      color: var(--fg2);
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      min-width:0;
+    }
+    .cardTitle small{
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 11px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .cardBody{ padding: 10px 12px; }
+
+    .muted{ color: var(--muted); }
+    .mono{ font-family: var(--mono); }
+    .small{ font-size: 12px; }
+    .right{ text-align:right; }
+    .wrap{ overflow-wrap:anywhere; word-break:break-word; white-space:normal; }
+
+    .chipRow{ display:flex; flex-wrap:wrap; gap: 6px; }
+    .chip{
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: var(--fg);
+      white-space: nowrap;
+    }
+    .chip.ok{ border-color: var(--green); color: var(--green); background: rgba(167, 223, 121, 0.1); }
+    .chip.warn{ border-color: var(--yellow); color: var(--yellow); background: rgba(229, 192, 123, 0.1); }
+    .chip.bad{ border-color: var(--red); color: var(--red); background: rgba(255, 123, 134, 0.1); }
+    .chip.info{ border-color: var(--blue); color: var(--blue); background: rgba(97, 175, 239, 0.1); }
+    .chip.click{ cursor:pointer; }
+    .chip.click:hover{ filter: brightness(1.2); }
+
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .row.wsControls{ margin-bottom: 8px; }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      min-width: 160px;
+      flex: 1 1 180px;
+    }
+    .field label{
+      font-size: 11px;
+      color: var(--muted);
+    }
+    select.input{ padding: 6px 8px; }
+
+    /* Tables */
+    table{
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 12px;
+    }
+    th, td{
+      padding: 7px 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th{
+      text-align:left;
+      color: var(--muted);
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      background: var(--panel);
+      z-index: 1;
+    }
+    tr:hover td{ background: var(--panel2); cursor:pointer; }
+    .nowrap{ white-space:nowrap; }
+
+    /* Tickets: split */
+    .split{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: var(--gap);
+      align-items:start;
+    }
+
+    /* Board */
+    .boardTop{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .board{
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      overflow:hidden;
+      background: var(--panel);
+    }
+    .cols{
+      display:grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(240px, 1fr);
+      gap: 0;
+      overflow:auto;
+      height: calc(100vh - 240px);
+      min-height: 420px;
+    }
+    .col{
+      border-right: 1px solid var(--border);
+      display:flex;
+      flex-direction:column;
+      min-width: 240px;
+      background: var(--panel);
+    }
+    .col:last-child{ border-right:none; }
+    .colHeader{
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      background: var(--panel);
+      z-index: 2;
+    }
+    .colHeader .name{
+      font-weight: 740;
+      color: var(--fg2);
+      font-size: 12px;
+      max-width: 170px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .colHeader .count{
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+    .colBody{
+      padding: 8px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+      overflow:auto;
+      height:100%;
+    }
+    .dropHint{
+      border: 1px dashed var(--border2);
+      border-radius: var(--r2);
+      padding: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align:center;
+      display:none;
+    }
+    .col.dragover .dropHint{ display:block; }
+    .cardT{
+      border: 1px solid var(--border);
+      background: var(--panel2);
+      border-radius: var(--r2);
+      padding: 8px;
+      cursor: grab;
+      user-select:none;
+    }
+    .cardT:active{ cursor: grabbing; }
+    .cardT:hover{ filter: brightness(1.06); }
+    .cardT .topLine{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 8px;
+    }
+    .cardT .id{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .cardT .prio{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .cardT .title{
+      margin-top: 6px;
+      font-weight: 650;
+      color: var(--fg2);
+      font-size: 12px;
+      line-height: 1.35;
+      display:-webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+    .cardT .meta{
+      margin-top: 6px;
+      display:flex;
+      gap: 6px;
+      flex-wrap:wrap;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* Detail drawer */
+    .drawer{
+      position: sticky;
+      top: 0;
+      max-height: calc(100vh - 96px);
+      overflow:auto;
+    }
+    .drawer .head{
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .drawer .head .h{
+      min-width: 0;
+    }
+    .drawer .head .id{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .drawer .head .title{
+      margin-top: 6px;
+      font-weight: 760;
+      color: var(--fg2);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .drawer .body{
+      padding: 10px 12px 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+
+    .md{
+      font-size: 12px;
+      color: var(--fg);
+      line-height: 1.55;
+      white-space: normal;
+    }
+    .md p{ margin: 8px 0; color: var(--fg); }
+    .md h1,.md h2,.md h3{ margin: 12px 0 6px; color: var(--fg2); }
+    .md h1{ font-size: 15px; }
+    .md h2{ font-size: 14px; }
+    .md h3{ font-size: 13px; }
+    .md pre{
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: var(--r2);
+      padding: 8px;
+      overflow:auto;
+    }
+    .md code{
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1px 5px;
+    }
+    .md blockquote{
+      margin: 8px 0;
+      padding: 8px;
+      border-left: 3px solid var(--border2);
+      background: var(--panel2);
+      border-radius: 8px;
+      color: var(--muted);
+    }
+    .md ul{ margin: 8px 0 8px 18px; }
+
+    .monoBlock{
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: var(--r2);
+      padding: 8px;
+      overflow:auto;
+      max-height: 320px;
+      white-space: pre;
+      color: var(--fg);
+    }
+
+    .canvasWrap{
+      border: 1px solid var(--border);
+      border-radius: var(--r2);
+      background: var(--panel2);
+      overflow:hidden;
+      height: 260px;
+    }
+    canvas{ width:100%; height:100%; display:block; }
+
+    /* Toasts */
+    .toasts{
+      position: fixed;
+      right: 10px;
+      bottom: 10px;
+      z-index: 9999;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+      width: min(420px, calc(100vw - 20px));
+      pointer-events:none;
+    }
+    .toast{
+      pointer-events:auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border2);
+      border-radius: var(--r);
+      padding: 8px 10px;
+      box-shadow: var(--shadow);
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .12s ease, transform .12s ease;
+    }
+    .toast.show{ opacity: 1; transform: translateY(0); }
+    .toast .t{
+      display:flex;
+      flex-direction:column;
+      gap: 4px;
+      min-width:0;
+    }
+    .toast .m{ font-weight: 700; color: var(--fg2); font-size: 12px; }
+    .toast .d{ color: var(--muted); font-size: 12px; }
+    .toast .x{
+      margin-left:auto;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2px 6px;
+      cursor:pointer;
+      user-select:none;
+      color: var(--muted);
+    }
+    .toast .x:hover{ background: var(--panel2); }
+    .toast.ok{ border-left-color: var(--ok); }
+    .toast.warn{ border-left-color: var(--warn); }
+    .toast.bad{ border-left-color: var(--bad); }
+    .toast.info{ border-left-color: var(--info); }
+
+    /* Dialog */
+    .modal{
+      position: fixed;
+      inset:0;
+      z-index: 9998;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 12px;
+      background: rgba(0,0,0,.48);
+    }
+    :root[data-theme="light"] .modal{ background: rgba(0,0,0,.22); }
+    .modal.show{ display:flex; }
+    .dialog{
+      width: min(920px, calc(100vw - 24px));
+      max-height: calc(100vh - 24px);
+      overflow:auto;
+      background: var(--panel);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    .dialogHead{
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .dialogHead .h{
+      font-weight: 760;
+      color: var(--fg2);
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .dialogBody{ padding: 10px 12px; }
+    .dialogFoot{
+      padding: 10px 12px;
+      border-top: 1px solid var(--border);
+      display:flex;
+      justify-content:flex-end;
+      gap: 8px;
+      flex-wrap:wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      body{ overflow:auto; }
+      .app{ grid-template-columns: 1fr; height:auto; min-height:100%; }
+      .side{ position: sticky; top:0; z-index: 2; border-right:none; border-bottom: 1px solid var(--border); }
+      .main{ height:auto; }
+      .split{ grid-template-columns: 1fr; }
+      .cols{ height: auto; min-height: 520px; }
+      .drawer{ position: static; max-height: none; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      *{ transition:none !important; }
+    }
+  </style>
 </head>
 <body>
-    <div id="root" class=""></div>
-    <script type="text/babel">
-    {% raw %}
-        const { useState, useEffect, useMemo, useRef } = React;
-    {% endraw %}
-    </script>
+  <div class="app">
+    <aside class="side">
+      <div class="brand">
+        <div class="logo">L</div>
+        <div class="brandTitle">
+          <div class="t">Loom</div>
+          <div class="s" id="brandSub">ops dashboard</div>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav">
+        <a href="#/overview" data-route="overview" class="active"><span>Overview</span><span class="k">g o</span></a>
+        <a href="#/tickets" data-route="tickets"><span>Tickets</span><span class="k">g t</span></a>
+        <a href="#/teams" data-route="teams"><span>Teams</span><span class="k">g m</span></a>
+        <a href="#/memory" data-route="memory"><span>Memory</span><span class="k">g r</span></a>
+        <a href="#/workspace" data-route="workspace"><span>Workspace</span><span class="k">g w</span></a>
+        <a href="#/compound" data-route="compound"><span>Compound</span><span class="k">g c</span></a>
+        <a href="#/settings" data-route="settings"><span>Settings</span><span class="k">g s</span></a>
+      </nav>
+
+      <div class="sideFooter">
+        <div class="statusRow">
+          <span><span id="connDot" class="dot"></span><span id="connText">disconnected</span></span>
+          <span class="mono" id="clock"></span>
+        </div>
+        <div class="statusRow">
+          <span class="muted">base</span>
+          <span class="mono" id="baseMini"></span>
+        </div>
+        <div class="statusRow">
+          <span id="writesLine" class="muted">writes: ?</span>
+          <span id="authLine" class="muted">auth: ?</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="top">
+        <div class="viewTitle" id="viewTitle">Overview</div>
+
+        <input class="input" id="globalSearch" placeholder="Search tickets (/)…" style="flex: 1 1 420px; max-width: 720px;" />
+
+        <div class="topRight">
+          <button class="pill small ghost" id="liveBtn" type="button" title="Toggle live polling (l)">
+            <span class="mono">live</span> <span id="liveState" class="mono muted">off</span>
+          </button>
+          <select class="input" id="liveInterval" title="Live interval" style="width:110px">
+            <option value="2000">2s</option>
+            <option value="5000">5s</option>
+            <option value="10000">10s</option>
+          </select>
+          <button class="pill small" id="refreshBtn" type="button" title="Refresh (r)">refresh</button>
+          <button class="pill small ok" id="createBtn" type="button" title="Create ticket (n)">new</button>
+          <button class="pill small ghost" id="helpBtn" type="button" title="Shortcuts (?)">?</button>
+        </div>
+      </header>
+
+      <section class="content" id="content"></section>
+    </main>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+
+  <div class="modal" id="modal">
+    <div class="dialog">
+      <div class="dialogHead">
+        <div class="h" id="dialogTitle">Dialog</div>
+        <button class="pill small" id="dialogClose" type="button">close</button>
+      </div>
+      <div class="dialogBody" id="dialogBody"></div>
+      <div class="dialogFoot" id="dialogFoot"></div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+  const STORE = 'loomDash:atomOne:v1';
+  const defaults = {
+    baseUrl: location.origin,
+    authMode: 'none', // none | loom | bearer
+    token: '',
+    theme: (matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light',
+
+    live: false,
+    liveInterval: 5000,
+
+    tickets: {
+      view: 'board', // board | list
+      include_closed: '0',
+      limit: '500',
+      status: '',
+      type: '',
+      assignee: '',
+      tag: '',
+      prio_min: '',
+      prio_max: '',
+      clientQ: '',
+      bucketMode: 'bucket', // bucket | status
+      selectedId: ''
+    },
+
+    teams: { selected: '', limit: '120' },
+    memory: { vault: '.memory', q: '', limit: '10', tag: '', not_tag: '', scope: '', not_scope: '', visibility: '', expand: '0', context:'0', deterministic:'0', include_deprecated:'0' },
+    workspace: { mode: 'auto', root: '', q: '', dirty: '', group: '', repo: '', missing: '' },
+    compound: { selectedSkill: '' },
+    lastRoute: 'overview'
+  };
+
+  let state = loadState();
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORE);
+      if (!raw) return structuredClone(defaults);
+      return mergeDeep(structuredClone(defaults), JSON.parse(raw));
+    } catch { return structuredClone(defaults); }
+  }
+  function mergeDeep(a,b){
+    if (!a || typeof a !== 'object' || !b || typeof b !== 'object') return b ?? a;
+    for (const k of Object.keys(b)){
+      if (b[k] && typeof b[k] === 'object' && !Array.isArray(b[k])) a[k] = mergeDeep(a[k] || {}, b[k]);
+      else a[k] = b[k];
+    }
+    return a;
+  }
+  function save(){
+    try{ localStorage.setItem(STORE, JSON.stringify(state)); } catch {}
+    $('#baseMini').textContent = normBase(state.baseUrl);
+  }
+  function normBase(u){
+    u = (u || '').trim();
+    return u.replace(/\/+$/,'');
+  }
+
+  function prettyPath(p){
+    p = (p || '').toString();
+    if (!p) return '';
+    const mac = p.match(/^\/Users\/[^/]+/);
+    if (mac) return p.replace(mac[0], '~');
+    const nix = p.match(/^\/home\/[^/]+/);
+    if (nix) return p.replace(nix[0], '~');
+    return p;
+  }
+
+  function setTheme(t){
+    state.theme = t;
+    document.documentElement.setAttribute('data-theme', t);
+    save();
+  }
+  setTheme(state.theme);
+
+  // clock
+  function tick(){
+    const d = new Date();
+    $('#clock').textContent = d.toLocaleTimeString();
+  }
+  tick(); setInterval(tick, 1000);
+
+  // toasts
+  const toasts = $('#toasts');
+  function toast(msg, type='info', detail=''){
+    const el = document.createElement('div');
+    el.className = `toast ${type}`;
+    el.innerHTML = `
+      <div class="t">
+        <div class="m">${escapeHtml(msg)}</div>
+        ${detail ? `<div class="d">${escapeHtml(detail)}</div>` : ''}
+      </div>
+      <button class="x" type="button">x</button>
+    `;
+    toasts.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('show'));
+    const kill = () => {
+      el.classList.remove('show');
+      setTimeout(() => el.remove(), 140);
+    };
+    el.querySelector('button.x').addEventListener('click', kill);
+    setTimeout(kill, 3200);
+  }
+
+  // dialog
+  const modal = $('#modal');
+  function openDialog({title='Dialog', bodyHTML='', footHTML='' }){
+    $('#dialogTitle').textContent = title;
+    $('#dialogBody').innerHTML = bodyHTML;
+    $('#dialogFoot').innerHTML = footHTML;
+    modal.classList.add('show');
+  }
+  function closeDialog(){ modal.classList.remove('show'); }
+  $('#dialogClose').addEventListener('click', closeDialog);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeDialog(); });
+
+  // API
+  const connDot = $('#connDot');
+  const connText = $('#connText');
+  function setConn(ok, label){
+    connDot.className = 'dot ' + (ok ? 'ok' : 'bad');
+    connText.textContent = label || (ok ? 'connected' : 'disconnected');
+  }
+
+  async function api(path, {method='GET', query=null, body=null} = {}){
+    const base = normBase(state.baseUrl);
+    const url = base + path + (query ? toQuery(query) : '');
+    const headers = { 'Accept':'application/json' };
+    if (body !== null) headers['Content-Type'] = 'application/json';
+    if (state.authMode === 'loom' && state.token) headers['X-Loom-Token'] = state.token;
+    if (state.authMode === 'bearer' && state.token) headers['Authorization'] = 'Bearer ' + state.token;
+
+    let res;
+    try{
+      res = await fetch(url, { method, headers, body: body !== null ? JSON.stringify(body) : undefined });
+    } catch (err){
+      setConn(false, 'network');
+      throw new Error('Network error: ' + (err?.message || String(err)));
+    }
+    const txt = await res.text();
+    let j = null;
+    try{ j = txt ? JSON.parse(txt) : null; } catch {
+      throw new Error('Bad JSON from server');
+    }
+    if (!res.ok){
+      const msg = j?.error?.message || (res.status + ' ' + res.statusText);
+      const code = j?.error?.code || ('HTTP_' + res.status);
+      const e = new Error(msg);
+      e._loom = { code, status: res.status, details: j?.error?.details || j, url };
+      throw e;
+    }
+    if (j && typeof j.ok === 'boolean'){
+      if (!j.ok){
+        const e = new Error(j?.error?.message || 'Request failed');
+        e._loom = { code: j?.error?.code || 'ERROR', details: j?.error?.details || {}, url };
+        throw e;
+      }
+      return j.data;
+    }
+    return j;
+  }
+
+  function escapeHtml(s){
+    return (s ?? '').toString()
+      .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+      .replaceAll('"','&quot;').replaceAll("'","&#039;");
+  }
+  function toQuery(params){
+    const sp = new URLSearchParams();
+    for (const [k,v] of Object.entries(params || {})){
+      if (v === undefined || v === null || v === '') continue;
+      if (Array.isArray(v)){
+        v.forEach(it => { const t = (it ?? '').toString().trim(); if (t) sp.append(k, t); });
+      } else sp.set(k, (v ?? '').toString());
+    }
+    const qs = sp.toString();
+    return qs ? ('?' + qs) : '';
+  }
+
+  // lightweight markdown: safe-ish, minimal
+  function mdToHtml(src){
+    src = (src ?? '').toString();
+    if (!src.trim()) return '<div class="muted">No content.</div>';
+    const lines = src.replaceAll('\r','').split('\n');
+    let out = '';
+    let inCode = false;
+    let code = [];
+    let list = [];
+
+    const flushList = () => {
+      if (!list.length) return;
+      out += '<ul>' + list.map(x => `<li>${inline(x)}</li>`).join('') + '</ul>';
+      list = [];
+    };
+    const flushCode = () => {
+      if (!inCode) return;
+      out += `<pre><code>${escapeHtml(code.join('\n'))}</code></pre>`;
+      inCode = false; code = [];
+    };
+
+    for (const raw of lines){
+      const line = raw ?? '';
+      if (line.trim().startsWith('```')){
+        if (inCode) flushCode();
+        else { flushList(); inCode = true; code = []; }
+        continue;
+      }
+      if (inCode){ code.push(line); continue; }
+
+      const h1 = line.match(/^#\s+(.*)$/);
+      const h2 = line.match(/^##\s+(.*)$/);
+      const h3 = line.match(/^###\s+(.*)$/);
+      const bq = line.match(/^>\s?(.*)$/);
+      const li = line.match(/^\s*[-*]\s+(.*)$/);
+
+      if (h1){ flushList(); out += `<h1>${inline(h1[1])}</h1>`; continue; }
+      if (h2){ flushList(); out += `<h2>${inline(h2[1])}</h2>`; continue; }
+      if (h3){ flushList(); out += `<h3>${inline(h3[1])}</h3>`; continue; }
+      if (bq){ flushList(); out += `<blockquote>${inline(bq[1])}</blockquote>`; continue; }
+      if (li){ list.push(li[1]); continue; }
+
+      if (!line.trim()){ flushList(); out += '<div style="height:6px"></div>'; continue; }
+      flushList();
+      out += `<p>${inline(line)}</p>`;
+    }
+    flushList(); flushCode();
+    return out;
+
+    function inline(s){
+      s = escapeHtml(s);
+      s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m, txt, url) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(txt)}</a>`);
+      s = s.replace(/`([^`]+)`/g, (m, code) => `<code>${escapeHtml(code)}</code>`);
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      return s;
+    }
+  }
+
+  // Data cache
+  const data = {
+    health: null,
+    caps: null,
+    tickets: { list: null, count: 0, at: 0 },
+    ticket: { id: '', show: null, view: null, dep: null },
+    teams: { list: null, at: 0, bundle: null },
+    memory: { results: null, note: null },
+    workspace: { meta:null, worktrees:null, services:null },
+    compound: { skills:null, skill:null, instincts:null }
+  };
+
+  async function loadHealthCaps(force=false){
+    const fresh = (Date.now() - (data._hcAt || 0)) < 8000;
+    if (!force && data.health && data.caps && fresh) return;
+    try{
+      const [h, c] = await Promise.all([
+        api('/api/v1/health'),
+        api('/api/v1/capabilities')
+      ]);
+      data.health = h; data.caps = c; data._hcAt = Date.now();
+      setConn(true);
+      setBadges();
+      $('#brandSub').textContent = (h.workspace_mode || 'workspace') + ' · ' + (h.writes_enabled ? 'writes' : 'read-only');
+    } catch (err){
+      setConn(false, 'api');
+      toast('Health failed', 'bad', err.message || String(err));
+    }
+  }
+
+  function setBadges(){
+    const h = data.health;
+    if (!h){
+      $('#writesLine').textContent = 'writes: ?';
+      $('#authLine').textContent = 'auth: ?';
+      return;
+    }
+    $('#writesLine').textContent = 'writes: ' + (h.writes_enabled ? 'enabled' : 'disabled');
+    const req = !!h.token_required;
+    const mode = state.authMode === 'loom' ? 'X-Loom-Token' : (state.authMode === 'bearer' ? 'Bearer' : 'none');
+    $('#authLine').textContent = (req ? 'auth: token' : 'auth: open') + ' · ' + mode;
+  }
+
+  // Routing
+  const routes = {
+    overview: { title: 'Overview', render: renderOverview, bind: bindOverview },
+    tickets: { title: 'Tickets', render: renderTickets, bind: bindTickets },
+    teams: { title: 'Teams', render: renderTeams, bind: bindTeams },
+    memory: { title: 'Memory', render: renderMemory, bind: bindMemory },
+    workspace: { title: 'Workspace', render: renderWorkspace, bind: bindWorkspace },
+    compound: { title: 'Compound', render: renderCompound, bind: bindCompound },
+    settings: { title: 'Settings', render: renderSettings, bind: bindSettings }
+  };
+
+  function routeFromHash(){
+    const h = (location.hash || '#/overview').replace('#/','');
+    const r = (h.split('?')[0] || 'overview').trim();
+    return routes[r] ? r : 'overview';
+  }
+  function goto(r){ location.hash = '#/' + r; }
+
+  function setNavActive(route){
+    $$('#nav a').forEach(a => a.classList.toggle('active', a.getAttribute('data-route') === route));
+  }
+
+  const content = $('#content');
+  let scrollPos = {};
+
+  async function renderRoute(){
+    const route = routeFromHash();
+    state.lastRoute = route;
+    save();
+
+    $('#viewTitle').textContent = routes[route].title;
+    setNavActive(route);
+
+    // Save scroll state for current view components before re-render
+    $$('.cols, .drawer, .content').forEach(el => {
+      if (el.scrollTop > 0) scrollPos[el.className] = el.scrollTop;
+    });
+
+    await loadHealthCaps(false);
+
+    if (route === 'tickets') await loadTickets(false);
+    if (route === 'teams') await loadTeams(false);
+    if (route === 'memory' && !data.memory.results) await loadMemoryRecall(false);
+    if (route === 'workspace') await loadWorkspace(false);
+    if (route === 'compound') await loadCompound(false);
+
+    content.innerHTML = await routes[route].render();
+    routes[route].bind();
+
+    // Restore scroll state
+    requestAnimationFrame(() => {
+      Object.entries(scrollPos).forEach(([cls, top]) => {
+        const el = content.querySelector('.' + cls.split(' ').join('.'));
+        if (el) el.scrollTop = top;
+      });
+    });
+  }
+
+  window.addEventListener('hashchange', renderRoute);
+
+  // Overview
+  async function renderOverview(){
+    const h = data.health;
+    const c = data.caps;
+    if (!h || !c){
+      return `<div class="card"><div class="cardHeader"><div class="cardTitle">Loading</div></div><div class="cardBody" class="muted">Fetching health…</div></div>`;
+    }
+
+    // cheap nudge: stale + blocked snapshot from open tickets (best effort)
+    let nudges = { blocked: 0, stale: 0, staleList: [] };
+    if (data.tickets.list && data.tickets.list.length){
+      const now = Date.now();
+      for (const t of data.tickets.list){
+        const s = (t.status || '').toLowerCase();
+        if (s.includes('block')) nudges.blocked++;
+        const mt = parseTime(t.mtime);
+        if (mt && (now - mt) > 7*24*3600*1000){
+          nudges.stale++;
+          if (nudges.staleList.length < 5) nudges.staleList.push(t);
+        }
+      }
+    }
+
+    return `
+      <div class="grid">
+        <div class="card" style="grid-column: span 6;">
+          <div class="cardHeader">
+            <div class="cardTitle">Server <small>/api/v1/health</small></div>
+            <div class="row">
+              <button class="pill small" id="healthJson" type="button">json</button>
+            </div>
+          </div>
+          <div class="cardBody">
+            <div class="row">
+              <div class="field" style="min-width:220px">
+                <label>platform</label>
+                <div class="mono">${escapeHtml(h.platform || '')}</div>
+              </div>
+              <div class="field" style="min-width:220px">
+                <label>python</label>
+                <div class="mono">${escapeHtml(h.python || '')}</div>
+              </div>
+              <div class="field" style="min-width:220px">
+                <label>workspace</label>
+                <div class="mono">${escapeHtml(h.workspace_mode || '')}</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field" style="min-width:220px">
+                <label>root</label>
+                <div class="mono muted wrap">${escapeHtml(prettyPath(h.workspace_root || h.repo_root || ''))}</div>
+              </div>
+              <div class="field" style="min-width:220px">
+                <label>writes</label>
+                <div class="mono" style="color:${h.writes_enabled ? 'var(--green)' : 'var(--red)'}">${h.writes_enabled ? 'enabled' : 'disabled'}</div>
+              </div>
+              <div class="field" style="min-width:220px">
+                <label>token_required</label>
+                <div class="mono">${h.token_required ? 'true' : 'false'}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="grid-column: span 6;">
+          <div class="cardHeader">
+            <div class="cardTitle">Capabilities <small>/api/v1/capabilities</small></div>
+            <div class="row">
+              <button class="pill small" id="capsJson" type="button">json</button>
+            </div>
+          </div>
+          <div class="cardBody">
+            <div class="chipRow">
+              <span class="chip ${c.writes?.enabled ? 'ok' : 'warn'}">writes: ${c.writes?.enabled ? 'on' : 'off'}</span>
+              <span class="chip ${c.auth?.require_token ? 'warn' : 'ok'}">auth: ${c.auth?.require_token ? 'token' : 'open'}</span>
+              ${(c.auth?.supported || []).slice(0,6).map(x => `<span class="chip info">${escapeHtml(x)}</span>`).join('')}
+              <span class="chip">endpoints: ${(c.endpoints || []).length}</span>
+            </div>
+            <div style="height:10px"></div>
+            <div class="muted small">
+              This dashboard sticks to operational surfaces. No swarm UI. No introspection UI. Just the stuff you actually use.
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="grid-column: span 12;">
+          <div class="cardHeader">
+            <div class="cardTitle">Nudge <small>because humans forget</small></div>
+            <div class="row">
+              <button class="pill small" id="loadOpenTickets" type="button">scan open tickets</button>
+            </div>
+          </div>
+          <div class="cardBody">
+            <div class="chipRow">
+              <span class="chip ${nudges.blocked ? 'bad' : ''}">blocked-ish: ${nudges.blocked}</span>
+              <span class="chip ${nudges.stale ? 'warn' : ''}">stale &gt; 7d: ${nudges.stale}</span>
+              <span class="chip">tip: press <span class="mono">/</span> to search tickets, <span class="mono">l</span> to go live</span>
+            </div>
+            ${nudges.staleList.length ? `
+              <div style="height:10px"></div>
+              <table>
+                <thead><tr><th style="width:120px">id</th><th>title</th><th style="width:140px">status</th><th style="width:170px">mtime</th></tr></thead>
+                <tbody>
+                  ${nudges.staleList.map(t => `
+                    <tr data-open-ticket="${escapeHtml(t.id)}">
+                      <td class="mono" style="color:var(--purple)">${escapeHtml(t.id)}</td>
+                      <td style="color:var(--fg2)">${escapeHtml(t.title || '')}</td>
+                      <td class="mono" style="color:var(--yellow)">${escapeHtml(t.status || '')}</td>
+                      <td class="mono muted">${escapeHtml(t.mtime || '')}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            ` : `<div class="muted small" style="margin-top:10px">No nudges yet. Either you're crushing it or you haven't loaded tickets.</div>`}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function bindOverview(){
+    $('#healthJson')?.addEventListener('click', () => openDialog({
+      title: 'health.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify(data.health, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeH">close</button>`
+    }) || $('#closeH')?.addEventListener('click', closeDialog));
+    $('#capsJson')?.addEventListener('click', () => openDialog({
+      title: 'capabilities.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify(data.caps, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeC">close</button>`
+    }) || $('#closeC')?.addEventListener('click', closeDialog));
+
+    $('#loadOpenTickets')?.addEventListener('click', async () => {
+      // pull open tickets in background so nudge can compute
+      state.tickets.include_closed = '0';
+      await loadTickets(true);
+      await renderRoute();
+      toast('Loaded tickets for nudge', 'ok', `${data.tickets.count} tickets`);
+    });
+
+    $$('[data-open-ticket]').forEach(tr => {
+      tr.addEventListener('click', async () => {
+        const id = tr.getAttribute('data-open-ticket');
+        goto('tickets');
+        state.tickets.selectedId = id;
+        save();
+        await loadTicketDetails(id, true);
+        await renderRoute();
+      });
+    });
+  }
+
+  // Tickets
+  function ticketQueryFromState(){
+    const t = state.tickets;
+    return {
+      status: t.status,
+      type: t.type,
+      assignee: t.assignee,
+      tag: t.tag,
+      prio_min: t.prio_min,
+      prio_max: t.prio_max,
+      include_closed: t.include_closed || '0',
+      limit: t.limit || '500'
+    };
+  }
+
+  async function loadTickets(force=false){
+    await loadHealthCaps(false);
+    const age = Date.now() - data.tickets.at;
+    if (!force && data.tickets.list && age < 6000) return;
+    try{
+      const res = await api('/api/v1/tickets', { query: ticketQueryFromState() });
+      data.tickets.list = res.tickets || [];
+      data.tickets.count = res.count || data.tickets.list.length;
+      data.tickets.at = Date.now();
+    } catch (err){
+      toast('Tickets failed', 'bad', err.message || String(err));
+    }
+  }
+
+  async function loadTicketDetails(id, force=false){
+    if (!id) return;
+    if (!force && data.ticket.id === id && data.ticket.show && data.ticket.view) return;
+    try{
+      const [show, view] = await Promise.all([
+        api(`/api/v1/tickets/${encodeURIComponent(id)}`),
+        api(`/api/v1/tickets/${encodeURIComponent(id)}/view`)
+      ]);
+      data.ticket = { id, show, view, dep: null };
+    } catch (err){
+      toast('Ticket detail failed', 'bad', err.message || String(err));
+    }
+  }
+
+  function clamp(s, n){
+    s = (s ?? '').toString();
+    return s.length <= n ? s : (s.slice(0, n-1) + '…');
+  }
+
+  function parseTime(s){
+    if (!s) return null;
+    const d = new Date(s);
+    if (!isFinite(d.getTime())) return null;
+    return d.getTime();
+  }
+
+  function statusBucket(status){
+    const s = (status || '').toLowerCase();
+    if (/(done|closed|resolved|merged)/.test(s)) return 'done';
+    if (/block/.test(s)) return 'blocked';
+    if (/(progress|doing|wip)/.test(s)) return 'in_progress';
+    if (/review/.test(s)) return 'review';
+    if (/ready/.test(s)) return 'ready';
+    return 'backlog';
+  }
+  const BUCKET_ORDER = ['backlog','ready','in_progress','blocked','review','done'];
+  const BUCKET_LABEL = {
+    backlog: 'Backlog',
+    ready: 'Ready',
+    in_progress: 'In progress',
+    blocked: 'Blocked',
+    review: 'Review',
+    done: 'Done'
+  };
+
+  function ticketMatchesClientQ(t, q){
+    q = (q || '').trim().toLowerCase();
+    if (!q) return true;
+    const hay = `${t.id} ${t.title} ${t.status} ${t.assignee} ${(t.tags||[]).join(' ')} ${(t.claimed_by||'')}`.toLowerCase();
+    return hay.includes(q);
+  }
+
+  async function renderTickets(){
+    const tstate = state.tickets;
+    const list = data.tickets.list || [];
+    const q = (tstate.clientQ || '').trim();
+    const gq = ($('#globalSearch')?.value || '').trim();
+    const effectiveQ = gq || q;
+
+    const filtered = list.filter(t => ticketMatchesClientQ(t, effectiveQ));
+
+    // build columns
+    let cols = [];
+    let groups = new Map();
+
+    if (tstate.bucketMode === 'status'){
+      const counts = new Map();
+      for (const t of filtered){
+        const s = t.status || 'unknown';
+        counts.set(s, (counts.get(s)||0) + 1);
+      }
+      cols = Array.from(counts.entries()).sort((a,b)=>b[1]-a[1]).map(([s]) => s);
+      // keep sane: cap at 12 columns, lump rest into "other"
+      const cap = 12;
+      const keep = cols.slice(0, cap);
+      const rest = cols.slice(cap);
+      cols = rest.length ? [...keep, '__other__'] : keep;
+
+      for (const c of cols) groups.set(c, []);
+      for (const t of filtered){
+        const s = t.status || 'unknown';
+        const k = cols.includes(s) ? s : '__other__';
+        groups.get(k).push(t);
+      }
+    } else {
+      cols = BUCKET_ORDER.slice();
+      cols.forEach(c => groups.set(c, []));
+      for (const t of filtered){
+        const b = statusBucket(t.status);
+        groups.get(b).push(t);
+      }
+    }
+
+    // sort cards: prio asc then mtime desc
+    for (const [k, arr] of groups.entries()){
+      arr.sort((a,b) => {
+        const pa = (a.priority ?? 999);
+        const pb = (b.priority ?? 999);
+        if (pa !== pb) return pa - pb;
+        const ta = parseTime(a.mtime) || 0;
+        const tb = parseTime(b.mtime) || 0;
+        return tb - ta;
+      });
+    }
+
+    // load selected detail if needed
+    const sel = tstate.selectedId;
+    if (sel && data.ticket.id !== sel) await loadTicketDetails(sel, false);
+
+    const detail = renderTicketDrawer(sel);
+
+    return `
+      <div class="split">
+        <div class="card">
+          <div class="cardHeader">
+            <div class="cardTitle">Tickets <small>/api/v1/tickets · ${filtered.length}/${data.tickets.count}</small></div>
+            <div class="row">
+              <button class="pill small" id="toggleView" type="button">${tstate.view === 'board' ? 'list' : 'board'}</button>
+              <select class="input" id="bucketMode" style="width:150px">
+                <option value="bucket" ${tstate.bucketMode==='bucket'?'selected':''}>smart buckets</option>
+                <option value="status" ${tstate.bucketMode==='status'?'selected':''}>status columns</option>
+              </select>
+              <button class="pill small" id="ticketsJson" type="button">json</button>
+            </div>
+          </div>
+
+          <div class="cardBody">
+            <div class="boardTop">
+              <input class="input" id="ticketClientQ" placeholder="filter (local)..." value="${escapeHtml(tstate.clientQ)}" style="flex: 1 1 260px;"/>
+              <select class="input" id="includeClosed" style="width:150px">
+                <option value="0" ${tstate.include_closed==='0'?'selected':''}>open only</option>
+                <option value="1" ${tstate.include_closed==='1'?'selected':''}>include closed</option>
+              </select>
+              <button class="pill small" id="filtersBtn" type="button">filters</button>
+              <span class="chip">live: ${state.live ? 'on' : 'off'}</span>
+              <span class="chip">mode: ${escapeHtml(tstate.view)}</span>
+            </div>
+
+            <div style="height:10px"></div>
+
+            ${tstate.view === 'board' ? `
+              <div class="board" id="board">
+                <div class="cols" id="cols">
+                  ${cols.map(col => {
+                    const arr = groups.get(col) || [];
+                    const name = (tstate.bucketMode === 'status')
+                      ? (col === '__other__' ? 'Other' : col)
+                      : (BUCKET_LABEL[col] || col);
+                    return `
+                      <div class="col" data-col="${escapeHtml(col)}">
+                        <div class="colHeader">
+                          <div class="name">${escapeHtml(name)}</div>
+                          <div class="count">${arr.length}</div>
+                        </div>
+                        <div class="colBody">
+                          <div class="dropHint">drop to set status</div>
+                          ${arr.map(t => renderTicketCard(t)).join('')}
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            ` : `
+              <table id="ticketTable">
+                <thead><tr>
+                  <th style="width:120px">id</th>
+                  <th>title</th>
+                  <th style="width:140px">status</th>
+                  <th style="width:70px">prio</th>
+                  <th style="width:140px">assignee</th>
+                  <th style="width:180px">mtime</th>
+                </tr></thead>
+                <tbody>
+                  ${filtered.map(t => `
+                    <tr data-open="${escapeHtml(t.id)}">
+                      <td class="mono" style="color:var(--purple)">${escapeHtml(t.id)}</td>
+                      <td><span style="color:var(--fg2)">${escapeHtml(clamp(t.title, 110))}</span><div class="muted small mono">${escapeHtml((t.tags||[]).join(', '))}</div></td>
+                      <td class="mono" style="color:var(--green)">${escapeHtml(t.status || '')}</td>
+                      <td class="right mono" style="color:var(--orange)">${escapeHtml(String(t.priority ?? ''))}</td>
+                      <td style="color:var(--blue)">${escapeHtml(t.assignee || '')}</td>
+                      <td class="mono muted">${escapeHtml(t.mtime || '')}</td>
+                    </tr>
+                  `).join('') || `<tr><td colspan="6" class="muted">No tickets.</td></tr>`}
+                </tbody>
+              </table>
+            `}
+          </div>
+        </div>
+
+        ${detail}
+      </div>
+    `;
+  }
+
+  function renderTicketCard(t){
+    const tags = (t.tags || []).slice(0, 4);
+    return `
+      <div class="cardT" draggable="true" data-id="${escapeHtml(t.id)}">
+        <div class="topLine">
+          <div class="id" style="color:var(--purple)">${escapeHtml(t.id)}</div>
+          <div class="prio" style="color:var(--orange)">p${escapeHtml(String(t.priority ?? ''))}</div>
+        </div>
+        <div class="title" style="color:var(--fg2)">${escapeHtml(t.title || '')}</div>
+        <div class="meta">
+          ${t.assignee ? `<span style="color:var(--blue)">${escapeHtml(t.assignee)}</span>` : ''}
+          ${t.claimed_by ? `<span style="color:var(--yellow)">claimed:${escapeHtml(t.claimed_by)}</span>` : ''}
+          ${tags.map(x => `<span style="color:var(--cyan)">#${escapeHtml(x)}</span>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderTicketDrawer(selId){
+    if (!selId){
+      return `
+        <div class="card drawer">
+          <div class="head">
+            <div class="h">
+              <div class="id mono">ticket</div>
+              <div class="title">Select a ticket</div>
+            </div>
+          </div>
+          <div class="body">
+            <div class="muted small">
+              Click a card (or row). Drag between columns to update status if writes are enabled.
+            </div>
+            <div class="chipRow">
+              <span class="chip">shortcuts: <span class="mono">/</span> search · <span class="mono">n</span> new · <span class="mono">l</span> live · <span class="mono">r</span> refresh</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const show = data.ticket.show;
+    const view = data.ticket.view;
+    if (!show || !view){
+      return `
+        <div class="card drawer">
+          <div class="head"><div class="h"><div class="id mono">${escapeHtml(selId)}</div><div class="title">Loading…</div></div></div>
+          <div class="body"><div class="muted">Fetching show/view…</div></div>
+        </div>
+      `;
+    }
+
+    const ticket = show.ticket || {};
+    const rel = show.relationships || {};
+    const health = view.health || {};
+    const graph = view.graph || { nodes:[], edges:[] };
+
+    const chips = [
+      ticket.status ? `<span class="chip">${escapeHtml(ticket.status)}</span>` : '',
+      (ticket.priority != null) ? `<span class="chip">prio ${escapeHtml(String(ticket.priority))}</span>` : '',
+      ticket.type ? `<span class="chip">${escapeHtml(ticket.type)}</span>` : '',
+      ticket.assignee ? `<span class="chip">${escapeHtml(ticket.assignee)}</span>` : '',
+      ticket.claimed_by ? `<span class="chip warn">claimed ${escapeHtml(ticket.claimed_by)}</span>` : ''
+    ].filter(Boolean).join('');
+
+    const depChips = (ticket.deps || []).slice(0, 16).map(x => `<span class="chip click" data-open="${escapeHtml(x)}">${escapeHtml(x)}</span>`).join('');
+    const blockChips = (rel.blockers || []).slice(0, 16).map(x => `<span class="chip bad click" data-open="${escapeHtml(x)}">${escapeHtml(x)}</span>`).join('');
+    const linkedChips = (rel.linked || []).slice(0, 16).map(x => `<span class="chip click" data-open="${escapeHtml(x)}">${escapeHtml(x)}</span>`).join('');
+
+    return `
+      <div class="card drawer" id="drawer">
+        <div class="head">
+          <div class="h">
+            <div class="id mono" style="color:var(--purple)">${escapeHtml(ticket.id || selId)}</div>
+            <div class="title" style="color:var(--fg2)">${escapeHtml(ticket.title || '')}</div>
+          </div>
+          <div class="row">
+            <button class="pill small" id="copyId" type="button">copy</button>
+            <button class="pill small" id="editTicket" type="button">edit</button>
+            <button class="pill small" id="ticketJson" type="button">json</button>
+          </div>
+        </div>
+
+        <div class="body">
+          <div class="chipRow">${chips}${(ticket.tags||[]).slice(0,8).map(x => `<span class="chip">#${escapeHtml(x)}</span>`).join('')}</div>
+
+          <div class="card" style="background:transparent; border:none">
+            <div class="cardTitle" style="margin: 6px 0 4px;">Health <small>ready=${health.ready ?? '?'} · blocked=${health.blocked ?? '?'}</small></div>
+            <div class="chipRow">
+              ${Object.entries(health.counts || {}).slice(0,12).map(([k,v]) => `<span class="chip">${escapeHtml(k)}:${escapeHtml(String(v))}</span>`).join('')}
+              ${health.bottlenecks?.length ? `<span class="chip warn">bottlenecks:${health.bottlenecks.length}</span>` : ''}
+            </div>
+          </div>
+
+          <div class="card" style="background:transparent; border:none">
+            <div class="cardTitle" style="margin: 6px 0 4px;">Deps / Blockers</div>
+            <div class="chipRow">
+              ${depChips || `<span class="muted small">deps: none</span>`}
+            </div>
+            <div style="height:6px"></div>
+            <div class="chipRow">
+              ${blockChips || `<span class="muted small">blockers: none</span>`}
+            </div>
+            <div style="height:6px"></div>
+            <div class="chipRow">
+              ${linkedChips || `<span class="muted small">linked: none</span>`}
+            </div>
+          </div>
+
+          <div class="card" style="background:transparent; border:none">
+            <div class="cardTitle" style="margin: 6px 0 4px;">Body</div>
+            <div class="md">${mdToHtml(show.body || '')}</div>
+          </div>
+
+          <div class="card" style="background:transparent; border:none">
+            <div class="cardTitle" style="margin: 6px 0 4px;">Graph <small>${graph.nodes?.length || 0} nodes · ${graph.edges?.length || 0} edges</small></div>
+            <div class="canvasWrap"><canvas id="graphCanvas"></canvas></div>
+            <div class="muted small" style="margin-top:6px">Click related ticket ids above to jump. Drag cards to update status (if writes enabled).</div>
+          </div>
+
+        </div>
+      </div>
+    `;
+  }
+
+  function bindTickets(){
+    // global search wires to tickets local filter for speed
+    const gs = $('#globalSearch');
+    if (gs){
+      const currentQ = state.tickets.clientQ || '';
+      if (gs.value !== currentQ) gs.value = currentQ;
+      if (!gs.placeholder.includes('(/)')) gs.placeholder = "Search tickets (/)…";
+    }
+
+    $('#toggleView')?.addEventListener('click', async () => {
+      state.tickets.view = (state.tickets.view === 'board') ? 'list' : 'board';
+      save();
+      await renderRoute();
+    });
+
+    $('#bucketMode')?.addEventListener('change', async (e) => {
+      state.tickets.bucketMode = e.target.value;
+      save();
+      await renderRoute();
+    });
+
+    $('#includeClosed')?.addEventListener('change', async (e) => {
+      state.tickets.include_closed = e.target.value;
+      save();
+      await loadTickets(true);
+      await renderRoute();
+    });
+
+    $('#ticketClientQ')?.addEventListener('input', (e) => {
+      state.tickets.clientQ = e.target.value;
+      save();
+      // re-render locally without refetch
+      renderRoute();
+    });
+
+    $('#filtersBtn')?.addEventListener('click', () => openFiltersDialog());
+    $('#ticketsJson')?.addEventListener('click', () => openDialog({
+      title: 'tickets.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify({ count:data.tickets.count, tickets:data.tickets.list }, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeTJ">close</button>`
+    }) || $('#closeTJ')?.addEventListener('click', closeDialog));
+
+    // list open
+    $$('[data-open]').forEach(tr => {
+      tr.addEventListener('click', async () => {
+        const id = tr.getAttribute('data-open');
+        state.tickets.selectedId = id;
+        save();
+        await loadTicketDetails(id, true);
+        await renderRoute();
+      });
+    });
+
+    // board: open ticket on click
+    $$('.cardT').forEach(card => {
+      card.addEventListener('click', async () => {
+        const id = card.getAttribute('data-id');
+        state.tickets.selectedId = id;
+        save();
+        await loadTicketDetails(id, false);
+        await renderRoute();
+      });
+    });
+
+    // drawer binds
+    $('#copyId')?.addEventListener('click', async () => {
+      const id = state.tickets.selectedId || '';
+      try{
+        await navigator.clipboard.writeText(id);
+        toast('Copied', 'ok', id);
+      } catch {
+        toast('Copy failed', 'warn');
+      }
+    });
+
+    $('#ticketJson')?.addEventListener('click', () => openDialog({
+      title: 'ticket.show+view.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify({ show: data.ticket.show, view: data.ticket.view }, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeTD">close</button>`
+    }) || $('#closeTD')?.addEventListener('click', closeDialog));
+
+    $('#editTicket')?.addEventListener('click', () => openEditTicketDialog());
+
+    // relation jump
+    $$('[data-open]').forEach(ch => {
+      ch.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const id = ch.getAttribute('data-open');
+        state.tickets.selectedId = id;
+        save();
+        await loadTicketDetails(id, true);
+        await renderRoute();
+      });
+    });
+
+    // drag/drop
+    bindBoardDnD();
+
+    // graph draw
+    const canvas = $('#graphCanvas');
+    if (canvas && data.ticket.view){
+      const nodes = data.ticket.view.graph?.nodes || [];
+      const edges = data.ticket.view.graph?.edges || [];
+      drawGraph(canvas, nodes, edges);
+      window.addEventListener('resize', () => drawGraph(canvas, nodes, edges), { passive:true });
+    }
+  }
+
+  function openFiltersDialog(){
+    const t = state.tickets;
+    openDialog({
+      title: 'Ticket filters',
+      bodyHTML: `
+        <form id="filtersForm">
+          <div class="row">
+            <div class="field">
+              <label>status (server-side)</label>
+              <input class="input" name="status" value="${escapeHtml(t.status)}" placeholder="e.g. open"/>
+            </div>
+            <div class="field">
+              <label>type</label>
+              <input class="input" name="type" value="${escapeHtml(t.type)}"/>
+            </div>
+            <div class="field">
+              <label>assignee</label>
+              <input class="input" name="assignee" value="${escapeHtml(t.assignee)}"/>
+            </div>
+            <div class="field">
+              <label>tag</label>
+              <input class="input" name="tag" value="${escapeHtml(t.tag)}"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>prio_min</label>
+              <input class="input" name="prio_min" inputmode="numeric" value="${escapeHtml(t.prio_min)}"/>
+            </div>
+            <div class="field">
+              <label>prio_max</label>
+              <input class="input" name="prio_max" inputmode="numeric" value="${escapeHtml(t.prio_max)}"/>
+            </div>
+            <div class="field">
+              <label>limit</label>
+              <input class="input" name="limit" inputmode="numeric" value="${escapeHtml(t.limit)}"/>
+            </div>
+          </div>
+          <div class="muted small" style="margin-top:8px">
+            KISS: server filters are coarse. Use the global search and local filter for speed.
+          </div>
+        </form>
+      `,
+      footHTML: `
+        <button class="pill small" type="button" id="cancelF">cancel</button>
+        <button class="pill small ok" type="button" id="applyF">apply</button>
+      `
+    });
+    $('#cancelF')?.addEventListener('click', closeDialog);
+    $('#applyF')?.addEventListener('click', async () => {
+      const fd = new FormData($('#filtersForm'));
+      for (const k of ['status','type','assignee','tag','prio_min','prio_max','limit']){
+        state.tickets[k] = (fd.get(k) ?? '').toString().trim();
+      }
+      save();
+      closeDialog();
+      await loadTickets(true);
+      await renderRoute();
+      toast('Filters applied', 'ok');
+    });
+  }
+
+  function openEditTicketDialog(){
+    const writesEnabled = !!data.health?.writes_enabled;
+    if (!writesEnabled){
+      toast('Writes disabled', 'warn', 'Enable writes to edit tickets.');
+      return;
+    }
+    const id = state.tickets.selectedId;
+    const t = data.ticket.show?.ticket || {};
+    const body = data.ticket.show?.body || '';
+
+    openDialog({
+      title: `Edit ${id}`,
+      bodyHTML: `
+        <form id="editForm">
+          <div class="row">
+            <div class="field" style="flex:2 1 340px">
+              <label>title</label>
+              <input class="input" name="title" value="${escapeHtml(t.title || '')}"/>
+            </div>
+            <div class="field" style="min-width:180px">
+              <label>status</label>
+              <input class="input" name="status" value="${escapeHtml(t.status || '')}"/>
+            </div>
+            <div class="field" style="min-width:140px">
+              <label>priority</label>
+              <input class="input" name="priority" inputmode="numeric" value="${escapeHtml(String(t.priority ?? ''))}"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field">
+              <label>type</label>
+              <input class="input" name="type" value="${escapeHtml(t.type || '')}"/>
+            </div>
+            <div class="field">
+              <label>assignee</label>
+              <input class="input" name="assignee" value="${escapeHtml(t.assignee || '')}"/>
+            </div>
+            <div class="field">
+              <label>tags (comma)</label>
+              <input class="input" name="tags" value="${escapeHtml((t.tags||[]).join(', '))}"/>
+            </div>
+            <div class="field">
+              <label>external_ref</label>
+              <input class="input" name="external_ref" value="${escapeHtml(t.external_ref || '')}"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field" style="flex:1 1 680px">
+              <label>body (markdown)</label>
+              <textarea class="input" name="body" style="min-height:220px">${escapeHtml(body)}</textarea>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field" style="min-width:180px">
+              <label>force</label>
+              <select class="input" name="force">
+                <option value="">(default)</option>
+                <option value="true">true</option>
+                <option value="false">false</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      `,
+      footHTML: `
+        <button class="pill small" type="button" id="cancelE">cancel</button>
+        <button class="pill small ok" type="button" id="saveE">save</button>
+      `
+    });
+
+    $('#cancelE')?.addEventListener('click', closeDialog);
+    $('#saveE')?.addEventListener('click', async () => {
+      const fd = new FormData($('#editForm'));
+      const payload = {};
+      for (const [k,v] of fd.entries()){
+        const s = (v ?? '').toString();
+        if (!s.trim()) continue;
+        payload[k] = s.trim();
+      }
+      if (payload.priority !== undefined) payload.priority = Number(payload.priority);
+      if (payload.force !== undefined) payload.force = (payload.force === 'true');
+
+      try{
+        const res = await api(`/api/v1/tickets/${encodeURIComponent(id)}`, { method:'PATCH', body: payload });
+        toast('Updated', 'ok', res.id);
+        closeDialog();
+        await loadTickets(true);
+        await loadTicketDetails(id, true);
+        await renderRoute();
+      } catch (err){
+        toast('Update failed', 'bad', err.message || String(err));
+      }
+    });
+  }
+
+  function bindBoardDnD(){
+    const cards = $$('.cardT');
+    const cols = $$('.col');
+
+    cards.forEach(c => {
+      c.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', c.getAttribute('data-id'));
+        e.dataTransfer.effectAllowed = 'move';
+      });
+    });
+
+    cols.forEach(col => {
+      col.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        col.classList.add('dragover');
+        e.dataTransfer.dropEffect = 'move';
+      });
+      col.addEventListener('dragleave', () => col.classList.remove('dragover'));
+      col.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        col.classList.remove('dragover');
+        const id = e.dataTransfer.getData('text/plain');
+        const targetCol = col.getAttribute('data-col');
+        if (!id || !targetCol) return;
+
+        const writesEnabled = !!data.health?.writes_enabled;
+        if (!writesEnabled){
+          toast('Writes disabled', 'warn', 'Cannot update status.');
+          return;
+        }
+
+        // Determine new status based on column mode
+        let newStatus = null;
+        if (state.tickets.bucketMode === 'status'){
+          if (targetCol === '__other__'){
+            toast('Other column', 'warn', 'Choose a concrete status column.');
+            return;
+          }
+          newStatus = targetCol;
+        } else {
+          // smart bucket: use canonical bucket name as status (simple, consistent)
+          newStatus = targetCol;
+        }
+
+        // Optimistic update in local list
+        const t = (data.tickets.list || []).find(x => x.id === id);
+        const old = t ? t.status : null;
+        if (t) t.status = newStatus;
+
+        try{
+          await api(`/api/v1/tickets/${encodeURIComponent(id)}`, { method:'PATCH', body: { status: newStatus } });
+          toast('Status updated', 'ok', `${id} → ${newStatus}`);
+          // refresh in background for truth
+          data.tickets.at = 0;
+          await loadTickets(true);
+          await renderRoute();
+        } catch (err){
+          // rollback
+          if (t) t.status = old;
+          toast('Update failed', 'bad', err.message || String(err));
+          await renderRoute();
+        }
+      });
+    });
+  }
+
+  function drawGraph(canvas, nodes, edges){
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.clientWidth || 640;
+    const h = canvas.clientHeight || 260;
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+
+    ctx.clearRect(0,0,w,h);
+
+    if (!nodes || !nodes.length){
+      ctx.fillStyle = getCSS('--muted');
+      ctx.font = `12px ${getCSS('--mono')}`;
+      ctx.fillText('No graph', 10, 18);
+      return;
+    }
+
+    // simple circular layout
+    const cx = w/2, cy = h/2;
+    const r = Math.min(w,h) * 0.33;
+    const pos = {};
+    const N = nodes.length;
+    nodes.forEach((id, i) => {
+      const a = (Math.PI * 2 * i) / N - Math.PI/2;
+      pos[id] = { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+    });
+
+    const edgeColor = (kind) => {
+      const k = (kind || '').toLowerCase();
+      if (k.includes('block')) return getCSS('--red');
+      if (k.includes('dep')) return getCSS('--blue');
+      return getCSS('--border2');
+    };
+
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.95;
+    (edges || []).forEach(e => {
+      const a = pos[e.src], b = pos[e.dst];
+      if (!a || !b) return;
+      ctx.strokeStyle = edgeColor(e.kind);
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    });
+
+    ctx.globalAlpha = 1;
+    const fill = getCSS('--panel');
+    const stroke = getCSS('--border2');
+    const text = getCSS('--fg');
+    ctx.font = `11px ${getCSS('--mono')}`;
+    nodes.forEach(id => {
+      const p = pos[id];
+      ctx.fillStyle = fill;
+      ctx.strokeStyle = stroke;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 10, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = text;
+      const label = String(id).length > 10 ? String(id).slice(0,9)+'…' : String(id);
+      ctx.fillText(label, p.x + 14, p.y + 4);
+    });
+  }
+
+  function getCSS(v){
+    return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  }
+
+  // Teams
+  async function loadTeams(force=false){
+    const age = Date.now() - data.teams.at;
+    if (!force && data.teams.list && age < 12000) return;
+    try{
+      const res = await api('/api/v1/teams');
+      data.teams.list = res.teams || [];
+      data.teams.at = Date.now();
+    } catch (err){
+      toast('Teams failed', 'bad', err.message || String(err));
+    }
+  }
+
+  async function loadTeamBundle(team){
+    if (!team) return;
+    try{
+      const limit = state.teams.limit || '120';
+      const [status, run, events, inbox, captures] = await Promise.all([
+        api(`/api/v1/teams/${encodeURIComponent(team)}/status`),
+        api(`/api/v1/teams/${encodeURIComponent(team)}/run`),
+        api(`/api/v1/teams/${encodeURIComponent(team)}/events`, { query: { limit } }),
+        api(`/api/v1/teams/${encodeURIComponent(team)}/inbox`, { query: { limit: 50 } }),
+        api(`/api/v1/teams/${encodeURIComponent(team)}/captures`, { query: { limit: 50 } })
+      ]);
+      data.teams.bundle = { team, status, run, events, inbox, captures };
+    } catch (err){
+      toast('Team fetch failed', 'bad', err.message || String(err));
+    }
+  }
+
+  async function renderTeams(){
+    const list = data.teams.list || [];
+    const sel = state.teams.selected || '';
+    if (sel && (!data.teams.bundle || data.teams.bundle.team !== sel)) await loadTeamBundle(sel);
+
+    const b = data.teams.bundle;
+
+    return `
+      <div class="split">
+        <div class="card">
+          <div class="cardHeader">
+            <div class="cardTitle">Teams <small>/api/v1/teams</small></div>
+            <div class="row">
+              <button class="pill small" id="teamsRefresh" type="button">refresh</button>
+              <button class="pill small" id="teamsJson" type="button">json</button>
+            </div>
+          </div>
+          <div class="cardBody">
+            <div class="row">
+              <div class="field" style="min-width:180px">
+                <label>events limit</label>
+                <input class="input" id="teamLimit" value="${escapeHtml(state.teams.limit)}"/>
+              </div>
+              <div class="field" style="flex:0 0 auto; min-width:160px">
+                <label>&nbsp;</label>
+                <button class="pill small ok" id="applyTeamLimit" type="button">apply</button>
+              </div>
+            </div>
+            <div style="height:10px"></div>
+            <table id="teamsTable">
+              <thead><tr><th>team</th><th style="width:170px">updated</th></tr></thead>
+              <tbody>
+                ${list.map(t => `
+                  <tr data-team="${escapeHtml(t.team)}">
+                    <td><span class="mono" style="color:var(--blue)">${escapeHtml(t.team)}</span><div class="muted small">${escapeHtml(clamp(t.objective || '', 120))}</div></td>
+                    <td class="mono muted">${escapeHtml(t.updated_at || '')}</td>
+                  </tr>
+                `).join('') || `<tr><td colspan="2" class="muted">No teams.</td></tr>`}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card drawer">
+          <div class="head">
+            <div class="h">
+              <div class="id mono" style="color:var(--blue)">${sel ? escapeHtml(sel) : 'team'}</div>
+              <div class="title" style="color:var(--fg2)">${sel ? 'Live run state' : 'Select a team'}</div>
+            </div>
+            <div class="row">
+              <button class="pill small" id="teamReload" type="button">reload</button>
+              <button class="pill small" id="teamBundleJson" type="button">json</button>
+            </div>
+          </div>
+          <div class="body">
+            ${sel && b ? `
+              <div class="chipRow">
+                <span class="chip">events:${(b.events?.events || []).length}</span>
+                <span class="chip">unread:${(b.inbox?.unread || []).length}</span>
+                <span class="chip">captures:${(b.captures?.captures || []).length}</span>
+              </div>
+
+              <div class="cardTitle" style="margin: 6px 0 4px;">status snapshot</div>
+              <pre class="monoBlock">${escapeHtml(JSON.stringify(b.status, null, 2))}</pre>
+
+              <div class="cardTitle" style="margin: 6px 0 4px;">events (tail)</div>
+              <pre class="monoBlock">${escapeHtml(JSON.stringify((b.events?.events || []).slice(0, 60), null, 2))}</pre>
+
+              <div class="cardTitle" style="margin: 6px 0 4px;">inbox</div>
+              <pre class="monoBlock">${escapeHtml(JSON.stringify({ unread: (b.inbox?.unread || []).slice(0, 20), read: (b.inbox?.read || []).slice(0, 20) }, null, 2))}</pre>
+
+              <div class="cardTitle" style="margin: 6px 0 4px;">captures</div>
+              <pre class="monoBlock">${escapeHtml(JSON.stringify((b.captures?.captures || []).slice(0, 30), null, 2))}</pre>
+
+            ` : `<div class="muted small">Pick a team to watch. This is the closest thing to “realtime unfolding” the API gives us without websockets.</div>`}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function bindTeams(){
+    $('#teamsRefresh')?.addEventListener('click', async () => { await loadTeams(true); await renderRoute(); toast('Teams refreshed','ok'); });
+    $('#teamsJson')?.addEventListener('click', () => openDialog({
+      title: 'teams.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify(data.teams.list, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeTJ2">close</button>`
+    }) || $('#closeTJ2')?.addEventListener('click', closeDialog));
+
+    $('#applyTeamLimit')?.addEventListener('click', async () => {
+      state.teams.limit = ($('#teamLimit')?.value || '120').trim() || '120';
+      save();
+      if (state.teams.selected){
+        await loadTeamBundle(state.teams.selected);
+        await renderRoute();
+      } else toast('Saved', 'ok');
+    });
+
+    $$('#teamsTable tr[data-team]').forEach(tr => {
+      tr.addEventListener('click', async () => {
+        const team = tr.getAttribute('data-team');
+        state.teams.selected = team;
+        save();
+        await loadTeamBundle(team);
+        await renderRoute();
+      });
+    });
+
+    $('#teamReload')?.addEventListener('click', async () => {
+      const team = state.teams.selected;
+      if (!team) return;
+      await loadTeamBundle(team);
+      await renderRoute();
+      toast('Reloaded', 'ok', team);
+    });
+
+    $('#teamBundleJson')?.addEventListener('click', () => openDialog({
+      title: 'team.bundle.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify(data.teams.bundle, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeTB">close</button>`
+    }) || $('#closeTB')?.addEventListener('click', closeDialog));
+  }
+
+  // Memory
+  async function loadMemoryRecall(force=false){
+    try{
+      const m = state.memory;
+      const wantsContext = (m.context || '0') === '1';
+      const contextHasInput = !!(String(m.q || '').trim() || splitCSV(m.tag).length || splitCSV(m.scope).length);
+      if (wantsContext && !contextHasInput){
+        state.memory.context = '0';
+        save();
+        toast('Context needs a query', 'warn', 'Add query/tag/scope or disable context.');
+      }
+      const useContext = (state.memory.context || '0') === '1';
+      const query = {
+        vault: m.vault || '.memory',
+        q: m.q || '',
+        limit: m.limit || '10',
+        tag: splitCSV(m.tag),
+        not_tag: splitCSV(m.not_tag),
+        scope: splitCSV(m.scope),
+        not_scope: splitCSV(m.not_scope),
+        visibility: splitCSV(m.visibility),
+        expand: m.expand || '0',
+        context: useContext ? '1' : '0',
+        deterministic: m.deterministic || '0',
+        include_deprecated: m.include_deprecated || '0',
+        format: useContext ? 'md' : 'json'
+      };
+      const res = await api('/api/v1/memory/recall', { query });
+      data.memory.results = res;
+    } catch (err){
+      toast('Recall failed','bad', err.message || String(err));
+    }
+  }
+  async function loadMemoryNote(id){
+    if (!id) return;
+    try{
+      const res = await api(`/api/v1/memory/notes/${encodeURIComponent(id)}`, { query: { vault: state.memory.vault || '.memory' } });
+      data.memory.note = res;
+    } catch (err){
+      toast('Note failed','bad', err.message || String(err));
+    }
+  }
+  function splitCSV(s){
+    s = (s ?? '').toString().trim();
+    if (!s) return [];
+    return s.split(',').map(x => x.trim()).filter(Boolean);
+  }
+
+  async function renderMemory(){
+    const r = data.memory.results;
+    const items = r?.items || [];
+    const contextText = r?.context_text || '';
+    const hasContextText = !!contextText.trim();
+    const note = data.memory.note?.note || null;
+
+    return `
+      <div class="split">
+        <div class="card">
+          <div class="cardHeader">
+            <div class="cardTitle">Recall <small>/api/v1/memory/recall</small></div>
+            <div class="row">
+              <button class="pill small" id="recallNow" type="button">recall</button>
+              <button class="pill small" id="recallJson" type="button">json</button>
+            </div>
+          </div>
+          <div class="cardBody">
+            <div class="row">
+              <div class="field" style="min-width:240px">
+                <label>vault</label>
+                <input class="input" id="mVault" value="${escapeHtml(state.memory.vault)}"/>
+              </div>
+              <div class="field" style="min-width:140px">
+                <label>limit</label>
+                <input class="input" id="mLimit" value="${escapeHtml(state.memory.limit)}"/>
+              </div>
+              <div class="field" style="flex:2 1 340px">
+                <label>query</label>
+                <input class="input" id="mQ" value="${escapeHtml(state.memory.q)}" placeholder="search..."/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label>tag (comma)</label>
+                <input class="input" id="mTag" value="${escapeHtml(state.memory.tag)}"/>
+              </div>
+              <div class="field">
+                <label>not_tag</label>
+                <input class="input" id="mNotTag" value="${escapeHtml(state.memory.not_tag)}"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label>scope</label>
+                <input class="input" id="mScope" value="${escapeHtml(state.memory.scope)}"/>
+              </div>
+              <div class="field">
+                <label>not_scope</label>
+                <input class="input" id="mNotScope" value="${escapeHtml(state.memory.not_scope)}"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label>visibility</label>
+                <input class="input" id="mVis" value="${escapeHtml(state.memory.visibility)}"/>
+              </div>
+              <div class="field" style="min-width:160px">
+                <label>expand</label>
+                <select class="input" id="mExpand">
+                  <option value="0" ${state.memory.expand==='0'?'selected':''}>0</option>
+                  <option value="1" ${state.memory.expand==='1'?'selected':''}>1</option>
+                </select>
+              </div>
+              <div class="field" style="min-width:160px">
+                <label>context</label>
+                <select class="input" id="mContext">
+                  <option value="1" ${state.memory.context==='1'?'selected':''}>1</option>
+                  <option value="0" ${state.memory.context==='0'?'selected':''}>0</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="height:10px"></div>
+            ${hasContextText ? `
+              <div class="cardTitle" style="margin: 6px 0 4px;">context pack</div>
+              <pre class="monoBlock">${escapeHtml(contextText)}</pre>
+              <div class="muted small" style="margin-top:6px">Context packs render as text/markdown; switch context to 0 for structured results.</div>
+            ` : `
+              <table id="memTable">
+                <thead><tr><th style="width:140px">id</th><th>title</th><th style="width:110px">score</th></tr></thead>
+                <tbody>
+                  ${items.map(it => `
+                    <tr data-note="${escapeHtml(it.id)}">
+                      <td class="mono">${escapeHtml(it.id)}</td>
+                      <td>${escapeHtml(clamp(it.title, 110))}<div class="muted small mono">${escapeHtml(clamp(it.preview || '', 140))}</div></td>
+                      <td class="right mono">${it.score?.final != null ? escapeHtml(it.score.final.toFixed(3)) : ''}</td>
+                    </tr>
+                  `).join('') || `<tr><td colspan="3" class="muted">No results.</td></tr>`}
+                </tbody>
+              </table>
+            `}
+          </div>
+        </div>
+
+        <div class="card drawer">
+          <div class="head">
+            <div class="h">
+              <div class="id mono">${note ? escapeHtml(note.id) : 'note'}</div>
+              <div class="title">${note ? escapeHtml(note.title || '') : 'Select a note'}</div>
+            </div>
+            <div class="row">
+              <button class="pill small" id="noteJson" type="button">json</button>
+            </div>
+          </div>
+          <div class="body">
+            ${note ? `
+              <div class="chipRow">
+                <span class="chip">${escapeHtml(note.visibility || '')}</span>
+                <span class="chip">${escapeHtml(note.status || '')}</span>
+                ${(note.tags || []).slice(0,10).map(x => `<span class="chip">#${escapeHtml(x)}</span>`).join('')}
+              </div>
+              <div class="md">${mdToHtml(note.body || '')}</div>
+            ` : `<div class="muted small">Memory is file-backed. This UI is just a flashlight.</div>`}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function bindMemory(){
+    $('#recallNow')?.addEventListener('click', async () => {
+      state.memory.vault = ($('#mVault')?.value || '.memory').trim() || '.memory';
+      state.memory.limit = ($('#mLimit')?.value || '10').trim() || '10';
+      state.memory.q = ($('#mQ')?.value || '').trim();
+      state.memory.tag = ($('#mTag')?.value || '').trim();
+      state.memory.not_tag = ($('#mNotTag')?.value || '').trim();
+      state.memory.scope = ($('#mScope')?.value || '').trim();
+      state.memory.not_scope = ($('#mNotScope')?.value || '').trim();
+      state.memory.visibility = ($('#mVis')?.value || '').trim();
+      state.memory.expand = ($('#mExpand')?.value || '0').trim() || '0';
+      state.memory.context = ($('#mContext')?.value || '1').trim() || '1';
+      save();
+      await loadMemoryRecall(true);
+      await renderRoute();
+      toast('Recall complete','ok', `${(data.memory.results?.items || []).length} items`);
+    });
+
+    $('#recallJson')?.addEventListener('click', () => openDialog({
+      title: 'recall.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify(data.memory.results, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeR">close</button>`
+    }) || $('#closeR')?.addEventListener('click', closeDialog));
+
+    $$('#memTable tr[data-note]').forEach(tr => {
+      tr.addEventListener('click', async () => {
+        const id = tr.getAttribute('data-note');
+        await loadMemoryNote(id);
+        await renderRoute();
+      });
+    });
+
+    $('#noteJson')?.addEventListener('click', () => openDialog({
+      title: 'note.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify(data.memory.note, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeN">close</button>`
+    }) || $('#closeN')?.addEventListener('click', closeDialog));
+  }
+
+  // Workspace
+  async function loadWorkspace(force=false){
+    try{
+      const w = state.workspace;
+      const [meta, worktrees, services] = await Promise.all([
+        api('/api/v1/workspace/meta', { query: { mode: w.mode || 'auto', ...(w.root ? { root: w.root } : {}) } }),
+        api('/api/v1/workspace/worktrees', { query: {
+          mode: w.mode || 'auto',
+          ...(w.root ? { root: w.root } : {}),
+          ...(w.q ? { q: w.q } : {}),
+          ...(w.dirty ? { dirty: w.dirty } : {}),
+          ...(w.group ? { group: w.group } : {}),
+          ...(w.repo ? { repo: w.repo } : {}),
+          ...(w.missing ? { missing: w.missing } : {})
+        }}),
+        api('/api/v1/workspace/services/index', { query: { mode: w.mode || 'auto', ...(w.root ? { root: w.root } : {}) } }).catch(() => null)
+      ]);
+      data.workspace.meta = meta;
+      data.workspace.worktrees = worktrees;
+      data.workspace.services = services;
+    } catch (err){
+      toast('Workspace failed','bad', err.message || String(err));
+    }
+  }
+
+  async function renderWorkspace(){
+    const meta = data.workspace.meta;
+    const wt = data.workspace.worktrees;
+    const sv = data.workspace.services;
+
+    return `
+      <div class="card">
+        <div class="cardHeader">
+          <div class="cardTitle">Workspace <small>/api/v1/workspace/*</small></div>
+          <div class="row">
+            <button class="pill small" id="wsReload" type="button">reload</button>
+            <button class="pill small" id="wsJson" type="button">json</button>
+          </div>
+        </div>
+          <div class="cardBody">
+          <div class="row wsControls">
+            <div class="field" style="min-width:160px">
+              <label>mode</label>
+              <select class="input" id="wsMode">
+                <option value="auto" ${state.workspace.mode==='auto'?'selected':''}>auto</option>
+                <option value="repo" ${state.workspace.mode==='repo'?'selected':''}>repo</option>
+                <option value="poly" ${state.workspace.mode==='poly'?'selected':''}>poly</option>
+              </select>
+            </div>
+            <div class="field" style="flex:2 1 420px; min-width:240px">
+              <label>root</label>
+              <input class="input" id="wsRoot" value="${escapeHtml(state.workspace.root)}" placeholder="optional"/>
+            </div>
+            <div class="field" style="min-width:220px">
+              <label>q</label>
+              <input class="input" id="wsQ" value="${escapeHtml(state.workspace.q)}" placeholder="search path..."/>
+            </div>
+            <div class="field" style="min-width:150px">
+              <label>dirty (1/0)</label>
+              <input class="input" id="wsDirty" value="${escapeHtml(state.workspace.dirty)}"/>
+            </div>
+            <div class="field" style="min-width:150px">
+              <label>missing (1/0)</label>
+              <input class="input" id="wsMissing" value="${escapeHtml(state.workspace.missing)}"/>
+            </div>
+            <div class="field" style="flex:0 0 auto; min-width:160px">
+              <label>&nbsp;</label>
+              <button class="pill small ok" id="wsApply" type="button">apply</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardHeader"><div class="cardTitle">worktrees <small>${wt?.count ?? 0}</small></div></div>
+            <div class="cardBody">
+              <table>
+                <thead><tr><th style="width:80px">mode</th><th>path</th><th style="width:80px">dirty</th><th style="width:90px">missing</th><th style="width:140px">branch</th></tr></thead>
+                <tbody>
+                  ${(wt?.worktrees || []).slice(0, 300).map(w => `
+                    <tr>
+                      <td class="mono" style="color:var(--purple)">${escapeHtml(w.mode || '')}</td>
+                       <td><span class="mono" style="color:var(--blue)">${escapeHtml(w.path || '')}</span><div class="muted small mono">${escapeHtml(w.group ? (w.group + '/' + (w.repo||'')) : (w.ref || w.head || ''))}</div></td>
+                      <td class="mono" style="color:${w.dirty?'var(--red)':'var(--muted)'}">${w.dirty ? 'yes' : 'no'}</td>
+                      <td class="mono" style="color:${w.missing?'var(--red)':'var(--muted)'}">${w.missing ? 'yes' : 'no'}</td>
+                      <td class="mono">${escapeHtml(w.branch || '')}</td>
+                    </tr>
+                  `).join('') || `<tr><td colspan="5" class="muted">No worktrees.</td></tr>`}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="height:10px"></div>
+
+          <div class="split">
+            <div class="card">
+              <div class="cardHeader"><div class="cardTitle">meta</div></div>
+              <div class="cardBody"><pre class="monoBlock">${escapeHtml(JSON.stringify(meta, null, 2))}</pre></div>
+            </div>
+            <div class="card">
+              <div class="cardHeader"><div class="cardTitle">services index <small>poly only</small></div></div>
+              <div class="cardBody"><pre class="monoBlock">${escapeHtml(sv ? JSON.stringify(sv, null, 2) : 'Not available')}</pre></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function bindWorkspace(){
+    const apply = async () => {
+      state.workspace.mode = ($('#wsMode')?.value || 'auto').trim() || 'auto';
+      state.workspace.root = ($('#wsRoot')?.value || '').trim();
+      state.workspace.q = ($('#wsQ')?.value || '').trim();
+      state.workspace.dirty = ($('#wsDirty')?.value || '').trim();
+      state.workspace.missing = ($('#wsMissing')?.value || '').trim();
+      save();
+      await loadWorkspace(true);
+      await renderRoute();
+      toast('Workspace updated','ok');
+    };
+    $('#wsApply')?.addEventListener('click', apply);
+    $('#wsReload')?.addEventListener('click', async () => { await loadWorkspace(true); await renderRoute(); toast('Reloaded','ok'); });
+    $('#wsJson')?.addEventListener('click', () => openDialog({
+      title: 'workspace.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify(data.workspace, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeWJ">close</button>`
+    }) || $('#closeWJ')?.addEventListener('click', closeDialog));
+  }
+
+  // Compound
+  async function loadCompound(force=false){
+    try{
+      const [skills, instincts] = await Promise.all([
+        api('/api/v1/compound/skills'),
+        api('/api/v1/compound/instincts').catch(() => null)
+      ]);
+      data.compound.skills = skills;
+      data.compound.instincts = instincts;
+      const sel = (state.compound.selectedSkill || '').trim();
+      if (sel) await loadSkill(sel);
+    } catch (err){
+      toast('Compound failed','bad', err.message || String(err));
+    }
+  }
+
+  async function loadSkill(name){
+    if (!name) return;
+    try{
+      const s = await api(`/api/v1/compound/skills/${encodeURIComponent(name)}`);
+      data.compound.skill = s;
+      state.compound.selectedSkill = name;
+      save();
+    } catch (err){
+      toast('Skill failed','bad', err.message || String(err));
+    }
+  }
+
+  async function renderCompound(){
+    const skills = data.compound.skills?.skills || [];
+    const skill = data.compound.skill || null;
+    const instincts = data.compound.instincts;
+
+    return `
+      <div class="split">
+        <div class="card">
+          <div class="cardHeader">
+            <div class="cardTitle">Skills <small>/api/v1/compound/skills</small></div>
+            <div class="row">
+              <button class="pill small" id="compReload" type="button">reload</button>
+              <button class="pill small" id="skillsJson" type="button">json</button>
+            </div>
+          </div>
+          <div class="cardBody">
+            <table id="skillsTable">
+              <thead><tr><th>name</th><th style="width:160px">path</th></tr></thead>
+              <tbody>
+                ${skills.map(s => `
+                  <tr data-skill="${escapeHtml(s.name)}">
+                    <td><span class="mono" style="color:var(--cyan)">${escapeHtml(s.name)}</span><div class="muted small">${escapeHtml(clamp(s.skill_md || '', 120))}</div></td>
+                    <td class="mono muted">${escapeHtml(clamp(s.path || '', 28))}</td>
+                  </tr>
+                `).join('') || `<tr><td colspan="2" class="muted">No skills.</td></tr>`}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card drawer">
+          <div class="head">
+            <div class="h">
+              <div class="id mono">${skill ? escapeHtml(skill.name) : 'skill'}</div>
+              <div class="title">${skill ? escapeHtml(skill.path || '') : 'Select a skill'}</div>
+            </div>
+            <div class="row">
+              <button class="pill small" id="skillJson" type="button">json</button>
+            </div>
+          </div>
+          <div class="body">
+            ${skill ? `<div class="md">${mdToHtml(skill.text || '')}</div>` : `<div class="muted small">Skills are how “speed of thought” becomes “speed of shipping.”</div>`}
+            <div style="height:10px"></div>
+            <div class="cardTitle">instincts <small>/api/v1/compound/instincts</small></div>
+            <pre class="monoBlock">${escapeHtml(instincts ? JSON.stringify(instincts, null, 2) : 'Not available')}</pre>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function bindCompound(){
+    $('#compReload')?.addEventListener('click', async () => { data.compound = { skills:null, skill:null, instincts:null }; await loadCompound(true); await renderRoute(); toast('Reloaded','ok'); });
+    $('#skillsJson')?.addEventListener('click', () => openDialog({
+      title: 'skills.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify(data.compound.skills, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeSJ">close</button>`
+    }) || $('#closeSJ')?.addEventListener('click', closeDialog));
+
+    $$('#skillsTable tr[data-skill]').forEach(tr => {
+      tr.addEventListener('click', async () => {
+        const name = tr.getAttribute('data-skill');
+        await loadSkill(name);
+        await renderRoute();
+      });
+    });
+
+    $('#skillJson')?.addEventListener('click', () => openDialog({
+      title: 'skill.json',
+      bodyHTML: `<pre class="monoBlock">${escapeHtml(JSON.stringify(data.compound.skill, null, 2))}</pre>`,
+      footHTML: `<button class="pill small" type="button" id="closeSkJ">close</button>`
+    }) || $('#closeSkJ')?.addEventListener('click', closeDialog));
+  }
+
+  // Settings
+  async function renderSettings(){
+    const h = data.health;
+    return `
+      <div class="grid">
+        <div class="card" style="grid-column: span 7;">
+          <div class="cardHeader">
+            <div class="cardTitle">Connection <small>stored locally</small></div>
+            <div class="row">
+              <button class="pill small" id="testBtn" type="button">test</button>
+              <button class="pill small bad" id="resetBtn" type="button">reset</button>
+            </div>
+          </div>
+          <div class="cardBody">
+            <div class="row">
+              <div class="field" style="flex:2 1 420px">
+                <label>base url</label>
+                <input class="input" id="baseUrl" value="${escapeHtml(normBase(state.baseUrl))}" placeholder="http://127.0.0.1:8764"/>
+                <div class="muted small">Use same-origin if possible. Otherwise you need CORS or a proxy.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field" style="min-width:220px">
+                <label>auth mode</label>
+                <select class="input" id="authMode">
+                  <option value="none" ${state.authMode==='none'?'selected':''}>none</option>
+                  <option value="loom" ${state.authMode==='loom'?'selected':''}>X-Loom-Token</option>
+                  <option value="bearer" ${state.authMode==='bearer'?'selected':''}>Bearer</option>
+                </select>
+              </div>
+              <div class="field" style="flex:2 1 420px">
+                <label>token</label>
+                <input class="input" id="token" value="${escapeHtml(state.token)}" placeholder="paste token..."/>
+                <div class="muted small">Writes require token when token_required=true.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="field" style="min-width:200px">
+                <label>theme</label>
+                <select class="input" id="themeSel">
+                  <option value="dark" ${state.theme==='dark'?'selected':''}>dark</option>
+                  <option value="light" ${state.theme==='light'?'selected':''}>light</option>
+                </select>
+              </div>
+              <div class="field" style="flex:0 0 auto; min-width:160px">
+                <label>&nbsp;</label>
+                <button class="pill small ok" id="saveSettings" type="button">save</button>
+              </div>
+            </div>
+
+            <div style="height:10px"></div>
+            <div class="chipRow">
+              <span class="chip">${h?.workspace_mode ? escapeHtml(h.workspace_mode) : 'workspace'}</span>
+              <span class="chip ${h?.writes_enabled ? 'ok' : 'warn'}">writes: ${h?.writes_enabled ? 'enabled' : 'disabled'}</span>
+              <span class="chip ${h?.token_required ? 'warn' : 'ok'}">token_required: ${h?.token_required ? 'true' : 'false'}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="grid-column: span 5;">
+          <div class="cardHeader">
+            <div class="cardTitle">About <small>zen, not shiny</small></div>
+          </div>
+          <div class="cardBody">
+            <div class="muted small">
+              This UI intentionally avoids gradients, oversized controls, and internal endpoints.
+              It’s built for the person running agents and wanting visibility without ceremony.
+              <ul>
+                <li>Kanban board with drag-to-update status</li>
+                <li>Live polling for “realtime” (toggle in top bar)</li>
+                <li>Nudge panel for stale/blocked signal</li>
+              </ul>
+            </div>
+            <div class="chipRow">
+              <span class="chip">shortcuts: <span class="mono">g</span> + <span class="mono">t</span> tickets</span>
+              <span class="chip"><span class="mono">/</span> search</span>
+              <span class="chip"><span class="mono">l</span> live</span>
+              <span class="chip"><span class="mono">n</span> new</span>
+              <span class="chip"><span class="mono">r</span> refresh</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function bindSettings(){
+    $('#saveSettings')?.addEventListener('click', async () => {
+      state.baseUrl = normBase($('#baseUrl')?.value || location.origin);
+      state.authMode = $('#authMode')?.value || 'none';
+      state.token = ($('#token')?.value || '').trim();
+      setTheme($('#themeSel')?.value || 'dark');
+      save();
+      await loadHealthCaps(true);
+      toast('Saved','ok');
+      await renderRoute();
+    });
+
+    $('#testBtn')?.addEventListener('click', async () => {
+      await loadHealthCaps(true);
+      toast('Tested','ok', normBase(state.baseUrl));
+      await renderRoute();
+    });
+
+    $('#resetBtn')?.addEventListener('click', async () => {
+      state = structuredClone(defaults);
+      save();
+      setTheme(state.theme);
+      toast('Reset','ok');
+      await loadHealthCaps(true);
+      goto('overview');
+      await renderRoute();
+    });
+  }
+
+  // Create ticket
+  function openCreateTicketDialog(){
+    const writesEnabled = !!data.health?.writes_enabled;
+    if (!writesEnabled){
+      toast('Writes disabled','warn','Enable writes to create tickets.');
+      return;
+    }
+    openDialog({
+      title: 'New ticket',
+      bodyHTML: `
+        <form id="createForm">
+          <div class="row">
+            <div class="field" style="flex:2 1 420px">
+              <label>title *</label>
+              <input class="input" name="title" placeholder="Ship agent dashboard" required/>
+            </div>
+            <div class="field" style="min-width:180px">
+              <label>type</label>
+              <input class="input" name="type" placeholder="task"/>
+            </div>
+            <div class="field" style="min-width:140px">
+              <label>priority</label>
+              <input class="input" name="priority" inputmode="numeric" placeholder="1"/>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label>tags (comma)</label>
+              <input class="input" name="tags" placeholder="ui, ops"/>
+            </div>
+            <div class="field">
+              <label>assignee</label>
+              <input class="input" name="assignee" placeholder=""/>
+            </div>
+            <div class="field">
+              <label>external_ref</label>
+              <input class="input" name="external_ref" placeholder=""/>
+            </div>
+            <div class="field">
+              <label>parent</label>
+              <input class="input" name="parent" placeholder=""/>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field" style="flex:1 1 680px">
+              <label>description</label>
+              <textarea class="input" name="description" style="min-height:140px" placeholder="What & why."></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field" style="flex:1 1 680px">
+              <label>acceptance</label>
+              <textarea class="input" name="acceptance" style="min-height:120px" placeholder="Definition of done."></textarea>
+            </div>
+          </div>
+        </form>
+      `,
+      footHTML: `
+        <button class="pill small" type="button" id="cancelNew">cancel</button>
+        <button class="pill small ok" type="button" id="saveNew">create</button>
+      `
+    });
+
+    $('#cancelNew')?.addEventListener('click', closeDialog);
+    $('#saveNew')?.addEventListener('click', async () => {
+      const form = $('#createForm');
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+      if (!payload.title || !payload.title.trim()){
+        toast('Title required','warn'); return;
+      }
+      if (payload.priority) payload.priority = Number(payload.priority);
+      try{
+        const res = await api('/api/v1/tickets', { method:'POST', body: payload });
+        toast('Created','ok', res.id);
+        closeDialog();
+        await loadTickets(true);
+        state.tickets.selectedId = res.id;
+        save();
+        await loadTicketDetails(res.id, true);
+        goto('tickets');
+        await renderRoute();
+      } catch (err){
+        toast('Create failed','bad', err.message || String(err));
+      }
+    });
+  }
+
+  // Global UI bindings
+  $('#refreshBtn').addEventListener('click', async () => {
+    await refreshCurrent(true);
+  });
+
+  $('#createBtn').addEventListener('click', () => openCreateTicketDialog());
+
+  $('#helpBtn').addEventListener('click', () => openShortcuts());
+
+  function openShortcuts(){
+    openDialog({
+      title: 'Shortcuts',
+      bodyHTML: `
+        <div class="chipRow">
+          <span class="chip"><span class="mono">g t</span> tickets</span>
+          <span class="chip"><span class="mono">g o</span> overview</span>
+          <span class="chip"><span class="mono">g m</span> teams</span>
+          <span class="chip"><span class="mono">g r</span> memory</span>
+          <span class="chip"><span class="mono">g w</span> workspace</span>
+          <span class="chip"><span class="mono">g c</span> compound</span>
+          <span class="chip"><span class="mono">g s</span> settings</span>
+          <span class="chip"><span class="mono">/</span> focus search</span>
+          <span class="chip"><span class="mono">r</span> refresh</span>
+          <span class="chip"><span class="mono">l</span> toggle live</span>
+          <span class="chip"><span class="mono">n</span> new ticket</span>
+          <span class="chip"><span class="mono">Esc</span> close dialog</span>
+        </div>
+        <div class="muted small" style="margin-top:10px">
+          Live mode polls tickets and the selected team (if any). No sockets here, unless you add them.
+        </div>
+      `,
+      footHTML: `<button class="pill small" type="button" id="closeHelp">close</button>`
+    });
+    $('#closeHelp')?.addEventListener('click', closeDialog);
+  }
+
+  // Global search: bind to tickets local filter, but works anywhere
+  const globalSearch = $('#globalSearch');
+  globalSearch.addEventListener('input', async (e) => {
+    const val = e.target.value;
+    state.tickets.clientQ = val;
+    save();
+    if (routeFromHash() !== 'tickets') return;
+    renderRoute();
+  });
+
+  // Live polling
+  let liveTimer = null;
+
+  function setLive(on){
+    state.live = !!on;
+    save();
+    $('#liveState').textContent = state.live ? 'on' : 'off';
+    $('#liveBtn').classList.toggle('info', state.live);
+    if (state.live) startLive();
+    else stopLive();
+  }
+
+  function startLive(){
+    stopLive();
+    const tick = async () => {
+      // Light touch: tickets + selected team bundle
+      if (routeFromHash() === 'tickets' || state.lastRoute === 'tickets'){
+        data.tickets.at = 0;
+        await loadTickets(true);
+        // refresh selected ticket details less aggressively
+        if (state.tickets.selectedId){
+          await loadTicketDetails(state.tickets.selectedId, true);
+        }
+        if (routeFromHash() === 'tickets') await renderRoute();
+      }
+      if (state.teams.selected){
+        await loadTeamBundle(state.teams.selected);
+        if (routeFromHash() === 'teams') await renderRoute();
+      }
+    };
+    liveTimer = setInterval(tick, Number(state.liveInterval || 5000));
+    toast('Live on','info', `${Math.round((state.liveInterval||5000)/1000)}s polling`);
+  }
+
+  function stopLive(){
+    if (liveTimer){ clearInterval(liveTimer); liveTimer = null; }
+  }
+
+  $('#liveBtn').addEventListener('click', () => setLive(!state.live));
+  $('#liveInterval').value = String(state.liveInterval || 5000);
+  $('#liveInterval').addEventListener('change', (e) => {
+    state.liveInterval = Number(e.target.value || 5000);
+    save();
+    if (state.live) startLive();
+  });
+
+  async function refreshCurrent(loud=false){
+    if (loud) toast('Refreshing','info', routes[routeFromHash()]?.title || routeFromHash());
+    data.health = null;
+    data.caps = null;
+    data._hcAt = 0;
+
+    if (routeFromHash() === 'tickets') data.tickets.at = 0;
+    await loadHealthCaps(true);
+
+    const route = routeFromHash();
+    if (route === 'tickets') await loadTickets(true);
+    if (route === 'teams') await loadTeams(true);
+    if (route === 'workspace') await loadWorkspace(true);
+    if (route === 'compound') await loadCompound(true);
+    if (route === 'memory') await loadMemoryRecall(true);
+
+    await renderRoute();
+  }
+
+  // Keyboard shortcuts
+  let gPrefix = false;
+  document.addEventListener('keydown', async (e) => {
+    const tag = (document.activeElement?.tagName || '').toLowerCase();
+    const typing = (tag === 'input' || tag === 'textarea' || tag === 'select');
+    const k = e.key;
+
+    if (k === 'Escape'){ closeDialog(); return; }
+
+    if (!typing && k === '/'){
+      e.preventDefault();
+      goto('tickets');
+      setTimeout(() => { $('#globalSearch')?.focus(); }, 0);
+      return;
+    }
+
+    if (typing) return;
+
+    if (k.toLowerCase() === 'g'){ gPrefix = true; setTimeout(() => gPrefix = false, 700); return; }
+    if (gPrefix){
+      const kk = k.toLowerCase();
+      gPrefix = false;
+      if (kk === 't') goto('tickets');
+      if (kk === 'o') goto('overview');
+      if (kk === 'm') goto('teams');
+      if (kk === 'r') goto('memory');
+      if (kk === 'w') goto('workspace');
+      if (kk === 'c') goto('compound');
+      if (kk === 's') goto('settings');
+      return;
+    }
+
+    const kk = k.toLowerCase();
+    if (kk === 'r'){ await refreshCurrent(true); }
+    if (kk === 'l'){ setLive(!state.live); }
+    if (kk === 'n'){ openCreateTicketDialog(); }
+    if (kk === '?'){ openShortcuts(); }
+  });
+
+  // nav click (also keep hash navigation)
+  $$('#nav a').forEach(a => {
+    a.addEventListener('click', () => {
+      state.lastRoute = a.getAttribute('data-route');
+      save();
+    });
+  });
+
+  // Init
+  $('#baseMini').textContent = normBase(state.baseUrl);
+  $('#liveState').textContent = state.live ? 'on' : 'off';
+  if (!location.hash) location.hash = '#/' + (state.lastRoute || 'overview');
+  setLive(state.live);
+
+  (async () => {
+    await loadHealthCaps(true);
+    // preload tickets lightly so Overview nudge can work without friction
+    await loadTickets(false);
+    await renderRoute();
+  })();
+
+})();
+</script>
 </body>
 </html>

@@ -10,9 +10,10 @@ This is an evolving, empirical compass. Keep it short and stable.
 <!-- END:compound:roadmap-backlog -->
 
 <!-- BEGIN:compound:roadmap-ai-notes -->
-- Reduce skill-source drift: consolidate on `.opencode/skills/*` and keep any templates/mirrors deterministic.
-- Keep learning loop tight: JSON-only specs, then `compound_apply()`; prefer updates over new skills.
-- Maintain contract surfaces: any UX/prompt changes must stay deterministic and covered by focused tests.
+- Near-term: make server UI agent-legible (stable `data-*` anchors, deliberate section ordering).
+- Keep contracts small and specific: assert markers/ordering in `tests/test_server_api_contract.py`, avoid full-HTML snapshots.
+- Prefer determinism over convenience: explicit ordering, no timestamps/random IDs, no machine-specific absolute paths.
+- When changing scaffolded `.opencode/*`, keep the mirrored templates under `src/agent_loom/compound/opencode/.opencode/*` aligned.
 <!-- END:compound:roadmap-ai-notes -->
 
 ## Changelog (AI-first)
@@ -23,6 +24,25 @@ It tracks changes to skills, instincts, and core context files.
 It is intentionally bounded. Do not write entries like "no changes".
 
 <!-- BEGIN:compound:changelog-entries -->
+- 2026-02-02T20:31:09.235Z Reinforce server template contract discipline: stable data-* anchors + request-level invariants; slightly increase confidence on related instincts.
+- 2026-02-02T20:26:40.303Z Reinforce server template contract instincts (dashboard invariants, deterministic markers) based on recent dashboard.html edits.
+- 2026-02-02T20:19:32.304Z Reinforce dashboard/server HTML contract instincts: deterministic template output, diff hygiene, and server API contract tests on dashboard.html changes.
+- 2026-02-02T20:11:49.701Z Reinforce dashboard HTML as a deterministic, anchor-driven contract; add an instinct to avoid drift when touching the instincts store.
+- 2026-02-02T20:07:39.211Z Reinforce server-rendered dashboard HTML as a deterministic contract; add a focused skill for stable data-* anchors + contract testing when editing dashboard.html.
+- 2026-02-02T20:02:22.241Z Reinforce instincts: dashboard/server templates are contract surfaces; pair template edits with deterministic invariants and server API contract tests.
+- 2026-02-02T19:44:50.423Z Strengthen confidence in server HTML contract instincts (dashboard/template changes paired with request-level tests; keep scaffold mirrors in sync).
+- 2026-02-02T19:37:33.385Z Reinforce server HTML contract instincts and add always-on reminder to keep shipped .opencode template mirrors in sync under src/agent_loom/compound/opencode/.opencode/.
+- 2026-02-02T19:32:14.197Z Reinforce instincts around dashboard/server HTML contract testing, diff hygiene for template refactors, and keeping Compound scaffold mirrors in sync.
+- 2026-02-02T19:27:44.980Z Codified diff hygiene for large server template refactors; strengthened server HTML contract guidance and tests-first invariants.
+- 2026-02-02T19:21:47.052Z Reinforce JSON-only autolearn output and plan-mode read-only discipline; no skill/doc content changes.
+- 2026-02-02T18:09:51.586Z Reinforce server-rendered HTML as a deterministic UX contract; add a refactor hygiene skill focused on anchors, meaningful diffs, and request-level contract tests.
+- 2026-02-02T18:02:26.339Z Reinforce dashboard/server HTML contract: boost relevant instincts, and tighten server-api-contract-testing guidance for large template refactors + resilient request-level invariants.
+- 2026-02-02T17:53:42.145Z Codified that large dashboard.html refactors must be paired with resilient server HTML contract tests asserting stable markers/ordering (not whitespace snapshots).
+- 2026-02-02T17:37:43.176Z Reinforced server template determinism and request-level HTML contract testing after dashboard template refactor.
+- 2026-02-02T17:11:59.402Z Codified a tighter heuristic and skill: server-rendered HTML changes should be guarded by request-level API contract tests (prefer tests/test_server_api_contract.py) using stable markers and deterministic ordering.
+- 2026-02-02T17:02:29.943Z Reinforce deterministic server template UX contracts and strict Plan Mode read-only discipline.
+- 2026-02-02T16:51:48.922Z Add instinct to treat server templates as deterministic UX contracts; reinforce always-on guidance to test large dashboard.html refactors with focused invariants.
+- 2026-02-02T16:44:53.996Z Add an instinct + skill to treat server-rendered templates (dashboard.html) as deterministic UX contracts with focused pytest coverage.
 - 2026-02-02T15:47:25.765Z Reinforced JSON-only discipline for Compound background autolearn responses.
 - 2026-02-02T05:46:51.173Z Reinforce plan-mode read-only discipline during autolearn/idle sessions; no new durable procedures identified from README-only edits.
 - 2026-02-02T04:29:15.307Z Reinforced strict JSON-only learning output and plan-mode read-only discipline via instinct confidence bumps.

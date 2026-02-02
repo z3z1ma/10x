@@ -111,7 +111,7 @@
       "confidence": 1,
       "status": "active",
       "created_at": "2026-01-30T19:57:13.467Z",
-      "updated_at": "2026-02-02T15:47:24.303Z",
+      "updated_at": "2026-02-02T20:19:31.290Z",
       "evidence": [
         {
           "ts": "2026-01-30T19:57:13.467Z",
@@ -181,6 +181,16 @@
           "ts": "2026-02-02T15:47:24.303Z",
           "sessionID": "ses_3e3909915ffeQPxpsEGARkmO6s",
           "note": "Background autolearn prompt reiterates JSON-only output requirement; complying here reinforces the contract."
+        },
+        {
+          "ts": "2026-02-02T19:21:45.952Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Background autolearn prompt reiterates JSON-only output discipline; keeping this as a hard rule prevents tool/application failures."
+        },
+        {
+          "ts": "2026-02-02T20:19:31.290Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Autolearn prompts require JSON-only output; reiterates strict output discipline for compound learning runs."
         }
       ]
     },
@@ -386,7 +396,7 @@
       "confidence": 1,
       "status": "active",
       "created_at": "2026-01-31T03:33:28.939Z",
-      "updated_at": "2026-02-01T05:50:02.770Z",
+      "updated_at": "2026-02-02T17:37:41.423Z",
       "evidence": [
         {
           "ts": "2026-01-31T03:33:28.939Z",
@@ -441,6 +451,11 @@
           "ts": "2026-02-01T05:50:02.770Z",
           "sessionID": "ses_3e8acef0bffebmMo8l1iU1ZNUA",
           "note": "Team CLI surface area changed (src/agent_loom/team/cli.py). Reinforces keeping output deterministic and test-covered."
+        },
+        {
+          "ts": "2026-02-02T17:37:41.423Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m",
+          "note": "Ongoing edits to core docs and user-facing surfaces reinforce the repo norm: user-visible output is a public contract and must stay deterministic."
         }
       ]
     },
@@ -450,10 +465,10 @@
       "trigger": "System reminder says Plan Mode ACTIVE / READ-ONLY phase",
       "action": "Do not edit/create/delete files or run write-capable commands; only inspect/read/search and produce an execution plan or required JSON payload.",
       "tags": [],
-      "confidence": 0.9900000000000002,
+      "confidence": 1,
       "status": "active",
       "created_at": "2026-01-31T04:25:38.114Z",
-      "updated_at": "2026-02-02T05:46:49.849Z",
+      "updated_at": "2026-02-02T20:26:39.333Z",
       "evidence": [
         {
           "ts": "2026-01-31T04:25:38.114Z",
@@ -518,6 +533,21 @@
           "ts": "2026-02-02T05:46:49.849Z",
           "sessionID": "ses_3e3909915ffeQPxpsEGARkmO6s",
           "note": "Session included a Plan Mode READ-ONLY reminder explicitly forbidding file edits and write-capable commands; reinforces that plan/autolearn responses must remain non-modifying."
+        },
+        {
+          "ts": "2026-02-02T17:02:28.398Z",
+          "sessionID": "ses_3e0cf11c0ffeuV6Xy9e5B6YK94",
+          "note": "This session included a strict Plan Mode READ-ONLY reminder; reinforces never attempting write-capable actions when Plan Mode is active."
+        },
+        {
+          "ts": "2026-02-02T19:21:45.952Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Plan mode reminder emphasizes strict read-only behavior; reinforce to avoid accidental write-capable tool usage during planning/autolearn contexts."
+        },
+        {
+          "ts": "2026-02-02T20:26:39.333Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "This autolearn context is read-only; reinforces strict separation between plan/learn outputs and any write actions."
         }
       ]
     },
@@ -708,10 +738,10 @@
       "trigger": "When editing Compound plugin/skill/docs behavior that is shipped via a template (for example .opencode/plugins/compound_engineering.ts or .opencode/skills/*) and the repo contains a scaffold copy under src/agent_loom/compound/opencode/.",
       "action": "Update both the repo-root .opencode/* sources and the scaffolded template under src/agent_loom/compound/opencode/.opencode/* to keep installation output deterministic; add/adjust tests/test_compound_install.py to lock the expected installed files/contents.",
       "tags": [],
-      "confidence": 0.8800000000000001,
+      "confidence": 0.9400000000000002,
       "status": "active",
       "created_at": "2026-02-01T04:25:40.315Z",
-      "updated_at": "2026-02-01T21:18:47.983Z",
+      "updated_at": "2026-02-02T19:44:49.394Z",
       "evidence": [
         {
           "ts": "2026-02-01T04:25:40.315Z",
@@ -731,6 +761,21 @@
           "ts": "2026-02-01T21:18:47.983Z",
           "sessionID": "ses_3e4fa7035ffef9fueirYdJRAWg",
           "note": "Recent work updated workflow command docs/skills in both `.opencode/` and the scaffold mirror under `src/agent_loom/compound/opencode/.opencode/`, reinforcing that template mirroring must stay in lockstep for deterministic installs."
+        },
+        {
+          "ts": "2026-02-02T19:32:13.059Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "server-api-contract-testing skill was modified in both .opencode/skills/server-api-contract-testing/SKILL.md and src/agent_loom/compound/opencode/.opencode/skills/server-api-contract-testing/SKILL.md; confirms mirror-sync requirement."
+        },
+        {
+          "ts": "2026-02-02T19:37:32.422Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Ongoing updates to .opencode skills/docs highlight that shipped template mirrors (when present) must be updated in lockstep to keep installs deterministic."
+        },
+        {
+          "ts": "2026-02-02T19:44:49.394Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Both .opencode/skills/server-api-contract-testing/SKILL.md and src/agent_loom/compound/opencode/.opencode/skills/server-api-contract-testing/SKILL.md changed together, validating the mirror-sync rule."
         }
       ]
     },
@@ -999,6 +1044,330 @@
         {
           "ts": "2026-02-02T04:02:11.056Z",
           "sessionID": "ses_3e3909915ffeQPxpsEGARkmO6s"
+        }
+      ]
+    },
+    {
+      "id": "server-template-changes-require-ux-contract-test",
+      "title": "Server templates need UX contract tests",
+      "trigger": "You changed server-rendered HTML templates under src/agent_loom/server/templates/ (especially large diffs like dashboard.html).",
+      "action": "Treat rendered HTML as a contract: add/update a focused pytest that renders/requests the template and asserts stable markers/ordering; avoid nondeterministic output (timestamps/random ids) and machine-specific absolute paths; verify with uv run basedpyright, uv run ruff check ., and targeted uv run pytest for the new/updated test module.",
+      "tags": [],
+      "confidence": 0.7,
+      "status": "active",
+      "created_at": "2026-02-02T16:44:52.124Z",
+      "updated_at": "2026-02-02T16:44:52.124Z",
+      "evidence": [
+        {
+          "ts": "2026-02-02T16:44:52.124Z",
+          "sessionID": "ses_3e0cf11c0ffeuV6Xy9e5B6YK94"
+        }
+      ]
+    },
+    {
+      "id": "server-template-output-is-a-contract",
+      "title": "Server Template Output Is A Contract",
+      "trigger": "When changing src/agent_loom/server/templates/*.html (especially large refactors like dashboard.html).",
+      "action": "Treat rendered HTML as a deterministic UX contract: ensure stable ordering/no nondeterministic values, add/update a focused pytest contract test for required markers/sections, then run `uv run basedpyright`, `uv run ruff check .`, and targeted `uv run pytest`.",
+      "tags": [],
+      "confidence": 1,
+      "status": "active",
+      "created_at": "2026-02-02T16:51:47.123Z",
+      "updated_at": "2026-02-02T20:31:08.208Z",
+      "evidence": [
+        {
+          "ts": "2026-02-02T16:51:47.123Z",
+          "sessionID": "ses_3e0cf11c0ffeuV6Xy9e5B6YK94"
+        },
+        {
+          "ts": "2026-02-02T17:02:28.398Z",
+          "sessionID": "ses_3e0cf11c0ffeuV6Xy9e5B6YK94",
+          "note": "Large refactor to src/agent_loom/server/templates/dashboard.html reinforces treating server-rendered HTML as a deterministic UX contract with focused pytest invariants (markers/sections/ordering) rather than brittle snapshots."
+        },
+        {
+          "ts": "2026-02-02T17:11:57.762Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m",
+          "note": "Large refactor in src/agent_loom/server/templates/dashboard.html was paired with a focused request-level contract update in tests/test_server_api_contract.py, reinforcing the template-as-contract practice."
+        },
+        {
+          "ts": "2026-02-02T17:37:41.423Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m",
+          "note": "Large refactor of src/agent_loom/server/templates/dashboard.html reinforced that template output must remain deterministic and treated as a UX contract."
+        },
+        {
+          "ts": "2026-02-02T18:02:24.489Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m",
+          "note": "Changes to server-rendered HTML were validated via request-level contract assertions rather than brittle full-HTML snapshots, matching the intended deterministic server-template contract approach."
+        },
+        {
+          "ts": "2026-02-02T18:09:49.728Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m",
+          "note": "Large refactor of src/agent_loom/server/templates/dashboard.html required aligning deterministic anchors/ordering with a focused request-level contract update in tests/test_server_api_contract.py."
+        },
+        {
+          "ts": "2026-02-02T19:27:42.729Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Significant server template changes required carefully maintained stable markers plus request-level invariants rather than brittle HTML snapshots."
+        },
+        {
+          "ts": "2026-02-02T19:32:13.059Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Template changes in src/agent_loom/server/templates/dashboard.html accompanied by contract test adjustments; supports keeping server-rendered HTML deterministic and marker-driven."
+        },
+        {
+          "ts": "2026-02-02T19:37:32.422Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Dashboard template changes required deterministic markers/ordering; reinforces treating server templates as a UX contract."
+        },
+        {
+          "ts": "2026-02-02T19:44:49.394Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Server-rendered HTML refactor occurred alongside contract test updates, indicating templates are treated as deterministic UX/API output."
+        },
+        {
+          "ts": "2026-02-02T20:02:21.190Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Template edits (src/agent_loom/server/templates/dashboard.html) are recurring and should always be guarded by deterministic markers/ordering plus request-level contract coverage."
+        },
+        {
+          "ts": "2026-02-02T20:07:38.171Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Recent changes touched src/agent_loom/server/templates/dashboard.html; reinforces treating server-rendered templates as deterministic contracts with stable markers and ordering."
+        },
+        {
+          "ts": "2026-02-02T20:11:48.678Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Server-rendered dashboard HTML changed materially; keeping stable anchors/ordering and backing them with focused invariants prevents silent UX/API contract drift."
+        },
+        {
+          "ts": "2026-02-02T20:19:31.290Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Recent dashboard.html edits reiterate that server-rendered HTML must stay deterministic and contract-tested (stable markers/ordering, no nondeterministic values)."
+        },
+        {
+          "ts": "2026-02-02T20:26:39.333Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Recent server template changes confirm that HTML output needs deterministic ordering and stable markers."
+        },
+        {
+          "ts": "2026-02-02T20:31:08.208Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Server HTML changes continue to be high-churn/high-risk without explicit deterministic markers/ordering; treat templates as UX contracts."
+        }
+      ]
+    },
+    {
+      "id": "server-html-changes-require-api-contract-test",
+      "title": "Server HTML Changes Require API Contract Test",
+      "trigger": "When changing server-rendered HTML behavior (templates or the route that serves them), especially large refactors in src/agent_loom/server/templates/*.html",
+      "action": "Add/update a request-level contract test (prefer tests/test_server_api_contract.py) that asserts stable markers/sections and deterministic ordering; avoid brittle full-HTML snapshots; verify via uv run basedpyright, uv run ruff check ., and targeted uv run pytest.",
+      "tags": [],
+      "confidence": 0.8800000000000001,
+      "status": "active",
+      "created_at": "2026-02-02T17:11:57.762Z",
+      "updated_at": "2026-02-02T20:07:38.171Z",
+      "evidence": [
+        {
+          "ts": "2026-02-02T17:11:57.762Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m"
+        },
+        {
+          "ts": "2026-02-02T17:37:41.423Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m",
+          "note": "Template refactor was paired with request-level coverage in tests/test_server_api_contract.py to lock stable markers/sections without brittle full-HTML snapshots."
+        },
+        {
+          "ts": "2026-02-02T18:09:49.728Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m",
+          "note": "Template refactor + contract test edits validated the pattern: avoid brittle full-HTML snapshots; assert stable markers/sections and deterministic ordering at the route level."
+        },
+        {
+          "ts": "2026-02-02T19:32:13.059Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Server-rendered HTML behavior changed and tests/test_server_api_contract.py was updated in the same session; confirms this as the default gate for HTML/route behavior changes."
+        },
+        {
+          "ts": "2026-02-02T19:37:32.422Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Server-rendered HTML behavior changes were guarded with updates in tests/test_server_api_contract.py; confirms request-level contract tests are the right lock."
+        },
+        {
+          "ts": "2026-02-02T19:44:49.394Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "HTML behavior changes were backed by adjustments in tests/test_server_api_contract.py, matching the intended guardrail."
+        },
+        {
+          "ts": "2026-02-02T20:07:38.171Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Server-rendered HTML behavior changed; strengthens the need for focused API/HTML contract tests asserting stable sections/anchors and deterministic ordering."
+        }
+      ]
+    },
+    {
+      "id": "dashboard-template-changes-require-server-contract-test",
+      "title": "Dashboard Template Changes Require Server Contract Test",
+      "trigger": "You change src/agent_loom/server/templates/dashboard.html (especially large refactors or section reshuffles).",
+      "action": "Update/add request-level invariants in tests/test_server_api_contract.py (stable markers/sections + deterministic ordering; avoid full-HTML snapshots) and verify with: uv run basedpyright; uv run ruff check .; uv run pytest tests/test_server_api_contract.py.",
+      "tags": [],
+      "confidence": 1,
+      "status": "active",
+      "created_at": "2026-02-02T17:53:40.739Z",
+      "updated_at": "2026-02-02T20:31:08.208Z",
+      "evidence": [
+        {
+          "ts": "2026-02-02T17:53:40.739Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m"
+        },
+        {
+          "ts": "2026-02-02T18:02:24.489Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m",
+          "note": "Recent work included a large refactor of src/agent_loom/server/templates/dashboard.html plus an accompanying update to tests/test_server_api_contract.py, reinforcing that dashboard HTML is a contract surface that must be locked by focused invariants."
+        },
+        {
+          "ts": "2026-02-02T18:09:49.728Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m",
+          "note": "Dashboard template churn reinforced the need to treat dashboard HTML as a UX contract and lock stable markers/sections via tests/test_server_api_contract.py invariants."
+        },
+        {
+          "ts": "2026-02-02T19:27:42.729Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "A large dashboard.html refactor landed alongside updates to tests/test_server_api_contract.py, reinforcing the contract-test co-change rule."
+        },
+        {
+          "ts": "2026-02-02T19:32:13.059Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Recent work touched src/agent_loom/server/templates/dashboard.html and updated tests/test_server_api_contract.py; reinforces treating dashboard HTML as a request-level contract with stable markers/sections."
+        },
+        {
+          "ts": "2026-02-02T19:37:32.422Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Recent changes touched src/agent_loom/server/templates/dashboard.html alongside tests/test_server_api_contract.py; reinforces pairing dashboard template edits with request-level invariants."
+        },
+        {
+          "ts": "2026-02-02T19:44:49.394Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Recent work touched src/agent_loom/server/templates/dashboard.html and updated tests/test_server_api_contract.py in the same change set; reinforces pairing template changes with request-level invariants."
+        },
+        {
+          "ts": "2026-02-02T20:02:21.190Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Recent work included a non-trivial edit to src/agent_loom/server/templates/dashboard.html; reinforces treating dashboard template structure as a contract and updating tests/test_server_api_contract.py invariants alongside template changes."
+        },
+        {
+          "ts": "2026-02-02T20:07:38.171Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "dashboard.html was edited substantially; this is exactly the class of change that should be paired with request-level invariants in tests/test_server_api_contract.py."
+        },
+        {
+          "ts": "2026-02-02T20:11:48.678Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "src/agent_loom/server/templates/dashboard.html had a large refactor-sized diff; reinforces that dashboard HTML changes must be paired with request-level contract assertions (markers/sections + deterministic ordering)."
+        },
+        {
+          "ts": "2026-02-02T20:19:31.290Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Session changed src/agent_loom/server/templates/dashboard.html again; reinforces treating dashboard HTML as a request-level contract with focused invariants in tests/test_server_api_contract.py."
+        },
+        {
+          "ts": "2026-02-02T20:26:39.333Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Recent edit touched src/agent_loom/server/templates/dashboard.html; reinforces that dashboard template churn should be paired with request-level invariants in tests/test_server_api_contract.py."
+        },
+        {
+          "ts": "2026-02-02T20:31:08.208Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Session changed src/agent_loom/server/templates/dashboard.html; this repeatedly correlates with needing request-level invariants in tests/test_server_api_contract.py."
+        }
+      ]
+    },
+    {
+      "id": "server-html-tests-should-assert-markers-not-whitespace",
+      "title": "Server HTML Tests Assert Markers Not Whitespace",
+      "trigger": "You write or modify tests that validate server-rendered HTML.",
+      "action": "Assert stable markers (data-* hooks, headings/labels) and ordering for repeated items; avoid brittle full-string/whitespace snapshots unless explicitly intended as the contract.",
+      "tags": [],
+      "confidence": 0.72,
+      "status": "active",
+      "created_at": "2026-02-02T17:53:40.739Z",
+      "updated_at": "2026-02-02T17:53:40.739Z",
+      "evidence": [
+        {
+          "ts": "2026-02-02T17:53:40.739Z",
+          "sessionID": "ses_3e0aaf312ffeIrs1flMshFCA6m"
+        }
+      ]
+    },
+    {
+      "id": "large-template-refactor-diff-hygiene",
+      "title": "Large Template Refactors Need Diff Hygiene",
+      "trigger": "You are about to make a large refactor in src/agent_loom/server/templates/*.html (especially dashboard.html) that could produce a huge diff.",
+      "action": "Minimize formatting-only churn, preserve/introduce stable data-* anchors, and update tests/test_server_api_contract.py in the same change to assert invariant markers/sections (avoid full HTML snapshots).",
+      "tags": [],
+      "confidence": 0.9200000000000002,
+      "status": "active",
+      "created_at": "2026-02-02T19:27:42.729Z",
+      "updated_at": "2026-02-02T20:31:08.208Z",
+      "evidence": [
+        {
+          "ts": "2026-02-02T19:27:42.729Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU"
+        },
+        {
+          "ts": "2026-02-02T19:32:13.059Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "dashboard.html saw a non-trivial diff; emphasizes minimizing formatting churn and keeping anchor markers stable during refactors."
+        },
+        {
+          "ts": "2026-02-02T19:37:32.422Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "Template edits emphasize keeping diffs reviewable; minimizing formatting churn remains a recurring need for dashboard.html refactors."
+        },
+        {
+          "ts": "2026-02-02T19:44:49.394Z",
+          "sessionID": "ses_3e0371aa5ffeG1WkT34x2lOeuU",
+          "note": "dashboard.html saw a large edit; the surrounding workflow emphasized minimizing formatting-only churn and keeping refactors reviewable."
+        },
+        {
+          "ts": "2026-02-02T20:07:38.171Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "dashboard.html saw a sizable diff; reinforces keeping template refactors reviewable (avoid formatting churn, preserve/introduce stable data-* anchors)."
+        },
+        {
+          "ts": "2026-02-02T20:11:48.678Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Dashboard template edits produced a broad diff; minimizing formatting-only churn and preserving stable anchors materially reduces review risk and brittle tests."
+        },
+        {
+          "ts": "2026-02-02T20:19:31.290Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Even small dashboard.html edits benefit from minimizing formatting-only churn and preserving stable anchors."
+        },
+        {
+          "ts": "2026-02-02T20:26:39.333Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "Dashboard template changed with limited diff size; reinforces minimizing formatting-only churn and preserving stable anchors during template edits."
+        },
+        {
+          "ts": "2026-02-02T20:31:08.208Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa",
+          "note": "dashboard.html edits tend to create formatting churn; reiterate minimizing whitespace-only diffs and preserving stable anchors."
+        }
+      ]
+    },
+    {
+      "id": "instincts-store-changes-require-doc-sync",
+      "title": "Instincts Store Changes Require Sync",
+      "trigger": "When editing .opencode/memory/instincts.json or .opencode/memory/INSTINCTS.md",
+      "action": "Prefer making the change via a CompoundSpec v2 (skills/instincts/docs) with docs.sync: true so derived indexes stay consistent; avoid manual drift between the JSON store and the markdown index.",
+      "tags": [],
+      "confidence": 0.72,
+      "status": "active",
+      "created_at": "2026-02-02T20:11:48.678Z",
+      "updated_at": "2026-02-02T20:11:48.678Z",
+      "evidence": [
+        {
+          "ts": "2026-02-02T20:11:48.678Z",
+          "sessionID": "ses_3e011378effedoidu5iqE7NfSa"
         }
       ]
     }
