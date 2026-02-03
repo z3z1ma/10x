@@ -182,6 +182,10 @@ def test_dashboard_template_contract(client):
     assert "data-team-tabs" in html
     assert "data-team-panel" in html
 
+    # Master/detail split focus controls
+    assert 'data-split-btn="master"' in html
+    assert 'data-split-btn="detail"' in html
+
 
 def test_team_capture_text_endpoint(client):
     h = client.get("/api/v1/health").get_json()["data"]

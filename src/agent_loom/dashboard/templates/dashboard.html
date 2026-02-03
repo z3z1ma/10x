@@ -420,6 +420,16 @@
       align-items:start;
     }
 
+    /* Split focus (master/detail) without changing view structure */
+    .splitRoot > *{ min-width: 0; }
+    .splitRoot > *{
+      transition: opacity .12s ease, transform .12s ease;
+    }
+    .splitRoot.focus-master{ grid-template-columns: 1fr 0fr; gap: 0; }
+    .splitRoot.focus-detail{ grid-template-columns: 0fr 1fr; gap: 0; }
+    .splitRoot.focus-master > :nth-child(2){ opacity: 0; pointer-events:none; transform: translateX(6px); }
+    .splitRoot.focus-detail > :nth-child(1){ opacity: 0; pointer-events:none; transform: translateX(-6px); }
+
     /* Board */
     .boardTop{
       display:flex;
@@ -915,6 +925,10 @@
       .split{ grid-template-columns: 1fr; }
       .cols{ height: auto; min-height: 520px; }
       .drawer{ position: static; max-height: none; }
+
+      /* On mobile, "focus" should hide the other pane (since split is stacked). */
+      .splitRoot.focus-master > :nth-child(2){ display:none; }
+      .splitRoot.focus-detail > :nth-child(1){ display:none; }
     }
     @media (prefers-reduced-motion: reduce){
       *{ transition:none !important; }
@@ -1031,6 +1045,16 @@
     memory: { vault: '.memory', q: '', limit: '10', tag: '', not_tag: '', scope: '', not_scope: '', visibility: '', expand: '0', context:'0', deterministic:'0', include_deprecated:'0' },
     workspace: { mode: 'auto', root: '', q: '', dirty: '', group: '', repo: '', missing: '', selectedPath: '', diffMode: 'cumulative', diffBase: '' },
     compound: { selectedSkill: '' },
+
+    layout: {
+      splitFocus: {
+        tickets: 'both',
+        teams: 'both',
+        memory: 'both',
+        workspace: 'both',
+        compound: 'both'
+      }
+    },
     lastRoute: 'overview'
   };
 
@@ -1343,6 +1367,10 @@
 
     content.innerHTML = await routes[route].render();
     routes[route].bind();
+
+    applySplitMode(route);
+    updateSplitButtons(route);
+    bindSplitButtons();
 
     // Restore scroll state
     requestAnimationFrame(() => {
@@ -1657,7 +1685,7 @@
     const detail = renderTicketDrawer(sel);
 
     return `
-      <div class="split">
+      <div class="split splitRoot">
         <div class="card">
           <div class="cardHeader">
             <div class="cardTitle">Tickets <small>/api/v1/tickets · ${filtered.length}/${data.tickets.count}</small></div>
@@ -1668,6 +1696,7 @@
                 <option value="status" ${tstate.bucketMode==='status'?'selected':''}>status columns</option>
               </select>
               <button class="pill small" id="ticketsJson" type="button">json</button>
+              <button class="pill small ghost" data-split-btn="master" type="button" title="Focus left ([)">focus</button>
             </div>
           </div>
 
@@ -1767,6 +1796,9 @@
               <div class="id mono">ticket</div>
               <div class="title">Select a ticket</div>
             </div>
+            <div class="row">
+              <button class="pill small ghost" data-split-btn="detail" type="button" title="Focus right (])">focus</button>
+            </div>
           </div>
           <div class="body">
             <div class="muted small">
@@ -1785,7 +1817,12 @@
     if (!show || !view){
       return `
         <div class="card drawer">
-          <div class="head"><div class="h"><div class="id mono">${escapeHtml(selId)}</div><div class="title">Loading…</div></div></div>
+          <div class="head">
+            <div class="h"><div class="id mono">${escapeHtml(selId)}</div><div class="title">Loading…</div></div>
+            <div class="row">
+              <button class="pill small ghost" data-split-btn="detail" type="button" title="Focus right (])">focus</button>
+            </div>
+          </div>
           <div class="body"><div class="muted">Fetching show/view…</div></div>
         </div>
       `;
@@ -1819,6 +1856,7 @@
             <button class="pill small" id="copyId" type="button">copy</button>
             <button class="pill small" id="editTicket" type="button">edit</button>
             <button class="pill small" id="ticketJson" type="button">json</button>
+            <button class="pill small ghost" data-split-btn="detail" type="button" title="Focus right (])">focus</button>
           </div>
         </div>
 
@@ -2676,13 +2714,14 @@
      }
 
       return `
-        <div class="split">
+        <div class="split splitRoot">
           <div class="card">
             <div class="cardHeader">
               <div class="cardTitle">Teams <small>/api/v1/teams</small></div>
               <div class="row">
                 <button class="pill small" id="teamsRefresh" type="button">refresh</button>
                 <button class="pill small" id="teamsJson" type="button">json</button>
+                <button class="pill small ghost" data-split-btn="master" type="button" title="Focus left ([)">focus</button>
               </div>
             </div>
             <div class="cardBody">
@@ -2722,6 +2761,7 @@
               <div class="row">
                 <button class="pill small" id="teamReload" type="button">reload</button>
                 <button class="pill small" id="teamBundleJson" type="button">json</button>
+                <button class="pill small ghost" data-split-btn="detail" type="button" title="Focus right (])">focus</button>
               </div>
             </div>
             <div class="body">
@@ -2986,13 +3026,14 @@
     const note = data.memory.note?.note || null;
 
     return `
-      <div class="split">
+      <div class="split splitRoot">
         <div class="card">
           <div class="cardHeader">
             <div class="cardTitle">Recall <small>/api/v1/memory/recall</small></div>
             <div class="row">
               <button class="pill small" id="recallNow" type="button">recall</button>
               <button class="pill small" id="recallJson" type="button">json</button>
+              <button class="pill small ghost" data-split-btn="master" type="button" title="Focus left ([)">focus</button>
             </div>
           </div>
           <div class="cardBody">
@@ -3081,6 +3122,7 @@
             </div>
             <div class="row">
               <button class="pill small" id="noteJson" type="button">json</button>
+              <button class="pill small ghost" data-split-btn="detail" type="button" title="Focus right (])">focus</button>
             </div>
           </div>
           <div class="body">
@@ -3367,13 +3409,14 @@
     const baseShown = (state.workspace.diffBase || diff?.base || 'HEAD').toString();
 
     return `
-      <div class="split">
+      <div class="split splitRoot">
         <div class="card">
           <div class="cardHeader">
             <div class="cardTitle">Workspace <small>/api/v1/workspace/*</small></div>
             <div class="row">
               <button class="pill small" id="wsReload" type="button">reload</button>
               <button class="pill small" id="wsJson" type="button">json</button>
+              <button class="pill small ghost" data-split-btn="master" type="button" title="Focus left ([)">focus</button>
             </div>
           </div>
           <div class="cardBody">
@@ -3469,6 +3512,7 @@
               <button class="pill small" id="wsDiffReload" type="button">reload</button>
               <button class="pill small" id="wsDiffClear" type="button">clear</button>
               <button class="pill small" id="wsDiffJson" type="button">json</button>
+              <button class="pill small ghost" data-split-btn="detail" type="button" title="Focus right (])">focus</button>
             </div>
           </div>
           <div class="body">
@@ -3617,13 +3661,14 @@
     const instincts = data.compound.instincts;
 
     return `
-      <div class="split">
+      <div class="split splitRoot">
         <div class="card">
           <div class="cardHeader">
             <div class="cardTitle">Skills <small>/api/v1/compound/skills</small></div>
             <div class="row">
               <button class="pill small" id="compReload" type="button">reload</button>
               <button class="pill small" id="skillsJson" type="button">json</button>
+              <button class="pill small ghost" data-split-btn="master" type="button" title="Focus left ([)">focus</button>
             </div>
           </div>
           <div class="cardBody">
@@ -3649,6 +3694,7 @@
             </div>
             <div class="row">
               <button class="pill small" id="skillJson" type="button">json</button>
+              <button class="pill small ghost" data-split-btn="detail" type="button" title="Focus right (])">focus</button>
             </div>
           </div>
           <div class="body">
@@ -3918,6 +3964,9 @@
           <span class="chip"><span class="mono">r</span> refresh</span>
           <span class="chip"><span class="mono">l</span> toggle live</span>
           <span class="chip"><span class="mono">n</span> new ticket</span>
+          <span class="chip"><span class="mono">[</span> focus left</span>
+          <span class="chip"><span class="mono">]</span> focus right</span>
+          <span class="chip"><span class="mono">\\</span> split view</span>
           <span class="chip"><span class="mono">Esc</span> close dialog</span>
         </div>
         <div class="muted small" style="margin-top:10px">
@@ -4022,6 +4071,23 @@
 
     if (typing) return;
 
+    // Split focus (master/detail) for master-detail tabs.
+    if (k === '['){
+      e.preventDefault();
+      toggleSplitMode(routeFromHash(), 'master');
+      return;
+    }
+    if (k === ']'){
+      e.preventDefault();
+      toggleSplitMode(routeFromHash(), 'detail');
+      return;
+    }
+    if (k === '\\'){
+      e.preventDefault();
+      setSplitMode(routeFromHash(), 'both');
+      return;
+    }
+
     if (k.toLowerCase() === 'g'){ gPrefix = true; setTimeout(() => gPrefix = false, 700); return; }
     if (gPrefix){
       const kk = k.toLowerCase();
@@ -4042,6 +4108,64 @@
     if (kk === 'n'){ openCreateTicketDialog(); }
     if (kk === '?'){ openShortcuts(); }
   });
+
+  function splitModeFor(route){
+    const m = state?.layout?.splitFocus || {};
+    const v = m[route];
+    return (v === 'master' || v === 'detail' || v === 'both') ? v : 'both';
+  }
+
+  function setSplitMode(route, mode){
+    if (!state.layout) state.layout = { splitFocus: {} };
+    if (!state.layout.splitFocus) state.layout.splitFocus = {};
+    if (!(route in state.layout.splitFocus)) return; // ignore routes without split focus
+    state.layout.splitFocus[route] = (mode === 'master' || mode === 'detail') ? mode : 'both';
+    save();
+    applySplitMode(route);
+    updateSplitButtons(route);
+  }
+
+  function toggleSplitMode(route, side){
+    const cur = splitModeFor(route);
+    const want = (side === 'master') ? 'master' : 'detail';
+    setSplitMode(route, (cur === want) ? 'both' : want);
+  }
+
+  function applySplitMode(route){
+    const root = content.querySelector('.split.splitRoot');
+    if (!root) return;
+    root.classList.remove('focus-master', 'focus-detail');
+    const mode = splitModeFor(route);
+    if (mode === 'master') root.classList.add('focus-master');
+    if (mode === 'detail') root.classList.add('focus-detail');
+  }
+
+  function updateSplitButtons(route){
+    const root = content.querySelector('.split.splitRoot');
+    if (!root) return;
+    const mode = splitModeFor(route);
+
+    const masterBtn = root.querySelector('[data-split-btn="master"]');
+    const detailBtn = root.querySelector('[data-split-btn="detail"]');
+
+    const setBtn = (btn, active) => {
+      if (!btn) return;
+      btn.classList.toggle('active', !!active);
+      btn.textContent = active ? 'split' : 'focus';
+    };
+
+    setBtn(masterBtn, mode === 'master');
+    setBtn(detailBtn, mode === 'detail');
+  }
+
+  function bindSplitButtons(){
+    const root = content.querySelector('.split.splitRoot');
+    if (!root) return;
+    root.querySelector('[data-split-btn="master"]')
+      ?.addEventListener('click', () => toggleSplitMode(routeFromHash(), 'master'));
+    root.querySelector('[data-split-btn="detail"]')
+      ?.addEventListener('click', () => toggleSplitMode(routeFromHash(), 'detail'));
+  }
 
   // nav click (also keep hash navigation)
   $$('#nav a').forEach(a => {
