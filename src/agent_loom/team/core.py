@@ -566,7 +566,7 @@ def _agent_file_content(
     return "\n".join(lines)
 
 
-def _opencode_team_agent_permissions(*, repo_root: Path) -> Dict[str, Dict[str, Any]]:
+def _opencode_team_agent_permissions() -> Dict[str, Dict[str, Any]]:
     """Return OpenCode permission profiles for Team agents.
 
     Notes:
@@ -575,11 +575,8 @@ def _opencode_team_agent_permissions(*, repo_root: Path) -> Dict[str, Dict[str, 
     - Workers need broad shell access for real work, but must not operate Team.
     """
 
-    root = repo_root.resolve()
-    root_str = str(root)
     external_allow = {
-        root_str: "allow",
-        f"{root_str}/**": "allow",
+        "*": "allow",
     }
 
     # Manager: orchestrate via loom team + ticket; avoid direct coding.
@@ -592,14 +589,10 @@ def _opencode_team_agent_permissions(*, repo_root: Path) -> Dict[str, Dict[str, 
         "bash": {
             "*": "deny",
             # Manager operational surface.
-            "loom team *": "allow",
-            "uv run loom team *": "allow",
-            "loom ticket *": "allow",
-            "uv run loom ticket *": "allow",
-            "loom memory *": "allow",
-            "uv run loom memory *": "allow",
-            "loom compound sync*": "allow",
-            "uv run loom compound sync*": "allow",
+            "*loom team *": "allow",
+            "*loom ticket *": "allow",
+            "*loom memory *": "allow",
+            "*loom compound sync*": "allow",
             # Allow read-only git inspection.
             "git status*": "allow",
             "git diff*": "allow",
@@ -619,12 +612,9 @@ def _opencode_team_agent_permissions(*, repo_root: Path) -> Dict[str, Dict[str, 
             "git merge*": "deny",
             "git rebase*": "deny",
             # Manager should not start/attach a new team from inside a running manager.
-            "loom team start*": "deny",
-            "uv run loom team start*": "deny",
-            "loom team attach*": "deny",
-            "uv run loom team attach*": "deny",
-            "loom team tui*": "deny",
-            "uv run loom team tui*": "deny",
+            "*loom team * start*": "deny",
+            "*loom team * attach*": "deny",
+            "*loom team * tui*": "deny",
             # Force all sleeps through loom team wait/snooze.
             "sleep *": "deny",
         },
@@ -640,35 +630,21 @@ def _opencode_team_agent_permissions(*, repo_root: Path) -> Dict[str, Dict[str, 
             # Force all tmux interaction through Team CLI.
             "tmux *": "deny",
             # Only the manager commits compound changes.
-            "loom compound sync*": "deny",
-            "uv run loom compound sync*": "deny",
+            "*loom compound sync*": "deny",
             # Block team lifecycle and orchestration.
-            "loom team start*": "deny",
-            "uv run loom team start*": "deny",
-            "loom team attach*": "deny",
-            "uv run loom team attach*": "deny",
-            "loom team disband*": "deny",
-            "uv run loom team disband*": "deny",
-            "loom team ship*": "deny",
-            "uv run loom team ship*": "deny",
-            "loom team spawn*": "deny",
-            "uv run loom team spawn*": "deny",
-            "loom team spawn-integrator*": "deny",
-            "uv run loom team spawn-integrator*": "deny",
-            "loom team bounce*": "deny",
-            "uv run loom team bounce*": "deny",
-            "loom team janitor*": "deny",
-            "uv run loom team janitor*": "deny",
-            "loom team mark-retirable*": "deny",
-            "uv run loom team mark-retirable*": "deny",
-            "loom team objective *": "deny",
-            "uv run loom team objective *": "deny",
-            "loom team sprint *": "deny",
-            "uv run loom team sprint *": "deny",
-            "loom team prep-sprint*": "deny",
-            "uv run loom team prep-sprint*": "deny",
-            "loom team merge *": "deny",
-            "uv run loom team merge *": "deny",
+            "*loom team * start*": "deny",
+            "*loom team * attach*": "deny",
+            "*loom team * disband*": "deny",
+            "*loom team * ship*": "deny",
+            "*loom team * spawn*": "deny",
+            "*loom team * spawn-integrator*": "deny",
+            "*loom team * bounce*": "deny",
+            "*loom team * janitor*": "deny",
+            "*loom team * mark-retirable*": "deny",
+            "*loom team * objective *": "deny",
+            "*loom team * sprint *": "deny",
+            "*loom team * prep-sprint*": "deny",
+            "*loom team * merge *": "deny",
         },
     }
 
@@ -677,14 +653,10 @@ def _opencode_team_agent_permissions(*, repo_root: Path) -> Dict[str, Dict[str, 
         "bash": {
             **dict(worker_permission.get("bash") or {}),
             # Integrator may operate merge queue primitives only.
-            "loom team merge *": "deny",
-            "uv run loom team merge *": "deny",
-            "loom team merge list*": "allow",
-            "uv run loom team merge list*": "allow",
-            "loom team merge next*": "allow",
-            "uv run loom team merge next*": "allow",
-            "loom team merge done*": "allow",
-            "uv run loom team merge done*": "allow",
+            "*loom team * merge *": "deny",
+            "*loom team * merge list*": "allow",
+            "*loom team * merge next*": "allow",
+            "*loom team * merge done*": "allow",
         },
     }
 
@@ -871,7 +843,7 @@ def init_agents(
     investigator_prompt = prompts["investigator"]
     integrator_prompt = prompts["integrator"]
 
-    perms = _opencode_team_agent_permissions(repo_root=root)
+    perms = _opencode_team_agent_permissions()
     manager_permission = perms["manager"]
     worker_permission = perms["worker"]
     investigator_permission = perms["investigator"]
@@ -1051,7 +1023,7 @@ def _ensure_opencode_agents(
     investigator_prompt = prompts["investigator"]
     integrator_prompt = prompts["integrator"]
 
-    perms = _opencode_team_agent_permissions(repo_root=canonical_root)
+    perms = _opencode_team_agent_permissions()
     manager_permission = perms["manager"]
     worker_permission = perms["worker"]
     investigator_permission = perms["investigator"]

@@ -54,7 +54,7 @@
       "confidence": 1,
       "status": "active",
       "created_at": "2026-01-30T19:57:13.467Z",
-      "updated_at": "2026-02-03T00:16:52.461Z",
+      "updated_at": "2026-02-03T01:00:58.221Z",
       "evidence": [
         {
           "ts": "2026-01-30T19:57:13.467Z",
@@ -104,6 +104,21 @@
           "ts": "2026-02-03T00:16:52.461Z",
           "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
           "note": "Changes touching team orchestration/prompt assembly were paired with tests/test_team_prompts.py updates, reinforcing prompt contract coverage whenever prompt-facing behavior shifts."
+        },
+        {
+          "ts": "2026-02-03T00:51:53.502Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Recent change touched team prompt assembly surface (src/agent_loom/team/core.py) and updated the prompt contract test (tests/test_team_prompts.py)."
+        },
+        {
+          "ts": "2026-02-03T00:55:38.383Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Prompt-facing behavior changes were accompanied by prompt contract test updates."
+        },
+        {
+          "ts": "2026-02-03T01:00:58.221Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Prompt-facing behavior was exercised via changes in tests/test_team_prompts.py, reinforcing that prompt edits must be paired with prompt contract tests."
         }
       ]
     },
@@ -213,7 +228,7 @@
       "confidence": 1,
       "status": "active",
       "created_at": "2026-01-30T20:09:25.396Z",
-      "updated_at": "2026-02-03T00:16:52.461Z",
+      "updated_at": "2026-02-03T01:37:14.552Z",
       "evidence": [
         {
           "ts": "2026-01-30T20:09:25.396Z",
@@ -308,6 +323,26 @@
           "ts": "2026-02-03T00:16:52.461Z",
           "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
           "note": "Recent work made substantial edits in src/agent_loom/team/core.py and updated tests/test_team_prompts.py alongside it, reinforcing the need to lock core team behavior with focused tests."
+        },
+        {
+          "ts": "2026-02-03T00:51:53.502Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Edits in src/agent_loom/team/core.py were paired with a focused contract test adjustment in tests/test_team_prompts.py."
+        },
+        {
+          "ts": "2026-02-03T00:55:38.383Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Edited src/agent_loom/team/core.py and updated focused prompt coverage in tests/test_team_prompts.py in the same change."
+        },
+        {
+          "ts": "2026-02-03T01:00:58.221Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Session changed src/agent_loom/team/core.py alongside updates in tests/test_team_prompts.py, matching the intended contract-testing workflow for team core changes."
+        },
+        {
+          "ts": "2026-02-03T01:37:14.552Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Recent changes touched src/agent_loom/team/core.py and were paired with focused prompt contract updates in tests/test_team_prompts.py, reinforcing the need to always lock team-core behavior with targeted tests."
         }
       ]
     },
@@ -697,10 +732,10 @@
       "trigger": "When adding or restructuring sections in src/agent_loom/team/prompts.py (or prompt assembly in src/agent_loom/team/core.py).",
       "action": "Make prompt rendering deterministic (explicit ordering, stable headings) and add/expand section-level contract tests in tests/test_team_prompts.py that assert required sections/ordering without relying on nondeterministic data.",
       "tags": [],
-      "confidence": 0.8600000000000001,
+      "confidence": 0.9400000000000002,
       "status": "active",
       "created_at": "2026-01-31T20:42:03.012Z",
-      "updated_at": "2026-02-01T19:14:15.264Z",
+      "updated_at": "2026-02-03T01:37:14.552Z",
       "evidence": [
         {
           "ts": "2026-01-31T20:42:03.012Z",
@@ -715,6 +750,26 @@
           "ts": "2026-02-01T19:14:15.264Z",
           "sessionID": "ses_3e56af781ffeyuFUyUyQzJFmJB",
           "note": "Recent change touched src/agent_loom/team/prompts.py and was paired with updates to tests/test_team_prompts.py, reinforcing that prompt assembly needs section-level, deterministic contract coverage."
+        },
+        {
+          "ts": "2026-02-03T00:51:53.502Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Prompt-related changes were validated by refining tests/test_team_prompts.py, reinforcing section-level prompt contract testing."
+        },
+        {
+          "ts": "2026-02-03T00:55:38.383Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Prompt contract changes were validated via targeted edits to tests/test_team_prompts.py rather than broad testing."
+        },
+        {
+          "ts": "2026-02-03T01:00:58.221Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Prompt contract updates were made in tests/test_team_prompts.py, consistent with section-level invariants rather than brittle snapshots."
+        },
+        {
+          "ts": "2026-02-03T01:37:14.552Z",
+          "sessionID": "ses_3df363547ffe9UJUtV4RePTANc",
+          "note": "Prompt-related behavior changes were validated via updates to tests/test_team_prompts.py, supporting section-level invariants over brittle snapshots."
         }
       ]
     },

@@ -114,12 +114,11 @@ This block is maintained by the compound plugin.
 <!-- END:compound:workflow-commands -->
 
 <!-- BEGIN:compound:loom-core-context -->
-- Greenfield: prioritize clarity and determinism; no backwards compatibility.
-- Tooling: use `uv run ...` for all Python commands; gate is basedpyright → ruff → targeted pytest.
-- Contracts: CLI output and prompts are deterministic and locked by focused contract tests.
-- Team initialization is a contract: keep agent init/spawn defaults deterministic and covered (prefer `tests/test_team_init_agents.py`, plus prompt tests when prompts change).
-- HTML templates are contracts: treat `src/agent_loom/server/templates/*.html` and `src/agent_loom/dashboard/templates/*.html` as agent-parseable UX surfaces; preserve stable `data-*` anchors and deterministic ordering.
-- When HTML changes: update request-level invariants in `tests/test_server_api_contract.py` (prefer anchors/sections over full-HTML snapshots).
+- Greenfield: optimize for clarity + determinism; do not carry backwards-compat baggage.
+- Use `uv run ...` for all Python tooling. Verification gate: `uv run basedpyright` -> `uv run ruff check .` -> `uv run pytest <targeted>`.
+- UX is a contract (CLI, prompts, server HTML): keep output stable (ordering, no timestamps/random IDs, no machine-specific absolute paths).
+- Team runtime changes in `src/agent_loom/team/core.py` or `src/agent_loom/team/prompts.py` require focused contract updates (prefer `tests/test_team_prompts.py` and other targeted modules).
+- Determinism defaults: explicitly sort anything that originates from dict/set iteration before rendering output or prompts.
 <!-- END:compound:loom-core-context -->
 
 <!-- BEGIN:compound:instincts-index -->
@@ -150,6 +149,9 @@ This block is maintained by the compound plugin.
 - **large-template-refactor-diff-hygiene** (96%)
   - Trigger: You are about to make a large refactor in src/agent_loom/server/templates/*.html (especially dashboard.html) that could produce a huge diff.
   - Action: Minimize formatting-only churn, preserve/introduce stable data-* anchors, and update tests/test_server_api_contract.py in the same change to assert invariant markers/sections (avoid full HTML snapshot…
+- **team-prompts-need-section-level-contracts** (94%)
+  - Trigger: When adding or restructuring sections in src/agent_loom/team/prompts.py (or prompt assembly in src/agent_loom/team/core.py).
+  - Action: Make prompt rendering deterministic (explicit ordering, stable headings) and add/expand section-level contract tests in tests/test_team_prompts.py that assert required sections/ordering without relyin…
 - **compound-template-mirror-must-stay-in-sync** (94%)
   - Trigger: When editing Compound plugin/skill/docs behavior that is shipped via a template (for example .opencode/plugins/compound_engineering.ts or .opencode/skills/*) and the repo contains a scaffold copy unde…
   - Action: Update both the repo-root .opencode/* sources and the scaffolded template under src/agent_loom/compound/opencode/.opencode/* to keep installation output deterministic; add/adjust tests/test_compound_i…
@@ -159,9 +161,6 @@ This block is maintained by the compound plugin.
 - **dashboard-template-edits-require-anchor-contracts** (88%)
   - Trigger: You edit src/agent_loom/dashboard/templates/dashboard.html or src/agent_loom/server/templates/dashboard.html (especially adding/removing/reordering sections).
   - Action: Preserve/add stable data-* anchors, keep section ordering deterministic, update request-level invariants in tests/test_server_api_contract.py, then run: uv run basedpyright; uv run ruff check .; uv ru…
-- **team-prompts-need-section-level-contracts** (86%)
-  - Trigger: When adding or restructuring sections in src/agent_loom/team/prompts.py (or prompt assembly in src/agent_loom/team/core.py).
-  - Action: Make prompt rendering deterministic (explicit ordering, stable headings) and add/expand section-level contract tests in tests/test_team_prompts.py that assert required sections/ordering without relyin…
 - **ticket-changes-require-ticket-ux-contract-test** (84%)
   - Trigger: You edit ticket runtime/UX code (src/agent_loom/ticket/*.py or src/agent_loom/ui/ticket_ui.*) or anything that changes rendered ticket text/sections.
   - Action: Treat ticket UX as a contract: make ordering deterministic, update/add focused assertions in tests/test_ticket_ux.py for required sections/lines (avoid nondeterministic values), then verify via `uv ru…

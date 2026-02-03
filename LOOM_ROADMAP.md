@@ -10,9 +10,10 @@ This is an evolving, empirical compass. Keep it short and stable.
 <!-- END:compound:roadmap-backlog -->
 
 <!-- BEGIN:compound:roadmap-ai-notes -->
-- Near-term focus: harden team boot/init determinism (agents, ordering, config) and treat it as a first-class contract with focused tests.
-- Keep prompts, CLI surfaces, and server-rendered HTML agent-legible via stable sections/anchors and deterministic ordering.
-- Prefer small, explicit contract tests over broad snapshots; expand coverage only when a surface becomes user/agent-critical.
+- Near-term focus: harden team runtime determinism (init/spawn defaults, prompt assembly, stable output) with focused contract tests.
+- Prefer narrow, invariant-based pytest contracts over full snapshots for prompts/HTML.
+- Keep the developer loop strict and repeatable: `uv run basedpyright` -> `uv run ruff check .` -> targeted `uv run pytest`.
+- Continue tightening “agent-legible UX” surfaces: stable anchors/sections, explicit ordering, and minimal nondeterminism.
 <!-- END:compound:roadmap-ai-notes -->
 
 ## Changelog (AI-first)
@@ -23,6 +24,10 @@ It tracks changes to skills, instincts, and core context files.
 It is intentionally bounded. Do not write entries like "no changes".
 
 <!-- BEGIN:compound:changelog-entries -->
+- 2026-02-03T01:37:15.816Z Reinforce team core + prompt contract instincts; keep docs in sync.
+- 2026-02-03T01:00:59.243Z Reinforce team-core + prompt-contract discipline (determinism + targeted prompt tests) in instincts and always-on context.
+- 2026-02-03T00:55:39.333Z Reinforce that team core/prompt changes must be locked with targeted prompt contract tests.
+- 2026-02-03T00:51:54.512Z Reinforced instincts that team prompt/core changes must be locked by focused prompt contract tests.
 - 2026-02-03T00:47:29.598Z Add a focused checklist skill for prompt assembly changes in src/agent_loom/team/core.py, emphasizing deterministic prompts and contract tests.
 - 2026-02-03T00:28:13.735Z Add contract memory for deterministic team init agents (new instinct + skill) and reinforce docs around team boot determinism and focused tests.
 - 2026-02-03T00:16:55.004Z Reinforced instincts to always couple team core/prompt changes with deterministic prompt contract tests.
