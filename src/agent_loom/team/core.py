@@ -566,7 +566,7 @@ def _agent_file_content(
     return "\n".join(lines)
 
 
-def _opencode_team_agent_permissions() -> Dict[str, Dict[str, Any]]:
+def _opencode_team_agent_permissions(*, repo_root: Path) -> Dict[str, Dict[str, Any]]:
     """Return OpenCode permission profiles for Team agents.
 
     Notes:
@@ -575,12 +575,19 @@ def _opencode_team_agent_permissions() -> Dict[str, Dict[str, Any]]:
     - Workers need broad shell access for real work, but must not operate Team.
     """
 
+    root = repo_root.resolve()
+    root_str = str(root)
+    external_allow = {
+        root_str: "allow",
+        f"{root_str}/**": "allow",
+    }
+
     # Manager: orchestrate via loom team + ticket; avoid direct coding.
     manager_permission: Dict[str, Any] = {
         "*": "allow",
         "doom_loop": "deny",
         "edit": "deny",
-        "external_directory": "deny",
+        "external_directory": dict(external_allow),
         "task": "deny",
         "bash": {
             "*": "deny",
@@ -627,7 +634,7 @@ def _opencode_team_agent_permissions() -> Dict[str, Dict[str, Any]]:
     worker_permission: Dict[str, Any] = {
         "*": "allow",
         "doom_loop": "deny",
-        "external_directory": "deny",
+        "external_directory": dict(external_allow),
         "bash": {
             "*": "allow",
             # Force all tmux interaction through Team CLI.
@@ -864,7 +871,7 @@ def init_agents(
     investigator_prompt = prompts["investigator"]
     integrator_prompt = prompts["integrator"]
 
-    perms = _opencode_team_agent_permissions()
+    perms = _opencode_team_agent_permissions(repo_root=root)
     manager_permission = perms["manager"]
     worker_permission = perms["worker"]
     investigator_permission = perms["investigator"]
@@ -1044,7 +1051,7 @@ def _ensure_opencode_agents(
     investigator_prompt = prompts["investigator"]
     integrator_prompt = prompts["integrator"]
 
-    perms = _opencode_team_agent_permissions()
+    perms = _opencode_team_agent_permissions(repo_root=canonical_root)
     manager_permission = perms["manager"]
     worker_permission = perms["worker"]
     investigator_permission = perms["investigator"]

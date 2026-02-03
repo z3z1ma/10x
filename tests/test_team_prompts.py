@@ -399,10 +399,10 @@ class TestRenderMergeWorkerPrompt(unittest.TestCase):
 class TestEnsureOpenCodeAgents(unittest.TestCase):
     def test_default_agent_markdown_snapshot_sha256(self) -> None:
         expected = {
-            "team-integrator.md": "81046d35a480932b00d75e5ce419828e63ace159b87518c6ee744f9b20294254",
-            "team-investigator.md": "bc406d1c0c8c3f25ce989f4d56661245c8024a1d9e9c7fa22e06490f6b7ca2a1",
-            "team-manager.md": "6f901208c21ca7f816477f4e9722a41c3bf84adf1793ca14f5ebf966c33ccbb3",
-            "team-worker.md": "1ed3d842c0383dd1f111b3fd5a997b73dd53ca632cf59a826756ab51f61ad796",
+            "team-integrator.md": "1d2bd412aa0880f71d911c80f39ddb24f6a9e1842dc3455e9bb5d225ebd94fa7",
+            "team-investigator.md": "bd6d8c5732ee52531c570a05ea439a22ae32fac24a18df61bfd3030a1ee51d99",
+            "team-manager.md": "d5287a0453c97cc1d049e090a368902e7f3ff827994f28be7af0e1593fb8e252",
+            "team-worker.md": "0a6cf57cb1c51eea7fb9fdc7b6a76a7b9b4231f664f40db41ac97ff6a08dee34",
         }
 
         with tempfile.TemporaryDirectory() as d:

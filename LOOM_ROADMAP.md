@@ -23,6 +23,7 @@ It tracks changes to skills, instincts, and core context files.
 It is intentionally bounded. Do not write entries like "no changes".
 
 <!-- BEGIN:compound:changelog-entries -->
+- 2026-02-03T00:47:29.598Z Add a focused checklist skill for prompt assembly changes in src/agent_loom/team/core.py, emphasizing deterministic prompts and contract tests.
 - 2026-02-03T00:28:13.735Z Add contract memory for deterministic team init agents (new instinct + skill) and reinforce docs around team boot determinism and focused tests.
 - 2026-02-03T00:16:55.004Z Reinforced instincts to always couple team core/prompt changes with deterministic prompt contract tests.
 - 2026-02-02T23:45:29.308Z Reinforce dashboard template + server API contract test coupling via instinct confidence bumps; no new skills needed because existing dashboard anchor/contract skill already covers this workflow.
