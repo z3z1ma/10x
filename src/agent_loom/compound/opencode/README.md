@@ -171,9 +171,10 @@ Default upgrades are non-destructive:
 
 ### Run
 
-1. Start OpenCode normally. The plugin bootstraps missing files and syncs indexes.
-2. Use `/workflows:plan` and proceed through the workflow.
-3. Let the plugin autolearn on idle turns, or run it manually:
+1. Run `loom compound init --dest .` once (installs scaffolding).
+2. Start OpenCode normally. The plugin syncs indexes.
+3. Use `/workflows:plan` and proceed through the workflow.
+4. Let the plugin autolearn on idle turns, or run it manually:
    - `compound_autolearn_now`
 
 ---

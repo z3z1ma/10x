@@ -82,6 +82,35 @@ def test_compound_install_template_uses_compoundspec_v2(tmp_path: Path) -> None:
     assert "CompoundSpec v1" not in text
 
 
+def test_compound_install_provides_plugin_required_scaffolding(tmp_path: Path) -> None:
+    dest = tmp_path
+    install_opencode(dest=dest, dry_run=False)
+
+    required = [
+        dest / "AGENTS.md",
+        dest / "LOOM_ROADMAP.md",
+        dest / ".opencode" / "commands" / "workflows:plan.md",
+        dest / ".opencode" / "compound" / "prompts" / "autolearn.md",
+        dest / ".opencode" / "memory" / ".gitignore",
+        dest / ".opencode" / "compound" / ".gitignore",
+    ]
+    for p in required:
+        assert p.exists(), str(p)
+
+    mem_ignore = (dest / ".opencode" / "memory" / ".gitignore").read_text(
+        encoding="utf-8"
+    )
+    assert "observations.jsonl" in mem_ignore
+    assert "observations.jsonl.*.bak" in mem_ignore
+    assert "autolearn_failures/" in mem_ignore
+
+    compound_ignore = (dest / ".opencode" / "compound" / ".gitignore").read_text(
+        encoding="utf-8"
+    )
+    assert "state.json" in compound_ignore
+    assert "*.tmp.*" in compound_ignore
+
+
 def test_compound_install_dry_run_does_not_write_files(tmp_path: Path) -> None:
     dest = tmp_path
     res = install_opencode(dest=dest, dry_run=True)
