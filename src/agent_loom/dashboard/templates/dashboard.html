@@ -1393,6 +1393,7 @@
     save();
 
     if (route === 'tickets') livePendingTicketsRender = false;
+    if (route === 'teams') livePendingTeamsRender = false;
 
     $('#viewTitle').textContent = routes[route].title;
     setNavActive(route);
@@ -2418,6 +2419,14 @@
     }
   }
 
+  function teamBundleFingerprint(bundle){
+    try{
+      return JSON.stringify(bundle);
+    } catch {
+      return String(Date.now());
+    }
+  }
+
   async function loadTeamBundle(team){
     if (!team) return;
     try{
@@ -2429,9 +2438,15 @@
         api(`/api/v1/teams/${encodeURIComponent(team)}/inbox`, { query: { limit: 50 } }),
         api(`/api/v1/teams/${encodeURIComponent(team)}/captures`, { query: { limit: 50 } })
       ]);
-      data.teams.bundle = { team, status, run, events, inbox, captures };
+      const bundle = { team, status, run, events, inbox, captures };
+      const nextHash = teamBundleFingerprint(bundle);
+      const changed = nextHash !== data.teams._bundleHash;
+      data.teams.bundle = bundle;
+      data.teams._bundleHash = nextHash;
+      return changed;
     } catch (err){
       toast('Team fetch failed', 'bad', err.message || String(err));
+      return false;
     }
   }
 
@@ -4092,6 +4107,7 @@
   // Live polling
   let liveTimer = null;
   let livePendingTicketsRender = false;
+  let livePendingTeamsRender = false;
 
   function setLive(on){
     state.live = !!on;
@@ -4135,8 +4151,16 @@
         }
       }
       if (state.teams.selected){
-        await loadTeamBundle(state.teams.selected);
-        if (routeFromHash() === 'teams') await renderRoute();
+        const bundleChanged = await loadTeamBundle(state.teams.selected);
+        const needsRender = bundleChanged || livePendingTeamsRender;
+        if (routeFromHash() === 'teams' && needsRender){
+          if (shouldSkipLiveRender()){
+            livePendingTeamsRender = true;
+          } else {
+            livePendingTeamsRender = false;
+            await renderRoute();
+          }
+        }
       }
     };
     liveTimer = setInterval(tick, Number(state.liveInterval || 5000));
