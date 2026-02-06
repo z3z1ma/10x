@@ -1,5 +1,5 @@
 ---
-description: Work → execute a ticket in an isolated worktree (loom workspace), update ticket status/notes (loom ticket).
+description: Work -> execute a ticket in an isolated worktree (loom workspace), update ticket status/notes (loom ticket).
 agent: build
 subtask: false
 ---
@@ -15,7 +15,8 @@ Goals:
 - Implement the plan with tests.
 
 Process:
-1) Run `compound_bootstrap`.
+1) Ensure compound scaffolding exists:
+   - Run via bash: `loom compound init --dest .`
 2) Read the ticket:
    - `loom ticket show $ARGUMENTS`
 3) Set status to in_progress:
@@ -33,7 +34,8 @@ Process:
 7) When done:
    - run the relevant test commands
    - set status to `closed`
-8) End with `compound_sync` to refresh derived doc sections.
+8) Finish by refreshing derived compound docs:
+   - Run via bash: `loom compound refresh`
 
 Output:
 - What changed.

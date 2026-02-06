@@ -90,11 +90,13 @@ def test_compound_install_template_autolearn_prompt_is_tools_first(
     prompt = (dest / ".opencode" / "compound" / "prompts" / "autolearn.md").read_text(
         encoding="utf-8"
     )
-    assert "compound_skill_upsert" in prompt
-    assert "compound_instinct_upsert" in prompt
-    assert "compound_docblock_upsert" in prompt
-    assert "compound_memo_add" in prompt
-    assert "compound_changelog_append" in prompt
+    assert "bash" in prompt
+    assert "loom compound skill upsert" in prompt
+    assert "loom compound instinct upsert" in prompt
+    assert "loom compound docblock upsert" in prompt
+    assert "loom compound changelog append" in prompt
+    assert "loom compound refresh" in prompt
+    assert "loom memory add" in prompt
     assert "Output **only** valid JSON" not in prompt
 
 

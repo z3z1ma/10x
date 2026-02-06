@@ -13,9 +13,9 @@ Hard rules:
 - Do nothing unless the learning is durable.
 
 How to act:
-- Prefer calling tools.
-- If you decide to persist learnings, apply them using the granular tools below.
-- If there is nothing worth persisting, do not call any tools.
+- Prefer calling the `bash` tool.
+- Use Loom commands for all writes (skills/instincts/docs/changelog/memos).
+- If there is nothing worth persisting, do not run any commands.
 
 Budget (hard caps):
 - Max tool calls per run: 18
@@ -24,13 +24,14 @@ Budget (hard caps):
 - Max doc-block upserts per run: 3
 - Max memos per run: 4
 
-Tools to use:
-- `compound_skill_upsert`
-- `compound_instinct_upsert`
-- `compound_docblock_upsert`
-- `compound_memo_add`
-- `compound_changelog_append`
-- `compound_sync`
+Commands to use (via bash):
+- `loom compound skill upsert <name> --description ... --body ...` (or pipe stdin)
+- `loom compound instinct upsert create|update <id> ...`
+- `loom compound docblock upsert --file AGENTS.md --id loom-core-context --content ...`
+- `loom compound docblock upsert --file LOOM_ROADMAP.md --id roadmap-ai-notes --content ...`
+- `loom compound changelog append --note "..."`
+- `loom compound refresh`
+- `loom memory add --title ... --body ... --tag ... --scope ...` (use sparingly)
 
 Rules:
 - Prefer updating an existing skill over creating a near-duplicate.

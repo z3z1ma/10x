@@ -1,5 +1,5 @@
 ---
-description: Plan → create tickets (loom ticket) and a detailed implementation plan, using memory recall (loom memory).
+description: Plan -> create tickets (loom ticket) and a detailed implementation plan, using memory recall (loom memory).
 agent: plan
 subtask: false
 ---
@@ -15,7 +15,8 @@ Goals:
 - Do **not** implement code in this phase.
 
 Process:
-1) Run `compound_bootstrap` to ensure scaffolding exists.
+1) Ensure compound scaffolding exists:
+   - Run via bash: `loom compound init --dest .`
 2) Recall memory notes relevant to planning this idea:
    - `loom memory recall "$ARGUMENTS" --command workflows:plan --format prompt`
 3) Inspect current ticket backlog:
@@ -29,7 +30,8 @@ Process:
    - sequencing and “definition of done”
    - tests/checks to run
    - risks and rollback plan
-6) Finish by calling `compound_sync` to refresh AI-managed indexes in docs.
+6) Finish by refreshing derived compound docs:
+   - Run via bash: `loom compound refresh`
 
 Output:
 - A concise plan document.

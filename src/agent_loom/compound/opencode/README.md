@@ -171,10 +171,9 @@ Default upgrades are non-destructive:
 ### Run
 
 1. Run `loom compound init --dest .` once (installs scaffolding).
-2. Start OpenCode normally. The plugin syncs indexes.
+2. Start OpenCode normally. The plugin calls Loom to keep derived indexes current.
 3. Use `/workflows:plan` and proceed through the workflow.
-4. Let the plugin autolearn on idle turns, or run it manually:
-   - `compound_autolearn_now`
+4. Let the plugin autolearn on idle turns (it runs a background prompt that uses `bash` + `loom compound ...`).
 
 ---
 
@@ -182,7 +181,9 @@ Default upgrades are non-destructive:
 
 This plugin is intentionally limited:
 
- - ✅ Writes: skills, instincts, memos, AGENTS.md, LOOM_ROADMAP.md
+- ✅ Writes: observations.jsonl (append-only; gitignored by default)
+- ✅ Triggers: background autolearn prompts
+- ✅ Calls Loom: for priming/refresh
 - ❌ Does **not** write product code
 
 If you want it to mutate application code automatically, you can do that, but you should probably also install a fire alarm and start journaling.

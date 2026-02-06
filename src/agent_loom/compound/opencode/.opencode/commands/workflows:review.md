@@ -1,5 +1,5 @@
 ---
-description: Review → multi-angle code review before merge, update tickets with findings.
+description: Review -> multi-angle code review before merge, update tickets with findings.
 agent: build
 subtask: false
 ---
@@ -14,10 +14,11 @@ Goals:
 - Record required follow-ups back into the ticket.
 
 Process:
-1) Run `compound_bootstrap`.
+1) Ensure compound scaffolding exists:
+   - Run via bash: `loom compound init --dest .`
 2) Gather context:
    - `loom ticket show $ARGUMENTS`
-   - `compound_git_summary()`
+   - Run via bash: `git status --porcelain` and `git diff --stat`
 3) If the OpenCode `task` tool is available, run three subreviews (subagents):
    - agent: `review-quality`
    - agent: `review-security`
@@ -31,7 +32,8 @@ Process:
 5) Update the ticket:
    - add notes
    - create new tickets if issues are substantial
-6) End with `compound_sync`.
+6) Finish by refreshing derived compound docs:
+   - Run via bash: `loom compound refresh`
 
 Output:
 - Review summary.
