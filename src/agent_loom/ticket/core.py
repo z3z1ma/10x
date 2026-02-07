@@ -2,7 +2,7 @@
 
 Design goals
  - Ticket library + CLI (loom)
-- State stored as Markdown with YAML frontmatter in `.tickets/`
+- State stored as Markdown with YAML frontmatter in `.tickets/<status>/`
 - Agent-friendly graph primitives: deps, links, parent/child
 - Safe-ish concurrency: per-ticket lease locks + optional claim enforcement
 - Optional external sync (GitHub built-in)

@@ -16,9 +16,9 @@ loom <noun> --help
 
 ## 1. Intent & State (Loom Ticket)
 
-**Source of Truth:** Git-backed files in `.tickets/`. Use this to track *what* you are doing and *why*.
+**Source of Truth:** Git-backed files in `.tickets/<status>/` (one folder per status). Use this to track *what* you are doing and *why*.
 
-* **Model:** Graph-based (deps, links). Statuses: `open` -> `in_progress` -> `closed`.
+* **Model:** Graph-based (deps, links). Statuses: `open|ready|in_progress|blocked|review|closed`.
 * **Primitives:**
 * `loom ticket create "$TITLE" --type [task|bug|epic] --priority [0-4]` -> Returns `$TID`.
 * `loom ticket show $TID` -> Returns metadata + body + relationships (blockers).

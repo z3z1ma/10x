@@ -254,6 +254,15 @@ class TicketStore:
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.leases_dir.mkdir(parents=True, exist_ok=True)
         (self.tickets_dir / AUDIT_DIRNAME).mkdir(parents=True, exist_ok=True)
+        for s in VALID_STATUSES:
+            (self.tickets_dir / str(s)).mkdir(parents=True, exist_ok=True)
+
+    def ticket_path_for_status(self, ticket_id: str, *, status: str) -> Path:
+        # Tickets are stored under one status layer: .tickets/<status>/<id>.md
+        s = normalize_status(status)
+        if s not in VALID_STATUSES:
+            s = "open"
+        return (self.tickets_dir / s) / f"{ticket_id}.md"
 
     def lease_path(self, ticket_id: str) -> Path:
         return self.leases_dir / f"{ticket_id}.json"
@@ -339,7 +348,68 @@ class TicketStore:
         )
 
     def ticket_path(self, ticket_id: str) -> Path:
-        return self.tickets_dir / f"{ticket_id}.md"
+        # Default location for new/unknown tickets.
+        return self.ticket_path_for_status(ticket_id, status="open")
+
+    def _ticket_paths_candidates(self) -> list[Path]:
+        if not self.tickets_dir.exists():
+            return []
+        out: list[Path] = []
+        for s in VALID_STATUSES:
+            d = self.tickets_dir / str(s)
+            if d.is_dir():
+                out.extend(list(d.glob("*.md")))
+        out.extend(list(self.tickets_dir.glob("*.md")))
+        # Keep deterministic ordering across platforms.
+        out = sorted(
+            [p for p in out if p.is_file()],
+            key=lambda p: safe_relpath(p, self.tickets_dir).replace("\\", "/"),
+        )
+        return out
+
+    def _canonicalize_ticket_path(self, p: Path) -> Path:
+        """Move/rename a ticket file into .tickets/<status>/<id>.md.
+
+        This makes rollout safe: legacy tickets in the bare .tickets/ dir (and
+        tickets in the wrong status folder) are self-correcting as soon as we
+        touch the store.
+        """
+
+        try:
+            text = p.read_text(encoding="utf-8")
+        except Exception:
+            return p
+
+        try:
+            fm, _body = split_frontmatter(text)
+        except Exception:
+            fm = {}
+
+        tid = str((fm or {}).get("id") or p.stem).strip() or p.stem
+        status_raw = (fm or {}).get("status") or "open"
+        status = normalize_status(status_raw)
+        if status not in VALID_STATUSES:
+            status = "open"
+
+        desired = self.ticket_path_for_status(tid, status=status)
+        if p.resolve() == desired.resolve():
+            return p
+
+        desired.parent.mkdir(parents=True, exist_ok=True)
+        if desired.exists() and desired.resolve() != p.resolve():
+            raise TicketArgError(
+                code="ARG",
+                error=f"Ticket path conflict for id {tid!r}: {safe_relpath(p, self.tickets_dir)} -> {safe_relpath(desired, self.tickets_dir)} exists",
+                hint="Resolve duplicate ticket files (or delete the incorrect one) and retry.",
+                details={
+                    "src": safe_relpath(p, self.tickets_dir),
+                    "dst": safe_relpath(desired, self.tickets_dir),
+                },
+            )
+
+        # Atomic within filesystem; do not overwrite.
+        p.replace(desired)
+        return desired
 
     def resolve_id(self, pattern: str) -> str:
         raw = (pattern or "").strip()
@@ -355,12 +425,12 @@ class TicketStore:
             raise TicketArgError(
                 code="ARG",
                 error=f"Invalid ticket reference {raw!r}",
-                hint="Use an id like `ab-1234`, `#ab-1234`, or a path like `.tickets/ab-1234.md`.",
+                hint=(
+                    "Use an id like `ab-1234`, `#ab-1234`, or a path like "
+                    "`.tickets/<status>/ab-1234.md` (for example `.tickets/open/ab-1234.md`). "
+                    "Legacy `.tickets/ab-1234.md` refs are also accepted."
+                ),
             )
-        exact = self.ticket_path(norm)
-        if exact.exists():
-            return norm
-
         if not self.tickets_dir.exists() or not self.tickets_dir.is_dir():
             raise TicketNotFoundError(
                 code="NOT_FOUND",
@@ -370,7 +440,13 @@ class TicketStore:
                 details={"tickets_dir": str(self.tickets_dir)},
             )
 
-        paths = list(self.tickets_dir.glob("*.md"))
+        paths = list(self.iter_paths())
+        exact_matches = [p for p in paths if p.stem == norm]
+        if len(exact_matches) == 1:
+            return norm
+        if len(exact_matches) > 1:
+            ids = sorted([p.stem for p in exact_matches])
+            self._raise_ambiguous(norm, ids[:10], max(0, len(ids) - 10))
 
         prefix_matches = [p for p in paths if p.stem.startswith(norm)]
         if len(prefix_matches) == 1:
@@ -393,7 +469,10 @@ class TicketStore:
         raise TicketNotFoundError(
             code="NOT_FOUND",
             error=f"Ticket {norm!r} not found",
-            hint="Run `loom ticket list` to see ids. Refs like `#id`, `id.md`, and `.tickets/id.md` are accepted.",
+            hint=(
+                "Run `loom ticket list` to see ids. Refs like `#id`, `id.md`, "
+                "`.tickets/<status>/id.md`, and legacy `.tickets/id.md` are accepted."
+            ),
         )
 
     def _raise_ambiguous(self, norm: str, matches: list[str], more: int) -> NoReturn:
@@ -409,11 +488,40 @@ class TicketStore:
     def iter_paths(self):
         if not self.tickets_dir.exists():
             return iter(())
-        return iter(sorted(self.tickets_dir.glob("*.md")))
+        candidates = self._ticket_paths_candidates()
+        canon: list[Path] = []
+        seen: set[str] = set()
+        for p in candidates:
+            if not p.exists() or not p.is_file():
+                continue
+            try:
+                p2 = self._canonicalize_ticket_path(p)
+            except TicketArgError:
+                raise
+            except Exception:
+                p2 = p
+            try:
+                key = str(p2.resolve())
+            except Exception:
+                key = str(p2)
+            if key in seen:
+                continue
+            seen.add(key)
+            if p2.exists() and p2.is_file():
+                canon.append(p2)
+        canon = sorted(
+            canon,
+            key=lambda p: safe_relpath(p, self.tickets_dir).replace("\\", "/"),
+        )
+        return iter(canon)
 
     def load_ticket_by_id(self, ticket_id: str) -> Ticket:
-        p = self.ticket_path(ticket_id)
-        if not p.exists():
+        p: Optional[Path] = None
+        for cand in self.iter_paths():
+            if cand.stem == ticket_id:
+                p = cand
+                break
+        if p is None or not p.exists():
             raise TicketNotFoundError(
                 code="NOT_FOUND",
                 error=f"Ticket {ticket_id!r} not found",
@@ -446,6 +554,13 @@ class TicketStore:
                 before_body = ""
 
         t.fm = normalize_ticket_frontmatter(t.fm)
+
+        desired = self.ticket_path_for_status(
+            str(t.fm.get("id") or t.id), status=str(t.fm.get("status") or "open")
+        )
+        old_path = t.path
+        if old_path.resolve() != desired.resolve():
+            t.path = desired
         out = dump_frontmatter(t.fm) + t.body.lstrip("\n")
 
         audit_event: Optional[Dict[str, Any]] = None
@@ -479,9 +594,14 @@ class TicketStore:
                 "body_bytes_after": len(t.body.encode("utf-8", errors="replace")),
             }
 
+        t.path.parent.mkdir(parents=True, exist_ok=True)
         tmp = t.path.with_suffix(".md.tmp")
         tmp.write_text(out, encoding="utf-8")
         tmp.replace(t.path)
+
+        if old_path.resolve() != t.path.resolve() and old_path.exists():
+            with contextlib.suppress(Exception):
+                old_path.unlink()
 
         if (
             audit_event is not None

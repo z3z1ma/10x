@@ -61,6 +61,8 @@ class TestLoomInitCliUx(unittest.TestCase):
 
             self.assertTrue((root / ".loom-repo" / "worktrees").exists())
             self.assertTrue((root / ".tickets").exists())
+            for s in ("open", "ready", "in_progress", "blocked", "review", "closed"):
+                self.assertTrue((root / ".tickets" / s).exists())
             self.assertTrue((root / ".memory" / "meta.json").exists())
             self.assertTrue((root / ".opencode").exists())
             self.assertTrue((root / ".opencode" / "agents").exists())
@@ -102,6 +104,8 @@ class TestLoomInitCliUx(unittest.TestCase):
 
             self.assertTrue((root / "workspace.json").exists())
             self.assertTrue((root / ".tickets").exists())
+            for s in ("open", "ready", "in_progress", "blocked", "review", "closed"):
+                self.assertTrue((root / ".tickets" / s).exists())
             self.assertTrue((root / ".memory" / "meta.json").exists())
             self.assertTrue((root / ".opencode").exists())
 

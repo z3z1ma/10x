@@ -35,7 +35,7 @@ class TestEnsureTicketsSynced(unittest.TestCase):
     def test_calls_ticket_sync_when_tickets_dirty(self) -> None:
         with (
             mock.patch.object(
-                team, "_git_status_porcelain", return_value=" M .tickets/a.md\n"
+                team, "_git_status_porcelain", return_value=" M .tickets/open/a.md\n"
             ),
             mock.patch.object(team, "ticket_sync") as sync,
         ):

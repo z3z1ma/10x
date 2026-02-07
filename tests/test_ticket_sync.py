@@ -82,7 +82,8 @@ class TestTicketSync(unittest.TestCase):
         with _temp_git_repo() as (root, env):
             env = {**env, "TICKET_DIR": str(root / ".tickets")}
             (root / ".tickets").mkdir(parents=True)
-            (root / ".tickets" / "a.md").write_text("# A\n", encoding="utf-8")
+            (root / ".tickets" / "open").mkdir(parents=True, exist_ok=True)
+            (root / ".tickets" / "open" / "a.md").write_text("# A\n", encoding="utf-8")
             _git(["add", "-A"], cwd=root, env=env)
             _git(["commit", "-m", "init"], cwd=root, env=env)
 
@@ -101,11 +102,12 @@ class TestTicketSync(unittest.TestCase):
         with _temp_git_repo() as (root, env):
             env = {**env, "TICKET_DIR": str(root / ".tickets")}
             (root / ".tickets").mkdir(parents=True)
-            (root / ".tickets" / "a.md").write_text("# A\n", encoding="utf-8")
+            (root / ".tickets" / "open").mkdir(parents=True, exist_ok=True)
+            (root / ".tickets" / "open" / "a.md").write_text("# A\n", encoding="utf-8")
             _git(["add", "-A"], cwd=root, env=env)
             _git(["commit", "-m", "init"], cwd=root, env=env)
 
-            (root / ".tickets" / "a.md").write_text(
+            (root / ".tickets" / "open" / "a.md").write_text(
                 "# A\n\nupdated\n", encoding="utf-8"
             )
             code, payload = _ticket_json(
@@ -116,14 +118,14 @@ class TestTicketSync(unittest.TestCase):
             self.assertTrue(payload.get("ok"))
             self.assertEqual(payload.get("committed"), True)
             self.assertEqual(payload.get("message"), "chore: tickets")
-            self.assertEqual(payload.get("files"), [".tickets/a.md"])
+            self.assertEqual(payload.get("files"), [".tickets/open/a.md"])
 
             self.assertEqual(
                 _git(["log", "-1", "--pretty=%B"], cwd=root, env=env), "chore: tickets"
             )
             shown = _git(["show", "--name-only", "--pretty=format:"], cwd=root, env=env)
             self.assertEqual(
-                [p for p in shown.splitlines() if p.strip()], [".tickets/a.md"]
+                [p for p in shown.splitlines() if p.strip()], [".tickets/open/a.md"]
             )
             self.assertEqual(_git(["status", "--porcelain"], cwd=root, env=env), "")
 
@@ -131,12 +133,13 @@ class TestTicketSync(unittest.TestCase):
         with _temp_git_repo() as (root, env):
             env = {**env, "TICKET_DIR": str(root / ".tickets")}
             (root / ".tickets").mkdir(parents=True)
-            (root / ".tickets" / "a.md").write_text("# A\n", encoding="utf-8")
+            (root / ".tickets" / "open").mkdir(parents=True, exist_ok=True)
+            (root / ".tickets" / "open" / "a.md").write_text("# A\n", encoding="utf-8")
             (root / "other.txt").write_text("x\n", encoding="utf-8")
             _git(["add", "-A"], cwd=root, env=env)
             _git(["commit", "-m", "init"], cwd=root, env=env)
 
-            (root / ".tickets" / "a.md").write_text(
+            (root / ".tickets" / "open" / "a.md").write_text(
                 "# A\n\nupdated\n", encoding="utf-8"
             )
             (root / "other.txt").write_text("y\n", encoding="utf-8")
@@ -150,12 +153,12 @@ class TestTicketSync(unittest.TestCase):
 
             shown = _git(["show", "--name-only", "--pretty=format:"], cwd=root, env=env)
             self.assertEqual(
-                [p for p in shown.splitlines() if p.strip()], [".tickets/a.md"]
+                [p for p in shown.splitlines() if p.strip()], [".tickets/open/a.md"]
             )
 
             status = _git(["status", "--porcelain"], cwd=root, env=env)
             self.assertIn("other.txt", status)
-            self.assertNotIn(".tickets/a.md", status)
+            self.assertNotIn(".tickets/open/a.md", status)
 
 
 if __name__ == "__main__":

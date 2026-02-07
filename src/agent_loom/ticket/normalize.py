@@ -120,7 +120,8 @@ def normalize_ticket_ref(value: str, *, tickets_dir: Optional[Path] = None) -> s
     Accepts:
     - #al-b110
     - al-b110.md
-    - .tickets/al-b110.md
+    - .tickets/al-b110.md (legacy)
+    - .tickets/open/al-b110.md
     - /abs/path/to/.tickets/al-b110.md
     """
 
@@ -148,6 +149,12 @@ def normalize_ticket_ref(value: str, *, tickets_dir: Optional[Path] = None) -> s
             pass
 
     if raw.endswith(".md"):
-        return raw[:-3]
+        # Return the filename stem, not the full path without extension.
+        # This keeps `.tickets/<id>.md` and `.tickets/<status>/<id>.md` refs working
+        # even after tickets are moved.
+        try:
+            return Path(raw).stem
+        except Exception:
+            return raw[:-3]
 
     return raw

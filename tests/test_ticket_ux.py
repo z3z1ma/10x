@@ -346,6 +346,31 @@ class TestTicketUx(unittest.TestCase):
             self.assertEqual(code, 0)
             self.assertEqual(shown["ticket"]["status"], "closed")
 
+    def test_auto_moves_bare_ticket_files_into_status_dirs(self) -> None:
+        with _temp_git_repo() as (root, env):
+            env = {**env, "TICKET_DIR": str(root / ".tickets")}
+            (root / ".tickets").mkdir(parents=True, exist_ok=True)
+
+            # Legacy ticket in bare ticket dir.
+            (root / ".tickets" / "legacy.md").write_text(
+                "---\nid: legacy\nstatus: review\n---\n# Legacy\n",
+                encoding="utf-8",
+            )
+            # Bare markdown file should default to open.
+            (root / ".tickets" / "plain.md").write_text("# Plain\n", encoding="utf-8")
+
+            code, payload = _ticket_json(
+                ["--json", "--no-audit", "list", "--all"], cwd=root, env=env
+            )
+            self.assertEqual(code, 0)
+            self.assertTrue(payload.get("ok"))
+
+            self.assertFalse((root / ".tickets" / "legacy.md").exists())
+            self.assertTrue((root / ".tickets" / "review" / "legacy.md").exists())
+
+            self.assertFalse((root / ".tickets" / "plain.md").exists())
+            self.assertTrue((root / ".tickets" / "open" / "plain.md").exists())
+
     def test_status_accepts_canonical_workflow_states(self) -> None:
         with _temp_git_repo() as (root, env):
             env = {**env, "TICKET_DIR": str(root / ".tickets")}

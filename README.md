@@ -30,7 +30,7 @@ Each subsystem has a CLI surface and an on-disk footprint.
 
 | Subsystem | CLI | On disk | What it's for |
 | --- | --- | --- | --- |
-| Ticket | `loom ticket` | `.tickets/` | Intent and execution state as Markdown + frontmatter, with deps/links/claims |
+| Ticket | `loom ticket` | `.tickets/<status>/` | Intent and execution state as Markdown + frontmatter, with deps/links/claims |
 | Workspace | `loom workspace` | `workspace.json`, `.loom/`, `.loom-repo/` | Worktree lifecycle, snapshots, multi-repo coordination, service deps |
 | Team | `loom team` | `.team/` | tmux-native orchestration: manager/workers/inbox/merge queue |
 | Memory | `loom memory` | `.memory/` | Obsidian-like Markdown notes; derived SQLite cache for recall |
