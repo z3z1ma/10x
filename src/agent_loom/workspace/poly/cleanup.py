@@ -40,15 +40,14 @@ def poly_cleanup_suggest(*, root: Optional[Path] = None) -> dict:
 
         lease = lease_path(root=ws_root, key=f"group:{group}")
         base = worktrees_base(ws_root, ws, group)
+        is_leased = bool(lease_is_active(key=f"group:{group}", root=ws_root))
         candidates.append(
             {
                 "id": group,
                 "group": group,
                 "reason": "ttl_expired",
-                "claimed": bool(lease_is_active(key=f"group:{group}", root=ws_root)),
-                "lease_path": str(lease.resolve())
-                if lease_is_active(key=f"group:{group}", root=ws_root)
-                else "",
+                "leased": is_leased,
+                "lease_path": str(lease.resolve()) if is_leased else "",
                 "meta_path": str(p.resolve()),
                 "worktrees_dir": str(base.resolve()),
             }
@@ -84,7 +83,7 @@ def poly_cleanup_apply(
                 {
                     "id": group,
                     "status": "skip",
-                    "reason": "claimed",
+                    "reason": "leased",
                     "lease_path": str(lease.resolve()),
                 }
             )

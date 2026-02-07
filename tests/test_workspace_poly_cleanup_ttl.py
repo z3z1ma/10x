@@ -72,7 +72,7 @@ class TestWorkspacePolyCleanupTtl(unittest.TestCase):
                     json.dumps(meta, indent=2, sort_keys=True) + "\n", encoding="utf-8"
                 )
 
-            # Claim g1.
+            # Lease g1.
             _run_json(["poly", "lease", "acquire", "group:g1"], ws_root)
 
             rc, out = _run_json(

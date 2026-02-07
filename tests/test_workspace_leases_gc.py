@@ -60,9 +60,9 @@ class TestWorkspaceLeasesGc(unittest.TestCase):
             self.assertEqual(rc1, 0)
             self.assertTrue(out1.get("ok"))
 
-            # GC unclaimed only should remove g2's worktree but skip g1.
+            # GC skip-leased should remove g2's worktree but skip g1.
             rc2, out2 = _run_json(
-                ["poly", "worktree", "gc", "--unclaimed-only", "--yes"],
+                ["poly", "worktree", "gc", "--skip-leased", "--yes"],
                 ws_root,
             )
             self.assertEqual(rc2, 0)
@@ -116,9 +116,9 @@ class TestWorkspaceLeasesGc(unittest.TestCase):
             data_ls = out_ls.get("data") or {}
             self.assertEqual(int(data_ls.get("pruned_expired") or 0), 1)
 
-            # GC unclaimed-only should now remove g1 (since lease was pruned).
+            # GC skip-leased should now remove g1 (since lease was pruned).
             rc_gc, out_gc = _run_json(
-                ["harness", "worktree", "gc", "--unclaimed-only", "--yes"],
+                ["harness", "worktree", "gc", "--skip-leased", "--yes"],
                 ws_root,
             )
             self.assertEqual(rc_gc, 0)

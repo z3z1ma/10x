@@ -1473,7 +1473,7 @@ def cmd_worktree_gc(args: argparse.Namespace) -> None:
         lease_require_active(key=req, root=root)
     res = worktree_gc(
         older_than_days=int(args.older_than),
-        unclaimed_only=bool(args.unclaimed_only),
+        skip_leased=bool(getattr(args, "skip_leased", False)),
         force=bool(args.force),
         confirm=bool(args.yes),
         root=root,
@@ -2085,7 +2085,7 @@ def _add_poly_parser(
 
     sp2 = sub2.add_parser(
         "gc",
-        help="Garbage collect old worktrees (requires --yes; optionally unclaimed-only)",
+        help="Garbage collect old worktrees (requires --yes; optionally skip leased groups)",
     )
     sp2.add_argument(
         "--require-lease",
@@ -2099,9 +2099,9 @@ def _add_poly_parser(
         help="Only remove groups older than N days (0 = no age filter)",
     )
     sp2.add_argument(
-        "--unclaimed-only",
+        "--skip-leased",
         action="store_true",
-        help="Only remove groups without a group:<name> lease",
+        help="Skip groups that have an active group:<name> lease",
     )
     sp2.add_argument(
         "--force",

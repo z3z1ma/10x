@@ -371,7 +371,7 @@ loom workspace poly worktree rebase sprint-42 --base-ref main --all
 loom workspace poly worktree push sprint-42 --all --set-upstream
 loom workspace poly worktree push sprint-42 --all --force --yes
 loom workspace poly worktree gc --older-than 14 --yes
-loom workspace poly worktree gc --older-than 30 --unclaimed-only --yes
+loom workspace poly worktree gc --older-than 30 --skip-leased --yes
 ```
 
 ### poly snapshot capture / diff / restore
@@ -483,7 +483,7 @@ loom workspace poly worktree push sprint-42 --all
 
 ```
 loom workspace poly lease acquire group:sprint-42
-loom workspace poly worktree gc --unclaimed-only --yes
+loom workspace poly worktree gc --skip-leased --yes
 ```
 
 ## Troubleshooting

@@ -112,7 +112,7 @@ def poly_sandbox_gc(
             skipped.append(
                 {
                     "group": g,
-                    "reason": "claimed",
+                    "reason": "leased",
                     "lease_path": str(lease.resolve()),
                 }
             )

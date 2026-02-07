@@ -41,7 +41,7 @@ def _cleanup_group_artifacts(*, ws_root: Path, group: str) -> None:
 def worktree_gc(
     *,
     older_than_days: int = 0,
-    unclaimed_only: bool = False,
+    skip_leased: bool = False,
     force: bool = False,
     confirm: bool,
     root: Optional[Path] = None,
@@ -91,7 +91,7 @@ def worktree_gc(
                 skipped.append({"group": group, "status": "skip", "reason": "too_new"})
                 continue
 
-        if unclaimed_only:
+        if skip_leased:
             key = f"group:{group}"
             if lease_is_active(key=key, root=ws_root):
                 lease = lease_path(root=ws_root, key=key)
@@ -99,7 +99,7 @@ def worktree_gc(
                     {
                         "group": group,
                         "status": "skip",
-                        "reason": "claimed",
+                        "reason": "leased",
                         "lease_path": str(lease),
                     }
                 )
