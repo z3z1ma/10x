@@ -8,7 +8,7 @@ from agent_loom.core.io import atomic_write_json, read_json
 from agent_loom.core.time import now_iso
 from agent_loom.workspace.constants import REPO_INTERNAL_DIR
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.repo.ops import repo_root, repo_worktree_ensure
+from agent_loom.workspace.repo.core import repo_root, repo_worktree_ensure
 from agent_loom.workspace.utils import run
 from agent_loom.workspace.worktree_meta import repo_worktree_annotate
 

@@ -15,7 +15,7 @@ Workspace library + CLI (loom).
 
 from __future__ import annotations
 
-from agent_loom.workspace.poly.ops import (
+from agent_loom.workspace.poly.core import (
     add_repo,
     branch,
     context,
@@ -64,7 +64,7 @@ from agent_loom.workspace.poly.meta import (
     poly_set_upsert,
 )
 from agent_loom.workspace.prime import prime
-from agent_loom.workspace.repo.ops import (
+from agent_loom.workspace.repo.core import (
     repo_merge_attempt,
     repo_init,
     repo_root,

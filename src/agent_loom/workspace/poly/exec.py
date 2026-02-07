@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional, Sequence
 from agent_loom.core.concurrent import parallel_map
 from agent_loom.core.git import is_git_repo
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.git.ops import git_is_dirty, require_git
+from agent_loom.workspace.git.core import git_is_dirty, require_git
 from agent_loom.workspace.guards import workspace_root
 from agent_loom.workspace.models import PolyExecResult
 from agent_loom.workspace.poly.selection import poly_resolve_repo_names

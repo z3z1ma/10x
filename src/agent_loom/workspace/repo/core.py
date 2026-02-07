@@ -9,7 +9,7 @@ from agent_loom.core.io import atomic_write_json, read_json
 from agent_loom.core.time import now_iso
 from agent_loom.workspace.constants import REPO_INTERNAL_DIR, SHA_RE
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.git.ops import (
+from agent_loom.workspace.git.core import (
     git_git_dir,
     ensure_repo_internal_ignored,
     git_current_branch,

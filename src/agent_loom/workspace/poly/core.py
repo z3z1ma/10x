@@ -16,7 +16,7 @@ from agent_loom.workspace.constants import (
     WORKSPACE_FILE,
 )
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.git.ops import (
+from agent_loom.workspace.git.core import (
     git_checkout_reset_branch,
     git_clone_if_missing,
     git_current_branch,

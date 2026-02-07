@@ -10,7 +10,7 @@ from agent_loom.workspace.guards import workspace_root
 from agent_loom.workspace.models import ImpactResult
 from agent_loom.workspace.poly.services import service_index_path
 from agent_loom.workspace.state import load_workspace
-from agent_loom.workspace.poly.ops import snapshot_diff
+from agent_loom.workspace.poly.core import snapshot_diff
 
 
 def _neighbors(idx: dict, svc: str, key: str) -> List[str]:

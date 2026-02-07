@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Sequence
 
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.guards import workspace_root
-from agent_loom.workspace.poly.ops import worktree_rm, worktree_add
+from agent_loom.workspace.poly.core import worktree_rm, worktree_add
 from agent_loom.core.io import atomic_write_json, read_json
 from agent_loom.workspace.lifecycle import meta_is_expired
 from agent_loom.workspace.poly.leases import lease_is_active, lease_path

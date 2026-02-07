@@ -6,11 +6,11 @@ from typing import Any, Dict, List, Optional
 
 from agent_loom.workspace.lifecycle import meta_is_expired
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.git.ops import (
+from agent_loom.workspace.git.core import (
     git_worktree_list_porcelain,
     git_worktree_remove_from,
 )
-from agent_loom.workspace.repo.ops import repo_root
+from agent_loom.workspace.repo.core import repo_root
 from agent_loom.core.io import read_json
 from agent_loom.workspace.worktree_meta import repo_worktree_meta_dir
 

@@ -9,7 +9,7 @@ from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.guards import workspace_root
 from agent_loom.workspace.lifecycle import meta_is_expired
 from agent_loom.workspace.poly.leases import lease_is_active, lease_path
-from agent_loom.workspace.poly.ops import worktree_rm
+from agent_loom.workspace.poly.core import worktree_rm
 from agent_loom.workspace.state import load_workspace, worktrees_base
 from agent_loom.workspace.worktree_meta import poly_group_meta_dir, poly_group_meta_path
 
