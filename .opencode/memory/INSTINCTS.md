@@ -68,7 +68,7 @@ The source of truth is `.opencode/memory/instincts.json`.
   - Action: Treat agent initialization as a UX+behavior contract: update/add focused assertions in tests/test_team_init_agents.py (and prompt tests if prompts changed), then run the gate: uv run basedpyright; uv ...
 - **team-spawn-integrator-changes-require-contract-test** (77%)
   - Trigger: When changing team spawn/integrator wiring (typically in src/agent_loom/team/core.py or src/agent_loom/team/cli.py), especially anything that boots an integrator or mediates agent process startup.
-  - Action: Add/update a focused contract test in tests/test_team_spawn_integrator.py that asserts deterministic invariants (what starts, with what args/env, and what is persisted/returned), then run lsp_diagnost...
+  - Action: Add/update a focused contract test in tests/test_team_spawn_integrator.py that asserts deterministic invariants (what starts, with what args/env, and what is persisted/returned); then run `uv run base...
 - **compound-install-changes-require-install-contract-test** (77%)
   - Trigger: When changing src/agent_loom/compound/install.py or src/agent_loom/compound/cli.py (or any behavior that affects generated .opencode/* files).
   - Action: Update/add assertions in tests/test_compound_install.py for deterministic outputs; then run uv run basedpyright, uv run ruff check ., and uv run pytest tests/test_compound_install.py before calling th...
@@ -116,7 +116,7 @@ The source of truth is `.opencode/memory/instincts.json`.
   - Action: Replace the lost safety net with a focused contract test module asserting the same invariants (prefer UX contract tests like tests/test_ticket_ux.py) and run the verification gate.
 - **ticket-frontmatter-changes-require-roundtrip-tests** (66%)
   - Trigger: When editing src/agent_loom/ticket/frontmatter.py or changing the ticket on-disk format/serialization
-  - Action: Add/adjust round-trip tests that load+save+reload tickets; ensure parse errors include actionable context; run lsp_diagnostics on touched files, then `uv run ruff check .`, then the smallest relevant ...
+  - Action: Add/adjust round-trip tests that load+save+reload tickets; ensure parse errors include actionable context; run `uv run basedpyright`, then `uv run ruff check .`, then the smallest relevant `uv run pyt...
 - **cli-environment-output-must-be-sanitized** (64%)
   - Trigger: When adding CLI output that prints runtime environment or model identifiers (e.g., model id, working directory, platform, dates)
   - Action: Avoid secrets and machine-specific absolute paths; prefer minimal, stable fields; keep formatting deterministic; add/adjust a contract test asserting stable invariants rather than full dumps.
@@ -125,7 +125,7 @@ The source of truth is `.opencode/memory/instincts.json`.
   - Action: Treat tickets as the execution graph: validate dependency edges and status transitions with `loom ticket dep <id>`, keep status consistent with deps (don't mark `in_progress` if blocked), and add a sh...
 - **ui-changes-require-lsp-ruff-and-targeted-tests** (62%)
   - Trigger: After editing Python UI code under src/agent_loom/ui/ (for example src/agent_loom/ui/ticket_ui.py)
-  - Action: Run lsp_diagnostics on touched UI files, fix all findings, then run `uv run ruff check .` and the smallest relevant `uv run pytest ...` subset (or full suite if unsure).
+  - Action: Run `uv run basedpyright`, fix all findings, then run `uv run ruff check .` and the smallest relevant `uv run pytest ...` subset (or full suite if unsure).
 
 ## Notes
 

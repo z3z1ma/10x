@@ -5,8 +5,8 @@ license: MIT
 compatibility: opencode,claude
 metadata:
   created_at: "2026-02-01T18:34:49.248Z"
-  updated_at: "2026-02-01T18:34:49.248Z"
-  version: "1"
+  updated_at: "2026-02-07T06:07:04.398128Z"
+  version: "3"
 ---
 <!-- BEGIN:compound:skill-managed -->
 ## When to use
@@ -20,14 +20,14 @@ Keep core docs stable, agent-legible, and safe to evolve.
 
 ## Checklist
 
-1. Identify what is "contract"
+1. Identify what is contract
    - `LOOM_PROJECT.md`: constitution (principles and non-negotiables).
    - `LOOM_ROADMAP.md`: direction (near-term focus and decision compass).
    - `AGENTS.md`: operational guidance + AI-managed blocks.
 
 2. Respect AI-managed fences
-   - Do not hand-edit inside `BEGIN/END` AI-managed fences.
-   - Prefer `compound_docblock_upsert` to change managed content.
+   - Do not hand-edit inside `<!-- BEGIN/END:compound:* -->` fences.
+   - Prefer `loom compound docblock upsert --file <...> --id <...>` to change managed content.
 
 3. Make changes additive and minimal
    - Prefer adding or refining bullets over deleting large sections.
@@ -43,10 +43,10 @@ Keep core docs stable, agent-legible, and safe to evolve.
 
 6. Keep it safe
    - Never include secrets, tokens, or local machine identifiers.
-   - Avoid timestamps or other nondeterministic text in "contract" blocks.
+   - Avoid timestamps or other nondeterministic text in contract blocks.
 
 7. Sync after doc changes
-   - Run `compound_sync` so derived indexes stay consistent.
+   - Run `loom compound refresh` so derived indexes stay consistent.
 <!-- END:compound:skill-managed -->
 
 ## Manual notes

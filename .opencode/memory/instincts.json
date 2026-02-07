@@ -27,12 +27,12 @@
       "id": "fix-lsp-before-committing",
       "title": "Address LSP diagnostics early",
       "trigger": "After editing code or before declaring work complete",
-      "action": "Run LSP diagnostics on touched files and fix errors/warnings before lint/tests; don\u2019t defer LSP cleanup.",
+      "action": "Run `uv run basedpyright` and fix all findings; then run `uv run ruff check .`; then run the smallest relevant `uv run pytest ...` subset. Do not use `lsp_diagnostics`.",
       "tags": [],
       "confidence": 0.47,
       "status": "active",
       "created_at": "2026-01-30T19:57:13.467Z",
-      "updated_at": "2026-02-01T02:50:11.295Z",
+      "updated_at": "2026-02-07T06:06:03.573290Z",
       "evidence": [
         {
           "ts": "2026-01-30T19:57:13.467Z",
@@ -47,6 +47,11 @@
           "ts": "2026-02-01T02:50:11.295Z",
           "sessionID": "ses_3e8f9eb96ffedix8V6RSVbkyiA",
           "note": "Project guidance says: do not use lsp_diagnostics; use `uv run basedpyright` instead."
+        },
+        {
+          "ts": "2026-02-07T06:06:03.572996Z",
+          "sessionID": "ses_3c95621c1ffeWmvBp2AFE12UbM",
+          "note": "Align instinct with repo standard: use basedpyright, not lsp_diagnostics."
         }
       ]
     },
@@ -56,7 +61,7 @@
       "trigger": "When editing agent prompts or prompt assembly code",
       "action": "Update/add focused tests covering the prompt contract and run the prompt test suite.",
       "tags": [],
-      "confidence": 1,
+      "confidence": 1.0,
       "status": "active",
       "created_at": "2026-01-30T19:57:13.467Z",
       "updated_at": "2026-02-03T01:00:58.221Z",
@@ -133,7 +138,7 @@
       "trigger": "When editing src/agent_loom/team/core.py, src/agent_loom/team/prompts.py, or src/agent_loom/team/cli.py",
       "action": "Update/add focused tests covering the changed behavior (especially prompt contracts) and run `uv run pytest` for the relevant test module(s) plus `uv run ruff check .` before calling the work done.",
       "tags": [],
-      "confidence": 1,
+      "confidence": 1.0,
       "status": "active",
       "created_at": "2026-01-30T20:09:25.396Z",
       "updated_at": "2026-02-03T07:18:28.213Z",
@@ -300,12 +305,12 @@
       "id": "ticket-core-changes-require-targeted-tests",
       "title": "Ticket Core Changes Require Targeted Tests",
       "trigger": "When editing src/agent_loom/ticket/cli.py, src/agent_loom/ticket/core.py, or src/agent_loom/ticket/store.py",
-      "action": "Treat it like a public API: run lsp_diagnostics on touched files, fix issues, run `uv run ruff check .`, and add/run targeted pytest coverage for ticket CLI/core/store behavior before declaring done.",
+      "action": "Treat it like a public API: run `uv run basedpyright`, fix issues, run `uv run ruff check .`, and add/run targeted pytest coverage for ticket CLI/core/store behavior before declaring done.",
       "tags": [],
       "confidence": 0.6100000000000001,
       "status": "active",
       "created_at": "2026-01-31T02:21:31.201Z",
-      "updated_at": "2026-02-01T02:50:11.295Z",
+      "updated_at": "2026-02-07T06:06:03.971064Z",
       "evidence": [
         {
           "ts": "2026-01-31T02:21:31.201Z",
@@ -330,23 +335,33 @@
           "ts": "2026-02-01T02:50:11.295Z",
           "sessionID": "ses_3e8f9eb96ffedix8V6RSVbkyiA",
           "note": "This instinct\u2019s action references lsp_diagnostics; repo standard is `uv run basedpyright`."
+        },
+        {
+          "ts": "2026-02-07T06:06:03.970015Z",
+          "sessionID": "ses_3c95621c1ffeWmvBp2AFE12UbM",
+          "note": "Remove lsp_diagnostics reference; repo gate is basedpyright."
         }
       ]
     },
     {
       "id": "ui-changes-require-lsp-ruff-and-targeted-tests",
-      "title": "UI changes require LSP + ruff + targeted tests",
+      "title": "UI changes require basedpyright + ruff + targeted tests",
       "trigger": "After editing Python UI code under src/agent_loom/ui/ (for example src/agent_loom/ui/ticket_ui.py)",
-      "action": "Run lsp_diagnostics on touched UI files, fix all findings, then run `uv run ruff check .` and the smallest relevant `uv run pytest ...` subset (or full suite if unsure).",
+      "action": "Run `uv run basedpyright`, fix all findings, then run `uv run ruff check .` and the smallest relevant `uv run pytest ...` subset (or full suite if unsure).",
       "tags": [],
       "confidence": 0.62,
       "status": "active",
       "created_at": "2026-01-31T03:03:39.465Z",
-      "updated_at": "2026-01-31T03:03:39.465Z",
+      "updated_at": "2026-02-07T06:06:04.356813Z",
       "evidence": [
         {
           "ts": "2026-01-31T03:03:39.465Z",
           "sessionID": "ses_3ee01edb7ffeVX2nmMC8uhYdeI"
+        },
+        {
+          "ts": "2026-02-07T06:06:04.356355Z",
+          "sessionID": "ses_3c95621c1ffeWmvBp2AFE12UbM",
+          "note": "Replace lsp_diagnostics with basedpyright per repo standards."
         }
       ]
     },
@@ -356,7 +371,7 @@
       "trigger": "When changing any CLI/user-facing output formatting (especially ticket/team UX)",
       "action": "Make output deterministic (explicit ordering, stable formatting) and add a focused pytest contract test for the rendered text.",
       "tags": [],
-      "confidence": 1,
+      "confidence": 1.0,
       "status": "active",
       "created_at": "2026-01-31T03:33:28.939Z",
       "updated_at": "2026-02-03T07:18:28.213Z",
@@ -443,7 +458,7 @@
       "trigger": "System reminder says Plan Mode ACTIVE / READ-ONLY phase",
       "action": "Do not edit/create/delete files or run write-capable commands; only inspect/read/search and produce an execution plan or required JSON payload.",
       "tags": [],
-      "confidence": 1,
+      "confidence": 1.0,
       "status": "active",
       "created_at": "2026-01-31T04:25:38.114Z",
       "updated_at": "2026-02-03T07:06:13.378Z",
@@ -543,16 +558,21 @@
       "id": "ticket-frontmatter-changes-require-roundtrip-tests",
       "title": "Ticket file format changes require round-trip tests",
       "trigger": "When editing src/agent_loom/ticket/frontmatter.py or changing the ticket on-disk format/serialization",
-      "action": "Add/adjust round-trip tests that load+save+reload tickets; ensure parse errors include actionable context; run lsp_diagnostics on touched files, then `uv run ruff check .`, then the smallest relevant `uv run pytest` subset (include tests/test_ticket_ux.py when UX/output is affected).",
+      "action": "Add/adjust round-trip tests that load+save+reload tickets; ensure parse errors include actionable context; run `uv run basedpyright`, then `uv run ruff check .`, then the smallest relevant `uv run pytest` subset (include tests/test_ticket_ux.py when UX/output is affected).",
       "tags": [],
       "confidence": 0.66,
       "status": "active",
       "created_at": "2026-01-31T04:49:38.906Z",
-      "updated_at": "2026-01-31T04:49:38.906Z",
+      "updated_at": "2026-02-07T06:06:04.797982Z",
       "evidence": [
         {
           "ts": "2026-01-31T04:49:38.906Z",
           "sessionID": "ses_3edb9b07effeYs8LKpwXgcKxsL"
+        },
+        {
+          "ts": "2026-02-07T06:06:04.796011Z",
+          "sessionID": "ses_3c95621c1ffeWmvBp2AFE12UbM",
+          "note": "Replace lsp_diagnostics with basedpyright per repo standards."
         }
       ]
     },
@@ -614,12 +634,12 @@
       "id": "team-ship-behavior-requires-ticket-sync-test",
       "title": "Team ship behavior requires ticket-sync contract test",
       "trigger": "When changing team ship/merge behavior in src/agent_loom/team/core.py, src/agent_loom/team/cli.py, or src/agent_loom/team/merge_queue.py",
-      "action": "Add/update a focused contract test in tests/test_team_ship_ticket_sync.py and run `uv run pytest tests/test_team_ship_ticket_sync.py` plus `uv run ruff check .` (after clearing lsp_diagnostics on touched files).",
+      "action": "Add/update a focused contract test in tests/test_team_ship_ticket_sync.py; then run `uv run basedpyright`, `uv run ruff check .`, and `uv run pytest tests/test_team_ship_ticket_sync.py` before calling work done.",
       "tags": [],
       "confidence": 0.57,
       "status": "active",
       "created_at": "2026-01-31T07:40:51.877Z",
-      "updated_at": "2026-02-01T02:50:11.295Z",
+      "updated_at": "2026-02-07T06:06:05.193843Z",
       "evidence": [
         {
           "ts": "2026-01-31T07:40:51.877Z",
@@ -629,6 +649,11 @@
           "ts": "2026-02-01T02:50:11.295Z",
           "sessionID": "ses_3e8f9eb96ffedix8V6RSVbkyiA",
           "note": "This instinct\u2019s action references lsp_diagnostics; repo standard is `uv run basedpyright`."
+        },
+        {
+          "ts": "2026-02-07T06:06:05.193463Z",
+          "sessionID": "ses_3c95621c1ffeWmvBp2AFE12UbM",
+          "note": "Remove clear-lsp_diagnostics step; use basedpyright gate."
         }
       ]
     },
@@ -636,12 +661,12 @@
       "id": "team-start-merge-config-changes-require-contract-test",
       "title": "Team start/merge config changes require a focused contract test",
       "trigger": "When changing team startup behavior or merge configuration wiring (typically in src/agent_loom/team/core.py and/or src/agent_loom/team/cli.py), especially any logic that selects/validates merge config at team start.",
-      "action": "Treat it like a public contract: add/update tests/test_team_start_merge_config.py to lock expected invariants, clear lsp_diagnostics on touched files, then run `uv run ruff check .` and `uv run pytest tests/test_team_start_merge_config.py` before calling work complete.",
+      "action": "Treat it like a public contract: add/update tests/test_team_start_merge_config.py to lock expected invariants; then run `uv run basedpyright`, `uv run ruff check .`, and `uv run pytest tests/test_team_start_merge_config.py` before calling work complete.",
       "tags": [],
       "confidence": 0.57,
       "status": "active",
       "created_at": "2026-01-31T19:44:51.792Z",
-      "updated_at": "2026-02-01T02:50:11.295Z",
+      "updated_at": "2026-02-07T06:06:05.717505Z",
       "evidence": [
         {
           "ts": "2026-01-31T19:44:51.792Z",
@@ -651,6 +676,11 @@
           "ts": "2026-02-01T02:50:11.295Z",
           "sessionID": "ses_3e8f9eb96ffedix8V6RSVbkyiA",
           "note": "This instinct\u2019s action references lsp_diagnostics; repo standard is `uv run basedpyright`."
+        },
+        {
+          "ts": "2026-02-07T06:06:05.717189Z",
+          "sessionID": "ses_3c95621c1ffeWmvBp2AFE12UbM",
+          "note": "Remove clear-lsp_diagnostics step; use basedpyright gate."
         }
       ]
     },
@@ -705,12 +735,12 @@
       "id": "team-spawn-integrator-changes-require-contract-test",
       "title": "Team spawn/integrator changes require a contract test",
       "trigger": "When changing team spawn/integrator wiring (typically in src/agent_loom/team/core.py or src/agent_loom/team/cli.py), especially anything that boots an integrator or mediates agent process startup.",
-      "action": "Add/update a focused contract test in tests/test_team_spawn_integrator.py that asserts deterministic invariants (what starts, with what args/env, and what is persisted/returned), then run lsp_diagnostics on touched files, uv run ruff check ., and uv run pytest tests/test_team_spawn_integrator.py before calling the work done.",
+      "action": "Add/update a focused contract test in tests/test_team_spawn_integrator.py that asserts deterministic invariants (what starts, with what args/env, and what is persisted/returned); then run `uv run basedpyright`, `uv run ruff check .`, and `uv run pytest tests/test_team_spawn_integrator.py` before calling the work done.",
       "tags": [],
       "confidence": 0.77,
       "status": "active",
       "created_at": "2026-02-01T00:21:23.984Z",
-      "updated_at": "2026-02-01T06:00:43.221Z",
+      "updated_at": "2026-02-07T06:06:06.240907Z",
       "evidence": [
         {
           "ts": "2026-02-01T00:21:23.984Z",
@@ -720,6 +750,11 @@
           "ts": "2026-02-01T06:00:43.221Z",
           "sessionID": "ses_3e8acef0bffebmMo8l1iU1ZNUA",
           "note": "Startup wiring/integrator spawning changes were locked with deterministic invariants in tests/test_team_spawn_integrator.py."
+        },
+        {
+          "ts": "2026-02-07T06:06:06.240349Z",
+          "sessionID": "ses_3c95621c1ffeWmvBp2AFE12UbM",
+          "note": "Replace lsp_diagnostics with basedpyright per repo standards."
         }
       ]
     },
@@ -1069,7 +1104,7 @@
       "trigger": "When changing src/agent_loom/server/templates/*.html (especially large refactors like dashboard.html).",
       "action": "Treat rendered HTML as a deterministic UX contract: ensure stable ordering/no nondeterministic values, add/update a focused pytest contract test for required markers/sections, then run `uv run basedpyright`, `uv run ruff check .`, and targeted `uv run pytest`.",
       "tags": [],
-      "confidence": 1,
+      "confidence": 1.0,
       "status": "active",
       "created_at": "2026-02-02T16:51:47.123Z",
       "updated_at": "2026-02-02T20:59:16.342Z",
@@ -1228,7 +1263,7 @@
       "trigger": "You change src/agent_loom/server/templates/dashboard.html (especially large refactors or section reshuffles).",
       "action": "Update/add request-level invariants in tests/test_server_api_contract.py (stable markers/sections + deterministic ordering; avoid full-HTML snapshots) and verify with: uv run basedpyright; uv run ruff check .; uv run pytest tests/test_server_api_contract.py.",
       "tags": [],
-      "confidence": 1,
+      "confidence": 1.0,
       "status": "active",
       "created_at": "2026-02-02T17:53:40.739Z",
       "updated_at": "2026-02-02T23:45:28.328Z",

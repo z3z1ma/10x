@@ -5,6 +5,15 @@ High-level direction and priorities.
 This is an evolving, empirical compass. Keep it short and stable.
 
 <!-- BEGIN:compound:roadmap-backlog -->
+- al-0e62 [open] (p1) Workspace: lifecycle/annotations schema v2 + clean metadata storage
+- al-1f81 [open] (p1) Workspace: refactor structure + clarify value proposition
+- al-33c8 [open] (p1) Workspace: unify git plumbing layer (dedupe git_ops/diff_ops/core.git)
+- al-97e8 [open] (p1) Core: extract shared exec/fs/time helpers used by workspace
+- al-e024 [open] (p1) Workspace: reorganize package layout + split CLI
+- al-24be [open] (p2) Workspace: unify cleanup/GC story (TTL, leases, metadata) across repo + poly
+- al-3063 [open] (p2) Workspace: change/impact analysis across repos (snapshots + service deps)
+- al-7d77 [open] (p2) Workspace: dial in polyrepo harness value prop + naming (poly vs harness)
+- al-1450 [open] (p3) Workspace: optional canonical locations for harness roots/clones/worktrees
 - al-768c [in_progress] (p1) Sprint prep: Documentation Foundation
 <!-- END:compound:roadmap-backlog -->
 
