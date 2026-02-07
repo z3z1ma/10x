@@ -35,6 +35,7 @@ It tracks changes to skills, instincts, and core context files.
 It is intentionally bounded. Do not write entries like "no changes".
 
 <!-- BEGIN:compound:changelog-entries -->
+- 2026-02-07T19:31:20.132833Z Compound: resolve repo root (git toplevel + optional COMPOUND_ROOT override) so plugin/CLI don’t write .opencode/ into nested CWDs/worktrees.
 - 2026-02-07T15:05:48.336700Z Extend workspace feature checklist with stricter TTL/duration validation, idempotent persisted-path migration guidance, and preference for shared core primitives.
 - 2026-02-03T07:18:29.138Z Reinforce that team CLI/output changes require deterministic UX + targeted contract tests.
 - 2026-02-03T07:06:13.382Z Reinforce JSON-only autolearn output and strict plan-mode read-only discipline.

@@ -5,8 +5,8 @@ license: MIT
 compatibility: opencode,claude
 metadata:
   created_at: "2026-02-01T18:34:49.248Z"
-  updated_at: "2026-02-07T19:15:16.120831Z"
-  version: "4"
+  updated_at: "2026-02-07T19:30:55.949253Z"
+  version: "5"
 ---
 <!-- BEGIN:compound:skill-managed -->
 ## When to use
@@ -24,7 +24,7 @@ Keep core docs stable, agent-legible, and safe to evolve.
    - `LOOM_PROJECT.md`: constitution (principles and non-negotiables).
    - `LOOM_ROADMAP.md`: direction (near-term focus + decision compass + bounded changelog; contains compound-managed sections).
    - `LOOM_CONTEXT.md`: derived always-on context (compound-managed; keep small and stable).
-   - `AGENTS.md`: stable human-owned overview and guardrails; avoid frequent churn here.
+   - `AGENTS.md`: stable human-owned overview and guardrails; keep it free of frequently-regenerated Compound blocks.
 
 2. Respect AI-managed fences
    - Do not hand-edit inside `<!-- BEGIN/END:compound:* -->` fences (primarily in `LOOM_CONTEXT.md` and `LOOM_ROADMAP.md`).

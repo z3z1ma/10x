@@ -5,8 +5,8 @@ license: MIT
 compatibility: opencode,claude
 metadata:
   created_at: "2026-02-01T04:25:40.311Z"
-  updated_at: "2026-02-01T04:25:40.311Z"
-  version: "1"
+  updated_at: "2026-02-07T19:30:44.584277Z"
+  version: "2"
 ---
 <!-- BEGIN:compound:skill-managed -->
 ## When to use
@@ -32,23 +32,29 @@ Keep Compound installation outputs deterministic and regression-tested.
      - For plugins, ensure `.opencode/plugins/*` stays in sync with `src/agent_loom/compound/opencode/.opencode/plugins/*`.
    - Which files must be gitignored (for example `.opencode/memory/observations.jsonl`)?
 
-2. Ensure deterministic content
+2. Resolve repo root deterministically
+   - Treat `--repo` as "a path inside the repo", not necessarily the repo root.
+   - Resolve the git toplevel and read/write `.opencode/` relative to that root (avoid writing into a nested CWD or worktree path).
+   - Allow an escape hatch for non-git contexts (for example an environment override like `COMPOUND_ROOT`).
+
+3. Ensure deterministic content
    - Stable ordering (no set/dict iteration).
    - No timestamps, random IDs, or machine-specific absolute paths.
 
-3. Prevent template drift
+4. Prevent template drift
    - If you update a file in `.opencode/`, update its mirror under `src/agent_loom/compound/opencode/.opencode/` in the same change.
    - Prefer making `tests/test_compound_install.py` assert:
      - both copies exist for mirrored assets
      - key markers/blocks exist in the installed outputs (avoid full-file snapshots unless the full file is the contract)
 
-4. Update/add contract tests
+5. Update/add contract tests
    - Edit `tests/test_compound_install.py` to assert:
      - required files exist
      - required file contents include key markers/blocks
      - gitignore entries are present and correct
+     - running from a subdirectory still targets the same repo-root `.opencode/`
 
-5. Verification gate
+6. Verification gate
    - `uv run basedpyright`
    - `uv run ruff check .`
    - `uv run pytest tests/test_compound_install.py`
@@ -56,6 +62,7 @@ Keep Compound installation outputs deterministic and regression-tested.
 ## Common failure modes
 
 - Template drift between `.opencode/` and `src/agent_loom/compound/opencode/.opencode/`.
+- Repo-root confusion: `.opencode/` gets written into a nested directory/worktree because code assumes `.` is the repo root.
 - Tests asserting full file contents that include nondeterministic data.
 - Installing files that should be ignored/ephemeral (logs, observations) without adding `.gitignore` rules.
 - Plugin changes not mirrored (especially `.opencode/plugins/*`), causing installs to diverge from repo state.

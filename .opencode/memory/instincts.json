@@ -1655,6 +1655,29 @@
           "note": "Fix: prior create used shell backticks; action/evidence were mangled. Durable rule: derived compound fences live in LOOM_CONTEXT.md; regenerate with loom compound update."
         }
       ]
+    },
+    {
+      "id": "compound-ops-resolve-git-root",
+      "title": "Compound ops resolve git repo root",
+      "trigger": "When adding/modifying Compound plugin/CLI code that reads/writes .opencode/ or accepts a repo path via --repo",
+      "action": "Resolve the git toplevel (git rev-parse --show-toplevel) and perform scaffold checks + .opencode/ file IO relative to that root (not the current CWD/worktree). Treat --repo as a path inside the repo. Allow an explicit override (e.g. COMPOUND_ROOT) for non-git contexts.",
+      "tags": [],
+      "confidence": 0.74,
+      "status": "active",
+      "created_at": "2026-02-07T19:31:02.959939Z",
+      "updated_at": "2026-02-07T19:31:16.083645Z",
+      "evidence": [
+        {
+          "ts": "2026-02-07T19:31:02.959939Z",
+          "sessionID": "ses_3c6a4f581ffeozBgHx7dUNscK1",
+          "note": "Recent changes updated Compound plugin + compound CLI to resolve git repo root instead of assuming CWD; persist as heuristic to prevent regressions."
+        },
+        {
+          "ts": "2026-02-07T19:31:16.083296Z",
+          "sessionID": "ses_3c6a4f581ffeozBgHx7dUNscK1",
+          "note": "Fix instinct text to avoid shell-unsafe markdown backticks; keep examples as plain text."
+        }
+      ]
     }
   ]
 }

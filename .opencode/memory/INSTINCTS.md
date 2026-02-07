@@ -90,6 +90,9 @@ The source of truth is `.opencode/memory/instincts.json`.
 - **workspace-prime-changes-require-targeted-tests** (74%)
   - Trigger: You edit src/agent_loom/workspace/prime.py (especially refactors or behavior deletions).
   - Action: Treat prime behavior as a contract: make outputs/order deterministic, add or update a focused pytest module covering the changed semantics (prefer workspace-focused tests), then run the repo gate: uv ...
+- **compound-ops-resolve-git-root** (74%)
+  - Trigger: When adding/modifying Compound plugin/CLI code that reads/writes .opencode/ or accepts a repo path via --repo
+  - Action: Resolve the git toplevel (git rev-parse --show-toplevel) and perform scaffold checks + .opencode/ file IO relative to that root (not the current CWD/worktree). Treat --repo as a path inside the repo. ...
 - **team-expansion-requires-contract-tests-and-ruff** (73%)
   - Trigger: When adding or significantly expanding team runtime (new CLI entrypoints, inbox loop, or new team modules like inbox/models/constants)
   - Action: Treat it like a public API: add/adjust prompt-contract tests, run `uv run ruff check .`, run targeted `uv run pytest` for the changed surface area, and clear LSP diagnostics on touched files before ca...
@@ -123,9 +126,6 @@ The source of truth is `.opencode/memory/instincts.json`.
 - **cli-environment-output-must-be-sanitized** (64%)
   - Trigger: When adding CLI output that prints runtime environment or model identifiers (e.g., model id, working directory, platform, dates)
   - Action: Avoid secrets and machine-specific absolute paths; prefer minimal, stable fields; keep formatting deterministic; add/adjust a contract test asserting stable invariants rather than full dumps.
-- **ticket-edits-require-dep-status-sanity** (64%)
-  - Trigger: When a change set primarily touches `.tickets/*.md` (creating/updating multiple tickets).
-  - Action: Treat tickets as the execution graph: validate dependency edges and status transitions with `loom ticket dep <id>`, keep status consistent with deps (don't mark `in_progress` if blocked), and add a sh...
 
 ## Notes
 

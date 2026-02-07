@@ -27,6 +27,7 @@ Budget (hard caps):
 Commands to use (via bash):
 - `loom compound skill upsert <name> --description ... --body ...` (or pipe stdin)
 - `loom compound instinct upsert create|update <id> ...`
+- `loom compound docblock upsert --file AGENTS.md --id loom-core-context --content ...`
 - `loom compound docblock upsert --file LOOM_CONTEXT.md --id loom-core-context --content ...`
 - `loom compound docblock upsert --file LOOM_ROADMAP.md --id roadmap-ai-notes --content ...`
 - `loom compound changelog append --note "..."`
