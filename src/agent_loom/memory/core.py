@@ -248,7 +248,9 @@ def prime() -> PrimeResult:
             hint="Reinstall the package or verify README is bundled.",
         ) from exc
 
-    return PrimeResult(payload={"ok": True, "markdown": text})
+    return PrimeResult(
+        payload={"ok": True, "schema_version": SCHEMA_VERSION, "markdown": text}
+    )
 
 
 # -----------------------------

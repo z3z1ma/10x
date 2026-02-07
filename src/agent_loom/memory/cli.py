@@ -669,8 +669,6 @@ def _effective_format(args: argparse.Namespace) -> str:
         and bool(getattr(args, "context", False))
     ):
         return "text"
-    if args.format is None and args.cmd == "prime":
-        return "text"
     return args.format or "json"
 
 
