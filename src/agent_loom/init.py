@@ -17,9 +17,9 @@ from agent_loom.team.core import init_agents
 from agent_loom.team.prime import prime as team_prime
 from agent_loom.ticket.core import init as ticket_init
 from agent_loom.ticket.core import prime as ticket_prime
-from agent_loom.workspace.poly_ops import poly_init
+from agent_loom.workspace.poly.ops import poly_init
 from agent_loom.workspace.prime import prime as workspace_prime
-from agent_loom.workspace.repo_ops import repo_init
+from agent_loom.workspace.repo.ops import repo_init
 
 
 def now_iso() -> str:

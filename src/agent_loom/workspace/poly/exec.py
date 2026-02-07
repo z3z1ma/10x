@@ -4,18 +4,20 @@ import time
 from pathlib import Path
 from typing import Any, Dict, Optional, Sequence
 
+from agent_loom.core.concurrent import parallel_map
+from agent_loom.core.git import is_git_repo
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.git_ops import git_is_dirty, require_git
+from agent_loom.workspace.git.ops import git_is_dirty, require_git
 from agent_loom.workspace.guards import workspace_root
 from agent_loom.workspace.models import PolyExecResult
-from agent_loom.workspace.selection import poly_resolve_repo_names
+from agent_loom.workspace.poly.selection import poly_resolve_repo_names
 from agent_loom.workspace.state import (
     iter_repos,
     load_workspace,
     worktrees_base,
     ws_repos_dir,
 )
-from agent_loom.workspace.utils import is_git_repo, run
+from agent_loom.workspace.utils import run
 
 
 def _truncate(s: str, *, max_chars: int) -> tuple[str, bool]:
@@ -63,6 +65,12 @@ def poly_exec(
     if group:
         target = {"kind": "worktrees", "group": str(group)}
         base = worktrees_base(ws_root, ws, str(group)).resolve()
+        try:
+            from agent_loom.workspace.worktree_meta import poly_group_touch
+
+            poly_group_touch(ws_root=ws_root, group=str(group))
+        except Exception:
+            pass
 
     def _one(repo_name: str) -> Dict[str, Any]:
         p = (base / repo_name).resolve()
@@ -101,9 +109,6 @@ def poly_exec(
             }
         )
         return rec
-
-    # Keep ordering deterministic.
-    from agent_loom.workspace.utils import parallel_map
 
     results = parallel_map(_one, names, int(jobs or 1))
 

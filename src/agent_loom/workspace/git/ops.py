@@ -3,6 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List, Optional
 
+from agent_loom.core.exec import ExecError
+from agent_loom.core.exec import which
+from agent_loom.core.fs import ensure_dir
+from agent_loom.core import git as core_git
+from agent_loom.core.git import is_git_repo
 from agent_loom.workspace.constants import (
     DEFAULT_DEFAULT_BRANCH,
     REPO_INTERNAL_DIR,
@@ -10,7 +15,7 @@ from agent_loom.workspace.constants import (
 )
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.state import Repo, worktrees_base
-from agent_loom.workspace.utils import ensure_dir, is_git_repo, run, short, which
+from agent_loom.workspace.utils import run, short
 
 
 def git_git_dir(repo_path: Path) -> Path:
@@ -133,23 +138,28 @@ def git_checkout_reset_branch(
 
 
 def git_current_branch(path: Path) -> str:
-    return run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=path).stdout.strip()
+    try:
+        return core_git.git_current_branch(path)
+    except ExecError as e:
+        raise WorkspaceError(str(e)) from e
 
 
 def git_head_sha(path: Path) -> str:
-    return run(["git", "rev-parse", "HEAD"], cwd=path).stdout.strip()
+    try:
+        return core_git.git_head_sha(path)
+    except ExecError as e:
+        raise WorkspaceError(str(e)) from e
 
 
 def git_is_dirty(path: Path) -> bool:
-    return bool(run(["git", "status", "--porcelain"], cwd=path).stdout.strip())
+    try:
+        return core_git.git_is_dirty(path)
+    except ExecError as e:
+        raise WorkspaceError(str(e)) from e
 
 
 def git_ref_exists(path: Path, ref: str) -> bool:
-    try:
-        run(["git", "rev-parse", "--verify", ref], cwd=path, check=True)
-        return True
-    except WorkspaceError:
-        return False
+    return core_git.git_ref_exists(path, ref)
 
 
 def git_branch_upstream(path: Path, branch: str) -> Optional[str]:
@@ -168,8 +178,7 @@ def git_set_upstream(path: Path, branch: str, upstream: str) -> None:
 
 
 def git_is_ancestor(path: Path, older: str, newer: str) -> bool:
-    p = run(["git", "merge-base", "--is-ancestor", older, newer], cwd=path, check=False)
-    return p.returncode == 0
+    return core_git.git_is_ancestor(path, older, newer)
 
 
 def git_ensure_branch(
@@ -300,35 +309,19 @@ def git_worktree_remove_from(
 
 
 def git_worktree_list_porcelain(repo_path: Path) -> List[dict]:
-    out = run(["git", "worktree", "list", "--porcelain"], cwd=repo_path).stdout
-    rows: List[dict] = []
-    cur: Optional[dict] = None
-    for line in out.splitlines():
-        if not line.strip():
-            continue
-        if line.startswith("worktree "):
-            if cur:
-                rows.append(cur)
-            cur = {"path": line.split(" ", 1)[1].strip()}
-            continue
-        if cur is None:
-            continue
-        if line.startswith("HEAD "):
-            cur["head"] = line.split(" ", 1)[1].strip()
-        elif line.startswith("branch "):
-            ref = line.split(" ", 1)[1].strip()
-            cur["ref"] = ref
-            if ref.startswith("refs/heads/"):
-                cur["branch"] = ref[len("refs/heads/") :]
-            else:
-                cur["branch"] = ref
-        elif line == "detached":
-            cur["detached"] = True
-        elif line.startswith("locked"):
-            cur["locked"] = True
-    if cur:
-        rows.append(cur)
-    return rows
+    try:
+        rows = core_git.git_worktree_list_porcelain(repo_path)
+    except ExecError as e:
+        raise WorkspaceError(str(e)) from e
+
+    # Preserve the historical shape of the workspace helper (no bare/prunable keys).
+    out: List[dict] = []
+    for row in rows:
+        r = dict(row)
+        r.pop("bare", None)
+        r.pop("prunable", None)
+        out.append(r)
+    return out
 
 
 def repo_default_branch(repo_path: Path) -> str:

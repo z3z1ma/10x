@@ -17,7 +17,7 @@ from agent_loom.workspace.state import (
     ws_repos_dir,
     ws_worktrees_dir,
 )
-from agent_loom.workspace.utils import read_json
+from agent_loom.core.io import read_json
 
 
 @dataclass(frozen=True)

@@ -67,6 +67,20 @@ class TestWorkspaceInit(unittest.TestCase):
             self.assertEqual(text2.count("services/index.json"), 1)
             self.assertEqual(text2.count(".loom/"), 1)
 
+    def test_harness_init_root_flag_initializes_target_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            base = Path(td)
+            cwd = base / "cwd"
+            target = base / "harness"
+            cwd.mkdir(parents=True, exist_ok=True)
+
+            rc, out = _run_json(["harness", "init", "--root", str(target)], cwd)
+            self.assertEqual(rc, 0)
+            self.assertTrue(out.get("ok"))
+            self.assertTrue((target / "workspace.json").exists())
+            self.assertTrue((target / ".loom").exists())
+            self.assertFalse((cwd / "workspace.json").exists())
+
     def test_workspace_init_in_git_repo_runs_repo_init(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             repo = Path(td) / "repo"

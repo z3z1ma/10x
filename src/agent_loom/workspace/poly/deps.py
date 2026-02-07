@@ -6,9 +6,9 @@ from typing import Any, Dict, List, Optional
 
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.guards import workspace_root
-from agent_loom.workspace.services import service_index_path
+from agent_loom.workspace.poly.services import service_index_path
 from agent_loom.workspace.state import load_workspace
-from agent_loom.workspace.utils import read_json
+from agent_loom.core.io import read_json
 
 
 def _neighbors(idx: dict, svc: str, key: str) -> List[str]:

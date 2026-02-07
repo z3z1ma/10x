@@ -15,7 +15,7 @@ Workspace library + CLI (loom).
 
 from __future__ import annotations
 
-from agent_loom.workspace.poly_ops import (
+from agent_loom.workspace.poly.ops import (
     add_repo,
     branch,
     context,
@@ -42,11 +42,13 @@ from agent_loom.workspace.poly_ops import (
     worktree_rebase,
     worktree_rm,
 )
-from agent_loom.workspace.exec_ops import poly_exec
-from agent_loom.workspace.deps_ops import deps_closure, deps_impacted
-from agent_loom.workspace.gc_ops import worktree_gc
-from agent_loom.workspace.leases import lease_acquire, lease_list, lease_release
-from agent_loom.workspace.meta_ops import (
+from agent_loom.workspace.poly.exec import poly_exec
+from agent_loom.workspace.poly.cleanup import poly_cleanup_apply, poly_cleanup_suggest
+from agent_loom.workspace.poly.deps import deps_closure, deps_impacted
+from agent_loom.workspace.poly.impact import poly_impact_repos, poly_impact_snapshot
+from agent_loom.workspace.poly.gc import worktree_gc
+from agent_loom.workspace.poly.leases import lease_acquire, lease_list, lease_release
+from agent_loom.workspace.poly.meta import (
     poly_repo_edit,
     poly_set_ls,
     poly_set_rm,
@@ -54,7 +56,7 @@ from agent_loom.workspace.meta_ops import (
     poly_set_upsert,
 )
 from agent_loom.workspace.prime import prime
-from agent_loom.workspace.repo_ops import (
+from agent_loom.workspace.repo.ops import (
     repo_merge_attempt,
     repo_init,
     repo_root,
@@ -97,6 +99,8 @@ __all__ = [
     "repo_merge_attempt",
     "poly_init",
     "poly_exec",
+    "poly_cleanup_suggest",
+    "poly_cleanup_apply",
     "add_repo",
     "remove_repo",
     "list_repos",
@@ -122,6 +126,8 @@ __all__ = [
     "deps_who_uses",
     "deps_closure",
     "deps_impacted",
+    "poly_impact_repos",
+    "poly_impact_snapshot",
     "deepen",
     "poly_repo_edit",
     "poly_set_upsert",

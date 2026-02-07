@@ -18,12 +18,19 @@ def isoformat_z(ts: dt.datetime) -> str:
 
 
 def parse_iso(ts: str) -> Optional[dt.datetime]:
-    if not ts:
+    raw = str(ts or "").strip()
+    if not raw:
         return None
     try:
-        return dt.datetime.fromisoformat(ts)
+        if raw.endswith("Z"):
+            raw = raw[:-1] + "+00:00"
+        return dt.datetime.fromisoformat(raw)
     except Exception:
         return None
+
+
+def parse_iso_z(ts: str) -> Optional[dt.datetime]:
+    return parse_iso(ts)
 
 
 def now_iso() -> str:
@@ -63,11 +70,11 @@ def parse_duration_seconds(s: str) -> int:
     if raw.isdigit():
         return int(raw)
 
-    if not re.fullmatch(r"(?:\d+[smhd])+", raw):
+    if not re.fullmatch(r"(?:\d+[smhdw])+", raw):
         raise ValueError(f"invalid duration: {s}")
 
     total = 0
-    for m in re.finditer(r"(\d+)([smhd])", raw):
+    for m in re.finditer(r"(\d+)([smhdw])", raw):
         n = int(m.group(1))
         unit = m.group(2)
         if unit == "s":
@@ -78,6 +85,8 @@ def parse_duration_seconds(s: str) -> int:
             total += n * 3600
         elif unit == "d":
             total += n * 86400
+        elif unit == "w":
+            total += n * 7 * 86400
     if total <= 0:
         raise ValueError(f"invalid duration: {s}")
     return total

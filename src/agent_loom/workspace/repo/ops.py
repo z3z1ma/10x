@@ -3,9 +3,13 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from agent_loom.core.fs import ensure_dir, fs_escape
+from agent_loom.core.git import is_git_repo
+from agent_loom.core.io import atomic_write_json, read_json
+from agent_loom.core.time import now_iso
 from agent_loom.workspace.constants import REPO_INTERNAL_DIR, SHA_RE
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.git_ops import (
+from agent_loom.workspace.git.ops import (
     git_git_dir,
     ensure_repo_internal_ignored,
     git_current_branch,
@@ -29,17 +33,9 @@ from agent_loom.workspace.models import (
     WorktreeDiffResult,
     WorktreeEnsureResult,
 )
-from agent_loom.workspace.state import fs_escape
-from agent_loom.workspace.utils import (
-    atomic_write_json,
-    ensure_dir,
-    is_git_repo,
-    now_iso,
-    read_json,
-    run,
-)
+from agent_loom.workspace.utils import run
 
-from agent_loom.workspace.diff_ops import worktree_diff_by_file
+from agent_loom.workspace.git.diff import worktree_diff_by_file
 
 
 def repo_root() -> Path:
@@ -333,7 +329,22 @@ def repo_worktree_rm_path(
 
     p = Path(raw)
     wt_path = (p if p.is_absolute() else (repo / p)).resolve()
+
+    branch = ""
+    try:
+        if wt_path.exists() and is_git_repo(wt_path):
+            branch = git_current_branch(wt_path)
+    except Exception:
+        branch = ""
     git_worktree_remove_from(repo, wt_path, force=bool(force))
+
+    if branch and branch != "HEAD":
+        try:
+            from agent_loom.workspace.worktree_meta import repo_worktree_meta_path
+
+            repo_worktree_meta_path(repo, branch).unlink(missing_ok=True)
+        except Exception:
+            pass
 
     return RepoWorktreeRemoveResult(removed=str(wt_path))
 
@@ -567,6 +578,13 @@ def repo_worktree_rm(
             raise WorkspaceError(f"No worktree found for branch: {branch}")
 
     git_worktree_remove_from(repo, wt_path, force=bool(force))
+
+    try:
+        from agent_loom.workspace.worktree_meta import repo_worktree_meta_path
+
+        repo_worktree_meta_path(repo, branch).unlink(missing_ok=True)
+    except Exception:
+        pass
     return RepoWorktreeRemoveResult(branch=branch, removed=str(wt_path))
 
 
@@ -593,11 +611,24 @@ def _repo_resolve_worktree(repo: Path, selector: str) -> Path:
     return repo_worktree_default_path(repo, sel).resolve()
 
 
+def _repo_touch_worktree_meta(*, repo: Path, wt_path: Path) -> None:
+    try:
+        from agent_loom.workspace.worktree_meta import repo_worktree_touch
+
+        br = git_current_branch(wt_path)
+        if br and br != "HEAD":
+            repo_worktree_touch(repo_root=repo, branch=br)
+    except Exception:
+        return
+
+
 def repo_worktree_status(*, worktree: str = "", root: Optional[Path] = None) -> dict:
     repo = root.resolve() if root is not None else repo_root()
     wt_path = _repo_resolve_worktree(repo, worktree)
     if not wt_path.exists() or not is_git_repo(wt_path):
         raise WorkspaceError(f"Not a git worktree: {wt_path}")
+
+    _repo_touch_worktree_meta(repo=repo, wt_path=wt_path)
 
     return {
         "repo_root": str(repo.resolve()),
@@ -618,6 +649,8 @@ def repo_worktree_check_clean(
     wt_path = _repo_resolve_worktree(repo, worktree)
     if not wt_path.exists() or not is_git_repo(wt_path):
         raise WorkspaceError(f"Not a git worktree: {wt_path}")
+
+    _repo_touch_worktree_meta(repo=repo, wt_path=wt_path)
 
     out = run(["git", "status", "--porcelain"], cwd=wt_path).stdout
     lines = [ln for ln in out.splitlines() if ln.strip()]
@@ -646,6 +679,8 @@ def repo_worktree_check_divergence(
     wt_path = _repo_resolve_worktree(repo, worktree)
     if not wt_path.exists() or not is_git_repo(wt_path):
         raise WorkspaceError(f"Not a git worktree: {wt_path}")
+
+    _repo_touch_worktree_meta(repo=repo, wt_path=wt_path)
 
     base_ref = str(base or "").strip()
     if not base_ref:
@@ -694,6 +729,8 @@ def repo_worktree_diff(
     if not wt_path.exists() or not is_git_repo(wt_path):
         raise WorkspaceError(f"Not a git worktree: {wt_path}")
 
+    _repo_touch_worktree_meta(repo=repo, wt_path=wt_path)
+
     files, untracked, truncated, base_used, merge_base = worktree_diff_by_file(
         worktree=wt_path,
         diff_mode=str(diff_mode or "dirty"),
@@ -732,6 +769,8 @@ def repo_snapshot_capture(
     if not wt_path.exists() or not is_git_repo(wt_path):
         raise WorkspaceError(f"Not a git worktree: {wt_path}")
 
+    _repo_touch_worktree_meta(repo=repo, wt_path=wt_path)
+
     _repo_states_dir(repo).mkdir(parents=True, exist_ok=True)
     snap_path = _repo_states_dir(repo) / f"{fs_escape(name)}.json"
 
@@ -769,6 +808,8 @@ def repo_snapshot_diff(*, name: str, root: Optional[Path] = None) -> dict:
             "status": "missing",
             "target": str(wt_path),
         }
+
+    _repo_touch_worktree_meta(repo=repo, wt_path=wt_path)
 
     cur = {
         "branch": run(
@@ -814,6 +855,8 @@ def repo_snapshot_restore(
     wt_path = Path(str(target or repo)).resolve()
     if not wt_path.exists() or not is_git_repo(wt_path):
         raise WorkspaceError(f"Not a git worktree: {wt_path}")
+
+    _repo_touch_worktree_meta(repo=repo, wt_path=wt_path)
 
     state = snap.get("state") or {}
     commit0 = str(state.get("commit") or "").strip()

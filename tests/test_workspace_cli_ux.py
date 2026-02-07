@@ -44,7 +44,7 @@ class TestWorkspaceCliUx(unittest.TestCase):
             rc, text = _run_text(["prime"], Path(td))
             self.assertEqual(rc, 0)
             self.assertIn("Workspace Cookbook", text)
-            self.assertIn("loom workspace poly init", text)
+            self.assertIn("loom workspace harness init", text)
 
     def test_prime_json_includes_markdown(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -54,6 +54,13 @@ class TestWorkspaceCliUx(unittest.TestCase):
             data = payload.get("data") or {}
             content = str(data.get("markdown") or "")
             self.assertIn("Workspace Cookbook", content)
+
+    def test_harness_is_poly_alias(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            rc, text = _run_text(["harness", "init"], Path(td))
+            self.assertEqual(rc, 0)
+            self.assertIn("workspace_file:", text)
+            self.assertIn("repos_dir:", text)
 
 
 if __name__ == "__main__":

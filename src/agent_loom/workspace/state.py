@@ -3,11 +3,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
-from urllib.parse import quote, unquote
+
+from agent_loom.core.fs import fs_escape
+from agent_loom.core.io import atomic_write_json, read_json
 
 from agent_loom.workspace.constants import (
     DEFAULT_DEFAULT_BRANCH,
-    FS_SAFE,
+    INTERNAL_DIR,
     REPO_NAME_RE,
     REPOS_DIR,
     SERVICES_DIR,
@@ -16,7 +18,6 @@ from agent_loom.workspace.constants import (
     WORKTREES_DIR,
 )
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.utils import atomic_write_json, read_json
 
 
 @dataclass
@@ -42,21 +43,27 @@ def validate_repo_name(name: str) -> None:
         )
 
 
-def fs_escape(name: str) -> str:
-    """Reversible encoding for filesystem path segments.
-
-    Git branch names commonly contain '/', which must not be treated as a directory.
-    """
-
-    return quote(name, safe=FS_SAFE)
-
-
-def fs_unescape(seg: str) -> str:
-    return unquote(seg)
-
-
 def worktrees_base(root: Path, ws: dict, group: str) -> Path:
-    return root / ws_worktrees_dir(ws) / fs_escape(group)
+    default = root / ws_worktrees_dir(ws) / fs_escape(group)
+
+    # Optional per-group override (persisted in group metadata).
+    meta = root / INTERNAL_DIR / "meta" / "groups" / f"{fs_escape(group)}.json"
+    if meta.exists():
+        try:
+            data = read_json(meta)
+        except Exception:
+            data = {}
+        if isinstance(data, dict):
+            raw = str(data.get("worktrees_base_path") or "").strip()
+            if raw:
+                p = Path(raw).expanduser()
+                if not p.is_absolute():
+                    p = (root / p).resolve()
+                else:
+                    p = p.resolve()
+                return p
+
+    return default
 
 
 def snapshot_path(root: Path, ws: dict, name: str) -> Path:

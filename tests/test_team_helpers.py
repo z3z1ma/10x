@@ -47,6 +47,7 @@ class TestParseDurationSeconds(unittest.TestCase):
         self.assertEqual(_parse_duration_seconds("90"), 90)
         self.assertEqual(_parse_duration_seconds("15m"), 15 * 60)
         self.assertEqual(_parse_duration_seconds("1h30m"), 1 * 3600 + 30 * 60)
+        self.assertEqual(_parse_duration_seconds("1w"), 7 * 24 * 3600)
 
     def test_clock_formats(self) -> None:
         self.assertEqual(_parse_duration_seconds("02:03"), 2 * 60 + 3)
@@ -56,7 +57,7 @@ class TestParseDurationSeconds(unittest.TestCase):
         with self.assertRaises(team.TeamError):
             _parse_duration_seconds("")
         with self.assertRaises(team.TeamError):
-            _parse_duration_seconds("1w")
+            _parse_duration_seconds("1x")
         with self.assertRaises(team.TeamError):
             _parse_duration_seconds("0s")
 
