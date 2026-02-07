@@ -130,7 +130,7 @@ from agent_loom.core.time import now_iso
 
 def _cmd_name(args: argparse.Namespace) -> str:
     top = getattr(args, "cmd", "") or ""
-    if top == "poly":
+    if top in {"poly", "harness"}:
         cmd = getattr(args, "poly_cmd", "") or ""
         if cmd == "worktree":
             cmd = f"worktree {getattr(args, 'worktree_cmd', '')}".strip()
@@ -150,7 +150,7 @@ def _cmd_name(args: argparse.Namespace) -> str:
             cmd = f"sandbox {getattr(args, 'sandbox_cmd', '')}".strip()
         elif cmd == "cleanup":
             cmd = f"cleanup {getattr(args, 'cleanup_cmd', '')}".strip()
-        return f"poly {cmd}".strip()
+        return f"{top} {cmd}".strip()
 
     cmd = top
     if cmd == "worktree":
@@ -1379,12 +1379,14 @@ def cmd_prime(args: argparse.Namespace) -> None:
     sys.stdout.write(_render_prime_text(payload))
 
 
-def _add_poly_parser(root_sub: Any) -> None:
-    p = root_sub.add_parser(
-        "poly",
-        help="Workspace-level control plane (polyrepo)",
-        description="Workspace-level control plane (polyrepo)",
-    )
+def _add_poly_parser(
+    root_sub: Any,
+    *,
+    name: str = "poly",
+    help_text: str = "Workspace harness control plane (polyrepo)",
+    description_text: str = "Workspace harness control plane (polyrepo)",
+) -> None:
+    p = root_sub.add_parser(name, help=help_text, description=description_text)
     sub = p.add_subparsers(dest="poly_cmd", required=True)
 
     sp = sub.add_parser(
@@ -1476,7 +1478,7 @@ def _add_poly_parser(root_sub: Any) -> None:
     spl = sub_lease.add_parser("ls", help="List leases")
     spl.set_defaults(func=cmd_lease_ls)
 
-    sp = sub.add_parser("sandbox", help="Sandbox worktrees (poly)")
+    sp = sub.add_parser("sandbox", help="Sandbox worktrees (harness)")
     subs = sp.add_subparsers(dest="sandbox_cmd", required=True)
 
     spc = subs.add_parser("create", help="Create sandbox worktrees for a group")
@@ -2011,7 +2013,7 @@ def _add_poly_parser(root_sub: Any) -> None:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="loom workspace",
-        description="Workspace + worktree tooling",
+        description="Workspace + worktree tooling (repo mode + harness control plane)",
     )
     p.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -2230,7 +2232,18 @@ def build_parser() -> argparse.ArgumentParser:
     spr.add_argument("--force-clean", action="store_true")
     spr.set_defaults(func=cmd_repo_snapshot_restore)
 
-    _add_poly_parser(sub)
+    _add_poly_parser(
+        sub,
+        name="harness",
+        help_text="Workspace harness control plane (preferred)",
+        description_text="Workspace harness control plane (preferred; alias: poly)",
+    )
+    _add_poly_parser(
+        sub,
+        name="poly",
+        help_text="Alias for harness (workspace control plane)",
+        description_text="Alias for harness (workspace control plane)",
+    )
 
     return p
 
@@ -2257,7 +2270,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     except WorkspaceError as e:
         if getattr(args, "json", False):
             try:
-                if getattr(args, "cmd", "") == "poly":
+                if getattr(args, "cmd", "") in {"poly", "harness"}:
                     if getattr(args, "poly_cmd", "") == "init":
                         root = Path.cwd().resolve()
                     else:
