@@ -1515,12 +1515,22 @@ def _add_poly_parser(
     sps = sub_set.add_parser("ls", help="List repo sets")
     sps.set_defaults(func=cmd_poly_set_ls)
 
-    sp = sub.add_parser("lease", help="Coordination leases (agent-safe locks)")
+    sp = sub.add_parser(
+        "lease",
+        help="Coordination leases (optional in-use marker + exclusive coordination lock)",
+    )
     sub_lease = sp.add_subparsers(dest="lease_cmd", required=True)
 
-    spl = sub_lease.add_parser("acquire", help="Acquire a lease key")
+    spl = sub_lease.add_parser(
+        "acquire",
+        help="Acquire a lease key (marks resource in-use; can prevent cleanup/GC)",
+    )
     spl.add_argument("key")
-    spl.add_argument("--force", action="store_true", help="Steal an existing lease")
+    spl.add_argument(
+        "--force",
+        action="store_true",
+        help="Steal an existing lease (override another owner)",
+    )
     spl.set_defaults(func=cmd_lease_acquire)
 
     spl = sub_lease.add_parser("release", help="Release a lease key")

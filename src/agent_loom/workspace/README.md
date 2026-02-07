@@ -219,6 +219,31 @@ loom workspace snapshot restore baseline --yes --force-clean
 
 All `loom workspace poly ...` commands are available under `loom workspace harness ...`.
 
+## Leases (harness coordination)
+
+Leases are a harness-only coordination primitive stored under `.loom/leases/`.
+
+- They are NOT related to ticket claims and are not automatically tied to tickets.
+- They do NOT prevent parallel work on multiple branches/worktrees.
+- They are an *optional* exclusive coordination lock for higher-level harness operations.
+
+Primary use cases:
+- Protect a group from automated cleanup/GC while it is actively in use.
+- Avoid two orchestrators/agents mutating the same group concurrently.
+
+Examples:
+
+```
+# Mark a group in-use so cleanup/GC can skip it.
+loom workspace harness lease acquire group:sprint-42
+
+# Release when done.
+loom workspace harness lease release group:sprint-42
+
+# List current leases.
+loom workspace harness lease ls
+```
+
 ### poly init
 
 Initialize a poly workspace control plane.
@@ -348,7 +373,8 @@ loom workspace poly snapshot restore sprint-42 --yes --force-clean
 
 ### poly lease acquire / release / ls
 
-Leases are agent-safe locks stored under `.loom/leases`.
+Leases are optional coordination locks stored under `.loom/leases`.
+They are primarily used to mark a group in-use so cleanup/GC can skip it.
 
 ```
 loom workspace poly lease acquire group:sprint-42

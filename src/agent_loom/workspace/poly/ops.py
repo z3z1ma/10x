@@ -911,12 +911,6 @@ def worktree_group_status(
 
     _touch_group_meta(ws_root=ws_root, group=group)
 
-    _touch_group_meta(ws_root=ws_root, group=group)
-
-    _touch_group_meta(ws_root=ws_root, group=group)
-
-    _touch_group_meta(ws_root=ws_root, group=group)
-
     if repos or sets or tags:
         names = poly_resolve_repo_names(
             ws,
@@ -1031,8 +1025,6 @@ def worktree_group_check_divergence(
     base_dir = worktrees_base(ws_root, ws, group)
     if not base_dir.exists():
         raise WorkspaceError(f"No worktrees found for: {group}")
-
-    _touch_group_meta(ws_root=ws_root, group=group)
 
     _touch_group_meta(ws_root=ws_root, group=group)
 
