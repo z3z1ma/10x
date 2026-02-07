@@ -131,6 +131,12 @@ async function resolveLoom(root: string): Promise<CommandSpec> {
   return { cmd: DEFAULT_LOOM_BIN, args: [] };
 }
 
+async function resolveRepoRoot(start: string): Promise<string> {
+  const r = await runProcess({ cmd: "git", args: ["rev-parse", "--show-toplevel"] }, start, 8000);
+  const top = r.code === 0 ? String(r.stdout || "").trim() : "";
+  return top || start;
+}
+
 async function checkInstalled(root: string): Promise<{ ok: boolean; missing: string[] }> {
   const required = [
     "AGENTS.md",
@@ -380,16 +386,17 @@ ${recentObs
 
 export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, worktree }) => {
   const sessionRoot = worktree ?? directory;
+  const repoRoot = await resolveRepoRoot(sessionRoot);
 
-  const installed = await checkInstalled(sessionRoot);
+  const installed = await checkInstalled(repoRoot);
   if (!installed.ok) {
     await tuiToast(client, `Compound scaffolding not installed. ${_install_hint()}`, "info");
   } else {
     // Best-effort: keep derived docs and rules current at session start.
     try {
-      const loom = await resolveLoom(sessionRoot);
+      const loom = await resolveLoom(repoRoot);
       if (REFRESH_ON_START || PRIME_ON_START) {
-        await runProcess({ cmd: loom.cmd, args: [...loom.args, "compound", "update", "--repo", ".", "--json"] }, sessionRoot, 60000);
+        await runProcess({ cmd: loom.cmd, args: [...loom.args, "compound", "update", "--json"] }, repoRoot, 60000);
       }
     } catch {}
   }
@@ -434,7 +441,7 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
     if (type === "command.executed") obs.summary = `name=${String(event?.properties?.name ?? event?.properties?.command ?? "")}`;
     if (type === "session.updated") obs.summary = `title=${String(event?.properties?.title ?? "")}`;
 
-    await appendJsonl(sessionRoot, OBSERVATIONS_FILE, obs);
+    await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
   };
 
   const onEvent = async ({ event }: any) => {
@@ -446,7 +453,7 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
 
       if (event.type === "session.idle") {
         const sessionID = event.properties?.sessionID ?? event.properties?.sessionId ?? event.properties?.id ?? null;
-        await autoLearnIfNeeded(sessionRoot, client, sessionID ?? null);
+        await autoLearnIfNeeded(repoRoot, client, sessionID ?? null);
       }
     } catch {
       // swallow
@@ -472,9 +479,9 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
         args: redactedArgs,
       };
 
-      await appendJsonl(sessionRoot, OBSERVATIONS_FILE, obs);
-    } catch {}
-  };
+       await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
+     } catch {}
+   };
 
   const toolAfter = async (input: any, output: any) => {
     try {
@@ -497,7 +504,7 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
         args: redactedArgs,
       };
 
-      await appendJsonl(sessionRoot, OBSERVATIONS_FILE, obs);
+      await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
     } catch {
       // swallow
     }

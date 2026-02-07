@@ -21,6 +21,7 @@ from agent_loom.compound.scaffold import (
 )
 from agent_loom.compound.skills import write_or_update_skill
 from agent_loom.compound.sync import sync as compound_sync
+from agent_loom.core.git import git_repo_root
 
 
 def _emit_json(obj: object) -> None:
@@ -35,6 +36,17 @@ def _chdir(p: Path):
         yield
     finally:
         os.chdir(prev)
+
+
+def _resolve_repo_root(repo: Optional[str]) -> Path:
+    cr = str(os.environ.get("COMPOUND_ROOT") or "").strip()
+    if cr:
+        p = Path(cr).expanduser().resolve()
+        if p.exists() and p.is_dir():
+            return p
+
+    start = Path(repo).expanduser().resolve() if repo else Path.cwd().resolve()
+    return (git_repo_root(start) or start).resolve()
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -80,8 +92,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sync.add_argument(
         "--repo",
-        default=".",
-        help="Repo root (default: .)",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
     )
     sync.add_argument(
         "--json",
@@ -95,8 +107,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     refresh.add_argument(
         "--repo",
-        default=".",
-        help="Repo root (default: .)",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
     )
     refresh.add_argument(
         "--json",
@@ -110,8 +122,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     update.add_argument(
         "--repo",
-        default=".",
-        help="Repo root (default: .)",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
     )
     update.add_argument(
         "--json",
@@ -125,8 +137,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     prime.add_argument(
         "--repo",
-        default=".",
-        help="Repo root (default: .)",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
     )
     prime.add_argument(
         "--json",
@@ -140,8 +152,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     status.add_argument(
         "--repo",
-        default=".",
-        help="Repo root (default: .)",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
     )
     status.add_argument(
         "--json",
@@ -156,7 +168,11 @@ def build_parser() -> argparse.ArgumentParser:
     obs_sub = obs.add_subparsers(dest="obs_cmd", required=True)
 
     obs_tail = obs_sub.add_parser("tail", help="Show the last N observation records")
-    obs_tail.add_argument("--repo", default=".", help="Repo root (default: .)")
+    obs_tail.add_argument(
+        "--repo",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
+    )
     obs_tail.add_argument("--n", type=int, default=30, help="Number of records")
     obs_tail.add_argument("--json", action="store_true", help="Emit JSON")
 
@@ -165,7 +181,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     skill_upsert = skill_sub.add_parser("upsert", help="Create/update a skill")
     skill_upsert.add_argument("name")
-    skill_upsert.add_argument("--repo", default=".", help="Repo root (default: .)")
+    skill_upsert.add_argument(
+        "--repo",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
+    )
     skill_upsert.add_argument("--description", default="", help="Skill description")
     skill_upsert.add_argument(
         "--body",
@@ -182,7 +202,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     instinct_upsert.add_argument("operation", choices=["create", "update"])
     instinct_upsert.add_argument("id")
-    instinct_upsert.add_argument("--repo", default=".", help="Repo root (default: .)")
+    instinct_upsert.add_argument(
+        "--repo",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
+    )
     instinct_upsert.add_argument("--title", default=None)
     instinct_upsert.add_argument("--trigger", default=None)
     instinct_upsert.add_argument("--action", default=None)
@@ -195,7 +219,11 @@ def build_parser() -> argparse.ArgumentParser:
     instinct_list = instinct_sub.add_parser(
         "list", help="List instincts (top by confidence)"
     )
-    instinct_list.add_argument("--repo", default=".", help="Repo root (default: .)")
+    instinct_list.add_argument(
+        "--repo",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
+    )
     instinct_list.add_argument("--n", type=int, default=30)
     instinct_list.add_argument("--json", action="store_true", help="Emit JSON")
 
@@ -204,7 +232,11 @@ def build_parser() -> argparse.ArgumentParser:
     docblock_upsert = docblock_sub.add_parser(
         "upsert", help="Upsert an allowed AI-managed doc block"
     )
-    docblock_upsert.add_argument("--repo", default=".", help="Repo root (default: .)")
+    docblock_upsert.add_argument(
+        "--repo",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
+    )
     docblock_upsert.add_argument("--file", required=True)
     docblock_upsert.add_argument("--id", required=True)
     docblock_upsert.add_argument(
@@ -219,7 +251,11 @@ def build_parser() -> argparse.ArgumentParser:
     changelog_append = changelog_sub.add_parser(
         "append", help="Append a short entry to LOOM_ROADMAP.md"
     )
-    changelog_append.add_argument("--repo", default=".", help="Repo root (default: .)")
+    changelog_append.add_argument(
+        "--repo",
+        default=None,
+        help="Path inside repo (defaults to CWD; resolves git root)",
+    )
     changelog_append.add_argument(
         "--note", default=None, help="Note text. If omitted: read stdin."
     )
@@ -268,7 +304,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.cmd == "sync":
         try:
             res = compound_sync(
-                repo=Path(args.repo).resolve(), message=str(args.message or "")
+                repo=_resolve_repo_root(getattr(args, "repo", None)),
+                message=str(args.message or ""),
             )
             payload = {"ok": True, **dataclasses.asdict(res)}
             if bool(getattr(args, "json", False)):
@@ -290,7 +327,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             return 1
 
     if args.cmd == "refresh":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         try:
             require_scaffold_installed(repo)
             from agent_loom.compound.docs import sync_docs
@@ -316,7 +353,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             return 1
 
     if args.cmd == "update":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         try:
             require_scaffold_installed(repo)
             from agent_loom.compound.docs import sync_docs
@@ -349,7 +386,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             return 1
 
     if args.cmd == "prime":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         try:
             with _chdir(repo):
                 res = prime_rules(root=repo)
@@ -370,7 +407,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             return 1
 
     if args.cmd == "status":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         paths = compound_paths(repo)
         scaffold = check_scaffold_installed(repo)
         obs = count_observations(paths.observations_file)
@@ -408,7 +445,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return 0
 
     if args.cmd == "observations" and args.obs_cmd == "tail":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         paths = compound_paths(repo)
         tail = read_observations_tail(paths.observations_file, max_lines=int(args.n))
         if bool(getattr(args, "json", False)):
@@ -418,7 +455,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return 0
 
     if args.cmd == "skill" and args.skill_cmd == "upsert":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         require_scaffold_installed(repo)
 
         body = getattr(args, "body", None)
@@ -445,7 +482,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return 0
 
     if args.cmd == "instinct" and args.instinct_cmd == "upsert":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         require_scaffold_installed(repo)
         from agent_loom.compound.instincts import (
             instinct_upsert,
@@ -480,7 +517,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return 0
 
     if args.cmd == "instinct" and args.instinct_cmd == "list":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         from agent_loom.compound.instincts import load_instincts
 
         store = load_instincts(repo / ".opencode" / "memory" / "instincts.json")
@@ -495,7 +532,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return 0
 
     if args.cmd == "docblock" and args.docblock_cmd == "upsert":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         require_scaffold_installed(repo)
         from agent_loom.compound.docblocks import docblock_upsert
 
@@ -517,7 +554,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return 0
 
     if args.cmd == "changelog" and args.changelog_cmd == "append":
-        repo = Path(args.repo).resolve()
+        repo = _resolve_repo_root(getattr(args, "repo", None))
         require_scaffold_installed(repo)
         note = getattr(args, "note", None)
         if note is None:
