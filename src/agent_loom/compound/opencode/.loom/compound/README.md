@@ -11,4 +11,4 @@ Layout:
 
 Notes:
 - Episodes are intended to be small. Large diffs may be stored as references (base/head sha + diffstat) instead of full patches.
-- Do not edit Episodes casually; use `loom compound triage` for status/tagging.
+- Do not edit Episodes casually; treat them as committed evidence capsules.

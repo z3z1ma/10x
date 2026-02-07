@@ -30,5 +30,5 @@ def require_scaffold_installed(root: Path) -> None:
     raise ValueError(
         "compound scaffolding is not installed (missing required files):\n"
         + lines
-        + "\n\nRun: loom compound init --dest .\n"
+        + "\n\nRun: loom compound init\n"
     )

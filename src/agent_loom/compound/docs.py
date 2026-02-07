@@ -82,10 +82,10 @@ This block is maintained by the compound system.
 
 def render_workflow_commands() -> str:
     return _normalize_newlines(
-        """- `/workflows:plan` - Create tickets + plan (uses `loom memory recall`)
-- `/workflows:work` - Work in a worktree and implement
-- `/workflows:review` - Review changes before merge
-- `/workflows:compound` - Extract learnings into skills + memos + docs
+        """- `/workflow-plan` - Create tickets + plan (uses `loom memory recall`)
+- `/workflow-work` - Work in a worktree and implement
+- `/workflow-review` - Review changes before merge
+- `/workflow-compound` - Capture durable learnings (memos + skills)
 """
     )
 

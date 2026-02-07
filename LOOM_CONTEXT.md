@@ -39,10 +39,10 @@ This block is maintained by the compound system.
 <!-- END:compound:agents-ai-behavior -->
 
 <!-- BEGIN:compound:workflow-commands -->
-- `/workflows:plan` - Create tickets + plan (uses `loom memory recall`)
-- `/workflows:work` - Work in a worktree and implement
-- `/workflows:review` - Review changes before merge
-- `/workflows:compound` - Extract learnings into skills + memos + docs
+- `/workflow-plan` - Create tickets + plan (uses `loom memory recall`)
+- `/workflow-work` - Work in a worktree and implement
+- `/workflow-review` - Review changes before merge
+- `/workflow-compound` - Capture durable learnings (memos + skills)
 <!-- END:compound:workflow-commands -->
 
 <!-- BEGIN:compound:loom-core-context -->

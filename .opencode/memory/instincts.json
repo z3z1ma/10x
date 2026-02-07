@@ -1,4 +1,99 @@
 {
   "version": 1,
-  "instincts": []
+  "instincts": [
+    {
+      "id": "avoid-tooling-artifacts-in-templates",
+      "title": "Do not ship editor/agent tool artifacts in templates",
+      "trigger": "When adding or reviewing files under template trees like src/agent_loom/compound/opencode/ (or other scaffolded outputs).",
+      "action": "Exclude tool-specific project files (e.g., `.serena/*`, local IDE metadata, assistant-runner configs) from templates and committed scaffolds unless they are a deliberate product feature; prefer removing them rather than ignoring via template-local `.gitignore`.",
+      "tags": [
+        "compound",
+        "hygiene",
+        "templates"
+      ],
+      "confidence": 0.9,
+      "status": "active",
+      "created_at": "2026-02-07T22:37:34.902851Z",
+      "updated_at": "2026-02-07T22:37:34.902851Z",
+      "evidence": [
+        {
+          "ts": "2026-02-07T22:37:34.902851Z",
+          "episode_id": "a8b5ac3ffe5219232c3770309945487b6529be88e9f52cf834208c21bdd88e3d",
+          "head_sha": "4f98369282b323883f43073b37e0506c3ab64249",
+          "patch_sha256": "742213b0caf9e2d73477a9c67da02f1028c4bc4ca41ae9315da1472bf28ce322"
+        }
+      ]
+    },
+    {
+      "id": "compound-template-determinism-first",
+      "title": "Keep compound install outputs deterministic",
+      "trigger": "When changing compound scaffold/template contents or compound install logic (e.g., src/agent_loom/compound/scaffold.py, src/agent_loom/compound/paths.py, src/agent_loom/compound/docs.py, compound opencode template tree).",
+      "action": "Treat the installed `.opencode/` (and any `.loom/compound/` docs) as a contract: preserve stable paths, stable file ordering, stable newline formatting, and stable rendered content; immediately update/extend `tests/test_compound_install.py` to lock the behavior.",
+      "tags": [
+        "compound",
+        "determinism",
+        "templates",
+        "tests"
+      ],
+      "confidence": 0.82,
+      "status": "active",
+      "created_at": "2026-02-07T22:37:34.902851Z",
+      "updated_at": "2026-02-07T22:37:34.902851Z",
+      "evidence": [
+        {
+          "ts": "2026-02-07T22:37:34.902851Z",
+          "episode_id": "a8b5ac3ffe5219232c3770309945487b6529be88e9f52cf834208c21bdd88e3d",
+          "head_sha": "4f98369282b323883f43073b37e0506c3ab64249",
+          "patch_sha256": "742213b0caf9e2d73477a9c67da02f1028c4bc4ca41ae9315da1472bf28ce322"
+        }
+      ]
+    },
+    {
+      "id": "prefer-command-docs-over-embedded-skill-copies",
+      "title": "Prefer workflow command docs over duplicating skills in templates",
+      "trigger": "When documenting workflows for end-users inside compound-installed `.opencode/` trees.",
+      "action": "Put workflow guidance in `.opencode/commands/workflow-*.md` (command-discoverable docs) and avoid duplicating full skill content inside the compound template unless required; keep skills procedural and source-of-truth in `.opencode/skills/` at repo root.",
+      "tags": [
+        "commands",
+        "compound",
+        "docs",
+        "skills"
+      ],
+      "confidence": 0.74,
+      "status": "active",
+      "created_at": "2026-02-07T22:37:34.902851Z",
+      "updated_at": "2026-02-07T22:37:34.902851Z",
+      "evidence": [
+        {
+          "ts": "2026-02-07T22:37:34.902851Z",
+          "episode_id": "a8b5ac3ffe5219232c3770309945487b6529be88e9f52cf834208c21bdd88e3d",
+          "head_sha": "4f98369282b323883f43073b37e0506c3ab64249",
+          "patch_sha256": "742213b0caf9e2d73477a9c67da02f1028c4bc4ca41ae9315da1472bf28ce322"
+        }
+      ]
+    },
+    {
+      "id": "template-docs-use-root-relative-paths",
+      "title": "Use repo-root-relative paths in template docs",
+      "trigger": "When editing README/docs content that will be scaffolded into a repo (e.g., src/agent_loom/compound/opencode/README.md, src/agent_loom/compound/opencode/.loom/compound/README.md, `.opencode/commands/*.md`).",
+      "action": "Write links and references using repo-root-relative paths (no absolute machine paths, no editor URIs) and avoid references to removed/retired template files (e.g., AGENTS.md copies) to keep docs portable and deterministic.",
+      "tags": [
+        "compound",
+        "docs",
+        "portability"
+      ],
+      "confidence": 0.78,
+      "status": "active",
+      "created_at": "2026-02-07T22:37:34.902851Z",
+      "updated_at": "2026-02-07T22:37:34.902851Z",
+      "evidence": [
+        {
+          "ts": "2026-02-07T22:37:34.902851Z",
+          "episode_id": "a8b5ac3ffe5219232c3770309945487b6529be88e9f52cf834208c21bdd88e3d",
+          "head_sha": "4f98369282b323883f43073b37e0506c3ab64249",
+          "patch_sha256": "742213b0caf9e2d73477a9c67da02f1028c4bc4ca41ae9315da1472bf28ce322"
+        }
+      ]
+    }
+  ]
 }

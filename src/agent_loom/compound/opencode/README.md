@@ -4,7 +4,7 @@ This repo includes a production-ready **OpenCode plugin + workflow commands** to
 
 It supports:
 
-- ✅ **Plan → Work → Review → Compound → Repeat** commands (`/workflows:*`)
+- ✅ **Plan → Work → Review → Compound → Repeat** workflow commands (`/workflow-*`)
 - ✅ Integration with:
   - `loom ticket`
   - `loom memory`
@@ -13,7 +13,7 @@ It supports:
 - ✅ **Automatic post-turn learning** on `session.idle`
   - extracts/updates **instincts**
   - creates/updates **skills**
-  - refreshes `AGENTS.md` and `LOOM_ROADMAP.md`
+  - refreshes derived docs (`LOOM_CONTEXT.md`, `LOOM_ROADMAP.md`, `.opencode/memory/INSTINCTS.md`)
 
 ---
 
@@ -62,7 +62,7 @@ Skills compound. That’s the entire trick.
 
 - `.opencode/plugins/compound_engineering.ts`
   The OpenCode plugin
-- `.opencode/commands/workflows:*.md`
+- `.opencode/commands/workflow-*.md`
   Plan/Work/Review/Compound command set
 
 ### What is managed (and why)
@@ -112,13 +112,13 @@ When the session goes idle (agent has finished a turn):
 
 ## Workflow commands
 
-- `/workflows:plan`
+- `/workflow-plan`
   Recall memory (`loom memory recall`), inspect ticket backlog, create tickets, write plan
-- `/workflows:work`
+- `/workflow-work`
   Create a worktree (`loom workspace ...`), implement tasks, update tickets
-- `/workflows:review`
+- `/workflow-review`
   Review work, adjust tickets, prepare merge
-- `/workflows:compound`
+- `/workflow-compound`
   Extract learnings into skills + memos + docs
 
 ---
@@ -164,8 +164,8 @@ When the session goes idle (agent has finished a turn):
 
 Preferred install path (safe, idempotent):
 
-- `loom compound init --dest .`
-- Preview changes: `loom compound init --dest . --dry-run`
+- `loom compound init`
+- Preview changes: `loom compound init --dry-run`
 
 ### Upgrade
 
@@ -173,14 +173,14 @@ Default upgrades are non-destructive:
 
 - Re-running init will **not** overwrite skills or memory.
 - To refresh scaffold files (plugin/commands/agents/prompts), use:
-  - `loom compound init --dest . --force`
+  - `loom compound init --force`
 
 ### Run
 
-1. Run `loom compound init --dest .` once (installs scaffolding).
+1. Run `loom compound init` once (installs scaffolding).
 2. Start OpenCode normally.
    - Optional: set `COMPOUND_REFRESH_ON_START=1` to keep derived context up to date automatically.
-3. Use `/workflows:plan` and proceed through the workflow.
+3. Use `/workflow-plan` and proceed through the workflow.
 4. Let the plugin autolearn on idle turns (it runs a background prompt that uses `bash` + `loom compound ...`).
 
 ---
