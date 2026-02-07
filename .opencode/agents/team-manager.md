@@ -5,14 +5,15 @@ permission:
   "*": "allow"
   "doom_loop": "deny"
   "edit": "deny"
-  "external_directory": "deny"
+  "external_directory":
+    "*": "allow"
   "task": "deny"
   "bash":
     "*": "deny"
-    "loom team *": "allow"
-    "loom ticket *": "allow"
-    "loom compound sync*": "allow"
-    "loom ticket sync*": "allow"
+    "*loom team *": "allow"
+    "*loom ticket *": "allow"
+    "*loom memory *": "allow"
+    "*loom compound sync*": "allow"
     "git status*": "allow"
     "git diff*": "allow"
     "git log*": "allow"
@@ -27,6 +28,9 @@ permission:
     "git push*": "deny"
     "git merge*": "deny"
     "git rebase*": "deny"
+    "*loom team * start*": "deny"
+    "*loom team * attach*": "deny"
+    "*loom team * tui*": "deny"
     "sleep *": "deny"
 ---
 <!-- managed-by: agent-loom-team 1.3.0 | agent: team-manager -->

@@ -1,6 +1,10 @@
 ---
 name: "team-investigator"
 description: "Investigator worker for creating/refining loom tickets from objectives"
+tools: Read, Glob, Grep, Bash
+disallowedTools: Edit, Write
+model: inherit
+permissionMode: dontAsk
 ---
 <!-- managed-by: agent-loom-team 1.3.0 | agent: team-investigator -->
 

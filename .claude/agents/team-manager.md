@@ -1,6 +1,10 @@
 ---
 name: "team-manager"
 description: "Primary manager agent for Team orchestration"
+tools: Read, Glob, Grep, Bash
+disallowedTools: Edit, Write
+model: inherit
+permissionMode: dontAsk
 ---
 <!-- managed-by: agent-loom-team 1.3.0 | agent: team-manager -->
 

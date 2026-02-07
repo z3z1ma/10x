@@ -1,13 +1,15 @@
 ---
 name: compound-workflows
-description: Use Plan -> Work -> Review -> Compound to compound skills and maintain project context.
+description: Use Plan → Work → Review → Compound to compound skills and maintain project context.
 license: MIT
 compatibility: opencode,claude
 metadata:
   created_at: "2026-01-27T17:03:09.731823+00:00"
-  updated_at: "2026-02-07T19:15:04.735243Z"
-  version: "2"
+  updated_at: "2026-01-27T17:03:09.731823+00:00"
+  version: "1"
+  tags: "workflow,compounding"
 ---
+
 <!-- BEGIN:compound:skill-managed -->
 ## Purpose
 
@@ -18,7 +20,7 @@ This repository uses a loop:
 3. **Review**: run a multi-angle review before merging.
 4. **Compound**: extract reusable patterns into skills (procedural memory) + store memos for future planning.
 
-The point is not vibes. The point is reusable procedure.
+The point is not vibes. The point is *reusable procedure*.
 
 ## Commands
 
@@ -61,18 +63,17 @@ The point is not vibes. The point is reusable procedure.
 - Apply durable learnings using Loom (run via bash):
   - `loom compound skill upsert <name> --description ... --body ...` (or pipe stdin)
   - `loom compound instinct upsert create|update <id> ...`
-  - `loom compound docblock upsert --file LOOM_CONTEXT.md --id loom-core-context --content ...`
+  - `loom compound docblock upsert --file AGENTS.md --id loom-core-context --content ...`
   - `loom compound docblock upsert --file LOOM_ROADMAP.md --id roadmap-ai-notes --content ...`
   - `loom compound changelog append --note "..."`
   - `loom memory add --title ... --body ... --scope command:workflows:plan` (sparingly)
-- Finish with `loom compound update` (regenerates derived docs, rules/cookbooks, and mirrors).
+- Finish with `loom compound refresh`.
 
 ## Operational defaults
 
 - Keep skills small, scoped, and action-oriented.
 - Prefer updating an existing skill over creating a near-duplicate.
 - A skill should be applicable in at least 2 future contexts.
-- If you change workflow docs/skills under `.opencode/`, keep the scaffold mirror under `src/agent_loom/compound/opencode/.opencode/` in sync (install determinism depends on it).
 <!-- END:compound:skill-managed -->
 
 ## Manual notes

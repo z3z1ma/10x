@@ -1,6 +1,9 @@
 ---
 name: "team-integrator"
 description: "Integrator (fan-in): serial merges + ticket updates"
+tools: Read, Glob, Grep, Bash, Edit, Write
+model: inherit
+permissionMode: dontAsk
 ---
 <!-- managed-by: agent-loom-team 1.3.0 | agent: team-integrator -->
 
