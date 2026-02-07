@@ -31,7 +31,7 @@ Process:
    - tests/checks to run
    - risks and rollback plan
 6) Finish by refreshing derived compound docs:
-   - Run via bash: `loom compound refresh`
+   - Run via bash: `loom compound update`
 
 Output:
 - A concise plan document.

@@ -33,7 +33,7 @@ Process:
    - add notes
    - create new tickets if issues are substantial
 6) Finish by refreshing derived compound docs:
-   - Run via bash: `loom compound refresh`
+   - Run via bash: `loom compound update`
 
 Output:
 - Review summary.

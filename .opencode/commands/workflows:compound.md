@@ -35,7 +35,7 @@ Process:
 7) Append a short changelog entry using Loom:
    - Run via bash: `loom compound changelog append --note "..."`
 8) Finish by refreshing derived compound docs:
-   - Run via bash: `loom compound refresh`
+   - Run via bash: `loom compound update`
 
 Required output:
 - A short “Compound report” section (what we learned).

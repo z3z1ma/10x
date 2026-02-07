@@ -51,6 +51,10 @@ def test_compound_install_patches_agents_md_without_clobbering(tmp_path: Path) -
     new = agents.read_text(encoding="utf-8")
     assert "hello" in new
 
+    # install must not patch or overwrite an existing AGENTS.md
+    assert new == "# AGENTS\n\nhello\n"
+
+    ctx = (dest / "LOOM_CONTEXT.md").read_text(encoding="utf-8")
     required = [
         "agents-ai-behavior",
         "workflow-commands",
@@ -59,14 +63,15 @@ def test_compound_install_patches_agents_md_without_clobbering(tmp_path: Path) -
         "rules-index",
     ]
     for ident in required:
-        assert f"<!-- BEGIN:compound:{ident} -->" in new
-        assert f"<!-- END:compound:{ident} -->" in new
+        assert f"<!-- BEGIN:compound:{ident} -->" in ctx
+        assert f"<!-- END:compound:{ident} -->" in ctx
 
 
 def test_compound_install_creates_loom_docs_if_missing(tmp_path: Path) -> None:
     dest = tmp_path
     install_opencode(dest=dest, dry_run=False)
 
+    assert (dest / "LOOM_CONTEXT.md").exists()
     assert (dest / "LOOM_ROADMAP.md").exists()
     assert not (dest / "LOOM_PROJECT.md").exists()
     assert not (dest / "LOOM_CHANGELOG.md").exists()
@@ -94,8 +99,9 @@ def test_compound_install_template_autolearn_prompt_is_tools_first(
     assert "loom compound skill upsert" in prompt
     assert "loom compound instinct upsert" in prompt
     assert "loom compound docblock upsert" in prompt
+    assert "LOOM_CONTEXT.md" in prompt
     assert "loom compound changelog append" in prompt
-    assert "loom compound refresh" in prompt
+    assert "loom compound update" in prompt
     assert "loom memory add" in prompt
     assert "Output **only** valid JSON" not in prompt
 
@@ -106,6 +112,7 @@ def test_compound_install_provides_plugin_required_scaffolding(tmp_path: Path) -
 
     required = [
         dest / "AGENTS.md",
+        dest / "LOOM_CONTEXT.md",
         dest / "LOOM_ROADMAP.md",
         dest / ".opencode" / "commands" / "workflows:plan.md",
         dest / ".opencode" / "compound" / "prompts" / "autolearn.md",
@@ -135,6 +142,7 @@ def test_compound_install_dry_run_does_not_write_files(tmp_path: Path) -> None:
 
     assert res.dry_run is True
     assert not (dest / ".opencode").exists()
+    assert not (dest / "LOOM_CONTEXT.md").exists()
     assert not (dest / "LOOM_ROADMAP.md").exists()
     assert not (dest / "AGENTS.md").exists()
 
@@ -145,17 +153,30 @@ def test_compound_install_dry_run_does_not_write_files(tmp_path: Path) -> None:
 
 def test_compound_install_ensures_loom_doc_fences(tmp_path: Path) -> None:
     dest = tmp_path
-    p = dest / "LOOM_ROADMAP.md"
-    p.write_text("# LOOM_ROADMAP\n", encoding="utf-8")
+    roadmap = dest / "LOOM_ROADMAP.md"
+    roadmap.write_text("# LOOM_ROADMAP\n", encoding="utf-8")
+    ctx = dest / "LOOM_CONTEXT.md"
+    ctx.write_text("# LOOM_CONTEXT\n", encoding="utf-8")
 
     install_opencode(dest=dest, dry_run=False)
-    text = p.read_text(encoding="utf-8")
+    text = roadmap.read_text(encoding="utf-8")
     assert "<!-- BEGIN:compound:roadmap-backlog -->" in text
     assert "<!-- END:compound:roadmap-backlog -->" in text
     assert "<!-- BEGIN:compound:roadmap-ai-notes -->" in text
     assert "<!-- END:compound:roadmap-ai-notes -->" in text
     assert "<!-- BEGIN:compound:changelog-entries -->" in text
     assert "<!-- END:compound:changelog-entries -->" in text
+
+    ctext = ctx.read_text(encoding="utf-8")
+    for ident in [
+        "agents-ai-behavior",
+        "workflow-commands",
+        "loom-core-context",
+        "instincts-index",
+        "rules-index",
+    ]:
+        assert f"<!-- BEGIN:compound:{ident} -->" in ctext
+        assert f"<!-- END:compound:{ident} -->" in ctext
 
 
 def test_compound_install_never_overwrites_instincts_store(tmp_path: Path) -> None:

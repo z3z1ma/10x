@@ -8,7 +8,6 @@ from typing import List
 from agent_loom.compound.blocks import (
     upsert_managed_block,
     upsert_managed_block_preserving_non_placeholder,
-    remove_managed_block,
 )
 from agent_loom.compound.instincts import (
     InstinctStore,
@@ -69,7 +68,8 @@ This block is maintained by the compound system.
 - Observations: `.opencode/memory/observations.jsonl` (gitignored by default)
 
 **Core docs:**
-- `AGENTS.md` (behavior + always-on context)
+- `AGENTS.md` (stable human-owned overview)
+- `LOOM_CONTEXT.md` (derived always-on context + instincts summary)
 - `LOOM_ROADMAP.md` (direction + backlog + changelog)
 """
     )
@@ -150,30 +150,24 @@ def sync_instincts_markdown(*, root: Path, store: InstinctStore) -> None:
 def sync_docs(*, root: Path) -> None:
     require_scaffold_installed(root)
 
-    # AGENTS.md
-    agents_path = root / "AGENTS.md"
-    agents = _read_text(agents_path, fallback="# AGENTS\n")
-
-    # Keep AGENTS small: drop legacy block if present.
-    agents = remove_managed_block(agents, "skills-index")
-
     instincts = load_instincts(root / ".opencode" / "memory" / "instincts.json")
-    agents = upsert_managed_block(
-        agents, "agents-ai-behavior", render_agents_ai_behavior()
+
+    # LOOM_CONTEXT.md (derived, AI-managed)
+    ctx_path = root / "LOOM_CONTEXT.md"
+    ctx = _read_text(ctx_path, fallback="# LOOM_CONTEXT\n")
+    ctx = upsert_managed_block(ctx, "agents-ai-behavior", render_agents_ai_behavior())
+    ctx = upsert_managed_block(ctx, "workflow-commands", render_workflow_commands())
+    ctx = upsert_managed_block_preserving_non_placeholder(
+        ctx, "loom-core-context", render_loom_core_context()
     )
-    agents = upsert_managed_block(
-        agents, "workflow-commands", render_workflow_commands()
-    )
-    agents = upsert_managed_block_preserving_non_placeholder(
-        agents, "loom-core-context", render_loom_core_context()
-    )
-    agents = upsert_managed_block(
-        agents,
+    # Keep this small to reduce churn; the full index lives at .opencode/memory/INSTINCTS.md.
+    ctx = upsert_managed_block(
+        ctx,
         "instincts-index",
-        render_instincts_index(instincts.instincts, max_items=20),
+        render_instincts_index(instincts.instincts, max_items=12),
     )
-    agents = upsert_managed_block(agents, "rules-index", render_rules_index(root))
-    _write_text(agents_path, agents)
+    ctx = upsert_managed_block(ctx, "rules-index", render_rules_index(root))
+    _write_text(ctx_path, ctx)
 
     # LOOM_ROADMAP.md
     roadmap_path = root / "LOOM_ROADMAP.md"

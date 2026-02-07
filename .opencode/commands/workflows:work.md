@@ -35,7 +35,7 @@ Process:
    - run the relevant test commands
    - set status to `closed`
 8) Finish by refreshing derived compound docs:
-   - Run via bash: `loom compound refresh`
+   - Run via bash: `loom compound update`
 
 Output:
 - What changed.

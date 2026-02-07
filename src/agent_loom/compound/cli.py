@@ -91,7 +91,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     refresh = sub.add_parser(
         "refresh",
-        help="Refresh derived compound docs (AGENTS/ROADMAP/INSTINCTS index) and mirrors",
+        help="Refresh derived compound docs (LOOM_CONTEXT/ROADMAP/INSTINCTS index) and mirrors",
     )
     refresh.add_argument(
         "--repo",
@@ -99,6 +99,21 @@ def build_parser() -> argparse.ArgumentParser:
         help="Repo root (default: .)",
     )
     refresh.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit machine-readable JSON",
+    )
+
+    update = sub.add_parser(
+        "update",
+        help="Update derived compound artifacts (docs + rules + mirrors)",
+    )
+    update.add_argument(
+        "--repo",
+        default=".",
+        help="Repo root (default: .)",
+    )
+    update.add_argument(
         "--json",
         action="store_true",
         help="Emit machine-readable JSON",
@@ -292,6 +307,39 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             else:
                 sys.stdout.write("compound refresh: ok\n")
             return 0
+        except Exception as e:
+            payload = {"ok": False, "error": str(e)}
+            if bool(getattr(args, "json", False)):
+                _emit_json(payload)
+            else:
+                sys.stderr.write(f"Error: {e}\n")
+            return 1
+
+    if args.cmd == "update":
+        repo = Path(args.repo).resolve()
+        try:
+            require_scaffold_installed(repo)
+            from agent_loom.compound.docs import sync_docs
+
+            with _chdir(repo):
+                sync_docs(root=repo)
+                prime = prime_rules(root=repo)
+                mirror = sync_claude_skills_mirror(
+                    root=repo,
+                    enabled=(str(os.environ.get("COMPOUND_MIRROR_CLAUDE", "1")) != "0"),
+                )
+            payload = {
+                "ok": bool(prime.ok),
+                "prime": dataclasses.asdict(prime),
+                "mirror": dataclasses.asdict(mirror),
+            }
+            if bool(getattr(args, "json", False)):
+                _emit_json(payload)
+            else:
+                sys.stdout.write(
+                    f"compound update: wrote {len(prime.wrote)} rules file(s)\n"
+                )
+            return 0 if prime.ok else 1
         except Exception as e:
             payload = {"ok": False, "error": str(e)}
             if bool(getattr(args, "json", False)):

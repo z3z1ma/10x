@@ -13,8 +13,8 @@ def test_compound_refresh_populates_agents_blocks(tmp_path: Path) -> None:
     # run the refresh logic
     sync_docs(root=dest)
 
-    agents = (dest / "AGENTS.md").read_text(encoding="utf-8")
-    assert "<!-- BEGIN:compound:agents-ai-behavior -->" in agents
-    assert "<!-- END:compound:agents-ai-behavior -->" in agents
-    assert "Core loop" in agents
-    assert "Plan -> Work -> Review -> Compound -> Repeat" in agents
+    ctx = (dest / "LOOM_CONTEXT.md").read_text(encoding="utf-8")
+    assert "<!-- BEGIN:compound:agents-ai-behavior -->" in ctx
+    assert "<!-- END:compound:agents-ai-behavior -->" in ctx
+    assert "Core loop" in ctx
+    assert "Plan -> Work -> Review -> Compound -> Repeat" in ctx

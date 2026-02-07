@@ -35,7 +35,9 @@ Skills compound. That’s the entire trick.
 ### Core context files
 
 - `AGENTS.md`
-  Rules, workflow pointers, and a small always-on core context (second-order compression).
+  Human-owned overview and stable project guardrails.
+- `LOOM_CONTEXT.md`
+  Derived always-on context (compound-managed) including workflow pointers, core context, and a small instincts summary.
 - `LOOM_ROADMAP.md`
   Loom direction as an empirical compass (AI-managed sections).
   Also contains an embedded AI-first changelog block (bounded; no "no changes" entries).
@@ -132,9 +134,14 @@ When the session goes idle (agent has finished a turn):
 - `COMPOUND_AUTO_MIN_NEW_OBSERVATIONS=12`
   Minimum new observation records before an autolearn run
 - `COMPOUND_AUTO_MAX_OBSERVATIONS_IN_PROMPT=80`
-- `COMPOUND_AUTO_MAX_SKILLS_PER_RUN=3`
-- `COMPOUND_AUTO_MAX_INSTINCT_UPDATES_PER_RUN=8`
 - `COMPOUND_AUTO_PROMPT_MAX_CHARS=18000`
+
+### Session-start maintenance (optional)
+
+- `COMPOUND_REFRESH_ON_START=1|0` (default `0`)
+  If enabled, runs `loom compound update` when a session starts.
+- `COMPOUND_PRIME_ON_START=1|0` (default `0`)
+  Alias toggle for the same behavior (kept for clarity).
 
 ### Observation logging
 
@@ -171,7 +178,8 @@ Default upgrades are non-destructive:
 ### Run
 
 1. Run `loom compound init --dest .` once (installs scaffolding).
-2. Start OpenCode normally. The plugin calls Loom to keep derived indexes current.
+2. Start OpenCode normally.
+   - Optional: set `COMPOUND_REFRESH_ON_START=1` to keep derived context up to date automatically.
 3. Use `/workflows:plan` and proceed through the workflow.
 4. Let the plugin autolearn on idle turns (it runs a background prompt that uses `bash` + `loom compound ...`).
 
@@ -183,7 +191,7 @@ This plugin is intentionally limited:
 
 - ✅ Writes: observations.jsonl (append-only; gitignored by default)
 - ✅ Triggers: background autolearn prompts
-- ✅ Calls Loom: for priming/refresh
+- ✅ Calls Loom: for compounding maintenance (`loom compound update`)
 - ❌ Does **not** write product code
 
 If you want it to mutate application code automatically, you can do that, but you should probably also install a fire alarm and start journaling.

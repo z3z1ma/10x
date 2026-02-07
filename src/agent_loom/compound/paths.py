@@ -22,6 +22,7 @@ class CompoundPaths:
 
     # Docs
     agents_md: Path
+    context_md: Path
     roadmap_md: Path
 
 
@@ -38,6 +39,7 @@ def compound_paths(root: Path) -> CompoundPaths:
     autolearn_prompt_file = prompts_dir / "autolearn.md"
 
     agents_md = root / "AGENTS.md"
+    context_md = root / "LOOM_CONTEXT.md"
     roadmap_md = root / "LOOM_ROADMAP.md"
 
     return CompoundPaths(
@@ -51,6 +53,7 @@ def compound_paths(root: Path) -> CompoundPaths:
         prompts_dir=prompts_dir,
         autolearn_prompt_file=autolearn_prompt_file,
         agents_md=agents_md,
+        context_md=context_md,
         roadmap_md=roadmap_md,
     )
 
@@ -59,6 +62,7 @@ def required_scaffold_paths() -> list[str]:
     # These should be installed via `loom compound init`.
     return [
         "AGENTS.md",
+        "LOOM_CONTEXT.md",
         "LOOM_ROADMAP.md",
         ".opencode/commands/workflows:plan.md",
         ".opencode/compound/prompts/autolearn.md",

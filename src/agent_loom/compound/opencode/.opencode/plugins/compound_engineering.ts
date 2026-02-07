@@ -32,8 +32,8 @@ const AUTO_MIN_NEW_OBSERVATIONS = intEnv("COMPOUND_AUTO_MIN_NEW_OBSERVATIONS", 1
 const AUTO_MAX_OBSERVATIONS_IN_PROMPT = intEnv("COMPOUND_AUTO_MAX_OBSERVATIONS_IN_PROMPT", 80);
 const AUTO_PROMPT_MAX_CHARS = intEnv("COMPOUND_AUTO_PROMPT_MAX_CHARS", 18000);
 
-const PRIME_ON_START = (process.env.COMPOUND_PRIME_ON_START ?? "1") !== "0";
-const REFRESH_ON_START = (process.env.COMPOUND_REFRESH_ON_START ?? "1") !== "0";
+const PRIME_ON_START = (process.env.COMPOUND_PRIME_ON_START ?? "0") !== "0";
+const REFRESH_ON_START = (process.env.COMPOUND_REFRESH_ON_START ?? "0") !== "0";
 
 type ISODate = string;
 
@@ -134,6 +134,7 @@ async function resolveLoom(root: string): Promise<CommandSpec> {
 async function checkInstalled(root: string): Promise<{ ok: boolean; missing: string[] }> {
   const required = [
     "AGENTS.md",
+    "LOOM_CONTEXT.md",
     "LOOM_ROADMAP.md",
     ".opencode/compound/prompts/autolearn.md",
     ".opencode/memory/.gitignore",
@@ -387,11 +388,8 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
     // Best-effort: keep derived docs and rules current at session start.
     try {
       const loom = await resolveLoom(sessionRoot);
-      if (REFRESH_ON_START) {
-        await runProcess({ cmd: loom.cmd, args: [...loom.args, "compound", "refresh", "--repo", ".", "--json"] }, sessionRoot, 60000);
-      }
-      if (PRIME_ON_START) {
-        await runProcess({ cmd: loom.cmd, args: [...loom.args, "compound", "prime", "--repo", ".", "--json"] }, sessionRoot, 60000);
+      if (REFRESH_ON_START || PRIME_ON_START) {
+        await runProcess({ cmd: loom.cmd, args: [...loom.args, "compound", "update", "--repo", ".", "--json"] }, sessionRoot, 60000);
       }
     } catch {}
   }
@@ -515,9 +513,10 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
       out.context.push(
         [
           "## Persistent repo context (compound-engineering)",
-          "- Read AGENTS.md (core behavior + links + instincts index).",
+          "- Read AGENTS.md (stable human-owned overview).",
+          "- Read LOOM_CONTEXT.md (derived always-on context + instincts summary).",
           "- Read LOOM_ROADMAP.md (direction + backlog + changelog).",
-          "- Rules/cookbooks may be written to .opencode/rules/*.md via `loom compound prime`.",
+          "- Rules/cookbooks may be written to .opencode/rules/*.md via `loom compound update`.",
           "- Skills live under .opencode/skills/<name>/SKILL.md (mirrored to .claude/skills/ when enabled).",
           "- This plugin logs observations and may trigger a background autolearn on session idle.",
         ].join("\n")

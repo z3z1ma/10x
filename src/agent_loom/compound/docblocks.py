@@ -28,7 +28,7 @@ def docblock_upsert(
         raise ValueError("file, id, and content are required")
 
     allowed: dict[str, set[str]] = {
-        "AGENTS.md": {"loom-core-context"},
+        "LOOM_CONTEXT.md": {"loom-core-context"},
         "LOOM_ROADMAP.md": {"roadmap-ai-notes"},
     }
     if f not in allowed or bid not in allowed[f]:
