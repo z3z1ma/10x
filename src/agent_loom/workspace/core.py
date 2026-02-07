@@ -47,7 +47,15 @@ from agent_loom.workspace.poly.cleanup import poly_cleanup_apply, poly_cleanup_s
 from agent_loom.workspace.poly.deps import deps_closure, deps_impacted
 from agent_loom.workspace.poly.impact import poly_impact_repos, poly_impact_snapshot
 from agent_loom.workspace.poly.gc import worktree_gc
-from agent_loom.workspace.poly.leases import lease_acquire, lease_list, lease_release
+from agent_loom.workspace.poly.leases import (
+    lease_acquire,
+    lease_is_active,
+    lease_list,
+    lease_release,
+    lease_renew,
+    lease_require_active,
+    lease_show,
+)
 from agent_loom.workspace.poly.meta import (
     poly_repo_edit,
     poly_set_ls,
@@ -137,5 +145,9 @@ __all__ = [
     "lease_acquire",
     "lease_release",
     "lease_list",
+    "lease_show",
+    "lease_renew",
+    "lease_is_active",
+    "lease_require_active",
     "worktree_gc",
 ]

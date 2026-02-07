@@ -226,6 +226,7 @@ Leases are a harness-only coordination primitive stored under `.loom/leases/`.
 - They are NOT related to ticket claims and are not automatically tied to tickets.
 - They do NOT prevent parallel work on multiple branches/worktrees.
 - They are an *optional* exclusive coordination lock for higher-level harness operations.
+- Leases are time-bound by default (TTL); renew them if a long-running process needs the hold.
 
 Primary use cases:
 - Protect a group from automated cleanup/GC while it is actively in use.
@@ -234,8 +235,19 @@ Primary use cases:
 Examples:
 
 ```
-# Mark a group in-use so cleanup/GC can skip it.
+# Mark a group in-use so cleanup/GC can skip it (default TTL: 8h).
 loom workspace harness lease acquire group:sprint-42
+
+# Explicit TTL (or disable expiry).
+loom workspace harness lease acquire group:sprint-42 --ttl 2h
+loom workspace harness lease acquire group:sprint-42 --ttl none
+
+# Renew (bumps updated_at; optionally change TTL).
+loom workspace harness lease renew group:sprint-42
+loom workspace harness lease renew group:sprint-42 --ttl 4h
+
+# Inspect.
+loom workspace harness lease show group:sprint-42
 
 # Release when done.
 loom workspace harness lease release group:sprint-42
@@ -330,6 +342,9 @@ loom workspace poly worktree add sprint-42 --repos api billing --base-ref main
 # Override where the group's worktrees are created (path/<repo>).
 # This is useful for integration with Loom Team and other orchestrators.
 loom workspace harness worktree add sprint-42 --all --path ../team-runs/sprint-42
+
+loom workspace harness lease acquire group:sprint-42
+loom workspace harness worktree rm sprint-42 --all --yes --require-lease group:sprint-42
 
 loom workspace poly worktree rm sprint-42 --repos api --yes
 loom workspace poly worktree rm sprint-42 --all --yes --force

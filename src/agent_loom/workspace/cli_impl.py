@@ -20,8 +20,11 @@ from agent_loom.workspace.core import (
     deps_show,
     deps_who_uses,
     lease_acquire,
+    lease_require_active,
     lease_list,
     lease_release,
+    lease_renew,
+    lease_show,
     list_repos,
     poly_exec,
     poly_cleanup_apply,
@@ -98,6 +101,8 @@ from agent_loom.workspace.models import (
     LeaseAcquireResult,
     LeaseListResult,
     LeaseReleaseResult,
+    LeaseRenewResult,
+    LeaseShowResult,
     ListReposResult,
     MergeAttemptResult,
     PolyInitResult,
@@ -434,15 +439,56 @@ def _render_text(result: Any) -> str:
         )
 
     if isinstance(result, LeaseListResult):
-        return (
-            "\n".join(
-                [
-                    f"leases_dir: {result.leases_dir}",
-                    f"leases: {len(result.leases)}",
-                ]
-            ).rstrip()
-            + "\n"
-        )
+        keys: list[str] = []
+        for row in result.leases or []:
+            if not isinstance(row, dict):
+                continue
+            data = row.get("data")
+            if not isinstance(data, dict):
+                continue
+            k = str(data.get("key") or "").strip()
+            if k:
+                keys.append(k)
+        keys = sorted(set(keys))
+
+        lines = [
+            f"leases_dir: {result.leases_dir}",
+            f"leases: {len(keys)}",
+        ]
+        if int(getattr(result, "pruned_expired", 0)):
+            lines.append(f"pruned_expired: {int(getattr(result, 'pruned_expired', 0))}")
+        for k in keys:
+            lines.append(f"- {k}")
+        return "\n".join(lines).rstrip() + "\n"
+
+    if isinstance(result, LeaseShowResult):
+        lines = [
+            f"key: {result.key}",
+            f"lease_path: {result.lease_path}",
+            f"exists: {_bool(result.exists)}",
+            f"active: {_bool(result.active)}",
+        ]
+        ttl = (result.data or {}).get("ttl_seconds")
+        if ttl is not None:
+            lines.append(f"ttl_seconds: {ttl}")
+        owner = (result.data or {}).get("owner")
+        if isinstance(owner, dict):
+            u = str(owner.get("user") or "").strip()
+            h = str(owner.get("host") or "").strip()
+            if u or h:
+                lines.append(f"owner: {u}@{h}".rstrip("@"))
+        return "\n".join(lines).rstrip() + "\n"
+
+    if isinstance(result, LeaseRenewResult):
+        ttl = (result.data or {}).get("ttl_seconds")
+        lines = [
+            f"key: {result.key}",
+            f"lease_path: {result.lease_path}",
+            f"renewed: {_bool(result.renewed)}",
+        ]
+        if ttl is not None:
+            lines.append(f"ttl_seconds: {ttl}")
+        return "\n".join(lines).rstrip() + "\n"
 
     if isinstance(result, WorktreeGcResult):
         return (
@@ -1030,7 +1076,6 @@ def cmd_worktree_add(args: argparse.Namespace) -> None:
         group=args.group,
         base_ref=args.base_ref,
         path=str(getattr(args, "path", "") or "").strip() or None,
-        claim=bool(getattr(args, "claim", False)),
         clone=bool(args.clone),
         allow_dirty=bool(args.allow_dirty),
         repos=args.repos,
@@ -1044,6 +1089,9 @@ def cmd_worktree_add(args: argparse.Namespace) -> None:
 
 def cmd_worktree_rm(args: argparse.Namespace) -> None:
     root = workspace_root()
+    req = str(getattr(args, "require_lease", "") or "").strip()
+    if req:
+        lease_require_active(key=req, root=root)
     res = worktree_rm(
         group=args.group,
         repos=args.repos,
@@ -1157,7 +1205,6 @@ def cmd_poly_sandbox_create(args: argparse.Namespace) -> None:
         base_ref=str(args.base_ref),
         ttl=str(getattr(args, "ttl", "2h") or "2h"),
         purpose=str(getattr(args, "purpose", "sandbox") or "sandbox"),
-        claim=bool(getattr(args, "claim", False)),
         repos=args.repos,
         sets=args.sets,
         tags=args.tags,
@@ -1176,6 +1223,9 @@ def cmd_poly_sandbox_promote(args: argparse.Namespace) -> None:
 
 def cmd_poly_sandbox_gc(args: argparse.Namespace) -> None:
     root = workspace_root()
+    req = str(getattr(args, "require_lease", "") or "").strip()
+    if req:
+        lease_require_active(key=req, root=root)
     res = poly_sandbox_gc(confirm=bool(args.yes), force=bool(args.force), root=root)
     emit_result(args, root, res)
 
@@ -1188,6 +1238,9 @@ def cmd_poly_cleanup_suggest(args: argparse.Namespace) -> None:
 
 def cmd_poly_cleanup_apply(args: argparse.Namespace) -> None:
     root = workspace_root()
+    req = str(getattr(args, "require_lease", "") or "").strip()
+    if req:
+        lease_require_active(key=req, root=root)
     res = poly_cleanup_apply(
         ids=list(args.id or []),
         confirm=bool(args.yes),
@@ -1199,6 +1252,9 @@ def cmd_poly_cleanup_apply(args: argparse.Namespace) -> None:
 
 def cmd_worktree_rebase(args: argparse.Namespace) -> None:
     root = workspace_root()
+    req = str(getattr(args, "require_lease", "") or "").strip()
+    if req:
+        lease_require_active(key=req, root=root)
     res = worktree_rebase(
         group=args.group,
         base_ref=args.base_ref,
@@ -1213,6 +1269,9 @@ def cmd_worktree_rebase(args: argparse.Namespace) -> None:
 
 def cmd_worktree_push(args: argparse.Namespace) -> None:
     root = workspace_root()
+    req = str(getattr(args, "require_lease", "") or "").strip()
+    if req:
+        lease_require_active(key=req, root=root)
     res = worktree_push(
         group=args.group,
         repos=args.repos,
@@ -1374,7 +1433,12 @@ def cmd_poly_set_ls(args: argparse.Namespace) -> None:
 
 def cmd_lease_acquire(args: argparse.Namespace) -> None:
     root = workspace_root()
-    res = lease_acquire(key=args.key, force=bool(args.force), root=root)
+    res = lease_acquire(
+        key=args.key,
+        ttl=str(getattr(args, "ttl", "") or ""),
+        force=bool(args.force),
+        root=root,
+    )
     emit_result(args, root, res)
 
 
@@ -1390,8 +1454,23 @@ def cmd_lease_ls(args: argparse.Namespace) -> None:
     emit_result(args, root, res)
 
 
+def cmd_lease_show(args: argparse.Namespace) -> None:
+    root = workspace_root()
+    res = lease_show(key=args.key, root=root)
+    emit_result(args, root, res)
+
+
+def cmd_lease_renew(args: argparse.Namespace) -> None:
+    root = workspace_root()
+    res = lease_renew(key=args.key, ttl=str(getattr(args, "ttl", "") or ""), root=root)
+    emit_result(args, root, res)
+
+
 def cmd_worktree_gc(args: argparse.Namespace) -> None:
     root = workspace_root()
+    req = str(getattr(args, "require_lease", "") or "").strip()
+    if req:
+        lease_require_active(key=req, root=root)
     res = worktree_gc(
         older_than_days=int(args.older_than),
         unclaimed_only=bool(args.unclaimed_only),
@@ -1527,6 +1606,11 @@ def _add_poly_parser(
     )
     spl.add_argument("key")
     spl.add_argument(
+        "--ttl",
+        default="",
+        help="Lease TTL (default 8h; use 'none' for no expiry)",
+    )
+    spl.add_argument(
         "--force",
         action="store_true",
         help="Steal an existing lease (override another owner)",
@@ -1536,6 +1620,22 @@ def _add_poly_parser(
     spl = sub_lease.add_parser("release", help="Release a lease key")
     spl.add_argument("key")
     spl.set_defaults(func=cmd_lease_release)
+
+    spl = sub_lease.add_parser(
+        "renew",
+        help="Renew a lease (bump updated_at; optionally change TTL)",
+    )
+    spl.add_argument("key")
+    spl.add_argument(
+        "--ttl",
+        default="",
+        help="Lease TTL (default 8h; use 'none' for no expiry)",
+    )
+    spl.set_defaults(func=cmd_lease_renew)
+
+    spl = sub_lease.add_parser("show", help="Show a lease (prunes if expired)")
+    spl.add_argument("key")
+    spl.set_defaults(func=cmd_lease_show)
 
     spl = sub_lease.add_parser("ls", help="List leases")
     spl.set_defaults(func=cmd_lease_ls)
@@ -1548,11 +1648,6 @@ def _add_poly_parser(
     spc.add_argument("--base-ref", required=True, help="Base ref-ish")
     spc.add_argument("--ttl", default="2h")
     spc.add_argument("--purpose", default="sandbox")
-    spc.add_argument(
-        "--claim",
-        action="store_true",
-        help="Acquire lease group:<group> before creating worktrees",
-    )
     spc.add_argument(
         "--clone", action="store_true", help="Clone missing repos automatically"
     )
@@ -1571,6 +1666,11 @@ def _add_poly_parser(
     spp.set_defaults(func=cmd_poly_sandbox_promote)
 
     spg = subs.add_parser("gc", help="Remove expired sandbox groups (requires --yes)")
+    spg.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before running sandbox GC",
+    )
     spg.add_argument("--force", action="store_true")
     spg.add_argument("--yes", action="store_true")
     spg.set_defaults(func=cmd_poly_sandbox_gc)
@@ -1582,6 +1682,11 @@ def _add_poly_parser(
     spc.set_defaults(func=cmd_poly_cleanup_suggest)
 
     spa = subc.add_parser("apply", help="Apply cleanup (requires --yes)")
+    spa.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before applying cleanup",
+    )
     spa.add_argument("--id", action="append", default=[])
     spa.add_argument("--force", action="store_true")
     spa.add_argument("--yes", action="store_true")
@@ -1740,11 +1845,6 @@ def _add_poly_parser(
     sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
     sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
     sp2.add_argument(
-        "--claim",
-        action="store_true",
-        help="Acquire lease group:<group> before creating worktrees",
-    )
-    sp2.add_argument(
         "--clone", action="store_true", help="Clone missing repos automatically"
     )
     sp2.add_argument(
@@ -1774,11 +1874,6 @@ def _add_poly_parser(
     sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
     sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
     sp2.add_argument(
-        "--claim",
-        action="store_true",
-        help="Acquire lease group:<group> before creating worktrees",
-    )
-    sp2.add_argument(
         "--clone", action="store_true", help="Clone missing repos automatically"
     )
     sp2.add_argument(
@@ -1792,6 +1887,11 @@ def _add_poly_parser(
         "rm", help="Remove worktrees for a group (optionally subset repos)"
     )
     sp2.add_argument("group")
+    sp2.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before deleting worktrees (example: group:<group>)",
+    )
     sp2.add_argument(
         "--yes",
         action="store_true",
@@ -1929,6 +2029,11 @@ def _add_poly_parser(
     )
     sp2.add_argument("group")
     sp2.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before rebasing worktrees (example: group:<group>)",
+    )
+    sp2.add_argument(
         "--all",
         action="store_true",
         help="Confirm operating on multiple repos when no selection is provided",
@@ -1945,6 +2050,11 @@ def _add_poly_parser(
         "push", help="Push worktrees for a group to their remote branch"
     )
     sp2.add_argument("group")
+    sp2.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before pushing worktrees (example: group:<group>)",
+    )
     sp2.add_argument(
         "--all",
         action="store_true",
@@ -1976,6 +2086,11 @@ def _add_poly_parser(
     sp2 = sub2.add_parser(
         "gc",
         help="Garbage collect old worktrees (requires --yes; optionally unclaimed-only)",
+    )
+    sp2.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before running GC",
     )
     sp2.add_argument(
         "--older-than",

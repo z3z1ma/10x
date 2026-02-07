@@ -15,7 +15,7 @@ from agent_loom.workspace.git.ops import (
 )
 from agent_loom.workspace.guards import workspace_root
 from agent_loom.workspace.models import WorktreeGcResult
-from agent_loom.workspace.poly.leases import lease_path
+from agent_loom.workspace.poly.leases import lease_is_active, lease_path
 from agent_loom.workspace.constants import INTERNAL_DIR
 from agent_loom.workspace.state import (
     load_workspace,
@@ -92,8 +92,9 @@ def worktree_gc(
                 continue
 
         if unclaimed_only:
-            lease = lease_path(root=ws_root, key=f"group:{group}")
-            if lease.exists():
+            key = f"group:{group}"
+            if lease_is_active(key=key, root=ws_root):
+                lease = lease_path(root=ws_root, key=key)
                 skipped.append(
                     {
                         "group": group,

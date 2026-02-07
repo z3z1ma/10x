@@ -618,7 +618,6 @@ def worktree_add(
     group: str,
     base_ref: Optional[str] = None,
     path: Optional[str] = None,
-    claim: bool = False,
     clone: bool = False,
     allow_dirty: bool = False,
     repos: Optional[Sequence[str]] = None,
@@ -631,11 +630,6 @@ def worktree_add(
     ws_root = root.resolve() if root is not None else workspace_root()
     ws = load_workspace(ws_root)
     repo_map = iter_repos(ws)
-
-    if claim:
-        from agent_loom.workspace.poly.leases import lease_acquire
-
-        lease_acquire(key=f"group:{group}", force=False, root=ws_root)
 
     names = poly_resolve_repo_names(
         ws,

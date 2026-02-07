@@ -9,7 +9,7 @@ from agent_loom.workspace.guards import workspace_root
 from agent_loom.workspace.poly.ops import worktree_rm, worktree_add
 from agent_loom.core.io import atomic_write_json, read_json
 from agent_loom.workspace.lifecycle import meta_is_expired
-from agent_loom.workspace.poly.leases import lease_path
+from agent_loom.workspace.poly.leases import lease_is_active, lease_path
 from agent_loom.workspace.worktree_meta import (
     poly_group_annotate,
     poly_group_meta_dir,
@@ -23,7 +23,6 @@ def poly_sandbox_create(
     base_ref: str,
     ttl: str = "2h",
     purpose: str = "sandbox",
-    claim: bool = False,
     repos: Optional[Sequence[str]] = None,
     sets: Optional[Sequence[str]] = None,
     tags: Optional[Sequence[str]] = None,
@@ -35,7 +34,6 @@ def poly_sandbox_create(
     wt = worktree_add(
         group=group,
         base_ref=base_ref,
-        claim=bool(claim),
         clone=bool(clone),
         allow_dirty=False,
         repos=repos,
@@ -108,8 +106,9 @@ def poly_sandbox_gc(
     removed: List[str] = []
     skipped: List[Dict[str, Any]] = []
     for g in sorted(set(expired_groups)):
-        lease = lease_path(root=ws_root, key=f"group:{g}")
-        if lease.exists():
+        key = f"group:{g}"
+        lease = lease_path(root=ws_root, key=key)
+        if lease_is_active(key=key, root=ws_root):
             skipped.append(
                 {
                     "group": g,

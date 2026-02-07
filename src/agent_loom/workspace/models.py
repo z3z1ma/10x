@@ -179,6 +179,24 @@ class LeaseReleaseResult:
 class LeaseListResult:
     leases_dir: str
     leases: List[Dict[str, Any]]
+    pruned_expired: int = 0
+
+
+@dataclass(frozen=True)
+class LeaseShowResult:
+    key: str
+    lease_path: str
+    exists: bool
+    active: bool
+    data: Dict[str, Any]
+
+
+@dataclass(frozen=True)
+class LeaseRenewResult:
+    key: str
+    lease_path: str
+    renewed: bool
+    data: Dict[str, Any]
 
 
 @dataclass(frozen=True)
@@ -315,6 +333,8 @@ __all__ = [
     "LeaseAcquireResult",
     "LeaseListResult",
     "LeaseReleaseResult",
+    "LeaseRenewResult",
+    "LeaseShowResult",
     "MergeAttemptResult",
     "PolyInitResult",
     "PolyExecResult",

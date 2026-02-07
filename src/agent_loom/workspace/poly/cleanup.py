@@ -8,7 +8,7 @@ from agent_loom.core.io import read_json
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.guards import workspace_root
 from agent_loom.workspace.lifecycle import meta_is_expired
-from agent_loom.workspace.poly.leases import lease_path
+from agent_loom.workspace.poly.leases import lease_is_active, lease_path
 from agent_loom.workspace.poly.ops import worktree_rm
 from agent_loom.workspace.state import load_workspace, worktrees_base
 from agent_loom.workspace.worktree_meta import poly_group_meta_dir, poly_group_meta_path
@@ -45,8 +45,10 @@ def poly_cleanup_suggest(*, root: Optional[Path] = None) -> dict:
                 "id": group,
                 "group": group,
                 "reason": "ttl_expired",
-                "claimed": bool(lease.exists()),
-                "lease_path": str(lease.resolve()) if lease.exists() else "",
+                "claimed": bool(lease_is_active(key=f"group:{group}", root=ws_root)),
+                "lease_path": str(lease.resolve())
+                if lease_is_active(key=f"group:{group}", root=ws_root)
+                else "",
                 "meta_path": str(p.resolve()),
                 "worktrees_dir": str(base.resolve()),
             }
@@ -77,7 +79,7 @@ def poly_cleanup_apply(
 
     for group in sorted(group_set):
         lease = lease_path(root=ws_root, key=f"group:{group}")
-        if lease.exists():
+        if lease_is_active(key=f"group:{group}", root=ws_root):
             skipped.append(
                 {
                     "id": group,
