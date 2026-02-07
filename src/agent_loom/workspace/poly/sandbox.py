@@ -6,9 +6,10 @@ from typing import Any, Dict, List, Optional, Sequence
 
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.guards import workspace_root
-from agent_loom.workspace.poly_ops import worktree_rm, worktree_add
-from agent_loom.workspace.time_utils import parse_iso_z
-from agent_loom.workspace.utils import atomic_write_json, read_json
+from agent_loom.workspace.poly.ops import worktree_rm, worktree_add
+from agent_loom.core.io import atomic_write_json, read_json
+from agent_loom.workspace.lifecycle import meta_is_expired
+from agent_loom.workspace.poly.leases import lease_path
 from agent_loom.workspace.worktree_meta import (
     poly_group_annotate,
     poly_group_meta_dir,
@@ -64,24 +65,13 @@ def poly_sandbox_promote(*, group: str, root: Optional[Path] = None) -> dict:
     data["kind"] = "normal"
     data.pop("ttl_seconds", None)
     atomic_write_json(p, data)
-    return {"group": group, "promoted": True, "meta_path": str(p.resolve())}
-
-
-def _expired(meta: dict, now: float) -> bool:
-    ttl = meta.get("ttl_seconds")
-    if ttl is None:
-        return False
     try:
-        ttl_s = int(ttl)
+        from agent_loom.workspace.worktree_meta import poly_group_touch
+
+        poly_group_touch(ws_root=ws_root, group=group)
     except Exception:
-        return False
-    if ttl_s <= 0:
-        return False
-    ts = meta.get("last_used_at") or meta.get("updated_at") or meta.get("created_at")
-    dt = parse_iso_z(str(ts or ""))
-    if dt is None:
-        return False
-    return (dt.timestamp() + ttl_s) <= now
+        pass
+    return {"group": group, "promoted": True, "meta_path": str(p.resolve())}
 
 
 def poly_sandbox_gc(
@@ -112,12 +102,22 @@ def poly_sandbox_gc(
         g = str(meta.get("group") or "").strip()
         if not g:
             continue
-        if _expired(meta, now):
+        if meta_is_expired(meta, now=now):
             expired_groups.append(g)
 
     removed: List[str] = []
     skipped: List[Dict[str, Any]] = []
     for g in sorted(set(expired_groups)):
+        lease = lease_path(root=ws_root, key=f"group:{g}")
+        if lease.exists():
+            skipped.append(
+                {
+                    "group": g,
+                    "reason": "claimed",
+                    "lease_path": str(lease.resolve()),
+                }
+            )
+            continue
         try:
             res = worktree_rm(
                 group=g,

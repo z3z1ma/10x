@@ -6,6 +6,9 @@ import platform
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from agent_loom.core.fs import fs_escape
+from agent_loom.core.io import atomic_write_json, read_json
+from agent_loom.core.time import now_iso
 from agent_loom.workspace.constants import INTERNAL_DIR
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.guards import workspace_root
@@ -14,8 +17,6 @@ from agent_loom.workspace.models import (
     LeaseListResult,
     LeaseReleaseResult,
 )
-from agent_loom.workspace.state import fs_escape
-from agent_loom.workspace.utils import atomic_write_json, now_iso, read_json
 
 
 def leases_dir(*, root: Path) -> Path:

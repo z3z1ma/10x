@@ -4,33 +4,15 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from agent_loom.workspace.lifecycle import meta_is_expired
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.git_ops import (
+from agent_loom.workspace.git.ops import (
     git_worktree_list_porcelain,
     git_worktree_remove_from,
 )
-from agent_loom.workspace.repo_ops import repo_root
-from agent_loom.workspace.time_utils import parse_iso_z
-from agent_loom.workspace.utils import read_json
+from agent_loom.workspace.repo.ops import repo_root
+from agent_loom.core.io import read_json
 from agent_loom.workspace.worktree_meta import repo_worktree_meta_dir
-
-
-def _expired(meta: dict, now: float) -> bool:
-    ttl = meta.get("ttl_seconds")
-    if ttl is None:
-        return False
-    try:
-        ttl_s = int(ttl)
-    except Exception:
-        return False
-    if ttl_s <= 0:
-        return False
-
-    ts = meta.get("last_used_at") or meta.get("updated_at") or meta.get("created_at")
-    dt = parse_iso_z(str(ts or ""))
-    if dt is None:
-        return False
-    return (dt.timestamp() + ttl_s) <= now
 
 
 def repo_worktree_cleanup_suggest(*, root: Optional[Path] = None) -> dict:
@@ -59,7 +41,7 @@ def repo_worktree_cleanup_suggest(*, root: Optional[Path] = None) -> dict:
         branch = str(meta.get("branch") or "").strip()
         if not branch:
             continue
-        if not _expired(meta, now):
+        if not meta_is_expired(meta, now=now):
             continue
 
         candidates.append(
@@ -108,6 +90,12 @@ def repo_worktree_cleanup_apply(
 
         try:
             git_worktree_remove_from(repo, wt_path, force=bool(force))
+            try:
+                from agent_loom.workspace.worktree_meta import repo_worktree_meta_path
+
+                repo_worktree_meta_path(repo, br).unlink(missing_ok=True)
+            except Exception:
+                pass
             removed.append({"id": br, "removed": str(wt_path.resolve())})
         except WorkspaceError as e:
             skipped.append({"id": br, "status": "skip", "reason": str(e)})

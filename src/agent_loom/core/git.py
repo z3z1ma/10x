@@ -6,7 +6,30 @@ import tempfile
 from pathlib import Path
 from typing import List, Optional, Sequence
 
+from agent_loom.core.exec import ExecError, run as exec_run
 from agent_loom.core.paths import realpath_from
+
+
+def _git_exec(
+    cwd: Path,
+    args: Sequence[str],
+    *,
+    check: bool,
+    env: Optional[dict[str, str]] = None,
+) -> subprocess.CompletedProcess[str]:
+    cmd = ["git", *list(args)]
+    try:
+        return exec_run(cmd, cwd=cwd, check=check, env=env)
+    except OSError as e:
+        raise ExecError(
+            cmd=cmd, cwd=cwd, returncode=127, stdout="", stderr=str(e)
+        ) from e
+
+
+def is_git_repo(path: Path) -> bool:
+    # normal repo has .git dir; worktree has .git file
+    gitp = path / ".git"
+    return gitp.is_dir() or gitp.is_file()
 
 
 def run_quiet(cmd: Sequence[str]) -> str:
@@ -126,38 +149,105 @@ def git_abs_git_dir(toplevel: Path) -> Optional[Path]:
 
 
 def git_worktree_paths(toplevel: Path) -> List[Path]:
-    s = git_quiet(toplevel, ["worktree", "list", "--porcelain"])
-    if not s:
+    try:
+        rows = git_worktree_list_porcelain(toplevel)
+    except ExecError:
         return []
 
     paths: List[Path] = []
-    cur_path: Optional[Path] = None
-    cur_bare = False
-    cur_prunable = False
+    for row in rows:
+        if bool(row.get("bare")) or bool(row.get("prunable")):
+            continue
+        p = realpath_from(toplevel, str(row.get("path") or ""))
+        if p is not None:
+            paths.append(p)
+    return paths
 
-    def flush() -> None:
-        nonlocal cur_path, cur_bare, cur_prunable
-        if cur_path is not None and (not cur_bare) and (not cur_prunable):
-            paths.append(cur_path)
-        cur_path = None
-        cur_bare = False
-        cur_prunable = False
 
-    for line in s.splitlines():
-        line = line.strip()
+def git_worktree_list_porcelain(cwd: Path) -> list[dict[str, object]]:
+    p = _git_exec(cwd, ["worktree", "list", "--porcelain"], check=True)
+    out = p.stdout or ""
+
+    rows: list[dict[str, object]] = []
+    cur: Optional[dict[str, object]] = None
+
+    for line in out.splitlines():
+        if not line.strip():
+            continue
         if line.startswith("worktree "):
-            flush()
-            cur_path = realpath_from(toplevel, line.split(" ", 1)[1])
+            if cur:
+                rows.append(cur)
+            cur = {"path": line.split(" ", 1)[1].strip()}
             continue
-        if line == "bare":
-            cur_bare = True
-            continue
-        if line.startswith("prunable"):
-            cur_prunable = True
+        if cur is None:
             continue
 
-    flush()
-    return [p for p in paths if p is not None]
+        if line.startswith("HEAD "):
+            cur["head"] = line.split(" ", 1)[1].strip()
+        elif line.startswith("branch "):
+            ref = line.split(" ", 1)[1].strip()
+            cur["ref"] = ref
+            if ref.startswith("refs/heads/"):
+                cur["branch"] = ref[len("refs/heads/") :]
+            else:
+                cur["branch"] = ref
+        elif line == "detached":
+            cur["detached"] = True
+        elif line == "bare":
+            cur["bare"] = True
+        elif line.startswith("prunable"):
+            cur["prunable"] = True
+        elif line.startswith("locked"):
+            cur["locked"] = True
+
+    if cur:
+        rows.append(cur)
+    return rows
+
+
+def git_ref_exists(cwd: Path, ref: str) -> bool:
+    r = str(ref or "").strip()
+    if not r:
+        return False
+    p = _git_exec(cwd, ["rev-parse", "--verify", r], check=False)
+    return p.returncode == 0
+
+
+def git_has_head(cwd: Path) -> bool:
+    return git_ref_exists(cwd, "HEAD")
+
+
+def git_merge_base(cwd: Path, a: str, b: str = "HEAD") -> str:
+    aa = str(a or "").strip()
+    bb = str(b or "").strip() or "HEAD"
+    if not aa:
+        raise ValueError("missing base ref")
+    p = _git_exec(cwd, ["merge-base", aa, bb], check=True)
+    return (p.stdout or "").strip()
+
+
+def git_is_ancestor(cwd: Path, older: str, newer: str) -> bool:
+    p = _git_exec(
+        cwd,
+        ["merge-base", "--is-ancestor", str(older), str(newer)],
+        check=False,
+    )
+    return p.returncode == 0
+
+
+def git_current_branch(cwd: Path) -> str:
+    p = _git_exec(cwd, ["rev-parse", "--abbrev-ref", "HEAD"], check=True)
+    return (p.stdout or "").strip()
+
+
+def git_head_sha(cwd: Path) -> str:
+    p = _git_exec(cwd, ["rev-parse", "HEAD"], check=True)
+    return (p.stdout or "").strip()
+
+
+def git_is_dirty(cwd: Path) -> bool:
+    p = _git_exec(cwd, ["status", "--porcelain"], check=True)
+    return bool((p.stdout or "").strip())
 
 
 def git_repo_root(cwd: Path) -> Optional[Path]:

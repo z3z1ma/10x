@@ -3,11 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
-from urllib.parse import quote, unquote
+
+from agent_loom.core.fs import fs_escape
+from agent_loom.core.io import atomic_write_json, read_json
 
 from agent_loom.workspace.constants import (
     DEFAULT_DEFAULT_BRANCH,
-    FS_SAFE,
     REPO_NAME_RE,
     REPOS_DIR,
     SERVICES_DIR,
@@ -16,7 +17,6 @@ from agent_loom.workspace.constants import (
     WORKTREES_DIR,
 )
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.utils import atomic_write_json, read_json
 
 
 @dataclass
@@ -40,19 +40,6 @@ def validate_repo_name(name: str) -> None:
         raise WorkspaceError(
             "Invalid repo name. Use letters/digits plus '._-' only (must not contain '/')."
         )
-
-
-def fs_escape(name: str) -> str:
-    """Reversible encoding for filesystem path segments.
-
-    Git branch names commonly contain '/', which must not be treated as a directory.
-    """
-
-    return quote(name, safe=FS_SAFE)
-
-
-def fs_unescape(seg: str) -> str:
-    return unquote(seg)
 
 
 def worktrees_base(root: Path, ws: dict, group: str) -> Path:

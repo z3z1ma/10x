@@ -4,10 +4,12 @@ import re
 from pathlib import Path
 from typing import Optional
 
+from agent_loom.core.io import atomic_write_json, read_json
+from agent_loom.core.time import now_iso
 from agent_loom.workspace.constants import REPO_INTERNAL_DIR
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.repo_ops import repo_root, repo_worktree_ensure
-from agent_loom.workspace.utils import now_iso, run
+from agent_loom.workspace.repo.ops import repo_root, repo_worktree_ensure
+from agent_loom.workspace.utils import run
 from agent_loom.workspace.worktree_meta import repo_worktree_annotate
 
 
@@ -63,7 +65,6 @@ def repo_sandbox_promote(
     # Rewrite metadata from src -> dst if present.
     try:
         from agent_loom.workspace.worktree_meta import repo_worktree_meta_path
-        from agent_loom.workspace.utils import atomic_write_json, read_json
 
         srcp = repo_worktree_meta_path(repo, src)
         dstp = repo_worktree_meta_path(repo, dst)
@@ -79,6 +80,13 @@ def repo_sandbox_promote(
     except Exception:
         pass
 
+    try:
+        from agent_loom.workspace.worktree_meta import repo_worktree_touch
+
+        repo_worktree_touch(repo_root=repo, branch=dst)
+    except Exception:
+        pass
+
     return {"from": src, "to": dst, "promoted": True}
 
 
@@ -88,7 +96,7 @@ def repo_sandbox_gc(
     if not confirm:
         raise WorkspaceError("Refusing to gc sandboxes without --yes")
 
-    from agent_loom.workspace.cleanup_ops import (
+    from agent_loom.workspace.repo.cleanup import (
         repo_worktree_cleanup_apply,
         repo_worktree_cleanup_suggest,
     )

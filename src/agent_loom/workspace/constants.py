@@ -50,16 +50,12 @@ BULLET_RE = re.compile(r"^\s*-\s+(.*\S)\s*$")
 SHA_RE = re.compile(r"^[0-9a-f]{7,40}$")
 REPO_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 
-FS_SAFE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.@+"
-
-
 __all__ = [
     "SUBSYSTEM_NAME",
     "SUBSYSTEM_VERSION",
     "BULLET_RE",
     "DEFAULT_DEFAULT_BRANCH",
     "DEP_SECTION_RE",
-    "FS_SAFE",
     "INTERNAL_DIR",
     "REPO_INTERNAL_DIR",
     "REPO_NAME_RE",

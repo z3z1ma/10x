@@ -4,28 +4,35 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from agent_loom.workspace.constants import INTERNAL_DIR
+from agent_loom.core.fs import fs_unescape
+from agent_loom.core.git import is_git_repo
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.git_ops import (
+from agent_loom.workspace.git.ops import (
     git_is_dirty,
     git_worktree_remove,
     git_worktree_remove_from,
 )
 from agent_loom.workspace.guards import workspace_root
 from agent_loom.workspace.models import WorktreeGcResult
+from agent_loom.workspace.poly.leases import lease_path
 from agent_loom.workspace.state import (
-    fs_escape,
-    fs_unescape,
     load_workspace,
     ws_repos_dir,
     ws_worktrees_dir,
 )
-from agent_loom.workspace.utils import is_git_repo
 
 
-def _lease_file_for_group(ws_root: Path, group: str) -> Path:
-    key = f"group:{group}"
-    return (ws_root / INTERNAL_DIR / "leases" / f"{fs_escape(key)}.json").resolve()
+def _cleanup_group_artifacts(*, ws_root: Path, group: str) -> None:
+    try:
+        from agent_loom.workspace.worktree_meta import poly_group_meta_path
+
+        poly_group_meta_path(ws_root, group).unlink(missing_ok=True)
+    except Exception:
+        pass
+    try:
+        lease_path(root=ws_root, key=f"group:{group}").unlink(missing_ok=True)
+    except Exception:
+        pass
 
 
 def worktree_gc(
@@ -61,7 +68,7 @@ def worktree_gc(
                 continue
 
         if unclaimed_only:
-            lease = _lease_file_for_group(ws_root, group)
+            lease = lease_path(root=ws_root, key=f"group:{group}")
             if lease.exists():
                 skipped.append(
                     {
@@ -117,5 +124,14 @@ def worktree_gc(
                         "path": str(repo_dir.resolve()),
                     }
                 )
+
+        # If the group is now empty, remove group dir + artifacts.
+        try:
+            if group_dir.exists() and not any(p.is_dir() for p in group_dir.iterdir()):
+                group_dir.rmdir()
+        except Exception:
+            pass
+        if not group_dir.exists():
+            _cleanup_group_artifacts(ws_root=ws_root, group=group)
 
     return WorktreeGcResult(removed=removed, skipped=skipped)

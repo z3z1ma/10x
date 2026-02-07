@@ -3,20 +3,22 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Optional
 
+from agent_loom.core.concurrent import parallel_map
+from agent_loom.core.fs import fs_unescape
+from agent_loom.core.git import is_git_repo
+from agent_loom.core.io import read_json
 from agent_loom.workspace.guards import poly_context
-from agent_loom.workspace.repo_ops import repo_root as repo_root_fn
+from agent_loom.workspace.repo.ops import repo_root as repo_root_fn
 from agent_loom.workspace.state import (
-    fs_unescape,
     iter_repos,
     load_workspace,
     worktrees_base,
     ws_services_dir,
     ws_worktrees_dir,
 )
-from agent_loom.workspace.utils import is_git_repo, parallel_map, read_json
-from agent_loom.workspace.git_ops import git_is_dirty, git_worktree_list_porcelain
+from agent_loom.workspace.git.ops import git_is_dirty, git_worktree_list_porcelain
 
-from agent_loom.workspace.diff_ops import worktree_diff_by_file
+from agent_loom.workspace.git.diff import worktree_diff_by_file
 
 
 class WorkspaceReadError(RuntimeError):
@@ -331,7 +333,7 @@ def worktree_diff(
     else:
         # Best-effort: infer from origin/HEAD when present.
         try:
-            from agent_loom.workspace.git_ops import repo_default_branch
+            from agent_loom.workspace.git.ops import repo_default_branch
 
             default_branch = repo_default_branch(requested)
         except Exception:

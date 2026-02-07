@@ -4,8 +4,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional
 
+from agent_loom.core import git as core_git
+from agent_loom.core.exec import ExecError
+from agent_loom.core.git import is_git_repo
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.utils import is_git_repo, run
+from agent_loom.workspace.utils import run
 
 
 @dataclass(frozen=True)
@@ -16,17 +19,8 @@ class DiffFile:
     dels: int
 
 
-def git_has_head(path: Path) -> bool:
-    p = run(["git", "rev-parse", "--verify", "HEAD"], cwd=path, check=False)
-    return p.returncode == 0
-
-
 def git_ref_exists(path: Path, ref: str) -> bool:
-    r = str(ref or "").strip()
-    if not r:
-        return False
-    p = run(["git", "rev-parse", "--verify", r], cwd=path, check=False)
-    return p.returncode == 0
+    return core_git.git_ref_exists(path, ref)
 
 
 def git_merge_base(path: Path, a: str, b: str = "HEAD") -> str:
@@ -34,12 +28,15 @@ def git_merge_base(path: Path, a: str, b: str = "HEAD") -> str:
     bb = str(b or "").strip() or "HEAD"
     if not aa:
         raise WorkspaceError("Missing base ref")
-    p = run(["git", "merge-base", aa, bb], cwd=path, check=False)
-    if p.returncode != 0:
-        raise WorkspaceError(
-            f"git merge-base failed ({aa} {bb}):\n{(p.stderr or p.stdout or '').strip()}"
-        )
-    return p.stdout.strip()
+    try:
+        return core_git.git_merge_base(path, aa, bb)
+    except ExecError as e:
+        msg = (e.stderr or e.stdout or "").strip()
+        raise WorkspaceError(f"git merge-base failed ({aa} {bb}):\n{msg}") from e
+
+
+def git_has_head(path: Path) -> bool:
+    return core_git.git_has_head(path)
 
 
 def git_untracked_files(path: Path) -> list[str]:

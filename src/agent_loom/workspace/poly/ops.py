@@ -4,6 +4,11 @@ import shutil
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+from agent_loom.core.concurrent import parallel_map
+from agent_loom.core.fs import ensure_dir, fs_unescape
+from agent_loom.core.git import is_git_repo
+from agent_loom.core.io import atomic_write_json, atomic_write_text, read_json
+from agent_loom.core.time import now_iso
 from agent_loom.workspace.constants import (
     DEFAULT_DEFAULT_BRANCH,
     INTERNAL_DIR,
@@ -11,7 +16,7 @@ from agent_loom.workspace.constants import (
     WORKSPACE_FILE,
 )
 from agent_loom.workspace.errors import WorkspaceError
-from agent_loom.workspace.git_ops import (
+from agent_loom.workspace.git.ops import (
     git_checkout_reset_branch,
     git_clone_if_missing,
     git_current_branch,
@@ -51,8 +56,11 @@ from agent_loom.workspace.models import (
     WorktreePushResult,
     WorktreeRebaseResult,
 )
-from agent_loom.workspace.selection import poly_has_selection, poly_resolve_repo_names
-from agent_loom.workspace.services import (
+from agent_loom.workspace.poly.selection import (
+    poly_has_selection,
+    poly_resolve_repo_names,
+)
+from agent_loom.workspace.poly.services import (
     ensure_service_files,
     refresh_services_index,
     service_index_path,
@@ -60,7 +68,6 @@ from agent_loom.workspace.services import (
 from agent_loom.workspace.state import (
     Repo,
     default_workspace_json,
-    fs_unescape,
     iter_repos,
     load_workspace,
     save_workspace,
@@ -73,19 +80,18 @@ from agent_loom.workspace.state import (
     ws_states_dir,
     ws_worktrees_dir,
 )
-from agent_loom.workspace.utils import (
-    atomic_write_json,
-    atomic_write_text,
-    ensure_dir,
-    is_git_repo,
-    now_iso,
-    parallel_map,
-    read_json,
-    run,
-    short,
-)
+from agent_loom.workspace.utils import run, short
 
-from agent_loom.workspace.diff_ops import worktree_diff_by_file
+from agent_loom.workspace.git.diff import worktree_diff_by_file
+
+
+def _touch_group_meta(*, ws_root: Path, group: str) -> None:
+    try:
+        from agent_loom.workspace.worktree_meta import poly_group_touch
+
+        poly_group_touch(ws_root=ws_root, group=group)
+    except Exception:
+        return
 
 
 def poly_init(*, root: Optional[Path] = None) -> PolyInitResult:
@@ -605,7 +611,7 @@ def worktree_add(
     repo_map = iter_repos(ws)
 
     if claim:
-        from agent_loom.workspace.leases import lease_acquire
+        from agent_loom.workspace.poly.leases import lease_acquire
 
         lease_acquire(key=f"group:{group}", force=False, root=ws_root)
 
@@ -657,12 +663,7 @@ def worktree_add(
         wt = git_worktree_add(ws_root, ws, r, group)
         created.append({"repo": name, "path": str(wt.resolve()), "existed": False})
 
-    try:
-        from agent_loom.workspace.worktree_meta import poly_group_touch
-
-        poly_group_touch(ws_root=ws_root, group=group)
-    except Exception:
-        pass
+    _touch_group_meta(ws_root=ws_root, group=group)
 
     return WorktreeAddResult(group=group, worktrees=created)
 
@@ -723,6 +724,31 @@ def worktree_rm(
         else:
             git_worktree_remove(t, force=force)
         removed.append(str(t.resolve()))
+
+    # If the group is now empty, remove group-level metadata + stale leases.
+    try:
+        if base.exists() and not any(p.is_dir() for p in base.iterdir()):
+            base.rmdir()
+    except Exception:
+        pass
+
+    try:
+        is_empty = (not base.exists()) or (not any(p.is_dir() for p in base.iterdir()))
+    except Exception:
+        is_empty = False
+    if is_empty:
+        try:
+            from agent_loom.workspace.worktree_meta import poly_group_meta_path
+
+            poly_group_meta_path(ws_root, group).unlink(missing_ok=True)
+        except Exception:
+            pass
+        try:
+            from agent_loom.workspace.poly.leases import lease_path
+
+            lease_path(root=ws_root, key=f"group:{group}").unlink(missing_ok=True)
+        except Exception:
+            pass
 
     return WorktreeGroupRemoveResult(group=group, removed=removed)
 
@@ -819,6 +845,14 @@ def worktree_group_status(
     base = worktrees_base(ws_root, ws, group)
     if not base.exists():
         raise WorkspaceError(f"No worktrees found for: {group}")
+
+    _touch_group_meta(ws_root=ws_root, group=group)
+
+    _touch_group_meta(ws_root=ws_root, group=group)
+
+    _touch_group_meta(ws_root=ws_root, group=group)
+
+    _touch_group_meta(ws_root=ws_root, group=group)
 
     if repos or sets or tags:
         names = poly_resolve_repo_names(
@@ -934,6 +968,10 @@ def worktree_group_check_divergence(
     base_dir = worktrees_base(ws_root, ws, group)
     if not base_dir.exists():
         raise WorkspaceError(f"No worktrees found for: {group}")
+
+    _touch_group_meta(ws_root=ws_root, group=group)
+
+    _touch_group_meta(ws_root=ws_root, group=group)
 
     if repos or sets or tags:
         names = poly_resolve_repo_names(

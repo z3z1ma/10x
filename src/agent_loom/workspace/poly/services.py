@@ -4,9 +4,10 @@ import re
 from pathlib import Path
 from typing import Dict, List
 
+from agent_loom.core.io import atomic_write_json, atomic_write_text
+from agent_loom.core.time import now_iso
 from agent_loom.workspace.constants import BULLET_RE, SERVICE_HEADER
 from agent_loom.workspace.state import iter_repos, ws_repos_dir, ws_services_dir
-from agent_loom.workspace.utils import atomic_write_json, atomic_write_text, now_iso
 
 
 def service_md_path(root: Path, ws: dict, name: str) -> Path:
