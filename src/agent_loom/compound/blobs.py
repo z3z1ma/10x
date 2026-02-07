@@ -14,10 +14,6 @@ def sha256_bytes(data: bytes) -> str:
     return sha256(data).hexdigest()
 
 
-def sha256_text(text: str) -> str:
-    return sha256_bytes(str(text or "").encode("utf-8"))
-
-
 def blob_filename(*, sha256_hex: str, ext: str, compression: BlobCompression) -> str:
     ident = str(sha256_hex or "").strip()
     if not ident or any(c not in "0123456789abcdef" for c in ident) or len(ident) != 64:
@@ -106,7 +102,6 @@ __all__ = [
     "BlobRef",
     "blob_path",
     "sha256_bytes",
-    "sha256_text",
     "write_blob",
     "write_blob_text",
 ]

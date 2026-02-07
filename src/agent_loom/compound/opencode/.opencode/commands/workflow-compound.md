@@ -12,7 +12,7 @@ $ARGUMENTS
 This is where we convert "we learned a thing" into durable, replayable memory.
 
 Goals:
-- Package evidence into an **Episode** under `.loom/compound/episodes/...`.
+- Package evidence into an Episode under `.loom/compound/episodes/...`.
 - Compile/update instincts in `.opencode/memory/instincts.json`.
 - Compile/update skills under `.opencode/skills/` (optional mirror to `.claude/skills/`).
 - Store a few Loom Memory notes when the learning is contextual or narrative.

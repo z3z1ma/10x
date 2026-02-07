@@ -143,6 +143,12 @@ async function checkInstalled(root: string): Promise<{ ok: boolean; missing: str
     "AGENTS.md",
     "LOOM_CONTEXT.md",
     "LOOM_ROADMAP.md",
+    ".loom/compound/README.md",
+    ".opencode/commands/workflow-plan.md",
+    ".opencode/commands/workflow-work.md",
+    ".opencode/commands/workflow-review.md",
+    ".opencode/commands/workflow-compound.md",
+    ".opencode/compound/.gitignore",
     ".opencode/compound/prompts/autolearn.md",
     ".opencode/memory/.gitignore",
   ];
@@ -155,7 +161,7 @@ async function checkInstalled(root: string): Promise<{ ok: boolean; missing: str
 }
 
 function _install_hint(): string {
-  return "Run: loom compound init --dest .";
+  return "Run: loom compound init";
 }
 
 // -----------------------------

@@ -48,32 +48,6 @@ class ObservationIngest:
     partial_line_ignored: bool
 
 
-def read_observations_tail(file_path: Path, *, max_lines: int) -> List[Dict[str, Any]]:
-    if max_lines <= 0:
-        return []
-    if not file_path.exists():
-        return []
-    # Stream to avoid loading very large files.
-    lines: list[str] = []
-    with file_path.open("r", encoding="utf-8", errors="replace") as f:
-        for ln in f:
-            if not ln.strip():
-                continue
-            lines.append(ln.rstrip("\n"))
-            if len(lines) > int(max_lines):
-                lines = lines[-int(max_lines) :]
-    tail = lines
-    out: List[Dict[str, Any]] = []
-    for ln in tail:
-        try:
-            obj = json.loads(ln)
-        except Exception:
-            continue
-        if isinstance(obj, dict):
-            out.append(obj)
-    return out
-
-
 def count_observations(file_path: Path) -> ObservationCount:
     if not file_path.exists():
         return ObservationCount(count=0, tail_sha256="")

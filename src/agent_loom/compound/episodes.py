@@ -12,10 +12,6 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def _sha256_text(text: str) -> str:
-    return sha256(text.encode("utf-8")).hexdigest()
-
-
 def canonical_json_bytes(obj: object) -> bytes:
     # Stable, whitespace-free encoding for hashing.
     return json.dumps(
@@ -179,19 +175,6 @@ def episode_path_for_id(
     except Exception:
         dt = datetime.now(timezone.utc)
     return episodes_dir / f"{dt.year:04d}" / f"{dt.month:02d}" / f"{episode_id}.json"
-
-
-def find_episode_by_id(*, episodes_dir: Path, episode_id: str) -> Optional[Path]:
-    ident = str(episode_id or "").strip()
-    if not ident:
-        return None
-    target = f"{ident}.json"
-    if not episodes_dir.exists():
-        return None
-    for p in episodes_dir.rglob(target):
-        if p.is_file() and p.name == target:
-            return p
-    return None
 
 
 def load_episode(path: Path) -> Episode:

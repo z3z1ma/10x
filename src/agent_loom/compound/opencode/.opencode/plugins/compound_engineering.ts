@@ -19,6 +19,8 @@ import * as path from "node:path";
 
 const MEMORY_DIR = path.join(".opencode", "memory");
 const OBSERVATIONS_FILE = path.join(MEMORY_DIR, "observations.jsonl");
+const AUTOLEARN_PROMPT_FILE = path.join(".opencode", "compound", "prompts", "autolearn.md");
+const AUTOLEARN_STATUS_FILE = path.join(".opencode", "compound", "autolearn_status.json");
 
 const DEFAULT_LOOM_BIN = process.env.COMPOUND_LOOM_BIN ?? "loom";
 
@@ -146,6 +148,8 @@ async function checkInstalled(root: string): Promise<{ ok: boolean; missing: str
     ".opencode/commands/workflow-work.md",
     ".opencode/commands/workflow-review.md",
     ".opencode/commands/workflow-compound.md",
+    ".opencode/compound/.gitignore",
+    ".opencode/compound/prompts/autolearn.md",
     ".opencode/memory/.gitignore",
   ];
   const missing: string[] = [];
@@ -258,7 +262,7 @@ async function createEphemeralSession(client: any, activeSessionID: string | nul
     if (typeof id === "string" && id) return id;
   } catch {}
 
-  // Fallback: attach to the active session if opencode requires a parent.
+  // Fallback: attach to the active session if OpenCode requires a parent.
   try {
     const pid = String(activeSessionID ?? "");
     if (!pid) return "";
@@ -321,53 +325,7 @@ async function autoLearnIfNeeded(sessionRoot: string, client: any, sessionID: st
   lastObservationCount = obsCount.count;
   lastObservationHash = obsCount.tailHash;
   try {
-    const promptTemplate = normalizeNewlines(`
-You are a background "learning" agent for an agentic coding system.
-
-Your job is to propose **memory-only updates** from the recent activity. Loom will apply them deterministically:
-- Evidence (Episode): committed under \`.loom/compound/episodes/...\`
-- Instincts: compiled into \`.opencode/memory/instincts.json\`
-- Skills: compiled into \`.opencode/skills/<name>/SKILL.md\`
-
-Hard rules:
-- Do NOT propose or write code.
-- Prefer updating an existing skill over creating a near-duplicate.
-- Do nothing unless the learning is durable.
-
-How to act:
-- Do not run any tools.
-- Output a single JSON object (no markdown fences) matching the schema below.
-- If there is nothing worth persisting, output an empty JSON object: \`{}\`.
-
-Budget (hard caps):
-- Max skills per run: 3
-- Max instinct updates per run: 8
-- Max doc-block upserts per run: 3
-- Max memos per run: 4
-
-Rules:
-- Prefer updating an existing skill over creating a near-duplicate.
-- Skills must be procedural and short.
-- Use repo-root-relative paths in markdown.
-
-Proposal JSON schema (top-level object):
-- \`instinct_candidates\`: list of objects:
-  - \`id\` (kebab-case)
-  - \`title\`
-  - \`trigger\` (when to apply)
-  - \`action\` (what to do)
-  - \`confidence\` (0..1)
-  - \`tags\` (list)
-- \`skill_candidates\`: list of objects:
-  - \`name\` (kebab-case)
-  - \`description\` (critical, this is what the model uses to decide if the skill is worth reading, must be specific, unambiguous, and must be the form of "when [trigger], then [action]")
-  - \`body\` (FULL managed body, not a diff)
-  - \`tags\` (list)
-  - \`source_instinct_ids\` (list)
-
-Response:
-- Output **only** valid JSON.
-`).trim();
+    const promptTemplate = await safeReadFile(path.join(sessionRoot, AUTOLEARN_PROMPT_FILE), "");
     if (!promptTemplate.trim()) return;
 
     const recentObs = await readObservationsTail(sessionRoot, AUTO_MAX_OBSERVATIONS_IN_PROMPT);
@@ -403,7 +361,7 @@ ${recentObs
       resp = await client.session.prompt({
         path: { id: ephemeralSessionID },
         body: {
-          agent: "build",
+          agent: "plan",
           parts: [{ type: "text", text: finalPrompt }],
         },
       });
@@ -426,12 +384,21 @@ ${recentObs
       proposals = null;
     }
 
+    const wroteStatus = async (payload: any) => {
+      try {
+        await ensureDir(path.join(sessionRoot, ".opencode", "compound"));
+        await fs.writeFile(path.join(sessionRoot, AUTOLEARN_STATUS_FILE), JSON.stringify(payload, null, 2) + "\n", "utf8");
+      } catch {}
+    };
+
     if (!proposals || typeof proposals !== "object" || Array.isArray(proposals)) {
+      await wroteStatus({ ok: false, ts: nowIso(), error: "invalid_json", raw_len: text.length });
       return;
     }
 
     const isEmpty = Object.keys(proposals).length === 0;
     if (isEmpty) {
+      await wroteStatus({ ok: true, ts: nowIso(), applied: false, reason: "noop" });
       return;
     }
 
@@ -447,8 +414,10 @@ ${recentObs
 
     if (learnRes.code === 0) {
       await tuiToast(client, "Compound autolearn applied", "success");
+      await wroteStatus({ ok: true, ts: nowIso(), applied: true, exit_code: learnRes.code, stdout: truncate(String(learnRes.stdout || ""), 4000) });
     } else {
       await tuiToast(client, "Compound autolearn failed", "error");
+      await wroteStatus({ ok: false, ts: nowIso(), applied: false, exit_code: learnRes.code, stdout: truncate(String(learnRes.stdout || ""), 4000), stderr: truncate(String(learnRes.stderr || ""), 4000) });
     }
   } catch {
     // swallow
@@ -532,7 +501,9 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
         const sessionID = event.properties?.sessionID ?? event.properties?.sessionId ?? event.properties?.id ?? null;
         await autoLearnIfNeeded(repoRoot, client, sessionID ?? null);
       }
-    } catch {}
+    } catch {
+      // swallow
+    }
   };
 
   const toolBefore = async (input: any, output: any) => {
@@ -554,9 +525,9 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
         args: redactedArgs,
       };
 
-       await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
-     } catch {}
-   };
+      await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
+    } catch {}
+  };
 
   const toolAfter = async (input: any, output: any) => {
     try {
@@ -580,19 +551,27 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
       };
 
       await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
-    } catch {}
+    } catch {
+      // swallow
+    }
   };
 
   return {
     event: onEvent,
     "tool.execute.before": toolBefore,
     "tool.execute.after": toolAfter,
+
+    // Keep compaction anchored to stable context files.
     "experimental.session.compacting": async (_input: any, out: any) => {
       out.context.push(
         [
-          "## Loom context",
-          "- Read LOOM_CONTEXT.md.",
-          "- Read LOOM_ROADMAP.md.",
+          "## Persistent repo context (compound-engineering)",
+          "- Read AGENTS.md (stable human-owned overview).",
+          "- Read LOOM_CONTEXT.md (derived always-on context + instincts summary).",
+          "- Read LOOM_ROADMAP.md (direction + backlog + changelog).",
+          "- Rules/cookbooks may be written to .opencode/rules/*.md via `loom compound update`.",
+          "- Skills live under .opencode/skills/<name>/SKILL.md (mirrored to .claude/skills/ when enabled).",
+          "- This plugin logs observations and may trigger a background autolearn on session idle.",
         ].join("\n")
       );
     },

@@ -104,12 +104,6 @@ def _state_path(paths: CompoundPaths) -> Path:
     return paths.compound_dir / "state.json"
 
 
-def _episode_ts(existing: Optional[Episode]) -> str:
-    if existing is not None and str(existing.created_at or "").strip():
-        return str(existing.created_at).strip()
-    return _now_iso()
-
-
 @dataclass(frozen=True)
 class CompoundRunResult:
     ok: bool
@@ -446,72 +440,4 @@ def run_compound(
         wrote_instincts=bool(wrote_instincts),
         wrote_docs=bool(wrote_docs),
         state_updated=(not dry_run),
-    )
-
-
-def replay_episode(
-    *, root: Path, episode_path: Path, dry_run: bool, mirror_claude: bool
-) -> CompoundRunResult:
-    repo = root.resolve()
-    require_scaffold_installed(repo)
-    paths = compound_paths(repo)
-    ep = load_episode(episode_path)
-
-    instincts_created = 0
-    instincts_updated = 0
-    skills_created = 0
-    skills_updated = 0
-    wrote_instincts = False
-    wrote_docs = False
-
-    if ep.triage.status != "rejected" and ep.proposals:
-        store = load_instincts(paths.instincts_file)
-        inst_cands = parse_instinct_candidates(ep.proposals)
-        if inst_cands:
-            c, u = apply_instinct_candidates(
-                store=store,
-                candidates=inst_cands,
-                episode_id=ep.episode_id,
-                episode_ts=ep.created_at,
-                head_sha=ep.git.head_sha,
-                patch_sha256=ep.git.patch_sha256,
-            )
-            instincts_created += c
-            instincts_updated += u
-
-        skill_cands = parse_skill_candidates(ep.proposals)
-        if skill_cands:
-            c2, u2 = apply_skill_candidates(
-                skills_dir=paths.skills_dir,
-                candidates=skill_cands,
-                episode_id=ep.episode_id,
-                episode_ts=ep.created_at,
-                mirror_claude_dir=(paths.root / ".claude" / "skills")
-                if mirror_claude
-                else None,
-            )
-            skills_created += c2
-            skills_updated += u2
-
-        if (instincts_created or instincts_updated) and not dry_run:
-            save_instincts(paths.instincts_file, store)
-            wrote_instincts = True
-            sync_instincts_markdown(root=repo, store=store)
-            wrote_docs = True
-
-    return CompoundRunResult(
-        ok=True,
-        repo=str(repo),
-        episode_id=ep.episode_id,
-        episode_path=str(episode_path),
-        episode_created=False,
-        decision_id="",
-        decision_path="",
-        instincts_created=int(instincts_created),
-        instincts_updated=int(instincts_updated),
-        skills_created=int(skills_created),
-        skills_updated=int(skills_updated),
-        wrote_instincts=bool(wrote_instincts),
-        wrote_docs=bool(wrote_docs),
-        state_updated=False,
     )

@@ -1,10 +1,10 @@
 ---
-description: Work -> execute a ticket in an isolated worktree (loom workspace), update ticket status/notes (loom ticket).
+description: Workflow Work -> execute a ticket in a worktree, keep tickets updated, run checks.
 agent: build
 subtask: false
 ---
 
-You are running the **Work** phase.
+You are running **Workflow Work**.
 
 Ticket to execute:
 $ARGUMENTS
@@ -15,16 +15,16 @@ Goals:
 - Implement the plan with tests.
 
 Process:
-1) Ensure compound scaffolding exists:
-   - Run via bash: `loom compound init --dest .`
+1) If compound scaffolding isn't installed yet, install it once:
+   - Run via bash: `loom compound init`
 2) Read the ticket:
    - `loom ticket show $ARGUMENTS`
 3) Set status to in_progress:
    - `loom ticket update $ARGUMENTS --status in_progress`
 4) Create a worktree for this ticket:
-   - Branch naming convention: `ticket-<id>-<short-slug>`
-   - Use `loom workspace worktree add <branch>`
-   - NOTE: OpenCode operates in one working directory. After creating the worktree, do the actual code changes in that worktree (often by starting OpenCode in the worktree directory).
+    - Branch naming convention: `ticket-<id>-<short-slug>`
+    - `loom workspace worktree ensure <branch> --base-ref main`
+    - NOTE: OpenCode operates in one working directory. After creating the worktree, do the actual code changes in that worktree.
 5) Implement the ticket:
    - Small commits
    - Add/update tests
@@ -34,8 +34,9 @@ Process:
 7) When done:
    - run the relevant test commands
    - set status to `closed`
-8) Finish by refreshing derived compound docs:
-   - Run via bash: `loom compound update`
+
+Optional:
+- `loom compound update` (refresh derived docs and rule files)
 
 Output:
 - What changed.

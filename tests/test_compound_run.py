@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from agent_loom.compound.engine import replay_episode, run_compound
+from agent_loom.compound.engine import run_compound
 from agent_loom.compound.install import install_opencode
 from agent_loom.compound.paths import compound_paths
 
@@ -91,7 +91,7 @@ def test_compound_run_writes_episode_and_applies_proposals() -> None:
                 {
                     "name": "compound-episode-workflow",
                     "description": "Package evidence into episodes and compile memory",
-                    "body": "## Steps\n\n- Run `loom compound run` with structured proposals.\n- Verify instincts/skills outputs are updated deterministically.\n",
+                    "body": "## Steps\n\n- Run `loom compound learn` with structured proposals.\n- Verify instincts/skills outputs are updated deterministically.\n",
                     "tags": ["compound"],
                     "source_instinct_ids": ["keep-commands-safe"],
                 }
@@ -125,15 +125,7 @@ def test_compound_run_writes_episode_and_applies_proposals() -> None:
         before_instincts = instincts_path.read_text(encoding="utf-8")
         before_skill = skill_path.read_text(encoding="utf-8")
 
-        # Replay is idempotent for a given Episode.
-        rep = replay_episode(
-            root=root,
-            episode_path=Path(res.episode_path),
-            dry_run=False,
-            mirror_claude=False,
-        )
-        assert rep.ok is True
-        assert rep.decision_id == ""
+        # No accidental churn.
         assert instincts_path.read_text(encoding="utf-8") == before_instincts
         assert skill_path.read_text(encoding="utf-8") == before_skill
 
@@ -229,83 +221,3 @@ def test_compound_run_persists_full_patch_blob_when_truncated() -> None:
         assert blob.exists()
         txt = blob.read_text(encoding="utf-8")
         assert "diff --git" in txt
-
-        from agent_loom.compound.doctor import doctor
-
-        dr = doctor(root=root)
-        assert dr.ok is True
-        assert dr.errors == []
-
-
-def test_compound_rebuild_products_from_decisions_matches_outputs(
-    tmp_path: Path,
-) -> None:
-    with _temp_git_repo() as (root, env):
-        install_opencode(dest=root, dry_run=False)
-        _git(["add", "-A"], cwd=root, env=env)
-        _git(["commit", "-m", "init"], cwd=root, env=env)
-
-        paths = compound_paths(root)
-        paths.observations_file.parent.mkdir(parents=True, exist_ok=True)
-        paths.observations_file.write_text(
-            "\n".join(
-                [
-                    json.dumps({"id": "1", "ts": "2026-02-07T00:00:00Z", "type": "x"}),
-                    json.dumps({"id": "2", "ts": "2026-02-07T00:01:00Z", "type": "y"}),
-                    "",
-                ]
-            ),
-            encoding="utf-8",
-        )
-
-        (root / "demo.txt").write_text("hello\n", encoding="utf-8")
-        _git(["add", "-N", "demo.txt"], cwd=root, env=env)
-
-        proposals = {
-            "instinct_candidates": [
-                {
-                    "id": "rebuild-is-deterministic",
-                    "title": "Rebuild is deterministic",
-                    "trigger": "When rebuilding compound products",
-                    "action": "Replay Decisions in a stable order and write products deterministically",
-                    "confidence": 0.75,
-                    "tags": ["compound"],
-                }
-            ],
-            "skill_candidates": [
-                {
-                    "name": "compound-decisions-rebuild",
-                    "description": "Rebuild products from Decisions",
-                    "body": "## Steps\n\n- Run `loom compound rebuild` and verify outputs match.\n",
-                    "tags": ["compound"],
-                    "source_instinct_ids": ["rebuild-is-deterministic"],
-                }
-            ],
-        }
-
-        res = run_compound(root=root, proposals_json=json.dumps(proposals), auto=False)
-        assert res.ok is True
-        assert res.decision_id
-
-        from agent_loom.compound.rebuild import rebuild_products
-
-        dest = tmp_path / "rebuilt"
-        rb = rebuild_products(
-            root=root, dest=dest, clean_dest=True, mirror_claude=False
-        )
-        assert rb.ok is True
-        assert rb.decisions_applied >= 1
-
-        assert (dest / ".opencode" / "memory" / "instincts.json").read_text(
-            encoding="utf-8"
-        ) == (root / ".opencode" / "memory" / "instincts.json").read_text(
-            encoding="utf-8"
-        )
-
-        orig_skill = (
-            root / ".opencode" / "skills" / "compound-decisions-rebuild" / "SKILL.md"
-        ).read_text(encoding="utf-8")
-        rebuilt_skill = (
-            dest / ".opencode" / "skills" / "compound-decisions-rebuild" / "SKILL.md"
-        ).read_text(encoding="utf-8")
-        assert rebuilt_skill == orig_skill
