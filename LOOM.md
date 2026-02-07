@@ -67,7 +67,8 @@ NOTE: Do NOT use this unless you are explicitly asked to.
 * **Primitives:**
 * `loom memory recall "$QUERY"` -> Fetch relevant context/skills.
 * `loom memory add --title "$TOPIC" --body "$CONTENT"` -> Persist new knowledge.
-* `loom compound` -> Trigger learning extraction from current session.
+* `loom compound learn` -> Apply learning proposals deterministically (writes an Episode).
+* `loom compound update` -> Refresh derived docs and cookbooks.
 
 
 

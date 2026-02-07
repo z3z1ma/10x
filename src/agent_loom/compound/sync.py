@@ -41,6 +41,7 @@ def sync(
         raise ValueError("Not in a git repository")
 
     # Deliberately scoped to compound-owned/AI-managed artifacts.
+    # Note: git pathspecs that do not exist are treated as errors by `git add`.
     pathspecs = [
         "LOOM_CONTEXT.md",
         "LOOM_ROADMAP.md",
@@ -48,9 +49,11 @@ def sync(
         ".opencode/agents",
         ".opencode/memory",
         ".opencode/skills",
-        ".claude/agents",
-        ".claude/skills",
     ]
+    if (repo_root / ".claude" / "agents").exists():
+        pathspecs.append(".claude/agents")
+    if (repo_root / ".claude" / "skills").exists():
+        pathspecs.append(".claude/skills")
 
     changed = _git_status_paths(repo_root, pathspecs=pathspecs)
 

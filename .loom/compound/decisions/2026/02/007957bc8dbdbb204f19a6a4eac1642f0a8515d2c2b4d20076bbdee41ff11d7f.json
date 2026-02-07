@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-02-07T22:03:48.297745Z",
+  "decision_id": "007957bc8dbdbb204f19a6a4eac1642f0a8515d2c2b4d20076bbdee41ff11d7f",
+  "episode_id": "643f2dcff84c8a8af59de242d82e15e26615ee7bceefa00b773e2968864fc4ed",
+  "ops": [
+    {
+      "action": "Treat CLI output + generated artifacts as a contract: ensure deterministic ordering/formatting, update or add focused pytest coverage (prefer existing contract tests like tests/test_compound_install.py), and run the standard gates (uv run basedpyright, uv run ruff check ., uv run pytest <targeted>).",
+      "confidence": 0.74,
+      "episode_id": "643f2dcff84c8a8af59de242d82e15e26615ee7bceefa00b773e2968864fc4ed",
+      "id": "compound-cli-change-requires-contract-tests",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "cli",
+        "compound",
+        "contracts",
+        "determinism",
+        "testing"
+      ],
+      "title": "Compound CLI changes must be pinned by contract tests",
+      "trigger": "When editing src/agent_loom/compound/cli.py (especially large refactors/simplifications) or behavior-adjacent modules like src/agent_loom/compound/sync.py",
+      "ts": "2026-02-07T22:03:48.297745Z"
+    },
+    {
+      "action": "Scan the edited docs for concrete promises (commands, flags, output snippets, workflow steps). Ensure those are still true given the code changes; if output is contract-tested, prefer docs wording that matches the contract-tested output.",
+      "confidence": 0.58,
+      "episode_id": "643f2dcff84c8a8af59de242d82e15e26615ee7bceefa00b773e2968864fc4ed",
+      "id": "docs-touch-means-ux-claims-check",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "consistency",
+        "docs",
+        "ux"
+      ],
+      "title": "Docs touched => verify UX claims match reality",
+      "trigger": "When updating README.md or LOOM.md alongside functional changes",
+      "ts": "2026-02-07T22:03:48.297745Z"
+    },
+    {
+      "action": "Write down the behavior invariants (inputs/flags -> outputs/side effects), ensure each invariant is covered by at least one test, and ensure error messages/exit codes remain intentional (no accidental silent success/failure).",
+      "confidence": 0.63,
+      "episode_id": "643f2dcff84c8a8af59de242d82e15e26615ee7bceefa00b773e2968864fc4ed",
+      "id": "large-deletion-refactor-requires-behavior-audit",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "cli-ux",
+        "quality",
+        "refactor",
+        "testing"
+      ],
+      "title": "Large deletions imply explicit behavior audit",
+      "trigger": "When a diff removes hundreds of lines from a core module (e.g. src/agent_loom/compound/cli.py) or collapses multiple flows into fewer branches",
+      "ts": "2026-02-07T22:03:48.297745Z"
+    },
+    {
+      "body": "# Compound CLI Contract Testing\n\nUse this when changing Compound CLI behavior (especially refactors) so UX + artifacts stay deterministic.\n\n## Scope\n- Applies to: `src/agent_loom/compound/cli.py`, `src/agent_loom/compound/sync.py` (and any Compound command wiring they influence)\n- Goal: deterministic output, stable semantics, and regression coverage\n\n## Checklist\n1. Identify the contract surface\n- CLI: command names, flags, help text, exit codes, stderr vs stdout\n- Output: headings/labels, ordering, whitespace, and any user-visible paths\n- Artifacts: any generated/installed files, rendered templates, or computed lists\n\n2. Make determinism explicit\n- Sort lists before printing\n- Use stable iteration order (avoid depending on dict insertion order unless guaranteed by construction)\n- Avoid timestamps/randomness in outputs unless explicitly part of the contract\n\n3. Update/add focused contract tests\n- Prefer extending existing tests that already pin Compound behavior (start by checking `tests/test_compound_install.py`)\n- Test both:\n  - happy path output/content\n  - failure modes (bad args, missing files, partial state) with intentional messages and exit codes\n\n4. Keep docs aligned when you touch them\n- If you edit `README.md` or `LOOM.md`, verify any example commands/outputs still match the contract behavior\n- Prefer language that mirrors contract-tested output when practical\n\n## Verify (local gates)\n- `uv run basedpyright`\n- `uv run ruff check .`\n- `uv run pytest tests/test_compound_install.py` (plus any new/adjacent tests you add)\n\n## Done when\n- Contract tests pin the behavior you intended to preserve\n- Gates are green\n- No accidental UX drift (output/exit codes) from the refactor",
+      "description": "Keep Compound CLI behavior deterministic and protected by focused contract tests when refactoring src/agent_loom/compound/cli.py or src/agent_loom/compound/sync.py.",
+      "episode_id": "643f2dcff84c8a8af59de242d82e15e26615ee7bceefa00b773e2968864fc4ed",
+      "name": "compound-cli-contract-testing",
+      "op": "skill.upsert",
+      "source_instinct_ids": [
+        "compound-cli-change-requires-contract-tests",
+        "docs-touch-means-ux-claims-check",
+        "large-deletion-refactor-requires-behavior-audit"
+      ],
+      "tags": [
+        "cli",
+        "compound",
+        "contracts",
+        "determinism",
+        "testing"
+      ],
+      "ts": "2026-02-07T22:03:48.297745Z"
+    }
+  ],
+  "proposal_blob_sha256": "f16d72ea2a08fbdc34c8ca83b8d7c989b0ef9cce6f748b2dfaebb7d35cf0c23b",
+  "version": 1
+}

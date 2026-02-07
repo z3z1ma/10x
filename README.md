@@ -124,7 +124,7 @@ One practical example from `loom team send`: delivery is best-effort to tmux, bu
 Loom has two complementary persistence mechanisms:
 
 - Memory (`loom memory`): open-ended notes as Markdown with YAML frontmatter; the SQLite index is derived and rebuildable.
-- Skills (`loom compound`): procedural memory as `.opencode/skills/*/SKILL.md`.
+- Skills (`loom compound learn`): procedural memory as `.opencode/skills/*/SKILL.md`.
 
 The intended workflow is:
 
@@ -136,6 +136,8 @@ Practical loop:
 loom memory recall "worktree safety" --context
 loom memory add --title "Worktree safety" --body "Snapshot before force-clean"
 loom compound init
+loom compound update
+# optional: commit compound-managed artifacts
 loom compound sync
 ```
 
