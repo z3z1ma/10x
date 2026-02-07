@@ -921,7 +921,8 @@ def cmd_repo_merge_attempt(args: argparse.Namespace) -> None:
 
 
 def cmd_poly_init(args: argparse.Namespace) -> None:
-    root = Path.cwd().resolve()
+    root_arg = str(getattr(args, "root", "") or "").strip()
+    root = Path(root_arg).expanduser().resolve() if root_arg else Path.cwd().resolve()
     res = poly_init(root=root)
     emit_result(args, root, res)
 
@@ -1436,6 +1437,11 @@ def _add_poly_parser(
 
     sp = sub.add_parser(
         "init", help="Initialize workspace.json + dirs + baseline .gitignore"
+    )
+    sp.add_argument(
+        "--root",
+        default="",
+        help="Initialize the harness at a specific root (default: current directory)",
     )
     sp.set_defaults(func=cmd_poly_init)
 
@@ -2338,7 +2344,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             try:
                 if getattr(args, "cmd", "") in {"poly", "harness"}:
                     if getattr(args, "poly_cmd", "") == "init":
-                        root = Path.cwd().resolve()
+                        root_arg = str(getattr(args, "root", "") or "").strip()
+                        root = (
+                            Path(root_arg).expanduser().resolve()
+                            if root_arg
+                            else Path.cwd().resolve()
+                        )
                     else:
                         root = workspace_root()
                 else:

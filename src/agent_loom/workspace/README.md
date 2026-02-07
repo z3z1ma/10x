@@ -225,6 +225,7 @@ Initialize a poly workspace control plane.
 
 ```
 loom workspace harness init
+loom workspace harness init --root /path/to/my-harness
 loom workspace poly init  # alias
 ```
 
