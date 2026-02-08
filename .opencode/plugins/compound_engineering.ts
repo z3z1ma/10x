@@ -26,6 +26,10 @@ const DEFAULT_LOOM_BIN = process.env.COMPOUND_LOOM_BIN ?? "loom";
 
 const LOG_OBSERVATIONS = (process.env.COMPOUND_LOG_OBSERVATIONS ?? "1") !== "0";
 const OBS_MAX_BYTES = intEnv("COMPOUND_OBSERVATIONS_MAX_BYTES", 32 * 1024 * 1024);
+const OBS_MAX_BACKUPS = intEnv("COMPOUND_OBSERVATIONS_MAX_BACKUPS", 5);
+const OBS_TAIL_MAX_BYTES = intEnv("COMPOUND_OBSERVATIONS_TAIL_MAX_BYTES", 512 * 1024);
+const OBS_MAX_STRING_CHARS = intEnv("COMPOUND_OBSERVATIONS_MAX_STRING_CHARS", 2000);
+const OBS_MAX_OBJECT_KEYS = intEnv("COMPOUND_OBSERVATIONS_MAX_OBJECT_KEYS", 50);
 
 const AUTO_ENABLED = (process.env.COMPOUND_AUTO ?? "1") !== "0";
 const AUTO_COOLDOWN_SECONDS = intEnv("COMPOUND_AUTO_COOLDOWN_SECONDS", 120);
@@ -77,6 +81,48 @@ async function ensureDir(p: string): Promise<void> {
   await fs.mkdir(p, { recursive: true });
 }
 
+async function cleanupOldBackups(filePath: string, maxBackups: number): Promise<void> {
+  try {
+    if (maxBackups <= 0) return;
+    const dir = path.dirname(filePath);
+    const base = path.basename(filePath);
+    const entries = await fs.readdir(dir);
+    const candidates = entries
+      .filter((name) => name.startsWith(base + ".") && name.endsWith(".bak"))
+      .map((name) => path.join(dir, name));
+    if (candidates.length <= maxBackups) return;
+
+    const stats = await Promise.all(
+      candidates.map(async (p) => {
+        try {
+          const st = await fs.stat(p);
+          return { p, mtimeMs: st.mtimeMs };
+        } catch {
+          return { p, mtimeMs: 0 };
+        }
+      })
+    );
+    stats.sort((a, b) => a.mtimeMs - b.mtimeMs);
+    const toDelete = stats.slice(0, Math.max(0, stats.length - maxBackups));
+    await Promise.all(
+      toDelete.map(async (x) => {
+        try {
+          await fs.unlink(x.p);
+        } catch {}
+      })
+    );
+  } catch {
+    // swallow
+  }
+}
+
+function truncateString(s: string, maxChars: number): string {
+  const str = String(s ?? "");
+  if (maxChars <= 0) return "";
+  if (str.length <= maxChars) return str;
+  return str.slice(0, Math.max(0, maxChars - 80)) + `... (truncated, len=${str.length})`;
+}
+
 async function appendJsonl(root: string, rel: string, obj: unknown): Promise<void> {
   const filePath = path.join(root, rel);
   await ensureDir(path.dirname(filePath));
@@ -87,10 +133,12 @@ async function appendJsonl(root: string, rel: string, obj: unknown): Promise<voi
     if (st.size > OBS_MAX_BYTES) {
       const rotated = `${filePath}.${Date.now()}.bak`;
       await fs.rename(filePath, rotated);
+      await cleanupOldBackups(filePath, OBS_MAX_BACKUPS);
     }
   } catch {}
 
   await fs.appendFile(filePath, JSON.stringify(obj) + "\n", "utf8");
+  observationsSinceAutolearn += 1;
 }
 
 async function tuiToast(client: any, message: string, variant: "success" | "error" | "info" = "info") {
@@ -184,7 +232,7 @@ function scrubString(s: string): string {
   for (const re of SECRET_VALUE_RE) {
     out = out.replace(re, (m, p1) => (p1 ? `${p1} [REDACTED]` : "[REDACTED]"));
   }
-  return out;
+  return truncateString(out, OBS_MAX_STRING_CHARS);
 }
 
 function sanitizeObservationArgs(toolName: string, args: any): any {
@@ -209,9 +257,12 @@ function sanitizeObservationArgs(toolName: string, args: any): any {
     if (Array.isArray(v)) return v.slice(0, 50).map((x) => scrub(x, key, depth + 1));
     if (v && typeof v === "object") {
       const out: any = {};
-      for (const [k, vv] of Object.entries(v)) {
+      const entries = Object.entries(v);
+      const limit = Math.max(0, OBS_MAX_OBJECT_KEYS);
+      for (const [k, vv] of entries.slice(0, limit)) {
         out[k] = SECRET_KEY_RE.test(k) ? "[REDACTED]" : scrub(vv, k, depth + 1);
       }
+      if (entries.length > limit) out._compound_truncated_keys = true;
       return out;
     }
     return v;
@@ -220,37 +271,76 @@ function sanitizeObservationArgs(toolName: string, args: any): any {
   return scrub(cloned, "args", 0);
 }
 
+function shouldLogEventType(type: string): boolean {
+  const t = String(type ?? "");
+  if (!t) return false;
+  if (t === "message.part.updated") return false;
+  if (t.startsWith("message.part.")) return false;
+  return true;
+}
+
+function toolObservationSummary(toolName: string, redactedArgs: any): string {
+  const t = String(toolName ?? "");
+  try {
+    if (/bash|shell/i.test(t)) {
+      const sha = String(redactedArgs?.command_sha256 ?? "");
+      const len = Number(redactedArgs?.command_len ?? 0);
+      if (sha) return `command_sha256=${sha} command_len=${Number.isFinite(len) ? len : 0}`;
+      return "";
+    }
+
+    const filePath = typeof redactedArgs?.filePath === "string" ? String(redactedArgs.filePath) : "";
+    const pattern = typeof redactedArgs?.pattern === "string" ? String(redactedArgs.pattern) : "";
+    const include = typeof redactedArgs?.include === "string" ? String(redactedArgs.include) : "";
+    const url = typeof redactedArgs?.url === "string" ? String(redactedArgs.url) : "";
+    const summaryBits: string[] = [];
+    if (filePath) summaryBits.push(`filePath=${truncateString(filePath, 240)}`);
+    if (pattern) summaryBits.push(`pattern=${truncateString(pattern, 240)}`);
+    if (include) summaryBits.push(`include=${truncateString(include, 120)}`);
+    if (url) summaryBits.push(`url=${truncateString(url, 240)}`);
+    return summaryBits.join(" ");
+  } catch {
+    return "";
+  }
+}
+
 // -----------------------------
 // Autolearn (session.idle)
 // -----------------------------
 
 let autolearnInFlight = false;
 let lastAutolearnAt = 0;
-let lastObservationCount = 0;
-let lastObservationHash = "";
+let observationsSinceAutolearn = 0;
 
 async function readObservationsTail(root: string, maxLines: number): Promise<Observation[]> {
   const filePath = path.join(root, OBSERVATIONS_FILE);
   if (!(await pathExists(filePath))) return [];
-  const raw = await fs.readFile(filePath, "utf8");
-  const lines = raw.trimEnd().split("\n").filter(Boolean);
-  const slice = lines.slice(Math.max(0, lines.length - maxLines));
-  const out: Observation[] = [];
-  for (const line of slice) {
-    try {
-      out.push(JSON.parse(line));
-    } catch {}
-  }
-  return out;
-}
 
-async function countObservations(root: string): Promise<{ count: number; tailHash: string }> {
-  const filePath = path.join(root, OBSERVATIONS_FILE);
-  if (!(await pathExists(filePath))) return { count: 0, tailHash: "" };
-  const raw = await fs.readFile(filePath, "utf8");
-  const lines = raw.trimEnd().split("\n").filter(Boolean);
-  const tail = lines.slice(Math.max(0, lines.length - 200)).join("\n");
-  return { count: lines.length, tailHash: tail ? sha256(tail) : "" };
+  try {
+    const st = await fs.stat(filePath);
+    const size = Number(st.size ?? 0);
+    const want = Math.max(1, OBS_TAIL_MAX_BYTES);
+    const start = Math.max(0, size - want);
+    const fh = await fs.open(filePath, "r");
+    try {
+      const buf = Buffer.alloc(Math.max(0, size - start));
+      const r = await fh.read(buf, 0, buf.length, start);
+      const raw = buf.slice(0, r.bytesRead).toString("utf8");
+      const lines = raw.split("\n").filter((l) => Boolean(String(l || "").trim()));
+      const slice = lines.slice(Math.max(0, lines.length - maxLines));
+      const out: Observation[] = [];
+      for (const line of slice) {
+        try {
+          out.push(JSON.parse(line));
+        } catch {}
+      }
+      return out;
+    } finally {
+      await fh.close();
+    }
+  } catch {
+    return [];
+  }
 }
 
 async function createEphemeralSession(client: any, activeSessionID: string | null | undefined): Promise<string> {
@@ -311,10 +401,7 @@ async function autoLearnIfNeeded(sessionRoot: string, client: any, sessionID: st
   const now = Date.now();
   if (lastAutolearnAt && now - lastAutolearnAt < AUTO_COOLDOWN_SECONDS * 1000) return;
 
-  const obsCount = await countObservations(sessionRoot);
-  const newObs = obsCount.count - lastObservationCount;
-  const hashChanged = obsCount.tailHash && obsCount.tailHash !== lastObservationHash;
-  if (newObs < AUTO_MIN_NEW_OBSERVATIONS && !hashChanged) return;
+  if (observationsSinceAutolearn < AUTO_MIN_NEW_OBSERVATIONS) return;
 
   const g = await gitSummary(sessionRoot);
   const diff = String(g.diffStat || "").trim();
@@ -322,8 +409,7 @@ async function autoLearnIfNeeded(sessionRoot: string, client: any, sessionID: st
 
   autolearnInFlight = true;
   lastAutolearnAt = now;
-  lastObservationCount = obsCount.count;
-  lastObservationHash = obsCount.tailHash;
+  observationsSinceAutolearn = 0;
   try {
     const promptTemplate = await safeReadFile(path.join(sessionRoot, AUTOLEARN_PROMPT_FILE), "");
     if (!promptTemplate.trim()) return;
@@ -345,7 +431,7 @@ ${recentObs
     const t = String(o.type ?? "");
     const toolName = o["tool"] ? ` tool=${String(o["tool"])}` : "";
     const cmdName = o["command"] ? ` command=${String(o["command"])}` : "";
-    const msg = o["summary"] ? ` summary=${String(o["summary"])}` : "";
+    const msg = o["summary"] ? ` summary=${truncateString(String(o["summary"]), 500)}` : "";
     return `- ${o.ts} ${t}${toolName}${cmdName}${msg}`;
   })
   .join("\n")}
@@ -452,6 +538,7 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
     if (!LOG_OBSERVATIONS) return;
 
     const type = String(event?.type ?? "unknown");
+    if (!shouldLogEventType(type)) return;
     const sessionID = event?.properties?.sessionID ?? event?.properties?.sessionId ?? event?.properties?.id ?? null;
 
     const pick = (obj: any, keys: string[]) => {
@@ -484,7 +571,11 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
       sessionID: sessionID ?? null,
     };
     if (safeProps) obs.properties = safeProps;
-    if (type === "command.executed") obs.summary = `name=${String(event?.properties?.name ?? event?.properties?.command ?? "")}`;
+    if (type === "command.executed") {
+      const name = String(event?.properties?.name ?? event?.properties?.command ?? "");
+      obs.command = name;
+      obs.summary = `name=${name}`;
+    }
     if (type === "session.updated") obs.summary = `title=${String(event?.properties?.title ?? "")}`;
 
     await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
@@ -524,10 +615,12 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
         tool: toolName,
         args: redactedArgs,
       };
+      const s = toolObservationSummary(toolName, redactedArgs);
+      if (s) obs.summary = s;
 
-       await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
-     } catch {}
-   };
+      await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
+    } catch {}
+  };
 
   const toolAfter = async (input: any, output: any) => {
     try {
@@ -549,6 +642,8 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
         ok,
         args: redactedArgs,
       };
+      const s = toolObservationSummary(toolName, redactedArgs);
+      if (s) obs.summary = s;
 
       await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
     } catch {

@@ -16,7 +16,7 @@
     "noEmit": true
   },
   "include": [
-    ".opencode/plugins/compound_engineering.ts",
+    "plugins/compound_engineering.ts",
     "types/**/*.d.ts"
   ]
 }
