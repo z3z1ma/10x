@@ -17,8 +17,6 @@ class CompoundPaths:
 
     # Scaffold
     compound_dir: Path
-    prompts_dir: Path
-    autolearn_prompt_file: Path
 
     # Evidence (committed)
     loom_dir: Path
@@ -42,8 +40,6 @@ def compound_paths(root: Path) -> CompoundPaths:
     instincts_md = memory_dir / "INSTINCTS.md"
 
     compound_dir = root / ".opencode" / "compound"
-    prompts_dir = compound_dir / "prompts"
-    autolearn_prompt_file = prompts_dir / "autolearn.md"
 
     loom_dir = root / ".loom"
     loom_compound_dir = loom_dir / "compound"
@@ -63,8 +59,6 @@ def compound_paths(root: Path) -> CompoundPaths:
         instincts_file=instincts_file,
         instincts_md=instincts_md,
         compound_dir=compound_dir,
-        prompts_dir=prompts_dir,
-        autolearn_prompt_file=autolearn_prompt_file,
         loom_dir=loom_dir,
         loom_compound_dir=loom_compound_dir,
         episodes_dir=episodes_dir,
@@ -87,7 +81,6 @@ def required_scaffold_paths() -> list[str]:
         ".opencode/commands/workflow-work.md",
         ".opencode/commands/workflow-review.md",
         ".opencode/commands/workflow-compound.md",
-        ".opencode/compound/prompts/autolearn.md",
         ".opencode/memory/.gitignore",
         ".opencode/compound/.gitignore",
     ]

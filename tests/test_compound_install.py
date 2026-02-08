@@ -86,20 +86,6 @@ def test_compound_install_does_not_install_compoundspec_skill(tmp_path: Path) ->
     ).exists()
 
 
-def test_compound_install_template_autolearn_prompt_is_json_only(
-    tmp_path: Path,
-) -> None:
-    dest = tmp_path
-    install_opencode(dest=dest, dry_run=False)
-
-    prompt = (dest / ".opencode" / "compound" / "prompts" / "autolearn.md").read_text(
-        encoding="utf-8"
-    )
-    assert ".loom/compound/episodes" in prompt
-    assert "Output **only** valid JSON" in prompt
-    assert "Do not run any tools" in prompt
-
-
 def test_compound_install_provides_plugin_required_scaffolding(tmp_path: Path) -> None:
     dest = tmp_path
     install_opencode(dest=dest, dry_run=False)
@@ -113,7 +99,6 @@ def test_compound_install_provides_plugin_required_scaffolding(tmp_path: Path) -
         dest / ".opencode" / "commands" / "workflow-work.md",
         dest / ".opencode" / "commands" / "workflow-review.md",
         dest / ".opencode" / "commands" / "workflow-compound.md",
-        dest / ".opencode" / "compound" / "prompts" / "autolearn.md",
         dest / ".opencode" / "memory" / ".gitignore",
         dest / ".opencode" / "compound" / ".gitignore",
     ]
@@ -125,7 +110,6 @@ def test_compound_install_provides_plugin_required_scaffolding(tmp_path: Path) -
     )
     assert "observations.jsonl" in mem_ignore
     assert "observations.jsonl.*.bak" in mem_ignore
-    assert "autolearn_failures/" in mem_ignore
 
     compound_ignore = (dest / ".opencode" / "compound" / ".gitignore").read_text(
         encoding="utf-8"

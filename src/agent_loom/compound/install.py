@@ -161,7 +161,6 @@ def install_opencode(
                 required_lines=[
                     "observations.jsonl",
                     "observations.jsonl.*.bak",
-                    "autolearn_failures/",
                 ],
                 dry_run=dry_run,
             )
@@ -173,7 +172,6 @@ def install_opencode(
                 dest=dst,
                 required_lines=[
                     "state.json",
-                    "autolearn_status.json",
                     "*.tmp.*",
                 ],
                 dry_run=dry_run,
