@@ -59,7 +59,7 @@ This block is maintained by the compound system.
 - **Decisions** are append-only records of normalized ops applied to instincts/skills (governance; replayable).
 
 **Non-negotiables:**
-- Keep skills small, specific, and triggerable from the `description`.
+- Keep skills small, specific, and triggerable from the `description`. Use "when [condition], then [action]" format when possible.
 - Prefer updating an existing skill over creating a near-duplicate.
 - Never put secrets into skills, memos, or observations.
 
