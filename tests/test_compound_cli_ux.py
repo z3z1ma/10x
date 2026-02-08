@@ -64,14 +64,13 @@ class TestCompoundCliUx(unittest.TestCase):
         self.assertTrue(out.strip() or err.strip())
         text = (out + "\n" + err).lower()
 
-        for cmd in ["init", "update", "learn", "sync", "prime"]:
+        for cmd in ["init", "refresh", "learn", "sync", "prime"]:
             self.assertIn(cmd, text)
 
-        self.assertIn("{init,sync,update,learn,prime}", text)
+        self.assertIn("{init,sync,refresh,learn,prime}", text)
 
         # Deleted surface area should not be discoverable.
         for gone in [
-            "refresh",
             "run",
             "status",
             "doctor",
@@ -79,7 +78,6 @@ class TestCompoundCliUx(unittest.TestCase):
             "observations",
             "triage",
             "replay",
-            "instinct",
             "docblock",
             "changelog",
         ]:
@@ -100,7 +98,7 @@ class TestCompoundCliUx(unittest.TestCase):
         self.assertEqual(str(payload.get("code") or ""), "ARGPARSE")
         self.assertTrue(str(payload.get("hint") or ""))
 
-    def test_init_update_learn_sync_json_smoke(self) -> None:
+    def test_init_refresh_learn_sync_json_smoke(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             root = Path(td) / "repo"
             root.mkdir(parents=True, exist_ok=True)
@@ -119,8 +117,10 @@ class TestCompoundCliUx(unittest.TestCase):
                 self.assertTrue(bool(p0.get("ok")))
                 self.assertTrue(str(p0.get("dest") or ""))
 
-                # update
-                rc1, p1 = _run_json(["update", "--repo", str(root), "--json"], cwd=root)
+                # refresh
+                rc1, p1 = _run_json(
+                    ["refresh", "--repo", str(root), "--json"], cwd=root
+                )
                 self.assertEqual(rc1, 0)
                 self.assertTrue(bool(p1.get("ok")))
 

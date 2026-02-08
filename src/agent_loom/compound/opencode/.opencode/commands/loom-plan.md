@@ -1,10 +1,10 @@
 ---
-description: Workflow Plan -> create tickets and an implementation plan (use memory recall).
+description: Loom Plan -> create tickets and an implementation plan (use memory recall).
 agent: plan
 subtask: false
 ---
 
-You are running **Workflow Plan**.
+You are running **Loom Plan**.
 
 User idea / request:
 $ARGUMENTS
@@ -18,7 +18,7 @@ Process:
 1) If compound scaffolding isn't installed yet, install it once:
    - Run via bash: `loom compound init`
 2) Recall memory notes relevant to this request:
-   - `loom memory recall "$ARGUMENTS" --command workflow-plan --format prompt`
+   - `loom memory recall "$ARGUMENTS" --command loom-plan --format prompt`
 3) Inspect current ticket backlog:
    - `loom ticket list`
 4) Create tickets:
@@ -32,7 +32,7 @@ Process:
    - risks + rollback
 
 Optional:
-- `loom compound update` (refresh derived docs and rule files)
+- `loom compound refresh` (refresh derived docs)
 
 Output:
 - A concise plan document.

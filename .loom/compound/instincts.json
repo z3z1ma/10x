@@ -52,7 +52,7 @@
       "id": "prefer-command-docs-over-embedded-skill-copies",
       "title": "Prefer workflow command docs over duplicating skills in templates",
       "trigger": "When documenting workflows for end-users inside compound-installed `.opencode/` trees.",
-      "action": "Put workflow guidance in `.opencode/commands/workflow-*.md` (command-discoverable docs) and avoid duplicating full skill content inside the compound template unless required; keep skills procedural and source-of-truth in `.opencode/skills/` at repo root.",
+      "action": "Put loom command guidance in `.opencode/commands/loom-*.md` (command-discoverable docs) and avoid duplicating full skill content inside the compound template unless required; keep skills procedural and source-of-truth in `.opencode/skills/` at repo root.",
       "tags": [
         "commands",
         "compound",

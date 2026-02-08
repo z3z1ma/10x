@@ -240,10 +240,9 @@ def install_opencode(
             "LOOM.md",
             [
                 "agents-ai-behavior",
-                "workflow-commands",
+                "loom-commands",
                 "loom-core-context",
                 "instincts-index",
-                "rules-index",
             ],
         ),
         (

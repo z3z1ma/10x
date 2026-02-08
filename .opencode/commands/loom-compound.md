@@ -1,10 +1,10 @@
 ---
-description: Workflow Compound -> capture durable learnings (memos + skills) from recent work.
+description: Loom Compound -> capture durable learnings (memos + skills) from recent work.
 agent: build
 subtask: false
 ---
 
-You are running **Workflow Compound**.
+You are running **Loom Compound**.
 
 Ticket (if applicable):
 $ARGUMENTS
@@ -12,8 +12,8 @@ $ARGUMENTS
 This is where we convert "we learned a thing" into durable, replayable memory.
 
 Goals:
-- Package evidence into an Episode under `.loom/compound/episodes/...`.
-- Compile/update instincts in `.opencode/memory/instincts.json`.
+- Package evidence into an **Episode** under `.loom/compound/episodes/...`.
+- Compile/update instincts in `.loom/compound/instincts.json`.
 - Compile/update skills under `.opencode/skills/` (optional mirror to `.claude/skills/`).
 - Store a few Loom Memory notes when the learning is contextual or narrative.
 
@@ -22,7 +22,7 @@ Process:
    - Run via bash: `loom compound init`
 2) Gather context:
    - Run via bash: `git status --porcelain` and `git diff --stat`
-   - If a ticket ID was provided: `loom ticket show $ARGUMENTS`
+   - If a ticket ID was provided, `loom ticket show $ARGUMENTS`
 3) Decide what to persist:
    - If the learning is contextual ("why" / history), store a memo:
      - `loom memory add --title "..." --body "..." --tag compound --scope repo:.`
@@ -35,7 +35,7 @@ Process:
    - Run via bash: `loom compound learn --proposals '<json>'`
 
 Optional:
-- `loom compound update` (refresh derived docs and rule files)
+- `loom compound refresh` (refresh derived docs)
 
 Required output:
 - A short "Compound report" section (what we learned).

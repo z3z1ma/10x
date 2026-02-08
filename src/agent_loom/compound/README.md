@@ -29,7 +29,7 @@ loom compound init --force
 Refresh derived docs and rule files (safe to run often):
 
 ```bash
-loom compound update
+loom compound refresh
 ```
 
 Apply learning proposals deterministically (writes an Episode; may update skills/instincts):

@@ -57,10 +57,9 @@ def test_compound_install_patches_agents_md_without_clobbering(tmp_path: Path) -
     ctx = (dest / "LOOM.md").read_text(encoding="utf-8")
     required = [
         "agents-ai-behavior",
-        "workflow-commands",
+        "loom-commands",
         "loom-core-context",
         "instincts-index",
-        "rules-index",
     ]
     for ident in required:
         assert f"<!-- BEGIN:compound:{ident} -->" in ctx
@@ -95,10 +94,10 @@ def test_compound_install_provides_plugin_required_scaffolding(tmp_path: Path) -
         dest / "LOOM.md",
         dest / ".loom" / "compound" / "ROADMAP.md",
         dest / ".loom" / "compound" / "README.md",
-        dest / ".opencode" / "commands" / "workflow-plan.md",
-        dest / ".opencode" / "commands" / "workflow-work.md",
-        dest / ".opencode" / "commands" / "workflow-review.md",
-        dest / ".opencode" / "commands" / "workflow-compound.md",
+        dest / ".opencode" / "commands" / "loom-plan.md",
+        dest / ".opencode" / "commands" / "loom-work.md",
+        dest / ".opencode" / "commands" / "loom-review.md",
+        dest / ".opencode" / "commands" / "loom-compound.md",
         dest / ".opencode" / "memory" / ".gitignore",
         dest / ".opencode" / "compound" / ".gitignore",
     ]
@@ -154,10 +153,9 @@ def test_compound_install_ensures_loom_doc_fences(tmp_path: Path) -> None:
     ctext = ctx.read_text(encoding="utf-8")
     for ident in [
         "agents-ai-behavior",
-        "workflow-commands",
+        "loom-commands",
         "loom-core-context",
         "instincts-index",
-        "rules-index",
     ]:
         assert f"<!-- BEGIN:compound:{ident} -->" in ctext
         assert f"<!-- END:compound:{ident} -->" in ctext

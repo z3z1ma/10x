@@ -1,8 +1,5 @@
 # INSTINCTS
 
-This is the *fast index* of the current instinct set.
-The source of truth is `.opencode/memory/instincts.json`.
-
 <!-- BEGIN:compound:instincts-md -->
 ## Active instincts (top confidence)
 
@@ -17,7 +14,7 @@ The source of truth is `.opencode/memory/instincts.json`.
   - Action: Write links and references using repo-root-relative paths (no absolute machine paths, no editor URIs) and avoid references to removed/retired template files (e.g., AGENTS.md copies) to keep docs porta...
 - **prefer-command-docs-over-embedded-skill-copies** (74%) [commands, compound, docs, skills]
   - Trigger: When documenting workflows for end-users inside compound-installed `.opencode/` trees.
-  - Action: Put workflow guidance in `.opencode/commands/workflow-*.md` (command-discoverable docs) and avoid duplicating full skill content inside the compound template unless required; keep skills procedural an...
+  - Action: Put loom command guidance in `.opencode/commands/loom-*.md` (command-discoverable docs) and avoid duplicating full skill content inside the compound template unless required; keep skills procedural an...
 
 ## Notes
 

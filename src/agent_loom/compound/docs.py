@@ -3,7 +3,6 @@ from __future__ import annotations
 import contextlib
 import os
 from pathlib import Path
-from typing import List
 
 from agent_loom.compound.blocks import (
     upsert_managed_block,
@@ -65,6 +64,7 @@ This block is maintained by the compound system.
 - Never put secrets into skills, memos, or observations.
 
 **Where things live:**
+- Boundary: `.loom/**` is Loom-owned durable evidence + compiled state; `.opencode/**` is OpenCode integration + runtime artifacts (including skills).
 - Skills: `.opencode/skills/<name>/SKILL.md`
 - Instincts: `.loom/compound/instincts.json` (index at `.loom/compound/INSTINCTS.md`)
 - Observations: `.opencode/memory/observations.jsonl` (gitignored by default)
@@ -80,12 +80,12 @@ This block is maintained by the compound system.
     )
 
 
-def render_workflow_commands() -> str:
+def render_loom_commands() -> str:
     return _normalize_newlines(
-        """- `/workflow-plan` - Create tickets + plan (uses `loom memory recall`)
-- `/workflow-work` - Work in a worktree and implement
-- `/workflow-review` - Review changes before merge
-- `/workflow-compound` - Capture durable learnings (memos + skills)
+        """- `/loom-plan` - Create tickets + plan (uses `loom memory recall`)
+- `/loom-work` - Work in a worktree and implement
+- `/loom-review` - Review changes before merge
+- `/loom-compound` - Capture durable learnings (memos + skills)
 """
     )
 
@@ -94,33 +94,17 @@ def render_loom_core_context() -> str:
     return _normalize_newlines(
         """# Loom always-on context (second-order compression)
 
-This block is intentionally *small and stable*. Only update it when a principle has proven durable.
+This block is Loom's AI-managed "operating manual": short, sticky, and updated only when a principle proves durable.
 
 - First-order: observations -> instincts -> skills.
 - Second-order: compress patterns into a few fundamentals that are always-on.
 - Prefer agent-native primitives: ticket, memory, workspace, team.
 - Governance loop: Plan -> Work -> Review -> Compound -> Repeat.
+- When the system learns something structural, it should update this manual (not just add a memo).
 
 @.loom/compound/ROADMAP.md
 """
     )
-
-
-def scan_rules(root: Path) -> List[str]:
-    rules_dir = root / ".opencode" / "rules"
-    if not rules_dir.exists() or not rules_dir.is_dir():
-        return []
-    out: List[str] = []
-    for p in sorted(rules_dir.glob("*.md")):
-        out.append(p.name)
-    return out
-
-
-def render_rules_index(root: Path) -> str:
-    rules = scan_rules(root)
-    if not rules:
-        return "- _(none)_"
-    return "\n".join([f"- {name}: .opencode/rules/{name}" for name in rules])
 
 
 def sync_instincts_markdown(*, root: Path, store: InstinctStore) -> None:
@@ -161,17 +145,14 @@ def sync_docs(*, root: Path) -> None:
     ctx_path = root / "LOOM.md"
     ctx = _read_text(ctx_path, fallback="# LOOM\n")
     ctx = upsert_managed_block(ctx, "agents-ai-behavior", render_agents_ai_behavior())
-    ctx = upsert_managed_block(ctx, "workflow-commands", render_workflow_commands())
-    ctx = upsert_managed_block_preserving_non_placeholder(
-        ctx, "loom-core-context", render_loom_core_context()
-    )
+    ctx = upsert_managed_block(ctx, "loom-commands", render_loom_commands())
+    ctx = upsert_managed_block(ctx, "loom-core-context", render_loom_core_context())
     # Keep this small to reduce churn; the full index lives at .loom/compound/INSTINCTS.md.
     ctx = upsert_managed_block(
         ctx,
         "instincts-index",
         render_instincts_index(instincts.instincts, max_items=12),
     )
-    ctx = upsert_managed_block(ctx, "rules-index", render_rules_index(root))
     _write_text(ctx_path, ctx)
 
     # ROADMAP.md

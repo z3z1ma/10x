@@ -1,10 +1,10 @@
 ---
-description: Workflow Review -> multi-angle review before merge, record findings to tickets.
+description: Loom Review -> multi-angle review before merge, record findings to tickets.
 agent: build
 subtask: false
 ---
 
-You are running **Workflow Review**.
+You are running **Loom Review**.
 
 Ticket:
 $ARGUMENTS
@@ -34,7 +34,7 @@ Process:
    - create new tickets if issues are substantial
 
 Optional:
-- `loom compound update` (refresh derived docs and rule files)
+- `loom compound refresh` (refresh derived docs)
 
 Output:
 - Review summary.

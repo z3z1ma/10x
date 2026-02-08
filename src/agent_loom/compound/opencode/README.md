@@ -1,10 +1,10 @@
 # OpenCode Compound System
 
-This repo includes a production-ready **OpenCode plugin + workflow commands** to make an agentic coding setup *self-compounding* via durable “procedural memory” (**Skills**).
+This repo includes a production-ready **OpenCode plugin + loom commands** to make an agentic coding setup *self-compounding* via durable procedural memory (**Skills**).
 
 It supports:
 
-- ✅ **Plan → Work → Review → Compound → Repeat** workflow commands (`/workflow-*`)
+- ✅ **Plan → Work → Review → Compound → Repeat** loom commands (`/loom-*`)
 - ✅ Integration with:
   - `loom ticket`
   - `loom memory`
@@ -37,7 +37,7 @@ Skills compound. That’s the entire trick.
 - `AGENTS.md`
   Human-owned overview and stable project guardrails.
 - `LOOM.md`
-  Derived always-on context (compound-managed) including workflow pointers, core context, and a small instincts summary.
+  Derived always-on context (compound-managed) including command pointers, core context, and a small instincts summary.
 - `.loom/compound/ROADMAP.md`
   Loom direction as an empirical compass (AI-managed sections).
   Also contains an embedded AI-first changelog block (bounded; no "no changes" entries).
@@ -62,7 +62,7 @@ Skills compound. That’s the entire trick.
 
 - `.opencode/plugins/compound_engineering.ts`
   The OpenCode plugin
-- `.opencode/commands/workflow-*.md`
+- `.opencode/commands/loom-*.md`
   Plan/Work/Review/Compound command set
 
 ### What is managed (and why)
@@ -72,7 +72,7 @@ Treat these as three classes:
 1) Scaffold (safe to refresh):
 
 - `.opencode/plugins/**` (tooling + autolearn loop)
-- `.opencode/commands/**` (workflow UX)
+- `.opencode/commands/**` (command UX)
 - `.opencode/agents/**` (subagent presets)
 - `.opencode/compound/prompts/**` (prompt templates)
 
@@ -110,15 +110,15 @@ When the session goes idle (agent has finished a turn):
 
 ---
 
-## Workflow commands
+## Loom commands
 
-- `/workflow-plan`
+- `/loom-plan`
   Recall memory (`loom memory recall`), inspect ticket backlog, create tickets, write plan
-- `/workflow-work`
+- `/loom-work`
   Create a worktree (`loom workspace ...`), implement tasks, update tickets
-- `/workflow-review`
+- `/loom-review`
   Review work, adjust tickets, prepare merge
-- `/workflow-compound`
+- `/loom-compound`
   Extract learnings into skills + memos + docs
 
 ---
@@ -139,7 +139,7 @@ When the session goes idle (agent has finished a turn):
 ### Session-start maintenance (optional)
 
 - `COMPOUND_REFRESH_ON_START=1|0` (default `0`)
-  If enabled, runs `loom compound update` when a session starts.
+  If enabled, runs `loom compound refresh` when a session starts.
 - `COMPOUND_PRIME_ON_START=1|0` (default `0`)
   Alias toggle for the same behavior (kept for clarity).
 
@@ -180,7 +180,7 @@ Default upgrades are non-destructive:
 1. Run `loom compound init` once (installs scaffolding).
 2. Start OpenCode normally.
    - Optional: set `COMPOUND_REFRESH_ON_START=1` to keep derived context up to date automatically.
-3. Use `/workflow-plan` and proceed through the workflow.
+3. Use `/loom-plan` and proceed through the workflow.
 4. Let the plugin autolearn on idle turns (it runs a background prompt that uses `bash` + `loom compound ...`).
 
 ---
@@ -191,7 +191,7 @@ This plugin is intentionally limited:
 
 - ✅ Writes: observations.jsonl (append-only; gitignored by default)
 - ✅ Triggers: background autolearn prompts
-- ✅ Calls Loom: for compounding maintenance (`loom compound update`)
+- ✅ Calls Loom: for compounding maintenance (`loom compound refresh`)
 - ❌ Does **not** write product code
 
 If you want it to mutate application code automatically, you can do that, but you should probably also install a fire alarm and start journaling.

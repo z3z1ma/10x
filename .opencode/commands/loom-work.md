@@ -1,10 +1,10 @@
 ---
-description: Workflow Work -> execute a ticket in a worktree, keep tickets updated, run checks.
+description: Loom Work -> execute a ticket in a worktree, keep tickets updated, run checks.
 agent: build
 subtask: false
 ---
 
-You are running **Workflow Work**.
+You are running **Loom Work**.
 
 Ticket to execute:
 $ARGUMENTS
@@ -36,7 +36,7 @@ Process:
    - set status to `closed`
 
 Optional:
-- `loom compound update` (refresh derived docs and rule files)
+- `loom compound refresh` (refresh derived docs)
 
 Output:
 - What changed.

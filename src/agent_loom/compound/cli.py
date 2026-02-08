@@ -12,7 +12,6 @@ from typing import Optional, Sequence
 
 from agent_loom.compound.install import install_opencode
 from agent_loom.compound.mirror import sync_claude_skills_mirror
-from agent_loom.compound.prime import prime_rules
 from agent_loom.compound.scaffold import require_scaffold_installed
 from agent_loom.compound.sync import sync as compound_sync
 from agent_loom.core.git import git_repo_root
@@ -117,16 +116,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Emit machine-readable JSON",
     )
 
-    update = sub.add_parser(
-        "update",
-        help="Update derived compound artifacts (docs + rules + mirrors)",
+    refresh = sub.add_parser(
+        "refresh",
+        help="Regenerate derived compound artifacts (LOOM.md, ROADMAP.md, INSTINCTS.md) and mirrors",
     )
-    update.add_argument(
+    refresh.add_argument(
         "--repo",
         default=None,
         help="Path inside repo (defaults to CWD; resolves git root)",
     )
-    update.add_argument(
+    refresh.add_argument(
         "--json",
         action="store_true",
         help="Emit machine-readable JSON",
@@ -269,7 +268,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 sys.stderr.write(f"Error: {e}\n")
             return 1
 
-    if args.cmd == "update":
+    if args.cmd == "refresh":
         repo = _resolve_repo_root(getattr(args, "repo", None))
         try:
             require_scaffold_installed(repo)
@@ -277,23 +276,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
             with _chdir(repo):
                 sync_docs(root=repo)
-                prime = prime_rules(root=repo)
                 mirror = sync_claude_skills_mirror(
                     root=repo,
                     enabled=(str(os.environ.get("COMPOUND_MIRROR_CLAUDE", "1")) != "0"),
                 )
             payload = {
-                "ok": bool(prime.ok),
-                "prime": dataclasses.asdict(prime),
+                "ok": True,
                 "mirror": dataclasses.asdict(mirror),
             }
             if bool(getattr(args, "json", False)):
                 _emit_json(payload)
             else:
-                sys.stdout.write(
-                    f"compound update: wrote {len(prime.wrote)} rules file(s)\n"
-                )
-            return 0 if prime.ok else 1
+                sys.stdout.write("compound refresh: refreshed derived docs\n")
+            return 0
         except Exception as e:
             payload = {"ok": False, "error": str(e)}
             if bool(getattr(args, "json", False)):

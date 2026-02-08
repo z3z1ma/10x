@@ -136,7 +136,7 @@ Practical loop:
 loom memory recall "worktree safety" --context
 loom memory add --title "Worktree safety" --body "Snapshot before force-clean"
 loom compound init
-loom compound update
+loom compound refresh
 # optional: commit compound-managed artifacts
 loom compound sync
 ```

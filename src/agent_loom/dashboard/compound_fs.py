@@ -36,7 +36,7 @@ def read_skill(repo_root: Path, *, name: str) -> dict[str, str]:
 
 
 def read_instincts(repo_root: Path) -> dict:
-    p = repo_root / ".opencode" / "memory" / "instincts.json"
+    p = repo_root / ".loom" / "compound" / "instincts.json"
     if not p.exists() or not p.is_file():
         return {}
     import json
