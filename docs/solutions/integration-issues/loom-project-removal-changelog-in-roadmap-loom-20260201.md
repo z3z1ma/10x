@@ -103,8 +103,8 @@ pathspecs = [
 
 ## Prevention
 - Treat the compound scaffold as a contract:
-  - keep `.opencode/plugins/compound_engineering.ts` mirrored with `src/agent_loom/compound/opencode/.opencode/plugins/compound_engineering.ts`
-  - keep `.opencode/compound/prompts/autolearn.md` mirrored with `src/agent_loom/compound/opencode/.opencode/compound/prompts/autolearn.md`
+  - keep `.opencode/plugins/compound_engineering.ts` mirrored with `src/agent_loom/compound/opencode/plugins/compound_engineering.ts`
+  - keep `.opencode/compound/prompts/autolearn.md` mirrored with `src/agent_loom/compound/opencode/compound/prompts/autolearn.md`
 - Add a “forbidden references” test (or CI grep) to ensure no scaffold files mention `LOOM_PROJECT.md` or `LOOM_CHANGELOG.md`.
 - Add/keep contract tests ensuring `.loom/compound/ROADMAP.md` contains `changelog-entries` fences after install.
 
@@ -113,7 +113,7 @@ No related issues documented yet.
 
 ## References
 - `.opencode/plugins/compound_engineering.ts`
-- `src/agent_loom/compound/opencode/.opencode/plugins/compound_engineering.ts`
+- `src/agent_loom/compound/opencode/plugins/compound_engineering.ts`
 - `src/agent_loom/compound/install.py`
 - `src/agent_loom/compound/sync.py`
 - `src/agent_loom/compound/opencode/.loom/compound/ROADMAP.md`

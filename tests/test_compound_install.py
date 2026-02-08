@@ -37,7 +37,7 @@ def test_compound_install_overwrites_scaffold_with_force(tmp_path: Path) -> None
     plugin_path.write_text("// old\n", encoding="utf-8")
 
     install_opencode(dest=dest, dry_run=False, force=True)
-    expected = _template_text(".opencode", "plugins", "compound_engineering.ts")
+    expected = _template_text("plugins", "compound_engineering.ts")
     actual = plugin_path.read_text(encoding="utf-8")
     assert actual == expected
 

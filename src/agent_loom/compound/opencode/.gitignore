@@ -1,11 +1,11 @@
 # OpenCode compound plugin local state
-.opencode/compound/state.json
-.opencode/compound/*.tmp.*
+compound/state.json
+compound/*.tmp.*
 
 # OpenCode compound runtime logs
-.opencode/memory/observations.jsonl
-.opencode/memory/observations.jsonl.*.bak
-.opencode/memory/autolearn_failures/
+memory/observations.jsonl
+memory/observations.jsonl.*.bak
+memory/autolearn_failures/
 
 # Workspace worktrees (usually local)
 .loom-repo/

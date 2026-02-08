@@ -131,73 +131,102 @@ def install_opencode(
     skipped: list[str] = []
     warnings: list[str] = []
 
-    # 1) Merge .opencode/
+    # 1) Install OpenCode integration into .opencode/
+    #
+    # The packaged template lives under agent_loom/compound/opencode/ and is shaped
+    # like an OpenCode settings directory (plugins/commands/agents/...). We install
+    # it into the destination repo's `.opencode/**`.
+    #
     # Default is non-destructive: scaffold files are created if missing; learned state is preserved.
     # Use force=True to refresh scaffold files only.
-    src_opencode = src / ".opencode"
-    if not src_opencode.exists() or not src_opencode.is_dir():
-        raise FileNotFoundError(f"Template missing .opencode/: {src_opencode}")
+    template_roots_required = [
+        "plugins",
+        "commands",
+        "agents",
+        "compound",
+        "memory",
+    ]
+    template_roots_optional = [
+        "skills",
+    ]
 
-    for p in sorted(src_opencode.rglob("*")):
-        if p.is_dir():
+    missing_required = [
+        name for name in template_roots_required if not (src / name).is_dir()
+    ]
+    if missing_required:
+        missing = ", ".join(missing_required)
+        raise FileNotFoundError(
+            "Template missing required OpenCode roots under agent_loom/compound/opencode/: "
+            + missing
+        )
+
+    for root_name in template_roots_required + template_roots_optional:
+        base = src / root_name
+        if not base.exists() or not base.is_dir():
             continue
-        rel = p.relative_to(src)
-        rel_str = _rel_posix(rel)
-        dst = dest / rel
 
-        # Never overwrite persistent state.
-        if _is_persistent_memory_file(rel_str) or _is_skill_file(rel_str):
-            if dst.exists():
+        for p in sorted(base.rglob("*")):
+            if p.is_dir():
+                continue
+
+            rel_in_template = p.relative_to(src)
+            dest_rel = Path(".opencode") / rel_in_template
+            rel_str = _rel_posix(dest_rel)
+            dst = dest / dest_rel
+
+            # Never overwrite persistent state.
+            if _is_persistent_memory_file(rel_str) or _is_skill_file(rel_str):
+                if dst.exists():
+                    skipped.append(rel_str)
+                    continue
+                status = _copy_file(src=p, dest=dst, overwrite=False, dry_run=dry_run)
+                (wrote if status == "wrote" else skipped).append(rel_str)
+                continue
+
+            # Merge-required ignore rules (safe and idempotent).
+            if rel_str == ".opencode/memory/.gitignore":
+                status = _ensure_lines_in_file(
+                    dest=dst,
+                    required_lines=[
+                        "observations.jsonl",
+                        "observations.jsonl.*.bak",
+                    ],
+                    dry_run=dry_run,
+                )
+                (wrote if status == "wrote" else skipped).append(rel_str)
+                continue
+
+            if rel_str == ".opencode/compound/.gitignore":
+                status = _ensure_lines_in_file(
+                    dest=dst,
+                    required_lines=[
+                        "state.json",
+                        "*.tmp.*",
+                    ],
+                    dry_run=dry_run,
+                )
+                (wrote if status == "wrote" else skipped).append(rel_str)
+                continue
+
+            # Scaffold files: overwrite only with --force.
+            overwrite = bool(force and _is_scaffold_file(rel_str))
+            if dst.exists() and not overwrite:
+                src_text = _read_text_if_exists(p)
+                dst_text = _read_text_if_exists(dst)
+                if (
+                    src_text
+                    and dst_text
+                    and src_text != dst_text
+                    and _is_scaffold_file(rel_str)
+                ):
+                    warnings.append(
+                        f"left existing {rel_str} (differs from template; re-run with --force to refresh scaffold files)"
+                    )
                 skipped.append(rel_str)
                 continue
-            status = _copy_file(src=p, dest=dst, overwrite=False, dry_run=dry_run)
+
+            status = _copy_file(src=p, dest=dst, overwrite=overwrite, dry_run=dry_run)
             (wrote if status == "wrote" else skipped).append(rel_str)
-            continue
-
-        # Merge-required ignore rules (safe and idempotent).
-        if rel_str == ".opencode/memory/.gitignore":
-            status = _ensure_lines_in_file(
-                dest=dst,
-                required_lines=[
-                    "observations.jsonl",
-                    "observations.jsonl.*.bak",
-                ],
-                dry_run=dry_run,
-            )
-            (wrote if status == "wrote" else skipped).append(rel_str)
-            continue
-
-        if rel_str == ".opencode/compound/.gitignore":
-            status = _ensure_lines_in_file(
-                dest=dst,
-                required_lines=[
-                    "state.json",
-                    "*.tmp.*",
-                ],
-                dry_run=dry_run,
-            )
-            (wrote if status == "wrote" else skipped).append(rel_str)
-            continue
-
-        # Scaffold files: overwrite only with --force.
-        overwrite = bool(force and _is_scaffold_file(rel_str))
-        if dst.exists() and not overwrite:
-            src_text = _read_text_if_exists(p)
-            dst_text = _read_text_if_exists(dst)
-            if (
-                src_text
-                and dst_text
-                and src_text != dst_text
-                and _is_scaffold_file(rel_str)
-            ):
-                warnings.append(
-                    f"left existing {rel_str} (differs from template; re-run with --force to refresh scaffold files)"
-                )
-            skipped.append(rel_str)
-            continue
-
-        status = _copy_file(src=p, dest=dst, overwrite=overwrite, dry_run=dry_run)
-        (wrote if status == "wrote" else skipped).append(rel_str)
 
     # 1b) Merge .loom/compound (evidence + minimal docs)
     src_loom_compound = src / ".loom" / "compound"
