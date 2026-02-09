@@ -33,6 +33,9 @@
 - **subsystem-removal-sweep** (82%) [deletion, docs, maintenance, python, refactor, tests]
   - Trigger: When deleting or deprecating a substantial module/package (especially with many submodules)
   - Action: Immediately sweep for imports/exports, docs references, CLI help/examples, tests, and any API schemas; remove or rewrite references so the repo remains coherent and discoverable.
+- **uv-gates-before-done** (82%) [lint, quality, tests, typing, uv]
+  - Trigger: After implementing user-visible CLI changes (even small ones)
+  - Action: Run `uv run ruff check .`, then `uv run basedpyright`, then `uv run pytest`; fix all warnings/errors (no waivers) before considering the change complete.
 - **ignore-new-persistent-artifacts** (81%) [docs, git, hygiene, storage]
   - Trigger: When introducing any persistent local artifact (sqlite db, index, cache dir, logs, tmp files) as part of a new subsystem
   - Action: Update `.gitignore` to exclude the artifact(s) and add a short doc note describing where the artifact lives and how to reset it safely.
@@ -102,6 +105,9 @@
 - **extract-new-package-from-monolith** (72%) [architecture, maintainability, packaging, python, refactor]
   - Trigger: A refactor produces a diffstat dominated by large deletions in a single file/module (hundreds of lines removed) and the remaining code is conceptually multiple responsibilities.
   - Action: Extract a focused package with a small public surface (exports in __init__.py), split by role (models/types vs core logic vs registries), add a package-level README that states scope + non-goals, then...
+- **loom-ticket-never-delete** (72%) [hygiene, loom, tickets, workflow]
+  - Trigger: When cleaning up or finishing work tracked under `.loom/ticket/`
+  - Action: Preserve history by closing the ticket (or moving it into `.loom/ticket/closed/`) instead of deleting the markdown file directly; only remove a ticket file if it was created by mistake and contains no...
 - **pack-change-sync-sample-and-tests** (72%) [consistency, packs, regression, sample-data, tests]
   - Trigger: When editing any pack implementation under src/agent_loom/pack/ (core/lock/packs/cli) or changing pack behaviors/validation
   - Action: Update the reference pack at src/agent_loom/pack/packs/sample/pack.yaml and any sample command/docs under src/agent_loom/pack/packs/sample/files/ to match the new behavior, then adjust tests in tests/...
@@ -117,12 +123,6 @@
 - **git-preflight-status-diff-log** (70%) [git, safety, workflow]
   - Trigger: When asked to create a commit or a PR, or when preparing to stage changes
   - Action: Run `git status`, `git diff` (staged+unstaged), and `git log -n ...` early to understand scope/style; avoid staging secrets and avoid destructive git operations unless explicitly requested
-- **greenfield-no-backcompat-language** (70%) [design, docs, product]
-  - Trigger: Writing docs, flags, deprecations, or migration behaviors in early-stage systems
-  - Action: Prefer clean breaks and simple interfaces; remove/avoid 'backcompat' language unless there is a real external user contract that requires it.
-- **memory-feature-docs-coevolve** (70%) [cli, consistency, docs, memory]
-  - Trigger: When adding/changing Loom Memory behavior (notes merge, recall, indexing, CLI surface area).
-  - Action: Update `src/agent_loom/memory/README.md` to reflect the new behavior and examples, and ensure the docs match the CLI UX tests (examples should be testable expectations, not aspirational).
 
 ## Notes
 

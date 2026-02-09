@@ -152,6 +152,30 @@
       ]
     },
     {
+      "id": "cli-noun-change-requires-docs",
+      "title": "New CLI nouns must ship with docs + help polish",
+      "trigger": "When adding or expanding a `loom <noun>` CLI surface (new module, new commands, new flags)",
+      "action": "Update the noun-level README (or equivalent) with 2-5 concrete usage examples; sanity-check `loom <noun> --help` for clarity and flag naming; add or update CLI UX regression tests when behavior is user-visible.",
+      "tags": [
+        "cli",
+        "docs",
+        "loom",
+        "ux"
+      ],
+      "confidence": 0.66,
+      "status": "active",
+      "created_at": "2026-02-09T19:36:21.532550Z",
+      "updated_at": "2026-02-09T19:36:21.532550Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T19:36:21.532550Z",
+          "episode_id": "d6ecaa9e116fc5ab18e7edbce5715300eaa48baa364c4cda9f53127f8aa14997",
+          "head_sha": "457f14567e09087d9d5a6ea8ff0a5cf3296028ac",
+          "patch_sha256": ""
+        }
+      ]
+    },
+    {
       "id": "cli-unified-diff-output",
       "title": "Use unified diffs for human-readable CLI change output",
       "trigger": "When adding a CLI command that shows changes between two text versions (config, generated output, previews, etc.)",
@@ -722,6 +746,30 @@
       ]
     },
     {
+      "id": "loom-ticket-never-delete",
+      "title": "Close Loom tickets, don't delete files",
+      "trigger": "When cleaning up or finishing work tracked under `.loom/ticket/`",
+      "action": "Preserve history by closing the ticket (or moving it into `.loom/ticket/closed/`) instead of deleting the markdown file directly; only remove a ticket file if it was created by mistake and contains no useful record.",
+      "tags": [
+        "hygiene",
+        "loom",
+        "tickets",
+        "workflow"
+      ],
+      "confidence": 0.72,
+      "status": "active",
+      "created_at": "2026-02-09T19:36:21.532550Z",
+      "updated_at": "2026-02-09T19:36:21.532550Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T19:36:21.532550Z",
+          "episode_id": "d6ecaa9e116fc5ab18e7edbce5715300eaa48baa364c4cda9f53127f8aa14997",
+          "head_sha": "457f14567e09087d9d5a6ea8ff0a5cf3296028ac",
+          "patch_sha256": ""
+        }
+      ]
+    },
+    {
       "id": "memory-feature-docs-coevolve",
       "title": "Memory feature changes should co-evolve with README",
       "trigger": "When adding/changing Loom Memory behavior (notes merge, recall, indexing, CLI surface area).",
@@ -1223,6 +1271,31 @@
           "episode_id": "a8b5ac3ffe5219232c3770309945487b6529be88e9f52cf834208c21bdd88e3d",
           "head_sha": "4f98369282b323883f43073b37e0506c3ab64249",
           "patch_sha256": "742213b0caf9e2d73477a9c67da02f1028c4bc4ca41ae9315da1472bf28ce322"
+        }
+      ]
+    },
+    {
+      "id": "uv-gates-before-done",
+      "title": "Run uv-based gates before calling work done",
+      "trigger": "After implementing user-visible CLI changes (even small ones)",
+      "action": "Run `uv run ruff check .`, then `uv run basedpyright`, then `uv run pytest`; fix all warnings/errors (no waivers) before considering the change complete.",
+      "tags": [
+        "lint",
+        "quality",
+        "tests",
+        "typing",
+        "uv"
+      ],
+      "confidence": 0.82,
+      "status": "active",
+      "created_at": "2026-02-09T19:36:21.532550Z",
+      "updated_at": "2026-02-09T19:36:21.532550Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T19:36:21.532550Z",
+          "episode_id": "d6ecaa9e116fc5ab18e7edbce5715300eaa48baa364c4cda9f53127f8aa14997",
+          "head_sha": "457f14567e09087d9d5a6ea8ff0a5cf3296028ac",
+          "patch_sha256": ""
         }
       ]
     }

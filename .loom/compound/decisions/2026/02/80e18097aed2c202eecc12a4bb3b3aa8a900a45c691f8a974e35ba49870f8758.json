@@ -1,0 +1,61 @@
+{
+  "created_at": "2026-02-09T19:36:21.532550Z",
+  "decision_id": "80e18097aed2c202eecc12a4bb3b3aa8a900a45c691f8a974e35ba49870f8758",
+  "episode_id": "d6ecaa9e116fc5ab18e7edbce5715300eaa48baa364c4cda9f53127f8aa14997",
+  "ops": [
+    {
+      "action": "Update the noun-level README (or equivalent) with 2-5 concrete usage examples; sanity-check `loom <noun> --help` for clarity and flag naming; add or update CLI UX regression tests when behavior is user-visible.",
+      "confidence": 0.66,
+      "episode_id": "d6ecaa9e116fc5ab18e7edbce5715300eaa48baa364c4cda9f53127f8aa14997",
+      "id": "cli-noun-change-requires-docs",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "cli",
+        "docs",
+        "loom",
+        "ux"
+      ],
+      "title": "New CLI nouns must ship with docs + help polish",
+      "trigger": "When adding or expanding a `loom <noun>` CLI surface (new module, new commands, new flags)",
+      "ts": "2026-02-09T19:36:21.532550Z"
+    },
+    {
+      "action": "Preserve history by closing the ticket (or moving it into `.loom/ticket/closed/`) instead of deleting the markdown file directly; only remove a ticket file if it was created by mistake and contains no useful record.",
+      "confidence": 0.72,
+      "episode_id": "d6ecaa9e116fc5ab18e7edbce5715300eaa48baa364c4cda9f53127f8aa14997",
+      "id": "loom-ticket-never-delete",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "hygiene",
+        "loom",
+        "tickets",
+        "workflow"
+      ],
+      "title": "Close Loom tickets, don't delete files",
+      "trigger": "When cleaning up or finishing work tracked under `.loom/ticket/`",
+      "ts": "2026-02-09T19:36:21.532550Z"
+    },
+    {
+      "action": "Run `uv run ruff check .`, then `uv run basedpyright`, then `uv run pytest`; fix all warnings/errors (no waivers) before considering the change complete.",
+      "confidence": 0.82,
+      "episode_id": "d6ecaa9e116fc5ab18e7edbce5715300eaa48baa364c4cda9f53127f8aa14997",
+      "id": "uv-gates-before-done",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "lint",
+        "quality",
+        "tests",
+        "typing",
+        "uv"
+      ],
+      "title": "Run uv-based gates before calling work done",
+      "trigger": "After implementing user-visible CLI changes (even small ones)",
+      "ts": "2026-02-09T19:36:21.532550Z"
+    }
+  ],
+  "proposal_blob_sha256": "c9236a6b0cbfa899bde5537530cf64a880f93637c7f01cfec6df16ab6ae223e6",
+  "version": 1
+}

@@ -47,6 +47,12 @@ loom pack status
 loom pack doctor
 ```
 
+Show diffs for drifted managed files:
+
+```bash
+loom pack status --diff
+```
+
 Uninstall:
 
 ```bash

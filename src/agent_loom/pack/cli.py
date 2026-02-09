@@ -15,6 +15,7 @@ from agent_loom.pack.core import (
     uninstall_pack,
     update_pack,
 )
+from agent_loom.pack.diff import diff_pack_file
 
 
 class ArgParseError(RuntimeError):
@@ -85,6 +86,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Path inside repo (defaults to CWD; resolves git root)",
     )
+    st.add_argument(
+        "--diff",
+        action="store_true",
+        help="Show unified diffs for drifted managed files",
+    )
     st.add_argument("--json", action="store_true")
 
     doc = sub.add_parser("doctor", help="Verify installed pack checksums")
@@ -97,6 +103,44 @@ def build_parser() -> argparse.ArgumentParser:
     doc.add_argument("--json", action="store_true")
 
     return p
+
+
+def _status_diff_items(
+    *, repo_root: Path, max_lines: int = 400
+) -> list[dict[str, object]]:
+    items: list[dict[str, object]] = []
+    doc = doctor(repo_root)
+    results = doc.get("results") if isinstance(doc, dict) else None
+    if not isinstance(results, list):
+        return items
+    for r in results:
+        if not isinstance(r, dict):
+            continue
+        pid = str(r.get("id") or "").strip()
+        if not pid:
+            continue
+        drifted = r.get("drifted")
+        if not isinstance(drifted, list):
+            continue
+        for rel in drifted:
+            rp = str(rel or "").strip()
+            if not rp:
+                continue
+            d = diff_pack_file(
+                repo_root=repo_root,
+                pack_id=pid,
+                relpath=rp,
+                max_lines=max_lines,
+            )
+            items.append(
+                {
+                    "pack_id": pid,
+                    "relpath": rp,
+                    "ok": bool(d is not None and bool(getattr(d, "diff", "").strip())),
+                    "diff": ("" if d is None else d.diff),
+                }
+            )
+    return items
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
@@ -136,10 +180,29 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.cmd == "status":
         repo = _resolve_repo_root(getattr(args, "repo", None))
         payload = status(repo)
+        want_diff = bool(getattr(args, "diff", False))
         if bool(getattr(args, "json", False)):
+            if want_diff:
+                payload = {**payload, "diffs": _status_diff_items(repo_root=repo)}
             _emit_json(payload)
         else:
             sys.stdout.write(json.dumps(payload, indent=2) + "\n")
+            drifted_val = payload.get("drifted")
+            drifted = int(drifted_val) if isinstance(drifted_val, int) else 0
+            if drifted and not want_diff:
+                sys.stdout.write(
+                    "note: some pack files drifted; rerun with --diff to view diffs\n"
+                )
+            if want_diff and drifted:
+                sys.stdout.write("\n")
+                for it in _status_diff_items(repo_root=repo):
+                    sys.stdout.write(
+                        f"diff (drifted): {it.get('pack_id')}/{it.get('relpath')}\n"
+                    )
+                    if bool(it.get("ok")) and str(it.get("diff") or "").strip():
+                        sys.stdout.write(str(it.get("diff") or ""))
+                    else:
+                        sys.stdout.write("(diff unavailable)\n")
         return 0
 
     if args.cmd == "doctor":

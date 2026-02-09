@@ -1,6 +1,6 @@
 ---
 "id": "al-29bf"
-"status": "in_progress"
+"status": "closed"
 "deps": []
 "links": []
 "created": "2026-02-09T19:29:22Z"
@@ -21,3 +21,9 @@ Expose a CLI flag on loom pack status that prints unified diffs for drifted file
 - Does not print diffs when there is no drift (or prints a clear message)
 - Exit code remains consistent with existing drift behavior
 - Covered by CLI UX test(s)
+
+## Notes
+
+**2026-02-09T19:35:01Z**
+
+Implemented loom pack status --diff to print unified diffs for drifted managed files via agent_loom.pack.diff.diff_pack_file (truncated at 400 lines). Non-JSON output now prints a hint when drift exists; JSON output supports --json --diff via a diffs field. Added CLI UX regression tests.
