@@ -1,0 +1,44 @@
+{
+  "packs": [
+    {
+      "files": [
+        {
+          "path": ".opencode/agents/loom-review-docs.md",
+          "sha256": "41d6e4e7dab9e0563e8024b5b44cd79e9a77d9bfb977dda37d72ba5e4cd2162a"
+        },
+        {
+          "path": ".opencode/agents/loom-review-quality.md",
+          "sha256": "5537e6be1712ba3ff463eed845ad6e5d49bd444ada596a0eae12598600bcb43e"
+        },
+        {
+          "path": ".opencode/agents/loom-review-security.md",
+          "sha256": "4fe4e1e8398a2babfe10a7dff59e901baa4ec47894b47756dcb31e9efd74b630"
+        },
+        {
+          "path": ".opencode/commands/loom-plan.md",
+          "sha256": "21c0a00f6f39b451c1e78e43bc5bfe61ddb08b116b3e065f05da6c8fdf94cbd4"
+        },
+        {
+          "path": ".opencode/commands/loom-review.md",
+          "sha256": "2922346ead20f5e34dbd01160e36b23fdd3418b14362d2c2f4cebc5d5d86dc8b"
+        },
+        {
+          "path": ".opencode/compound/.gitignore",
+          "sha256": "ab97d93430ab2d96b0dbfb8caf6db3745f6a81e189778772411f871fe8e709a2"
+        },
+        {
+          "path": ".opencode/compound/prompts/autolearn.md",
+          "sha256": "889bfb665261ce4ddaca436c83e11fb42e5b4d847d1543a7e2f6c427127ef498"
+        },
+        {
+          "path": ".opencode/plugins/compound_engineering.ts",
+          "sha256": "cf63b7f07a77906215f0a7d54322e5614aff16151a044c96f7111cb4ab29db2a"
+        }
+      ],
+      "id": "loom-compound-core",
+      "installed_at": "2026-02-09T19:37:20.780544Z",
+      "version": "0.1.0"
+    }
+  ],
+  "version": 1
+}

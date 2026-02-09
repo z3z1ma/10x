@@ -193,13 +193,15 @@ def install_pack(
         sha_src = sha256_file(src)
         if dst.exists() and not force:
             # If the file already matches the pack, adopt it without rewriting.
-            # Otherwise, treat it as drift and do not take ownership.
+            # Otherwise, treat it as drift but still record the expected pack hash
+            # so status/doctor can report persistent drift and users can inspect diffs.
             if sha256_file(dst) == sha_src:
                 skipped.append(rel)
                 installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
             else:
                 skipped.append(rel)
                 drifted.append(rel)
+                installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
             continue
 
         ensure_parent_dir(dst, dry_run=dry_run)
@@ -218,6 +220,9 @@ def install_pack(
         version=lock.version, packs=sorted(lock.packs + [new_pack], key=lambda p: p.id)
     )
     save_lock(repo_root, lock, dry_run=dry_run)
+
+    if drifted and not force:
+        warnings.append("some files drifted; rerun with --force to overwrite")
 
     return PackApplyResult(
         ok=True,
@@ -328,6 +333,8 @@ def update_pack(
             drifted.append(rel)
             if not force:
                 skipped.append(rel)
+                # Record expected pack hash so drift is persistent + diffable.
+                installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
                 continue
 
             ensure_parent_dir(dst, dry_run=dry_run)

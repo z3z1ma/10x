@@ -817,6 +817,54 @@
       ]
     },
     {
+      "id": "pack-change-contract-sync",
+      "title": "Treat Pack UX + Core As One Contract",
+      "trigger": "When making a pack behavior change that has both a core and CLI surface area",
+      "action": "Update core logic and tests together: core/lifecycle invariants in `tests/test_pack_lifecycle.py`, user-facing contract in `tests/test_pack_cli_ux.py`; ensure failures are informative (actionable error messages) and consistent with expected exit codes.",
+      "tags": [
+        "cli",
+        "contracts",
+        "packs",
+        "testing"
+      ],
+      "confidence": 0.64,
+      "status": "active",
+      "created_at": "2026-02-09T19:45:29.498237Z",
+      "updated_at": "2026-02-09T19:45:29.498237Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T19:45:29.498237Z",
+          "episode_id": "638ba28af805beab3a6307cb83dbf75574c648b0891daa0d9bd161f3d638560b",
+          "head_sha": "a6f5fe58537d4604435a46c0bd177cb6b17d26f6",
+          "patch_sha256": "6c14272b50bce6925c2420ff633c06192fb59ceb839d16e17ee2b2af69ee6492"
+        }
+      ]
+    },
+    {
+      "id": "pack-change-requires-lifecycle-tests",
+      "title": "Pack Changes Need Lifecycle Coverage",
+      "trigger": "When you modify pack core behavior (selection, creation, install/activate, lifecycle/cleanup) or touch `src/agent_loom/pack/core.py`",
+      "action": "Add/adjust lifecycle tests to lock in invariants (happy path + edge cases) in `tests/test_pack_lifecycle.py`; make tests assert durable behaviors (state transitions, idempotency, cleanup, and failure modes) rather than incidental implementation details; run `uv run ruff check .`, `uv run basedpyright`, then `uv run pytest`.",
+      "tags": [
+        "lifecycle",
+        "packs",
+        "quality",
+        "tests"
+      ],
+      "confidence": 0.74,
+      "status": "active",
+      "created_at": "2026-02-09T19:45:29.498237Z",
+      "updated_at": "2026-02-09T19:45:29.498237Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T19:45:29.498237Z",
+          "episode_id": "638ba28af805beab3a6307cb83dbf75574c648b0891daa0d9bd161f3d638560b",
+          "head_sha": "a6f5fe58537d4604435a46c0bd177cb6b17d26f6",
+          "patch_sha256": "6c14272b50bce6925c2420ff633c06192fb59ceb839d16e17ee2b2af69ee6492"
+        }
+      ]
+    },
+    {
       "id": "pack-change-sync-sample-and-tests",
       "title": "Sync pack sample + tests whenever pack code changes",
       "trigger": "When editing any pack implementation under src/agent_loom/pack/ (core/lock/packs/cli) or changing pack behaviors/validation",
@@ -838,6 +886,30 @@
           "episode_id": "5dfc6781237a6acefa31edefa0ee4f60e94438077468b740966caa758a3c31bf",
           "head_sha": "6326ff91e85ca070eab9b926434399720801b107",
           "patch_sha256": "f4852f7c4de8a9e9be4b41ccdb5f57bd415263d28ae19b364a8839191f89df91"
+        }
+      ]
+    },
+    {
+      "id": "pack-cli-ux-test-when-user-facing-output-changes",
+      "title": "Lock Pack CLI UX With Low-Noise Tests",
+      "trigger": "When you change pack-related CLI commands (flags, help text, user-visible messaging, exit codes) or add new pack UX behavior",
+      "action": "Add/update focused CLI UX tests in `tests/test_pack_cli_ux.py` that assert exit code and a few key stdout/stderr substrings; avoid brittle full-output snapshots; keep assertions resilient to formatting/ordering changes while still protecting the user contract.",
+      "tags": [
+        "cli",
+        "packs",
+        "tests",
+        "ux"
+      ],
+      "confidence": 0.77,
+      "status": "active",
+      "created_at": "2026-02-09T19:45:29.498237Z",
+      "updated_at": "2026-02-09T19:45:29.498237Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T19:45:29.498237Z",
+          "episode_id": "638ba28af805beab3a6307cb83dbf75574c648b0891daa0d9bd161f3d638560b",
+          "head_sha": "a6f5fe58537d4604435a46c0bd177cb6b17d26f6",
+          "patch_sha256": "6c14272b50bce6925c2420ff633c06192fb59ceb839d16e17ee2b2af69ee6492"
         }
       ]
     },

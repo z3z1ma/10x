@@ -63,6 +63,9 @@
 - **template-docs-use-root-relative-paths** (78%) [compound, docs, portability]
   - Trigger: When editing README/docs content that will be scaffolded into a repo (e.g., src/agent_loom/compound/opencode/README.md, src/agent_loom/compound/opencode/.loom/compound/README.md, `.opencode/commands/*...
   - Action: Write links and references using repo-root-relative paths (no absolute machine paths, no editor URIs) and avoid references to removed/retired template files (e.g., AGENTS.md copies) to keep docs porta...
+- **pack-cli-ux-test-when-user-facing-output-changes** (77%) [cli, packs, tests, ux]
+  - Trigger: When you change pack-related CLI commands (flags, help text, user-visible messaging, exit codes) or add new pack UX behavior
+  - Action: Add/update focused CLI UX tests in `tests/test_pack_cli_ux.py` that assert exit code and a few key stdout/stderr substrings; avoid brittle full-output snapshots; keep assertions resilient to formattin...
 - **agile-pack-invariants-first** (76%) [contract-tests, loom-agile, packs, stability]
   - Trigger: When changing loom-agile pack content (skills/agents) or any pack loading/validation logic that touches loom-agile
   - Action: Read/align against tests/test_pack_loom_agile_core_invariants.py first; ensure skills and agent definitions satisfy the invariants instead of weakening the tests unless the contract is intentionally c...
@@ -84,6 +87,9 @@
 - **large-change-update-cli-ux-tests** (74%) [cli, tests, ux]
   - Trigger: Any change to CLI output, flags, or subcommand routing
   - Action: Locate and update the UX snapshot/expectation tests (e.g. `tests/test_*_cli_ux.py`) in the same change; ensure wording is intentional and stable.
+- **pack-change-requires-lifecycle-tests** (74%) [lifecycle, packs, quality, tests]
+  - Trigger: When you modify pack core behavior (selection, creation, install/activate, lifecycle/cleanup) or touch `src/agent_loom/pack/core.py`
+  - Action: Add/adjust lifecycle tests to lock in invariants (happy path + edge cases) in `tests/test_pack_lifecycle.py`; make tests assert durable behaviors (state transitions, idempotency, cleanup, and failure ...
 - **prefer-basedpyright-over-lsp-diagnostics** (74%) [python, quality, typechecking, workflow]
   - Trigger: When you see/typecheck errors via editor/LSP or are about to declare a Python change 'done'
   - Action: Run `uv run basedpyright` and fix all reported issues; treat LSP diagnostics as hints only (not a gate). Follow with `uv run ruff check .` before tests.
@@ -117,12 +123,6 @@
 - **deterministic-cli-output** (71%) [cli, determinism, ux]
   - Trigger: When a CLI command prints lists, tables, multi-item sections, or derived metadata (IDs, paths, counts).
   - Action: Ensure ordering is explicit and stable (sort inputs, stable iteration, deterministic grouping). Normalize or avoid non-deterministic content (timestamps, random IDs). Make newline behavior consistent ...
-- **create-readme-when-introducing-new-subsystem** (70%) [architecture, docs, onboarding]
-  - Trigger: Adding a new top-level package/subsystem (or formalizing an existing cluster of files into a new package).
-  - Action: Add a short README in the package directory that defines: what it is, what it is not, key entrypoints, and how to test it. Keep it intentionally small so it stays maintained.
-- **git-preflight-status-diff-log** (70%) [git, safety, workflow]
-  - Trigger: When asked to create a commit or a PR, or when preparing to stage changes
-  - Action: Run `git status`, `git diff` (staged+unstaged), and `git log -n ...` early to understand scope/style; avoid staging secrets and avoid destructive git operations unless explicitly requested
 
 ## Notes
 

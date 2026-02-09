@@ -1,0 +1,3110 @@
+{
+  "created_at": "2026-02-09T19:45:29.498237Z",
+  "episode_id": "638ba28af805beab3a6307cb83dbf75574c648b0891daa0d9bd161f3d638560b",
+  "git": {
+    "base_ref": "origin/main",
+    "base_sha": "a6f5fe58537d4604435a46c0bd177cb6b17d26f6",
+    "changed_files": [
+      "src/agent_loom/pack/core.py",
+      "tests/test_pack_cli_ux.py",
+      "tests/test_pack_lifecycle.py"
+    ],
+    "diffstat": "src/agent_loom/pack/core.py  |  9 +++++-\n tests/test_pack_cli_ux.py    | 17 +++++++++++\n tests/test_pack_lifecycle.py | 68 +++++++++++++++++++++++++++++++++++++++++++-\n 3 files changed, 92 insertions(+), 2 deletions(-)",
+    "diffstat_sha256": "7c500574d55d7bd4a74451163f3e42ddc85eb25f821160514e1d19fcfcfbabd0",
+    "dirty": true,
+    "head_sha": "a6f5fe58537d4604435a46c0bd177cb6b17d26f6",
+    "patch": "diff --git a/src/agent_loom/pack/core.py b/src/agent_loom/pack/core.py\nindex 0943b87..c0c35be 100644\n--- a/src/agent_loom/pack/core.py\n+++ b/src/agent_loom/pack/core.py\n@@ -193,13 +193,15 @@ def install_pack(\n         sha_src = sha256_file(src)\n         if dst.exists() and not force:\n             # If the file already matches the pack, adopt it without rewriting.\n-            # Otherwise, treat it as drift and do not take ownership.\n+            # Otherwise, treat it as drift but still record the expected pack hash\n+            # so status/doctor can report persistent drift and users can inspect diffs.\n             if sha256_file(dst) == sha_src:\n                 skipped.append(rel)\n                 installed_files.append(LockFileEntry(path=rel, sha256=sha_src))\n             else:\n                 skipped.append(rel)\n                 drifted.append(rel)\n+                installed_files.append(LockFileEntry(path=rel, sha256=sha_src))\n             continue\n \n         ensure_parent_dir(dst, dry_run=dry_run)\n@@ -219,6 +221,9 @@ def install_pack(\n     )\n     save_lock(repo_root, lock, dry_run=dry_run)\n \n+    if drifted and not force:\n+        warnings.append(\"some files drifted; rerun with --force to overwrite\")\n+\n     return PackApplyResult(\n         ok=True,\n         action=\"install\",\n@@ -328,6 +333,8 @@ def update_pack(\n             drifted.append(rel)\n             if not force:\n                 skipped.append(rel)\n+                # Record expected pack hash so drift is persistent + diffable.\n+                installed_files.append(LockFileEntry(path=rel, sha256=sha_src))\n                 continue\n \n             ensure_parent_dir(dst, dry_run=dry_run)\ndiff --git a/tests/test_pack_cli_ux.py b/tests/test_pack_cli_ux.py\nindex 6285652..7c64b15 100644\n--- a/tests/test_pack_cli_ux.py\n+++ b/tests/test_pack_cli_ux.py\n@@ -1,6 +1,7 @@\n import contextlib\n import importlib\n import io\n+import json\n import os\n import tempfile\n import unittest\n@@ -57,6 +58,22 @@ class TestPackCliUx(unittest.TestCase):\n         self.assertIn(\"--- pack:sample/.opencode/commands/pack-sample.md\", out)\n         self.assertIn(\"+drift\", out)\n \n+    def test_install_conflict_is_visible_in_status(self) -> None:\n+        with tempfile.TemporaryDirectory() as td:\n+            repo = Path(td)\n+\n+            p = repo / \".opencode\" / \"commands\" / \"pack-sample.md\"\n+            p.parent.mkdir(parents=True, exist_ok=True)\n+            p.write_text(\"preexisting drift\\n\", encoding=\"utf-8\")\n+\n+            install_pack(repo_root=repo, pack_id=\"sample\", dry_run=False)\n+\n+            rc, out, err = _run_text([\"status\", \"--json\"], cwd=repo)\n+        self.assertEqual(rc, 0)\n+        self.assertEqual(err, \"\")\n+        payload = json.loads(out.strip())\n+        self.assertEqual(int(payload.get(\"drifted\") or 0), 1)\n+\n \n if __name__ == \"__main__\":\n     unittest.main()\ndiff --git a/tests/test_pack_lifecycle.py b/tests/test_pack_lifecycle.py\nindex a040d1f..6480d93 100644\n--- a/tests/test_pack_lifecycle.py\n+++ b/tests/test_pack_lifecycle.py\n@@ -3,9 +3,16 @@ from __future__ import annotations\n import json\n from pathlib import Path\n \n-from agent_loom.pack.core import install_pack, uninstall_pack, update_pack\n+from agent_loom.pack.core import (\n+    doctor,\n+    install_pack,\n+    status,\n+    uninstall_pack,\n+    update_pack,\n+)\n from agent_loom.pack.lock import lock_path\n from agent_loom.pack.packs import list_pack_ids, load_manifest\n+from agent_loom.pack.lock import load_lock\n \n \n def test_pack_lists_builtin_sample_pack() -> None:\n@@ -50,6 +57,65 @@ def test_pack_update_respects_drift_without_force(tmp_path: Path) -> None:\n     assert \".opencode/commands/pack-sample.md\" in res.skipped\n \n \n+def test_pack_install_records_drifted_managed_files_in_lock(tmp_path: Path) -> None:\n+    repo = tmp_path\n+\n+    # Pre-create a managed file with conflicting contents before install.\n+    p = repo / \".opencode\" / \"commands\" / \"pack-sample.md\"\n+    p.parent.mkdir(parents=True, exist_ok=True)\n+    p.write_text(\"preexisting drift\\n\", encoding=\"utf-8\")\n+\n+    res = install_pack(repo_root=repo, pack_id=\"sample\", dry_run=False, force=False)\n+    assert \".opencode/commands/pack-sample.md\" in res.drifted\n+\n+    lock = load_lock(repo)\n+    ip = next(p for p in lock.packs if p.id == \"sample\")\n+    assert any(e.path == \".opencode/commands/pack-sample.md\" for e in ip.files)\n+\n+    st = status(repo)\n+    drifted_val = st.get(\"drifted\")\n+    assert (drifted_val if isinstance(drifted_val, int) else 0) == 1\n+    doc = doctor(repo, pack_id=\"sample\")\n+    assert doc.get(\"ok\") is False\n+    res0 = doc.get(\"results\")\n+    assert isinstance(res0, list) and res0\n+    r0 = res0[0]\n+    assert isinstance(r0, dict)\n+    drifted = r0.get(\"drifted\")\n+    assert isinstance(drifted, list)\n+    assert \".opencode/commands/pack-sample.md\" in drifted\n+\n+\n+def test_pack_update_records_untracked_drifted_managed_files_in_lock(\n+    tmp_path: Path,\n+) -> None:\n+    repo = tmp_path\n+    install_pack(repo_root=repo, pack_id=\"sample\", dry_run=False)\n+\n+    # Create drift and then simulate a legacy lock missing the entry.\n+    rel = \".opencode/commands/pack-sample.md\"\n+    p = repo / rel\n+    p.write_text(\"drift\\n\", encoding=\"utf-8\")\n+\n+    lp = lock_path(repo)\n+    doc = json.loads(lp.read_text(encoding=\"utf-8\"))\n+    packs = doc.get(\"packs\")\n+    assert isinstance(packs, list)\n+    for pr in packs:\n+        if isinstance(pr, dict) and pr.get(\"id\") == \"sample\":\n+            files = pr.get(\"files\")\n+            if isinstance(files, list):\n+                pr[\"files\"] = [f for f in files if f.get(\"path\") != rel]\n+    lp.write_text(json.dumps(doc, indent=2, sort_keys=True) + \"\\n\", encoding=\"utf-8\")\n+\n+    res = update_pack(repo_root=repo, pack_id=\"sample\", dry_run=False, force=False)\n+    assert rel in res.drifted\n+\n+    lock = load_lock(repo)\n+    ip = next(p for p in lock.packs if p.id == \"sample\")\n+    assert any(e.path == rel for e in ip.files)\n+\n+\n def test_pack_update_overwrites_drift_with_force(tmp_path: Path) -> None:\n     repo = tmp_path\n     install_pack(repo_root=repo, pack_id=\"sample\", dry_run=False)\n",
+    "patch_omitted": false,
+    "patch_sha256": "6c14272b50bce6925c2420ff633c06192fb59ceb839d16e17ee2b2af69ee6492"
+  },
+  "observations": {
+    "cursor": {
+      "end_count": 96941,
+      "end_offset_bytes": 17102781,
+      "file_prefix_sha256": "ea08844a853b43d8b06f8d9d28a0a9f67156d83075061a491564d6b3cbe1350f",
+      "reset_detected": false,
+      "start_count": 96666,
+      "start_offset_bytes": 17046567,
+      "tail_sha256": "9118bc211aea498b6787edf4f95f9c5d80509123bfc7660d45e6ce6b891bb189"
+    },
+    "included": [
+      {
+        "id": "54cefbf5-0c6f-484e-a3f3-590318320b3c",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:36:21.308Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "68ad0f73-3886-4823-83be-80e7eedf444b",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:36:21.376Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "397add34-f6a1-4ece-b2ba-82fe1d1d1c39",
+        "properties": {
+          "keys": [
+            "message",
+            "variant",
+            "duration"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:36:21.578Z",
+        "type": "tui.toast.show"
+      },
+      {
+        "id": "9035ec9e-e7f0-48ac-8e22-b114903f0b36",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:36:28.417Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "b98e051f-effe-4871-ad41-8ca90163e08a",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:36:30.232Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "c3739b67-7bf8-45ca-b87e-30c7a16453cd",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:36:30.301Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "779ccf27-29ce-40fb-9bde-2840a9a5c5b4",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:36:54.202Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "4ec79034-1da1-4a94-9ea8-d0f4ed069efb",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:36:54.356Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "cf8d69bd-77e3-4af2-b77c-ec6a9b219a9f",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:36:54.356Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "9058b6e0-ba52-4408-b302-d138fbd913f3",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:38:02.143Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "238f0135-79b6-4d40-8d22-748f849abe13",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:38:02.144Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "12fb682e-c653-46f3-93cd-331c3292bc27",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:38:02.145Z",
+        "type": "session.status"
+      },
+      {
+        "id": "a5d15e35-4f7b-4552-b9f9-6e5e76d8e73e",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:38:02.200Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "ebe02adc-23f5-4719-a6c3-d44747797737",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:38:02.884Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f26907be-e830-4f8b-b744-c6eaaf59752b",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:38:02.884Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "a4ee4be3-9d48-4093-888f-55db4c02f13a",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:38:02.884Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "6b417af4-10b0-43b8-bbe6-e4c3db4a0f88",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:38:02.892Z",
+        "type": "session.status"
+      },
+      {
+        "id": "8cd70715-278a-4789-8bf5-daa153c71d49",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:38:03.945Z",
+        "type": "message.updated"
+      },
+      {
+        "args": {
+          "command_len": 879,
+          "command_sha256": "dfc062082039e0f9402a4a38175419ab1fc0070130a626d470f2d818512c0101",
+          "redacted": true
+        },
+        "id": "a76e31bc-07aa-4ceb-88a3-e20c8b7552bf",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=dfc062082039e0f9402a4a38175419ab1fc0070130a626d470f2d818512c0101 command_len=879",
+        "tool": "bash",
+        "ts": "2026-02-09T19:39:21.566Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": {
+          "command_len": 106,
+          "command_sha256": "2a6616e96c86c864a103c388130bec8d15e8e26297520e20307b6b2a36705c74",
+          "redacted": true
+        },
+        "id": "e24358f2-3d95-46c4-8012-edf0637da7b5",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=2a6616e96c86c864a103c388130bec8d15e8e26297520e20307b6b2a36705c74 command_len=106",
+        "tool": "bash",
+        "ts": "2026-02-09T19:39:21.557Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "35331034-c984-443e-a358-0625ff311efa",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:39:22.600Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "args": null,
+        "id": "efa9bd09-3857-4011-9515-1e847ff2d20f",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:39:24.881Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "1815ab4b-a6e5-4683-b72e-4f035362625b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:24.886Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "62ef9a42-af7d-4e10-b390-57fbaedb0d79",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:24.897Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6a2ad050-8af6-47de-a6cc-0350289b4c75",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:24.898Z",
+        "type": "session.status"
+      },
+      {
+        "id": "8ec3741c-abbe-41f9-8432-c4071c232f6a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:24.971Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b4757eae-1421-4308-a56c-5bc2dd07f8cf",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:24.967Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9099baa1-ff51-4a01-89dc-63cfeda092f6",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:39:24.974Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "ff78fee9-d416-4343-a9a0-ae186499a659",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:24.974Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "07535121-beaa-45eb-94ea-575efe6b71d8",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:25.618Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 32,
+          "command_sha256": "50309de619cadde53375241bed962ff54cf729a5b38c98075c76b75276778997",
+          "redacted": true
+        },
+        "id": "e31f79c7-abda-4243-8aa0-b0a8c34e1c32",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=50309de619cadde53375241bed962ff54cf729a5b38c98075c76b75276778997 command_len=32",
+        "tool": "bash",
+        "ts": "2026-02-09T19:39:35.150Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "b30889e4-15c9-4b06-9563-852eaddd3f58",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:39:35.867Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "455f9f5b-270a-4b6e-b7a3-2aee4d5809ee",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:35.873Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "c9c4178b-dde8-4f4f-8894-ba5b41017466",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:35.875Z",
+        "type": "session.status"
+      },
+      {
+        "id": "79059438-4eb0-4531-a1df-2f0c4da401c5",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:35.875Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "27c74578-7f83-4672-962b-baecd12bcd21",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:35.913Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "1c86c4be-d035-4f12-b47c-05503b8a7d32",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:35.913Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "6989ea5b-5ecd-41d1-bdf3-7b3210595785",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:39:35.913Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "8ee3963f-972f-4ca1-abc2-89d40bd18063",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:35.915Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a7eb4694-404d-4386-94c4-59c9daa01cca",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:36.350Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 31,
+          "command_sha256": "2a1ebff532bf8ab70d314f9da55aac4db745ebfca79f72c280fe6ea338d8db73",
+          "redacted": true
+        },
+        "id": "70461e33-2de4-4b0c-8d68-a232e60010d2",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=2a1ebff532bf8ab70d314f9da55aac4db745ebfca79f72c280fe6ea338d8db73 command_len=31",
+        "tool": "bash",
+        "ts": "2026-02-09T19:39:38.449Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "24c184a5-c810-4e50-880e-2b8b23482a65",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:39:39.188Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "f249bf25-e515-4868-b15f-7f05850b6e3a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:39.190Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "4705e4cc-e5d9-48d2-b43c-d5366c07cd69",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:39.192Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "224183b7-b7cf-4d1e-b077-e066e7744ce3",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:39.192Z",
+        "type": "session.status"
+      },
+      {
+        "id": "7a420a4e-1441-4e72-9f76-90a1c764ae6d",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:39.234Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "74d6b60f-cd6d-468d-a9e0-79f512876be7",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:39.235Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "5520e2ac-374d-411c-9514-bce610411485",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:39:39.235Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "c8e3d648-5d2c-4c1b-9699-c4f016a7bb8b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:39.241Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "02ee37a0-ebe4-42a8-bdaf-38aef9e7fde3",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:39.620Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: src/agent_loom/pack/core.py\n@@\n     for rel in managed:\n         src = file_index.get(rel)\n         if src is None:\n             continue\n         dst = repo_root / rel\n \n         sha_src = sha256_file(src)\n         if dst.exists() and not force:\n             # If the file already matches the pack, adopt it without rewriting.\n-            # Otherwise, treat it as drift and do not take ownership.\n+            # Otherwise, treat it as drift but still record the expected pack hash\n+            # so status/doctor can report persistent drift and users can inspect diffs.\n             if sha256_file(dst) == sha_src:\n                 skipped.append(rel)\n                 installed_files.append(LockFileEntry(path=rel, sha256=sha_src))\n             else:\n                 skipped.append(rel)\n                 drifted.append(rel)\n+                installed_files.append(LockFileEntry(path=rel, sha256=sha_src))\n             continue\n@@\n     lock = LockFile(\n         version=lock.version, packs=sorted(lock.packs + [new_pack], key=lambda p: p.id)\n     )\n     save_lock(repo_root, lock, dry_run=dry_run)\n+\n+    if drifted and not force:\n+        warnings.append(\"some files drifted; rerun with --force to overwrite\")\n \n     return PackApplyResult(\n         ok=True,\n         action=\"install\",\n*** End Patch"
+        },
+        "id": "beb91357-e53b-4474-a61d-aa383c9910e4",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:39:51.558Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "b09c04cf-5ddf-45ee-a16f-a0352cee5d54",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:51.561Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "2684adf8-7dc6-4cd0-99e5-6f346513b59b",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:51.635Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "18318a3b-e6ac-4026-baa1-ab4ef29cfb47",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.037Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "6576a1da-d549-4b95-a833-800d88e2c1f2",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.037Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "a2e86583-c371-4519-8f38-16d15542aae8",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.145Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "00262c5c-9ea7-4477-bd6f-2b5f9db2fee9",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.208Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "307ebd1b-1cd4-49ac-9be2-862685759581",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:39:52.297Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "9217c6d1-c6f4-414a-a95d-aa79f1acb2c1",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.301Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9cebff10-6797-49c1-bbe9-96cbaa3e3b68",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:52.304Z",
+        "type": "session.status"
+      },
+      {
+        "id": "c908b954-4ce9-4077-a309-ec1593a0ff65",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.304Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "662cd3b2-2310-4091-a3de-6b633dd32cef",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:39:52.351Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "925c3454-6049-4670-b8fa-cc75948d3046",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.348Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "47a5571c-801c-4701-af43-9b73d214fd1c",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:52.351Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "8ef669c7-b460-435c-b997-7c0ddb985f6e",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.349Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "0444313a-65a0-4dc7-ba98-89bd764b9966",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.541Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "9a45b698-5463-47a8-bfea-07be4c729293",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.554Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "9f2bdfb0-8310-4d81-81b7-7a620d8405e9",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:39:52.554Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "11237439-6cd8-43df-b777-65d29f7a631c",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:39:52.740Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: tests/test_pack_lifecycle.py\n@@\n from agent_loom.pack.core import install_pack, uninstall_pack, update_pack\n from agent_loom.pack.lock import lock_path\n from agent_loom.pack.packs import list_pack_ids, load_manifest\n+from agent_loom.pack.lock import load_lock\n@@\n def test_pack_update_respects_drift_without_force(tmp_path: Path) -> None:\n@@\n     assert \".opencode/commands/pack-sample.md\" in res.skipped\n+\n+\n+def test_pack_install_records_drifted_managed_files_in_lock(tmp_path: Path) -> None:\n+    repo = tmp_path\n+\n+    # Pre-create a managed file with conflicting contents before install.\n+    p = repo / \".opencode\" / \"commands\" / \"pack-sample.md\"\n+    p.parent.mkdir(parents=True, exist_ok=True)\n+    p.write_text(\"preexisting drift\\n\", encoding=\"utf-8\")\n+\n+    res = install_pack(repo_root=repo, pack_id=\"sample\", dry_run=False, force=False)\n+    assert \".opencode/commands/pack-sample.md\" in res.drifted\n+\n+    lock = load_lock(repo)\n+    ip = next(p for p in lock.packs if p.id == \"sample\")\n+    assert any(e.path == \".opencode/commands/pack-sample.md\" for e in ip.files)\n*** End Patch"
+        },
+        "id": "a0e96ad6-65ae-440e-aaae-9902006e4364",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:01.105Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "c4feb90c-67a1-4deb-a4da-79f5428b0929",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:01.109Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "9a196c96-fe65-4ba0-a282-e47b74706681",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:01.148Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "b6897fd4-0046-45a2-8932-04774c8e7cb0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:01.487Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "2435542b-f331-4e99-bc4b-635716702eae",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:01.638Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "b11c695a-ac58-4d22-a655-71ab68960a86",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:01.643Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "aa1b97e5-de79-4154-8458-ef5a6f8a205e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:01.645Z",
+        "type": "session.status"
+      },
+      {
+        "id": "31573bb4-3e5a-4460-a0c9-de5bd89b31f7",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:01.645Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "98703523-7530-44b4-a347-a8beb1cf45cd",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:01.682Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "424299c3-bed7-4702-ae51-d9356140ef9e",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:40:01.682Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "9cb5d51d-6ae2-4602-b69b-3d6ed95d2576",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:01.682Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "b2fd1010-0176-4fad-a8c8-9dc93f520bb5",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:01.683Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "66bccda9-9267-4640-985d-5706aacb44e2",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:02.220Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: tests/test_pack_lifecycle.py\n@@\n-from agent_loom.pack.core import install_pack, uninstall_pack, update_pack\n+from agent_loom.pack.core import doctor, install_pack, status, uninstall_pack, update_pack\n@@\n def test_pack_install_records_drifted_managed_files_in_lock(tmp_path: Path) -> None:\n@@\n     lock = load_lock(repo)\n     ip = next(p for p in lock.packs if p.id == \"sample\")\n     assert any(e.path == \".opencode/commands/pack-sample.md\" for e in ip.files)\n+\n+    st = status(repo)\n+    assert int(st.get(\"drifted\") or 0) == 1\n+    doc = doctor(repo, pack_id=\"sample\")\n+    assert doc.get(\"ok\") is False\n+    res0 = doc.get(\"results\")\n+    assert isinstance(res0, list) and res0\n+    r0 = res0[0]\n+    assert isinstance(r0, dict)\n+    drifted = r0.get(\"drifted\")\n+    assert isinstance(drifted, list)\n+    assert \".opencode/commands/pack-sample.md\" in drifted\n*** End Patch"
+        },
+        "id": "33092463-ff3c-4c2e-8a0e-4429b8106572",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:11.753Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "15c4d38f-2823-4315-8ac1-dfab7a6533f0",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:11.774Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "5c3b24d0-31fc-4f74-a7b5-079ec5527a18",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:11.834Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "e22cfedd-0584-4b05-96f3-edc3f2f44690",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:12.164Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "77566ef8-9a51-4a79-8726-ac4e4d2ad295",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:12.314Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "b82a6a4b-85bd-415c-b1c9-1372cf3805ac",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:12.319Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f20104c7-27c6-4e97-8a39-bd3a90a2889d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:12.325Z",
+        "type": "session.status"
+      },
+      {
+        "id": "43ac8151-c3fa-4fb5-b3da-60eb146560b7",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:12.325Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "30055a0d-c845-438f-932c-6d769193b046",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:12.391Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "1e8abf4e-5da2-46cc-acb3-3ccc9c9e9205",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:12.391Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "94de8218-9c98-4ca4-87f7-25b3fe1c796f",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:40:12.391Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "505dbcd7-a383-4a72-b13a-e12f84f734b7",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:12.392Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "5384168e-ba15-447e-8c53-9c5b9955b390",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:12.820Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: tests/test_pack_lifecycle.py\n@@\n     assert any(e.path == \".opencode/commands/pack-sample.md\" for e in ip.files)\n \n     st = status(repo)\n-    assert int(st.get(\"drifted\") or 0) == 1\n+    drifted_val = st.get(\"drifted\")\n+    assert (drifted_val if isinstance(drifted_val, int) else 0) == 1\n*** End Patch"
+        },
+        "id": "9d74fd77-e30b-4f04-901c-6fb0cb3e8569",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:18.046Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "daa8d15b-10c6-4862-80fb-be6e9850658b",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:18.051Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "4b17e79f-a51b-49c8-b28e-aae14c07257f",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:18.104Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "d3a547ae-d015-43f6-8a23-9c6750078705",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:18.443Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "d3e83950-ca30-4d0c-8d35-9c410633c4b3",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:18.599Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "a75e9dac-2b0c-4707-a3ba-16488fac7743",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:18.603Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "023506d9-9ce4-4c3c-9951-f393b17c6ab4",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:18.612Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "7abfad26-e123-4362-b550-756a5d40c3f8",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:18.612Z",
+        "type": "session.status"
+      },
+      {
+        "id": "2969c177-8474-4224-99d9-60389e212dce",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:18.684Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "7d4b7c39-b92a-4ed5-a52f-ca420e029a03",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:18.685Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "577f8ef1-93ca-494c-a570-a1269fdf74df",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:40:18.684Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "c805fc3b-c0f8-43d4-8990-baff49eb4f69",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:18.686Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "fb8d6b75-5381-48ae-a335-5e73a76bd216",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:19.086Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: tests/test_pack_cli_ux.py\n@@\n class TestPackCliUx(unittest.TestCase):\n@@\n     def test_status_diff_prints_unified_diff_for_drifted_files(self) -> None:\n@@\n         self.assertIn(\"+drift\", out)\n+\n+    def test_install_conflict_is_visible_in_status(self) -> None:\n+        with tempfile.TemporaryDirectory() as td:\n+            repo = Path(td)\n+\n+            p = repo / \".opencode\" / \"commands\" / \"pack-sample.md\"\n+            p.parent.mkdir(parents=True, exist_ok=True)\n+            p.write_text(\"preexisting drift\\n\", encoding=\"utf-8\")\n+\n+            install_pack(repo_root=repo, pack_id=\"sample\", dry_run=False)\n+\n+            rc, out, err = _run_text([\"status\", \"--json\"], cwd=repo)\n+        self.assertEqual(rc, 0)\n+        self.assertEqual(err, \"\")\n+        payload = json.loads(out.strip())\n+        self.assertEqual(int(payload.get(\"drifted\") or 0), 1)\n*** End Patch"
+        },
+        "id": "d4b85ab0-8b08-4091-84f8-b313750047d2",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:41.204Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "8392ec2f-e518-48e7-8250-a9d1d69ab450",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:41.209Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "c82fdb7c-e6a2-4f5b-8567-48b809977452",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:41.239Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "42667278-3130-4b93-9baf-b95dc564d65d",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:41.549Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "41fb55f0-4d5c-4d60-8f6c-6dddf30b47a2",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:41.700Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "51e8a0a6-a296-437d-904e-6c5c0b079e7b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:41.705Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "2dbbed51-47c2-4215-ad33-bd8704b3a150",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:41.706Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b22965b6-a8a1-43c1-93d9-db558a7f68cc",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:41.707Z",
+        "type": "session.status"
+      },
+      {
+        "id": "cc182a75-f79a-49d9-a3d2-85830471f201",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:41.760Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "70d8a2d3-9c83-4047-978c-8b78ec925604",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:40:41.761Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "b8fa619a-281e-410e-ad7e-14ea18ec2216",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:41.761Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "def9511c-9b35-443a-a6f1-1c06d2c54026",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:41.761Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "941ff2e5-f258-4cd1-a2fb-90d944811549",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:42.184Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: tests/test_pack_cli_ux.py\n@@\n import contextlib\n import importlib\n import io\n+import json\n import os\n import tempfile\n import unittest\n*** End Patch"
+        },
+        "id": "43b78dc3-d2c7-41f0-a955-d2127733ce63",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:48.908Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "90139186-6bb2-4daf-9156-5536ac451fe3",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:48.913Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "b7199c09-3188-47f5-884a-d948594259c1",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:48.963Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "a343c1ca-6459-4d21-a257-007cf5808c5f",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:49.307Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "4fadc676-60f0-4847-924d-0ede62d3dcc7",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:40:49.459Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "c2dae31a-cb3d-40f0-a7fc-d0045c113896",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:49.473Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b48b8576-fce4-485b-b37b-f1cbef926329",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:49.481Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "1d48465d-bc95-4cce-a5b8-4d19d538afd9",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:49.482Z",
+        "type": "session.status"
+      },
+      {
+        "id": "6e9dbe16-f5ae-46b0-ac92-e74d20bff5a2",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:49.547Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "ce30b417-d601-4011-923e-ceaf4a741b39",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:49.547Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "676aa725-ac71-423f-9dd3-5bcff6c2c1ab",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:40:49.547Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "2de00461-f9dc-4788-9bbf-e552d68ca550",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:40:49.548Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "c4fcbf28-a688-44c0-bcc6-f50533ad4c11",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:40:49.987Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 59,
+          "command_sha256": "3c249488a2cfbbcc3e2049edf931f36d3cd850881db6ddb4dcfe78a4d2e018b6",
+          "redacted": true
+        },
+        "id": "129eea2a-fff1-4025-b2fe-4361ab9be74c",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=3c249488a2cfbbcc3e2049edf931f36d3cd850881db6ddb4dcfe78a4d2e018b6 command_len=59",
+        "tool": "bash",
+        "ts": "2026-02-09T19:40:55.774Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "42ac3fa2-a614-43c6-97f4-a12b0b0688e3",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:41:37.444Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "fdcb227f-b974-47c4-9571-e701d853c314",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:37.447Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9483b55d-2d07-41fd-a758-430d14cfc0bb",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:37.454Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "1905bf40-2d97-4507-a229-289bc54aedaa",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:41:37.454Z",
+        "type": "session.status"
+      },
+      {
+        "id": "0290c1f0-dac7-48b4-ba64-9a26a70f1ba8",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:37.529Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "69375555-954d-4a2a-b5a0-3e1181368aae",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:37.530Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "ef446af8-f7f3-41d9-92c5-490927506975",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:41:37.533Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "b31a4f82-45b6-4576-8dda-988a1a0b088d",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:41:37.533Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "0602ff6e-8970-4900-8433-b916e407d244",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:41:37.983Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 32,
+          "command_sha256": "d6016ad5c0b50eea9b2b6a727094ef2fd29afcf9cf4b2366a94c14a9e91edd30",
+          "redacted": true
+        },
+        "id": "055624ed-8261-4e76-baa0-9bcc9f0d4119",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=d6016ad5c0b50eea9b2b6a727094ef2fd29afcf9cf4b2366a94c14a9e91edd30 command_len=32",
+        "tool": "bash",
+        "ts": "2026-02-09T19:41:41.764Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "d6c6d000-9ea3-4ef2-b855-25ac303d0a46",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:41:42.169Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "0ff42df7-c671-4e99-b5a2-c6cc53ad7722",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:42.172Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a009506c-657f-43ad-a08b-130cf7e4753e",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:42.175Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a3099621-fbef-407c-8b53-71c30070e57f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:41:42.176Z",
+        "type": "session.status"
+      },
+      {
+        "id": "fcd0c2d1-38c2-4fc7-b9df-fbc01953a61c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:42.224Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d5190289-9ca3-4e75-8984-d765db25754c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:42.227Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "e9a97fea-3b2e-41a3-af26-bb8bb81cc628",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:41:42.227Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "0c17b1f9-83e2-4f13-9eb9-899c9818031d",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:41:42.227Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "e7ee884c-08b3-4e37-a697-9d355bce96d5",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:41:42.691Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 890,
+          "command_sha256": "58ef79f37fbd313cd8381aebf2a6db8a9ed14473cfc9c883efa1b5149fa58c4b",
+          "redacted": true
+        },
+        "id": "afa10f3d-4f43-44bc-aaaa-6954607124b6",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=58ef79f37fbd313cd8381aebf2a6db8a9ed14473cfc9c883efa1b5149fa58c4b command_len=890",
+        "tool": "bash",
+        "ts": "2026-02-09T19:41:54.430Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "4a323d14-6a69-4912-bce8-aebe837f181b",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:41:55.115Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "cea5ed30-5457-4d4f-8e2e-7f62136e0e75",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:55.118Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "417e87e7-6d54-47d9-a6c6-68e8c30dd112",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:41:55.119Z",
+        "type": "session.status"
+      },
+      {
+        "id": "a0468ed3-df0d-46e4-9a20-fbc84760c4b0",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:55.119Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "3982f678-db2d-49d5-b4e1-5143ceca445f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:55.157Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "374789f6-6be1-47f9-9993-280691a117e9",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:41:55.160Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9b461951-3d68-4feb-8558-351e6b66fe3b",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:41:55.160Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "bc8d2216-11e7-4ab6-9ef4-c9a790ab530c",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:41:55.160Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "5ba2a13d-1c30-485c-9eac-663a545c362f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:41:55.558Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 419,
+          "command_sha256": "3da66ec40b681672dc3b649e6fbd790cf8546209325745e99ed1380c926d9d79",
+          "redacted": true
+        },
+        "id": "ad6535b2-1b36-4e61-9dab-9415e0b8d9fb",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=3da66ec40b681672dc3b649e6fbd790cf8546209325745e99ed1380c926d9d79 command_len=419",
+        "tool": "bash",
+        "ts": "2026-02-09T19:42:01.596Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "862a7392-9d8f-4282-85d8-03a03453ca5b",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:42:02.236Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "31c1e9fb-be29-4003-9659-efed5e75174c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:02.239Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "5bb3ca86-df98-4310-b696-837b2d3cd4d1",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:02.245Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9dddab5d-e003-4f8a-b059-823b7acbada9",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:42:02.245Z",
+        "type": "session.status"
+      },
+      {
+        "id": "bb03bc73-de70-4e87-9b92-e8ae3842c185",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:02.276Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d59fc0c6-412a-4c2e-b729-de48c5df2790",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:42:02.280Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "5ac3bb64-b9a0-4779-93f4-0bbab0c73172",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:02.279Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d0036e58-ab4d-4314-8c72-0868dd10c9ca",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:42:02.280Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "f71d2fc3-d2cc-465d-a674-edc02064034f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:42:02.706Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 32,
+          "command_sha256": "7bf422b2ee52b8d0d380059f468d509e5f7fcbd47acbf6d2977cb5b03db1d9b3",
+          "redacted": true
+        },
+        "id": "ac7344df-c410-4119-99d7-5c95592a320f",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=7bf422b2ee52b8d0d380059f468d509e5f7fcbd47acbf6d2977cb5b03db1d9b3 command_len=32",
+        "tool": "bash",
+        "ts": "2026-02-09T19:42:04.828Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "27fcc7ad-3e56-4571-a7a4-d9681a808a80",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:42:05.417Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "c63e7c4c-c18b-4d91-91ec-772fde47b90c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:05.419Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b7dabc1f-1ef0-4632-bd04-92149a16eb04",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:05.421Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "bbd078de-0eed-4ac1-8e39-d7b6e82c225b",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:42:05.421Z",
+        "type": "session.status"
+      },
+      {
+        "id": "ec396226-ad1f-4aee-8077-1b91628246a9",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:05.463Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "ec886996-f2e0-458e-8717-d3128952243b",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:42:05.466Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "4148eba4-b043-4c4c-862c-7f27c4a61c7f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:05.463Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "28cebfa7-13c8-4ca3-be0c-bf66fee0238e",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:42:05.465Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "5775382b-d451-45cb-880b-7c917127ca06",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:42:05.912Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 866,
+          "command_sha256": "e391a70f92147ff326f7011ff1aeca78a2467790a6a12c634cd0c799019cf716",
+          "redacted": true
+        },
+        "id": "dcfa0d1b-30a9-4299-a41c-c1f13a8c1bff",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=e391a70f92147ff326f7011ff1aeca78a2467790a6a12c634cd0c799019cf716 command_len=866",
+        "tool": "bash",
+        "ts": "2026-02-09T19:42:12.969Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "552ca91b-8e6e-41f4-bf72-4881f9286985",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:42:13.647Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "ae764acc-4105-4880-aa57-3c0b9086b746",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:13.651Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "3220cdb9-20e2-4302-acbd-b202cd4a378e",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:13.653Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b461159b-48d7-494f-b487-b22c828e31b1",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:42:13.653Z",
+        "type": "session.status"
+      },
+      {
+        "id": "74892211-fb33-427b-a982-4ed31db93a20",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:13.702Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9dd6ddde-9c07-4885-9b6e-10b3b20ba8eb",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:42:13.702Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "52cbcc69-dade-4f5a-8e3f-71982ba0a35f",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:42:13.704Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "3aa22633-2cf0-490a-ab57-9eacc3a69c1d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:42:13.704Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "ccb6ab70-7243-418c-aa03-8f1a8eef12e9",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:42:14.140Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: src/agent_loom/pack/core.py\n@@\n         # Untracked file: never clobber unless forced.\n         if dst.exists():\n             if sha256_file(dst) == sha_src:\n                 skipped.append(rel)\n                 installed_files.append(LockFileEntry(path=rel, sha256=sha_src))\n                 continue\n \n             drifted.append(rel)\n             if not force:\n                 skipped.append(rel)\n+                # Record expected pack hash so drift is persistent + diffable.\n+                installed_files.append(LockFileEntry(path=rel, sha256=sha_src))\n                 continue\n*** End Patch"
+        },
+        "id": "0e157f5f-11f3-4149-959e-057a462cbaea",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:43:14.383Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "54ae5abb-fe15-43a3-94ae-4141a18e0ea7",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:14.390Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "5e75033e-22b0-4d87-82b7-7862a03f0fb7",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:14.461Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "219a5fd1-4b67-4517-a10f-5b374b0f3539",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:14.849Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "ee0e1770-41d6-4606-a539-0b8cd9e794d8",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:14.849Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "8bda9bd3-bff5-4225-ae8f-3115609497ca",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:14.927Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "dec2ef14-f380-4563-b61e-0d426f9513e5",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:43:15.078Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "607f8a23-9614-440b-b670-dc7e68062dba",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:15.081Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "59270432-df77-44f8-a6c8-74b0a6f02678",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:15.089Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b2eca73d-5ebd-48df-bec6-5c46f7ab29cc",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:43:15.089Z",
+        "type": "session.status"
+      },
+      {
+        "id": "9e8c7384-0236-441a-9db5-bf41d2630980",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:15.175Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "56a33cb0-e06f-4633-8723-ed8eb52871a0",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:15.178Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "744ef208-32bf-4db0-b2c3-e0d26cc701dd",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:43:15.179Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "6c441a8a-e761-40aa-b605-f76d9078d096",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:43:15.178Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "61c4b707-381b-411c-b1ed-9ec8658bc598",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:15.271Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "5a4c749f-b20b-4b57-ac77-06e048f606d0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:15.271Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "49152ac3-4672-47f3-b06a-a4359dca2ec4",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:15.290Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "c8895c55-829e-46eb-98e2-ecea0f4a0db6",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:15.291Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "bf362742-52f3-447c-83ce-ad91c0858c9d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:43:15.765Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: tests/test_pack_lifecycle.py\n@@\n def test_pack_install_records_drifted_managed_files_in_lock(tmp_path: Path) -> None:\n@@\n     assert \".opencode/commands/pack-sample.md\" in drifted\n+\n+\n+def test_pack_update_records_untracked_drifted_managed_files_in_lock(tmp_path: Path) -> None:\n+    repo = tmp_path\n+    install_pack(repo_root=repo, pack_id=\"sample\", dry_run=False)\n+\n+    # Create drift and then simulate a legacy lock missing the entry.\n+    rel = \".opencode/commands/pack-sample.md\"\n+    p = repo / rel\n+    p.write_text(\"drift\\n\", encoding=\"utf-8\")\n+\n+    lp = lock_path(repo)\n+    doc = json.loads(lp.read_text(encoding=\"utf-8\"))\n+    packs = doc.get(\"packs\")\n+    assert isinstance(packs, list)\n+    for pr in packs:\n+        if isinstance(pr, dict) and pr.get(\"id\") == \"sample\":\n+            files = pr.get(\"files\")\n+            if isinstance(files, list):\n+                pr[\"files\"] = [f for f in files if f.get(\"path\") != rel]\n+    lp.write_text(json.dumps(doc, indent=2, sort_keys=True) + \"\\n\", encoding=\"utf-8\")\n+\n+    res = update_pack(repo_root=repo, pack_id=\"sample\", dry_run=False, force=False)\n+    assert rel in res.drifted\n+\n+    lock = load_lock(repo)\n+    ip = next(p for p in lock.packs if p.id == \"sample\")\n+    assert any(e.path == rel for e in ip.files)\n*** End Patch"
+        },
+        "id": "54c1839e-0a0f-4cda-9504-fdfcdb935d1b",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:43:29.435Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "4b6925a8-73d0-4db2-91e9-2dda47af5c54",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:29.441Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "4c0c488e-353f-48ec-b460-674dd4996569",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:29.482Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "48654dd7-19ed-4d07-86d6-ef9da0c89908",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:29.800Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "01375f6b-6a7b-41d9-8ee1-c825a1347399",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T19:43:29.955Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "f52e9c8a-bad0-494a-a86e-a62f2dee80dc",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:29.968Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "4e9a6bcd-3eba-4095-8c0f-d3e76a4aa88e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:43:29.971Z",
+        "type": "session.status"
+      },
+      {
+        "id": "486f5096-dded-4147-aa44-9389746c20de",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:29.970Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "602704b2-4964-4a9b-9143-1ad64048a17d",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:30.040Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "251e90d9-69d9-4798-8c97-1f2858b22435",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:43:30.041Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f198a65a-ce1a-45f9-9b7c-e877bb994292",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:43:30.044Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "bde26e1e-0552-401f-a447-85e5a1c2e9f2",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:43:30.044Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "05eb1e07-ec1f-4f16-8dda-f9544825f5ba",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:43:30.478Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 59,
+          "command_sha256": "3c249488a2cfbbcc3e2049edf931f36d3cd850881db6ddb4dcfe78a4d2e018b6",
+          "redacted": true
+        },
+        "id": "91a9fc5b-4277-4189-b27b-be92daf89888",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=3c249488a2cfbbcc3e2049edf931f36d3cd850881db6ddb4dcfe78a4d2e018b6 command_len=59",
+        "tool": "bash",
+        "ts": "2026-02-09T19:43:33.265Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "2f721ae4-95b6-4a2c-a1ec-ca5216dc0cf0",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:44:16.940Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "e6780135-24ca-4ae6-a1ff-de36276a5f03",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:16.944Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "394b986e-6155-40b1-aa49-70eef62e9397",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:16.949Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "763bf2ce-ec7a-4353-b395-68246e009ffa",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:16.949Z",
+        "type": "session.status"
+      },
+      {
+        "id": "d5b63420-720b-4d60-b0b9-e1cbfa042b6f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:17.032Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "ea786a70-04ce-4d2e-b7b0-3285bfcfacb5",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:44:17.036Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "01daef98-cc0f-47b7-86fc-473c28b29ff7",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:17.035Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6d086657-a53e-4f73-b4b5-b58cec9fbbed",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:17.036Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "321b531f-9724-4050-837c-2ed4dddc035a",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:17.427Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 299,
+          "command_sha256": "f7189676e638c4db350f57cc261cbf899df04910920cc83185301c64b16c610a",
+          "redacted": true
+        },
+        "id": "c42e74f3-c050-4022-bd1c-775204c1c1f1",
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "summary": "command_sha256=f7189676e638c4db350f57cc261cbf899df04910920cc83185301c64b16c610a command_len=299",
+        "tool": "bash",
+        "ts": "2026-02-09T19:44:24.133Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "dcca3b8c-d443-451a-aaf3-a7118cc53daa",
+        "ok": null,
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "tool": "bash",
+        "ts": "2026-02-09T19:44:24.880Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "e5d530da-3508-4ed4-a8e8-0298906d36fa",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:25.789Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "216b421d-6939-4e4c-b49b-f94931c4b1c4",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:25.792Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "5052b20e-9b83-4e08-abf4-f2a9af4aa99d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:25.792Z",
+        "type": "session.status"
+      },
+      {
+        "id": "fed4d911-3f13-4cc6-bca0-980b2ef87c5d",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:25.857Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "5122609e-6645-4d0a-91d4-430bc2d60be5",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:25.858Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b29bdd6c-5cb3-4aee-be03-56f42be3db40",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:44:25.861Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "08d7caa6-ee1b-4001-a4da-75daada6c85d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:25.861Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "6f94a6c2-295d-4ee6-bedf-dc743012d402",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:26.334Z",
+        "type": "session.status"
+      },
+      {
+        "id": "29304792-0c4b-4e5f-a609-2402058224e7",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:56.299Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "cb77e8d8-81f9-479c-a7a6-3d7deef11311",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:56.301Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "827ba8a6-d407-4719-a472-17da7a45bff7",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:56.301Z",
+        "type": "session.status"
+      },
+      {
+        "id": "3de0b63e-35de-4717-839a-4d49c0243305",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:56.358Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "23d82de9-ecfe-430a-95a3-5a018d4d344e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:56.359Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "0b69bc99-35b7-4342-9115-b32d1691268e",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:44:56.359Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "1b5744f4-f9fa-45fa-bf57-f23fc674cf37",
+        "properties": {
+          "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U"
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:56.360Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "cf0c7d91-009a-4667-b4d2-e9f0e312de49",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc1f5b24ffeukhxelvD6uJj0U",
+        "ts": "2026-02-09T19:44:56.360Z",
+        "type": "session.status"
+      },
+      {
+        "id": "8cf9b064-2428-4d23-88fe-58ed94cb7d94",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:56.423Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "6fbf086b-a57e-49da-abd7-a340c078fdaf",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:56.437Z",
+        "type": "session.created"
+      },
+      {
+        "id": "b29adca2-ab23-4c9f-8b0f-dd0a2e56b382",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:44:56.438Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "905fe240-012a-40e7-8494-fa3261a90d78",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:56.440Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "7013d10a-0d35-4498-b910-ac74c2388ee4",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:44:56.441Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "fe73937d-640c-4e36-801d-a7afdaf8c9bf",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc107b8affeE34Rkfsm1W1VaY",
+        "ts": "2026-02-09T19:44:56.441Z",
+        "type": "session.status"
+      },
+      {
+        "id": "9710bb45-8a67-40ee-9f6f-835ab5d88988",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:56.442Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "4311757d-2547-4ff6-b5b0-d0c4c2cc0c2d",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:57.020Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "cd6fc797-b914-4c5a-be1e-ee1d0685ea8f",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:44:57.021Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "498c96f4-b7c7-4ff2-9022-78fb3a9f9e12",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc107b8affeE34Rkfsm1W1VaY",
+        "ts": "2026-02-09T19:44:57.023Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "d48d03f9-a2c8-4315-a2c8-b9b5b9021462",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc107b8affeE34Rkfsm1W1VaY",
+        "ts": "2026-02-09T19:44:57.029Z",
+        "type": "session.status"
+      },
+      {
+        "id": "53b0cf15-184c-4832-a756-1d548c8faf31",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:44:58.347Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "31918b35-9b70-4f4b-963f-1cc7cf70585a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:45:28.137Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "cf8248c4-feca-4a2e-9e29-76f05bd175e7",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc107b8affeE34Rkfsm1W1VaY",
+        "ts": "2026-02-09T19:45:28.153Z",
+        "type": "session.status"
+      },
+      {
+        "id": "621b38c9-1339-45ea-8aca-336e42c21e7d",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:45:28.152Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "570e2fd6-2c73-4823-b0c1-a26d4e2332bb",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:45:28.156Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "4c558837-0a1b-4dcc-b471-f280a13acc57",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T19:45:28.156Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "5a2efea4-cd69-47a7-ad63-b220d0f7951c",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bc107b8affeE34Rkfsm1W1VaY",
+        "ts": "2026-02-09T19:45:28.156Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "76ace202-4c90-4685-956e-7eb3529718e0",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bc107b8affeE34Rkfsm1W1VaY",
+        "ts": "2026-02-09T19:45:28.168Z",
+        "type": "session.status"
+      },
+      {
+        "id": "5d450319-a218-4bb1-9a73-a661b249f2b1",
+        "properties": {
+          "sessionID": "ses_3bc107b8affeE34Rkfsm1W1VaY"
+        },
+        "sessionID": "ses_3bc107b8affeE34Rkfsm1W1VaY",
+        "ts": "2026-02-09T19:45:28.168Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "9c831c03-1a0d-42e7-bfb5-f13b0c27f071",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T19:45:28.269Z",
+        "type": "session.deleted"
+      }
+    ],
+    "omitted": false
+  },
+  "proposals": {
+    "instinct_candidates": [
+      {
+        "action": "Add/adjust lifecycle tests to lock in invariants (happy path + edge cases) in `tests/test_pack_lifecycle.py`; make tests assert durable behaviors (state transitions, idempotency, cleanup, and failure modes) rather than incidental implementation details; run `uv run ruff check .`, `uv run basedpyright`, then `uv run pytest`.",
+        "confidence": 0.74,
+        "id": "pack-change-requires-lifecycle-tests",
+        "tags": [
+          "packs",
+          "tests",
+          "lifecycle",
+          "quality"
+        ],
+        "title": "Pack Changes Need Lifecycle Coverage",
+        "trigger": "When you modify pack core behavior (selection, creation, install/activate, lifecycle/cleanup) or touch `src/agent_loom/pack/core.py`"
+      },
+      {
+        "action": "Add/update focused CLI UX tests in `tests/test_pack_cli_ux.py` that assert exit code and a few key stdout/stderr substrings; avoid brittle full-output snapshots; keep assertions resilient to formatting/ordering changes while still protecting the user contract.",
+        "confidence": 0.77,
+        "id": "pack-cli-ux-test-when-user-facing-output-changes",
+        "tags": [
+          "cli",
+          "ux",
+          "tests",
+          "packs"
+        ],
+        "title": "Lock Pack CLI UX With Low-Noise Tests",
+        "trigger": "When you change pack-related CLI commands (flags, help text, user-visible messaging, exit codes) or add new pack UX behavior"
+      },
+      {
+        "action": "Update core logic and tests together: core/lifecycle invariants in `tests/test_pack_lifecycle.py`, user-facing contract in `tests/test_pack_cli_ux.py`; ensure failures are informative (actionable error messages) and consistent with expected exit codes.",
+        "confidence": 0.64,
+        "id": "pack-change-contract-sync",
+        "tags": [
+          "packs",
+          "contracts",
+          "cli",
+          "testing"
+        ],
+        "title": "Treat Pack UX + Core As One Contract",
+        "trigger": "When making a pack behavior change that has both a core and CLI surface area"
+      }
+    ]
+  },
+  "triage": {
+    "notes": "",
+    "status": "accepted",
+    "tags": []
+  },
+  "version": 1
+}

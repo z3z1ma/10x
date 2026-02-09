@@ -1,6 +1,7 @@
 import contextlib
 import importlib
 import io
+import json
 import os
 import tempfile
 import unittest
@@ -56,6 +57,22 @@ class TestPackCliUx(unittest.TestCase):
         self.assertIn("diff (drifted): sample/.opencode/commands/pack-sample.md", out)
         self.assertIn("--- pack:sample/.opencode/commands/pack-sample.md", out)
         self.assertIn("+drift", out)
+
+    def test_install_conflict_is_visible_in_status(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            repo = Path(td)
+
+            p = repo / ".opencode" / "commands" / "pack-sample.md"
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("preexisting drift\n", encoding="utf-8")
+
+            install_pack(repo_root=repo, pack_id="sample", dry_run=False)
+
+            rc, out, err = _run_text(["status", "--json"], cwd=repo)
+        self.assertEqual(rc, 0)
+        self.assertEqual(err, "")
+        payload = json.loads(out.strip())
+        self.assertEqual(int(payload.get("drifted") or 0), 1)
 
 
 if __name__ == "__main__":
