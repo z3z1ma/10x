@@ -11,10 +11,6 @@ managed_globs:
   - ".opencode/commands/**"
   - ".opencode/compound/**"
   - ".opencode/plugins/**"
-  - ".opencode/types/**"
-  - ".opencode/.gitignore"
-  - ".opencode/README.md"
-  - ".opencode/tsconfig.json"
 scaffold_globs:
   - "AGENTS.md"
   - "LOOM.md"
