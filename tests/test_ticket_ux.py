@@ -215,6 +215,105 @@ class TestTicketUx(unittest.TestCase):
             self.assertEqual(code, 0)
             self.assertEqual(int(shown2["ticket"]["priority"]), 3)
 
+    def test_ready_excludes_review_and_blocked_and_supports_limit(self) -> None:
+        with _temp_git_repo() as (root, env):
+            tickets_dir = root / ".loom" / "ticket"
+            env = {**env, "TICKET_DIR": str(tickets_dir)}
+
+            _, created_open = _ticket_json(
+                [
+                    "--json",
+                    "--no-audit",
+                    "create",
+                    "Open",
+                    "--no-sprint-tag",
+                ],
+                cwd=root,
+                env=env,
+            )
+            tid_open = str(created_open.get("id") or "")
+            self.assertTrue(tid_open)
+
+            _, created_review = _ticket_json(
+                [
+                    "--json",
+                    "--no-audit",
+                    "create",
+                    "Review",
+                    "--no-sprint-tag",
+                ],
+                cwd=root,
+                env=env,
+            )
+            tid_review = str(created_review.get("id") or "")
+            self.assertTrue(tid_review)
+
+            _, created_blocked = _ticket_json(
+                [
+                    "--json",
+                    "--no-audit",
+                    "create",
+                    "Blocked",
+                    "--no-sprint-tag",
+                ],
+                cwd=root,
+                env=env,
+            )
+            tid_blocked = str(created_blocked.get("id") or "")
+            self.assertTrue(tid_blocked)
+
+            code, _ = _ticket_json(
+                ["--json", "--no-audit", "status", tid_review, "review"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+
+            code, _ = _ticket_json(
+                ["--json", "--no-audit", "status", tid_blocked, "blocked"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+
+            code, ready_all = _ticket_json(
+                ["--json", "--no-audit", "ready"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+            ids = [str(r.get("id") or "") for r in (ready_all.get("tickets") or [])]
+            self.assertIn(tid_open, ids)
+            self.assertNotIn(tid_review, ids)
+            self.assertNotIn(tid_blocked, ids)
+
+            code, ready_limited = _ticket_json(
+                ["--json", "--no-audit", "ready", "--limit", "1"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+            self.assertEqual(int(ready_limited.get("count") or 0), 1)
+            self.assertEqual(len(ready_limited.get("tickets") or []), 1)
+
+            code, ready_limited_short = _ticket_json(
+                ["--json", "--no-audit", "ready", "-N1"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+            self.assertEqual(int(ready_limited_short.get("count") or 0), 1)
+            self.assertEqual(len(ready_limited_short.get("tickets") or []), 1)
+
+            code, list_limited_short = _ticket_json(
+                ["--json", "--no-audit", "list", "-N1"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+            self.assertEqual(int(list_limited_short.get("count") or 0), 1)
+            self.assertEqual(len(list_limited_short.get("tickets") or []), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

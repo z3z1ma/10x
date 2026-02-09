@@ -72,6 +72,78 @@
       ]
     },
     {
+      "id": "cli-ux-change-requires-ux-test",
+      "title": "CLI UX Changes Need UX Tests",
+      "trigger": "When you change CLI text output, flags, or exit-code behavior",
+      "action": "Add/adjust a dedicated UX test that asserts exit code + key stdout/stderr lines for the affected command(s); keep assertions minimal but intentional (user-visible contracts only) so refactors don't cause noise.",
+      "tags": [
+        "cli",
+        "loom-ticket",
+        "testing",
+        "ux-contract"
+      ],
+      "confidence": 0.78,
+      "status": "active",
+      "created_at": "2026-02-09T04:37:26.148941Z",
+      "updated_at": "2026-02-09T04:37:26.148941Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T04:37:26.148941Z",
+          "episode_id": "9ab03e71ade631a0d3bf8b48dc47183684f6ab3d335e96c44ec1d9307d0171b7",
+          "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
+          "patch_sha256": "498d72b84d957b97977d837d501afa645452709e17517a544f393586df79b5e6"
+        }
+      ]
+    },
+    {
+      "id": "cli-ux-regression-tests",
+      "title": "Add CLI UX regression tests when output changes",
+      "trigger": "When changing any CLI command output, flags, exit codes, or user-facing error messages (especially in ticket commands).",
+      "action": "Add/extend a pytest UX test that exercises the command and asserts: exit code, stdout/stderr content (including key lines and spacing), and stable formatting. Prefer small, readable golden strings (dedent) over broad regexes; avoid asserting volatile data (timestamps, temp paths) unless you control/freeze it.",
+      "tags": [
+        "cli",
+        "regression",
+        "testing",
+        "tickets",
+        "ux"
+      ],
+      "confidence": 0.82,
+      "status": "active",
+      "created_at": "2026-02-09T04:40:42.182303Z",
+      "updated_at": "2026-02-09T04:40:42.182303Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T04:40:42.182303Z",
+          "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
+          "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
+          "patch_sha256": "2b739a8231c6031ee25bc96ebbe1436a00521c016ddadb42a37b514d0e320431"
+        }
+      ]
+    },
+    {
+      "id": "compound-instincts-sync",
+      "title": "Keep instincts docs and compiled JSON in sync",
+      "trigger": "When adding or editing any Compound instinct.",
+      "action": "Update `.loom/compound/INSTINCTS.md` and regenerate/adjust `.loom/compound/instincts.json` in the same change. Verify IDs are unique, kebab-case, and identical across doc + JSON; ensure any new instinct has a clear trigger/action and minimal tags.",
+      "tags": [
+        "compound",
+        "docs",
+        "process"
+      ],
+      "confidence": 0.66,
+      "status": "active",
+      "created_at": "2026-02-09T04:40:42.182303Z",
+      "updated_at": "2026-02-09T04:40:42.182303Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T04:40:42.182303Z",
+          "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
+          "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
+          "patch_sha256": "2b739a8231c6031ee25bc96ebbe1436a00521c016ddadb42a37b514d0e320431"
+        }
+      ]
+    },
+    {
       "id": "compound-template-determinism-first",
       "title": "Keep compound install outputs deterministic",
       "trigger": "When changing compound scaffold/template contents or compound install logic (e.g., src/agent_loom/compound/scaffold.py, src/agent_loom/compound/paths.py, src/agent_loom/compound/docs.py, compound opencode template tree).",
@@ -96,6 +168,29 @@
       ]
     },
     {
+      "id": "deterministic-cli-output",
+      "title": "Keep CLI output deterministic by default",
+      "trigger": "When a CLI command prints lists, tables, multi-item sections, or derived metadata (IDs, paths, counts).",
+      "action": "Ensure ordering is explicit and stable (sort inputs, stable iteration, deterministic grouping). Normalize or avoid non-deterministic content (timestamps, random IDs). Make newline behavior consistent (exactly one trailing newline; no extra blank lines unless intentional) and cover with a UX test.",
+      "tags": [
+        "cli",
+        "determinism",
+        "ux"
+      ],
+      "confidence": 0.71,
+      "status": "active",
+      "created_at": "2026-02-09T04:40:42.182303Z",
+      "updated_at": "2026-02-09T04:40:42.182303Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T04:40:42.182303Z",
+          "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
+          "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
+          "patch_sha256": "2b739a8231c6031ee25bc96ebbe1436a00521c016ddadb42a37b514d0e320431"
+        }
+      ]
+    },
+    {
       "id": "greenfield-no-backcompat-language",
       "title": "Avoid backcompat framing in greenfield code/docs",
       "trigger": "Writing docs, flags, deprecations, or migration behaviors in early-stage systems",
@@ -115,6 +210,30 @@
           "episode_id": "e73f6556efab5a08fe44febbe2ba7d245b558f059154ad39c13d6adedb7d42b2",
           "head_sha": "3ed17ac0cb1119ce9355d2fab7e7000e1791a59a",
           "patch_sha256": "396d4064e16aedb39f74ca438e10beeef645fa829af509b251fa619bcf0e084d"
+        }
+      ]
+    },
+    {
+      "id": "keep-core-and-cli-error-contract-aligned",
+      "title": "Align Core Errors With CLI UX",
+      "trigger": "When updating core behavior that the CLI surfaces (validation, missing resources, ambiguous inputs)",
+      "action": "Make core raise/return a single, well-typed/consistent error shape that CLI maps to stable user-facing messages + non-zero exit codes; add a UX test covering the error path.",
+      "tags": [
+        "cli",
+        "error-handling",
+        "loom-ticket",
+        "ux-contract"
+      ],
+      "confidence": 0.73,
+      "status": "active",
+      "created_at": "2026-02-09T04:37:26.148941Z",
+      "updated_at": "2026-02-09T04:37:26.148941Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T04:37:26.148941Z",
+          "episode_id": "9ab03e71ade631a0d3bf8b48dc47183684f6ab3d335e96c44ec1d9307d0171b7",
+          "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
+          "patch_sha256": "498d72b84d957b97977d837d501afa645452709e17517a544f393586df79b5e6"
         }
       ]
     },
@@ -262,6 +381,29 @@
       ]
     },
     {
+      "id": "prefer-ux-tests-over-broad-internals",
+      "title": "Prefer UX Tests Over Internal Coupling",
+      "trigger": "When adding tests for command behavior",
+      "action": "Test through the CLI boundary (command invocation) rather than deep internal functions; assert the minimal observable behavior that matters (selected lines, not full dumps).",
+      "tags": [
+        "cli",
+        "maintainability",
+        "testing"
+      ],
+      "confidence": 0.7,
+      "status": "active",
+      "created_at": "2026-02-09T04:37:26.148941Z",
+      "updated_at": "2026-02-09T04:37:26.148941Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T04:37:26.148941Z",
+          "episode_id": "9ab03e71ade631a0d3bf8b48dc47183684f6ab3d335e96c44ec1d9307d0171b7",
+          "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
+          "patch_sha256": "498d72b84d957b97977d837d501afa645452709e17517a544f393586df79b5e6"
+        }
+      ]
+    },
+    {
       "id": "refactor-delete-module-chase-imports",
       "title": "After deleting a module, systematically eliminate all references",
       "trigger": "A refactor removes/renames modules (large deletions or package reshapes)",
@@ -305,6 +447,29 @@
           "episode_id": "3a49e37b2714b270438b82f96000a53a401f9d577d6a7ca6976af7f4eb510cdb",
           "head_sha": "3ed17ac0cb1119ce9355d2fab7e7000e1791a59a",
           "patch_sha256": "324dc48717dad74f886f10cc65e5f70d8db467bcdd3b77b618c8ec03e14a383c"
+        }
+      ]
+    },
+    {
+      "id": "stabilize-cli-output-contract",
+      "title": "Stabilize CLI Output Contracts",
+      "trigger": "When printing structured lists/summaries in CLI",
+      "action": "Ensure ordering and formatting are deterministic (sorting, fixed labels); avoid including volatile fields in user-facing output unless explicitly requested, and ensure tests lock the contract.",
+      "tags": [
+        "cli",
+        "determinism",
+        "ux-contract"
+      ],
+      "confidence": 0.66,
+      "status": "active",
+      "created_at": "2026-02-09T04:37:26.148941Z",
+      "updated_at": "2026-02-09T04:37:26.148941Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T04:37:26.148941Z",
+          "episode_id": "9ab03e71ade631a0d3bf8b48dc47183684f6ab3d335e96c44ec1d9307d0171b7",
+          "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
+          "patch_sha256": "498d72b84d957b97977d837d501afa645452709e17517a544f393586df79b5e6"
         }
       ]
     },

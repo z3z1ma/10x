@@ -12,6 +12,9 @@
 - **post-refactor-quality-gates** (86%) [lint, quality, tests, typing, uv]
   - Trigger: After a broad refactor that touches many files and tests
   - Action: Run `uv run ruff check .`, `uv run basedpyright`, then `uv run pytest`; treat failures as part of the refactor (not follow-up work).
+- **cli-ux-regression-tests** (82%) [cli, regression, testing, tickets, ux]
+  - Trigger: When changing any CLI command output, flags, exit codes, or user-facing error messages (especially in ticket commands).
+  - Action: Add/extend a pytest UX test that exercises the command and asserts: exit code, stdout/stderr content (including key lines and spacing), and stable formatting. Prefer small, readable golden strings (de...
 - **compound-template-determinism-first** (82%) [compound, determinism, templates, tests]
   - Trigger: When changing compound scaffold/template contents or compound install logic (e.g., src/agent_loom/compound/scaffold.py, src/agent_loom/compound/paths.py, src/agent_loom/compound/docs.py, compound open...
   - Action: Treat the installed `.opencode/` (and any `.loom/compound/` docs) as a contract: preserve stable paths, stable file ordering, stable newline formatting, and stable rendered content; immediately update...
@@ -24,6 +27,9 @@
 - **remove-orphans-after-large-deletions** (80%) [cleanup, packaging, python, refactor]
   - Trigger: When removing many files or an entire subtree (e.g., `.../poly/*`)
   - Action: Check `__init__.py` exports, public module surface, and docs/README links for orphans; ensure imports fail nowhere and no dead entrypoints remain.
+- **cli-ux-change-requires-ux-test** (78%) [cli, loom-ticket, testing, ux-contract]
+  - Trigger: When you change CLI text output, flags, or exit-code behavior
+  - Action: Add/adjust a dedicated UX test that asserts exit code + key stdout/stderr lines for the affected command(s); keep assertions minimal but intentional (user-visible contracts only) so refactors don't ca...
 - **refactor-delete-module-chase-imports** (78%) [maintenance, python, refactor]
   - Trigger: A refactor removes/renames modules (large deletions or package reshapes)
   - Action: Search for old module names and key symbols (e.g. with ripgrep/grep), update imports, docs, and tests together; ensure no dead entrypoints remain.
@@ -42,12 +48,27 @@
 - **prefer-command-docs-over-embedded-skill-copies** (74%) [commands, compound, docs, skills]
   - Trigger: When documenting workflows for end-users inside compound-installed `.opencode/` trees.
   - Action: Put loom command guidance in `.opencode/commands/loom-*.md` (command-discoverable docs) and avoid duplicating full skill content inside the compound template unless required; keep skills procedural an...
+- **keep-core-and-cli-error-contract-aligned** (73%) [cli, error-handling, loom-ticket, ux-contract]
+  - Trigger: When updating core behavior that the CLI surfaces (validation, missing resources, ambiguous inputs)
+  - Action: Make core raise/return a single, well-typed/consistent error shape that CLI maps to stable user-facing messages + non-zero exit codes; add a UX test covering the error path.
+- **deterministic-cli-output** (71%) [cli, determinism, ux]
+  - Trigger: When a CLI command prints lists, tables, multi-item sections, or derived metadata (IDs, paths, counts).
+  - Action: Ensure ordering is explicit and stable (sort inputs, stable iteration, deterministic grouping). Normalize or avoid non-deterministic content (timestamps, random IDs). Make newline behavior consistent ...
 - **greenfield-no-backcompat-language** (70%) [design, docs, product]
   - Trigger: Writing docs, flags, deprecations, or migration behaviors in early-stage systems
   - Action: Prefer clean breaks and simple interfaces; remove/avoid 'backcompat' language unless there is a real external user contract that requires it.
+- **prefer-ux-tests-over-broad-internals** (70%) [cli, maintainability, testing]
+  - Trigger: When adding tests for command behavior
+  - Action: Test through the CLI boundary (command invocation) rather than deep internal functions; assert the minimal observable behavior that matters (selected lines, not full dumps).
+- **compound-instincts-sync** (66%) [compound, docs, process]
+  - Trigger: When adding or editing any Compound instinct.
+  - Action: Update `.loom/compound/INSTINCTS.md` and regenerate/adjust `.loom/compound/instincts.json` in the same change. Verify IDs are unique, kebab-case, and identical across doc + JSON; ensure any new instin...
 - **openapi-keep-spec-deterministic** (66%) [api, docs, openapi]
   - Trigger: Editing `docs/openapi.yaml` during endpoint/schema updates
   - Action: Avoid volatile fields like timestamps; keep component and path ordering stable; validate references and schema names stay consistent with the code.
+- **stabilize-cli-output-contract** (66%) [cli, determinism, ux-contract]
+  - Trigger: When printing structured lists/summaries in CLI
+  - Action: Ensure ordering and formatting are deterministic (sorting, fixed labels); avoid including volatile fields in user-facing output unless explicitly requested, and ensure tests lock the contract.
 
 ## Notes
 

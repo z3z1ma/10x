@@ -640,9 +640,19 @@ def ready(
     prio_max: Optional[int] = None,
     assignee: str = "",
     tag: str = "",
+    limit: int = 0,
 ) -> TicketListResult:
     store = store_for_cmd("ready")
     idx = build_index(store)
+
+    limit = int(limit or 0)
+    if limit < 0:
+        raise TicketArgError(
+            code="ARG",
+            error="limit must be >= 0",
+            hint="Use 0 for unlimited.",
+            details={"limit": limit},
+        )
 
     if priority is not None:
         prio_min = priority
@@ -654,7 +664,7 @@ def ready(
     for tid, t in idx.tickets.items():
         if t.status not in NON_TERMINAL_STATUSES:
             continue
-        if t.status == "blocked":
+        if t.status in {"blocked", "review"}:
             continue
 
         try:
@@ -680,6 +690,9 @@ def ready(
             out.append(t)
 
     out.sort(key=lambda t: (t.priority, t.id))
+
+    if limit:
+        out = out[:limit]
 
     rows = [
         _summary_for_ticket(

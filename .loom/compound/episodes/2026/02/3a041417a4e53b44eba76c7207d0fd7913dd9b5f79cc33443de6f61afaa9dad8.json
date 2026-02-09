@@ -1,0 +1,2212 @@
+{
+  "created_at": "2026-02-09T04:40:42.182303Z",
+  "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
+  "git": {
+    "base_ref": "origin/main",
+    "base_sha": "fd11881c724ec177afb9793ee355528f46f63286",
+    "changed_files": [
+      ".loom/compound/INSTINCTS.md",
+      ".loom/compound/instincts.json",
+      "src/agent_loom/ticket/cli.py",
+      "src/agent_loom/ticket/core.py",
+      "tests/test_ticket_ux.py"
+    ],
+    "diffstat": ".loom/compound/INSTINCTS.md   | 12 ++++++\n .loom/compound/instincts.json | 94 ++++++++++++++++++++++++++++++++++++++++\n src/agent_loom/ticket/cli.py  | 12 +++++-\n src/agent_loom/ticket/core.py | 15 ++++++-\n tests/test_ticket_ux.py       | 99 +++++++++++++++++++++++++++++++++++++++++++\n 5 files changed, 230 insertions(+), 2 deletions(-)",
+    "diffstat_sha256": "c1d4a1de8e530d5e150aab95d77cf622f3ffb55c046c4b643e55ab863311a0ea",
+    "dirty": true,
+    "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
+    "patch": "diff --git a/.loom/compound/INSTINCTS.md b/.loom/compound/INSTINCTS.md\nindex b680bfc..da49ccc 100644\n--- a/.loom/compound/INSTINCTS.md\n+++ b/.loom/compound/INSTINCTS.md\n@@ -24,6 +24,9 @@\n - **remove-orphans-after-large-deletions** (80%) [cleanup, packaging, python, refactor]\n   - Trigger: When removing many files or an entire subtree (e.g., `.../poly/*`)\n   - Action: Check `__init__.py` exports, public module surface, and docs/README links for orphans; ensure imports fail nowhere and no dead entrypoints remain.\n+- **cli-ux-change-requires-ux-test** (78%) [cli, loom-ticket, testing, ux-contract]\n+  - Trigger: When you change CLI text output, flags, or exit-code behavior\n+  - Action: Add/adjust a dedicated UX test that asserts exit code + key stdout/stderr lines for the affected command(s); keep assertions minimal but intentional (user-visible contracts only) so refactors don't ca...\n - **refactor-delete-module-chase-imports** (78%) [maintenance, python, refactor]\n   - Trigger: A refactor removes/renames modules (large deletions or package reshapes)\n   - Action: Search for old module names and key symbols (e.g. with ripgrep/grep), update imports, docs, and tests together; ensure no dead entrypoints remain.\n@@ -42,12 +45,21 @@\n - **prefer-command-docs-over-embedded-skill-copies** (74%) [commands, compound, docs, skills]\n   - Trigger: When documenting workflows for end-users inside compound-installed `.opencode/` trees.\n   - Action: Put loom command guidance in `.opencode/commands/loom-*.md` (command-discoverable docs) and avoid duplicating full skill content inside the compound template unless required; keep skills procedural an...\n+- **keep-core-and-cli-error-contract-aligned** (73%) [cli, error-handling, loom-ticket, ux-contract]\n+  - Trigger: When updating core behavior that the CLI surfaces (validation, missing resources, ambiguous inputs)\n+  - Action: Make core raise/return a single, well-typed/consistent error shape that CLI maps to stable user-facing messages + non-zero exit codes; add a UX test covering the error path.\n - **greenfield-no-backcompat-language** (70%) [design, docs, product]\n   - Trigger: Writing docs, flags, deprecations, or migration behaviors in early-stage systems\n   - Action: Prefer clean breaks and simple interfaces; remove/avoid 'backcompat' language unless there is a real external user contract that requires it.\n+- **prefer-ux-tests-over-broad-internals** (70%) [cli, maintainability, testing]\n+  - Trigger: When adding tests for command behavior\n+  - Action: Test through the CLI boundary (command invocation) rather than deep internal functions; assert the minimal observable behavior that matters (selected lines, not full dumps).\n - **openapi-keep-spec-deterministic** (66%) [api, docs, openapi]\n   - Trigger: Editing `docs/openapi.yaml` during endpoint/schema updates\n   - Action: Avoid volatile fields like timestamps; keep component and path ordering stable; validate references and schema names stay consistent with the code.\n+- **stabilize-cli-output-contract** (66%) [cli, determinism, ux-contract]\n+  - Trigger: When printing structured lists/summaries in CLI\n+  - Action: Ensure ordering and formatting are deterministic (sorting, fixed labels); avoid including volatile fields in user-facing output unless explicitly requested, and ensure tests lock the contract.\n \n ## Notes\n \ndiff --git a/.loom/compound/instincts.json b/.loom/compound/instincts.json\nindex 8c18767..60ba31f 100644\n--- a/.loom/compound/instincts.json\n+++ b/.loom/compound/instincts.json\n@@ -71,6 +71,30 @@\n         }\n       ]\n     },\n+    {\n+      \"id\": \"cli-ux-change-requires-ux-test\",\n+      \"title\": \"CLI UX Changes Need UX Tests\",\n+      \"trigger\": \"When you change CLI text output, flags, or exit-code behavior\",\n+      \"action\": \"Add/adjust a dedicated UX test that asserts exit code + key stdout/stderr lines for the affected command(s); keep assertions minimal but intentional (user-visible contracts only) so refactors don't cause noise.\",\n+      \"tags\": [\n+        \"cli\",\n+        \"loom-ticket\",\n+        \"testing\",\n+        \"ux-contract\"\n+      ],\n+      \"confidence\": 0.78,\n+      \"status\": \"active\",\n+      \"created_at\": \"2026-02-09T04:37:26.148941Z\",\n+      \"updated_at\": \"2026-02-09T04:37:26.148941Z\",\n+      \"evidence\": [\n+        {\n+          \"ts\": \"2026-02-09T04:37:26.148941Z\",\n+          \"episode_id\": \"9ab03e71ade631a0d3bf8b48dc47183684f6ab3d335e96c44ec1d9307d0171b7\",\n+          \"head_sha\": \"fd11881c724ec177afb9793ee355528f46f63286\",\n+          \"patch_sha256\": \"498d72b84d957b97977d837d501afa645452709e17517a544f393586df79b5e6\"\n+        }\n+      ]\n+    },\n     {\n       \"id\": \"compound-template-determinism-first\",\n       \"title\": \"Keep compound install outputs deterministic\",\n@@ -118,6 +142,30 @@\n         }\n       ]\n     },\n+    {\n+      \"id\": \"keep-core-and-cli-error-contract-aligned\",\n+      \"title\": \"Align Core Errors With CLI UX\",\n+      \"trigger\": \"When updating core behavior that the CLI surfaces (validation, missing resources, ambiguous inputs)\",\n+      \"action\": \"Make core raise/return a single, well-typed/consistent error shape that CLI maps to stable user-facing messages + non-zero exit codes; add a UX test covering the error path.\",\n+      \"tags\": [\n+        \"cli\",\n+        \"error-handling\",\n+        \"loom-ticket\",\n+        \"ux-contract\"\n+      ],\n+      \"confidence\": 0.73,\n+      \"status\": \"active\",\n+      \"created_at\": \"2026-02-09T04:37:26.148941Z\",\n+      \"updated_at\": \"2026-02-09T04:37:26.148941Z\",\n+      \"evidence\": [\n+        {\n+          \"ts\": \"2026-02-09T04:37:26.148941Z\",\n+          \"episode_id\": \"9ab03e71ade631a0d3bf8b48dc47183684f6ab3d335e96c44ec1d9307d0171b7\",\n+          \"head_sha\": \"fd11881c724ec177afb9793ee355528f46f63286\",\n+          \"patch_sha256\": \"498d72b84d957b97977d837d501afa645452709e17517a544f393586df79b5e6\"\n+        }\n+      ]\n+    },\n     {\n       \"id\": \"keep-openapi-and-ui-in-sync\",\n       \"title\": \"Keep OpenAPI and Dashboard Consumers in Sync\",\n@@ -261,6 +309,29 @@\n         }\n       ]\n     },\n+    {\n+      \"id\": \"prefer-ux-tests-over-broad-internals\",\n+      \"title\": \"Prefer UX Tests Over Internal Coupling\",\n+      \"trigger\": \"When adding tests for command behavior\",\n+      \"action\": \"Test through the CLI boundary (command invocation) rather than deep internal functions; assert the minimal observable behavior that matters (selected lines, not full dumps).\",\n+      \"tags\": [\n+        \"cli\",\n+        \"maintainability\",\n+        \"testing\"\n+      ],\n+      \"confidence\": 0.7,\n+      \"status\": \"active\",\n+      \"created_at\": \"2026-02-09T04:37:26.148941Z\",\n+      \"updated_at\": \"2026-02-09T04:37:26.148941Z\",\n+      \"evidence\": [\n+        {\n+          \"ts\": \"2026-02-09T04:37:26.148941Z\",\n+          \"episode_id\": \"9ab03e71ade631a0d3bf8b48dc47183684f6ab3d335e96c44ec1d9307d0171b7\",\n+          \"head_sha\": \"fd11881c724ec177afb9793ee355528f46f63286\",\n+          \"patch_sha256\": \"498d72b84d957b97977d837d501afa645452709e17517a544f393586df79b5e6\"\n+        }\n+      ]\n+    },\n     {\n       \"id\": \"refactor-delete-module-chase-imports\",\n       \"title\": \"After deleting a module, systematically eliminate all references\",\n@@ -308,6 +379,29 @@\n         }\n       ]\n     },\n+    {\n+      \"id\": \"stabilize-cli-output-contract\",\n+      \"title\": \"Stabilize CLI Output Contracts\",\n+      \"trigger\": \"When printing structured lists/summaries in CLI\",\n+      \"action\": \"Ensure ordering and formatting are deterministic (sorting, fixed labels); avoid including volatile fields in user-facing output unless explicitly requested, and ensure tests lock the contract.\",\n+      \"tags\": [\n+        \"cli\",\n+        \"determinism\",\n+        \"ux-contract\"\n+      ],\n+      \"confidence\": 0.66,\n+      \"status\": \"active\",\n+      \"created_at\": \"2026-02-09T04:37:26.148941Z\",\n+      \"updated_at\": \"2026-02-09T04:37:26.148941Z\",\n+      \"evidence\": [\n+        {\n+          \"ts\": \"2026-02-09T04:37:26.148941Z\",\n+          \"episode_id\": \"9ab03e71ade631a0d3bf8b48dc47183684f6ab3d335e96c44ec1d9307d0171b7\",\n+          \"head_sha\": \"fd11881c724ec177afb9793ee355528f46f63286\",\n+          \"patch_sha256\": \"498d72b84d957b97977d837d501afa645452709e17517a544f393586df79b5e6\"\n+        }\n+      ]\n+    },\n     {\n       \"id\": \"subsystem-removal-sweep\",\n       \"title\": \"Subsystem Removal Requires Repo-Wide Sweep\",\ndiff --git a/src/agent_loom/ticket/cli.py b/src/agent_loom/ticket/cli.py\nindex dc2c8c1..be1406d 100644\n--- a/src/agent_loom/ticket/cli.py\n+++ b/src/agent_loom/ticket/cli.py\n@@ -163,7 +163,7 @@ def _emit_error(\n                     sys.stderr.write(f\"Try: {s}\\n\")\n \n \n-_VALUE_FLAGS = {\"-p\", \"-m\", \"-a\", \"-T\"}\n+_VALUE_FLAGS = {\"-p\", \"-m\", \"-a\", \"-T\", \"-N\"}\n _FLAG_ALIASES = {\n     \"--ticket-dir\": \"--tickets-dir\",\n     \"--noaudit\": \"--no-audit\",\n@@ -433,6 +433,7 @@ def build_parser() -> argparse.ArgumentParser:\n     sp.add_argument(\"-T\", \"--tag\", default=\"\")\n     sp.add_argument(\"--all\", action=\"store_true\", help=\"Include closed\")\n     sp.add_argument(\n+        \"-N\",\n         \"--limit\",\n         type=int,\n         default=0,\n@@ -449,6 +450,7 @@ def build_parser() -> argparse.ArgumentParser:\n     sp.add_argument(\"-T\", \"--tag\", default=\"\")\n     sp.add_argument(\"--all\", action=\"store_true\", help=\"Include closed\")\n     sp.add_argument(\n+        \"-N\",\n         \"--limit\",\n         type=int,\n         default=0,\n@@ -462,6 +464,13 @@ def build_parser() -> argparse.ArgumentParser:\n     sp.add_argument(\"--prio-max\", dest=\"prio_max\", type=_arg_priority, default=None)\n     sp.add_argument(\"-a\", \"--assignee\", default=\"\")\n     sp.add_argument(\"-T\", \"--tag\", default=\"\")\n+    sp.add_argument(\n+        \"-N\",\n+        \"--limit\",\n+        type=int,\n+        default=0,\n+        help=\"Maximum tickets to return (0 = unlimited)\",\n+    )\n \n     sp = sub.add_parser(\"blocked\", parents=[common], help=\"List blocked tickets\")\n     sp.add_argument(\"-a\", \"--assignee\", default=\"\")\n@@ -880,6 +889,7 @@ def _handle_ready(args: argparse.Namespace, json_mode: bool, _cwd: Path) -> int:\n         prio_max=args.prio_max,\n         assignee=args.assignee,\n         tag=args.tag,\n+        limit=int(getattr(args, \"limit\", 0) or 0),\n     )\n     _emit_list_result(\"Ready\", response, json_mode=json_mode)\n     return 0\ndiff --git a/src/agent_loom/ticket/core.py b/src/agent_loom/ticket/core.py\nindex e026f30..c8601f0 100644\n--- a/src/agent_loom/ticket/core.py\n+++ b/src/agent_loom/ticket/core.py\n@@ -640,10 +640,20 @@ def ready(\n     prio_max: Optional[int] = None,\n     assignee: str = \"\",\n     tag: str = \"\",\n+    limit: int = 0,\n ) -> TicketListResult:\n     store = store_for_cmd(\"ready\")\n     idx = build_index(store)\n \n+    limit = int(limit or 0)\n+    if limit < 0:\n+        raise TicketArgError(\n+            code=\"ARG\",\n+            error=\"limit must be >= 0\",\n+            hint=\"Use 0 for unlimited.\",\n+            details={\"limit\": limit},\n+        )\n+\n     if priority is not None:\n         prio_min = priority\n         prio_max = priority\n@@ -654,7 +664,7 @@ def ready(\n     for tid, t in idx.tickets.items():\n         if t.status not in NON_TERMINAL_STATUSES:\n             continue\n-        if t.status == \"blocked\":\n+        if t.status in {\"blocked\", \"review\"}:\n             continue\n \n         try:\n@@ -681,6 +691,9 @@ def ready(\n \n     out.sort(key=lambda t: (t.priority, t.id))\n \n+    if limit:\n+        out = out[:limit]\n+\n     rows = [\n         _summary_for_ticket(\n             store,\ndiff --git a/tests/test_ticket_ux.py b/tests/test_ticket_ux.py\nindex e994815..7b720bb 100644\n--- a/tests/test_ticket_ux.py\n+++ b/tests/test_ticket_ux.py\n@@ -215,6 +215,105 @@ class TestTicketUx(unittest.TestCase):\n             self.assertEqual(code, 0)\n             self.assertEqual(int(shown2[\"ticket\"][\"priority\"]), 3)\n \n+    def test_ready_excludes_review_and_blocked_and_supports_limit(self) -> None:\n+        with _temp_git_repo() as (root, env):\n+            tickets_dir = root / \".loom\" / \"ticket\"\n+            env = {**env, \"TICKET_DIR\": str(tickets_dir)}\n+\n+            _, created_open = _ticket_json(\n+                [\n+                    \"--json\",\n+                    \"--no-audit\",\n+                    \"create\",\n+                    \"Open\",\n+                    \"--no-sprint-tag\",\n+                ],\n+                cwd=root,\n+                env=env,\n+            )\n+            tid_open = str(created_open.get(\"id\") or \"\")\n+            self.assertTrue(tid_open)\n+\n+            _, created_review = _ticket_json(\n+                [\n+                    \"--json\",\n+                    \"--no-audit\",\n+                    \"create\",\n+                    \"Review\",\n+                    \"--no-sprint-tag\",\n+                ],\n+                cwd=root,\n+                env=env,\n+            )\n+            tid_review = str(created_review.get(\"id\") or \"\")\n+            self.assertTrue(tid_review)\n+\n+            _, created_blocked = _ticket_json(\n+                [\n+                    \"--json\",\n+                    \"--no-audit\",\n+                    \"create\",\n+                    \"Blocked\",\n+                    \"--no-sprint-tag\",\n+                ],\n+                cwd=root,\n+                env=env,\n+            )\n+            tid_blocked = str(created_blocked.get(\"id\") or \"\")\n+            self.assertTrue(tid_blocked)\n+\n+            code, _ = _ticket_json(\n+                [\"--json\", \"--no-audit\", \"status\", tid_review, \"review\"],\n+                cwd=root,\n+                env=env,\n+            )\n+            self.assertEqual(code, 0)\n+\n+            code, _ = _ticket_json(\n+                [\"--json\", \"--no-audit\", \"status\", tid_blocked, \"blocked\"],\n+                cwd=root,\n+                env=env,\n+            )\n+            self.assertEqual(code, 0)\n+\n+            code, ready_all = _ticket_json(\n+                [\"--json\", \"--no-audit\", \"ready\"],\n+                cwd=root,\n+                env=env,\n+            )\n+            self.assertEqual(code, 0)\n+            ids = [str(r.get(\"id\") or \"\") for r in (ready_all.get(\"tickets\") or [])]\n+            self.assertIn(tid_open, ids)\n+            self.assertNotIn(tid_review, ids)\n+            self.assertNotIn(tid_blocked, ids)\n+\n+            code, ready_limited = _ticket_json(\n+                [\"--json\", \"--no-audit\", \"ready\", \"--limit\", \"1\"],\n+                cwd=root,\n+                env=env,\n+            )\n+            self.assertEqual(code, 0)\n+            self.assertEqual(int(ready_limited.get(\"count\") or 0), 1)\n+            self.assertEqual(len(ready_limited.get(\"tickets\") or []), 1)\n+\n+            code, ready_limited_short = _ticket_json(\n+                [\"--json\", \"--no-audit\", \"ready\", \"-N1\"],\n+                cwd=root,\n+                env=env,\n+            )\n+            self.assertEqual(code, 0)\n+            self.assertEqual(int(ready_limited_short.get(\"count\") or 0), 1)\n+            self.assertEqual(len(ready_limited_short.get(\"tickets\") or []), 1)\n+\n+            code, list_limited_short = _ticket_json(\n+                [\"--json\", \"--no-audit\", \"list\", \"-N1\"],\n+                cwd=root,\n+                env=env,\n+            )\n+            self.assertEqual(code, 0)\n+            self.assertEqual(int(list_limited_short.get(\"count\") or 0), 1)\n+            self.assertEqual(len(list_limited_short.get(\"tickets\") or []), 1)\n+\n \n if __name__ == \"__main__\":\n     unittest.main()\n",
+    "patch_omitted": false,
+    "patch_sha256": "2b739a8231c6031ee25bc96ebbe1436a00521c016ddadb42a37b514d0e320431"
+  },
+  "observations": {
+    "cursor": {
+      "end_count": 86754,
+      "end_offset_bytes": 14995722,
+      "file_prefix_sha256": "ea08844a853b43d8b06f8d9d28a0a9f67156d83075061a491564d6b3cbe1350f",
+      "reset_detected": false,
+      "start_count": 86562,
+      "start_offset_bytes": 14957383,
+      "tail_sha256": "24322dc2ec659835b502e9510e5a568d6dd79a541dee598d804c9798db9f4d87"
+    },
+    "included": [
+      {
+        "id": "d072757c-49ba-4985-898c-be7cf7c95082",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:25.981Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "fed6cfaa-79d6-4f60-81b5-95c2e5b061e5",
+        "properties": {
+          "keys": [
+            "message",
+            "variant",
+            "duration"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:26.197Z",
+        "type": "tui.toast.show"
+      },
+      {
+        "id": "ce24bc5a-e770-421f-be2b-b141f24fb5b0",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:38.368Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "17ff1b7f-e966-49a9-9e93-a6bd118ab4ec",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:37:38.370Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "b5aae49f-bd47-41f7-ab74-5c2bd8f6def1",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:37:38.373Z",
+        "type": "session.status"
+      },
+      {
+        "id": "a129b7d7-16ec-4318-ba80-a65efac30228",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:38.411Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "db2668ff-2eb1-4de3-98ff-0541dcc40be6",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:38.905Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f9fd7a93-175c-4b61-90db-7721efe7b849",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:37:38.911Z",
+        "type": "session.status"
+      },
+      {
+        "id": "074df87d-2902-46a0-b3ac-14596d6128df",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:37:38.914Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "f30eefc4-3576-47f5-8260-88e4a10c4e99",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:37:38.913Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "304f7575-22ef-4bf0-b0e3-b7449e2ea361",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:40.862Z",
+        "type": "message.updated"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: src/agent_loom/ticket/cli.py\n@@\n-    sp.add_argument(\n-        \"--limit\",\n-        type=int,\n-        default=0,\n-        help=\"Maximum tickets to return (0 = unlimited)\",\n-    )\n+    sp.add_argument(\n+        \"-N\",\n+        \"--limit\",\n+        type=int,\n+        default=0,\n+        help=\"Maximum tickets to return (0 = unlimited)\",\n+    )\n@@\n-    sp.add_argument(\n-        \"--limit\",\n-        type=int,\n-        default=0,\n-        help=\"Maximum tickets to return (0 = unlimited)\",\n-    )\n+    sp.add_argument(\n+        \"-N\",\n+        \"--limit\",\n+        type=int,\n+        default=0,\n+        help=\"Maximum tickets to return (0 = unlimited)\",\n+    )\n@@\n-    sp.add_argument(\n-        \"--limit\",\n-        type=int,\n-        default=0,\n-        help=\"Maximum tickets to return (0 = unlimited)\",\n-    )\n+    sp.add_argument(\n+        \"-N\",\n+        \"--limit\",\n+        type=int,\n+        default=0,\n+        help=\"Maximum tickets to return (0 = unlimited)\",\n+    )\n@@\n-_VALUE_FLAGS = {\"-p\", \"-m\", \"-a\", \"-T\"}\n+_VALUE_FLAGS = {\"-p\", \"-m\", \"-a\", \"-T\", \"-N\"}\n*** End Patch"
+        },
+        "id": "b03314c4-b8af-4e89-952e-1306a63ad5e3",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T04:37:55.089Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "ec9b83a9-ba4d-48e6-b005-3e41f3942e87",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:55.104Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "7bff98a4-eef0-44fe-a84b-ea08be74e21b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:55.110Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "0b05ef89-0dad-4398-a614-f908a9e4c3ed",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:37:55.110Z",
+        "type": "session.status"
+      },
+      {
+        "id": "6e746c0b-376f-4cd6-987a-0ef1c4023f1c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:55.137Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "ebdb28b4-6e9b-4ddf-8511-3e9c8ec9dc3f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:55.140Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "c5fceefe-30f4-47d4-8228-c76ce86a1579",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:37:55.141Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "e878652c-6c52-4c93-9095-af83ad1596c4",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:37:55.141Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "6e3b2357-d8bf-4131-a4d8-3ad35f5fc6eb",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:37:55.506Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "filePath": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/ticket/cli.py",
+          "limit": 50,
+          "offset": 150
+        },
+        "id": "18df9921-ca2f-4f72-b608-301114e428aa",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "filePath=/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/ticket/cli.py",
+        "tool": "read",
+        "ts": "2026-02-09T04:37:59.398Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "a7e6fea0-09b7-47c3-b360-bf31bd5c63fb",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "read",
+        "ts": "2026-02-09T04:37:59.404Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "7786c494-6dea-46f6-bf30-a465b3fc0c03",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:59.413Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "77fe6e9c-fe1b-4b3c-a9a1-4dc735012efc",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:37:59.414Z",
+        "type": "session.status"
+      },
+      {
+        "id": "1c115593-497a-495e-9ae8-07e4e9caa65a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:59.414Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "761bcb5e-deaf-4416-82c3-63fc7d8e190b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:59.447Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "09842f3f-9fdb-4a22-a0a2-9c567ccca785",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:59.448Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "467897b7-327b-42f9-8e11-eb8262222d00",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:37:59.451Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "39aa2c82-5bf3-417c-b3a4-f247d635a6b9",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:37:59.450Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "d9db5768-6ffa-4036-9557-5efbfb957e24",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:37:59.850Z",
+        "type": "session.status"
+      },
+      {
+        "id": "10b67733-693e-4514-9761-52702e420a86",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:59.878Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "a0a8fd2c-37a6-4b74-9213-72ce014be92d",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:59.918Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "b6c78107-6d5f-4d3d-971d-4e0773e66b0e",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:37:59.919Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: src/agent_loom/ticket/cli.py\n@@\n-_VALUE_FLAGS = {\"-p\", \"-m\", \"-a\", \"-T\"}\n+_VALUE_FLAGS = {\"-p\", \"-m\", \"-a\", \"-T\", \"-N\"}\n*** End Patch"
+        },
+        "id": "b14d32c4-2032-42cf-8769-b8f9015d2342",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T04:38:03.712Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "74783f7e-0763-451d-b386-da5baf0b47b1",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:03.717Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "667effa4-d32d-4175-9b23-94245cd7329e",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:03.775Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "b9339d9e-7a22-4d08-ad30-29faa5b59b75",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:04.200Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "d2baf9dc-050c-47c3-99fc-159c9d2d4458",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:04.238Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "304d5372-5e4e-47a7-896e-9038611afaf0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:04.238Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "68c9c430-492c-4cd0-87d9-f4926af24039",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T04:38:04.352Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "d4c5fbb4-88af-4959-820c-2befe2fb95aa",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:04.356Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "58e475f6-b807-45be-b160-f692ac38dd86",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:04.359Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "0a317518-e29c-419a-b262-ecec5399daf6",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:04.360Z",
+        "type": "session.status"
+      },
+      {
+        "id": "33749137-950f-4a91-be92-0a062834e8e6",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:04.389Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f7f8116f-7d30-4f00-bf60-c46a095bbbc2",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:04.389Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "40785c93-cde1-4970-b85a-b52e1a2f5e63",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:38:04.392Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "df772c82-7561-462c-b09e-a8b685f9e1cf",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:04.392Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "f9d8aacf-98a9-41af-a8a2-f3e0ba221c75",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:04.737Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "include": "src/agent_loom/ticket/cli.py",
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom",
+          "pattern": "add_argument\\(\\s*\"--limit\""
+        },
+        "id": "b9c3d7f0-ad08-4ac5-ac65-c2759cf419ca",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "pattern=add_argument\\(\\s*\"--limit\" include=src/agent_loom/ticket/cli.py",
+        "tool": "grep",
+        "ts": "2026-02-09T04:38:07.029Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "e42c912e-1414-4d6c-a828-9c8a69be4765",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "grep",
+        "ts": "2026-02-09T04:38:07.079Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "9d2ca58a-3642-49c5-90c6-7327c5602086",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:07.082Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "e6b5e5fd-6986-45e5-806e-dea33be90fc4",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:07.083Z",
+        "type": "session.status"
+      },
+      {
+        "id": "cd378269-8af5-4617-9f40-1438dafe7767",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:07.083Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9c4a2abd-74b0-4c02-800c-0d8ee3942397",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:07.115Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "690d732f-f4ab-4da0-bdf9-90ce9f5eec70",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:07.116Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "c7d8e411-a864-4f41-b833-f0f11107d13d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:07.118Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "2e029998-3a0b-46d2-8229-445694383b4b",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:38:07.118Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "c30492a8-263c-4d4f-b50a-42959b747a71",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:07.476Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "include": "src/agent_loom/ticket/cli.py",
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom",
+          "pattern": "\"--limit\","
+        },
+        "id": "a3c7e103-ad69-418c-8680-ba55f3686f85",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "pattern=\"--limit\", include=src/agent_loom/ticket/cli.py",
+        "tool": "grep",
+        "ts": "2026-02-09T04:38:10.251Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "3bc6e085-dd69-43d6-9e4c-3d689c275204",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "grep",
+        "ts": "2026-02-09T04:38:10.288Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "3126c035-85c4-4036-8000-be5b3ceccb87",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:10.291Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "5c6579b8-122a-4e04-8938-337bc02d566d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:10.296Z",
+        "type": "session.status"
+      },
+      {
+        "id": "a4a36c82-6800-4227-92de-350aa306b277",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:10.296Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "8e62c119-b2f6-4c73-a336-9fc4e61ec799",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:10.327Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "66fed331-7a1a-45f8-a98f-b1c5c13cb710",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:38:10.327Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "d1d9f931-e5a1-4c27-83e5-a60baee8260c",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:10.327Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "b243d145-8d7f-4705-b5aa-fafafb3bfcd7",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:10.328Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "568e462b-a45c-4305-9787-dd45d8288ff5",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:10.669Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "filePath": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/ticket/cli.py",
+          "limit": 70,
+          "offset": 420
+        },
+        "id": "ab32a392-0f1e-4c44-8dc4-e7b124fda817",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "filePath=/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/ticket/cli.py",
+        "tool": "read",
+        "ts": "2026-02-09T04:38:13.681Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "abbc3d78-7fe0-47df-a823-c67b9af31fb5",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "read",
+        "ts": "2026-02-09T04:38:13.685Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "8a5a5eb8-b114-40a6-8d54-bd95575e63d2",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:13.687Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b111b6c6-00cf-48db-9233-0145240ac07e",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:13.689Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "8cb36057-5dfb-4114-9738-b60527c013f3",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:13.689Z",
+        "type": "session.status"
+      },
+      {
+        "id": "c54dad41-efd8-401d-806b-9d9e4715d82c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:13.718Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "3d3891c8-1124-4585-9239-459b6cabecbb",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:13.720Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "7ffb2923-950f-486e-8648-dcd446ebd171",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:13.718Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "64c0619f-b330-4840-b9a7-7818105e07c7",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:38:13.720Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "cc6b7263-a850-4b64-ac53-896a65c51f73",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:14.100Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "14fe8bc8-72f4-4595-b90b-43a147a43d52",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:14.111Z",
+        "type": "session.status"
+      },
+      {
+        "id": "600d7de6-0acd-4f1e-aaa2-ca19a20f7651",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:14.138Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "b8dde71c-f55a-496c-831d-329f574f8453",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:14.138Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: src/agent_loom/ticket/cli.py\n@@\n     sp.add_argument(\"--all\", action=\"store_true\", help=\"Include closed\")\n     sp.add_argument(\n+        \"-N\",\n         \"--limit\",\n         type=int,\n         default=0,\n         help=\"Maximum tickets to return (0 = unlimited)\",\n     )\n@@\n     sp.add_argument(\"--all\", action=\"store_true\", help=\"Include closed\")\n     sp.add_argument(\n+        \"-N\",\n         \"--limit\",\n         type=int,\n         default=0,\n         help=\"Maximum tickets to return (0 = unlimited)\",\n     )\n@@\n     sp.add_argument(\"-a\", \"--assignee\", default=\"\")\n     sp.add_argument(\"-T\", \"--tag\", default=\"\")\n     sp.add_argument(\n+        \"-N\",\n         \"--limit\",\n         type=int,\n         default=0,\n         help=\"Maximum tickets to return (0 = unlimited)\",\n     )\n*** End Patch"
+        },
+        "id": "bd7fdc62-5265-4d8f-9084-a3feedcb90b0",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T04:38:21.461Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "8eb5d1cb-510a-4987-b1e2-11df67205778",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:21.473Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "97264cc1-e949-4c1d-a571-4d9d4d7e37ec",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:21.502Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "e080ac3a-cb30-4aa9-b1a2-15941a4cc490",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:21.924Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "cc2145a0-4ace-4db8-8f44-2347259ec980",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:21.957Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "3132843c-ed9d-46a5-bc55-336794e9344b",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:21.957Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "60d6879f-48e2-4b57-afce-914b6f1189d3",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T04:38:22.076Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "8846548b-4601-4fb5-974f-98154a9d3943",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:22.082Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "8a53cc7a-e28d-4bad-8d45-349f42112c1e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:22.084Z",
+        "type": "session.status"
+      },
+      {
+        "id": "a30ccaf8-95e3-4490-95ac-83a7f526ecdc",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:22.084Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "924e0fe9-d9bf-40c1-a9c1-a2dc540b990d",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:22.116Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "7ae7dfda-19f8-4d0a-a279-09cede0fa884",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:38:22.119Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "6306099b-48f0-432f-ad21-46926681e71c",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:22.119Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "925cf27b-6d1e-406f-b556-0808e14df69a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:22.116Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a5bb6ec1-10df-46da-928f-1f45c44fa327",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:22.628Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: tests/test_ticket_ux.py\n@@\n     def test_ready_excludes_review_and_blocked_and_supports_limit(self) -> None:\n         with _temp_git_repo() as (root, env):\n@@\n             code, ready_limited = _ticket_json(\n                 [\"--json\", \"--no-audit\", \"ready\", \"--limit\", \"1\"],\n                 cwd=root,\n                 env=env,\n             )\n             self.assertEqual(code, 0)\n             self.assertEqual(int(ready_limited.get(\"count\") or 0), 1)\n             self.assertEqual(len(ready_limited.get(\"tickets\") or []), 1)\n+\n+            code, ready_limited_short = _ticket_json(\n+                [\"--json\", \"--no-audit\", \"ready\", \"-N1\"],\n+                cwd=root,\n+                env=env,\n+            )\n+            self.assertEqual(code, 0)\n+            self.assertEqual(int(ready_limited_short.get(\"count\") or 0), 1)\n+            self.assertEqual(len(ready_limited_short.get(\"tickets\") or []), 1)\n+\n+            code, list_limited_short = _ticket_json(\n+                [\"--json\", \"--no-audit\", \"list\", \"-N1\"],\n+                cwd=root,\n+                env=env,\n+            )\n+            self.assertEqual(code, 0)\n+            self.assertEqual(int(list_limited_short.get(\"count\") or 0), 1)\n+            self.assertEqual(len(list_limited_short.get(\"tickets\") or []), 1)\n*** End Patch"
+        },
+        "id": "6469ad0e-751c-4c26-9cdf-e43aa5ab85b9",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T04:38:38.773Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "c8dbf9e4-346b-489f-baf3-41ebfe57b3b0",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:38.782Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "99cc02b4-8cdf-4f28-b190-52f5605009b8",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:38.820Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "3fbb29b8-5356-499c-9e9c-3f547a591b06",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:39.145Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "38f27888-1c3b-4076-9c02-9ea984a38804",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "apply_patch",
+        "ts": "2026-02-09T04:38:39.296Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "4b6da22b-54c0-4ce4-b7f9-74fe36d08907",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:39.300Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "22e4370f-6923-4486-a5cf-a56465e96bf8",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:39.302Z",
+        "type": "session.status"
+      },
+      {
+        "id": "71fab5b3-5ff6-47e9-b1ab-039460c625fe",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:39.301Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d20d24dc-a7a3-4007-b2c5-2f355d811ac6",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:39.336Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9d6f6121-8ae5-47f4-b89c-b589a4710529",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:39.337Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f613accd-c92a-4457-b31f-344ab6c8370e",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:38:39.340Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "fefbd2e8-c02d-4122-a6bb-d8836d63ee16",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:39.340Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "541bb096-cfa8-46d7-8e34-15db8953fe6c",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:39.746Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 19,
+          "command_sha256": "64776c1ca0c426f361df9362b24f35323bd843c12b79af437d10aa080db1b36f",
+          "redacted": true
+        },
+        "id": "5024ee12-46c8-411e-966c-cd83008aa09a",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "command_sha256=64776c1ca0c426f361df9362b24f35323bd843c12b79af437d10aa080db1b36f command_len=19",
+        "tool": "bash",
+        "ts": "2026-02-09T04:38:42.364Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": {
+          "command_len": 19,
+          "command_sha256": "abbdbe7f68d529e81b887d45d3a9d58969b565b523ce5753aacc4dfe0b9e8a63",
+          "redacted": true
+        },
+        "id": "12eaa1ee-3642-4f3e-a344-ce8727c2f4bf",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "command_sha256=abbdbe7f68d529e81b887d45d3a9d58969b565b523ce5753aacc4dfe0b9e8a63 command_len=19",
+        "tool": "bash",
+        "ts": "2026-02-09T04:38:42.388Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "aff13e86-6d31-4501-88c2-b5fcef151c76",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "bash",
+        "ts": "2026-02-09T04:38:42.446Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "args": null,
+        "id": "d0c1800c-64ef-46bf-90fd-1ba4da7990b2",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "bash",
+        "ts": "2026-02-09T04:38:47.308Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "aaf6a39d-a074-4ebf-a6b9-6db776380c28",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:47.311Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "4b6f30ea-d45f-4336-8866-5b5cfd450c47",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:47.312Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d480dea6-3b7f-4900-8b38-77f0d5b84c69",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:47.312Z",
+        "type": "session.status"
+      },
+      {
+        "id": "4fd74008-acc5-4bfa-adf6-31ed4efde2a7",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:47.340Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "fd4e8b54-53e2-4815-925d-8aae7c2cad26",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:38:47.341Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "aa59e8f1-a35e-4921-9940-f3c0fd854622",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:47.341Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "3207dac3-5532-46f1-8453-03c00c36169d",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:38:47.342Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "fc7fadff-9148-4cbd-b5fd-42dee3439892",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:38:47.703Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 13,
+          "command_sha256": "efbb60d087c678d2718a428ddea96c5458e79f8f334c3141eb3ddacd55ae91d8",
+          "redacted": true
+        },
+        "id": "d90b63f7-4d7f-4637-bfd0-f2c8549c6ca1",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "command_sha256=efbb60d087c678d2718a428ddea96c5458e79f8f334c3141eb3ddacd55ae91d8 command_len=13",
+        "tool": "bash",
+        "ts": "2026-02-09T04:38:49.561Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "b6c0e417-40bf-4998-9ae1-8ab1e8910280",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "bash",
+        "ts": "2026-02-09T04:39:23.070Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "8f90794e-3e12-4c98-bf60-e40f8037d725",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:23.075Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "ac138237-4fc2-4471-8e0d-d1928f45ad2d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:23.078Z",
+        "type": "session.status"
+      },
+      {
+        "id": "3e778065-04fe-4345-a208-0e9ecb45dda1",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:23.078Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "cc90eb9b-58bc-4788-8824-bc89bf135146",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:23.113Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "8fcb76b5-4fda-4fb6-b47a-ce724ff0c700",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:23.113Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "81506cfd-ab0f-441a-b665-236726aefa30",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:39:23.116Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "5e285b16-fe3e-45c4-819b-47bc72e9435d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:23.116Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "615fcd74-dc5d-42f2-84f0-503a4e023efc",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:23.695Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 15,
+          "command_sha256": "bcf996cc2c0b7eb7e8ddcd15c1c22e596e11fd6556591a38ebc741509209e1a5",
+          "redacted": true
+        },
+        "id": "b86072c5-3ab7-47e1-86c4-fe0f8fe6e891",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "command_sha256=bcf996cc2c0b7eb7e8ddcd15c1c22e596e11fd6556591a38ebc741509209e1a5 command_len=15",
+        "tool": "bash",
+        "ts": "2026-02-09T04:39:25.880Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "d6bc9b93-fb56-4229-b51a-7527e5b04573",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "bash",
+        "ts": "2026-02-09T04:39:25.934Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "1937e32d-906d-4562-b436-e4853ae4c0ec",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:25.936Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d799cc6d-25e8-43ca-9912-6b00785674b0",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:25.939Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "daa2fcbc-60a8-4e73-9706-8247bb41d026",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:25.939Z",
+        "type": "session.status"
+      },
+      {
+        "id": "b4c7bbfe-96b1-429e-bbf8-3f560e8cbfd8",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:25.969Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "0d752ed8-6a75-4b86-83df-714a6e4a507c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:25.970Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a203309d-0eb8-4551-a42c-e40f43f15f49",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:25.972Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "6a172989-f504-48aa-b6e9-fd59c946a156",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:39:25.972Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "343de163-e57d-445a-a8d3-0021eac20f95",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:26.328Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 22,
+          "command_sha256": "ca225b06d4162d1658e5ddabe3f0616050b0a0a408204115fa1d8ba30ad0da4f",
+          "redacted": true
+        },
+        "id": "f5b1b8fc-22bc-4787-b2af-432e43ea96c7",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "command_sha256=ca225b06d4162d1658e5ddabe3f0616050b0a0a408204115fa1d8ba30ad0da4f command_len=22",
+        "tool": "bash",
+        "ts": "2026-02-09T04:39:36.795Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "3d3a4336-9cbd-4da7-9d4a-4dbf9ae3e30d",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:36.878Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "args": null,
+        "id": "cf94b18c-03d1-46f7-83a5-6cff2db6e704",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "bash",
+        "ts": "2026-02-09T04:39:36.890Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "fd37eec9-e211-4544-a14e-b850b3fa9bd1",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:36.893Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "2120f6a1-6b63-488c-9499-7ec03379c4da",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:36.894Z",
+        "type": "session.status"
+      },
+      {
+        "id": "872f9d9c-2fe6-476d-9f64-f0201cd51684",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:36.894Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "89ed69b8-51cb-424f-b287-d79ddff55e64",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:36.923Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "122eaab4-1ad1-4aec-93bb-92c4fc00c345",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:39:36.923Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "f4c350de-d2b1-42fb-bc30-530e13e4b1dd",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:36.923Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "6e57a0e0-fb59-4fd7-b9b1-f11f730e2531",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:36.924Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f2eb7d47-89c7-4b6e-bdcc-f992feb9a2f5",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:36.943Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "f76f4f98-e8ea-4ab1-8ca5-fa0b15c76edc",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:37.290Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "include": "src/agent_loom/ticket/cli.py",
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom",
+          "pattern": "\"-N\""
+        },
+        "id": "e3988af5-e3d7-4fd5-8f97-50e10418b4f7",
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "summary": "pattern=\"-N\" include=src/agent_loom/ticket/cli.py",
+        "tool": "grep",
+        "ts": "2026-02-09T04:39:48.776Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "2b2b081a-ac37-4336-a651-8a752b6edb06",
+        "ok": null,
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "tool": "grep",
+        "ts": "2026-02-09T04:39:48.826Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "15cdb8fd-c629-447e-8059-8632f22b8664",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:48.829Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "4feb9eed-b4e5-4881-b180-87b961820f1d",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:48.831Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6ead7353-db70-48dc-8c3e-d42e4e7a45a7",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:48.831Z",
+        "type": "session.status"
+      },
+      {
+        "id": "d9f5bf75-27d6-4aa5-bff7-53f06c9b4a07",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:48.875Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "83208763-fe7b-44ba-be96-9e307799a875",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:48.876Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "20a5e295-60c2-44b8-9947-629e0fbb6f08",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:39:48.875Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "11d6bda9-6555-4ae4-b709-97fc752fddd5",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:48.878Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "3ac968bb-b27c-4038-8eee-8ebd53892914",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:49.274Z",
+        "type": "session.status"
+      },
+      {
+        "id": "b6a7adb9-7f40-4633-b8f8-cdfcc0436bdf",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:59.113Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "975b03e2-c400-47fc-9677-c4ef8c8113e2",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:59.123Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6d565f38-23c6-4822-91a1-3eebdd535faa",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:59.123Z",
+        "type": "session.status"
+      },
+      {
+        "id": "5b8b3a56-dce3-4ccb-a565-9c3031c2898a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:59.181Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "e32c08e2-f9c9-49aa-bc94-9e49575904fe",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:59.181Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "344fe720-bee6-4bc7-a9b2-5be7baac2fa3",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:39:59.181Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "d9ed4053-90cc-44bf-b07a-9c29ecbb833f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:59.184Z",
+        "type": "session.status"
+      },
+      {
+        "id": "1095d042-5c1a-4642-a3ff-69559a62897c",
+        "properties": {
+          "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4"
+        },
+        "sessionID": "ses_3bf53e7b7ffeRKkPXHz6q1isx4",
+        "ts": "2026-02-09T04:39:59.186Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "05ededea-2106-44fa-a411-8ea2139e285e",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:59.275Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "85694476-3cf4-4b26-b775-b091bf0f0fd5",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:59.305Z",
+        "type": "session.created"
+      },
+      {
+        "id": "9633f9de-6cc8-47a8-a659-223b6cbdda95",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:39:59.305Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "bffc8ed9-2f5b-40c4-913c-e32a52bbbf76",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:59.309Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "c592203b-1b93-414b-887f-4b1b855c2a93",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:39:59.310Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "2ece1fc9-16ce-438b-91b1-5dcca7e9ed01",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf4cfdb6ffeyHSEPAPZu0E8eq",
+        "ts": "2026-02-09T04:39:59.310Z",
+        "type": "session.status"
+      },
+      {
+        "id": "fe8a9d6b-f0f8-4eb0-9500-6b26c6fd9b96",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:59.311Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6fba049f-9b97-476b-8ddf-74d85a78c642",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:39:59.615Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6cf4507e-1442-4602-ba53-6205c806f9f4",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf4cfdb6ffeyHSEPAPZu0E8eq",
+        "ts": "2026-02-09T04:39:59.620Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "1820f07d-0364-434b-b129-4108e9b46d7e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf4cfdb6ffeyHSEPAPZu0E8eq",
+        "ts": "2026-02-09T04:39:59.618Z",
+        "type": "session.status"
+      },
+      {
+        "id": "cac34d49-2551-42a2-819d-47811bf31a2b",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:39:59.619Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "445a79f3-9da9-49a2-b656-57af50277965",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:40:01.320Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a1f4d73a-ec07-4ba7-abb5-8999ce21f809",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:40:41.187Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "83fa9b6a-5043-450c-ba0f-ee42c5a92203",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:40:41.204Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b1a8f78c-c809-4594-a9d8-4c26c30bb1d7",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf4cfdb6ffeyHSEPAPZu0E8eq",
+        "ts": "2026-02-09T04:40:41.205Z",
+        "type": "session.status"
+      },
+      {
+        "id": "df717b37-8670-4168-a6fa-f02da416e120",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:40:41.209Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a1753146-61d5-4b76-b377-4a5374fdb57f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3bf4cfdb6ffeyHSEPAPZu0E8eq",
+        "ts": "2026-02-09T04:40:41.210Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "b64c3aed-448c-4e5e-9fc6-bba3103c9a44",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-09T04:40:41.210Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "3bcc0e31-86a7-49ab-b7dd-ae1a598ac33e",
+        "properties": {
+          "sessionID": "ses_3bf4cfdb6ffeyHSEPAPZu0E8eq"
+        },
+        "sessionID": "ses_3bf4cfdb6ffeyHSEPAPZu0E8eq",
+        "ts": "2026-02-09T04:40:41.213Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "d9e6d9e9-f590-45a2-9c79-6fc6661631fe",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3bf4cfdb6ffeyHSEPAPZu0E8eq",
+        "ts": "2026-02-09T04:40:41.213Z",
+        "type": "session.status"
+      },
+      {
+        "id": "e58face0-8409-46e6-88ed-ee22eec80b4c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-09T04:40:41.254Z",
+        "type": "session.deleted"
+      }
+    ],
+    "omitted": false
+  },
+  "proposals": {
+    "instinct_candidates": [
+      {
+        "action": "Add/extend a pytest UX test that exercises the command and asserts: exit code, stdout/stderr content (including key lines and spacing), and stable formatting. Prefer small, readable golden strings (dedent) over broad regexes; avoid asserting volatile data (timestamps, temp paths) unless you control/freeze it.",
+        "confidence": 0.82,
+        "id": "cli-ux-regression-tests",
+        "tags": [
+          "cli",
+          "ux",
+          "testing",
+          "regression",
+          "tickets"
+        ],
+        "title": "Add CLI UX regression tests when output changes",
+        "trigger": "When changing any CLI command output, flags, exit codes, or user-facing error messages (especially in ticket commands)."
+      },
+      {
+        "action": "Ensure ordering is explicit and stable (sort inputs, stable iteration, deterministic grouping). Normalize or avoid non-deterministic content (timestamps, random IDs). Make newline behavior consistent (exactly one trailing newline; no extra blank lines unless intentional) and cover with a UX test.",
+        "confidence": 0.71,
+        "id": "deterministic-cli-output",
+        "tags": [
+          "cli",
+          "determinism",
+          "ux"
+        ],
+        "title": "Keep CLI output deterministic by default",
+        "trigger": "When a CLI command prints lists, tables, multi-item sections, or derived metadata (IDs, paths, counts)."
+      },
+      {
+        "action": "Update `.loom/compound/INSTINCTS.md` and regenerate/adjust `.loom/compound/instincts.json` in the same change. Verify IDs are unique, kebab-case, and identical across doc + JSON; ensure any new instinct has a clear trigger/action and minimal tags.",
+        "confidence": 0.66,
+        "id": "compound-instincts-sync",
+        "tags": [
+          "compound",
+          "process",
+          "docs"
+        ],
+        "title": "Keep instincts docs and compiled JSON in sync",
+        "trigger": "When adding or editing any Compound instinct."
+      }
+    ],
+    "skill_candidates": [
+      {
+        "body": "# CLI UX Regression Tests\n\nUse this when you change CLI output/flags/errors and want durable regression coverage.\n\n## Procedure\n\n1. Pick the narrowest invocation surface.\n   - If the CLI is built on Typer/Click: use the framework test runner.\n   - If the CLI is a thin wrapper over Python functions: call the function directly and capture output.\n\n2. Write a focused pytest in `tests/test_<area>_ux.py`.\n   - One test per user story (e.g. `ticket show`, `ticket update`, invalid args).\n   - Assert `exit_code`, `stdout`, `stderr`.\n\n3. Assert *stable* strings.\n   - Prefer exact multi-line output comparisons using `textwrap.dedent`.\n   - Avoid asserting volatile data (timestamps, temp paths, random IDs). If unavoidable, control/freeze it.\n\n4. Keep formatting expectations intentional.\n   - Cover newline behavior (exact output, trailing newline).\n   - Cover ordering (sorted lists) if multiple items are printed.\n\n5. Run the smallest loop first.\n   - `uv run pytest -k ux`\n\n## Framework runners (choose one)\n\nTyper:\n\n```python\nfrom typer.testing import CliRunner\n\nrunner = CliRunner()\nresult = runner.invoke(app, [\"ticket\", \"show\", \"...\"])\nassert result.exit_code == 0\nassert result.stdout == \"...\\n\"\n```\n\nClick:\n\n```python\nfrom click.testing import CliRunner\n\nrunner = CliRunner()\nresult = runner.invoke(cli, [\"ticket\", \"show\", \"...\"])\nassert result.exit_code == 0\nassert result.output == \"...\\n\"\n```\n",
+        "description": "Procedure for adding stable, high-signal CLI UX regression tests (stdout/stderr/exit codes) without making brittle assertions.",
+        "name": "cli-ux-regression-tests",
+        "source_instinct_ids": [
+          "cli-ux-regression-tests",
+          "deterministic-cli-output"
+        ],
+        "tags": [
+          "cli",
+          "testing",
+          "ux",
+          "pytest"
+        ]
+      }
+    ]
+  },
+  "triage": {
+    "notes": "",
+    "status": "accepted",
+    "tags": []
+  },
+  "version": 1
+}

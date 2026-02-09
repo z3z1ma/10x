@@ -1,0 +1,77 @@
+{
+  "created_at": "2026-02-09T04:40:42.182303Z",
+  "decision_id": "519b38d0cf109069ef477b9c92b4f92563cf88a15a712a6a7dbee92f31cbd060",
+  "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
+  "ops": [
+    {
+      "action": "Add/extend a pytest UX test that exercises the command and asserts: exit code, stdout/stderr content (including key lines and spacing), and stable formatting. Prefer small, readable golden strings (dedent) over broad regexes; avoid asserting volatile data (timestamps, temp paths) unless you control/freeze it.",
+      "confidence": 0.82,
+      "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
+      "id": "cli-ux-regression-tests",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "cli",
+        "regression",
+        "testing",
+        "tickets",
+        "ux"
+      ],
+      "title": "Add CLI UX regression tests when output changes",
+      "trigger": "When changing any CLI command output, flags, exit codes, or user-facing error messages (especially in ticket commands).",
+      "ts": "2026-02-09T04:40:42.182303Z"
+    },
+    {
+      "action": "Update `.loom/compound/INSTINCTS.md` and regenerate/adjust `.loom/compound/instincts.json` in the same change. Verify IDs are unique, kebab-case, and identical across doc + JSON; ensure any new instinct has a clear trigger/action and minimal tags.",
+      "confidence": 0.66,
+      "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
+      "id": "compound-instincts-sync",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "compound",
+        "docs",
+        "process"
+      ],
+      "title": "Keep instincts docs and compiled JSON in sync",
+      "trigger": "When adding or editing any Compound instinct.",
+      "ts": "2026-02-09T04:40:42.182303Z"
+    },
+    {
+      "action": "Ensure ordering is explicit and stable (sort inputs, stable iteration, deterministic grouping). Normalize or avoid non-deterministic content (timestamps, random IDs). Make newline behavior consistent (exactly one trailing newline; no extra blank lines unless intentional) and cover with a UX test.",
+      "confidence": 0.71,
+      "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
+      "id": "deterministic-cli-output",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "cli",
+        "determinism",
+        "ux"
+      ],
+      "title": "Keep CLI output deterministic by default",
+      "trigger": "When a CLI command prints lists, tables, multi-item sections, or derived metadata (IDs, paths, counts).",
+      "ts": "2026-02-09T04:40:42.182303Z"
+    },
+    {
+      "body": "# CLI UX Regression Tests\n\nUse this when you change CLI output/flags/errors and want durable regression coverage.\n\n## Procedure\n\n1. Pick the narrowest invocation surface.\n   - If the CLI is built on Typer/Click: use the framework test runner.\n   - If the CLI is a thin wrapper over Python functions: call the function directly and capture output.\n\n2. Write a focused pytest in `tests/test_<area>_ux.py`.\n   - One test per user story (e.g. `ticket show`, `ticket update`, invalid args).\n   - Assert `exit_code`, `stdout`, `stderr`.\n\n3. Assert *stable* strings.\n   - Prefer exact multi-line output comparisons using `textwrap.dedent`.\n   - Avoid asserting volatile data (timestamps, temp paths, random IDs). If unavoidable, control/freeze it.\n\n4. Keep formatting expectations intentional.\n   - Cover newline behavior (exact output, trailing newline).\n   - Cover ordering (sorted lists) if multiple items are printed.\n\n5. Run the smallest loop first.\n   - `uv run pytest -k ux`\n\n## Framework runners (choose one)\n\nTyper:\n\n```python\nfrom typer.testing import CliRunner\n\nrunner = CliRunner()\nresult = runner.invoke(app, [\"ticket\", \"show\", \"...\"])\nassert result.exit_code == 0\nassert result.stdout == \"...\\n\"\n```\n\nClick:\n\n```python\nfrom click.testing import CliRunner\n\nrunner = CliRunner()\nresult = runner.invoke(cli, [\"ticket\", \"show\", \"...\"])\nassert result.exit_code == 0\nassert result.output == \"...\\n\"\n```",
+      "description": "Procedure for adding stable, high-signal CLI UX regression tests (stdout/stderr/exit codes) without making brittle assertions.",
+      "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
+      "name": "cli-ux-regression-tests",
+      "op": "skill.upsert",
+      "source_instinct_ids": [
+        "cli-ux-regression-tests",
+        "deterministic-cli-output"
+      ],
+      "tags": [
+        "cli",
+        "pytest",
+        "testing",
+        "ux"
+      ],
+      "ts": "2026-02-09T04:40:42.182303Z"
+    }
+  ],
+  "proposal_blob_sha256": "b418a0d6717cd4216e78812c032bfca0fabb9891db819997dc4f12b0a8b95052",
+  "version": 1
+}

@@ -163,7 +163,7 @@ def _emit_error(
                     sys.stderr.write(f"Try: {s}\n")
 
 
-_VALUE_FLAGS = {"-p", "-m", "-a", "-T"}
+_VALUE_FLAGS = {"-p", "-m", "-a", "-T", "-N"}
 _FLAG_ALIASES = {
     "--ticket-dir": "--tickets-dir",
     "--noaudit": "--no-audit",
@@ -433,6 +433,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("-T", "--tag", default="")
     sp.add_argument("--all", action="store_true", help="Include closed")
     sp.add_argument(
+        "-N",
         "--limit",
         type=int,
         default=0,
@@ -449,6 +450,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("-T", "--tag", default="")
     sp.add_argument("--all", action="store_true", help="Include closed")
     sp.add_argument(
+        "-N",
         "--limit",
         type=int,
         default=0,
@@ -462,6 +464,13 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--prio-max", dest="prio_max", type=_arg_priority, default=None)
     sp.add_argument("-a", "--assignee", default="")
     sp.add_argument("-T", "--tag", default="")
+    sp.add_argument(
+        "-N",
+        "--limit",
+        type=int,
+        default=0,
+        help="Maximum tickets to return (0 = unlimited)",
+    )
 
     sp = sub.add_parser("blocked", parents=[common], help="List blocked tickets")
     sp.add_argument("-a", "--assignee", default="")
@@ -880,6 +889,7 @@ def _handle_ready(args: argparse.Namespace, json_mode: bool, _cwd: Path) -> int:
         prio_max=args.prio_max,
         assignee=args.assignee,
         tag=args.tag,
+        limit=int(getattr(args, "limit", 0) or 0),
     )
     _emit_list_result("Ready", response, json_mode=json_mode)
     return 0
