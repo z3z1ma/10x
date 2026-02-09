@@ -190,18 +190,23 @@ def install_pack(
             continue
         dst = repo_root / rel
 
+        sha_src = sha256_file(src)
         if dst.exists() and not force:
-            # Existing file that we don't own yet: don't clobber.
-            skipped.append(rel)
-            drifted.append(rel)
+            # If the file already matches the pack, adopt it without rewriting.
+            # Otherwise, treat it as drift and do not take ownership.
+            if sha256_file(dst) == sha_src:
+                skipped.append(rel)
+                installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
+            else:
+                skipped.append(rel)
+                drifted.append(rel)
             continue
 
         ensure_parent_dir(dst, dry_run=dry_run)
         if not dry_run:
             dst.write_bytes(src.read_bytes())
         wrote.append(rel)
-        # Record intended hash based on source.
-        installed_files.append(LockFileEntry(path=rel, sha256=sha256_file(src)))
+        installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
 
     new_pack = InstalledPack(
         id=manifest.id,
@@ -253,8 +258,9 @@ def update_pack(
         if p not in managed
     ]
 
-    # Compute drift per lock.
+    # Compute drift/missing per lock.
     existing_files = {e.path: e.sha256 for e in existing.files}
+    tracked = set(existing_files.keys())
     drifted: List[str] = []
     missing: List[str] = []
     wrote: List[str] = []
@@ -262,6 +268,7 @@ def update_pack(
     removed: List[str] = []
     warnings: List[str] = []
 
+    drifted_tracked: set[str] = set()
     for pth, sha in existing_files.items():
         fp = repo_root / pth
         if not fp.exists():
@@ -269,6 +276,7 @@ def update_pack(
         else:
             if sha256_file(fp) != sha:
                 drifted.append(pth)
+                drifted_tracked.add(pth)
 
     installed_files: List[LockFileEntry] = []
 
@@ -292,16 +300,49 @@ def update_pack(
         src = file_index.get(rel)
         if src is None:
             continue
+        sha_src = sha256_file(src)
         dst = repo_root / rel
-        is_drift = rel in drifted
-        if is_drift and not force:
-            skipped.append(rel)
+
+        if rel in tracked:
+            # Tracked file: respect drift guard, but refresh expected hash to match
+            # the current pack version.
+            if rel in drifted_tracked and not force:
+                skipped.append(rel)
+                installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
+                continue
+
+            ensure_parent_dir(dst, dry_run=dry_run)
+            if not dry_run:
+                dst.write_bytes(src.read_bytes())
+            wrote.append(rel)
+            installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
             continue
+
+        # Untracked file: never clobber unless forced.
+        if dst.exists():
+            if sha256_file(dst) == sha_src:
+                skipped.append(rel)
+                installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
+                continue
+
+            drifted.append(rel)
+            if not force:
+                skipped.append(rel)
+                continue
+
+            ensure_parent_dir(dst, dry_run=dry_run)
+            if not dry_run:
+                dst.write_bytes(src.read_bytes())
+            wrote.append(rel)
+            installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
+            continue
+
+        # New file introduced by the pack.
         ensure_parent_dir(dst, dry_run=dry_run)
         if not dry_run:
             dst.write_bytes(src.read_bytes())
         wrote.append(rel)
-        installed_files.append(LockFileEntry(path=rel, sha256=sha256_file(src)))
+        installed_files.append(LockFileEntry(path=rel, sha256=sha_src))
 
     # Also preserve tracked files that are still on disk but not in the new pack manifest.
     # We don't remove them on update; uninstall handles removal.

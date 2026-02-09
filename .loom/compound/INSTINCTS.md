@@ -69,6 +69,9 @@
 - **cli-changes-require-ux-regression-tests** (74%) [cli, regression, testing, ux]
   - Trigger: When changing CLI output, exit codes, error handling, or flags for any loom subcommand (especially user-facing UX paths).
   - Action: Add or update a focused pytest UX regression test that asserts exit code + the most stable stdout/stderr fragments (avoid brittle full-output snapshots), and include at least one negative case (bad ar...
+- **cli-unified-diff-output** (74%) [cli, diff, python, ux]
+  - Trigger: When adding a CLI command that shows changes between two text versions (config, generated output, previews, etc.)
+  - Action: Generate output via `difflib.unified_diff` with explicit `fromfile`/`tofile`, fixed context lines, and `lineterm=""`; print nothing (or a single friendly line) when no changes; keep diff generation pu...
 - **cli-ux-change-needs-tests** (74%) [cli, regression, tests, ux]
   - Trigger: When modifying CLI output, help text, defaults, or command structure
   - Action: Update/extend UX-focused tests to lock in the intended ergonomics and prevent regressions; avoid untested copy changes that silently degrade UX.
@@ -120,9 +123,6 @@
 - **memory-feature-docs-coevolve** (70%) [cli, consistency, docs, memory]
   - Trigger: When adding/changing Loom Memory behavior (notes merge, recall, indexing, CLI surface area).
   - Action: Update `src/agent_loom/memory/README.md` to reflect the new behavior and examples, and ensure the docs match the CLI UX tests (examples should be testable expectations, not aspirational).
-- **prefer-ux-tests-over-broad-internals** (70%) [cli, maintainability, testing]
-  - Trigger: When adding tests for command behavior
-  - Action: Test through the CLI boundary (command invocation) rather than deep internal functions; assert the minimal observable behavior that matters (selected lines, not full dumps).
 
 ## Notes
 

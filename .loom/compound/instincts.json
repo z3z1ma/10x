@@ -152,6 +152,30 @@
       ]
     },
     {
+      "id": "cli-unified-diff-output",
+      "title": "Use unified diffs for human-readable CLI change output",
+      "trigger": "When adding a CLI command that shows changes between two text versions (config, generated output, previews, etc.)",
+      "action": "Generate output via `difflib.unified_diff` with explicit `fromfile`/`tofile`, fixed context lines, and `lineterm=\"\"`; print nothing (or a single friendly line) when no changes; keep diff generation pure so it is easy to test.",
+      "tags": [
+        "cli",
+        "diff",
+        "python",
+        "ux"
+      ],
+      "confidence": 0.74,
+      "status": "active",
+      "created_at": "2026-02-09T19:02:04.864649Z",
+      "updated_at": "2026-02-09T19:02:04.864649Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T19:02:04.864649Z",
+          "episode_id": "6b4f92dcfe0b292c1545e85c5c8d5eb0751c41108b80b557a74a4c6539245fd9",
+          "head_sha": "b6ff7f76d8fd836ce1b5c94002b0a1d4e46d2003",
+          "patch_sha256": ""
+        }
+      ]
+    },
+    {
       "id": "cli-ux-change-needs-tests",
       "title": "CLI UX Changes Need Targeted UX Tests",
       "trigger": "When modifying CLI output, help text, defaults, or command structure",
@@ -457,6 +481,30 @@
           "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
           "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
           "patch_sha256": "2b739a8231c6031ee25bc96ebbe1436a00521c016ddadb42a37b514d0e320431"
+        }
+      ]
+    },
+    {
+      "id": "diff-output-stable-and-testable",
+      "title": "Keep diff output stable and easy to snapshot-test",
+      "trigger": "When writing tests for CLI diff output, or when diff output might be consumed in pipelines/logs",
+      "action": "Avoid ANSI by default (or gate it behind TTY / `--color`); ensure deterministic file labels and context lines; normalize trailing newlines so diffs don\u2019t flap; in tests, assert on a small number of stable sentinel lines (headers + one hunk) rather than the entire diff when possible.",
+      "tags": [
+        "cli",
+        "determinism",
+        "diff",
+        "testing"
+      ],
+      "confidence": 0.66,
+      "status": "active",
+      "created_at": "2026-02-09T19:02:04.864649Z",
+      "updated_at": "2026-02-09T19:02:04.864649Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T19:02:04.864649Z",
+          "episode_id": "6b4f92dcfe0b292c1545e85c5c8d5eb0751c41108b80b557a74a4c6539245fd9",
+          "head_sha": "b6ff7f76d8fd836ce1b5c94002b0a1d4e46d2003",
+          "patch_sha256": ""
         }
       ]
     },
@@ -1032,6 +1080,29 @@
           "episode_id": "3a49e37b2714b270438b82f96000a53a401f9d577d6a7ca6976af7f4eb510cdb",
           "head_sha": "3ed17ac0cb1119ce9355d2fab7e7000e1791a59a",
           "patch_sha256": "324dc48717dad74f886f10cc65e5f70d8db467bcdd3b77b618c8ec03e14a383c"
+        }
+      ]
+    },
+    {
+      "id": "reproducible-pack-outputs",
+      "title": "Prefer reproducible packaging outputs",
+      "trigger": "When implementing or extending `pack`-like functionality that builds archives/bundles/manifests",
+      "action": "Sort input files, normalize path separators, and (when applicable) normalize archive metadata (mtime, uid/gid, mode) so repeated runs produce identical artifacts; document any intentional non-determinism explicitly.",
+      "tags": [
+        "determinism",
+        "packaging",
+        "python"
+      ],
+      "confidence": 0.58,
+      "status": "active",
+      "created_at": "2026-02-09T19:02:04.864649Z",
+      "updated_at": "2026-02-09T19:02:04.864649Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T19:02:04.864649Z",
+          "episode_id": "6b4f92dcfe0b292c1545e85c5c8d5eb0751c41108b80b557a74a4c6539245fd9",
+          "head_sha": "b6ff7f76d8fd836ce1b5c94002b0a1d4e46d2003",
+          "patch_sha256": ""
         }
       ]
     },

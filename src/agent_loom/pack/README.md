@@ -11,7 +11,7 @@ It installs prebuilt, OpenCode-first artifacts into a target repo in a way that 
 ### Concepts
 
 - Pack: a versioned bundle of files that install into a repo (commonly `.opencode/agents` and `.opencode/commands`).
-- Lock file: `.loom/pack/lock.json` records installed packs and per-file sha256.
+- Lock file: `.loom/pack/lock.json` records installed packs and per-file sha256. Commit it.
  - Scaffold files: optional pack paths installed only if missing; they are not tracked in the lock, never updated, and never removed.
 
 ### Commands

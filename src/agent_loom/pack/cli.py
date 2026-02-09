@@ -164,6 +164,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             _emit_json(payload)
         else:
             sys.stdout.write(json.dumps(payload, indent=2) + "\n")
+            sys.stdout.write("note: commit .loom/pack/lock.json\n")
         return 0
 
     if args.cmd == "update":
@@ -179,6 +180,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             _emit_json(payload)
         else:
             sys.stdout.write(json.dumps(payload, indent=2) + "\n")
+            sys.stdout.write("note: commit .loom/pack/lock.json\n")
         return 0
 
     if args.cmd == "uninstall":
@@ -194,6 +196,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             _emit_json(payload)
         else:
             sys.stdout.write(json.dumps(payload, indent=2) + "\n")
+            sys.stdout.write("note: commit .loom/pack/lock.json\n")
         return 0
 
     return 2

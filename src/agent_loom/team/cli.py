@@ -16,8 +16,12 @@ from agent_loom.team.constants import (
     DEFAULT_DONE_CHECK_S,
     DEFAULT_HARNESS,
     DEFAULT_IDLE_SCREEN_S,
+    DEFAULT_INTEGRATOR_AGENT,
+    DEFAULT_INVESTIGATOR_AGENT,
+    DEFAULT_MANAGER_AGENT,
     DEFAULT_MANAGER_WINDOW,
     DEFAULT_OBJECTIVE_NUDGE_S,
+    DEFAULT_WORKER_AGENT,
     ENV_TEAM_ROLE,
     ENV_TEAM_WORKER_ID,
     ENV_TICKET_DIR,
@@ -464,6 +468,8 @@ def cmd_init(args: argparse.Namespace) -> None:
 
     print(f"{SUBSYSTEM_NAME} init")
     print(f"- repo_root: {res.repo_root}")
+    print("- pack: loom-team-core")
+    print("- note: commit .loom/pack/lock.json")
     if res.wrote:
         print(f"- wrote: {len(res.wrote)}")
     if res.updated:
@@ -474,6 +480,37 @@ def cmd_init(args: argparse.Namespace) -> None:
         print("warnings:")
         for w in res.warnings:
             print(f"- {w}")
+
+    from agent_loom.pack.diff import any_pack_diffs, diff_pack_files
+
+    repo_root = Path(res.repo_root).resolve()
+    pack_id = "loom-team-core"
+    rels = [
+        f".opencode/agents/{DEFAULT_MANAGER_AGENT}.md",
+        f".opencode/agents/{DEFAULT_WORKER_AGENT}.md",
+        f".opencode/agents/{DEFAULT_INVESTIGATOR_AGENT}.md",
+        f".opencode/agents/{DEFAULT_INTEGRATOR_AGENT}.md",
+        f".claude/agents/{DEFAULT_MANAGER_AGENT}.md",
+        f".claude/agents/{DEFAULT_WORKER_AGENT}.md",
+        f".claude/agents/{DEFAULT_INVESTIGATOR_AGENT}.md",
+        f".claude/agents/{DEFAULT_INTEGRATOR_AGENT}.md",
+    ]
+
+    if not bool(getattr(args, "diff", False)) and any_pack_diffs(
+        repo_root=repo_root, pack_id=pack_id, relpaths=rels
+    ):
+        print("note: some Team agent files differ; rerun with --diff to view")
+
+    if bool(getattr(args, "diff", False)):
+        diffs = diff_pack_files(
+            repo_root=repo_root,
+            pack_id=pack_id,
+            relpaths=rels,
+            max_lines=400,
+        )
+        for d in diffs:
+            print(f"diff (skipped): {d.relpath}")
+            sys.stdout.write(d.diff)
 
 
 def cmd_attach(args: argparse.Namespace) -> None:
@@ -1192,6 +1229,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--force",
         action="store_true",
         help="Overwrite existing agent definitions on disk",
+    )
+    ini.add_argument(
+        "--diff",
+        action="store_true",
+        help="Show diffs for skipped Team agent files",
     )
     ini.set_defaults(func=cmd_init)
 

@@ -11,10 +11,12 @@ from pathlib import Path
 from typing import Optional, Sequence
 
 from agent_loom.compound.install import install_opencode
+from agent_loom.compound.install import COMPOUND_PACK_ID
 from agent_loom.compound.mirror import sync_claude_skills_mirror
 from agent_loom.compound.scaffold import require_scaffold_installed
 from agent_loom.compound.sync import sync as compound_sync
 from agent_loom.core.git import git_repo_root
+from agent_loom.pack.diff import any_pack_diffs, diff_pack_files
 
 
 class ArgParseError(RuntimeError):
@@ -88,6 +90,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--force",
         action="store_true",
         help="Overwrite scaffold files (.opencode plugin/commands/agents/prompts). Never overwrites skills or memory.",
+    )
+    init.add_argument(
+        "--diff",
+        action="store_true",
+        help="Show diffs for skipped scaffold files (e.g. AGENTS.md)",
     )
     init.add_argument(
         "--json",
@@ -220,6 +227,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 _emit_json(payload)
             else:
                 sys.stdout.write(f"installed into: {res.dest}\n")
+                sys.stdout.write(f"pack: {COMPOUND_PACK_ID}\n")
+                sys.stdout.write("note: commit .loom/pack/lock.json\n")
                 if res.dry_run:
                     sys.stdout.write("(dry-run)\n")
                 if res.wrote:
@@ -234,6 +243,26 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     sys.stdout.write("warnings:\n")
                     for w in res.warnings:
                         sys.stdout.write(f"- {w}\n")
+
+                repo_root = Path(res.dest).resolve()
+                diff_targets = ["AGENTS.md"]
+                if not bool(getattr(args, "diff", False)) and any_pack_diffs(
+                    repo_root=repo_root, pack_id=COMPOUND_PACK_ID, relpaths=diff_targets
+                ):
+                    sys.stdout.write(
+                        "note: AGENTS.md differs from Loom scaffold; rerun with --diff to view\n"
+                    )
+
+                if bool(getattr(args, "diff", False)) and not bool(res.dry_run):
+                    diffs = diff_pack_files(
+                        repo_root=repo_root,
+                        pack_id=COMPOUND_PACK_ID,
+                        relpaths=diff_targets,
+                        max_lines=400,
+                    )
+                    for d in diffs:
+                        sys.stdout.write(f"diff (skipped): {d.relpath}\n")
+                        sys.stdout.write(d.diff)
             return 0
         except Exception as e:
             payload = {"ok": False, "error": str(e)}
