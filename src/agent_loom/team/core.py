@@ -2891,6 +2891,10 @@ def start(
             ENV_TEAM_SPRINT_TAG: sprint.get("tag", ""),
             "COMPOUND_ROOT": str(root),
         }
+        if "SSH_AUTH_SOCK" in os.environ:
+            pane_env["SSH_AUTH_SOCK"] = os.environ["SSH_AUTH_SOCK"]
+        if "SSH_AGENT_PID" in os.environ:
+            pane_env["SSH_AGENT_PID"] = os.environ["SSH_AGENT_PID"]
 
         if not tmux_has_session(session):
             tmux_cmd(
@@ -3959,6 +3963,10 @@ def _respawn_active_worker_if_missing(
         ENV_TEAM_SPRINT_TAG: sprint.get("tag", ""),
         "COMPOUND_ROOT": str(repo_root),
     }
+    if "SSH_AUTH_SOCK" in os.environ:
+        pane_env["SSH_AUTH_SOCK"] = os.environ["SSH_AUTH_SOCK"]
+    if "SSH_AGENT_PID" in os.environ:
+        pane_env["SSH_AGENT_PID"] = os.environ["SSH_AGENT_PID"]
 
     desired_window = win or f"{worker_id}-{sanitize(ticket_id, max_len=24)}"
     window = tmux_unique_window_name(session, desired_window)
@@ -4454,6 +4462,9 @@ def spawn(
 
         if harness == "opencode":
             _ensure_opencode_worktree_runtime(workdir=worktree_path, repo_root=root)
+            _ensure_opencode_agents(workdir=worktree_path, repo_root=root)
+        elif harness == "claude":
+            _ensure_claude_agents(workdir=worktree_path, repo_root=root)
 
         # Build worker prompt and spawn window.
         charter_path = paths.run_dir / "CHARTER.md"
@@ -4499,6 +4510,10 @@ def spawn(
             ENV_TEAM_SPRINT_TAG: sprint.get("tag", ""),
             "COMPOUND_ROOT": str(root),
         }
+        if "SSH_AUTH_SOCK" in os.environ:
+            pane_env["SSH_AUTH_SOCK"] = os.environ["SSH_AUTH_SOCK"]
+        if "SSH_AGENT_PID" in os.environ:
+            pane_env["SSH_AGENT_PID"] = os.environ["SSH_AGENT_PID"]
 
         desired_window = window or f"{worker_id}-{sanitize(ticket_id, max_len=24)}"
         window = tmux_unique_window_name(session, desired_window)
@@ -5049,6 +5064,9 @@ def spawn_integrator(
 
         if harness == "opencode":
             _ensure_opencode_worktree_runtime(workdir=wt_path, repo_root=root)
+            _ensure_opencode_agents(workdir=wt_path, repo_root=root)
+        elif harness == "claude":
+            _ensure_claude_agents(workdir=wt_path, repo_root=root)
 
         agent = _agent_for_role(run, ROLE_INTEGRATOR, harness=harness)
         _require_agent_file_present(workdir=wt_path, harness=harness, agent=agent)
@@ -5088,6 +5106,10 @@ def spawn_integrator(
             ENV_TEAM_SPRINT_TAG: sprint.get("tag", ""),
             "COMPOUND_ROOT": str(root),
         }
+        if "SSH_AUTH_SOCK" in os.environ:
+            pane_env["SSH_AUTH_SOCK"] = os.environ["SSH_AUTH_SOCK"]
+        if "SSH_AGENT_PID" in os.environ:
+            pane_env["SSH_AGENT_PID"] = os.environ["SSH_AGENT_PID"]
 
         workers = dict(run.get("workers") or {})
         existing = dict(workers.get(worker_id) or {})
