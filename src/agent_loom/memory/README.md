@@ -9,14 +9,14 @@ memory module.
 - Notes are Markdown files with YAML frontmatter.
 - SQLite index is derived and rebuildable; the files are the source of truth.
 - Each note has a stable id that must match the filename stem.
-- Notes are stored in a vault (default `.memory/`).
+- Notes are stored in a vault (default `.loom/memory/`).
 
 ## Vault layout and discovery
 
 Default vault layout (created by `memory init`):
 
 ```
-.memory/
+ .loom/memory/
   notes/                     # shared, committed
   personal/notes/            # personal, gitignored
   personal/ephemeral/notes/  # ephemeral scratch, gitignored
@@ -128,7 +128,7 @@ Initialize vault layout, meta.json, gitignore safety, and the sqlite index.
 
 ```
 loom memory init
-loom memory init --vault .memory
+loom memory init --vault .loom/memory
 ```
 
 ### add
@@ -365,8 +365,8 @@ cat decision.md | loom memory add --title "Decision: retry policy" --tag decisio
 ### Use multiple vaults
 
 ```
-loom memory --vault .memory init
-loom memory --vault ../shared/.memory recall "protocol"
+loom memory --vault .loom/memory init
+loom memory --vault ../shared/.loom/memory recall "protocol"
 ```
 
 ## Troubleshooting

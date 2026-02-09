@@ -92,7 +92,7 @@ class TestTeamPauseResume(unittest.TestCase):
                 run_id="123",
                 run_dir=str(paths.run_dir),
                 repo_root=str(repo_root),
-                tickets_dir=str(repo_root / ".tickets"),
+                tickets_dir=str(repo_root / ".loom" / "ticket"),
                 manager={"window": "manager", "pane_id": "%1"},
                 charter=str(paths.charter_file),
                 created=False,

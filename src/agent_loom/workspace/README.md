@@ -49,11 +49,11 @@ services/
 Repo mode (inside a git repo):
 
 ```
-.loom-repo/
+.loom/workspace/
   worktrees/
   meta/
     worktrees/
-.git/info/exclude  # ignore .loom-repo/
+.git/info/exclude  # ignore .loom/workspace/
 ```
 
 ## Guardrails and dispatch rules
@@ -126,7 +126,7 @@ loom workspace --json status
 
 ### worktree add / ensure / ensure-detached
 
-Create or ensure worktrees inside `.loom-repo/worktrees/<branch>`.
+Create or ensure worktrees inside `.loom/workspace/worktrees/<branch>`.
 
 ```
 loom workspace worktree add feature/foo
@@ -196,7 +196,7 @@ loom workspace cleanup apply --id feature/foo --yes
 
 ### sandbox create / promote / gc
 
-Create sandbox worktrees under `.loom-repo/worktrees/sandbox/<name>`.
+Create sandbox worktrees under `.loom/workspace/worktrees/sandbox/<name>`.
 
 ```
 loom workspace sandbox create --base main --name spike --ttl 2h --purpose "spike"

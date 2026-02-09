@@ -7,8 +7,8 @@ Design constitution highlights (enforced by this script):
 - Notes have stable identity (frontmatter `id` must match filename stem).
 - Merge-friendly files (stable frontmatter field ordering; body is not rewritten unless you ask).
 
-Default vault layout (under --vault, default `.memory/`):
-  .memory/
+Default vault layout (under --vault, default `.loom/memory/`):
+  .loom/memory/
     notes/                     # shared, committed
     personal/notes/            # personal, gitignored
     personal/ephemeral/notes/  # ephemeral scratch, gitignored

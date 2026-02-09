@@ -1,11 +1,12 @@
-.team
+.loom/team/
 .ws-repo/
-.tickets/.locks/
-.tickets/.cache/
-.tickets/.audit/
-.memory/index.sqlite3*
-.memory/memory.sqlite3*
-.memory/personal/
+.loom/ticket/.locks/
+.loom/ticket/.cache/
+.loom/ticket/.audit/
+.loom/memory/index.sqlite3*
+.loom/memory/memory.sqlite3*
+.loom/memory/personal/
+.loom/workspace/
 
 # Local virtualenvs (repo-root mounted into worktrees)
 .venv/

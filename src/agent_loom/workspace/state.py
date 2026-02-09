@@ -47,7 +47,14 @@ def worktrees_base(root: Path, ws: dict, group: str) -> Path:
     default = root / ws_worktrees_dir(ws) / fs_escape(group)
 
     # Optional per-group override (persisted in group metadata).
-    meta = root / INTERNAL_DIR / "meta" / "groups" / f"{fs_escape(group)}.json"
+    meta = (
+        root
+        / INTERNAL_DIR
+        / "workspace"
+        / "meta"
+        / "groups"
+        / f"{fs_escape(group)}.json"
+    )
     if meta.exists():
         try:
             data = read_json(meta)

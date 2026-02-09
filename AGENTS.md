@@ -56,7 +56,7 @@ NEVER leave dead code behind. If something is no longer needed, remove it.
 
 ## Issue tracking
 
-We use loom itself as the primary internal issue tracking system. Tickets are Git-backed and stored under `.tickets/` with a folder for each status (open, ready, in_progress, blocked, review, closed). Use `loom ticket create`, `loom ticket show`, `loom ticket update`, `loom ticket dep-add`, `loom ticket link`, and `loom ticket list` to manage tickets. Use `loom ticket prime` for a full cookbook. loom is unix philosophy-inspired, so most commands are designed to work well in combination with flags and other commands rather than as rigid, all-in-one workflows. Use `loom ticket --json` for machine-readable output that can be consumed by other commands or tools.
+We use loom itself as the primary internal issue tracking system. Tickets are Git-backed and stored under `.loom/ticket/` (only `closed/` is a subdirectory; all other statuses are stored at the top level to minimize git renames). Use `loom ticket create`, `loom ticket show`, `loom ticket update`, `loom ticket dep-add`, `loom ticket link`, and `loom ticket list` to manage tickets. Use `loom ticket prime` for a full cookbook. loom is unix philosophy-inspired, so most commands are designed to work well in combination with flags and other commands rather than as rigid, all-in-one workflows. Use `loom ticket --json` for machine-readable output that can be consumed by other commands or tools.
 
 ## Operation
 

@@ -73,7 +73,7 @@ class GitHubIssueAdapter(ExternalAdapter):
             repo = os.getenv("TK_GITHUB_REPO") or cfg.github_default_repo
             if not repo:
                 raise ValueError(
-                    "GitHub shorthand external_ref 'gh-123' requires TK_GITHUB_REPO env var or .tickets/config.yaml github.default_repo"
+                    "GitHub shorthand external_ref 'gh-123' requires TK_GITHUB_REPO env var or .loom/ticket/config.yaml github.default_repo"
                 )
 
         api_url = f"https://api.github.com/repos/{repo}/issues/{num}"
@@ -266,7 +266,7 @@ class JiraIssueAdapter(ExternalAdapter):
                 raise ValueError(f"Invalid Jira key: {key}. Expected like PROJ-123.")
             if not base_url:
                 raise ValueError(
-                    "Jira base URL missing. Set TK_JIRA_BASE_URL (or JIRA_BASE_URL) or .tickets/config.yaml jira.base_url"
+                    "Jira base URL missing. Set TK_JIRA_BASE_URL (or JIRA_BASE_URL) or .loom/ticket/config.yaml jira.base_url"
                 )
             browse_url = f"{base_url}/browse/{key}"
             return base_url, key, browse_url
@@ -349,7 +349,7 @@ class JiraIssueAdapter(ExternalAdapter):
         api_base = base_url or base_url_cfg
         if not api_base:
             raise ValueError(
-                "Jira base URL missing. Set TK_JIRA_BASE_URL (or JIRA_BASE_URL) or .tickets/config.yaml jira.base_url"
+                "Jira base URL missing. Set TK_JIRA_BASE_URL (or JIRA_BASE_URL) or .loom/ticket/config.yaml jira.base_url"
             )
 
         data = self._get_issue(api_base=api_base, key=key, headers=auth_headers)

@@ -33,7 +33,7 @@ Scope: Exactly one Loom ticket in the assigned ws worktree.
 
 Hard constraints (non-negotiable):
 - Never run tmux directly. Do not call tmux.
-- Tickets are accessed and updated ONLY via the Loom ticket CLI. Do not browse the filesystem for `.tickets`.
+- Tickets are accessed and updated ONLY via the Loom ticket CLI. Do not browse the filesystem for `.loom/ticket`.
 - Do not open or edit ticket files directly; use `loom ticket`.
 - You may edit code in your worktree, but do not merge to main; do not close tickets (manager-only).
 - Do not run `loom compound sync` (manager-only).

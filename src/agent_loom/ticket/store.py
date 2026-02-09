@@ -254,15 +254,13 @@ class TicketStore:
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.leases_dir.mkdir(parents=True, exist_ok=True)
         (self.tickets_dir / AUDIT_DIRNAME).mkdir(parents=True, exist_ok=True)
-        for s in VALID_STATUSES:
-            (self.tickets_dir / str(s)).mkdir(parents=True, exist_ok=True)
+        (self.tickets_dir / "closed").mkdir(parents=True, exist_ok=True)
 
     def ticket_path_for_status(self, ticket_id: str, *, status: str) -> Path:
-        # Tickets are stored under one status layer: .tickets/<status>/<id>.md
         s = normalize_status(status)
-        if s not in VALID_STATUSES:
-            s = "open"
-        return (self.tickets_dir / s) / f"{ticket_id}.md"
+        if s == "closed":
+            return (self.tickets_dir / "closed") / f"{ticket_id}.md"
+        return self.tickets_dir / f"{ticket_id}.md"
 
     def lease_path(self, ticket_id: str) -> Path:
         return self.leases_dir / f"{ticket_id}.json"
@@ -355,61 +353,16 @@ class TicketStore:
         if not self.tickets_dir.exists():
             return []
         out: list[Path] = []
-        for s in VALID_STATUSES:
-            d = self.tickets_dir / str(s)
-            if d.is_dir():
-                out.extend(list(d.glob("*.md")))
         out.extend(list(self.tickets_dir.glob("*.md")))
+        closed_dir = self.tickets_dir / "closed"
+        if closed_dir.is_dir():
+            out.extend(list(closed_dir.glob("*.md")))
         # Keep deterministic ordering across platforms.
         out = sorted(
             [p for p in out if p.is_file()],
             key=lambda p: safe_relpath(p, self.tickets_dir).replace("\\", "/"),
         )
         return out
-
-    def _canonicalize_ticket_path(self, p: Path) -> Path:
-        """Move/rename a ticket file into .tickets/<status>/<id>.md.
-
-        This makes rollout safe: legacy tickets in the bare .tickets/ dir (and
-        tickets in the wrong status folder) are self-correcting as soon as we
-        touch the store.
-        """
-
-        try:
-            text = p.read_text(encoding="utf-8")
-        except Exception:
-            return p
-
-        try:
-            fm, _body = split_frontmatter(text)
-        except Exception:
-            fm = {}
-
-        tid = str((fm or {}).get("id") or p.stem).strip() or p.stem
-        status_raw = (fm or {}).get("status") or "open"
-        status = normalize_status(status_raw)
-        if status not in VALID_STATUSES:
-            status = "open"
-
-        desired = self.ticket_path_for_status(tid, status=status)
-        if p.resolve() == desired.resolve():
-            return p
-
-        desired.parent.mkdir(parents=True, exist_ok=True)
-        if desired.exists() and desired.resolve() != p.resolve():
-            raise TicketArgError(
-                code="ARG",
-                error=f"Ticket path conflict for id {tid!r}: {safe_relpath(p, self.tickets_dir)} -> {safe_relpath(desired, self.tickets_dir)} exists",
-                hint="Resolve duplicate ticket files (or delete the incorrect one) and retry.",
-                details={
-                    "src": safe_relpath(p, self.tickets_dir),
-                    "dst": safe_relpath(desired, self.tickets_dir),
-                },
-            )
-
-        # Atomic within filesystem; do not overwrite.
-        p.replace(desired)
-        return desired
 
     def resolve_id(self, pattern: str) -> str:
         raw = (pattern or "").strip()
@@ -427,15 +380,14 @@ class TicketStore:
                 error=f"Invalid ticket reference {raw!r}",
                 hint=(
                     "Use an id like `ab-1234`, `#ab-1234`, or a path like "
-                    "`.tickets/<status>/ab-1234.md` (for example `.tickets/open/ab-1234.md`). "
-                    "Legacy `.tickets/ab-1234.md` refs are also accepted."
+                    "`.loom/ticket/ab-1234.md` or `.loom/ticket/closed/ab-1234.md`."
                 ),
             )
         if not self.tickets_dir.exists() or not self.tickets_dir.is_dir():
             raise TicketNotFoundError(
                 code="NOT_FOUND",
                 error=f"Tickets directory not found: {self.tickets_dir}",
-                hint="Run `loom ticket init` (or `loom ticket create`) to create `.tickets/`, or set TICKET_DIR.",
+                hint="Run `loom ticket init` (or `loom ticket create`) to create `.loom/ticket/`, or set TICKET_DIR.",
                 suggestions=["loom ticket init", "loom ticket create 'Title'"],
                 details={"tickets_dir": str(self.tickets_dir)},
             )
@@ -471,7 +423,7 @@ class TicketStore:
             error=f"Ticket {norm!r} not found",
             hint=(
                 "Run `loom ticket list` to see ids. Refs like `#id`, `id.md`, "
-                "`.tickets/<status>/id.md`, and legacy `.tickets/id.md` are accepted."
+                "and `.loom/ticket/id.md` are accepted."
             ),
         )
 
@@ -494,12 +446,7 @@ class TicketStore:
         for p in candidates:
             if not p.exists() or not p.is_file():
                 continue
-            try:
-                p2 = self._canonicalize_ticket_path(p)
-            except TicketArgError:
-                raise
-            except Exception:
-                p2 = p
+            p2 = p
             try:
                 key = str(p2.resolve())
             except Exception:

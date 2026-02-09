@@ -32,9 +32,9 @@ def app(tmp_path: Path):
     repo.mkdir(parents=True, exist_ok=True)
     _git_init(repo)
 
-    (repo / ".tickets").mkdir(parents=True, exist_ok=True)
+    (repo / ".loom" / "ticket").mkdir(parents=True, exist_ok=True)
     ticket_create(
-        tickets_dir=repo / ".tickets",
+        tickets_dir=repo / ".loom" / "ticket",
         title="Test ticket",
         type="task",
         priority=2,
@@ -47,9 +47,9 @@ def app(tmp_path: Path):
         acceptance="",
     )
 
-    memory_init(vault=str(repo / ".memory"))
+    memory_init(vault=str(repo / ".loom" / "memory"))
     memory_add(
-        vault=str(repo / ".memory"),
+        vault=str(repo / ".loom" / "memory"),
         title="Hello",
         body="World",
         tag=["infra"],

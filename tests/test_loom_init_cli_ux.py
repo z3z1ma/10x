@@ -59,11 +59,10 @@ class TestLoomInitCliUx(unittest.TestCase):
             self.assertEqual(str(payload.get("cmd") or ""), "init")
             self.assertTrue(bool(payload.get("git", {}).get("ok")))
 
-            self.assertTrue((root / ".loom-repo" / "worktrees").exists())
-            self.assertTrue((root / ".tickets").exists())
-            for s in ("open", "ready", "in_progress", "blocked", "review", "closed"):
-                self.assertTrue((root / ".tickets" / s).exists())
-            self.assertTrue((root / ".memory" / "meta.json").exists())
+            self.assertTrue((root / ".loom" / "workspace" / "worktrees").exists())
+            self.assertTrue((root / ".loom" / "ticket").exists())
+            self.assertTrue((root / ".loom" / "ticket" / "closed").exists())
+            self.assertTrue((root / ".loom" / "memory" / "meta.json").exists())
             self.assertTrue((root / ".opencode").exists())
             self.assertTrue((root / ".opencode" / "agents").exists())
             self.assertTrue((root / ".claude" / "agents").exists())
@@ -80,10 +79,9 @@ class TestLoomInitCliUx(unittest.TestCase):
             self.assertFalse(bool(payload.get("git", {}).get("ok")))
 
             self.assertTrue((root / "workspace.json").exists())
-            self.assertTrue((root / ".tickets").exists())
-            for s in ("open", "ready", "in_progress", "blocked", "review", "closed"):
-                self.assertTrue((root / ".tickets" / s).exists())
-            self.assertTrue((root / ".memory" / "meta.json").exists())
+            self.assertTrue((root / ".loom" / "ticket").exists())
+            self.assertTrue((root / ".loom" / "ticket" / "closed").exists())
+            self.assertTrue((root / ".loom" / "memory" / "meta.json").exists())
             self.assertTrue((root / ".opencode").exists())
 
             selected = payload.get("selected") or {}

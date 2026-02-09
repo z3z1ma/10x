@@ -28,7 +28,7 @@ def _run(argv: list[str], *, stdin: str | None = None) -> str:
 class TestContextPack(unittest.TestCase):
     def test_context_pack_is_stable_and_includes_neighbor_distance(self) -> None:
         with tempfile.TemporaryDirectory() as td:
-            vault = Path(td) / ".memory"
+            vault = Path(td) / ".loom" / "memory"
             _run(["--vault", str(vault), "init"])
 
             # a -> b (resolved wikilink)

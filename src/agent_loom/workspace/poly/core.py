@@ -103,7 +103,7 @@ def _iter_group_bases(*, ws_root: Path, ws: dict) -> List[tuple[str, Path]]:
             group = fs_unescape(group_dir.name)
             groups[group] = group_dir.resolve()
 
-    meta_dir = (ws_root / INTERNAL_DIR / "meta" / "groups").resolve()
+    meta_dir = (ws_root / INTERNAL_DIR / "workspace" / "meta" / "groups").resolve()
     if meta_dir.exists():
         for p in sorted(meta_dir.glob("*.json")):
             try:

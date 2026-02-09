@@ -244,7 +244,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--memory-vault",
         default="",
-        help="Memory vault path (default: .memory)",
+        help="Memory vault path (default: .loom/memory)",
     )
     p.add_argument(
         "--compound-force",
@@ -294,7 +294,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     memory_vault = str(getattr(args, "memory_vault", "") or "").strip()
     if not memory_vault:
-        memory_vault = ".memory"
+        memory_vault = ".loom/memory"
 
     compound_force = bool(getattr(args, "compound_force", False))
 

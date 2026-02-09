@@ -268,7 +268,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--vault",
         default=os.environ.get("MEMORY_VAULT", DEFAULT_VAULT_DIR),
-        help="Vault directory (absolute or repo-root-relative when in git). Default: .memory",
+        help="Vault directory (absolute or repo-root-relative when in git). Default: .loom/memory",
     )
     p.add_argument(
         "--format",
@@ -694,7 +694,7 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
             hint="Initialize a vault or point --vault to an existing one.",
             suggestions=[
                 f"loom memory init --vault {vp.root}",
-                "export MEMORY_VAULT=.memory",
+                "export MEMORY_VAULT=.loom/memory",
             ],
             details={"vault": str(vp.root)},
         )

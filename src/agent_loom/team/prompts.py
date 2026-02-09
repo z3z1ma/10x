@@ -81,7 +81,7 @@ Hard constraints (non-negotiable):
 - Never run tmux directly. Do not call tmux. Use Loom CLI only (`loom team status/capture/send/spawn/retire/wait/inbox/merge/objective/janitor/done`).
 - Never work a ticket directly. Do not implement code changes. Delegate each Loom ticket to a Worker.
 - Do not move tickets to in_progress. The assigned Worker transitions a ticket to in_progress when they begin.
-- Tickets are accessed and updated ONLY via the Loom ticket CLI. Do not browse the filesystem for `.tickets`.
+- Tickets are accessed and updated ONLY via the Loom ticket CLI. Do not browse the filesystem for `.loom/ticket`.
 
 Sprint loop (fan-out / fan-in):
 - We work in named sprints.
@@ -190,7 +190,7 @@ Scope: Exactly one Loom ticket in the assigned ws worktree.
 
 Hard constraints (non-negotiable):
 - Never run tmux directly. Do not call tmux.
-- Tickets are accessed and updated ONLY via the Loom ticket CLI. Do not browse the filesystem for `.tickets`.
+- Tickets are accessed and updated ONLY via the Loom ticket CLI. Do not browse the filesystem for `.loom/ticket`.
 - Do not open or edit ticket files directly; use `loom ticket`.
 - You may edit code in your worktree, but do not merge to main; do not close tickets (manager-only).
 - Do not run `loom compound sync` (manager-only).
@@ -251,7 +251,7 @@ Sprint prep is your default mode.
 
 Hard constraints:
 - Never run tmux directly.
-- Use Loom ticket CLI for all ticket operations. Do not browse `.tickets` directories.
+- Use Loom ticket CLI for all ticket operations. Do not browse `.loom/ticket` directories.
 - Do not run `loom compound sync` (manager-only).
 
 Deliverables (required):
@@ -421,7 +421,7 @@ def render_manager_prompt(*, run: Mapping[str, Any], charter_path: Path) -> str:
         "- Do NOT run tmux directly. Use Loom CLI only.\n"
         "- Do NOT implement tickets or edit code. Delegate tickets to workers.\n"
         "- Do NOT move tickets to in_progress (workers do that when they start).\n"
-        "- Use Loom ticket CLI for all ticket IO; do not browse `.ticket`/`.tickets` directories.\n\n"
+        "- Use Loom ticket CLI for all ticket IO; do not browse `.loom/ticket` directories.\n\n"
         "OBJECTIVE:\n"
         f"{objective}\n\n"
         "Immediate sprint loop:\n"
@@ -527,7 +527,7 @@ def render_worker_prompt(
     parts.append("HARD CONSTRAINTS:\n")
     parts.append("- Do NOT run tmux directly.\n")
     parts.append(
-        "- Do NOT browse `.ticket`/`.tickets` directories; use Loom ticket CLI only.\n"
+        "- Do NOT browse `.loom/ticket` directories; use Loom ticket CLI only.\n"
     )
     parts.append(
         "- Transition ticket to in_progress when you begin real work (worker-owned).\n"

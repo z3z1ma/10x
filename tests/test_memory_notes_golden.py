@@ -28,7 +28,7 @@ def _run(argv: list[str], *, stdin: str | None = None) -> str:
 class TestFormats(unittest.TestCase):
     def test_recall_format_md(self) -> None:
         with tempfile.TemporaryDirectory() as td:
-            vault = Path(td) / ".memory"
+            vault = Path(td) / ".loom" / "memory"
             _run(["--vault", str(vault), "init"])
 
             _run(
@@ -63,7 +63,7 @@ class TestFormats(unittest.TestCase):
 
     def test_link_validate_format_md(self) -> None:
         with tempfile.TemporaryDirectory() as td:
-            vault = Path(td) / ".memory"
+            vault = Path(td) / ".loom" / "memory"
             _run(["--vault", str(vault), "init"])
 
             _run(

@@ -5,7 +5,7 @@ import re
 SUBSYSTEM_NAME = "agent-loom-memory"
 SUBSYSTEM_VERSION = "1.2.0"
 
-DEFAULT_VAULT_DIR = ".memory"
+DEFAULT_VAULT_DIR = ".loom/memory"
 META_FILENAME = "meta.json"
 DB_FILENAME = "index.sqlite3"
 

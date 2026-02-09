@@ -1052,7 +1052,7 @@
 
     // Teams UI state (client-only)
     teams: { selected: '', limit: '120', tab: 'overview', q: '', events_q: '', events_ok: 'all', inbox_view: 'unread', captures_q: '' },
-    memory: { vault: '.memory', q: '', limit: '10', tag: '', not_tag: '', scope: '', not_scope: '', visibility: '', expand: '0', context:'0', deterministic:'0', include_deprecated:'0' },
+    memory: { vault: '.loom/memory', q: '', limit: '10', tag: '', not_tag: '', scope: '', not_scope: '', visibility: '', expand: '0', context:'0', deterministic:'0', include_deprecated:'0' },
     workspace: { mode: 'auto', root: '', q: '', dirty: '', group: '', repo: '', missing: '', selectedPath: '', diffMode: 'cumulative', diffBase: '' },
     compound: { selectedSkill: '' },
 
@@ -3099,7 +3099,7 @@
       }
       const useContext = (state.memory.context || '0') === '1';
       const query = {
-        vault: m.vault || '.memory',
+        vault: m.vault || '.loom/memory',
         q: m.q || '',
         limit: m.limit || '10',
         tag: splitCSV(m.tag),
@@ -3122,7 +3122,7 @@
   async function loadMemoryNote(id){
     if (!id) return;
     try{
-      const res = await api(`/api/v1/memory/notes/${encodeURIComponent(id)}`, { query: { vault: state.memory.vault || '.memory' } });
+      const res = await api(`/api/v1/memory/notes/${encodeURIComponent(id)}`, { query: { vault: state.memory.vault || '.loom/memory' } });
       data.memory.note = res;
     } catch (err){
       toast('Note failed','bad', err.message || String(err));
@@ -3258,7 +3258,7 @@
 
   function bindMemory(){
     $('#recallNow')?.addEventListener('click', async () => {
-      state.memory.vault = ($('#mVault')?.value || '.memory').trim() || '.memory';
+      state.memory.vault = ($('#mVault')?.value || '.loom/memory').trim() || '.loom/memory';
       state.memory.limit = ($('#mLimit')?.value || '10').trim() || '10';
       state.memory.q = ($('#mQ')?.value || '').trim();
       state.memory.tag = ($('#mTag')?.value || '').trim();

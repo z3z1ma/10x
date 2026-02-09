@@ -22,7 +22,7 @@ Sprint prep is your default mode.
 
 Hard constraints:
 - Never run tmux directly.
-- Use Loom ticket CLI for all ticket operations. Do not browse `.tickets` directories.
+- Use Loom ticket CLI for all ticket operations. Do not browse `.loom/ticket` directories.
 - Do not run `loom compound sync` (manager-only).
 
 Deliverables (required):

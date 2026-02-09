@@ -29,7 +29,7 @@ Happy-path CLI (human or an outer AI agent):
 
 Design constraints:
   - Single-file script; no background daemon.
-  - State is explicit and inspectable under .team/runs/<team>/run.json
+  - State is explicit and inspectable under .loom/team/runs/<team>/run.json
   - Tmux session/window/pane is the source of truth for live state.
   - ws is the exclusive interface for worktree lifecycle.
   - loom ticket is the exclusive interface for durable ticket state.
@@ -283,10 +283,10 @@ def _git_status_porcelain(*, cwd: Path, pathspec: Optional[str] = None) -> str:
 
 
 def _ensure_tickets_synced(*, cwd: Path, tickets_dir: Path) -> Dict[str, Any]:
-    """Best-effort stage+commit .tickets changes via loom ticket.
+    """Best-effort stage+commit ticket changes via loom ticket.
 
-    Team ship runs from the canonical repo root. Ticket updates are typically
-    made via loom ticket and live under `.tickets`, which is tracked by git.
+    Team ship runs from the canonical repo root. Ticket updates are made via
+    loom ticket and live under `.loom/ticket`, which is tracked by git.
     """
 
     if not _git_status_porcelain(cwd=cwd, pathspec=CANONICAL_TICKET_DIRNAME).strip():
@@ -1679,7 +1679,7 @@ def _run_paths_from_env() -> Optional[RunPaths]:
         return None
 
     run_dir = Path(run_dir_raw).expanduser().resolve()
-    # Expected: <repo_root>/.team/runs/<team>
+    # Expected: <repo_root>/.loom/team/runs/<team>
     try:
         repo_root = run_dir.parent.parent.parent.resolve()
     except Exception:
@@ -3699,13 +3699,19 @@ def disband(
             if rd:
                 try:
                     run_dir = Path(rd).expanduser().resolve()
-                    # repo root is the parent of `.team/runs/<team>` if run_dir follows our layout.
+                    # repo root is the parent of `.loom/team/runs/<team>` if run_dir follows our layout.
                     # If not, we still use run_dir as a starting point.
-                    # Find the nearest `.team` parent.
+                    # Find the repo root via the nearest `.loom/team` marker.
                     cur = run_dir
                     while cur != cur.parent:
-                        if (cur / ".team").exists():
+                        if (cur / ".loom" / "team").exists():
                             root = cur
+                            break
+                        if cur.name == "team" and cur.parent.name == ".loom":
+                            root = cur.parent.parent
+                            break
+                        if cur.name == ".loom" and (cur / "team").exists():
+                            root = cur.parent
                             break
                         cur = cur.parent
                 except Exception:
@@ -6411,7 +6417,7 @@ def ship(
             data={"force_clean": bool(force_clean), "push": bool(push_enabled)},
         )
 
-        # Auto-sync/commit ticket changes so ship isn't blocked by `.tickets`.
+        # Auto-sync/commit ticket changes so ship isn't blocked by `.loom/ticket`.
         _ensure_tickets_synced(cwd=root, tickets_dir=tickets_dir)
 
         # Auto-sync/commit compound learning changes so ship isn't blocked by skills/docs drift.

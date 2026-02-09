@@ -15,7 +15,7 @@ def test_write_gated_when_disabled(tmp_path: Path):
     repo = tmp_path / "repo"
     repo.mkdir(parents=True, exist_ok=True)
     _git_init(repo)
-    (repo / ".tickets").mkdir(parents=True, exist_ok=True)
+    (repo / ".loom" / "ticket").mkdir(parents=True, exist_ok=True)
 
     app = create_app(
         cfg=ServerConfig(
@@ -43,7 +43,7 @@ def test_write_requires_token_when_configured(tmp_path: Path):
     repo = tmp_path / "repo"
     repo.mkdir(parents=True, exist_ok=True)
     _git_init(repo)
-    (repo / ".tickets").mkdir(parents=True, exist_ok=True)
+    (repo / ".loom" / "ticket").mkdir(parents=True, exist_ok=True)
 
     app = create_app(
         cfg=ServerConfig(

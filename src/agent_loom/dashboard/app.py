@@ -163,7 +163,7 @@ def create_app(*, cfg: ServerConfig) -> Flask:
 
     def _tickets_dir() -> Path:
         # Server is repo-root anchored; allow override for testing.
-        return (cfg.repo_root / ".tickets").resolve()
+        return (cfg.repo_root / ".loom" / "ticket").resolve()
 
     @app.get("/api/v1/tickets")
     def tickets_list() -> Any:
@@ -527,7 +527,7 @@ def create_app(*, cfg: ServerConfig) -> Flask:
         from agent_loom.memory.core import recall
 
         q = request.args
-        vault_raw = str(q.get("vault") or "").strip() or ".memory"
+        vault_raw = str(q.get("vault") or "").strip() or ".loom/memory"
         vault_path = Path(vault_raw).expanduser()
         if not vault_path.is_absolute():
             vault_path = (cfg.repo_root / vault_path).resolve()
@@ -559,7 +559,7 @@ def create_app(*, cfg: ServerConfig) -> Flask:
             vault_paths,
         )
 
-        vault_raw = str(request.args.get("vault") or "").strip() or ".memory"
+        vault_raw = str(request.args.get("vault") or "").strip() or ".loom/memory"
         vault_path = Path(vault_raw).expanduser()
         if not vault_path.is_absolute():
             vault_path = (cfg.repo_root / vault_path).resolve()

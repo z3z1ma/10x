@@ -65,7 +65,7 @@ class TestWorkspacePolyCleanupTtl(unittest.TestCase):
 
             # Force expiry by backdating last_used_at.
             for g in ("g1", "g2"):
-                p = ws_root / ".loom" / "meta" / "groups" / f"{g}.json"
+                p = ws_root / ".loom" / "workspace" / "meta" / "groups" / f"{g}.json"
                 meta = json.loads(p.read_text(encoding="utf-8"))
                 meta["last_used_at"] = "2000-01-01T00:00:00Z"
                 p.write_text(
@@ -97,10 +97,14 @@ class TestWorkspacePolyCleanupTtl(unittest.TestCase):
 
             # g2 meta removed, g1 meta remains.
             self.assertTrue(
-                (ws_root / ".loom" / "meta" / "groups" / "g1.json").exists()
+                (
+                    ws_root / ".loom" / "workspace" / "meta" / "groups" / "g1.json"
+                ).exists()
             )
             self.assertFalse(
-                (ws_root / ".loom" / "meta" / "groups" / "g2.json").exists()
+                (
+                    ws_root / ".loom" / "workspace" / "meta" / "groups" / "g2.json"
+                ).exists()
             )
 
 

@@ -7,7 +7,7 @@ SUBSYSTEM_VERSION = "0.1.0"
 
 WORKSPACE_FILE = "workspace.json"
 INTERNAL_DIR = ".loom"
-REPO_INTERNAL_DIR = ".loom-repo"
+REPO_INTERNAL_DIR = ".loom/workspace"
 REPOS_DIR = "repos"
 WORKTREES_DIR = "worktrees"
 STATES_DIR = "states"

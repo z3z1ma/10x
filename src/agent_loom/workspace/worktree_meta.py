@@ -30,66 +30,30 @@ def _owner_default() -> dict[str, Any]:
     }
 
 
-def _migrate_meta_files(*, old_dir: Path, new_dir: Path) -> None:
-    if not old_dir.exists() or not old_dir.is_dir():
-        return
-    new_dir.mkdir(parents=True, exist_ok=True)
-    for p in sorted(old_dir.glob("*.json")):
-        try:
-            dst = new_dir / p.name
-            if dst.exists():
-                continue
-            p.replace(dst)
-        except Exception:
-            continue
-
-
 def repo_worktree_meta_dir(repo_root: Path) -> Path:
-    # v2: keep metadata separate from worktree directories.
-    new = (repo_root / REPO_INTERNAL_DIR / "meta" / "worktrees").resolve()
-    old = (repo_root / REPO_INTERNAL_DIR / "worktrees").resolve()
-    _migrate_meta_files(old_dir=old, new_dir=new)
-    return new
+    d = (repo_root / REPO_INTERNAL_DIR / "meta" / "worktrees").resolve()
+    d.mkdir(parents=True, exist_ok=True)
+    return d
 
 
 def repo_worktree_meta_path(repo_root: Path, branch: str) -> Path:
     b = str(branch or "").strip()
     if not b:
         raise WorkspaceError("Missing branch")
-    new = repo_worktree_meta_dir(repo_root) / f"{fs_escape(b)}.json"
-    old = (
-        repo_root / REPO_INTERNAL_DIR / "worktrees" / f"{fs_escape(b)}.json"
-    ).resolve()
-    if (not new.exists()) and old.exists():
-        try:
-            new.parent.mkdir(parents=True, exist_ok=True)
-            old.replace(new)
-        except Exception:
-            pass
-    return new
+    return repo_worktree_meta_dir(repo_root) / f"{fs_escape(b)}.json"
 
 
 def poly_group_meta_dir(ws_root: Path) -> Path:
-    # v2: keep metadata under .loom/meta.
-    new = (ws_root / INTERNAL_DIR / "meta" / "groups").resolve()
-    old = (ws_root / INTERNAL_DIR / "worktrees").resolve()
-    _migrate_meta_files(old_dir=old, new_dir=new)
-    return new
+    d = (ws_root / INTERNAL_DIR / "workspace" / "meta" / "groups").resolve()
+    d.mkdir(parents=True, exist_ok=True)
+    return d
 
 
 def poly_group_meta_path(ws_root: Path, group: str) -> Path:
     g = str(group or "").strip()
     if not g:
         raise WorkspaceError("Missing group")
-    new = poly_group_meta_dir(ws_root) / f"{fs_escape(g)}.json"
-    old = (ws_root / INTERNAL_DIR / "worktrees" / f"{fs_escape(g)}.json").resolve()
-    if (not new.exists()) and old.exists():
-        try:
-            new.parent.mkdir(parents=True, exist_ok=True)
-            old.replace(new)
-        except Exception:
-            pass
-    return new
+    return poly_group_meta_dir(ws_root) / f"{fs_escape(g)}.json"
 
 
 def _touch_meta(path: Path) -> dict:

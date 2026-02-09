@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Optional
 
+from agent_loom.core.git import git_repo_root
+
 
 def normalize_priority(value: Any) -> int:
     """Normalize priority inputs to an int 0..4 (0 is highest).
@@ -120,9 +122,9 @@ def normalize_ticket_ref(value: str, *, tickets_dir: Optional[Path] = None) -> s
     Accepts:
     - #al-b110
     - al-b110.md
-    - .tickets/al-b110.md (legacy)
-    - .tickets/open/al-b110.md
-    - /abs/path/to/.tickets/al-b110.md
+    - .loom/ticket/al-b110.md
+    - .loom/ticket/closed/al-b110.md
+    - /abs/path/to/.loom/ticket/al-b110.md
     """
 
     raw = str(value or "").strip()
@@ -137,9 +139,15 @@ def normalize_ticket_ref(value: str, *, tickets_dir: Optional[Path] = None) -> s
         try:
             p = Path(raw).expanduser()
             if not p.is_absolute() and tickets_dir is not None:
-                # Prefer resolving relative paths against tickets_dir's parent (repo root).
-                # This covers `.tickets/<id>.md` and `<id>.md` from repo root-ish contexts.
-                root = tickets_dir.parent
+                repo_root = git_repo_root(tickets_dir)
+                if repo_root is not None:
+                    root = repo_root
+                elif (
+                    tickets_dir.name == "ticket" and tickets_dir.parent.name == ".loom"
+                ):
+                    root = tickets_dir.parent.parent
+                else:
+                    root = tickets_dir.parent
                 cand = (root / p).resolve()
                 if cand.exists() and cand.suffix == ".md":
                     return cand.stem
@@ -150,8 +158,7 @@ def normalize_ticket_ref(value: str, *, tickets_dir: Optional[Path] = None) -> s
 
     if raw.endswith(".md"):
         # Return the filename stem, not the full path without extension.
-        # This keeps `.tickets/<id>.md` and `.tickets/<status>/<id>.md` refs working
-        # even after tickets are moved.
+        # Extract stem from filename.
         try:
             return Path(raw).stem
         except Exception:

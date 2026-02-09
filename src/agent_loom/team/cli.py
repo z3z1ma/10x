@@ -1639,7 +1639,9 @@ def build_parser() -> argparse.ArgumentParser:
         help="Remove all run worktrees (dangerous; janitor is preferred)",
     )
     dis.add_argument(
-        "--keep-state", action="store_true", help="Do not remove .team run state"
+        "--keep-state",
+        action="store_true",
+        help="Do not remove .loom/team run state",
     )
     dis.set_defaults(func=cmd_disband)
 

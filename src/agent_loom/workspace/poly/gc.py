@@ -58,7 +58,7 @@ def worktree_gc(
         for group_dir in sorted(p for p in wt_root.iterdir() if p.is_dir()):
             groups[fs_unescape(group_dir.name)] = group_dir.resolve()
 
-    meta_dir = (ws_root / INTERNAL_DIR / "meta" / "groups").resolve()
+    meta_dir = (ws_root / INTERNAL_DIR / "workspace" / "meta" / "groups").resolve()
     if meta_dir.exists():
         for p in sorted(meta_dir.glob("*.json")):
             try:

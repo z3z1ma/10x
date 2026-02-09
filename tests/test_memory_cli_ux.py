@@ -38,7 +38,7 @@ class TestMemoryCliUx(unittest.TestCase):
 
     def test_vault_missing_is_not_found(self) -> None:
         with tempfile.TemporaryDirectory() as td:
-            vault = Path(td) / ".memory"
+            vault = Path(td) / ".loom" / "memory"
             rc, payload = _run_json(["--vault", str(vault), "add", "Hello"])
         self.assertEqual(rc, 2)
         self.assertFalse(payload.get("ok"))
@@ -57,7 +57,7 @@ class TestMemoryCliUx(unittest.TestCase):
 
     def test_body_dash_requires_piped_stdin(self) -> None:
         with tempfile.TemporaryDirectory() as td:
-            vault = Path(td) / ".memory"
+            vault = Path(td) / ".loom" / "memory"
             # init vault so we get to the body '-' validation
             rc0, payload0 = _run_json(["--vault", str(vault), "init"])
             self.assertEqual(rc0, 0)

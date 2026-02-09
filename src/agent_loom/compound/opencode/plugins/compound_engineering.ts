@@ -655,6 +655,7 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
     event: onEvent,
     "tool.execute.before": toolBefore,
     "tool.execute.after": toolAfter,
+
     // Keep compaction anchored to stable context files.
     "experimental.session.compacting": async (_input: any, out: any) => {
       out.context.push(

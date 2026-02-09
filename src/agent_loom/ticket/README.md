@@ -8,8 +8,8 @@ installed.
 
 ## Mental model
 
-- Tickets live as Markdown files with YAML frontmatter in `.tickets/`.
-- Each ticket is one file: `.tickets/<id>.md`.
+- Tickets live as Markdown files with YAML frontmatter in `.loom/ticket/`.
+- Each ticket is one file: `.loom/ticket/<id>.md` (or `.loom/ticket/closed/<id>.md` for closed tickets).
 - The CLI is designed for both humans (readable text) and machines (`--json`).
 - Dependency graph primitives are first class: deps, links, parent/children.
 - Optional claims/leases enable safe multi-agent concurrency.
@@ -17,9 +17,10 @@ installed.
 ## Storage layout
 
 ```
-.tickets/
-  config.yaml                 # optional, generated on first create
-  <id>.md                      # ticket file
+.loom/ticket/
+  config.yaml                  # optional, generated on first create
+  <id>.md                      # ticket file (any non-closed status)
+  closed/<id>.md               # closed tickets
   .locks/
     <id>.lock                  # per-ticket lock while writing
     leases/<id>.json           # claim leases
@@ -31,12 +32,12 @@ installed.
 
 ## Tickets directory discovery
 
-The CLI finds `.tickets/` in this order:
+The CLI finds `.loom/ticket/` in this order:
 
 1. `--tickets-dir` flag (or `--ticket-dir` alias)
 2. `TICKET_DIR` env var (absolute or repo-root-relative)
-3. Git repo root `.tickets/` (preferred)
-4. Walk up parent directories to find `.tickets/`
+3. Git repo root `.loom/ticket/` (preferred)
+4. Walk up parent directories to find `.loom/ticket/`
 
 If none exists, `init` and `create` will create it at the git root (or cwd
 if not in a repo). Other commands error with a helpful hint.
@@ -48,8 +49,9 @@ Ticket references normalize to a bare id. All of these are accepted:
 - `ab-1234`
 - `#ab-1234`
 - `ab-1234.md`
-- `.tickets/ab-1234.md`
-- `/abs/path/to/.tickets/ab-1234.md`
+- `.loom/ticket/ab-1234.md`
+- `.loom/ticket/closed/ab-1234.md`
+- `/abs/path/to/.loom/ticket/ab-1234.md`
 
 Partial ids are resolved by prefix/contains matching. Ambiguous matches will
 error with a list of candidates.
@@ -181,7 +183,7 @@ loom ticket --json version
 
 ### init
 
-Initialize `.tickets/` in the discovered tickets directory.
+Initialize `.loom/ticket/` in the discovered tickets directory.
 
 ```
 loom ticket init
@@ -304,8 +306,8 @@ Show a ticket with relationships + body.
 
 ```
 loom ticket show ab-1234
-loom ticket show .tickets/ab-1234.md
-loom ticket show /abs/path/.tickets/ab-1234.md
+loom ticket show .loom/ticket/ab-1234.md
+loom ticket show /abs/path/.loom/ticket/ab-1234.md
 ```
 
 Raw file output (frontmatter + body):
@@ -413,7 +415,7 @@ loom ticket --json view ab-1234
 
 ### claim / heartbeat / release
 
-Claims are leases stored in `.tickets/.locks/leases/<id>.json`.
+Claims are leases stored in `.loom/ticket/.locks/leases/<id>.json`.
 
 - `claim` sets `claimed_by`, `claim_expires`, and `heartbeat`
 - `heartbeat` refreshes heartbeat; `--no-extend` keeps expiry fixed
@@ -439,7 +441,7 @@ loom ticket swarm --active-within 30m
 
 ### sync
 
-Stage and commit `.tickets/` changes. Uses git status under the repo root.
+Stage and commit `.loom/ticket/` changes. Uses git status under the repo root.
 
 ```
 loom ticket sync
@@ -568,8 +570,8 @@ curl -sL https://example.com/rfc.md | loom ticket update ab-1234
 ### Keep tickets in a separate directory
 
 ```
-loom ticket --tickets-dir ../shared/.tickets init
-loom ticket --tickets-dir ../shared/.tickets list
+loom ticket --tickets-dir ../shared/.loom/ticket init
+loom ticket --tickets-dir ../shared/.loom/ticket list
 ```
 
 ## Claims, locks, and safety
@@ -588,7 +590,7 @@ Write commands include:
 
 ## Troubleshooting
 
-Missing .tickets
+Missing .loom/ticket
 
 ```
 loom ticket init

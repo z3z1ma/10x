@@ -29,7 +29,7 @@ def _run(argv: list[str], *, stdin: str | None = None) -> str:
 class TestVisibilityMoves(unittest.TestCase):
     def test_edit_visibility_moves_and_recall_filters(self) -> None:
         with tempfile.TemporaryDirectory() as td:
-            vault = Path(td) / ".memory"
+            vault = Path(td) / ".loom" / "memory"
             _run(["--vault", str(vault), "init"])
 
             _run(

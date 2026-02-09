@@ -2,7 +2,7 @@
 
 Design goals
  - Ticket library + CLI (loom)
-- State stored as Markdown with YAML frontmatter in `.tickets/<status>/`
+ - State stored as Markdown with YAML frontmatter in `.loom/ticket/` (only `closed/` is a subdir)
 - Agent-friendly graph primitives: deps, links, parent/child
 - Safe-ish concurrency: per-ticket lease locks + optional claim enforcement
 - Optional external sync (GitHub built-in)
@@ -267,9 +267,18 @@ def find_tickets_dir(cmd: str, cwd: Path) -> Path:
         return (cwd / TICKET_DIRNAME).resolve()
 
     raise FileNotFoundError(
-        "No .tickets directory found (searched parent directories). "
+        f"No {TICKET_DIRNAME} directory found (searched parent directories). "
         "Run 'loom ticket init' or 'loom ticket create' to initialize, or set TICKET_DIR."
     )
+
+
+def _prefix_cwd_for_tickets_dir(tickets_dir: Path) -> Path:
+    repo_root = git_repo_root(tickets_dir)
+    if repo_root is not None:
+        return repo_root
+    if tickets_dir.name == "ticket" and tickets_dir.parent.name == ".loom":
+        return tickets_dir.parent.parent
+    return tickets_dir.parent
 
 
 def store_for_cmd(cmd: str) -> TicketStore:
@@ -463,7 +472,7 @@ def create_in_dir(
     acceptance: Optional[str] = None,
 ) -> TicketCreateResult:
     store = TicketStore(Path(tickets_dir).resolve())
-    prefix = _ensure_prefix(store, cwd=store.tickets_dir.parent)
+    prefix = _ensure_prefix(store, cwd=_prefix_cwd_for_tickets_dir(store.tickets_dir))
 
     assignee = assignee or default_assignee()
 
@@ -1431,7 +1440,7 @@ def sync(*, message: str = "chore: tickets") -> TicketSyncResult:
             error="Ticket dir must be within repo root",
             hint=f"Repo root: {repo_root}. Tickets dir: {store.tickets_dir}.",
             suggestions=[
-                "Move `.tickets/` into the repo root",
+                f"Move `{TICKET_DIRNAME}/` into the repo root",
                 "Or set TICKET_DIR to a repo-local path",
             ],
             details={
@@ -1462,9 +1471,9 @@ def sync(*, message: str = "chore: tickets") -> TicketSyncResult:
     if remaining:
         raise TicketArgError(
             code="ARG",
-            error="Ticket sync incomplete: .tickets still has uncommitted changes",
-            hint="Inspect remaining changes under `.tickets/` and retry.",
-            suggestions=["git status --porcelain .tickets"],
+            error=f"Ticket sync incomplete: {TICKET_DIRNAME} still has uncommitted changes",
+            hint=f"Inspect remaining changes under `{TICKET_DIRNAME}/` and retry.",
+            suggestions=[f"git status --porcelain {TICKET_DIRNAME}"],
         )
 
     return TicketSyncResult(

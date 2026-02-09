@@ -8,7 +8,7 @@ tmux orchestration, inbox durability, merge queue behavior, and sidecar health.
 
 - Team is tmux-native orchestration for long-horizon, multi-agent work.
 - It does not replace git, workspace, or ticket; it composes them.
-- Every run is explicit state under `.team/runs/<team>/run.json`.
+- Every run is explicit state under `.loom/team/runs/<team>/run.json`.
 - Workers operate in isolated worktrees (managed by workspace).
 - Tickets are the durable work ledger (managed by loom ticket).
 - Messages are durable (disk inbox) with best-effort tmux nudges.
@@ -17,7 +17,7 @@ tmux orchestration, inbox durability, merge queue behavior, and sidecar health.
 ## Storage layout
 
 ```
-.team/
+.loom/team/
   runs/
     <team>/
       run.json                  # authoritative run state
@@ -36,8 +36,8 @@ tmux orchestration, inbox durability, merge queue behavior, and sidecar health.
 ## Run discovery and repo roots
 
 - `--repo` selects a path inside the canonical repo; Team resolves the git root.
-- Without `--repo`, Team searches upward for `.team/runs/<team>/run.json`.
-- The canonical tickets dir is always `<repo>/.tickets` and is injected into
+- Without `--repo`, Team searches upward for `.loom/team/runs/<team>/run.json`.
+- The canonical tickets dir is always `<repo>/.loom/ticket` and is injected into
   tmux panes as `TICKET_DIR`.
 
 ## Global flags and JSON output
@@ -135,7 +135,7 @@ loom team status my-team --show-dead
 loom team --json status my-team
 ```
 
-Also persists a status snapshot at `.team/runs/<team>/snapshots/status.json`.
+Also persists a status snapshot at `.loom/team/runs/<team>/snapshots/status.json`.
 
 ### doctor
 

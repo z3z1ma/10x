@@ -84,7 +84,7 @@ class TestRenderManagerPrompt(unittest.TestCase):
             "team": "CobraKai",
             "run_id": "b2ede2554eec",
             "session": "team-cobrakai",
-            "tickets_dir": "/repo/.tickets",
+            "tickets_dir": "/repo/.loom/ticket",
         }
 
         out = team.render_manager_prompt(run=run, charter_path=Path("CHARTER.md"))
@@ -99,13 +99,13 @@ TEAM: CobraKai
 RUN_ID: b2ede2554eec
 TMUX_SESSION: team-cobrakai
 CHARTER: CHARTER.md
-TICKET_DIR: /repo/.tickets
+TICKET_DIR: /repo/.loom/ticket
 
 HARD CONSTRAINTS (non-negotiable):
 - Do NOT run tmux directly. Use Loom CLI only.
 - Do NOT implement tickets or edit code. Delegate tickets to workers.
 - Do NOT move tickets to in_progress (workers do that when they start).
-- Use Loom ticket CLI for all ticket IO; do not browse `.ticket`/`.tickets` directories.
+- Use Loom ticket CLI for all ticket IO; do not browse `.loom/ticket` directories.
 
 OBJECTIVE:
 Ship fast, stay correct.
@@ -153,7 +153,7 @@ class TestRenderWorkerPrompt(unittest.TestCase):
             "objective": "Freeze prompt UX.",
             "team": "CobraKai",
             "run_id": "b2ede2554eec",
-            "tickets_dir": "/repo/.tickets",
+            "tickets_dir": "/repo/.loom/ticket",
         }
         ticket = {"id": "mem-127d", "title": "Lock prompts", "status": "open"}
         ticket_payload = {
@@ -190,11 +190,11 @@ class TestRenderWorkerPrompt(unittest.TestCase):
                 BRANCH: team/mem-127d
                 BASE: main
                 CHARTER: CHARTER.md
-                TICKET_DIR: /repo/.tickets
+                TICKET_DIR: /repo/.loom/ticket
 
                 HARD CONSTRAINTS:
                 - Do NOT run tmux directly.
-                - Do NOT browse `.ticket`/`.tickets` directories; use Loom ticket CLI only.
+                - Do NOT browse `.loom/ticket` directories; use Loom ticket CLI only.
                 - Transition ticket to in_progress when you begin real work (worker-owned).
                 - Keep a steady cadence of Loom ticket updates.
                 - Do not close tickets; do not merge to main (manager-owned).
@@ -245,7 +245,7 @@ class TestRenderInvestigatorPrompt(unittest.TestCase):
             "objective": "Freeze prompt UX.",
             "team": "CobraKai",
             "run_id": "b2ede2554eec",
-            "tickets_dir": "/repo/.tickets",
+            "tickets_dir": "/repo/.loom/ticket",
             "sprint": {"name": "Alpha", "tag": "sprint:alpha"},
         }
         ticket = {"id": "t-1", "title": "Sprint prep: Alpha", "status": "open"}
@@ -283,13 +283,13 @@ class TestRenderInvestigatorPrompt(unittest.TestCase):
                 BRANCH: team/t-1
                 BASE: main
                 CHARTER: CHARTER.md
-                TICKET_DIR: /repo/.tickets
+                TICKET_DIR: /repo/.loom/ticket
                 SPRINT: Alpha
                 SPRINT_TAG: sprint:alpha
 
                 HARD CONSTRAINTS:
                 - Do NOT run tmux directly.
-                - Do NOT browse `.ticket`/`.tickets` directories; use Loom ticket CLI only.
+                - Do NOT browse `.loom/ticket` directories; use Loom ticket CLI only.
                 - Transition ticket to in_progress when you begin real work (worker-owned).
                 - Keep a steady cadence of Loom ticket updates.
                 - Do not close tickets; do not merge to main (manager-owned).
@@ -346,7 +346,7 @@ class TestRenderMergeWorkerPrompt(unittest.TestCase):
             "objective": "Merge safely.",
             "team": "CobraKai",
             "run_id": "b2ede2554eec",
-            "tickets_dir": "/repo/.tickets",
+            "tickets_dir": "/repo/.loom/ticket",
             "merge": {
                 "config": {"target_branch": "main", "remote": "origin", "push": True}
             },
@@ -375,7 +375,7 @@ class TestRenderMergeWorkerPrompt(unittest.TestCase):
                 BRANCH: team/merge-queue
                 BASE: main
                 CHARTER: CHARTER.md
-                TICKET_DIR: /repo/.tickets
+                TICKET_DIR: /repo/.loom/ticket
                 MERGE_TARGET: origin/main  push=True
 
                 HARD CONSTRAINTS:
@@ -400,9 +400,9 @@ class TestEnsureOpenCodeAgents(unittest.TestCase):
     def test_default_agent_markdown_snapshot_sha256(self) -> None:
         expected = {
             "loom-team-integrator.md": "117230b87c34c0d6899724e29c116e998cc9449826c74aad084a52616bfc72fd",
-            "loom-team-investigator.md": "881d415404583cad546a89f9a3eeff83fafda1fd2becf0581dbf18c71d32c362",
-            "loom-team-manager.md": "7c793fa4008d779eade0b8fe42751fa3cf834718c3b47a0c5eba69737be46c8c",
-            "loom-team-worker.md": "fee615d58bad875867da00045fc0972f4df707eb8f9d709975b286644739370c",
+            "loom-team-investigator.md": "33025d6ed6f090aada7622477892a1c7d19ec1bc9ad4fde6dcd3bc5e952ce4ec",
+            "loom-team-manager.md": "6120aaee3cf12089fc2728623c0a2ccce2035e93c44ccf3520a77e91e24139aa",
+            "loom-team-worker.md": "bc575a1f793d32f917d913dbe995a5837984aaeadbb8765e3fa303ee34fedbbd",
         }
 
         with tempfile.TemporaryDirectory() as d:
@@ -422,9 +422,9 @@ class TestEnsureClaudeAgents(unittest.TestCase):
     def test_default_agent_markdown_snapshot_sha256(self) -> None:
         expected = {
             "loom-team-integrator.md": "61439d8e9cdbaaee174586fe87b180308fd1483e4e6fb0a6f0fc543d7cafa8a9",
-            "loom-team-investigator.md": "65c4f842e63425e298d3009d1588168ed1063725223a2da95886e642f7575340",
-            "loom-team-manager.md": "6ee872b81946f9ec1057350df5c4485a3bc06419f0be0e41cb84ea43e77ee4fc",
-            "loom-team-worker.md": "64f05ce16a1752644bff56f965ed6be0358b8c3861f983ae984bf3bf5c0d527e",
+            "loom-team-investigator.md": "eac69402cb208eba1f6d9dd7455dabcac36e014ed987b6be32894292017692bd",
+            "loom-team-manager.md": "ed904d4706d26c8a980385ba4ab688aa018220986ce7806efd542208159c8e0e",
+            "loom-team-worker.md": "9986678c38498c0bd3031ab06490bc803e2e808d5b4a3ea58ff5bf56b76f25cd",
         }
 
         with tempfile.TemporaryDirectory() as d:

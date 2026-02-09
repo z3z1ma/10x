@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 SUBSYSTEM_NAME = "agent-loom-ticket"
 SUBSYSTEM_VERSION = "1.0.0"
 
-TICKET_DIRNAME = ".tickets"
+TICKET_DIRNAME = ".loom/ticket"
 LOCKS_DIRNAME = ".locks"
 CACHE_DIRNAME = ".cache"
 CONFIG_FILENAME = "config.yaml"

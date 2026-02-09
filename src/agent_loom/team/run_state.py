@@ -75,8 +75,14 @@ def discover_repo_root_for_team(team: str, *, start: Path) -> Optional[Path]:
         if (cur / DEFAULT_RUNS_DIR / t / "run.json").exists():
             return cur
 
-        if cur.name == ".team" and (cur / "runs" / t / "run.json").exists():
-            return cur.parent
+        # If invoked from within `.loom/team/...`, return the repo root.
+        if cur.name == "team" and cur.parent.name == ".loom":
+            if (cur / "runs" / t / "run.json").exists():
+                return cur.parent.parent
+
+        if cur.name == ".loom":
+            if (cur / "team" / "runs" / t / "run.json").exists():
+                return cur.parent
 
         if cur == cur.parent:
             break

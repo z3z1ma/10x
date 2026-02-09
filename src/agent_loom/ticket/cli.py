@@ -375,7 +375,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="cmd")
 
     sub.add_parser("version", parents=[common], help="Print version")
-    sub.add_parser("init", parents=[common], help="Initialize .tickets")
+    sub.add_parser("init", parents=[common], help="Initialize .loom/ticket")
 
     sp = sub.add_parser("create", parents=[common], help="Create a ticket")
     sp.add_argument("title_pos", nargs="?", default=None, metavar="title")
@@ -615,7 +615,9 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("swarm", parents=[common], help="Show swarm activity")
     sp.add_argument("--active-within", default="2h")
 
-    sp = sub.add_parser("sync", parents=[common], help="Stage+commit .tickets changes")
+    sp = sub.add_parser(
+        "sync", parents=[common], help="Stage+commit .loom/ticket changes"
+    )
     sp.add_argument(
         "-m",
         "--message",
@@ -1332,7 +1334,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             error=str(e),
             code="NOT_FOUND",
             json_mode=json_mode,
-            hint="Run `loom ticket list` to see tickets, or `loom ticket init` to create `.tickets/`.",
+            hint="Run `loom ticket list` to see tickets, or `loom ticket init` to create `.loom/ticket/`.",
         )
         raise SystemExit(2)
     except PermissionError as e:

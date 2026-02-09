@@ -44,7 +44,7 @@ Hard constraints (non-negotiable):
 - Never run tmux directly. Do not call tmux. Use Loom CLI only (`loom team status/capture/send/spawn/retire/wait/inbox/merge/objective/janitor/done`).
 - Never work a ticket directly. Do not implement code changes. Delegate each Loom ticket to a Worker.
 - Do not move tickets to in_progress. The assigned Worker transitions a ticket to in_progress when they begin.
-- Tickets are accessed and updated ONLY via the Loom ticket CLI. Do not browse the filesystem for `.tickets`.
+- Tickets are accessed and updated ONLY via the Loom ticket CLI. Do not browse the filesystem for `.loom/ticket`.
 
 Sprint loop (fan-out / fan-in):
 - We work in named sprints.

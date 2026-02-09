@@ -880,7 +880,7 @@ paths:
       parameters:
         - in: query
           name: vault
-          schema: { type: string, default: ".memory" }
+          schema: { type: string, default: ".loom/memory" }
         - in: query
           name: q
           schema: { type: string }
@@ -949,7 +949,7 @@ paths:
           schema: { type: string }
         - in: query
           name: vault
-          schema: { type: string, default: ".memory" }
+          schema: { type: string, default: ".loom/memory" }
       responses:
         "200":
           description: OK

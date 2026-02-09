@@ -89,13 +89,13 @@ class TestWorkspaceInit(unittest.TestCase):
             self.assertEqual(rc, 0)
             self.assertTrue(out.get("ok"))
             data = out.get("data") or {}
-            self.assertIn(".loom-repo", str(data.get("internal_dir") or ""))
-            self.assertTrue((repo / ".loom-repo" / "worktrees").exists())
+            self.assertIn(".loom/workspace", str(data.get("internal_dir") or ""))
+            self.assertTrue((repo / ".loom" / "workspace" / "worktrees").exists())
 
             # Ensure ignore was written to .git/info/exclude
             exclude = repo / ".git" / "info" / "exclude"
             self.assertTrue(exclude.exists())
-            self.assertIn(".loom-repo/", exclude.read_text(encoding="utf-8"))
+            self.assertIn(".loom/workspace/", exclude.read_text(encoding="utf-8"))
 
     def test_no_implicit_dispatch_from_poly_root(self) -> None:
         with tempfile.TemporaryDirectory() as td:

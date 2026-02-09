@@ -45,7 +45,7 @@ class _Chdir:
 class TestMemoryNotes(unittest.TestCase):
     def test_init_add_read_round_trip(self) -> None:
         with tempfile.TemporaryDirectory() as td:
-            vault = Path(td) / ".memory"
+            vault = Path(td) / ".loom" / "memory"
 
             _run(["--vault", str(vault), "init"])
 
@@ -91,7 +91,7 @@ class TestMemoryNotes(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             td_path = Path(td)
             with _Chdir(td_path):
-                vault = td_path / ".memory"
+                vault = td_path / ".loom" / "memory"
                 _run(["--vault", str(vault), "init"])
 
                 buf = io.StringIO()

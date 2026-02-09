@@ -26,7 +26,7 @@ class TestEnsureTicketsSynced(unittest.TestCase):
             mock.patch.object(team, "ticket_sync") as sync,
         ):
             out = _ensure_tickets_synced(
-                cwd=Path("/repo"), tickets_dir=Path("/repo/.tickets")
+                cwd=Path("/repo"), tickets_dir=Path("/repo/.loom/ticket")
             )
             self.assertEqual(out, {"ok": True, "attempted": False, "committed": False})
             gs.assert_called_once()
@@ -35,7 +35,7 @@ class TestEnsureTicketsSynced(unittest.TestCase):
     def test_calls_ticket_sync_when_tickets_dirty(self) -> None:
         with (
             mock.patch.object(
-                team, "_git_status_porcelain", return_value=" M .tickets/open/a.md\n"
+                team, "_git_status_porcelain", return_value=" M .loom/ticket/a.md\n"
             ),
             mock.patch.object(team, "ticket_sync") as sync,
         ):
@@ -44,11 +44,11 @@ class TestEnsureTicketsSynced(unittest.TestCase):
             )
             sync.return_value = sync_result(committed=True)
             out = _ensure_tickets_synced(
-                cwd=Path("/repo"), tickets_dir=Path("/repo/.tickets")
+                cwd=Path("/repo"), tickets_dir=Path("/repo/.loom/ticket")
             )
             self.assertTrue(out.get("ok"))
             self.assertTrue(out.get("attempted"))
-            sync.assert_called_once_with(tickets_dir=Path("/repo/.tickets"))
+            sync.assert_called_once_with(tickets_dir=Path("/repo/.loom/ticket"))
 
 
 class TestCmdShipTicketSync(unittest.TestCase):

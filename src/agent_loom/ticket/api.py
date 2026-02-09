@@ -41,7 +41,7 @@ from agent_loom.ticket.store import (
 )
 from agent_loom.ticket.errors import TicketArgError
 from agent_loom.ticket.normalize import normalize_status
-from agent_loom.ticket.constants import STATUS_ORDER, VALID_STATUSES
+from agent_loom.ticket.constants import STATUS_ORDER, TICKET_DIRNAME, VALID_STATUSES
 from agent_loom.ticket.core import default_agent_id
 
 
@@ -500,8 +500,8 @@ def sync(*, tickets_dir: Path, message: str = "chore: tickets") -> TicketSyncRes
     if remaining:
         raise TicketArgError(
             code="ARG",
-            error="Ticket sync incomplete: .tickets still has uncommitted changes",
-            hint="Inspect remaining changes under `.tickets/` and retry.",
+            error=f"Ticket sync incomplete: {TICKET_DIRNAME} still has uncommitted changes",
+            hint=f"Inspect remaining changes under `{TICKET_DIRNAME}/` and retry.",
         )
 
     return TicketSyncResult(

@@ -86,7 +86,9 @@ class TestPrepSprint(unittest.TestCase):
                 mock.patch.object(team, "locked_run", fake_locked_run),
                 mock.patch.object(team, "run_root", return_value=repo_root),
                 mock.patch.object(
-                    team, "ensure_run_tickets_dir", return_value=repo_root / ".tickets"
+                    team,
+                    "ensure_run_tickets_dir",
+                    return_value=repo_root / ".loom" / "ticket",
                 ),
                 mock.patch.object(team, "_write_charter"),
                 mock.patch.object(team, "write_event"),
@@ -103,7 +105,7 @@ class TestPrepSprint(unittest.TestCase):
                         session="team-cobrakai",
                         repo_root=str(repo_root),
                         run_dir=str(paths.run_dir),
-                        tickets_dir=str(repo_root / ".tickets"),
+                        tickets_dir=str(repo_root / ".loom" / "ticket"),
                         worker={"worker_id": "w9"},
                         ticket={"id": "t-1"},
                     ),
