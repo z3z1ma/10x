@@ -50,6 +50,13 @@ class TestMemoryCliUx(unittest.TestCase):
         args = memory_cli_mod.build_parser().parse_args(norm)
         self.assertEqual(str(getattr(args, "title", "") or ""), "Hello")
 
+    def test_add_command_flag_parses(self) -> None:
+        norm = memory_cli_mod._normalize_argv(
+            ["add", "Hello", "--command", "uv run pytest"]
+        )
+        args = memory_cli_mod.build_parser().parse_args(norm)
+        self.assertEqual(str(getattr(args, "command", "") or ""), "uv run pytest")
+
     def test_link_validate_positional_id_rewrites(self) -> None:
         norm = memory_cli_mod._normalize_argv(["link", "validate", "abc"])
         args = memory_cli_mod.build_parser().parse_args(norm)

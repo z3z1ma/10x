@@ -40,6 +40,41 @@ const AUTO_PROMPT_MAX_CHARS = intEnv("COMPOUND_AUTO_PROMPT_MAX_CHARS", 18000);
 const PRIME_ON_START = (process.env.COMPOUND_PRIME_ON_START ?? "0") !== "0";
 const REFRESH_ON_START = (process.env.COMPOUND_REFRESH_ON_START ?? "0") !== "0";
 
+const NUDGE_INJECT_ENABLED = (process.env.COMPOUND_NUDGE_INJECT ?? "1") !== "0";
+const NUDGE_TOOL_ENABLED = (process.env.COMPOUND_NUDGE_TOOL ?? "1") !== "0";
+const NUDGE_TOOL_COOLDOWN_SECONDS = intEnv(
+  "COMPOUND_NUDGE_TOOL_COOLDOWN_SECONDS",
+  45
+);
+
+const NUDGE_COMMAND_REGEXES = (() => {
+  const raw = String(process.env.COMPOUND_NUDGE_COMMAND_REGEX ?? "").trim();
+  if (!raw) return [] as RegExp[];
+  const parts = raw
+    .split(";")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 20);
+  const out: RegExp[] = [];
+  for (const p of parts) {
+    try {
+      out.push(new RegExp(p, "i"));
+    } catch {
+      // ignore invalid regex
+    }
+  }
+  return out;
+})();
+
+const TURN_REMINDER = [
+  "<reminder>",
+  "Loom protocol:",
+  "- Non-trivial work: create/update a Loom ticket before implementing.",
+  "- Recall memory when relevant: loom memory recall \"<query>\" --context --format prompt.",
+  "- When you learn something reusable, save a scoped note (prefer --command or file: scopes).",
+  "</reminder>",
+].join("\n");
+
 type ISODate = string;
 
 type Observation = Record<string, unknown> & {
@@ -302,6 +337,196 @@ function toolObservationSummary(toolName: string, redactedArgs: any): string {
   } catch {
     return "";
   }
+}
+
+// -----------------------------
+// Message + tool nudges
+// -----------------------------
+
+type ChatMessage = {
+  info?: { role?: string; agent?: string | null; sessionID?: string | null };
+  parts?: Array<{ type?: string; text?: string; [key: string]: any }>;
+};
+
+const _childSessionIDs = new Set<string>();
+
+function _isChildSession(sessionID: string | null | undefined): boolean {
+  const key = String(sessionID ?? "").trim();
+  return Boolean(key) && _childSessionIDs.has(key);
+}
+
+function injectTurnReminder(output: any): void {
+  if (!NUDGE_INJECT_ENABLED) return;
+
+  const messages: ChatMessage[] = Array.isArray(output?.messages)
+    ? (output.messages as ChatMessage[])
+    : [];
+  if (!messages.length) return;
+
+  let lastUserIdx = -1;
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const role = String(messages[i]?.info?.role ?? "");
+    if (role === "user") {
+      lastUserIdx = i;
+      break;
+    }
+  }
+  if (lastUserIdx === -1) return;
+
+  const msg = messages[lastUserIdx];
+  const sessionID = msg?.info?.sessionID ?? null;
+  if (_isChildSession(sessionID)) return;
+
+  const parts = Array.isArray(msg?.parts) ? msg.parts : [];
+  const textIdx = parts.findIndex(
+    (p) => String(p?.type ?? "") === "text" && typeof p?.text === "string"
+  );
+  if (textIdx === -1) return;
+
+  const original = String(parts[textIdx]?.text ?? "");
+  if (original.startsWith(TURN_REMINDER)) return;
+
+  parts[textIdx].text = `${TURN_REMINDER}\n\n---\n\n${original}`;
+}
+
+const _lastToolNudgeAtBySession = new Map<string, number>();
+let _lastToolNudgeAtGlobal = 0;
+
+function _toolNudgeAllowed(sessionID: string | null | undefined): boolean {
+  const now = Date.now();
+  const cooldownMs = Math.max(1, NUDGE_TOOL_COOLDOWN_SECONDS) * 1000;
+  const key = String(sessionID ?? "").trim();
+  if (!key) {
+    if (now - _lastToolNudgeAtGlobal < cooldownMs) return false;
+    _lastToolNudgeAtGlobal = now;
+    return true;
+  }
+  const last = _lastToolNudgeAtBySession.get(key) ?? 0;
+  if (now - last < cooldownMs) return false;
+  _lastToolNudgeAtBySession.set(key, now);
+  return true;
+}
+
+function _tokenizeCommand(raw: string): string[] {
+  const s = String(raw ?? "").replace(/\s+/g, " ").trim();
+  return s ? s.split(" ").filter(Boolean) : [];
+}
+
+function _redactCommandTokens(tokens: string[]): string[] {
+  const secretFlag = /^(--?)(token|api[-_]?key|apikey|key|secret|password|pass|auth(orization)?|cookie|session)$/i;
+  const secretFlagPrefix = /^(--?)(token|api[-_]?key|apikey|key|secret|password|pass|auth(orization)?|cookie|session)(=|:)/i;
+
+  const out: string[] = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const t = String(tokens[i] ?? "");
+    const prev = i > 0 ? String(tokens[i - 1] ?? "") : "";
+
+    if (secretFlag.test(prev)) {
+      out.push("[REDACTED]");
+      continue;
+    }
+
+    if (secretFlagPrefix.test(t)) {
+      const idx = t.indexOf("=") >= 0 ? t.indexOf("=") : t.indexOf(":");
+      if (idx > 0) {
+        out.push(t.slice(0, idx + 1) + "[REDACTED]");
+        continue;
+      }
+    }
+
+    let redacted = t;
+    for (const re of SECRET_VALUE_RE) {
+      // Some regexes are global; make test deterministic.
+      try {
+        (re as any).lastIndex = 0;
+      } catch {}
+      if (re.test(redacted)) {
+        redacted = "[REDACTED]";
+        break;
+      }
+    }
+    out.push(redacted);
+  }
+  return out;
+}
+
+function commandSignature(raw: string): string {
+  const tokens0 = _tokenizeCommand(raw);
+  if (!tokens0.length) return "";
+
+  // Drop leading env assignments (best-effort).
+  const tokens: string[] = [...tokens0];
+  let dropped = 0;
+  while (tokens.length && dropped < 6) {
+    const t = String(tokens[0] ?? "");
+    if (t.includes("=") && !t.startsWith("-") && !t.startsWith("./")) {
+      tokens.shift();
+      dropped += 1;
+      continue;
+    }
+    break;
+  }
+
+  const safe = _redactCommandTokens(tokens);
+
+  const maxTokens = 4;
+  const sig = safe.slice(0, maxTokens).join(" ").trim();
+  return truncateString(sig, 120);
+}
+
+function _toolOutputLooksFailed(output: any): boolean {
+  const ok = output?.ok ?? output?.success;
+  if (ok === false) return true;
+
+  const md = output?.metadata;
+  const exitCode = md?.exitCode ?? md?.exit_code ?? md?.code ?? null;
+  if (typeof exitCode === "number" && exitCode !== 0) return true;
+
+  const title = String(output?.title ?? "");
+  if (/\b(fail|failed|error)\b/i.test(title)) return true;
+
+  const txt = typeof output?.output === "string" ? String(output.output) : "";
+  if (/\b(traceback|panic:|segmentation fault)\b/i.test(txt)) return true;
+  if (/\b(FAILED|ERROR)\b/.test(txt)) return true;
+
+  return false;
+}
+
+function _shouldNudgeForBashCommand(sig: string, failed: boolean): boolean {
+  if (failed) return true;
+  const s = String(sig ?? "").trim();
+  if (!s) return false;
+  if (!NUDGE_COMMAND_REGEXES.length) return false;
+  for (const re of NUDGE_COMMAND_REGEXES) {
+    try {
+      (re as any).lastIndex = 0;
+    } catch {}
+    if (re.test(s)) return true;
+  }
+  return false;
+}
+
+function _appendToolNudge(toolName: string, sessionID: string | null | undefined, args: any, output: any): void {
+  if (!NUDGE_TOOL_ENABLED) return;
+  if (typeof output?.output !== "string") return;
+  if (_isChildSession(sessionID)) return;
+
+  const t = String(toolName ?? "");
+  if (!/bash|shell/i.test(t)) return;
+
+  const rawCmd = typeof args?.command === "string" ? String(args.command) : "";
+  const sig = commandSignature(rawCmd);
+  const failed = _toolOutputLooksFailed(output);
+  if (!_shouldNudgeForBashCommand(sig, failed)) return;
+  if (!_toolNudgeAllowed(sessionID)) return;
+
+  const base = "\n\n---\nLoom: if this matters, update your ticket and capture a scoped memory.";
+  const example = sig
+    ? `\nExample: loom memory add --title \"...\" --command \"${sig}\" --body \"...\"`
+    : "\nExample: loom memory add --title \"...\" --scope command:<signature> --body \"...\"";
+  const extra = failed ? "\nTip: include the failure symptom + the fix." : "";
+
+  output.output = output.output + base + example + extra;
 }
 
 // -----------------------------
@@ -586,6 +811,15 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
       if (!event?.type) return;
       if (!installed.ok) return;
 
+      if (event.type === "session.created") {
+        const info = event?.properties?.info ?? null;
+        const id = info?.id ?? event?.properties?.id ?? null;
+        const parentID = info?.parentID ?? null;
+        if (parentID && id) {
+          _childSessionIDs.add(String(id));
+        }
+      }
+
       await recordEventObservation(event);
 
       if (event.type === "session.idle") {
@@ -625,27 +859,30 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
   const toolAfter = async (input: any, output: any) => {
     try {
       if (!installed.ok) return;
-      if (!LOG_OBSERVATIONS) return;
 
       const toolName = String(input?.tool ?? input?.name ?? output?.tool ?? "unknown");
       const sessionID = input?.sessionID ?? input?.sessionId ?? null;
       const args = output?.args ?? input?.args ?? null;
       const ok = output?.ok ?? output?.success ?? null;
 
-      const redactedArgs = sanitizeObservationArgs(toolName, args);
-      const obs: Observation = {
-        id: randomUUID(),
-        ts: nowIso(),
-        type: "tool.execute.after",
-        sessionID,
-        tool: toolName,
-        ok,
-        args: redactedArgs,
-      };
-      const s = toolObservationSummary(toolName, redactedArgs);
-      if (s) obs.summary = s;
+      if (LOG_OBSERVATIONS) {
+        const redactedArgs = sanitizeObservationArgs(toolName, args);
+        const obs: Observation = {
+          id: randomUUID(),
+          ts: nowIso(),
+          type: "tool.execute.after",
+          sessionID,
+          tool: toolName,
+          ok,
+          args: redactedArgs,
+        };
+        const s = toolObservationSummary(toolName, redactedArgs);
+        if (s) obs.summary = s;
 
-      await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
+        await appendJsonl(repoRoot, OBSERVATIONS_FILE, obs);
+      }
+
+      _appendToolNudge(toolName, sessionID, args, output);
     } catch {
       // swallow
     }
@@ -655,6 +892,14 @@ export const CompoundEngineeringPlugin: Plugin = async ({ client, directory, wor
     event: onEvent,
     "tool.execute.before": toolBefore,
     "tool.execute.after": toolAfter,
+
+    "experimental.chat.messages.transform": async (_input: any, out: any) => {
+      try {
+        injectTurnReminder(out);
+      } catch {
+        // swallow
+      }
+    },
 
     // Keep compaction anchored to stable context files.
     "experimental.session.compacting": async (_input: any, out: any) => {

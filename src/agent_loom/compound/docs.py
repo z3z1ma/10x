@@ -62,6 +62,10 @@ This block is maintained by the compound system.
 - Keep skills small, specific, and triggerable from the `description`. Use "when [condition], then [action]" format when possible.
 - Prefer updating an existing skill over creating a near-duplicate.
 - Never put secrets into skills, memos, or observations.
+- Non-trivial work is ticketed: create/update a Loom ticket before implementing, and keep it updated as you work.
+- Use Loom memory intentionally:
+  - At the start of a task, recall relevant context (prefer `loom memory recall ... --context --format prompt`).
+  - When you learn something reusable, persist a scoped note (prefer `command:` / `file:` scopes).
 
 **Where things live:**
 - Boundary: `.loom/**` is Loom-owned durable evidence + compiled state; `.opencode/**` is OpenCode integration + runtime artifacts (including skills).

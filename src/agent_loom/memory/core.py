@@ -267,6 +267,7 @@ def add(
     tag: Optional[Sequence[str]] = None,
     alias: Optional[Sequence[str]] = None,
     scope: Optional[Sequence[str]] = None,
+    command: Optional[str] = None,
     allow_missing_scopes: bool = False,
     body: Optional[str] = None,
     interactive: bool = False,
@@ -288,7 +289,24 @@ def add(
     ]
 
     scope_items = parse_multi_csvish(list(scope) if scope else None)
+    if command is not None:
+        cmd = str(command).strip()
+        if not cmd:
+            raise MemoryError(
+                "--command cannot be empty",
+                code="ARG",
+                exit_code=2,
+                hint="Provide a non-empty command signature.",
+                suggestions=[
+                    'loom memory add --title "pytest failure" --command "uv run pytest" --body "..."',
+                ],
+            )
+        scope_items.append(f"command:{cmd}")
     scopes = [parse_scope_string(s, repo_root=repo_root) for s in scope_items]
+    if scopes:
+        # Dedup by JSON signature for stable frontmatter.
+        sigs = {json.dumps(s, sort_keys=True, ensure_ascii=False): s for s in scopes}
+        scopes = list(sigs.values())
     validate_file_scopes_exist(
         scopes,
         repo_root=repo_root,
@@ -393,6 +411,7 @@ def edit(
     remove_alias: Optional[Sequence[str]] = None,
     clear_aliases: bool = False,
     scope: Optional[Sequence[str]] = None,
+    command: Optional[str] = None,
     remove_scope: Optional[Sequence[str]] = None,
     clear_scopes: bool = False,
     allow_missing_scopes: bool = False,
@@ -518,6 +537,19 @@ def edit(
 
     # Scopes operations
     add_scopes_raw = parse_multi_csvish(list(scope) if scope else None)
+    if command is not None:
+        cmd = str(command).strip()
+        if not cmd:
+            raise MemoryError(
+                "--command cannot be empty",
+                code="ARG",
+                exit_code=2,
+                hint="Provide a non-empty command signature.",
+                suggestions=[
+                    'loom memory edit <id> --command "uv run pytest" --append "..."',
+                ],
+            )
+        add_scopes_raw.append(f"command:{cmd}")
     remove_scopes_raw = parse_multi_csvish(list(remove_scope) if remove_scope else None)
     if clear_scopes:
         fm.pop("scopes", None)

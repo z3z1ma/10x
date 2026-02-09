@@ -339,6 +339,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--scope", action="append", default=[], help="Scope kind:value (repeatable)"
     )
     add_p.add_argument(
+        "--command",
+        default=None,
+        help="Command context shorthand (adds scope command:...)",
+    )
+    add_p.add_argument(
         "--visibility",
         choices=VISIBILITIES,
         default="shared",
@@ -415,6 +420,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     edit_p.add_argument(
         "--scope", action="append", default=[], help="Add scope(s) kind:value"
+    )
+    edit_p.add_argument(
+        "--command",
+        default=None,
+        help="Command context shorthand (adds scope command:...)",
     )
     edit_p.add_argument(
         "--remove-scope",
@@ -727,6 +737,7 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
             tag=args.tag,
             alias=args.alias,
             scope=args.scope,
+            command=args.command,
             allow_missing_scopes=bool(getattr(args, "allow_missing_scopes", False)),
             body=body,
             interactive=bool(args.interactive),
@@ -808,6 +819,7 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
             remove_alias=args.remove_alias,
             clear_aliases=bool(args.clear_aliases),
             scope=args.scope,
+            command=args.command,
             remove_scope=args.remove_scope,
             clear_scopes=bool(args.clear_scopes),
             allow_missing_scopes=bool(getattr(args, "allow_missing_scopes", False)),

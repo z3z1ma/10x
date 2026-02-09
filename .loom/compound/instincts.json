@@ -2,6 +2,30 @@
   "version": 1,
   "instincts": [
     {
+      "id": "add-cli-ux-tests-when-output-changes",
+      "title": "Add CLI UX regression tests with output changes",
+      "trigger": "When changing any CLI command behavior (stdout/stderr text, exit codes, help output, error messages)",
+      "action": "Add or update a focused CLI UX test that asserts exit code and a small set of stable substrings/lines (not full output), covering both success and failure cases; avoid brittle assertions on whitespace, ordering, or environment-specific paths unless required.",
+      "tags": [
+        "cli",
+        "stability",
+        "tests",
+        "ux"
+      ],
+      "confidence": 0.82,
+      "status": "active",
+      "created_at": "2026-02-09T05:19:20.993689Z",
+      "updated_at": "2026-02-09T05:19:20.993689Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T05:19:20.993689Z",
+          "episode_id": "8effd17b5ade4736a0cbbffe48e6e827b159791adb05936c705d1a25cf60eca8",
+          "head_sha": "9b5f20d7deba438098e40fb95be85a6c5e7ca775",
+          "patch_sha256": "82e9b6c117f06879dda9b467b89f0e3215882c208be9a21db9fede566e6aab6c"
+        }
+      ]
+    },
+    {
       "id": "avoid-lsp-diagnostics-use-basedpyright",
       "title": "Do not rely on LSP diagnostics for typing status",
       "trigger": "When tempted to check typing errors via editor/LSP or `lsp_diagnostics`",
@@ -187,6 +211,30 @@
           "episode_id": "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8",
           "head_sha": "fd11881c724ec177afb9793ee355528f46f63286",
           "patch_sha256": "2b739a8231c6031ee25bc96ebbe1436a00521c016ddadb42a37b514d0e320431"
+        }
+      ]
+    },
+    {
+      "id": "doc-and-core-parity-for-new-subcommands",
+      "title": "Keep docs + core aligned with new subcommands",
+      "trigger": "When introducing a new subcommand or expanding a subsystem CLI (e.g., `loom memory ...`)",
+      "action": "Update subsystem README/help docs alongside the CLI wiring, and factor logic into a testable core module so UX tests can stay thin; ensure docs mention common workflows and error modes, and add at least one UX test covering the new path.",
+      "tags": [
+        "architecture",
+        "cli",
+        "docs",
+        "testing"
+      ],
+      "confidence": 0.66,
+      "status": "active",
+      "created_at": "2026-02-09T05:19:20.993689Z",
+      "updated_at": "2026-02-09T05:19:20.993689Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T05:19:20.993689Z",
+          "episode_id": "8effd17b5ade4736a0cbbffe48e6e827b159791adb05936c705d1a25cf60eca8",
+          "head_sha": "9b5f20d7deba438098e40fb95be85a6c5e7ca775",
+          "patch_sha256": "82e9b6c117f06879dda9b467b89f0e3215882c208be9a21db9fede566e6aab6c"
         }
       ]
     },
@@ -496,6 +544,30 @@
           "episode_id": "3a49e37b2714b270438b82f96000a53a401f9d577d6a7ca6976af7f4eb510cdb",
           "head_sha": "3ed17ac0cb1119ce9355d2fab7e7000e1791a59a",
           "patch_sha256": "324dc48717dad74f886f10cc65e5f70d8db467bcdd3b77b618c8ec03e14a383c"
+        }
+      ]
+    },
+    {
+      "id": "sync-distributed-opencode-plugin",
+      "title": "Keep distributed opencode plugin in sync",
+      "trigger": "When editing `.opencode/plugins/compound_engineering.ts` or any opencode plugin that is also shipped under `src/agent_loom/**/opencode/plugins/`",
+      "action": "Treat the plugin as having a source-of-truth and a distributed copy: update both copies in the same change, or consolidate to a single source and add a deterministic sync step + a check (e.g., CI/test that asserts the two files are identical) so drift can\u2019t happen silently.",
+      "tags": [
+        "compound",
+        "distribution",
+        "drift-prevention",
+        "opencode"
+      ],
+      "confidence": 0.74,
+      "status": "active",
+      "created_at": "2026-02-09T05:19:20.993689Z",
+      "updated_at": "2026-02-09T05:19:20.993689Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T05:19:20.993689Z",
+          "episode_id": "8effd17b5ade4736a0cbbffe48e6e827b159791adb05936c705d1a25cf60eca8",
+          "head_sha": "9b5f20d7deba438098e40fb95be85a6c5e7ca775",
+          "patch_sha256": "82e9b6c117f06879dda9b467b89f0e3215882c208be9a21db9fede566e6aab6c"
         }
       ]
     },

@@ -1,7 +1,13 @@
 {
   "components_dir": ".loom/workspaces/components",
   "repo_sets": {},
-  "repos": {},
+  "repos": {
+    "omo": {
+      "default_branch": "master",
+      "remote": "https://github.com/alvinunreal/oh-my-opencode-slim.git",
+      "shallow": false
+    }
+  },
   "repos_dir": ".loom/workspaces/repos",
   "states_dir": ".loom/workspaces/states",
   "version": 1,

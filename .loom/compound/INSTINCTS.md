@@ -12,6 +12,9 @@
 - **post-refactor-quality-gates** (86%) [lint, quality, tests, typing, uv]
   - Trigger: After a broad refactor that touches many files and tests
   - Action: Run `uv run ruff check .`, `uv run basedpyright`, then `uv run pytest`; treat failures as part of the refactor (not follow-up work).
+- **add-cli-ux-tests-when-output-changes** (82%) [cli, stability, tests, ux]
+  - Trigger: When changing any CLI command behavior (stdout/stderr text, exit codes, help output, error messages)
+  - Action: Add or update a focused CLI UX test that asserts exit code and a small set of stable substrings/lines (not full output), covering both success and failure cases; avoid brittle assertions on whitespace...
 - **cli-ux-regression-tests** (82%) [cli, regression, testing, tickets, ux]
   - Trigger: When changing any CLI command output, flags, exit codes, or user-facing error messages (especially in ticket commands).
   - Action: Add/extend a pytest UX test that exercises the command and asserts: exit code, stdout/stderr content (including key lines and spacing), and stable formatting. Prefer small, readable golden strings (de...
@@ -48,6 +51,9 @@
 - **prefer-command-docs-over-embedded-skill-copies** (74%) [commands, compound, docs, skills]
   - Trigger: When documenting workflows for end-users inside compound-installed `.opencode/` trees.
   - Action: Put loom command guidance in `.opencode/commands/loom-*.md` (command-discoverable docs) and avoid duplicating full skill content inside the compound template unless required; keep skills procedural an...
+- **sync-distributed-opencode-plugin** (74%) [compound, distribution, drift-prevention, opencode]
+  - Trigger: When editing `.opencode/plugins/compound_engineering.ts` or any opencode plugin that is also shipped under `src/agent_loom/**/opencode/plugins/`
+  - Action: Treat the plugin as having a source-of-truth and a distributed copy: update both copies in the same change, or consolidate to a single source and add a deterministic sync step + a check (e.g., CI/test...
 - **keep-core-and-cli-error-contract-aligned** (73%) [cli, error-handling, loom-ticket, ux-contract]
   - Trigger: When updating core behavior that the CLI surfaces (validation, missing resources, ambiguous inputs)
   - Action: Make core raise/return a single, well-typed/consistent error shape that CLI maps to stable user-facing messages + non-zero exit codes; add a UX test covering the error path.
@@ -63,6 +69,9 @@
 - **compound-instincts-sync** (66%) [compound, docs, process]
   - Trigger: When adding or editing any Compound instinct.
   - Action: Update `.loom/compound/INSTINCTS.md` and regenerate/adjust `.loom/compound/instincts.json` in the same change. Verify IDs are unique, kebab-case, and identical across doc + JSON; ensure any new instin...
+- **doc-and-core-parity-for-new-subcommands** (66%) [architecture, cli, docs, testing]
+  - Trigger: When introducing a new subcommand or expanding a subsystem CLI (e.g., `loom memory ...`)
+  - Action: Update subsystem README/help docs alongside the CLI wiring, and factor logic into a testable core module so UX tests can stay thin; ensure docs mention common workflows and error modes, and add at lea...
 - **openapi-keep-spec-deterministic** (66%) [api, docs, openapi]
   - Trigger: Editing `docs/openapi.yaml` during endpoint/schema updates
   - Action: Avoid volatile fields like timestamps; keep component and path ordering stable; validate references and schema names stay consistent with the code.

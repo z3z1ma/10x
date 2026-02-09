@@ -94,7 +94,7 @@ Notes:
 
 - `file` and `folder` are repo-relative when in a git repo.
 - `--allow-missing-scopes` bypasses file existence checks.
-- `--command` is shorthand for `--scope command:...`.
+- `--command` is shorthand for `--scope command:...` (supported by `add`, `edit`, and `recall`).
 
 ## Links
 
@@ -143,6 +143,7 @@ Common flags:
 - `--tag` (repeatable; comma-separated ok)
 - `--alias` (repeatable)
 - `--scope` (repeatable)
+- `--command` (shorthand for adding `--scope command:...`)
 - `--visibility` shared|personal|ephemeral
 - `--status` active|deprecated
 - `--folder` subfolder under visibility root
@@ -181,6 +182,7 @@ Metadata flags:
 - `--tag` / `--remove-tag` / `--clear-tags`
 - `--alias` / `--remove-alias` / `--clear-aliases`
 - `--scope` / `--remove-scope` / `--clear-scopes`
+- `--command` (shorthand for adding `--scope command:...`)
 - `--visibility` shared|personal|ephemeral (moves file)
 - `--status` active|deprecated
 - `--allow-missing-scopes`
@@ -297,8 +299,8 @@ loom memory janitor fix --apply
 ### Capture command output
 
 ```
-pytest -q 2>&1 | loom memory add --title "pytest failure" --tag test --scope command:pytest
-git status -sb | loom memory add --title "status snapshot" --tag git --scope command:"git status"
+pytest -q 2>&1 | loom memory add --title "pytest failure" --tag test --command "pytest -q"
+git status -sb | loom memory add --title "status snapshot" --tag git --command "git status"
 ```
 
 ### Use stdin for body replacement
