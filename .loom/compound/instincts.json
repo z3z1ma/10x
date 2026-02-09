@@ -169,6 +169,30 @@
       ]
     },
     {
+      "id": "cli-ux-tests-for-new-commands",
+      "title": "Add CLI UX tests for new commands",
+      "trigger": "When adding or changing a CLI command/subcommand (new noun/verb, flags, output text, exit behavior)",
+      "action": "Add/adjust a UX regression test that asserts (1) exit code, (2) key stdout/stderr lines, and (3) a stable error message for failure paths. Prefer partial/regex assertions and avoid brittle full-output snapshots unless output is explicitly stable.",
+      "tags": [
+        "cli",
+        "pytest",
+        "testing",
+        "ux"
+      ],
+      "confidence": 0.78,
+      "status": "active",
+      "created_at": "2026-02-09T06:31:32.792571Z",
+      "updated_at": "2026-02-09T06:31:32.792571Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T06:31:32.792571Z",
+          "episode_id": "8b9d287c8371fa5c2a007b3e600278223256c6ef8a0e529b9ac018277992691f",
+          "head_sha": "46275a6608cf9f9c995ca68f04bebbc4a37f6a7b",
+          "patch_sha256": "84e71a91e1e26ec3f1b6b967ca3d7886fab6af87f7c068d77916806997d69ef7"
+        }
+      ]
+    },
+    {
       "id": "compound-instincts-sync",
       "title": "Keep instincts docs and compiled JSON in sync",
       "trigger": "When adding or editing any Compound instinct.",
@@ -263,6 +287,29 @@
       ]
     },
     {
+      "id": "document-new-subsystem-entrypoints",
+      "title": "Document subsystem entrypoints and mental model",
+      "trigger": "When adding a new subsystem or expanding an existing one with multiple new modules (e.g., `core.py`, `models.py`, `cli.py`, `recall.py`)",
+      "action": "Add/update a subsystem README that explains: the user-facing commands, where data is stored, primary module responsibilities, and the quickest 'smoke path' to validate behavior.",
+      "tags": [
+        "architecture",
+        "docs",
+        "onboarding"
+      ],
+      "confidence": 0.72,
+      "status": "active",
+      "created_at": "2026-02-09T06:31:32.792571Z",
+      "updated_at": "2026-02-09T06:31:32.792571Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T06:31:32.792571Z",
+          "episode_id": "8b9d287c8371fa5c2a007b3e600278223256c6ef8a0e529b9ac018277992691f",
+          "head_sha": "46275a6608cf9f9c995ca68f04bebbc4a37f6a7b",
+          "patch_sha256": "84e71a91e1e26ec3f1b6b967ca3d7886fab6af87f7c068d77916806997d69ef7"
+        }
+      ]
+    },
+    {
       "id": "greenfield-no-backcompat-language",
       "title": "Avoid backcompat framing in greenfield code/docs",
       "trigger": "Writing docs, flags, deprecations, or migration behaviors in early-stage systems",
@@ -282,6 +329,30 @@
           "episode_id": "e73f6556efab5a08fe44febbe2ba7d245b558f059154ad39c13d6adedb7d42b2",
           "head_sha": "3ed17ac0cb1119ce9355d2fab7e7000e1791a59a",
           "patch_sha256": "396d4064e16aedb39f74ca438e10beeef645fa829af509b251fa619bcf0e084d"
+        }
+      ]
+    },
+    {
+      "id": "ignore-new-persistent-artifacts",
+      "title": "Ignore new persistent artifacts in git",
+      "trigger": "When introducing any persistent local artifact (sqlite db, index, cache dir, logs, tmp files) as part of a new subsystem",
+      "action": "Update `.gitignore` to exclude the artifact(s) and add a short doc note describing where the artifact lives and how to reset it safely.",
+      "tags": [
+        "docs",
+        "git",
+        "hygiene",
+        "storage"
+      ],
+      "confidence": 0.81,
+      "status": "active",
+      "created_at": "2026-02-09T06:31:32.792571Z",
+      "updated_at": "2026-02-09T06:31:32.792571Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T06:31:32.792571Z",
+          "episode_id": "8b9d287c8371fa5c2a007b3e600278223256c6ef8a0e529b9ac018277992691f",
+          "head_sha": "46275a6608cf9f9c995ca68f04bebbc4a37f6a7b",
+          "patch_sha256": "84e71a91e1e26ec3f1b6b967ca3d7886fab6af87f7c068d77916806997d69ef7"
         }
       ]
     },
@@ -425,6 +496,30 @@
           "episode_id": "3a49e37b2714b270438b82f96000a53a401f9d577d6a7ca6976af7f4eb510cdb",
           "head_sha": "3ed17ac0cb1119ce9355d2fab7e7000e1791a59a",
           "patch_sha256": "324dc48717dad74f886f10cc65e5f70d8db467bcdd3b77b618c8ec03e14a383c"
+        }
+      ]
+    },
+    {
+      "id": "prefer-basedpyright-over-lsp-diagnostics",
+      "title": "Prefer basedpyright over LSP diagnostics",
+      "trigger": "When you see/typecheck errors via editor/LSP or are about to declare a Python change 'done'",
+      "action": "Run `uv run basedpyright` and fix all reported issues; treat LSP diagnostics as hints only (not a gate). Follow with `uv run ruff check .` before tests.",
+      "tags": [
+        "python",
+        "quality",
+        "typechecking",
+        "workflow"
+      ],
+      "confidence": 0.74,
+      "status": "active",
+      "created_at": "2026-02-09T06:31:32.792571Z",
+      "updated_at": "2026-02-09T06:31:32.792571Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T06:31:32.792571Z",
+          "episode_id": "8b9d287c8371fa5c2a007b3e600278223256c6ef8a0e529b9ac018277992691f",
+          "head_sha": "46275a6608cf9f9c995ca68f04bebbc4a37f6a7b",
+          "patch_sha256": "84e71a91e1e26ec3f1b6b967ca3d7886fab6af87f7c068d77916806997d69ef7"
         }
       ]
     },

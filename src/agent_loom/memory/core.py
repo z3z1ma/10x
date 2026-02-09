@@ -72,6 +72,8 @@ from agent_loom.memory.models import (
     LinkGraphEdge,
     LinkGraphResult,
     LinkNeighborsResult,
+    LinkSuggestItem,
+    LinkSuggestResult,
     LinkValidateResult,
     LinkValidateRow,
     PrimeResult,
@@ -84,9 +86,11 @@ from agent_loom.memory.models import (
 )
 from agent_loom.memory.recall import around_notes as around_impl
 from agent_loom.memory.recall import default_visibility_from_env
+from agent_loom.memory.recall import grep_notes as grep_impl
 from agent_loom.memory.recall import list_notes as list_impl
 from agent_loom.memory.recall import parse_multi_csvish
 from agent_loom.memory.recall import recall as recall_impl
+from agent_loom.memory.recall import suggest_links as suggest_links_impl
 from agent_loom.memory.recall import timeline as timeline_impl
 from agent_loom.memory.scopes import (
     _validate_tags,
@@ -169,7 +173,7 @@ def _vault_paths_for(vault: Optional[str]) -> VaultPaths:
     return vault_paths(vault_root)
 
 
-def init_vault(vp: VaultPaths, *, cwd: Path) -> Dict[str, Any]:
+def init_vault(vp: VaultPaths) -> Dict[str, Any]:
     safe_mkdir(vp.root)
     safe_mkdir(vp.notes_dir)
     safe_mkdir(vp.personal_notes_dir)
@@ -191,31 +195,19 @@ def init_vault(vp: VaultPaths, *, cwd: Path) -> Dict[str, Any]:
         dbi = db_init(conn)
 
     # Safety: ignore derived + personal paths.
-    repo_root = git_repo_root(cwd)
+    # Write a vault-local .gitignore only. This avoids mutating repo-root `.gitignore`
+    # as a side effect of `loom memory init`.
     gitignore_results: List[Dict[str, Any]] = []
-
-    # Write to repo-root .gitignore only when the vault lives inside the repo.
-    # If the vault is outside the repo, write inside the vault so we don't pollute
-    # unrelated repos with ineffective ignore rules.
-    brain_rel = "."
     gi_path = vp.root / ".gitignore"
-    if repo_root is not None:
-        with contextlib.suppress(Exception):
-            brain_rel = vp.root.relative_to(repo_root).as_posix().rstrip("/")
-            gi_path = repo_root / ".gitignore"
-
-    # Ignore derived index (including WAL/SHM sidecars) and all personal notes.
-    if brain_rel == ".":
-        entries = [
-            f"{DB_FILENAME}*",
-            "personal/",
-        ]
-    else:
-        entries = [
-            f"{brain_rel}/{DB_FILENAME}*",
-            f"{brain_rel}/personal/",
-        ]
-    gitignore_results.append(ensure_gitignore_entries(gi_path, entries))
+    gitignore_results.append(
+        ensure_gitignore_entries(
+            gi_path,
+            [
+                f"{DB_FILENAME}*",
+                "personal/",
+            ],
+        )
+    )
 
     return {
         "ok": True,
@@ -228,7 +220,7 @@ def init_vault(vp: VaultPaths, *, cwd: Path) -> Dict[str, Any]:
 
 def init(*, vault: Optional[str] = None) -> InitResult:
     vp = _vault_paths_for(vault)
-    payload = init_vault(vp, cwd=Path.cwd())
+    payload = init_vault(vp)
     return InitResult(
         ok=bool(payload.get("ok")),
         vault=str(payload.get("vault") or ""),
@@ -283,7 +275,7 @@ def add(
 ) -> AddResult:
     vp = _vault_paths_for(vault)
     cwd = Path.cwd()
-    init_vault(vp, cwd=cwd)
+    init_vault(vp)
     repo_root = git_repo_root(cwd)
 
     title = (title or "").strip()
@@ -452,7 +444,7 @@ def edit(
 ) -> EditResult:
     vp = _vault_paths_for(vault)
     cwd = Path.cwd()
-    init_vault(vp, cwd=cwd)
+    init_vault(vp)
     repo_root = git_repo_root(cwd)
 
     note_id = note_id.strip()
@@ -916,6 +908,74 @@ def list_recent(
     return RecallResult(items=items, context_text="", warnings=warnings)
 
 
+def grep(
+    *,
+    vault: Optional[str] = None,
+    pattern: str,
+    limit: int = 20,
+    tag: Optional[Sequence[str]] = None,
+    not_tag: Optional[Sequence[str]] = None,
+    scope: Optional[Sequence[str]] = None,
+    not_scope: Optional[Sequence[str]] = None,
+    command: str = "",
+    visibility: Optional[Sequence[str]] = None,
+    include_deprecated: bool = False,
+    since: Optional[str] = None,
+    until: Optional[str] = None,
+    and_mode: bool = False,
+    scoped_only: bool = False,
+    quiet: bool = False,
+    allow_missing_scopes: bool = False,
+    ignore_case: bool = False,
+) -> Dict[str, Any]:
+    vp = _vault_paths_for(vault)
+
+    cwd = Path.cwd()
+    repo_root = git_repo_root(cwd)
+
+    tags = _validate_tags(parse_multi_csvish(list(tag) if tag else None))
+    not_tags = _validate_tags(parse_multi_csvish(list(not_tag) if not_tag else None))
+
+    scope_args = parse_multi_csvish(list(scope) if scope else None)
+    if command:
+        scope_args.append(f"command:{command}")
+    ctx_scopes = [parse_scope_string(s, repo_root=repo_root) for s in scope_args]
+    validate_file_scopes_exist(
+        ctx_scopes,
+        repo_root=repo_root,
+        cwd=cwd,
+        allow_missing=bool(allow_missing_scopes),
+    )
+
+    not_scope_args = parse_multi_csvish(list(not_scope) if not_scope else None)
+    not_ctx_scopes = (
+        [parse_scope_string(s, repo_root=repo_root) for s in not_scope_args]
+        if not_scope_args
+        else []
+    )
+
+    vis = list(visibility) if visibility else default_visibility_from_env()
+
+    items, warnings = grep_impl(
+        vp,
+        pattern=str(pattern or ""),
+        limit=int(limit),
+        tags=tags,
+        not_tags=not_tags,
+        ctx_scopes=ctx_scopes,
+        not_ctx_scopes=not_ctx_scopes,
+        visibility=vis,
+        include_deprecated=bool(include_deprecated),
+        since=since,
+        until=until,
+        and_mode=bool(and_mode),
+        scoped_only=bool(scoped_only),
+        quiet=bool(quiet),
+        ignore_case=bool(ignore_case),
+    )
+    return {"ok": True, "items": items, "warnings": warnings}
+
+
 def show(
     *,
     vault: Optional[str] = None,
@@ -923,7 +983,7 @@ def show(
     meta_only: bool = False,
 ) -> str:
     vp = _vault_paths_for(vault)
-    init_vault(vp, cwd=Path.cwd())
+    init_vault(vp)
     p = find_note_path(vp, note_id.strip())
     raw = p.read_text("utf-8", errors="replace")
     if not meta_only:
@@ -936,7 +996,7 @@ def show(
 
 def open_note(*, vault: Optional[str] = None, note_id: str) -> str:
     vp = _vault_paths_for(vault)
-    init_vault(vp, cwd=Path.cwd())
+    init_vault(vp)
     p = find_note_path(vp, note_id.strip())
     open_in_editor(p)
     return note_rel_path(vp, p)
@@ -967,7 +1027,7 @@ def forget(
     hard: bool = False,
 ) -> Dict[str, Any]:
     vp = _vault_paths_for(vault)
-    init_vault(vp, cwd=Path.cwd())
+    init_vault(vp)
 
     if (
         not (query or "").strip()
@@ -1278,9 +1338,44 @@ def link(
     limit: int = 200,
     k: int = 1,
     include_unresolved: bool = False,
+    visibility: Optional[Sequence[str]] = None,
+    include_deprecated: bool = False,
     quiet: bool = False,
-) -> LinkBacklinksResult | LinkNeighborsResult | LinkValidateResult | LinkGraphResult:
+) -> (
+    LinkBacklinksResult
+    | LinkNeighborsResult
+    | LinkValidateResult
+    | LinkGraphResult
+    | LinkSuggestResult
+):
     vp = _vault_paths_for(vault)
+
+    if cmd == "suggest":
+        vis = list(visibility) if visibility else default_visibility_from_env()
+        suggestions, warns2 = suggest_links_impl(
+            vp,
+            note_id=note_id,
+            limit=int(limit),
+            visibility=vis,
+            include_deprecated=bool(include_deprecated),
+            quiet=bool(quiet),
+        )
+        return LinkSuggestResult(
+            id=str(note_id or "").strip(),
+            suggestions=[
+                LinkSuggestItem(
+                    id=str(s.get("id") or ""),
+                    title=str(s.get("title") or ""),
+                    path=str(s.get("path") or ""),
+                    updated_at=str(s.get("updated_at") or ""),
+                    score=float(s.get("score") or 0.0),
+                    why=dict(s.get("why") or {}),
+                )
+                for s in (suggestions or [])
+            ],
+            warnings=list(warns2 or []),
+        )
+
     with connect_db(vp) as conn:
         sync_res = sync_index(vp, conn, quiet=bool(quiet))
         warnings = list(sync_res.get("warnings") or [])

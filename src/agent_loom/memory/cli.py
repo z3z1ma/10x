@@ -21,6 +21,7 @@ from agent_loom.memory.core import (
     around,
     edit,
     forget,
+    grep,
     init,
     janitor,
     link,
@@ -38,6 +39,7 @@ from agent_loom.memory.models import (
     LinkBacklinksResult,
     LinkGraphResult,
     LinkNeighborsResult,
+    LinkSuggestResult,
     LinkValidateResult,
     PrimeResult,
     RecallResult,
@@ -287,6 +289,27 @@ def payload_for(obj: Any, *, fmt: str) -> Any:
         if obj.neighbors is not None:
             return obj.neighbors
         return {}
+    if isinstance(obj, LinkSuggestResult):
+        items = [asdict(it) for it in obj.suggestions]
+        if fmt == "md":
+            lines = [
+                f"- [[{it['id']}]] ({it.get('score')}) {it.get('title')}"
+                for it in items
+            ]
+            return "\n".join(lines).rstrip() + "\n" if lines else ""
+        if fmt == "prompt":
+            lines = ["Suggested related notes:", ""]
+            for it in items:
+                lines.append(f"- [[{it['id']}]] ({it.get('score')}) {it.get('title')}")
+            return "\n".join(lines).rstrip() + "\n" if items else ""
+        if fmt == "text":
+            lines2: list[str] = []
+            for it in items:
+                lines2.append(
+                    f"{it.get('id')}\t{it.get('score')}\t{it.get('updated_at')}\t{(it.get('title') or '').strip()}"
+                )
+            return "\n".join(lines2).rstrip() + "\n" if items else ""
+        return items
     if isinstance(obj, (JanitorReportResult, JanitorFixResult)):
         return asdict(obj)
     if is_dataclass(obj) and not isinstance(obj, type):
@@ -631,6 +654,84 @@ def build_parser() -> argparse.ArgumentParser:
         help="Allow file: context scopes that do not exist on disk",
     )
 
+    grep_p = sp.add_parser(
+        "grep",
+        parents=[common_sub],
+        help="Regex search notes (literal regex; no ranking)",
+    )
+    grep_p.add_argument("pattern", help="Python regex pattern")
+    grep_p.add_argument("--limit", type=int, default=20, help="Max results")
+    grep_p.add_argument(
+        "--ignore-case",
+        action="store_true",
+        help="Case-insensitive regex matching",
+    )
+    grep_p.add_argument(
+        "--tag",
+        action="append",
+        default=[],
+        help="Filter by note tag (repeatable; comma ok)",
+    )
+    grep_p.add_argument(
+        "--not-tag",
+        action="append",
+        default=[],
+        help="Exclude by note tag (repeatable)",
+    )
+    grep_p.add_argument(
+        "--scope",
+        action="append",
+        default=[],
+        help="Context scope kind:value (repeatable)",
+    )
+    grep_p.add_argument(
+        "--not-scope",
+        action="append",
+        default=[],
+        help="Exclude notes matching these context scopes",
+    )
+    grep_p.add_argument(
+        "--command",
+        default=None,
+        help="Command context (shorthand for --scope command:...)",
+    )
+    grep_p.add_argument(
+        "--visibility",
+        action="append",
+        choices=VISIBILITIES,
+        default=None,
+        help="Visibility filter (default: shared+personal)",
+    )
+    grep_p.add_argument(
+        "--include-deprecated", action="store_true", help="Include status=deprecated"
+    )
+    grep_p.add_argument(
+        "--since",
+        default=None,
+        help="Only notes updated_at >= since (RFC3339 or YYYY-MM-DD)",
+    )
+    grep_p.add_argument(
+        "--until",
+        default=None,
+        help="Only notes updated_at <= until (RFC3339 or YYYY-MM-DD)",
+    )
+    grep_p.add_argument(
+        "--and",
+        dest="and_mode",
+        action="store_true",
+        help="AND semantics for multiple --tag/--scope",
+    )
+    grep_p.add_argument(
+        "--scoped-only",
+        action="store_true",
+        help="When context scopes are provided, drop unscoped notes",
+    )
+    grep_p.add_argument(
+        "--allow-missing-scopes",
+        action="store_true",
+        help="Allow file: context scopes that do not exist on disk",
+    )
+
     list_p = sp.add_parser(
         "list",
         parents=[common_sub],
@@ -888,6 +989,24 @@ def build_parser() -> argparse.ArgumentParser:
         "--include-unresolved",
         action="store_true",
         help="Include missing/ambiguous links too",
+    )
+
+    ls = lsp.add_parser(
+        "suggest",
+        parents=[common_sub],
+        help="Suggest likely related notes for <id> (non-mutating)",
+    )
+    ls.add_argument("id")
+    ls.add_argument("--limit", type=int, default=12)
+    ls.add_argument(
+        "--visibility",
+        action="append",
+        choices=VISIBILITIES,
+        default=None,
+        help="Visibility filter (default: shared+personal)",
+    )
+    ls.add_argument(
+        "--include-deprecated", action="store_true", help="Include status=deprecated"
     )
 
     sp.add_parser(
@@ -1203,6 +1322,29 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
         emit(payload_for(res, fmt=fmt), fmt)
         return 0
 
+    if args.cmd == "grep":
+        payload = grep(
+            vault=str(args.vault),
+            pattern=str(args.pattern),
+            limit=int(args.limit),
+            tag=args.tag,
+            not_tag=args.not_tag,
+            scope=args.scope,
+            not_scope=args.not_scope,
+            command=args.command or "",
+            visibility=args.visibility,
+            include_deprecated=bool(args.include_deprecated),
+            since=args.since,
+            until=getattr(args, "until", None),
+            and_mode=bool(getattr(args, "and_mode", False)),
+            scoped_only=bool(getattr(args, "scoped_only", False)),
+            quiet=quiet,
+            allow_missing_scopes=bool(getattr(args, "allow_missing_scopes", False)),
+            ignore_case=bool(getattr(args, "ignore_case", False)),
+        )
+        emit(payload, fmt)
+        return 0
+
     if args.cmd == "show":
         text = show(
             vault=str(args.vault), note_id=str(args.id), meta_only=bool(args.meta)
@@ -1293,6 +1435,8 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
             limit=int(getattr(args, "limit", 200) or 200),
             k=int(getattr(args, "k", 1) or 1),
             include_unresolved=bool(getattr(args, "include_unresolved", False)),
+            visibility=getattr(args, "visibility", None),
+            include_deprecated=bool(getattr(args, "include_deprecated", False)),
             quiet=quiet,
         )
         if not quiet and res.warnings:

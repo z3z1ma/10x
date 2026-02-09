@@ -366,6 +366,22 @@ loom memory link graph
 loom memory link graph --include-unresolved
 ```
 
+Suggest likely related notes (non-mutating):
+
+```
+loom memory link suggest retry-behavior
+loom memory link suggest retry-behavior --limit 20
+```
+
+### grep
+
+Regex search notes (literal regex; no ranking).
+
+```
+loom memory grep "timeout\\s+error" --ignore-case
+loom memory grep "\bbackoff\b" --tag infra
+```
+
 ### reindex
 
 Rebuild the derived sqlite index (safe and deterministic).

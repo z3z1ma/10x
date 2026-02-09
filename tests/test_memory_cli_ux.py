@@ -105,6 +105,110 @@ class TestMemoryCliUx(unittest.TestCase):
             self.assertFalse(payload.get("ok"))
             self.assertEqual(payload.get("code"), "ARG")
 
+    def test_grep_finds_regex_match(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            vault = Path(td) / ".loom" / "memory"
+            rc0, payload0 = _run_json(["--vault", str(vault), "init"])
+            self.assertEqual(rc0, 0)
+            self.assertTrue(payload0.get("ok"))
+
+            rc1, payload1 = _run_json(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "add",
+                    "--id",
+                    "a",
+                    "--title",
+                    "Alpha",
+                    "--body",
+                    "Hello World",
+                ]
+            )
+            self.assertEqual(rc1, 0)
+            self.assertTrue(payload1.get("ok"))
+
+            rc2, payload2 = _run_json(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "grep",
+                    "hello\\s+world",
+                    "--ignore-case",
+                    "--limit",
+                    "10",
+                ]
+            )
+            self.assertEqual(rc2, 0)
+            self.assertTrue(payload2.get("ok"))
+            items = list(payload2.get("items") or [])
+            self.assertTrue(any(str(it.get("id") or "") == "a" for it in items))
+
+    def test_link_suggest_returns_related(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            vault = Path(td) / ".loom" / "memory"
+            rc0, payload0 = _run_json(["--vault", str(vault), "init"])
+            self.assertEqual(rc0, 0)
+            self.assertTrue(payload0.get("ok"))
+
+            _rca, _pya = _run_json(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "add",
+                    "--id",
+                    "retry",
+                    "--title",
+                    "Retry",
+                    "--tag",
+                    "infra",
+                    "--body",
+                    "retry behavior",
+                ]
+            )
+            _rcb, _pyb = _run_json(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "add",
+                    "--id",
+                    "backoff",
+                    "--title",
+                    "Backoff",
+                    "--tag",
+                    "infra",
+                    "--body",
+                    "backoff jitter",
+                ]
+            )
+
+            rc2, payload2 = _run_json(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "link",
+                    "suggest",
+                    "retry",
+                    "--limit",
+                    "10",
+                ]
+            )
+            self.assertEqual(rc2, 0)
+            self.assertIsInstance(payload2, list)
+            self.assertTrue(
+                any(str(it.get("id") or "") == "backoff" for it in payload2)
+            )
+
     def test_link_validate_positional_id_rewrites(self) -> None:
         norm = memory_cli_mod._normalize_argv(["link", "validate", "abc"])
         args = memory_cli_mod.build_parser().parse_args(norm)

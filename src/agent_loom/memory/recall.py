@@ -698,6 +698,355 @@ def timeline(
         return (out, warnings)
 
 
+def grep_notes(
+    vp: VaultPaths,
+    *,
+    pattern: str,
+    limit: int,
+    tags: List[str],
+    not_tags: List[str],
+    ctx_scopes: List[Dict[str, Any]],
+    not_ctx_scopes: List[Dict[str, Any]],
+    visibility: List[str],
+    include_deprecated: bool,
+    since: Optional[str],
+    until: Optional[str],
+    and_mode: bool,
+    scoped_only: bool,
+    quiet: bool,
+    ignore_case: bool,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    pat = str(pattern or "").strip()
+    if not pat:
+        raise MemoryError(
+            "grep pattern is required",
+            code="ARG",
+            exit_code=2,
+            hint="Provide a Python regex pattern.",
+            suggestions=["loom memory grep <regex>"],
+        )
+    if limit <= 0:
+        return ([], [])
+
+    flags = re.MULTILINE
+    if ignore_case:
+        flags |= re.IGNORECASE
+    try:
+        rx = re.compile(pat, flags=flags)
+    except re.error as e:
+        raise MemoryError(
+            f"invalid regex: {e}",
+            code="ARG",
+            exit_code=2,
+            hint="Fix the regex or escape special characters.",
+        ) from e
+
+    since_s = parse_since(since)
+    until_s = parse_until(until)
+
+    with connect_db(vp) as conn:
+        sync_res = sync_index(vp, conn, quiet=quiet)
+        warnings = list(sync_res.get("warnings") or [])
+
+        where = ["1=1"]
+        params: List[Any] = []
+
+        if visibility:
+            where.append("visibility IN (" + ",".join(["?"] * len(visibility)) + ")")
+            params.extend(visibility)
+
+        if not include_deprecated:
+            where.append("status != 'deprecated'")
+
+        if since_s:
+            where.append("updated_at >= ?")
+            params.append(since_s)
+        if until_s:
+            where.append("updated_at <= ?")
+            params.append(until_s)
+
+        cand_limit = 5000
+        rows = conn.execute(
+            "SELECT id, title, md_path, visibility, status, tags_json, aliases_json, scopes_json, created_at, updated_at "
+            "FROM notes WHERE "
+            + " AND ".join(where)
+            + " ORDER BY updated_at DESC, id ASC LIMIT ?;",
+            (*params, cand_limit),
+        ).fetchall()
+
+        hits: List[Dict[str, Any]] = []
+        for r in rows:
+            note_tags = json.loads(r["tags_json"] or "[]")
+            note_scopes = json.loads(r["scopes_json"] or "[]")
+
+            ok_tags, matched_tags = tag_filter_match(
+                note_tags, want=tags, and_mode=and_mode
+            )
+            if not ok_tags:
+                continue
+            ex, excluded_tags = tag_filter_exclude(note_tags, not_tags=not_tags)
+            if ex:
+                continue
+
+            scope_score, matched_scopes = scope_matches_context(
+                note_scopes,
+                ctx_scopes=ctx_scopes,
+                and_mode=and_mode,
+            )
+            if ctx_scopes:
+                if scoped_only and scope_score <= 0:
+                    continue
+            if not_ctx_scopes:
+                neg_score, neg_matches = scope_matches_context(
+                    note_scopes, ctx_scopes=not_ctx_scopes, and_mode=False
+                )
+                if neg_score > 0:
+                    continue
+            else:
+                neg_matches = []
+
+            p = vp.root / str(r["md_path"] or "")
+            if not p.exists():
+                continue
+
+            raw = p.read_text("utf-8", errors="replace")
+            _fm, body = split_yaml_frontmatter(raw)
+
+            title = str(r["title"] or "")
+            text = title + "\n" + (body or "")
+            m = rx.search(text)
+            if not m:
+                continue
+
+            # Find a stable snippet and (approx) line number.
+            loc = "title" if rx.search(title or "") else "body"
+            line_no = None
+            line = ""
+            if loc == "title":
+                line_no = 1
+                line = title.strip()
+            else:
+                # The match might be in the title segment; guard.
+                if m.start() <= len(title):
+                    line_no = 1
+                    line = title.strip()
+                else:
+                    idx_in_body = max(0, m.start() - (len(title) + 1))
+                    pre = (body or "")[:idx_in_body]
+                    line_no = pre.count("\n") + 1
+                    body_lines = (body or "").splitlines()
+                    if 1 <= line_no <= len(body_lines):
+                        line = body_lines[line_no - 1].strip()
+            if len(line) > 240:
+                line = line[:237] + "..."
+
+            match_count = 0
+            with contextlib.suppress(Exception):
+                match_count = sum(1 for _ in rx.finditer(text))
+
+            hits.append(
+                {
+                    "id": r["id"],
+                    "title": title,
+                    "path": r["md_path"],
+                    "visibility": r["visibility"],
+                    "status": r["status"],
+                    "created_at": r["created_at"],
+                    "updated_at": r["updated_at"],
+                    "match_count": int(match_count),
+                    "match": {
+                        "pattern": pat,
+                        "ignore_case": bool(ignore_case),
+                        "location": loc,
+                        "line_no": int(line_no) if line_no is not None else None,
+                        "line": line,
+                    },
+                    "why": {
+                        "matched_tags": matched_tags,
+                        "excluded_tags": excluded_tags,
+                        "matched_scopes": matched_scopes[:20],
+                        "excluded_scopes": neg_matches[:20],
+                    },
+                }
+            )
+
+            if len(hits) >= int(limit):
+                break
+
+        return (hits, warnings)
+
+
+def suggest_links(
+    vp: VaultPaths,
+    *,
+    note_id: str,
+    limit: int,
+    visibility: List[str],
+    include_deprecated: bool,
+    quiet: bool,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    nid = str(note_id or "").strip()
+    if not nid:
+        raise MemoryError(
+            "note id is required",
+            code="ARG",
+            exit_code=2,
+            hint="Provide a note id.",
+            suggestions=["loom memory link suggest <id>"],
+        )
+    if limit <= 0:
+        return ([], [])
+
+    with connect_db(vp) as conn:
+        sync_res = sync_index(vp, conn, quiet=quiet)
+        warnings = list(sync_res.get("warnings") or [])
+
+        row = conn.execute(
+            "SELECT id, title, md_path, tags_json, scopes_json, preview, updated_at, visibility, status FROM notes WHERE id=?;",
+            (nid,),
+        ).fetchone()
+        if not row:
+            raise MemoryError(
+                f"Note not found: {nid}",
+                code="NOT_FOUND",
+                exit_code=2,
+                hint="Pick an existing note id.",
+                suggestions=[f"loom memory recall {nid!r}"],
+            )
+
+        src_tags = [str(x).strip() for x in json.loads(row["tags_json"] or "[]")]
+        src_scopes = json.loads(row["scopes_json"] or "[]")
+        src_title = str(row["title"] or "")
+        src_preview = str(row["preview"] or "")
+
+        src_tag_set = {t.casefold(): t for t in src_tags if t}
+
+        def scope_sig(s: Any) -> str:
+            try:
+                if not isinstance(s, dict):
+                    return ""
+                k = str(s.get("kind") or "").strip()
+                if not k:
+                    return ""
+                key = SCOPE_KIND_KEY.get(k)
+                if not key:
+                    return ""
+                v = s.get(key)
+                if not isinstance(v, str) or not v.strip():
+                    return ""
+                return json.dumps(
+                    {"kind": k, key: v.strip()}, sort_keys=True, ensure_ascii=False
+                )
+            except Exception:
+                return ""
+
+        src_scope_sigs = {scope_sig(s) for s in src_scopes}
+        src_scope_sigs.discard("")
+
+        src_cmds = []
+        for s in src_scopes:
+            if isinstance(s, dict) and s.get("kind") == "command":
+                c = s.get("command")
+                if isinstance(c, str) and c.strip():
+                    src_cmds.append(c.strip().casefold())
+
+        src_tokens = {
+            t.casefold()
+            for t in RE_WORD.findall((src_title + " " + src_preview).strip())
+            if len(t) >= 3 and not t.isdigit()
+        }
+
+        where = ["id != ?"]
+        params: List[Any] = [nid]
+        if visibility:
+            where.append("visibility IN (" + ",".join(["?"] * len(visibility)) + ")")
+            params.extend(visibility)
+        if not include_deprecated:
+            where.append("status != 'deprecated'")
+
+        cand = conn.execute(
+            "SELECT id, title, md_path, tags_json, scopes_json, preview, updated_at "
+            "FROM notes WHERE "
+            + " AND ".join(where)
+            + " ORDER BY updated_at DESC, id ASC LIMIT 4000;",
+            params,
+        ).fetchall()
+
+        scored: List[Tuple[float, Dict[str, Any]]] = []
+        for r in cand:
+            cid = str(r["id"] or "")
+            ctitle = str(r["title"] or "")
+            ctags = [str(x).strip() for x in json.loads(r["tags_json"] or "[]")]
+            cscopes = json.loads(r["scopes_json"] or "[]")
+            cpreview = str(r["preview"] or "")
+
+            matched_tags: List[str] = []
+            ctag_norm = {t.casefold(): t for t in ctags if t}
+            for tn, orig in src_tag_set.items():
+                if tn in ctag_norm:
+                    matched_tags.append(orig)
+
+            c_scope_sigs = {scope_sig(s) for s in cscopes}
+            c_scope_sigs.discard("")
+            matched_scopes = list(sorted(src_scope_sigs & c_scope_sigs))
+
+            cmd_bonus = 0.0
+            if src_cmds:
+                for s in cscopes:
+                    if isinstance(s, dict) and s.get("kind") == "command":
+                        c = s.get("command")
+                        if (
+                            isinstance(c, str)
+                            and c.strip()
+                            and c.strip().casefold() in set(src_cmds)
+                        ):
+                            cmd_bonus = 25.0
+                            break
+
+            ctokens = {
+                t.casefold()
+                for t in RE_WORD.findall((ctitle + " " + cpreview).strip())
+                if len(t) >= 3 and not t.isdigit()
+            }
+            token_overlap = len(src_tokens & ctokens)
+
+            rec_boost, _age_days = compute_recency_boost(str(r["updated_at"] or ""))
+
+            score = (
+                10.0 * float(len(matched_tags))
+                + 5.0 * float(len(matched_scopes))
+                + 2.0 * float(token_overlap)
+                + cmd_bonus
+                + 0.5 * float(rec_boost)
+            )
+            if score <= 0.0:
+                continue
+
+            scored.append(
+                (
+                    score,
+                    {
+                        "id": cid,
+                        "title": ctitle,
+                        "path": str(r["md_path"] or ""),
+                        "updated_at": str(r["updated_at"] or ""),
+                        "score": score,
+                        "why": {
+                            "matched_tags": sorted(set(matched_tags)),
+                            "matched_scopes": matched_scopes[:20],
+                            "token_overlap": int(token_overlap),
+                            "command_overlap": bool(cmd_bonus > 0),
+                        },
+                    },
+                )
+            )
+
+        scored.sort(key=lambda x: str(x[1].get("id") or ""))
+        scored.sort(key=lambda x: str(x[1].get("updated_at") or ""), reverse=True)
+        scored.sort(key=lambda x: float(x[0]), reverse=True)
+        return ([d for _s, d in scored[: int(limit)]], warnings)
+
+
 def format_scope_short(scopes: Any) -> str:
     if not isinstance(scopes, list):
         return ""
@@ -1030,6 +1379,8 @@ __all__ = [
     "list_notes",
     "around_notes",
     "timeline",
+    "grep_notes",
+    "suggest_links",
     "compute_recency_boost",
     "default_visibility_from_env",
     "build_safe_fts_query",

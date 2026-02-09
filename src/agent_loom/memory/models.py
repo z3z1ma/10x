@@ -157,6 +157,23 @@ class LinkGraphResult:
 
 
 @dataclass(frozen=True)
+class LinkSuggestItem:
+    id: str
+    title: str
+    path: str
+    updated_at: str
+    score: float
+    why: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class LinkSuggestResult:
+    id: str
+    suggestions: List[LinkSuggestItem]
+    warnings: List[Dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass(frozen=True)
 class RecallScore:
     final: float
     fts: float
@@ -214,6 +231,8 @@ __all__ = [
     "LinkBacklinksResult",
     "LinkGraphEdge",
     "LinkGraphResult",
+    "LinkSuggestItem",
+    "LinkSuggestResult",
     "LinkNeighborsResult",
     "LinkValidateResult",
     "LinkValidateRow",

@@ -27,12 +27,18 @@
 - **subsystem-removal-sweep** (82%) [deletion, docs, maintenance, python, refactor, tests]
   - Trigger: When deleting or deprecating a substantial module/package (especially with many submodules)
   - Action: Immediately sweep for imports/exports, docs references, CLI help/examples, tests, and any API schemas; remove or rewrite references so the repo remains coherent and discoverable.
+- **ignore-new-persistent-artifacts** (81%) [docs, git, hygiene, storage]
+  - Trigger: When introducing any persistent local artifact (sqlite db, index, cache dir, logs, tmp files) as part of a new subsystem
+  - Action: Update `.gitignore` to exclude the artifact(s) and add a short doc note describing where the artifact lives and how to reset it safely.
 - **remove-orphans-after-large-deletions** (80%) [cleanup, packaging, python, refactor]
   - Trigger: When removing many files or an entire subtree (e.g., `.../poly/*`)
   - Action: Check `__init__.py` exports, public module surface, and docs/README links for orphans; ensure imports fail nowhere and no dead entrypoints remain.
 - **cli-ux-change-requires-ux-test** (78%) [cli, loom-ticket, testing, ux-contract]
   - Trigger: When you change CLI text output, flags, or exit-code behavior
   - Action: Add/adjust a dedicated UX test that asserts exit code + key stdout/stderr lines for the affected command(s); keep assertions minimal but intentional (user-visible contracts only) so refactors don't ca...
+- **cli-ux-tests-for-new-commands** (78%) [cli, pytest, testing, ux]
+  - Trigger: When adding or changing a CLI command/subcommand (new noun/verb, flags, output text, exit behavior)
+  - Action: Add/adjust a UX regression test that asserts (1) exit code, (2) key stdout/stderr lines, and (3) a stable error message for failure paths. Prefer partial/regex assertions and avoid brittle full-output...
 - **refactor-delete-module-chase-imports** (78%) [maintenance, python, refactor]
   - Trigger: A refactor removes/renames modules (large deletions or package reshapes)
   - Action: Search for old module names and key symbols (e.g. with ripgrep/grep), update imports, docs, and tests together; ensure no dead entrypoints remain.
@@ -54,6 +60,9 @@
 - **large-change-update-cli-ux-tests** (74%) [cli, tests, ux]
   - Trigger: Any change to CLI output, flags, or subcommand routing
   - Action: Locate and update the UX snapshot/expectation tests (e.g. `tests/test_*_cli_ux.py`) in the same change; ensure wording is intentional and stable.
+- **prefer-basedpyright-over-lsp-diagnostics** (74%) [python, quality, typechecking, workflow]
+  - Trigger: When you see/typecheck errors via editor/LSP or are about to declare a Python change 'done'
+  - Action: Run `uv run basedpyright` and fix all reported issues; treat LSP diagnostics as hints only (not a gate). Follow with `uv run ruff check .` before tests.
 - **prefer-command-docs-over-embedded-skill-copies** (74%) [commands, compound, docs, skills]
   - Trigger: When documenting workflows for end-users inside compound-installed `.opencode/` trees.
   - Action: Put loom command guidance in `.opencode/commands/loom-*.md` (command-discoverable docs) and avoid duplicating full skill content inside the compound template unless required; keep skills procedural an...
@@ -63,6 +72,9 @@
 - **keep-core-and-cli-error-contract-aligned** (73%) [cli, error-handling, loom-ticket, ux-contract]
   - Trigger: When updating core behavior that the CLI surfaces (validation, missing resources, ambiguous inputs)
   - Action: Make core raise/return a single, well-typed/consistent error shape that CLI maps to stable user-facing messages + non-zero exit codes; add a UX test covering the error path.
+- **document-new-subsystem-entrypoints** (72%) [architecture, docs, onboarding]
+  - Trigger: When adding a new subsystem or expanding an existing one with multiple new modules (e.g., `core.py`, `models.py`, `cli.py`, `recall.py`)
+  - Action: Add/update a subsystem README that explains: the user-facing commands, where data is stored, primary module responsibilities, and the quickest 'smoke path' to validate behavior.
 - **deterministic-cli-output** (71%) [cli, determinism, ux]
   - Trigger: When a CLI command prints lists, tables, multi-item sections, or derived metadata (IDs, paths, counts).
   - Action: Ensure ordering is explicit and stable (sort inputs, stable iteration, deterministic grouping). Normalize or avoid non-deterministic content (timestamps, random IDs). Make newline behavior consistent ...
