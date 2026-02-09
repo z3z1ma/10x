@@ -1,0 +1,9 @@
+{
+  "components_dir": ".loom/workspaces/components",
+  "repo_sets": {},
+  "repos": {},
+  "repos_dir": ".loom/workspaces/repos",
+  "states_dir": ".loom/workspaces/states",
+  "version": 1,
+  "worktrees_dir": ".loom/workspaces/worktrees"
+}
