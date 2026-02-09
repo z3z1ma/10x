@@ -45,6 +45,9 @@
 - **cli-ux-tests-for-new-commands** (78%) [cli, pytest, testing, ux]
   - Trigger: When adding or changing a CLI command/subcommand (new noun/verb, flags, output text, exit behavior)
   - Action: Add/adjust a UX regression test that asserts (1) exit code, (2) key stdout/stderr lines, and (3) a stable error message for failure paths. Prefer partial/regex assertions and avoid brittle full-output...
+- **prompt-tests-assert-structure-not-strings** (78%) [prompts, regression, stability, testing, ux]
+  - Trigger: Writing or updating tests that validate generated prompts, templates, or other large text blobs that can change with harmless wording edits.
+  - Action: Assert on stable structure: required sections/markers, presence of key instructions, and critical interpolated values. Avoid full-string snapshots unless the format is explicitly versioned; keep asser...
 - **python-quality-gates-before-tests** (78%) [lint, python, quality, tests, typecheck]
   - Trigger: After making Python code changes (or before declaring work done) in Loom
   - Action: Run `uv run basedpyright` then `uv run ruff check .` and address issues; only then run `uv run pytest`
@@ -93,6 +96,9 @@
 - **document-new-subsystem-entrypoints** (72%) [architecture, docs, onboarding]
   - Trigger: When adding a new subsystem or expanding an existing one with multiple new modules (e.g., `core.py`, `models.py`, `cli.py`, `recall.py`)
   - Action: Add/update a subsystem README that explains: the user-facing commands, where data is stored, primary module responsibilities, and the quickest 'smoke path' to validate behavior.
+- **extract-new-package-from-monolith** (72%) [architecture, maintainability, packaging, python, refactor]
+  - Trigger: A refactor produces a diffstat dominated by large deletions in a single file/module (hundreds of lines removed) and the remaining code is conceptually multiple responsibilities.
+  - Action: Extract a focused package with a small public surface (exports in __init__.py), split by role (models/types vs core logic vs registries), add a package-level README that states scope + non-goals, then...
 - **pack-change-sync-sample-and-tests** (72%) [consistency, packs, regression, sample-data, tests]
   - Trigger: When editing any pack implementation under src/agent_loom/pack/ (core/lock/packs/cli) or changing pack behaviors/validation
   - Action: Update the reference pack at src/agent_loom/pack/packs/sample/pack.yaml and any sample command/docs under src/agent_loom/pack/packs/sample/files/ to match the new behavior, then adjust tests in tests/...
@@ -102,6 +108,9 @@
 - **deterministic-cli-output** (71%) [cli, determinism, ux]
   - Trigger: When a CLI command prints lists, tables, multi-item sections, or derived metadata (IDs, paths, counts).
   - Action: Ensure ordering is explicit and stable (sort inputs, stable iteration, deterministic grouping). Normalize or avoid non-deterministic content (timestamps, random IDs). Make newline behavior consistent ...
+- **create-readme-when-introducing-new-subsystem** (70%) [architecture, docs, onboarding]
+  - Trigger: Adding a new top-level package/subsystem (or formalizing an existing cluster of files into a new package).
+  - Action: Add a short README in the package directory that defines: what it is, what it is not, key entrypoints, and how to test it. Keep it intentionally small so it stays maintained.
 - **git-preflight-status-diff-log** (70%) [git, safety, workflow]
   - Trigger: When asked to create a commit or a PR, or when preparing to stage changes
   - Action: Run `git status`, `git diff` (staged+unstaged), and `git log -n ...` early to understand scope/style; avoid staging secrets and avoid destructive git operations unless explicitly requested
@@ -114,15 +123,6 @@
 - **prefer-ux-tests-over-broad-internals** (70%) [cli, maintainability, testing]
   - Trigger: When adding tests for command behavior
   - Action: Test through the CLI boundary (command invocation) rather than deep internal functions; assert the minimal observable behavior that matters (selected lines, not full dumps).
-- **compound-skill-dedup-preference** (67%) [compound, deduplication, maintenance, skills]
-  - Trigger: When adding or revising skills under .opencode/skills/ and you notice overlapping scope or repeated procedure
-  - Action: Update the most canonical existing skill (better name, better adoption surface) and remove the redundant one; keep a single durable procedure per workflow.
-- **compound-instincts-sync** (66%) [compound, docs, process]
-  - Trigger: When adding or editing any Compound instinct.
-  - Action: Update `.loom/compound/INSTINCTS.md` and regenerate/adjust `.loom/compound/instincts.json` in the same change. Verify IDs are unique, kebab-case, and identical across doc + JSON; ensure any new instin...
-- **doc-and-core-parity-for-new-subcommands** (66%) [architecture, cli, docs, testing]
-  - Trigger: When introducing a new subcommand or expanding a subsystem CLI (e.g., `loom memory ...`)
-  - Action: Update subsystem README/help docs alongside the CLI wiring, and factor logic into a testable core module so UX tests can stay thin; ensure docs mention common workflows and error modes, and add at lea...
 
 ## Notes
 

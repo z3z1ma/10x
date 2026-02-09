@@ -63,9 +63,7 @@ class TestTeamSpawnIntegrator(unittest.TestCase):
                 mock.patch.object(
                     team, "_ensure_worktree", side_effect=fake_ensure_worktree
                 ),
-                mock.patch.object(team, "_ensure_opencode_agents"),
                 mock.patch.object(team, "_ensure_opencode_worktree_runtime"),
-                mock.patch.object(team, "_ensure_claude_agents"),
                 mock.patch.object(
                     team, "render_integrator_prompt", return_value="prompt"
                 ),
@@ -130,9 +128,7 @@ class TestTeamSpawnIntegrator(unittest.TestCase):
                 mock.patch.object(
                     team, "_ensure_worktree", side_effect=fake_ensure_worktree
                 ),
-                mock.patch.object(team, "_ensure_opencode_agents"),
                 mock.patch.object(team, "_ensure_opencode_worktree_runtime"),
-                mock.patch.object(team, "_ensure_claude_agents"),
                 mock.patch.object(
                     team, "render_integrator_prompt", return_value="prompt"
                 ),
@@ -205,9 +201,7 @@ class TestTeamSpawnIntegrator(unittest.TestCase):
                 mock.patch.object(
                     team, "_ensure_worktree", side_effect=fake_ensure_worktree
                 ),
-                mock.patch.object(team, "_ensure_opencode_agents"),
                 mock.patch.object(team, "_ensure_opencode_worktree_runtime"),
-                mock.patch.object(team, "_ensure_claude_agents"),
                 mock.patch.object(team, "write_event"),
                 mock.patch.object(team, "_apply_mounts") as apply_mounts,
             ):

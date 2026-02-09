@@ -41,7 +41,6 @@ from __future__ import annotations
 import dataclasses
 import datetime as dt
 import hashlib
-import json
 import os
 import random
 import signal
@@ -88,8 +87,6 @@ from agent_loom.team.constants import (
     ROLE_MANAGER,
     ROLE_INTEGRATOR,
     ROLE_WORKER,
-    SUBSYSTEM_NAME,
-    SUBSYSTEM_VERSION,
     TMUX_OPT_OWNED,
     TMUX_OPT_REPO_ROOT,
     TMUX_OPT_RUN_DIR,
@@ -127,6 +124,10 @@ from agent_loom.team.merge_queue import (
     merge_mark_done,
 )
 from agent_loom.compound.sync import sync as compound_sync
+from agent_loom.pack.core import install_pack as pack_install
+from agent_loom.pack.core import update_pack as pack_update
+from agent_loom.pack.lock import index_packs as pack_index
+from agent_loom.pack.lock import load_lock as pack_load_lock
 from agent_loom.team.models import (
     InitAgentsResult,
     AttachResult,
@@ -164,7 +165,6 @@ from agent_loom.team.models import (
     WaitResult,
 )
 from agent_loom.team.prompts import (
-    default_agent_prompts,
     render_manager_prompt,
     render_integrator_prompt,
     render_worker_prompt,
@@ -497,483 +497,79 @@ def _require_self_worker_id(*, action: str, requested_worker_id: str) -> None:
 
 TEAM_AGENT_PROMPT_BEGIN = "<!-- BEGIN:agent-loom-team:prompt -->"
 TEAM_AGENT_PROMPT_END = "<!-- END:agent-loom-team:prompt -->"
+TEAM_PACK_ID = "loom-team-core"
 
 
-def _managed_by_marker(*, name: str) -> str:
-    return f"<!-- managed-by: {SUBSYSTEM_NAME} {SUBSYSTEM_VERSION} | agent: {name} -->"
-
-
-def _manual_notes_placeholder() -> str:
-    return (
-        "## Manual notes\n\n"
-        "_Everything below the managed prompt block is preserved on sync. "
-        "Put human-only instructions, caveats, and repo-specific policy here._\n"
-    )
-
-
-def _yaml_quote(s: str) -> str:
-    # YAML accepts JSON-style strings; JSON quoting avoids edge cases for keys like "*" or paths.
-    return json.dumps(s)
-
-
-def _yaml_lines(obj: Any, *, indent: int = 0) -> List[str]:
-    if not isinstance(obj, dict):
-        raise TypeError(f"expected dict for YAML mapping, got {type(obj)}")
-
-    out: List[str] = []
-    for k, v in obj.items():
-        kq = _yaml_quote(str(k))
-        prefix = " " * indent + f"{kq}:"
-        if isinstance(v, dict):
-            out.append(prefix)
-            out.extend(_yaml_lines(v, indent=indent + 2))
-        else:
-            if isinstance(v, str):
-                out.append(prefix + f" {_yaml_quote(v)}")
-            elif isinstance(v, bool):
-                out.append(prefix + (" true" if v else " false"))
-            elif v is None:
-                out.append(prefix + " null")
-            else:
-                out.append(prefix + f" {v}")
-    return out
-
-
-def _agent_file_content(
-    *,
-    name: str,
-    description: str,
-    prompt: str,
-    permission: Optional[Mapping[str, Any]] = None,
-) -> str:
-    # OpenCode agents are markdown with YAML frontmatter in `.opencode/agents/`.
-    lines: List[str] = ["---"]
-    lines.append(f"description: {_yaml_quote(description)}")
-    lines.append("mode: primary")
-    if permission:
-        lines.append("permission:")
-        # We rely on Python dict insertion order to preserve rule ordering.
-        lines.extend(_yaml_lines(dict(permission), indent=2))
-    lines.append("---")
-    lines.append(_managed_by_marker(name=name))
-    lines.append("")
-    lines.append(TEAM_AGENT_PROMPT_BEGIN)
-    lines.extend(prompt.strip().splitlines() if prompt.strip() else [""])
-    lines.append(TEAM_AGENT_PROMPT_END)
-    lines.append("")
-    lines.append(_manual_notes_placeholder().strip())
-    lines.append("")
-    return "\n".join(lines)
-
-
-def _opencode_team_agent_permissions() -> Dict[str, Dict[str, Any]]:
-    """Return OpenCode permission profiles for Team agents.
-
-    Notes:
-    - These permissions are for OpenCode agents only (YAML frontmatter `permission:`).
-    - Matching is last-rule-wins; put catch-alls first.
-    - Workers need broad shell access for real work, but must not operate Team.
-    """
-
-    external_allow = {
-        "*": "allow",
-    }
-
-    # Manager: orchestrate via loom team + ticket; avoid direct coding.
-    manager_permission: Dict[str, Any] = {
-        "*": "allow",
-        "doom_loop": "deny",
-        "edit": "deny",
-        "external_directory": dict(external_allow),
-        "task": "deny",
-        "bash": {
-            "*": "deny",
-            # Manager operational surface.
-            "*loom team *": "allow",
-            "*loom ticket *": "allow",
-            "*loom memory *": "allow",
-            "*loom compound sync*": "allow",
-            # Allow read-only git inspection.
-            "git status*": "allow",
-            "git diff*": "allow",
-            "git log*": "allow",
-            "git show*": "allow",
-            "git branch*": "allow",
-            "git fetch*": "allow",
-            # allow some git basics for reconciliation of local changes like auto learned skills
-            "git commit*": "allow",
-            "git add*": "allow",
-            # ws may be useful for inspection, but manager should prefer team commands.
-            "ws repo status*": "allow",
-            "ws repo worktree ls*": "allow",
-            # Explicit footgun blocks.
-            "tmux *": "deny",
-            "git push*": "deny",
-            "git merge*": "deny",
-            "git rebase*": "deny",
-            # Manager should not start/attach a new team from inside a running manager.
-            "*loom team * start*": "deny",
-            "*loom team * attach*": "deny",
-            "*loom team * tui*": "deny",
-            # Force all sleeps through loom team wait/snooze.
-            "sleep *": "deny",
-        },
-    }
-
-    # Worker-like roles: allow broad bash, but block orchestration footguns.
-    worker_permission: Dict[str, Any] = {
-        "*": "allow",
-        "doom_loop": "deny",
-        "external_directory": dict(external_allow),
-        "bash": {
-            "*": "allow",
-            # Force all tmux interaction through Team CLI.
-            "tmux *": "deny",
-            # Only the manager commits compound changes.
-            "*loom compound sync*": "deny",
-            # Block team lifecycle and orchestration.
-            "*loom team * start*": "deny",
-            "*loom team * attach*": "deny",
-            "*loom team * disband*": "deny",
-            "*loom team * ship*": "deny",
-            "*loom team * spawn*": "deny",
-            "*loom team * spawn-integrator*": "deny",
-            "*loom team * bounce*": "deny",
-            "*loom team * janitor*": "deny",
-            "*loom team * mark-retirable*": "deny",
-            "*loom team * objective *": "deny",
-            "*loom team * sprint *": "deny",
-            "*loom team * prep-sprint*": "deny",
-            "*loom team * merge *": "deny",
-        },
-    }
-
-    integrator_permission: Dict[str, Any] = {
-        **worker_permission,
-        "bash": {
-            **dict(worker_permission.get("bash") or {}),
-            # Integrator may operate merge queue primitives only.
-            "*loom team * merge *": "deny",
-            "*loom team * merge list*": "allow",
-            "*loom team * merge next*": "allow",
-            "*loom team * merge done*": "allow",
-        },
-    }
-
-    # Investigator is a planning worker; same as worker restrictions.
-    investigator_permission: Dict[str, Any] = dict(worker_permission)
-
-    return {
-        "manager": manager_permission,
-        "worker": worker_permission,
-        "investigator": investigator_permission,
-        "integrator": integrator_permission,
-    }
-
-
-def _claude_agent_file_content(
-    *,
-    name: str,
-    description: str,
-    prompt: str,
-    tools: Optional[list[str]] = None,
-    disallowed_tools: Optional[list[str]] = None,
-    model: str = "inherit",
-    permission_mode: str = "dontAsk",
-) -> str:
-    # Claude Code agents are markdown with YAML frontmatter in `.claude/agents/`.
-    # Prompt body stays identical to the OpenCode agents.
-    lines: List[str] = ["---"]
-    lines.append(f"name: {_yaml_quote(name)}")
-    lines.append(f"description: {_yaml_quote(description)}")
-    if tools:
-        lines.append(f"tools: {', '.join(tools)}")
-    if disallowed_tools:
-        lines.append(f"disallowedTools: {', '.join(disallowed_tools)}")
-    if model:
-        lines.append(f"model: {str(model)}")
-    if permission_mode:
-        lines.append(f"permissionMode: {str(permission_mode)}")
-    lines.append("---")
-    lines.append(_managed_by_marker(name=name))
-    lines.append("")
-    lines.append(TEAM_AGENT_PROMPT_BEGIN)
-    lines.extend(prompt.strip().splitlines() if prompt.strip() else [""])
-    lines.append(TEAM_AGENT_PROMPT_END)
-    lines.append("")
-    lines.append(_manual_notes_placeholder().strip())
-    lines.append("")
-    return "\n".join(lines)
-
-
-def _managed_agent_file(path: Path) -> bool:
+def _pack_installed(repo_root: Path, *, pack_id: str) -> bool:
     try:
-        txt = path.read_text(encoding="utf-8")
+        lock = pack_load_lock(repo_root)
     except Exception:
         return False
-    return f"<!-- managed-by: {SUBSYSTEM_NAME}" in txt
+    return pack_id in pack_index(lock)
 
 
-def _sync_agent_file(
-    *,
-    path: Path,
-    name: str,
-    desired_prompt: str,
-    create_missing: bool,
-    create_content: str,
-    force: bool,
-) -> str:
-    """Sync the managed prompt block for a single agent file.
-
-    Contract:
-      - If file is missing and create_missing=True, create it.
-      - If file exists but is not Team-managed, do nothing.
-      - If file is Team-managed, replace ONLY the managed prompt block and managed-by marker.
-      - Everything after the managed prompt block is preserved.
-
-    Returns: one of "wrote" | "updated" | "skipped" | "missing".
-    """
-    desired_prompt = str(desired_prompt or "").strip()
-    if not path.exists():
-        if not create_missing:
-            return "missing"
-        path.parent.mkdir(parents=True, exist_ok=True)
-        _atomic_write_text(path, create_content, encoding="utf-8")
-        return "wrote"
-
-    if force:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        _atomic_write_text(path, create_content, encoding="utf-8")
-        return "updated"
-
-    try:
-        raw = path.read_text(encoding="utf-8")
-    except Exception:
-        raw = ""
-
-    if not _managed_agent_file(path):
-        return "skipped"
-
-    lines = raw.splitlines()
-
-    # Update managed-by marker line.
-    marker = _managed_by_marker(name=name)
-    for i, ln in enumerate(lines):
-        if ln.strip().startswith("<!-- managed-by:"):
-            if ln.strip() != marker:
-                lines[i] = marker
-            break
-
-    # Locate managed prompt block.
-    begin_idx = next(
-        (i for i, ln in enumerate(lines) if ln.strip() == TEAM_AGENT_PROMPT_BEGIN), -1
-    )
-    end_idx = next(
-        (i for i, ln in enumerate(lines) if ln.strip() == TEAM_AGENT_PROMPT_END), -1
-    )
-
-    if begin_idx != -1 and end_idx != -1 and end_idx > begin_idx:
-        new_prompt_lines = desired_prompt.splitlines() if desired_prompt else [""]
-        if lines[begin_idx + 1 : end_idx] != new_prompt_lines:
-            lines = [
-                *lines[: begin_idx + 1],
-                *new_prompt_lines,
-                *lines[end_idx:],
-            ]
-    else:
-        # Legacy managed file: preserve header through managed-by marker, then recreate the prompt block.
-        marker_line_idx = next(
-            (
-                i
-                for i, ln in enumerate(lines)
-                if ln.strip().startswith("<!-- managed-by:")
-            ),
-            -1,
-        )
-        if marker_line_idx == -1:
-            # Should not happen if _managed_agent_file returned True, but be conservative.
-            return "skipped"
-
-        new_prompt_lines = desired_prompt.splitlines() if desired_prompt else [""]
-        lines = [
-            *lines[: marker_line_idx + 1],
-            "",
-            TEAM_AGENT_PROMPT_BEGIN,
-            *new_prompt_lines,
-            TEAM_AGENT_PROMPT_END,
-            "",
-            *_manual_notes_placeholder().strip().splitlines(),
-        ]
-
-    # Ensure there's always a preserved section.
-    end_idx2 = next(
-        (i for i, ln in enumerate(lines) if ln.strip() == TEAM_AGENT_PROMPT_END), -1
-    )
-    tail = [ln for ln in lines[end_idx2 + 1 :] if ln.strip()] if end_idx2 != -1 else []
-    if not tail:
-        lines.extend(["", *_manual_notes_placeholder().strip().splitlines()])
-
-    next_text = "\n".join(lines).rstrip() + "\n"
-    if next_text == (raw.rstrip() + "\n"):
-        return "skipped"
-
-    _atomic_write_text(path, next_text, encoding="utf-8")
-    return "updated"
+def _required_team_agent_relpaths() -> list[str]:
+    names = [
+        str(DEFAULT_MANAGER_AGENT),
+        str(DEFAULT_WORKER_AGENT),
+        str(DEFAULT_INVESTIGATOR_AGENT),
+        str(DEFAULT_INTEGRATOR_AGENT),
+    ]
+    out: list[str] = []
+    for n in names:
+        out.append(f".opencode/agents/{n}.md")
+        out.append(f".claude/agents/{n}.md")
+    return out
 
 
 def init_agents(
     *, repo: Optional[Path] = None, create_missing: bool = True, force: bool = False
 ) -> InitAgentsResult:
-    """Initialize/sync Team agent definitions in the canonical repo root.
+    """Install/sync Team agent definition files via `loom pack`.
 
-    This is the Team equivalent of `loom ticket init` / `loom memory init`:
-      - It installs committed agent definition files under `.opencode/agents/` and `.claude/agents/`.
-      - It only rewrites the managed prompt block for Team-managed files.
+    Team agents are committed artifacts under:
+    - `.opencode/agents/`
+    - `.claude/agents/`
 
-    If create_missing=False, this behaves as a sync/validation pass:
-      - It will NOT create missing agent files.
-      - Missing files are reported in the result.
+    When create_missing=False, this only validates that the required files exist.
     """
     root = canonical_repo_root(repo.resolve() if repo else Path.cwd())
-    resolve_tickets_dir(repo_root=root)
-
-    prompts = default_agent_prompts()
-    manager_prompt = prompts["manager"]
-    worker_prompt = prompts["worker"]
-    investigator_prompt = prompts["investigator"]
-    integrator_prompt = prompts["integrator"]
-
-    perms = _opencode_team_agent_permissions()
-    manager_permission = perms["manager"]
-    worker_permission = perms["worker"]
-    investigator_permission = perms["investigator"]
-    integrator_permission = perms["integrator"]
-
-    opencode_defs = [
-        (
-            DEFAULT_MANAGER_AGENT,
-            "Primary manager agent for Team orchestration",
-            manager_prompt,
-            manager_permission,
-        ),
-        (
-            DEFAULT_WORKER_AGENT,
-            "General-purpose worker agent for executing a loom ticket in a worktree",
-            worker_prompt,
-            worker_permission,
-        ),
-        (
-            DEFAULT_INVESTIGATOR_AGENT,
-            "Investigator worker for creating/refining loom tickets from objectives",
-            investigator_prompt,
-            investigator_permission,
-        ),
-        (
-            DEFAULT_INTEGRATOR_AGENT,
-            "Integrator (fan-in): serial merges + ticket updates",
-            integrator_prompt,
-            integrator_permission,
-        ),
-    ]
-
-    # Claude Code agent capabilities.
-    # Tools are an allowlist; permissionMode=dontAsk means denied by default when prompts would occur.
-    claude_defs = [
-        (
-            DEFAULT_MANAGER_AGENT,
-            "Primary manager agent for Team orchestration",
-            manager_prompt,
-            ["Read", "Glob", "Grep", "Bash"],
-            ["Edit", "Write"],
-        ),
-        (
-            DEFAULT_WORKER_AGENT,
-            "General-purpose worker agent for executing a loom ticket in a worktree",
-            worker_prompt,
-            ["Read", "Glob", "Grep", "Bash", "Edit", "Write"],
-            [],
-        ),
-        (
-            DEFAULT_INVESTIGATOR_AGENT,
-            "Investigator worker for creating/refining loom tickets from objectives",
-            investigator_prompt,
-            ["Read", "Glob", "Grep", "Bash"],
-            ["Edit", "Write"],
-        ),
-        (
-            DEFAULT_INTEGRATOR_AGENT,
-            "Integrator (fan-in): serial merges + ticket updates",
-            integrator_prompt,
-            ["Read", "Glob", "Grep", "Bash", "Edit", "Write"],
-            [],
-        ),
-    ]
 
     wrote: list[str] = []
-    updated: list[str] = []
     skipped: list[str] = []
-    missing: list[str] = []
     warnings: list[str] = []
 
-    for name, desc, prompt, perm in opencode_defs:
-        p = root / ".opencode" / "agents" / f"{name}.md"
-        content = _agent_file_content(
-            name=name, description=desc, prompt=prompt, permission=perm
-        )
-        r = _sync_agent_file(
-            path=p,
-            name=name,
-            desired_prompt=prompt,
-            create_missing=create_missing,
-            create_content=content,
-            force=bool(force),
-        )
-        rel = p.relative_to(root).as_posix()
-        if r == "wrote":
-            wrote.append(rel)
-        elif r == "updated":
-            updated.append(rel)
-        elif r == "missing":
-            missing.append(rel)
+    if create_missing:
+        if _pack_installed(root, pack_id=TEAM_PACK_ID):
+            pr = pack_update(
+                repo_root=root,
+                pack_id=TEAM_PACK_ID,
+                dry_run=False,
+                force=bool(force),
+            )
         else:
-            skipped.append(rel)
+            pr = pack_install(
+                repo_root=root,
+                pack_id=TEAM_PACK_ID,
+                dry_run=False,
+                force=bool(force),
+            )
+        wrote.extend(list(pr.wrote or []))
+        skipped.extend(list(pr.skipped or []))
+        warnings.extend(list(pr.warnings or []))
 
-    for name, desc, prompt, tools, disallowed in claude_defs:
-        p = root / ".claude" / "agents" / f"{name}.md"
-        content = _claude_agent_file_content(
-            name=name,
-            description=desc,
-            prompt=prompt,
-            tools=list(tools) if tools else None,
-            disallowed_tools=list(disallowed) if disallowed else None,
-            model="inherit",
-            permission_mode="dontAsk",
-        )
-        r = _sync_agent_file(
-            path=p,
-            name=name,
-            desired_prompt=prompt,
-            create_missing=create_missing,
-            create_content=content,
-            force=bool(force),
-        )
-        rel = p.relative_to(root).as_posix()
-        if r == "wrote":
-            wrote.append(rel)
-        elif r == "updated":
-            updated.append(rel)
-        elif r == "missing":
+    missing: list[str] = []
+    for rel in _required_team_agent_relpaths():
+        if not (root / rel).exists():
             missing.append(rel)
-        else:
-            skipped.append(rel)
 
     return InitAgentsResult(
         repo_root=str(root),
-        wrote=sorted(wrote),
-        updated=sorted(updated),
-        skipped=sorted(skipped),
-        missing=sorted(missing),
-        warnings=sorted(warnings),
+        wrote=sorted(set(wrote)),
+        updated=[],
+        skipped=sorted(set(skipped)),
+        missing=sorted(set(missing)),
+        warnings=sorted(set(warnings)),
     )
 
 
@@ -997,83 +593,6 @@ def _require_agent_file_present(*, workdir: Path, harness: str, agent: str) -> N
             "Then recreate or update this worktree."
         ),
     )
-
-
-def _ensure_opencode_agents(
-    workdir: Path,
-    *,
-    repo_root: Optional[Path] = None,
-) -> None:
-    """Ensure Team's default OpenCode agents exist under `.opencode/agents`.
-
-    Behavior:
-      - If the agent file does not exist, create it.
-      - If it exists and was previously managed by Team, update it in-place.
-      - If it exists and is user-managed (no Team marker), do nothing.
-    """
-    agents_dir = workdir / ".opencode" / "agents"
-    agents_dir.mkdir(parents=True, exist_ok=True)
-
-    canonical_root = (repo_root or workdir).resolve()
-    resolve_tickets_dir(repo_root=canonical_root)
-
-    prompts = default_agent_prompts()
-    manager_prompt = prompts["manager"]
-    worker_prompt = prompts["worker"]
-    investigator_prompt = prompts["investigator"]
-    integrator_prompt = prompts["integrator"]
-
-    perms = _opencode_team_agent_permissions()
-    manager_permission = perms["manager"]
-    worker_permission = perms["worker"]
-    investigator_permission = perms["investigator"]
-    integrator_permission = perms["integrator"]
-
-    agent_defs = [
-        (
-            DEFAULT_MANAGER_AGENT,
-            "Primary manager agent for Team orchestration",
-            manager_prompt,
-            manager_permission,
-        ),
-        (
-            DEFAULT_WORKER_AGENT,
-            "General-purpose worker agent for executing a loom ticket in a worktree",
-            worker_prompt,
-            worker_permission,
-        ),
-        (
-            DEFAULT_INVESTIGATOR_AGENT,
-            "Investigator worker for creating/refining loom tickets from objectives",
-            investigator_prompt,
-            investigator_permission,
-        ),
-        (
-            DEFAULT_INTEGRATOR_AGENT,
-            "Integrator (fan-in): serial merges + ticket updates",
-            integrator_prompt,
-            integrator_permission,
-        ),
-    ]
-
-    for name, desc, prompt, perm in agent_defs:
-        path = agents_dir / f"{name}.md"
-        content = _agent_file_content(
-            name=name, description=desc, prompt=prompt, permission=perm
-        )
-
-        if path.exists() and not _managed_agent_file(path):
-            # Respect user-managed customizations.
-            continue
-
-        if path.exists():
-            try:
-                if path.read_text(encoding="utf-8") == content:
-                    continue
-            except Exception:
-                pass
-
-        _atomic_write_text(path, content, encoding="utf-8")
 
 
 def _ensure_opencode_worktree_runtime(*, workdir: Path, repo_root: Path) -> None:
@@ -1352,71 +871,6 @@ def _apply_mounts(*, repo_root: Path, worktree_root: Path, mounts: list[dict]) -
                 code="MOUNT",
                 exit_code=2,
             )
-
-
-def _ensure_claude_agents(
-    workdir: Path,
-    *,
-    repo_root: Optional[Path] = None,
-) -> None:
-    """Ensure Team's default Claude Code agents exist under `.claude/agents`.
-
-    Behavior matches _ensure_opencode_agents:
-      - create if missing
-      - update only if previously managed by Team
-      - respect user-managed files
-    """
-
-    agents_dir = workdir / ".claude" / "agents"
-    agents_dir.mkdir(parents=True, exist_ok=True)
-
-    canonical_root = (repo_root or workdir).resolve()
-    resolve_tickets_dir(repo_root=canonical_root)
-
-    prompts = default_agent_prompts()
-    manager_prompt = prompts["manager"]
-    worker_prompt = prompts["worker"]
-    investigator_prompt = prompts["investigator"]
-    integrator_prompt = prompts["integrator"]
-
-    agent_defs = [
-        (
-            DEFAULT_MANAGER_AGENT,
-            "Primary manager agent for Team orchestration",
-            manager_prompt,
-        ),
-        (
-            DEFAULT_WORKER_AGENT,
-            "General-purpose worker agent for executing a loom ticket in a worktree",
-            worker_prompt,
-        ),
-        (
-            DEFAULT_INVESTIGATOR_AGENT,
-            "Investigator worker for creating/refining loom tickets from objectives",
-            investigator_prompt,
-        ),
-        (
-            DEFAULT_INTEGRATOR_AGENT,
-            "Integrator (fan-in): serial merges + ticket updates",
-            integrator_prompt,
-        ),
-    ]
-
-    for name, desc, prompt in agent_defs:
-        path = agents_dir / f"{name}.md"
-        content = _claude_agent_file_content(name=name, description=desc, prompt=prompt)
-
-        if path.exists() and not _managed_agent_file(path):
-            continue
-
-        if path.exists():
-            try:
-                if path.read_text(encoding="utf-8") == content:
-                    continue
-            except Exception:
-                pass
-
-        _atomic_write_text(path, content, encoding="utf-8")
 
 
 def _write_charter(paths: RunPaths, run: Mapping[str, Any]) -> Path:

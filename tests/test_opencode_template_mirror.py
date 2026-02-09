@@ -12,8 +12,11 @@ def test_compound_opencode_template_is_mirrored() -> None:
             root
             / "src"
             / "agent_loom"
-            / "compound"
-            / "opencode"
+            / "pack"
+            / "packs"
+            / "loom-compound-core"
+            / "files"
+            / ".opencode"
             / "plugins"
             / "compound_engineering.ts",
         ),
@@ -22,8 +25,11 @@ def test_compound_opencode_template_is_mirrored() -> None:
             root
             / "src"
             / "agent_loom"
-            / "compound"
-            / "opencode"
+            / "pack"
+            / "packs"
+            / "loom-compound-core"
+            / "files"
+            / ".opencode"
             / "compound"
             / "prompts"
             / "autolearn.md",

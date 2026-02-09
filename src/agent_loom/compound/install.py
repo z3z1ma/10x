@@ -1,107 +1,20 @@
 from __future__ import annotations
 
 import contextlib
-import shutil
-from importlib import resources
 from pathlib import Path
 
 from agent_loom.compound.models import CompoundInstallResult
+from agent_loom.pack.core import install_pack, update_pack
+from agent_loom.pack.lock import index_packs, load_lock
 
 
-def _template_root() -> Path:
-    traversable = resources.files("agent_loom.compound").joinpath("opencode")
-    with resources.as_file(traversable) as p:
-        return Path(p)
-
-
-def _is_file(p: Path) -> bool:
-    with contextlib.suppress(OSError):
-        return p.is_file()
-    return False
-
-
-def _copy_file(*, src: Path, dest: Path, overwrite: bool, dry_run: bool) -> str:
-    if dest.exists() and not overwrite:
-        return "skipped"
-
-    if dry_run:
-        return "wrote"
-
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(src, dest)
-    return "wrote"
+COMPOUND_PACK_ID = "loom-compound-core"
 
 
 def _read_text_if_exists(p: Path) -> str:
     with contextlib.suppress(OSError):
         return p.read_text(encoding="utf-8")
     return ""
-
-
-def _ensure_lines_in_file(
-    *, dest: Path, required_lines: list[str], dry_run: bool
-) -> str:
-    existing = _read_text_if_exists(dest)
-    existing_lines = [ln.rstrip("\n") for ln in existing.splitlines()]
-
-    want: list[str] = []
-    for ln in required_lines:
-        s = ln.rstrip("\n")
-        if not s:
-            continue
-        if s not in existing_lines:
-            want.append(s)
-
-    if not existing and not want:
-        return "skipped"
-    if existing and not want:
-        return "skipped"
-
-    next_text = existing.rstrip() + (
-        "\n" if existing and not existing.endswith("\n") else ""
-    )
-    if not existing:
-        next_text = ""
-    next_text += "\n".join(want) + "\n"
-
-    if dry_run:
-        return "wrote"
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(next_text, encoding="utf-8")
-    return "wrote"
-
-
-def _rel_posix(p: Path) -> str:
-    return p.as_posix()
-
-
-def _is_scaffold_file(rel: str) -> bool:
-    # Files safe to overwrite with --force.
-    return rel.startswith(
-        (
-            ".opencode/plugins/",
-            ".opencode/commands/",
-            ".opencode/agents/",
-            ".opencode/compound/prompts/",
-            ".loom/compound/",
-        )
-    )
-
-
-def _is_persistent_memory_file(rel: str) -> bool:
-    return rel in (
-        ".loom/compound/instincts.json",
-        ".loom/compound/INSTINCTS.md",
-    )
-
-
-def _is_persistent_evidence_file(rel: str) -> bool:
-    # Episodes are committed evidence capsules and must never be overwritten.
-    return rel.startswith(".loom/compound/episodes/") and rel.endswith(".json")
-
-
-def _is_skill_file(rel: str) -> bool:
-    return rel.startswith(".opencode/skills/")
 
 
 def _ensure_doc_fences(text: str, *, ids: list[str]) -> tuple[str, bool]:
@@ -121,149 +34,52 @@ def _ensure_doc_fences(text: str, *, ids: list[str]) -> tuple[str, bool]:
     return out, changed
 
 
+def _pack_installed(repo_root: Path, *, pack_id: str) -> bool:
+    try:
+        lock = load_lock(repo_root)
+    except Exception:
+        return False
+    return pack_id in index_packs(lock)
+
+
 def install_opencode(
     *, dest: Path, dry_run: bool, force: bool = False
 ) -> CompoundInstallResult:
-    dest = dest.resolve()
-    src = _template_root()
+    """Install/upgrade Compound's repo scaffold via Loom packs.
+
+    Contract (kept compatible with the previous installer):
+    - Installs/updates OpenCode integration under `.opencode/**`.
+    - Creates baseline docs under `LOOM.md` + `.loom/compound/**` if missing.
+    - Never overwrites `AGENTS.md`, `LOOM.md`, or `.loom/compound/**` once present.
+    - Ensures required compound doc fences exist in `LOOM.md` and `.loom/compound/ROADMAP.md`.
+    """
+
+    repo_root = dest.expanduser().resolve()
 
     wrote: list[str] = []
     skipped: list[str] = []
     warnings: list[str] = []
 
-    # 1) Install OpenCode integration into .opencode/
-    #
-    # The packaged template lives under agent_loom/compound/opencode/ and is shaped
-    # like an OpenCode settings directory (plugins/commands/agents/...). We install
-    # it into the destination repo's `.opencode/**`.
-    #
-    # Default is non-destructive: scaffold files are created if missing; learned state is preserved.
-    # Use force=True to refresh scaffold files only.
-    template_roots_required = [
-        "plugins",
-        "commands",
-        "agents",
-        "compound",
-        "memory",
-    ]
-    template_roots_optional = [
-        "skills",
-    ]
-
-    missing_required = [
-        name for name in template_roots_required if not (src / name).is_dir()
-    ]
-    if missing_required:
-        missing = ", ".join(missing_required)
-        raise FileNotFoundError(
-            "Template missing required OpenCode roots under agent_loom/compound/opencode/: "
-            + missing
+    if _pack_installed(repo_root, pack_id=COMPOUND_PACK_ID):
+        pr = update_pack(
+            repo_root=repo_root,
+            pack_id=COMPOUND_PACK_ID,
+            dry_run=bool(dry_run),
+            force=bool(force),
+        )
+    else:
+        pr = install_pack(
+            repo_root=repo_root,
+            pack_id=COMPOUND_PACK_ID,
+            dry_run=bool(dry_run),
+            force=bool(force),
         )
 
-    for root_name in template_roots_required + template_roots_optional:
-        base = src / root_name
-        if not base.exists() or not base.is_dir():
-            continue
+    wrote.extend(list(pr.wrote or []))
+    skipped.extend(list(pr.skipped or []))
+    warnings.extend(list(pr.warnings or []))
 
-        for p in sorted(base.rglob("*")):
-            if p.is_dir():
-                continue
-
-            rel_in_template = p.relative_to(src)
-            dest_rel = Path(".opencode") / rel_in_template
-            rel_str = _rel_posix(dest_rel)
-            dst = dest / dest_rel
-
-            # Never overwrite persistent state.
-            if _is_persistent_memory_file(rel_str) or _is_skill_file(rel_str):
-                if dst.exists():
-                    skipped.append(rel_str)
-                    continue
-                status = _copy_file(src=p, dest=dst, overwrite=False, dry_run=dry_run)
-                (wrote if status == "wrote" else skipped).append(rel_str)
-                continue
-
-            # Merge-required ignore rules (safe and idempotent).
-            if rel_str == ".opencode/memory/.gitignore":
-                status = _ensure_lines_in_file(
-                    dest=dst,
-                    required_lines=[
-                        "observations.jsonl",
-                        "observations.jsonl.*.bak",
-                    ],
-                    dry_run=dry_run,
-                )
-                (wrote if status == "wrote" else skipped).append(rel_str)
-                continue
-
-            if rel_str == ".opencode/compound/.gitignore":
-                status = _ensure_lines_in_file(
-                    dest=dst,
-                    required_lines=[
-                        "state.json",
-                        "*.tmp.*",
-                    ],
-                    dry_run=dry_run,
-                )
-                (wrote if status == "wrote" else skipped).append(rel_str)
-                continue
-
-            # Scaffold files: overwrite only with --force.
-            overwrite = bool(force and _is_scaffold_file(rel_str))
-            if dst.exists() and not overwrite:
-                src_text = _read_text_if_exists(p)
-                dst_text = _read_text_if_exists(dst)
-                if (
-                    src_text
-                    and dst_text
-                    and src_text != dst_text
-                    and _is_scaffold_file(rel_str)
-                ):
-                    warnings.append(
-                        f"left existing {rel_str} (differs from template; re-run with --force to refresh scaffold files)"
-                    )
-                skipped.append(rel_str)
-                continue
-
-            status = _copy_file(src=p, dest=dst, overwrite=overwrite, dry_run=dry_run)
-            (wrote if status == "wrote" else skipped).append(rel_str)
-
-    # 1b) Merge .loom/compound (evidence + minimal docs)
-    src_loom_compound = src / ".loom" / "compound"
-    if src_loom_compound.exists() and src_loom_compound.is_dir():
-        for p in sorted(src_loom_compound.rglob("*")):
-            if p.is_dir():
-                continue
-            rel = p.relative_to(src)
-            rel_str = _rel_posix(rel)
-            dst = dest / rel
-
-            # Never overwrite persistent state.
-            if _is_persistent_memory_file(rel_str):
-                if dst.exists():
-                    skipped.append(rel_str)
-                    continue
-                status = _copy_file(src=p, dest=dst, overwrite=False, dry_run=dry_run)
-                (wrote if status == "wrote" else skipped).append(rel_str)
-                continue
-
-            # Never overwrite committed evidence capsules.
-            if _is_persistent_evidence_file(rel_str):
-                if dst.exists():
-                    skipped.append(rel_str)
-                    continue
-                status = _copy_file(src=p, dest=dst, overwrite=False, dry_run=dry_run)
-                (wrote if status == "wrote" else skipped).append(rel_str)
-                continue
-
-            overwrite = bool(force and _is_scaffold_file(rel_str))
-            if dst.exists() and not overwrite:
-                skipped.append(rel_str)
-                continue
-            status = _copy_file(src=p, dest=dst, overwrite=overwrite, dry_run=dry_run)
-            (wrote if status == "wrote" else skipped).append(rel_str)
-
-    # 2) Loom-owned docs (derived, AI-managed)
+    # Ensure LOOM doc fences exist (idempotent; never overwrites full docs).
     doc_specs: list[tuple[str, list[str]]] = [
         (
             "LOOM.md",
@@ -279,58 +95,26 @@ def install_opencode(
             ["roadmap-backlog", "roadmap-ai-notes", "changelog-entries"],
         ),
     ]
+
     for rel, required_ids in doc_specs:
-        src_doc = src / rel
-        if not _is_file(src_doc):
-            raise FileNotFoundError(f"Template missing {rel}: {src_doc}")
-
-        dst_doc = dest / rel
-
-        if not dst_doc.exists():
-            status = _copy_file(
-                src=src_doc, dest=dst_doc, overwrite=False, dry_run=dry_run
-            )
-            (wrote if status == "wrote" else skipped).append(rel)
+        p = repo_root / rel
+        if not p.exists():
+            # The pack should have created this if missing, but be conservative.
             continue
 
-        raw = dst_doc.read_text(encoding="utf-8")
+        raw = _read_text_if_exists(p)
         new, changed = _ensure_doc_fences(raw, ids=required_ids)
         if not changed:
-            skipped.append(rel)
             continue
 
         if dry_run:
             wrote.append(rel)
         else:
-            dst_doc.write_text(new, encoding="utf-8")
+            p.write_text(new, encoding="utf-8")
             wrote.append(rel)
 
-    # 3) Ensure AGENTS.md exists, but never patch/overwrite it.
-    #    (Derived context lives in LOOM.md.)
-    agents = dest / "AGENTS.md"
-    if agents.exists():
-        skipped.append("AGENTS.md")
-    else:
-        text = "\n".join(
-            [
-                "# AGENTS",
-                "",
-                "This file is included in the agent's context. It should be committed.",
-                "",
-                "For derived and frequently-updated context, see:",
-                "- LOOM.md",
-                "- .loom/compound/ROADMAP.md",
-                "",
-            ]
-        )
-        if dry_run:
-            wrote.append("AGENTS.md")
-        else:
-            agents.write_text(text, encoding="utf-8")
-            wrote.append("AGENTS.md")
-
     return CompoundInstallResult(
-        dest=str(dest),
+        dest=str(repo_root),
         dry_run=bool(dry_run),
         wrote=sorted(set(wrote)),
         skipped=sorted(set(skipped)),

@@ -11,6 +11,9 @@ class PackManifest:
     description: str
     install_roots: List[str]
     managed_globs: List[str]
+    # Files that are installed only if missing, never tracked in lock.json,
+    # never updated (even with --force), and never removed on uninstall.
+    scaffold_globs: List[str]
     protected_globs: List[str]
     upstream: Optional[Dict[str, str]] = None
 

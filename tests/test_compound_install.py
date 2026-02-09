@@ -7,7 +7,11 @@ from agent_loom.compound.install import install_opencode
 
 
 def _template_text(*parts: str) -> str:
-    traversable = resources.files("agent_loom.compound").joinpath("opencode", *parts)
+    traversable = (
+        resources.files("agent_loom.pack")
+        .joinpath("packs", "loom-compound-core", "files", ".opencode")
+        .joinpath(*parts)
+    )
     with resources.as_file(traversable) as p:
         return Path(p).read_text(encoding="utf-8")
 

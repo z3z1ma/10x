@@ -1,0 +1,99 @@
+{
+  "created_at": "2026-02-09T18:25:50.635157Z",
+  "decision_id": "1b4790996e3f40240cf31084399fb589dea98a813aac761aa23854396a85ca9f",
+  "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+  "ops": [
+    {
+      "action": "Add a short README in the package directory that defines: what it is, what it is not, key entrypoints, and how to test it. Keep it intentionally small so it stays maintained.",
+      "confidence": 0.7,
+      "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+      "id": "create-readme-when-introducing-new-subsystem",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "architecture",
+        "docs",
+        "onboarding"
+      ],
+      "title": "New Subsystems Get A Scope README Immediately",
+      "trigger": "Adding a new top-level package/subsystem (or formalizing an existing cluster of files into a new package).",
+      "ts": "2026-02-09T18:25:50.635157Z"
+    },
+    {
+      "action": "Extract a focused package with a small public surface (exports in __init__.py), split by role (models/types vs core logic vs registries), add a package-level README that states scope + non-goals, then update callers/tests to depend on the new package (not the old internal layout).",
+      "confidence": 0.72,
+      "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+      "id": "extract-new-package-from-monolith",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "architecture",
+        "maintainability",
+        "packaging",
+        "python",
+        "refactor"
+      ],
+      "title": "Extract A New Package When A Module Collapses",
+      "trigger": "A refactor produces a diffstat dominated by large deletions in a single file/module (hundreds of lines removed) and the remaining code is conceptually multiple responsibilities.",
+      "ts": "2026-02-09T18:25:50.635157Z"
+    },
+    {
+      "action": "Assert on stable structure: required sections/markers, presence of key instructions, and critical interpolated values. Avoid full-string snapshots unless the format is explicitly versioned; keep assertions minimal to reduce churn while preserving intent coverage.",
+      "confidence": 0.78,
+      "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+      "id": "prompt-tests-assert-structure-not-strings",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "prompts",
+        "regression",
+        "stability",
+        "testing",
+        "ux"
+      ],
+      "title": "Prompt/Template Tests Should Assert Structure, Not Full Text",
+      "trigger": "Writing or updating tests that validate generated prompts, templates, or other large text blobs that can change with harmless wording edits.",
+      "ts": "2026-02-09T18:25:50.635157Z"
+    },
+    {
+      "action": "Before considering the refactor complete, ensure there are explicit tests for the contract (inputs/outputs, idempotency, lifecycle transitions) and delete tests that target removed paths. Prefer small targeted tests over broad integration snapshots unless behavior is truly end-to-end.",
+      "confidence": 0.66,
+      "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+      "id": "refactors-must-update-contract-tests",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "contracts",
+        "maintenance",
+        "refactor",
+        "testing"
+      ],
+      "title": "Refactors Must Carry Contract Tests Along",
+      "trigger": "Moving responsibilities across modules/packages (e.g., installer logic, lifecycle logic, orchestration core) where behavior is user-facing or used by other subsystems.",
+      "ts": "2026-02-09T18:25:50.635157Z"
+    },
+    {
+      "body": "# Extract Python Package From Large Module\n\nUse when a single Python module has grown into multiple responsibilities and a refactor will delete/move large amounts of code.\n\n## Goal\n- Split responsibilities into a new package with a small, deliberate public API.\n- Keep the diff reviewable and the behavior protected by contract tests.\n\n## Procedure\n1. Identify the contract\n- List the externally-used entrypoints (functions/classes/CLI hooks) and the behaviors that must not change.\n- Decide what becomes the new public API (what callers should import).\n\n2. Create the package skeleton\n- Create a new package directory (e.g. `src/<project>/<name>/`).\n- Add `__init__.py` that re-exports only the intended public API.\n- Add a small package README (scope, non-goals, entrypoints, how to test).\n\n3. Split by file role (keep names boring)\n- `models.py`: dataclasses/enums/typed containers; keep mostly import-light.\n- `core.py`: pure logic and operations (no side-effect orchestration unless necessary).\n- `<registry>.py` (optional): registries, plugin discovery, mappings.\n- Avoid cycles: `core.py` can depend on `models.py`; keep the reverse minimal.\n\n4. Move code with mechanical fidelity\n- Move code in small chunks; keep behavior identical initially.\n- Prefer moving whole symbols (function/class) without rewriting until tests pass.\n- Update imports in callers to use the new package\u2019s public API (not deep file paths).\n\n5. Update and prune tests\n- Add/adjust contract tests that verify the key behaviors (inputs/outputs, idempotency, lifecycle transitions).\n- Remove tests that only validate deleted paths.\n- For prompt/template/text outputs: assert on structure/markers and critical values, not full strings.\n\n6. Gates\n- Run:\n  - `uv run ruff check .`\n  - `uv run basedpyright`\n  - `uv run pytest`\n- Fix any typing drift caused by the move (imports, circular dependencies, missing exports).\n\n## Done when\n- Callers import from the package public API.\n- The old monolith is either deleted or reduced to a thin compatibility shim (only if explicitly needed).\n- Tests cover the contract and no tests reference dead paths.\n- Ruff, basedpyright, and pytest are clean.",
+      "description": "Procedure for extracting a new Python package from a large module while keeping a stable public API, crisp file roles, and high-signal tests.",
+      "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+      "name": "extract-python-package-from-large-module",
+      "op": "skill.upsert",
+      "source_instinct_ids": [
+        "create-readme-when-introducing-new-subsystem",
+        "extract-new-package-from-monolith",
+        "prompt-tests-assert-structure-not-strings",
+        "refactors-must-update-contract-tests"
+      ],
+      "tags": [
+        "architecture",
+        "packaging",
+        "python",
+        "refactor",
+        "testing"
+      ],
+      "ts": "2026-02-09T18:25:50.635157Z"
+    }
+  ],
+  "proposal_blob_sha256": "0304705b0c7073b344eda8ec5931aedd0ac16aacb9ab863d2882ba0cc89a8322",
+  "version": 1
+}

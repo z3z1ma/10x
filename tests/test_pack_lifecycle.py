@@ -10,6 +10,8 @@ from agent_loom.pack.packs import list_pack_ids, load_manifest
 
 def test_pack_lists_builtin_sample_pack() -> None:
     assert "sample" in list_pack_ids()
+    assert "loom-compound-core" in list_pack_ids()
+    assert "loom-team-core" in list_pack_ids()
     mf = load_manifest("sample")
     assert mf.id == "sample"
 

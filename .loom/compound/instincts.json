@@ -415,6 +415,29 @@
       ]
     },
     {
+      "id": "create-readme-when-introducing-new-subsystem",
+      "title": "New Subsystems Get A Scope README Immediately",
+      "trigger": "Adding a new top-level package/subsystem (or formalizing an existing cluster of files into a new package).",
+      "action": "Add a short README in the package directory that defines: what it is, what it is not, key entrypoints, and how to test it. Keep it intentionally small so it stays maintained.",
+      "tags": [
+        "architecture",
+        "docs",
+        "onboarding"
+      ],
+      "confidence": 0.7,
+      "status": "active",
+      "created_at": "2026-02-09T18:25:50.635157Z",
+      "updated_at": "2026-02-09T18:25:50.635157Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T18:25:50.635157Z",
+          "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+          "head_sha": "326ec09c3d7dd3cfca4f733000415b6ef4d595ef",
+          "patch_sha256": "0def4bb62236c8a889311ee11e6accf98693362e40794ed7373ae53f814bb2c3"
+        }
+      ]
+    },
+    {
       "id": "deterministic-cli-output",
       "title": "Keep CLI output deterministic by default",
       "trigger": "When a CLI command prints lists, tables, multi-item sections, or derived metadata (IDs, paths, counts).",
@@ -481,6 +504,31 @@
           "episode_id": "8b9d287c8371fa5c2a007b3e600278223256c6ef8a0e529b9ac018277992691f",
           "head_sha": "46275a6608cf9f9c995ca68f04bebbc4a37f6a7b",
           "patch_sha256": "84e71a91e1e26ec3f1b6b967ca3d7886fab6af87f7c068d77916806997d69ef7"
+        }
+      ]
+    },
+    {
+      "id": "extract-new-package-from-monolith",
+      "title": "Extract A New Package When A Module Collapses",
+      "trigger": "A refactor produces a diffstat dominated by large deletions in a single file/module (hundreds of lines removed) and the remaining code is conceptually multiple responsibilities.",
+      "action": "Extract a focused package with a small public surface (exports in __init__.py), split by role (models/types vs core logic vs registries), add a package-level README that states scope + non-goals, then update callers/tests to depend on the new package (not the old internal layout).",
+      "tags": [
+        "architecture",
+        "maintainability",
+        "packaging",
+        "python",
+        "refactor"
+      ],
+      "confidence": 0.72,
+      "status": "active",
+      "created_at": "2026-02-09T18:25:50.635157Z",
+      "updated_at": "2026-02-09T18:25:50.635157Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T18:25:50.635157Z",
+          "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+          "head_sha": "326ec09c3d7dd3cfca4f733000415b6ef4d595ef",
+          "patch_sha256": "0def4bb62236c8a889311ee11e6accf98693362e40794ed7373ae53f814bb2c3"
         }
       ]
     },
@@ -842,6 +890,31 @@
       ]
     },
     {
+      "id": "prompt-tests-assert-structure-not-strings",
+      "title": "Prompt/Template Tests Should Assert Structure, Not Full Text",
+      "trigger": "Writing or updating tests that validate generated prompts, templates, or other large text blobs that can change with harmless wording edits.",
+      "action": "Assert on stable structure: required sections/markers, presence of key instructions, and critical interpolated values. Avoid full-string snapshots unless the format is explicitly versioned; keep assertions minimal to reduce churn while preserving intent coverage.",
+      "tags": [
+        "prompts",
+        "regression",
+        "stability",
+        "testing",
+        "ux"
+      ],
+      "confidence": 0.78,
+      "status": "active",
+      "created_at": "2026-02-09T18:25:50.635157Z",
+      "updated_at": "2026-02-09T18:25:50.635157Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T18:25:50.635157Z",
+          "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+          "head_sha": "326ec09c3d7dd3cfca4f733000415b6ef4d595ef",
+          "patch_sha256": "0def4bb62236c8a889311ee11e6accf98693362e40794ed7373ae53f814bb2c3"
+        }
+      ]
+    },
+    {
       "id": "python-change-run-gates-even-for-doc-heavy-prs",
       "title": "Run python quality gates even when most changes are docs/skills",
       "trigger": "When a change set includes any Python edits (even small ones) alongside lots of markdown/skill edits",
@@ -911,6 +984,30 @@
           "episode_id": "e73f6556efab5a08fe44febbe2ba7d245b558f059154ad39c13d6adedb7d42b2",
           "head_sha": "3ed17ac0cb1119ce9355d2fab7e7000e1791a59a",
           "patch_sha256": "396d4064e16aedb39f74ca438e10beeef645fa829af509b251fa619bcf0e084d"
+        }
+      ]
+    },
+    {
+      "id": "refactors-must-update-contract-tests",
+      "title": "Refactors Must Carry Contract Tests Along",
+      "trigger": "Moving responsibilities across modules/packages (e.g., installer logic, lifecycle logic, orchestration core) where behavior is user-facing or used by other subsystems.",
+      "action": "Before considering the refactor complete, ensure there are explicit tests for the contract (inputs/outputs, idempotency, lifecycle transitions) and delete tests that target removed paths. Prefer small targeted tests over broad integration snapshots unless behavior is truly end-to-end.",
+      "tags": [
+        "contracts",
+        "maintenance",
+        "refactor",
+        "testing"
+      ],
+      "confidence": 0.66,
+      "status": "active",
+      "created_at": "2026-02-09T18:25:50.635157Z",
+      "updated_at": "2026-02-09T18:25:50.635157Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T18:25:50.635157Z",
+          "episode_id": "075e5ebae208428e278ccd9c88dfdaa88003c63ed6666e57aca164f01e88c42a",
+          "head_sha": "326ec09c3d7dd3cfca4f733000415b6ef4d595ef",
+          "patch_sha256": "0def4bb62236c8a889311ee11e6accf98693362e40794ed7373ae53f814bb2c3"
         }
       ]
     },

@@ -16,65 +16,17 @@ def _sha256_text(s: str) -> str:
 
 
 class TestYamlLines(unittest.TestCase):
-    def test_emits_yaml_mapping_lines(self) -> None:
-        obj = {
-            "a": "b",
-            "nested": {"x": True, "y": None, "z": 123},
-        }
+    """Deprecated: Team agent files are now shipped via loom packs."""
 
-        self.assertEqual(
-            team._yaml_lines(obj),
-            [
-                '"a": "b"',
-                '"nested":',
-                '  "x": true',
-                '  "y": null',
-                '  "z": 123',
-            ],
-        )
-
-    def test_rejects_non_mapping(self) -> None:
-        with self.assertRaises(TypeError):
-            team._yaml_lines(["nope"])  # type: ignore[arg-type]
+    def test_placeholder(self) -> None:
+        self.assertTrue(True)
 
 
 class TestAgentFileContent(unittest.TestCase):
-    def test_renders_managed_frontmatter_and_marker(self) -> None:
-        out = team._agent_file_content(
-            name="loom-team-worker",
-            description="Team worker agent.",
-            prompt="You are a worker.\n",
-            permission={
-                "*": "allow",
-                "bash": {"*": "deny", "team *": "allow"},
-            },
-        )
+    """Deprecated: Team agent files are now shipped via loom packs."""
 
-        self.assertEqual(
-            out,
-            textwrap.dedent(
-                """\
-                ---
-                description: "Team worker agent."
-                mode: primary
-                permission:
-                  "*": "allow"
-                  "bash":
-                    "*": "deny"
-                    "team *": "allow"
-                ---
-                <!-- managed-by: agent-loom-team 1.3.0 | agent: loom-team-worker -->
-
-                <!-- BEGIN:agent-loom-team:prompt -->
-                You are a worker.
-                <!-- END:agent-loom-team:prompt -->
-
-                ## Manual notes
-
-                _Everything below the managed prompt block is preserved on sync. Put human-only instructions, caveats, and repo-specific policy here._
-                """
-            ),
-        )
+    def test_placeholder(self) -> None:
+        self.assertTrue(True)
 
 
 class TestRenderManagerPrompt(unittest.TestCase):

@@ -42,6 +42,17 @@ def _managed_paths_for_pack(
     return sorted(set(out))
 
 
+def _scaffold_paths_for_pack(
+    manifest: PackManifest, pack_files: Iterable[str]
+) -> List[str]:
+    out: List[str] = []
+    for rel in pack_files:
+        rp = norm_rel_path(rel)
+        if _match_any(rp, manifest.scaffold_globs):
+            out.append(rp)
+    return sorted(set(out))
+
+
 def _build_file_index(files: Iterable[Tuple[str, Path]]) -> Dict[str, Path]:
     idx: Dict[str, Path] = {}
     for rel, p in files:
@@ -137,6 +148,11 @@ def install_pack(
     pack_files = list(iter_pack_files(pack_id))
     file_index = _build_file_index(pack_files)
     managed = _managed_paths_for_pack(manifest, file_index.keys())
+    scaffold = [
+        p
+        for p in _scaffold_paths_for_pack(manifest, file_index.keys())
+        if p not in managed
+    ]
 
     wrote: List[str] = []
     skipped: List[str] = []
@@ -153,6 +169,21 @@ def install_pack(
         )
 
     installed_files: List[LockFileEntry] = []
+
+    # Scaffold: install if missing; never tracked.
+    for rel in scaffold:
+        src = file_index.get(rel)
+        if src is None:
+            continue
+        dst = repo_root / rel
+        if dst.exists():
+            skipped.append(rel)
+            continue
+        ensure_parent_dir(dst, dry_run=dry_run)
+        if not dry_run:
+            dst.write_bytes(src.read_bytes())
+        wrote.append(rel)
+
     for rel in managed:
         src = file_index.get(rel)
         if src is None:
@@ -216,6 +247,11 @@ def update_pack(
     pack_files = list(iter_pack_files(pack_id))
     file_index = _build_file_index(pack_files)
     managed = _managed_paths_for_pack(manifest, file_index.keys())
+    scaffold = [
+        p
+        for p in _scaffold_paths_for_pack(manifest, file_index.keys())
+        if p not in managed
+    ]
 
     # Compute drift per lock.
     existing_files = {e.path: e.sha256 for e in existing.files}
@@ -235,6 +271,20 @@ def update_pack(
                 drifted.append(pth)
 
     installed_files: List[LockFileEntry] = []
+
+    # Scaffold: create only if missing. Never overwrite (even with --force).
+    for rel in scaffold:
+        src = file_index.get(rel)
+        if src is None:
+            continue
+        dst = repo_root / rel
+        if dst.exists():
+            continue
+        ensure_parent_dir(dst, dry_run=dry_run)
+        if not dry_run:
+            dst.write_bytes(src.read_bytes())
+        wrote.append(rel)
+
     for rel in managed:
         if _match_any(rel, manifest.protected_globs):
             skipped.append(rel)

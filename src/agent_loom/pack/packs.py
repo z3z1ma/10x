@@ -57,6 +57,18 @@ def load_manifest(pack_id: str) -> PackManifest:
             )
         return [str(x).strip() for x in v]
 
+    def _optional_list_str(k: str) -> List[str]:
+        v = doc.get(k)
+        if v is None:
+            return []
+        if not isinstance(v, list) or not all(
+            isinstance(x, str) and x.strip() for x in v
+        ):
+            raise ValueError(
+                f"invalid pack.yaml for {pack_id}: {k} must be a list of strings"
+            )
+        return [str(x).strip() for x in v]
+
     upstream = doc.get("upstream")
     if upstream is not None and not isinstance(upstream, dict):
         raise ValueError(f"invalid pack.yaml for {pack_id}: upstream must be a mapping")
@@ -75,6 +87,7 @@ def load_manifest(pack_id: str) -> PackManifest:
         description=_require_str("description"),
         install_roots=_require_list_str("install_roots"),
         managed_globs=_require_list_str("managed_globs"),
+        scaffold_globs=_optional_list_str("scaffold_globs"),
         protected_globs=_require_list_str("protected_globs"),
         upstream=upstream,
     )

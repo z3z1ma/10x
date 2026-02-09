@@ -1,0 +1,13 @@
+id: loom-team-core
+version: "0.1.0"
+description: "Loom Team Core: default Team agents (OpenCode + Claude Code)"
+install_roots:
+  - .opencode/agents
+  - .claude/agents
+managed_globs:
+  - ".opencode/agents/loom-team-*.md"
+  - ".claude/agents/loom-team-*.md"
+protected_globs:
+  - ".git/**"
+  - ".gitignore"
+  - ".loom/**"
