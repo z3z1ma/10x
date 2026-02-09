@@ -72,6 +72,7 @@ const TURN_REMINDER = [
   "- Non-trivial work: create/update a Loom ticket before implementing.",
   "- Recall memory when relevant: loom memory recall \"<query>\" --context --format prompt.",
   "- When you learn something reusable, save a scoped note (prefer --command or file: scopes).",
+  "- When a note references another concept, add a wikilink like [[note-id]].",
   "</reminder>",
 ].join("\n");
 

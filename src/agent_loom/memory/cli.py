@@ -18,13 +18,19 @@ from agent_loom.memory.constants import (
 )
 from agent_loom.memory.core import (
     add,
+    around,
     edit,
+    forget,
     init,
     janitor,
     link,
+    list_recent,
+    open_note,
     prime,
     recall,
     reindex,
+    show,
+    timeline,
 )
 from agent_loom.memory.models import (
     JanitorFixResult,
@@ -102,13 +108,16 @@ def _normalize_argv(argv: list[str]) -> list[str]:
 
     # Positional fallbacks:
     # memory add <title>  ->  memory add --title <title>
-    if "add" in out:
-        idx = out.index("add")
+    for add_cmd in ("add", "note", "save"):
+        if add_cmd not in out:
+            continue
+        idx = out.index(add_cmd)
         has_title = "--title" in out[idx:]
         if not has_title and idx + 1 < len(out):
             nxt = out[idx + 1]
             if nxt and not nxt.startswith("-"):
                 out = out[: idx + 1] + ["--title", nxt] + out[idx + 2 :]
+        break
 
     # memory link validate <id>  ->  memory link validate --id <id>
     if len(out) >= 3 and out[0] == "link" and out[1] == "validate":
@@ -314,7 +323,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Initialize vault layout, meta.json, gitignore safety, db cache",
     )
 
-    add_p = sp.add_parser("add", parents=[common_sub], help="Add a note")
+    add_p = sp.add_parser(
+        "add",
+        parents=[common_sub],
+        help="Add a note",
+        aliases=["note", "save"],
+    )
     add_p.add_argument(
         "--title",
         default=None,
@@ -334,6 +348,18 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         default=[],
         help="Alias (repeatable; comma-separated ok)",
+    )
+    add_p.add_argument(
+        "--link",
+        action="append",
+        default=[],
+        help="Add frontmatter links (repeatable; comma-separated ok)",
+    )
+    add_p.add_argument(
+        "--related",
+        action="append",
+        default=[],
+        help="Append a Related: line with [[wikilinks]] (repeatable; comma ok)",
     )
     add_p.add_argument(
         "--scope", action="append", default=[], help="Scope kind:value (repeatable)"
@@ -419,6 +445,27 @@ def build_parser() -> argparse.ArgumentParser:
         "--clear-aliases", action="store_true", help="Remove all aliases"
     )
     edit_p.add_argument(
+        "--link",
+        action="append",
+        default=[],
+        help="Add frontmatter links (repeatable; comma-separated ok)",
+    )
+    edit_p.add_argument(
+        "--remove-link",
+        action="append",
+        default=[],
+        help="Remove frontmatter links (repeatable; comma-separated ok)",
+    )
+    edit_p.add_argument(
+        "--clear-links", action="store_true", help="Remove all frontmatter links"
+    )
+    edit_p.add_argument(
+        "--related",
+        action="append",
+        default=[],
+        help="Append a Related: line with [[wikilinks]] (repeatable; comma ok)",
+    )
+    edit_p.add_argument(
         "--scope", action="append", default=[], help="Add scope(s) kind:value"
     )
     edit_p.add_argument(
@@ -447,6 +494,7 @@ def build_parser() -> argparse.ArgumentParser:
         "recall",
         parents=[common_sub],
         help="Recall notes (FTS + filters), default JSON output",
+        aliases=["get", "remember"],
     )
     recall_p.add_argument(
         "query", nargs="?", default="", help="Full-text query (FTS5 if available)"
@@ -488,10 +536,26 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         choices=VISIBILITIES,
         default=None,
-        help="Visibility filter (default: shared)",
+        help="Visibility filter (default: shared+personal)",
     )
     recall_p.add_argument(
         "--include-deprecated", action="store_true", help="Include status=deprecated"
+    )
+    recall_p.add_argument(
+        "--until",
+        default=None,
+        help="Only notes updated_at <= until (RFC3339 or YYYY-MM-DD)",
+    )
+    recall_p.add_argument(
+        "--or",
+        dest="or_mode",
+        action="store_true",
+        help="Use OR semantics between query tokens (default: AND)",
+    )
+    recall_p.add_argument(
+        "--fts-raw",
+        action="store_true",
+        help="Treat the query as a raw SQLite FTS expression (advanced)",
     )
     recall_p.add_argument(
         "--since",
@@ -541,6 +605,223 @@ def build_parser() -> argparse.ArgumentParser:
         "--allow-missing-scopes",
         action="store_true",
         help="Allow file: context scopes that do not exist on disk",
+    )
+
+    list_p = sp.add_parser(
+        "list",
+        parents=[common_sub],
+        help="List recent notes (no query required)",
+        aliases=["ls", "recent"],
+    )
+    list_p.add_argument("--limit", type=int, default=20, help="Max results")
+    list_p.add_argument(
+        "--tag",
+        action="append",
+        default=[],
+        help="Filter by note tag (repeatable; comma ok)",
+    )
+    list_p.add_argument(
+        "--not-tag",
+        action="append",
+        default=[],
+        help="Exclude by note tag (repeatable)",
+    )
+    list_p.add_argument(
+        "--scope",
+        action="append",
+        default=[],
+        help="Context scope kind:value (repeatable)",
+    )
+    list_p.add_argument(
+        "--not-scope",
+        action="append",
+        default=[],
+        help="Exclude notes matching these context scopes",
+    )
+    list_p.add_argument(
+        "--command",
+        default=None,
+        help="Command context (shorthand for --scope command:...)",
+    )
+    list_p.add_argument(
+        "--visibility",
+        action="append",
+        choices=VISIBILITIES,
+        default=None,
+        help="Visibility filter (default: shared+personal)",
+    )
+    list_p.add_argument(
+        "--include-deprecated", action="store_true", help="Include status=deprecated"
+    )
+    list_p.add_argument(
+        "--since",
+        default=None,
+        help="Only notes updated_at >= since (RFC3339 or YYYY-MM-DD)",
+    )
+    list_p.add_argument(
+        "--until",
+        default=None,
+        help="Only notes updated_at <= until (RFC3339 or YYYY-MM-DD)",
+    )
+    list_p.add_argument(
+        "--sort",
+        choices=["updated", "created"],
+        default="updated",
+        help="Sort key (default updated)",
+    )
+    list_p.add_argument(
+        "--allow-missing-scopes",
+        action="store_true",
+        help="Allow file: context scopes that do not exist on disk",
+    )
+
+    show_p = sp.add_parser("show", parents=[common_sub], help="Show a note by id")
+    show_p.add_argument("id", help="Note id")
+    show_p.add_argument("--meta", action="store_true", help="Show frontmatter only")
+
+    open_p = sp.add_parser("open", parents=[common_sub], help="Open a note in editor")
+    open_p.add_argument("id", help="Note id")
+
+    forget_p = sp.add_parser(
+        "forget",
+        parents=[common_sub],
+        help="Forget notes (soft by default; hard delete with --hard)",
+        aliases=["archive"],
+    )
+    forget_p.add_argument(
+        "query",
+        nargs="?",
+        default="",
+        help="Optional full-text query (FTS5 if available)",
+    )
+    forget_p.add_argument("--limit", type=int, default=50, help="Max candidates")
+    forget_p.add_argument(
+        "--tag",
+        action="append",
+        default=[],
+        help="Filter by note tag (repeatable; comma ok)",
+    )
+    forget_p.add_argument(
+        "--not-tag",
+        action="append",
+        default=[],
+        help="Exclude by note tag (repeatable)",
+    )
+    forget_p.add_argument(
+        "--scope",
+        action="append",
+        default=[],
+        help="Context scope kind:value (repeatable)",
+    )
+    forget_p.add_argument(
+        "--not-scope",
+        action="append",
+        default=[],
+        help="Exclude notes matching these context scopes",
+    )
+    forget_p.add_argument(
+        "--command",
+        default=None,
+        help="Command context (shorthand for --scope command:...)",
+    )
+    forget_p.add_argument(
+        "--visibility",
+        action="append",
+        choices=VISIBILITIES,
+        default=None,
+        help="Visibility filter (default: shared+personal)",
+    )
+    forget_p.add_argument(
+        "--include-deprecated", action="store_true", help="Include status=deprecated"
+    )
+    forget_p.add_argument(
+        "--since",
+        default=None,
+        help="Only notes updated_at >= since (RFC3339 or YYYY-MM-DD)",
+    )
+    forget_p.add_argument(
+        "--until",
+        default=None,
+        help="Only notes updated_at <= until (RFC3339 or YYYY-MM-DD)",
+    )
+    forget_p.add_argument(
+        "--or",
+        dest="or_mode",
+        action="store_true",
+        help="Use OR semantics between query tokens (default: AND)",
+    )
+    forget_p.add_argument(
+        "--fts-raw",
+        action="store_true",
+        help="Treat the query as a raw SQLite FTS expression (advanced)",
+    )
+    forget_p.add_argument(
+        "--apply", action="store_true", help="Apply changes (default is dry-run)"
+    )
+    forget_p.add_argument(
+        "--hard",
+        action="store_true",
+        help="Hard delete matching notes (requires --apply)",
+    )
+    forget_p.add_argument(
+        "--allow-missing-scopes",
+        action="store_true",
+        help="Allow file: context scopes that do not exist on disk",
+    )
+
+    around_p = sp.add_parser(
+        "around",
+        parents=[common_sub],
+        help="Show notes temporally near a note",
+    )
+    around_p.add_argument("id", help="Note id")
+    around_p.add_argument("--k", type=int, default=12, help="Number of neighbors")
+    around_p.add_argument(
+        "--by",
+        choices=["updated", "created"],
+        default="updated",
+        help="Which timestamp to use",
+    )
+    around_p.add_argument(
+        "--window-days",
+        type=int,
+        default=14,
+        help="Search window in days around the target timestamp",
+    )
+    around_p.add_argument(
+        "--visibility",
+        action="append",
+        choices=VISIBILITIES,
+        default=None,
+        help="Visibility filter (default: shared+personal)",
+    )
+    around_p.add_argument(
+        "--include-deprecated", action="store_true", help="Include status=deprecated"
+    )
+
+    timeline_p = sp.add_parser(
+        "timeline",
+        parents=[common_sub],
+        help="Temporal browse of recent notes grouped by day",
+    )
+    timeline_p.add_argument(
+        "--days", type=int, default=30, help="How many days back to include"
+    )
+    timeline_p.add_argument(
+        "--by",
+        choices=["updated", "created"],
+        default="updated",
+        help="Which timestamp to group by",
+    )
+    timeline_p.add_argument(
+        "--visibility",
+        action="append",
+        choices=VISIBILITIES,
+        default=None,
+        help="Visibility filter (default: shared+personal)",
+    )
+    timeline_p.add_argument(
+        "--include-deprecated", action="store_true", help="Include status=deprecated"
     )
 
     link_p = sp.add_parser(
@@ -675,9 +956,13 @@ def _parse_args(
 def _effective_format(args: argparse.Namespace) -> str:
     if (
         args.format is None
-        and args.cmd == "recall"
+        and args.cmd in {"recall", "get", "remember"}
         and bool(getattr(args, "context", False))
     ):
+        return "text"
+    if args.format is None and args.cmd in {"list", "ls", "recent"}:
+        return "text"
+    if args.format is None and args.cmd in {"show", "open"}:
         return "text"
     return args.format or "json"
 
@@ -712,7 +997,7 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
     if not vp.meta_path.exists():
         init(vault=str(args.vault))
 
-    if args.cmd == "add":
+    if args.cmd in {"add", "note", "save"}:
         body = args.body
         if body == "-":
             if not _stdin_is_ready():
@@ -736,6 +1021,8 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
             status=str(args.status or "active").strip().lower(),
             tag=args.tag,
             alias=args.alias,
+            link=getattr(args, "link", None),
+            related=getattr(args, "related", None),
             scope=args.scope,
             command=args.command,
             allow_missing_scopes=bool(getattr(args, "allow_missing_scopes", False)),
@@ -818,6 +1105,10 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
             alias=args.alias,
             remove_alias=args.remove_alias,
             clear_aliases=bool(args.clear_aliases),
+            link=getattr(args, "link", None),
+            remove_link=getattr(args, "remove_link", None),
+            clear_links=bool(getattr(args, "clear_links", False)),
+            related=getattr(args, "related", None),
             scope=args.scope,
             command=args.command,
             remove_scope=args.remove_scope,
@@ -830,7 +1121,7 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
         emit(payload_for(res, fmt=fmt), fmt)
         return 0
 
-    if args.cmd == "recall":
+    if args.cmd in {"recall", "get", "remember"}:
         res = recall(
             vault=str(args.vault),
             query=args.query or "",
@@ -843,6 +1134,7 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
             visibility=args.visibility,
             include_deprecated=bool(args.include_deprecated),
             since=args.since,
+            until=getattr(args, "until", None),
             and_mode=bool(args.and_mode),
             scoped_only=bool(args.scoped_only),
             full=bool(args.full),
@@ -854,10 +1146,102 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
             quiet=quiet,
             allow_missing_scopes=bool(getattr(args, "allow_missing_scopes", False)),
             format=fmt,
+            or_mode=bool(getattr(args, "or_mode", False)),
+            fts_raw=bool(getattr(args, "fts_raw", False)),
         )
         if not quiet and res.warnings:
             print_index_warnings(list(res.warnings))
         emit(payload_for(res, fmt=fmt), fmt)
+        return 0
+
+    if args.cmd in {"list", "ls", "recent"}:
+        res = list_recent(
+            vault=str(args.vault),
+            limit=int(args.limit),
+            tag=args.tag,
+            not_tag=args.not_tag,
+            scope=args.scope,
+            not_scope=args.not_scope,
+            command=args.command or "",
+            visibility=args.visibility,
+            include_deprecated=bool(args.include_deprecated),
+            since=args.since,
+            until=getattr(args, "until", None),
+            and_mode=False,
+            scoped_only=False,
+            deterministic=bool(getattr(args, "deterministic", False)),
+            quiet=quiet,
+            allow_missing_scopes=bool(getattr(args, "allow_missing_scopes", False)),
+            sort=str(getattr(args, "sort", "updated") or "updated"),
+        )
+        if not quiet and res.warnings:
+            print_index_warnings(list(res.warnings))
+        emit(payload_for(res, fmt=fmt), fmt)
+        return 0
+
+    if args.cmd == "show":
+        text = show(
+            vault=str(args.vault), note_id=str(args.id), meta_only=bool(args.meta)
+        )
+        emit(text, fmt)
+        return 0
+
+    if args.cmd == "open":
+        rel = open_note(vault=str(args.vault), note_id=str(args.id))
+        emit(rel, fmt)
+        return 0
+
+    if args.cmd in {"forget", "archive"}:
+        payload = forget(
+            vault=str(args.vault),
+            query=args.query or "",
+            limit=int(args.limit),
+            tag=args.tag,
+            not_tag=args.not_tag,
+            scope=args.scope,
+            not_scope=args.not_scope,
+            command=args.command or "",
+            visibility=args.visibility,
+            include_deprecated=bool(args.include_deprecated),
+            since=args.since,
+            until=getattr(args, "until", None),
+            and_mode=False,
+            scoped_only=False,
+            deterministic=bool(getattr(args, "deterministic", False)),
+            quiet=quiet,
+            allow_missing_scopes=bool(getattr(args, "allow_missing_scopes", False)),
+            or_mode=bool(getattr(args, "or_mode", False)),
+            fts_raw=bool(getattr(args, "fts_raw", False)),
+            apply=bool(getattr(args, "apply", False)),
+            hard=bool(getattr(args, "hard", False)),
+        )
+        emit(payload, fmt)
+        return 0
+
+    if args.cmd == "around":
+        payload = around(
+            vault=str(args.vault),
+            note_id=str(args.id),
+            k=int(getattr(args, "k", 12) or 12),
+            by=str(getattr(args, "by", "updated") or "updated"),
+            window_days=int(getattr(args, "window_days", 14) or 14),
+            visibility=args.visibility,
+            include_deprecated=bool(getattr(args, "include_deprecated", False)),
+            quiet=quiet,
+        )
+        emit(payload, fmt)
+        return 0
+
+    if args.cmd == "timeline":
+        payload = timeline(
+            vault=str(args.vault),
+            days=int(getattr(args, "days", 30) or 30),
+            by=str(getattr(args, "by", "updated") or "updated"),
+            visibility=args.visibility,
+            include_deprecated=bool(getattr(args, "include_deprecated", False)),
+            quiet=quiet,
+        )
+        emit(payload, fmt)
         return 0
 
     if args.cmd == "reindex":

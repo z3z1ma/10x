@@ -76,6 +76,7 @@ Convenience aliases and shorthands:
 
 - `MEMORY_VAULT` default vault root
 - `MEMORY_EDITOR` editor for `--interactive` (falls back to `VISUAL` or `EDITOR`)
+- `MEMORY_DEFAULT_VISIBILITY` default visibilities for `recall`/`list` (comma-separated; default: `shared,personal`)
 
 ## Scopes
 
@@ -142,6 +143,8 @@ Common flags:
 - `--id` (advanced; must be link-safe)
 - `--tag` (repeatable; comma-separated ok)
 - `--alias` (repeatable)
+- `--link` (repeatable; adds frontmatter `links`)
+- `--related` (repeatable; appends `Related: [[...]]` line)
 - `--scope` (repeatable)
 - `--command` (shorthand for adding `--scope command:...`)
 - `--visibility` shared|personal|ephemeral
@@ -181,6 +184,8 @@ Metadata flags:
 - `--title`
 - `--tag` / `--remove-tag` / `--clear-tags`
 - `--alias` / `--remove-alias` / `--clear-aliases`
+- `--link` / `--remove-link` / `--clear-links`
+- `--related` (append a `Related: [[...]]` line)
 - `--scope` / `--remove-scope` / `--clear-scopes`
 - `--command` (shorthand for adding `--scope command:...`)
 - `--visibility` shared|personal|ephemeral (moves file)
@@ -202,6 +207,11 @@ loom memory edit retry-behavior --visibility personal
 
 Recall notes with FTS + filters. Default output is JSON.
 
+Aliases:
+
+- `loom memory get` -> `loom memory recall`
+- `loom memory remember` -> `loom memory recall`
+
 Key flags:
 
 - `--limit` (default 8)
@@ -211,7 +221,10 @@ Key flags:
 - `--visibility` (repeatable; default shared)
 - `--include-deprecated`
 - `--since` (RFC3339 or YYYY-MM-DD)
+- `--until` (RFC3339 or YYYY-MM-DD)
 - `--and` (AND semantics for multiple tag/scope filters)
+- `--or` (OR semantics between query tokens; default AND)
+- `--fts-raw` (treat the query as a raw SQLite FTS expression)
 - `--scoped-only` (drop unscoped notes when scope filters exist)
 - `--full` (include body with size cap)
 - `--max-body-chars` (default 800; 4000 when `--context`)
@@ -227,6 +240,83 @@ loom memory recall "timeout" --tag infra --tag retries --and
 loom memory recall "api" --not-tag deprecated
 loom memory recall "foo" --since 2025-01-01
 loom memory recall --tag onboarding --visibility shared --visibility personal
+loom memory get "retri"  # prefix matching by default
+```
+
+### list
+
+List recent notes (temporal browse; no query required).
+
+Aliases:
+
+- `loom memory ls` -> `loom memory list`
+- `loom memory recent` -> `loom memory list`
+
+Examples:
+
+```
+loom memory list
+loom memory list --tag infra --limit 50
+loom memory list --since 2026-02-01 --until 2026-02-09
+```
+
+### show
+
+Show a note's markdown (or just its YAML frontmatter).
+
+```
+loom memory show retry-behavior
+loom memory show retry-behavior --meta
+```
+
+### open
+
+Open a note in your editor.
+
+```
+loom memory open retry-behavior
+```
+
+### forget
+
+Forget notes. Default is soft-forget by setting `status=deprecated` (hidden from default recall/list).
+
+Alias:
+
+- `loom memory archive` -> `loom memory forget`
+
+Safety:
+
+- Requires a query or at least one filter.
+- Default is dry-run; use `--apply` to make changes.
+
+Examples:
+
+```
+loom memory forget --tag legacy
+loom memory forget --tag legacy --apply
+loom memory forget "outdated auth" --apply
+loom memory forget --since 2025-01-01 --apply
+loom memory forget --tag secrets --hard --apply
+```
+
+### around
+
+Show notes created/updated near another note (temporal edges).
+
+```
+loom memory around retry-behavior
+loom memory around retry-behavior --by created --k 20 --window-days 7
+```
+
+### timeline
+
+Browse recent notes grouped by day.
+
+```
+loom memory timeline
+loom memory timeline --days 14
+loom memory timeline --by created
 ```
 
 Context packs (text output):

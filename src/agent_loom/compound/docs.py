@@ -66,6 +66,7 @@ This block is maintained by the compound system.
 - Use Loom memory intentionally:
   - At the start of a task, recall relevant context (prefer `loom memory recall ... --context --format prompt`).
   - When you learn something reusable, persist a scoped note (prefer `command:` / `file:` scopes).
+  - When a note references another concept, add a wikilink like `[[note-id]]` so the graph emerges.
 
 **Where things live:**
 - Boundary: `.loom/**` is Loom-owned durable evidence + compiled state; `.opencode/**` is OpenCode integration + runtime artifacts (including skills).

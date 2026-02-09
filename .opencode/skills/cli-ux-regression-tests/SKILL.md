@@ -1,65 +1,55 @@
 ---
 name: cli-ux-regression-tests
-description: Procedure for adding stable, high-signal CLI UX regression tests (stdout/stderr/exit codes) without making brittle assertions.
+description: Write stable, high-signal CLI UX regression tests (stdout/stderr/exit codes) without brittle snapshots.
 license: MIT
 compatibility: opencode,claude
 metadata:
-  created_at: "2026-02-09T04:40:42.182303Z"
-  source_episode_ids: "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8"
-  source_instinct_ids: "cli-ux-regression-tests,deterministic-cli-output"
+  created_at: "2026-02-09T05:53:52.854764Z"
+  source_episode_ids: "3a041417a4e53b44eba76c7207d0fd7913dd9b5f79cc33443de6f61afaa9dad8,bff9823012420bd7cf1a60643401fd63d759d5e9f72788820421fceb2a78cf42"
+  source_instinct_ids: "cli-ux-regression-tests,deterministic-cli-output,cli-changes-require-ux-regression-tests"
   tags: "cli,pytest,testing,ux"
-  updated_at: "2026-02-09T04:40:42.182303Z"
-  version: "1"
+  updated_at: "2026-02-09T05:53:52.854764Z"
+  version: "2"
 ---
 <!-- BEGIN:compound:skill-managed -->
 # CLI UX Regression Tests
 
-Use this when you change CLI output/flags/errors and want durable regression coverage.
+## When to use
+- You changed a CLI command's output, flags, exit codes, error messages, or argument validation.
+- You fixed a bug that users would experience via CLI.
 
 ## Procedure
+1. Pick the smallest UX contract to lock in:
+   - `returncode` (always)
+   - a couple of stable substrings in `stdout` and/or `stderr`
+   - avoid asserting exact whitespace, alignment, or full multi-line blocks unless the command is explicitly designed as a stable, versioned format.
+2. Add at least one failure-path test:
+   - missing file, invalid flag, invalid subcommand, or empty result
+   - assert non-zero exit code and a helpful `stderr` fragment.
+3. Prefer machine-readable modes when available:
+   - if a command has `--json`, test semantic fields rather than free-form text.
+   - if color could be enabled, pass `NO_COLOR=1` (or the project equivalent) in the test environment.
+4. Run the command in a hermetic temp workspace:
+   - use `tmp_path` for filesystem state
+   - pass an explicit `cwd=tmp_path`
+   - set environment variables explicitly (don't inherit flaky user env when avoidable).
+5. Keep assertions minimal but meaningful:
+   - assert the user-facing intent ("created", "not found", "0 results")
+   - do not assert timings, ordering of unrelated lines, or absolute paths unless the path itself is the feature.
 
-1. Pick the narrowest invocation surface.
-   - If the CLI is built on Typer/Click: use the framework test runner.
-   - If the CLI is a thin wrapper over Python functions: call the function directly and capture output.
+## Implementation template (pytest)
+- Use `subprocess.run([...], text=True, capture_output=True)` with `check=False`.
+- Assert:
+  - `proc.returncode == 0` for success, `!= 0` for failure
+  - `"expected fragment" in proc.stdout` or `proc.stderr`
 
-2. Write a focused pytest in `tests/test_<area>_ux.py`.
-   - One test per user story (e.g. `ticket show`, `ticket update`, invalid args).
-   - Assert `exit_code`, `stdout`, `stderr`.
+## File placement
+- Put tests in `tests/test_*_cli_ux.py` (or extend an existing UX test module for that subsystem).
 
-3. Assert *stable* strings.
-   - Prefer exact multi-line output comparisons using `textwrap.dedent`.
-   - Avoid asserting volatile data (timestamps, temp paths, random IDs). If unavoidable, control/freeze it.
-
-4. Keep formatting expectations intentional.
-   - Cover newline behavior (exact output, trailing newline).
-   - Cover ordering (sorted lists) if multiple items are printed.
-
-5. Run the smallest loop first.
-   - `uv run pytest -k ux`
-
-## Framework runners (choose one)
-
-Typer:
-
-```python
-from typer.testing import CliRunner
-
-runner = CliRunner()
-result = runner.invoke(app, ["ticket", "show", "..."])
-assert result.exit_code == 0
-assert result.stdout == "...\n"
-```
-
-Click:
-
-```python
-from click.testing import CliRunner
-
-runner = CliRunner()
-result = runner.invoke(cli, ["ticket", "show", "..."])
-assert result.exit_code == 0
-assert result.output == "...\n"
-```
+## Review checklist
+- Would this test still pass if help text formatting changes slightly?
+- Does the test fail with a useful diff when behavior regresses?
+- Does the test avoid coupling to the developer machine (paths, locale, shell config)?
 <!-- END:compound:skill-managed -->
 
 ## Manual notes

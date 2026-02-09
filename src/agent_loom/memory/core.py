@@ -47,6 +47,7 @@ from agent_loom.memory.constants import (
 )
 from agent_loom.memory.errors import MemoryError
 from agent_loom.memory.frontmatter import (
+    dump_yaml_frontmatter,
     split_yaml_frontmatter,
 )
 from agent_loom.memory.index import (
@@ -81,8 +82,12 @@ from agent_loom.memory.models import (
     ReindexResult,
     VaultPaths,
 )
+from agent_loom.memory.recall import around_notes as around_impl
+from agent_loom.memory.recall import default_visibility_from_env
+from agent_loom.memory.recall import list_notes as list_impl
 from agent_loom.memory.recall import parse_multi_csvish
 from agent_loom.memory.recall import recall as recall_impl
+from agent_loom.memory.recall import timeline as timeline_impl
 from agent_loom.memory.scopes import (
     _validate_tags,
     normalize_scopes,
@@ -266,6 +271,8 @@ def add(
     status: str = "active",
     tag: Optional[Sequence[str]] = None,
     alias: Optional[Sequence[str]] = None,
+    link: Optional[Sequence[str]] = None,
+    related: Optional[Sequence[str]] = None,
     scope: Optional[Sequence[str]] = None,
     command: Optional[str] = None,
     allow_missing_scopes: bool = False,
@@ -320,6 +327,18 @@ def add(
     elif bool(interactive):
         body_text = edit_text_in_editor(initial="")
 
+    related_items = [
+        s.strip()
+        for s in parse_multi_csvish(list(related) if related else None)
+        if s.strip()
+    ]
+    if related_items:
+        rel_line = "Related: " + " ".join([f"[[{x}]]" for x in related_items])
+        if body_text.strip():
+            body_text = body_text.rstrip() + "\n\n" + rel_line + "\n"
+        else:
+            body_text = rel_line + "\n"
+
     if not title:
         # Derive from first non-empty line of body (strip leading markdown heading).
         for ln in (body_text or "").splitlines():
@@ -371,6 +390,13 @@ def add(
     created_at = now_iso()
     updated_at = created_at
 
+    link_items = [
+        s.strip() for s in parse_multi_csvish(list(link) if link else None) if s.strip()
+    ]
+    fm_extra: Dict[str, Any] = {}
+    if link_items:
+        fm_extra["links"] = link_items
+
     p = write_note_file(
         vp,
         note_id=note_id,
@@ -384,6 +410,7 @@ def add(
         created_at=created_at,
         updated_at=updated_at,
         folder=folder or "",
+        frontmatter_extra=fm_extra or None,
     )
 
     links_info = compute_link_diagnostics(vp, note_id)
@@ -410,6 +437,10 @@ def edit(
     alias: Optional[Sequence[str]] = None,
     remove_alias: Optional[Sequence[str]] = None,
     clear_aliases: bool = False,
+    link: Optional[Sequence[str]] = None,
+    remove_link: Optional[Sequence[str]] = None,
+    clear_links: bool = False,
+    related: Optional[Sequence[str]] = None,
     scope: Optional[Sequence[str]] = None,
     command: Optional[str] = None,
     remove_scope: Optional[Sequence[str]] = None,
@@ -442,6 +473,18 @@ def edit(
     body_append: Optional[str] = None
     if append is not None:
         body_append = str(append)
+
+    related_items = [
+        s.strip()
+        for s in parse_multi_csvish(list(related) if related else None)
+        if s.strip()
+    ]
+    if related_items:
+        rel_line = "Related: " + " ".join([f"[[{x}]]" for x in related_items])
+        if body_append is not None:
+            body_append = body_append.rstrip() + "\n\n" + rel_line
+        else:
+            body_append = rel_line
 
     if bool(interactive):
         open_in_editor(p)
@@ -520,6 +563,42 @@ def edit(
     ]
     if clear_aliases:
         fm.pop("aliases", None)
+        changed = True
+
+    # Frontmatter link operations
+    add_links = [
+        s.strip() for s in parse_multi_csvish(list(link) if link else None) if s.strip()
+    ]
+    remove_links = [
+        s.strip()
+        for s in parse_multi_csvish(list(remove_link) if remove_link else None)
+        if s.strip()
+    ]
+    if clear_links:
+        fm.pop("links", None)
+        changed = True
+    if add_links or remove_links:
+        cur_links = fm.get("links")
+        if isinstance(cur_links, str):
+            cur = [x.strip() for x in cur_links.split(",") if x.strip()]
+        elif isinstance(cur_links, list):
+            cur = [str(x).strip() for x in cur_links if str(x).strip()]
+        else:
+            cur = []
+
+        seen_norm = {
+            str(x).strip().casefold(): str(x).strip() for x in cur if str(x).strip()
+        }
+        for x in add_links:
+            seen_norm.setdefault(x.casefold(), x)
+        for x in remove_links:
+            seen_norm.pop(x.casefold(), None)
+
+        new_links = list(seen_norm.values())
+        if new_links:
+            fm["links"] = new_links
+        else:
+            fm.pop("links", None)
         changed = True
     if add_aliases or remove_aliases:
         cur = fm.get("aliases") or []
@@ -720,6 +799,7 @@ def recall(
     visibility: Optional[Sequence[str]] = None,
     include_deprecated: bool = False,
     since: Optional[str] = None,
+    until: Optional[str] = None,
     and_mode: bool = False,
     scoped_only: bool = False,
     full: bool = False,
@@ -731,6 +811,8 @@ def recall(
     quiet: bool = False,
     allow_missing_scopes: bool = False,
     format: str = "json",
+    or_mode: bool = False,
+    fts_raw: bool = False,
 ) -> RecallResult:
     vp = _vault_paths_for(vault)
     raw, warnings = recall_impl(
@@ -745,6 +827,7 @@ def recall(
         visibility=list(visibility) if visibility else None,
         include_deprecated=include_deprecated,
         since=since,
+        until=until,
         and_mode=and_mode,
         scoped_only=scoped_only,
         full=full,
@@ -756,11 +839,300 @@ def recall(
         quiet=quiet,
         allow_missing_scopes=allow_missing_scopes,
         format=format,
+        or_mode=bool(or_mode),
+        fts_raw=bool(fts_raw),
     )
     if isinstance(raw, str):
         return RecallResult(items=[], context_text=raw, warnings=warnings)
     items = [_recall_item_from_dict(it) for it in (raw or [])]
     return RecallResult(items=items, context_text="", warnings=warnings)
+
+
+def list_recent(
+    *,
+    vault: Optional[str] = None,
+    limit: int = 20,
+    tag: Optional[Sequence[str]] = None,
+    not_tag: Optional[Sequence[str]] = None,
+    scope: Optional[Sequence[str]] = None,
+    not_scope: Optional[Sequence[str]] = None,
+    command: str = "",
+    visibility: Optional[Sequence[str]] = None,
+    include_deprecated: bool = False,
+    since: Optional[str] = None,
+    until: Optional[str] = None,
+    and_mode: bool = False,
+    scoped_only: bool = False,
+    deterministic: bool = False,
+    quiet: bool = False,
+    allow_missing_scopes: bool = False,
+    sort: str = "updated",
+) -> RecallResult:
+    vp = _vault_paths_for(vault)
+
+    cwd = Path.cwd()
+    repo_root = git_repo_root(cwd)
+    tags = _validate_tags(parse_multi_csvish(list(tag) if tag else None))
+    not_tags = _validate_tags(parse_multi_csvish(list(not_tag) if not_tag else None))
+
+    scope_args = parse_multi_csvish(list(scope) if scope else None)
+    if command:
+        scope_args.append(f"command:{command}")
+    ctx_scopes = [parse_scope_string(s, repo_root=repo_root) for s in scope_args]
+    validate_file_scopes_exist(
+        ctx_scopes,
+        repo_root=repo_root,
+        cwd=cwd,
+        allow_missing=bool(allow_missing_scopes),
+    )
+
+    not_scope_args = parse_multi_csvish(list(not_scope) if not_scope else None)
+    not_ctx_scopes = (
+        [parse_scope_string(s, repo_root=repo_root) for s in not_scope_args]
+        if not_scope_args
+        else []
+    )
+
+    vis = list(visibility) if visibility else default_visibility_from_env()
+
+    raw, warnings = list_impl(
+        vp,
+        limit=int(limit),
+        tags=tags,
+        not_tags=not_tags,
+        ctx_scopes=ctx_scopes,
+        not_ctx_scopes=not_ctx_scopes,
+        visibility=vis,
+        include_deprecated=bool(include_deprecated),
+        since=since,
+        until=until,
+        and_mode=bool(and_mode),
+        scoped_only=bool(scoped_only),
+        deterministic=bool(deterministic),
+        quiet=bool(quiet),
+        sort=str(sort or "updated"),
+    )
+    items = [_recall_item_from_dict(it) for it in (raw or [])]
+    return RecallResult(items=items, context_text="", warnings=warnings)
+
+
+def show(
+    *,
+    vault: Optional[str] = None,
+    note_id: str,
+    meta_only: bool = False,
+) -> str:
+    vp = _vault_paths_for(vault)
+    init_vault(vp, cwd=Path.cwd())
+    p = find_note_path(vp, note_id.strip())
+    raw = p.read_text("utf-8", errors="replace")
+    if not meta_only:
+        return raw.rstrip() + "\n"
+    fm, _body = split_yaml_frontmatter(raw)
+    if not fm:
+        return ""
+    return dump_yaml_frontmatter(fm).rstrip() + "\n"
+
+
+def open_note(*, vault: Optional[str] = None, note_id: str) -> str:
+    vp = _vault_paths_for(vault)
+    init_vault(vp, cwd=Path.cwd())
+    p = find_note_path(vp, note_id.strip())
+    open_in_editor(p)
+    return note_rel_path(vp, p)
+
+
+def forget(
+    *,
+    vault: Optional[str] = None,
+    query: str = "",
+    limit: int = 50,
+    tag: Optional[Sequence[str]] = None,
+    not_tag: Optional[Sequence[str]] = None,
+    scope: Optional[Sequence[str]] = None,
+    not_scope: Optional[Sequence[str]] = None,
+    command: str = "",
+    visibility: Optional[Sequence[str]] = None,
+    include_deprecated: bool = False,
+    since: Optional[str] = None,
+    until: Optional[str] = None,
+    and_mode: bool = False,
+    scoped_only: bool = False,
+    deterministic: bool = False,
+    quiet: bool = False,
+    allow_missing_scopes: bool = False,
+    or_mode: bool = False,
+    fts_raw: bool = False,
+    apply: bool = False,
+    hard: bool = False,
+) -> Dict[str, Any]:
+    vp = _vault_paths_for(vault)
+    init_vault(vp, cwd=Path.cwd())
+
+    if (
+        not (query or "").strip()
+        and not (tag or [])
+        and not (scope or [])
+        and not (command or "").strip()
+        and not (since or "").strip()
+        and not (until or "").strip()
+    ):
+        raise MemoryError(
+            "forget requires a query or at least one filter",
+            code="ARG",
+            exit_code=2,
+            hint="Provide a query/tag/scope/command/time window so forget is intentional.",
+            suggestions=[
+                "loom memory forget 'query'",
+                "loom memory forget --tag <tag>",
+                "loom memory forget --scope file:src/app.py",
+                "loom memory forget --command 'pytest -q'",
+                "loom memory forget --since 2026-02-01",
+            ],
+        )
+
+    res = recall(
+        vault=vault,
+        query=query,
+        limit=int(limit),
+        tag=tag,
+        not_tag=not_tag,
+        scope=scope,
+        not_scope=not_scope,
+        command=command,
+        visibility=visibility,
+        include_deprecated=include_deprecated,
+        since=since,
+        until=until,
+        and_mode=and_mode,
+        scoped_only=scoped_only,
+        full=False,
+        deterministic=bool(deterministic),
+        quiet=bool(quiet),
+        allow_missing_scopes=bool(allow_missing_scopes),
+        format="json",
+        or_mode=bool(or_mode),
+        fts_raw=bool(fts_raw),
+    )
+
+    candidates = [
+        {
+            "id": it.id,
+            "title": it.title,
+            "path": it.path,
+            "visibility": it.visibility,
+            "status": it.status,
+            "updated_at": it.updated_at,
+        }
+        for it in res.items
+    ]
+
+    if hard and not apply:
+        raise MemoryError(
+            "forget --hard requires --apply",
+            code="ARG",
+            exit_code=2,
+            hint="Run with --apply to perform hard deletes.",
+            suggestions=["loom memory forget <filters> --hard --apply"],
+        )
+
+    if not apply:
+        return {
+            "ok": True,
+            "dry_run": True,
+            "hard": bool(hard),
+            "count": len(candidates),
+            "candidates": candidates,
+        }
+
+    changed: List[Dict[str, Any]] = []
+    deleted: List[Dict[str, Any]] = []
+
+    if hard:
+        for c in candidates:
+            nid = str(c.get("id") or "").strip()
+            if not nid:
+                continue
+            p = find_note_path(vp, nid)
+            with contextlib.suppress(Exception):
+                p.unlink()
+                deleted.append({"id": nid, "path": note_rel_path(vp, p)})
+        with connect_db(vp) as conn:
+            sync_index(vp, conn, quiet=bool(quiet))
+        return {
+            "ok": True,
+            "dry_run": False,
+            "hard": True,
+            "deleted": deleted,
+            "deleted_count": len(deleted),
+        }
+
+    for c in candidates:
+        nid = str(c.get("id") or "").strip()
+        if not nid:
+            continue
+        er = edit(
+            vault=vault,
+            note_id=nid,
+            status="deprecated",
+        )
+        changed.append({"id": nid, "path": er.path, "updated": er.updated})
+
+    return {
+        "ok": True,
+        "dry_run": False,
+        "hard": False,
+        "deprecated": changed,
+        "deprecated_count": len(changed),
+    }
+
+
+def around(
+    *,
+    vault: Optional[str] = None,
+    note_id: str,
+    k: int = 12,
+    by: str = "updated",
+    window_days: int = 14,
+    visibility: Optional[Sequence[str]] = None,
+    include_deprecated: bool = False,
+    quiet: bool = False,
+) -> Dict[str, Any]:
+    vp = _vault_paths_for(vault)
+    vis = list(visibility) if visibility else default_visibility_from_env()
+    items, warnings = around_impl(
+        vp,
+        note_id=note_id,
+        k=int(k),
+        by=str(by or "updated"),
+        window_days=int(window_days),
+        visibility=vis,
+        include_deprecated=bool(include_deprecated),
+        quiet=bool(quiet),
+    )
+    return {"ok": True, "items": items, "warnings": warnings}
+
+
+def timeline(
+    *,
+    vault: Optional[str] = None,
+    days: int = 30,
+    by: str = "updated",
+    visibility: Optional[Sequence[str]] = None,
+    include_deprecated: bool = False,
+    quiet: bool = False,
+) -> Dict[str, Any]:
+    vp = _vault_paths_for(vault)
+    vis = list(visibility) if visibility else default_visibility_from_env()
+    items, warnings = timeline_impl(
+        vp,
+        days=int(days),
+        by=str(by or "updated"),
+        visibility=vis,
+        include_deprecated=bool(include_deprecated),
+        quiet=bool(quiet),
+    )
+    return {"ok": True, "items": items, "warnings": warnings}
 
 
 def _collect_stale_file_scopes(

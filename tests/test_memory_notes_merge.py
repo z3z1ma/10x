@@ -61,7 +61,7 @@ class TestVisibilityMoves(unittest.TestCase):
                 ]
             )
 
-            # Default recall only includes shared.
+            # Default recall includes shared+personal.
             out = _run(
                 [
                     "--vault",
@@ -75,7 +75,26 @@ class TestVisibilityMoves(unittest.TestCase):
                     "--deterministic",
                 ]
             )
-            self.assertEqual(json.loads(out), [])
+            res = json.loads(out)
+            self.assertEqual([r["id"] for r in res], ["secret"])
+
+            # Explicitly restrict to shared to hide personal notes.
+            out_shared = _run(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "recall",
+                    "sensitive",
+                    "--limit",
+                    "10",
+                    "--visibility",
+                    "shared",
+                    "--deterministic",
+                ]
+            )
+            self.assertEqual(json.loads(out_shared), [])
 
             out2 = _run(
                 [

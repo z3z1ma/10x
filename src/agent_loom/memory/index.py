@@ -155,13 +155,21 @@ def db_init(conn: sqlite3.Connection) -> Dict[str, Any]:
 
 
 def db_upsert_note_fts(
-    conn: sqlite3.Connection, note_id: str, title: str, body: str, tags: List[str]
+    conn: sqlite3.Connection,
+    note_id: str,
+    title: str,
+    body: str,
+    tags: List[str],
+    aliases: List[str],
 ) -> None:
     try:
         conn.execute("DELETE FROM notes_fts WHERE id=?;", (note_id,))
+        fts_tags = list(tags or []) + [
+            a for a in (aliases or []) if str(a or "").strip()
+        ]
         conn.execute(
             "INSERT INTO notes_fts (id, title, body, tags) VALUES (?, ?, ?, ?);",
-            (note_id, title or "", body or "", ",".join(tags or [])),
+            (note_id, title or "", body or "", ",".join(fts_tags)),
         )
     except sqlite3.OperationalError:
         return
@@ -605,7 +613,9 @@ def sync_index(
             ],
         )
 
-        db_upsert_note_fts(conn, note.id, note.title, note.body, note.tags)
+        db_upsert_note_fts(
+            conn, note.id, note.title, note.body, note.tags, note.aliases
+        )
         updated += 1
 
     deleted = 0

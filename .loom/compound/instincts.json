@@ -72,6 +72,30 @@
       ]
     },
     {
+      "id": "cli-changes-require-ux-regression-tests",
+      "title": "Add CLI UX tests alongside CLI behavior changes",
+      "trigger": "When changing CLI output, exit codes, error handling, or flags for any loom subcommand (especially user-facing UX paths).",
+      "action": "Add or update a focused pytest UX regression test that asserts exit code + the most stable stdout/stderr fragments (avoid brittle full-output snapshots), and include at least one negative case (bad args, missing resource, etc.).",
+      "tags": [
+        "cli",
+        "regression",
+        "testing",
+        "ux"
+      ],
+      "confidence": 0.74,
+      "status": "active",
+      "created_at": "2026-02-09T05:53:52.854764Z",
+      "updated_at": "2026-02-09T05:53:52.854764Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T05:53:52.854764Z",
+          "episode_id": "bff9823012420bd7cf1a60643401fd63d759d5e9f72788820421fceb2a78cf42",
+          "head_sha": "1018c233ca213cd0b298cc539d660cab64741147",
+          "patch_sha256": "3ebc4a1ffb2cacacaa6879b1adb1ca0a6d3a888a2d46ed9d85054c592c1ca6be"
+        }
+      ]
+    },
+    {
       "id": "cli-ux-change-needs-tests",
       "title": "CLI UX Changes Need Targeted UX Tests",
       "trigger": "When modifying CLI output, help text, defaults, or command structure",
@@ -333,6 +357,30 @@
       ]
     },
     {
+      "id": "memory-feature-docs-coevolve",
+      "title": "Memory feature changes should co-evolve with README",
+      "trigger": "When adding/changing Loom Memory behavior (notes merge, recall, indexing, CLI surface area).",
+      "action": "Update `src/agent_loom/memory/README.md` to reflect the new behavior and examples, and ensure the docs match the CLI UX tests (examples should be testable expectations, not aspirational).",
+      "tags": [
+        "cli",
+        "consistency",
+        "docs",
+        "memory"
+      ],
+      "confidence": 0.7,
+      "status": "active",
+      "created_at": "2026-02-09T05:53:52.854764Z",
+      "updated_at": "2026-02-09T05:53:52.854764Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T05:53:52.854764Z",
+          "episode_id": "bff9823012420bd7cf1a60643401fd63d759d5e9f72788820421fceb2a78cf42",
+          "head_sha": "1018c233ca213cd0b298cc539d660cab64741147",
+          "patch_sha256": "3ebc4a1ffb2cacacaa6879b1adb1ca0a6d3a888a2d46ed9d85054c592c1ca6be"
+        }
+      ]
+    },
+    {
       "id": "openapi-keep-spec-deterministic",
       "title": "Keep OpenAPI spec deterministic and non-generated where possible",
       "trigger": "Editing `docs/openapi.yaml` during endpoint/schema updates",
@@ -544,6 +592,30 @@
           "episode_id": "3a49e37b2714b270438b82f96000a53a401f9d577d6a7ca6976af7f4eb510cdb",
           "head_sha": "3ed17ac0cb1119ce9355d2fab7e7000e1791a59a",
           "patch_sha256": "324dc48717dad74f886f10cc65e5f70d8db467bcdd3b77b618c8ec03e14a383c"
+        }
+      ]
+    },
+    {
+      "id": "sync-compound-opencode-plugin-copies",
+      "title": "Keep compound opencode plugin copies in sync",
+      "trigger": "When editing the compound engineering opencode plugin (or any distributed opencode settings) and you notice there is both a repo-local copy and a distributed copy under src/",
+      "action": "Make the exact same change in both `.opencode/plugins/compound_engineering.ts` and `src/agent_loom/compound/opencode/plugins/compound_engineering.ts`, and sanity-check diffs so they only diverge when intentionally versioned.",
+      "tags": [
+        "compound",
+        "distribution",
+        "drift-prevention",
+        "opencode"
+      ],
+      "confidence": 0.78,
+      "status": "active",
+      "created_at": "2026-02-09T05:53:52.854764Z",
+      "updated_at": "2026-02-09T05:53:52.854764Z",
+      "evidence": [
+        {
+          "ts": "2026-02-09T05:53:52.854764Z",
+          "episode_id": "bff9823012420bd7cf1a60643401fd63d759d5e9f72788820421fceb2a78cf42",
+          "head_sha": "1018c233ca213cd0b298cc539d660cab64741147",
+          "patch_sha256": "3ebc4a1ffb2cacacaa6879b1adb1ca0a6d3a888a2d46ed9d85054c592c1ca6be"
         }
       ]
     },

@@ -57,6 +57,48 @@ class TestMemoryCliUx(unittest.TestCase):
         args = memory_cli_mod.build_parser().parse_args(norm)
         self.assertEqual(str(getattr(args, "command", "") or ""), "uv run pytest")
 
+    def test_recall_alias_parses(self) -> None:
+        args = memory_cli_mod.build_parser().parse_args(["get", "hello"])
+        self.assertEqual(str(getattr(args, "cmd", "") or ""), "get")
+
+    def test_empty_recall_returns_recent(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            vault = Path(td) / ".loom" / "memory"
+            rc0, payload0 = _run_json(["--vault", str(vault), "init"])
+            self.assertEqual(rc0, 0)
+            self.assertTrue(payload0.get("ok"))
+
+            rc1, payload1 = _run_json(
+                [
+                    "--vault",
+                    str(vault),
+                    "add",
+                    "--title",
+                    "Hello",
+                    "--body",
+                    "Body",
+                ]
+            )
+            self.assertEqual(rc1, 0)
+            self.assertTrue(payload1.get("ok"))
+
+            rc2, payload2 = _run_json(["--vault", str(vault), "recall", ""])
+            self.assertEqual(rc2, 0)
+            self.assertIsInstance(payload2, list)
+            self.assertTrue(any(str(x.get("title") or "") == "Hello" for x in payload2))
+
+    def test_forget_requires_filter(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            vault = Path(td) / ".loom" / "memory"
+            rc0, payload0 = _run_json(["--vault", str(vault), "init"])
+            self.assertEqual(rc0, 0)
+            self.assertTrue(payload0.get("ok"))
+
+            rc, payload = _run_json(["--vault", str(vault), "forget"])
+            self.assertEqual(rc, 2)
+            self.assertFalse(payload.get("ok"))
+            self.assertEqual(payload.get("code"), "ARG")
+
     def test_link_validate_positional_id_rewrites(self) -> None:
         norm = memory_cli_mod._normalize_argv(["link", "validate", "abc"])
         args = memory_cli_mod.build_parser().parse_args(norm)

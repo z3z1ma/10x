@@ -36,12 +36,18 @@
 - **refactor-delete-module-chase-imports** (78%) [maintenance, python, refactor]
   - Trigger: A refactor removes/renames modules (large deletions or package reshapes)
   - Action: Search for old module names and key symbols (e.g. with ripgrep/grep), update imports, docs, and tests together; ensure no dead entrypoints remain.
+- **sync-compound-opencode-plugin-copies** (78%) [compound, distribution, drift-prevention, opencode]
+  - Trigger: When editing the compound engineering opencode plugin (or any distributed opencode settings) and you notice there is both a repo-local copy and a distributed copy under src/
+  - Action: Make the exact same change in both `.opencode/plugins/compound_engineering.ts` and `src/agent_loom/compound/opencode/plugins/compound_engineering.ts`, and sanity-check diffs so they only diverge when ...
 - **template-docs-use-root-relative-paths** (78%) [compound, docs, portability]
   - Trigger: When editing README/docs content that will be scaffolded into a repo (e.g., src/agent_loom/compound/opencode/README.md, src/agent_loom/compound/opencode/.loom/compound/README.md, `.opencode/commands/*...
   - Action: Write links and references using repo-root-relative paths (no absolute machine paths, no editor URIs) and avoid references to removed/retired template files (e.g., AGENTS.md copies) to keep docs porta...
 - **keep-openapi-and-ui-in-sync** (76%) [api, contract, dashboard, openapi]
   - Trigger: When changing server routes, request/response shapes, or endpoint behavior
   - Action: Update `docs/openapi.yaml` in the same change and verify any dashboard readers/clients that depend on those endpoints still work; treat schema drift as a bug.
+- **cli-changes-require-ux-regression-tests** (74%) [cli, regression, testing, ux]
+  - Trigger: When changing CLI output, exit codes, error handling, or flags for any loom subcommand (especially user-facing UX paths).
+  - Action: Add or update a focused pytest UX regression test that asserts exit code + the most stable stdout/stderr fragments (avoid brittle full-output snapshots), and include at least one negative case (bad ar...
 - **cli-ux-change-needs-tests** (74%) [cli, regression, tests, ux]
   - Trigger: When modifying CLI output, help text, defaults, or command structure
   - Action: Update/extend UX-focused tests to lock in the intended ergonomics and prevent regressions; avoid untested copy changes that silently degrade UX.
@@ -63,6 +69,9 @@
 - **greenfield-no-backcompat-language** (70%) [design, docs, product]
   - Trigger: Writing docs, flags, deprecations, or migration behaviors in early-stage systems
   - Action: Prefer clean breaks and simple interfaces; remove/avoid 'backcompat' language unless there is a real external user contract that requires it.
+- **memory-feature-docs-coevolve** (70%) [cli, consistency, docs, memory]
+  - Trigger: When adding/changing Loom Memory behavior (notes merge, recall, indexing, CLI surface area).
+  - Action: Update `src/agent_loom/memory/README.md` to reflect the new behavior and examples, and ensure the docs match the CLI UX tests (examples should be testable expectations, not aspirational).
 - **prefer-ux-tests-over-broad-internals** (70%) [cli, maintainability, testing]
   - Trigger: When adding tests for command behavior
   - Action: Test through the CLI boundary (command invocation) rather than deep internal functions; assert the minimal observable behavior that matters (selected lines, not full dumps).

@@ -3,6 +3,7 @@ from __future__ import annotations
 import contextlib
 import datetime as dt
 import json
+import os
 import re
 import sqlite3
 from pathlib import Path
@@ -65,6 +66,36 @@ def parse_since(since: Optional[str]) -> Optional[str]:
     if re.match(r"^\d{4}-\d{2}-\d{2}$", s):
         s = s + "T00:00:00Z"
     return canonicalize_rfc3339_utc(s)
+
+
+def parse_until(until: Optional[str]) -> Optional[str]:
+    if not until:
+        return None
+    s = until.strip()
+    if not s:
+        return None
+    if re.match(r"^\d{4}-\d{2}-\d{2}$", s):
+        # End of day.
+        s = s + "T23:59:59Z"
+    return canonicalize_rfc3339_utc(s)
+
+
+def default_visibility_from_env() -> List[str]:
+    raw = str(os.environ.get("MEMORY_DEFAULT_VISIBILITY") or "").strip()
+    if raw:
+        parts = [p.strip().lower() for p in raw.split(",") if p.strip()]
+        out = [p for p in parts if p in ("shared", "personal", "ephemeral")]
+        return out or ["shared", "personal"]
+    return ["shared", "personal"]
+
+
+def build_safe_fts_query(q: str, *, or_mode: bool) -> str:
+    toks = [t for t in RE_WORD.findall(q or "") if t]
+    if not toks:
+        return ""
+    # Prefix matching makes recall tolerant to partial tokens.
+    joined = (" OR " if or_mode else " AND ").join([f"{t}*" for t in toks])
+    return joined
 
 
 def parse_context_scopes(
@@ -131,6 +162,7 @@ def recall_notes(
     visibility: List[str],
     include_deprecated: bool,
     since: Optional[str],
+    until: Optional[str],
     and_mode: bool,
     scoped_only: bool,
     include_body: bool,
@@ -138,6 +170,8 @@ def recall_notes(
     expand: int,
     deterministic: bool,
     quiet: bool,
+    or_mode: bool,
+    fts_raw: bool,
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     q = (query or "").strip()
     if limit <= 0:
@@ -147,6 +181,7 @@ def recall_notes(
         return ([], [])
 
     since_s = parse_since(since)
+    until_s = parse_until(until)
 
     with connect_db(vp) as conn:
         sync_res = sync_index(vp, conn, quiet=quiet)
@@ -166,11 +201,18 @@ def recall_notes(
             where.append("n.updated_at >= ?")
             params.append(since_s)
 
+        if until_s:
+            where.append("n.updated_at <= ?")
+            params.append(until_s)
+
         rows: List[sqlite3.Row] = []
         used_fts = False
 
         if q:
             cand_limit = max(200, limit * 50)
+            safe_q = q if fts_raw else build_safe_fts_query(q, or_mode=bool(or_mode))
+            if not safe_q:
+                safe_q = fts_sanitize_query(q)
             sql = (
                 "SELECT n.*, bm25(notes_fts) AS bm25, "
                 "snippet(notes_fts, 2, '[', ']', '…', 12) AS snippet "
@@ -180,13 +222,14 @@ def recall_notes(
                 + " ORDER BY bm25 ASC, n.updated_at DESC, n.id ASC LIMIT ?;"
             )
             try:
-                rows = conn.execute(sql, [q, *params, cand_limit]).fetchall()
+                rows = conn.execute(sql, [safe_q, *params, cand_limit]).fetchall()
                 used_fts = True
             except sqlite3.OperationalError:
-                sq = fts_sanitize_query(q)
-                if sq:
+                # Fallback: drop to a sanitized AND-join.
+                sq2 = fts_sanitize_query(q)
+                if sq2:
                     with contextlib.suppress(sqlite3.OperationalError):
-                        rows = conn.execute(sql, [sq, *params, cand_limit]).fetchall()
+                        rows = conn.execute(sql, [sq2, *params, cand_limit]).fetchall()
                         used_fts = True
 
         if not q or not used_fts:
@@ -350,7 +393,309 @@ def recall_notes(
                         body = body[: max(0, max_body_chars - 3)] + "..."
                     by_id[nid]["body"] = body
 
-        return (hits, warnings)
+    return (hits, warnings)
+
+
+def list_notes(
+    vp: VaultPaths,
+    *,
+    limit: int,
+    tags: List[str],
+    not_tags: List[str],
+    ctx_scopes: List[Dict[str, Any]],
+    not_ctx_scopes: List[Dict[str, Any]],
+    visibility: List[str],
+    include_deprecated: bool,
+    since: Optional[str],
+    until: Optional[str],
+    and_mode: bool,
+    scoped_only: bool,
+    deterministic: bool,
+    quiet: bool,
+    sort: str,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    if limit <= 0:
+        return ([], [])
+
+    since_s = parse_since(since)
+    until_s = parse_until(until)
+    sort_key = (sort or "updated").strip().lower()
+    if sort_key not in ("updated", "created"):
+        sort_key = "updated"
+    order_col = "n.updated_at" if sort_key == "updated" else "n.created_at"
+
+    with connect_db(vp) as conn:
+        sync_res = sync_index(vp, conn, quiet=quiet)
+        warnings = list(sync_res.get("warnings") or [])
+
+        where = ["1=1"]
+        params: List[Any] = []
+
+        if visibility:
+            where.append("n.visibility IN (" + ",".join(["?"] * len(visibility)) + ")")
+            params.extend(visibility)
+
+        if not include_deprecated:
+            where.append("n.status != 'deprecated'")
+
+        if since_s:
+            where.append("n.updated_at >= ?")
+            params.append(since_s)
+        if until_s:
+            where.append("n.updated_at <= ?")
+            params.append(until_s)
+
+        # Pull a wider candidate set because tag/scope filters happen in Python.
+        cand_limit = max(500, limit * 50)
+        sql = (
+            "SELECT n.*, NULL AS bm25, NULL AS snippet FROM notes n WHERE "
+            + " AND ".join(where)
+            + f" ORDER BY {order_col} DESC, n.id ASC LIMIT ?;"
+        )
+        rows = conn.execute(sql, [*params, cand_limit]).fetchall()
+
+        out: List[Dict[str, Any]] = []
+        for r in rows:
+            note_tags = json.loads(r["tags_json"] or "[]")
+            note_scopes = json.loads(r["scopes_json"] or "[]")
+            note_aliases = json.loads(r["aliases_json"] or "[]")
+
+            ok_tags, matched_tags = tag_filter_match(
+                note_tags, want=tags, and_mode=and_mode
+            )
+            if not ok_tags:
+                continue
+            ex, excluded_tags = tag_filter_exclude(note_tags, not_tags=not_tags)
+            if ex:
+                continue
+
+            scope_score, matched_scopes = scope_matches_context(
+                note_scopes,
+                ctx_scopes=ctx_scopes,
+                and_mode=and_mode,
+            )
+            if ctx_scopes:
+                if scoped_only and scope_score <= 0:
+                    continue
+            if not_ctx_scopes:
+                neg_score, neg_matches = scope_matches_context(
+                    note_scopes, ctx_scopes=not_ctx_scopes, and_mode=False
+                )
+                if neg_score > 0:
+                    continue
+            else:
+                neg_matches = []
+
+            if deterministic:
+                rec_boost, age_days = 0.0, None
+            else:
+                rec_boost, age_days = compute_recency_boost(r["updated_at"] or "")
+
+            final = float(scope_score) + float(rec_boost)
+
+            out.append(
+                {
+                    "id": r["id"],
+                    "title": r["title"],
+                    "path": r["md_path"],
+                    "visibility": r["visibility"],
+                    "status": r["status"],
+                    "tags": note_tags,
+                    "aliases": note_aliases,
+                    "scopes": note_scopes,
+                    "created_at": r["created_at"],
+                    "updated_at": r["updated_at"],
+                    "preview": r["preview"],
+                    "score": {
+                        "final": final,
+                        "fts": 0.0,
+                        "bm25": None,
+                        "scope": scope_score,
+                        "recency": rec_boost,
+                    },
+                    "why": {
+                        "matched_tags": matched_tags,
+                        "excluded_tags": excluded_tags,
+                        "matched_scopes": matched_scopes[:20],
+                        "excluded_scopes": neg_matches[:20],
+                        "fts_snippet": None,
+                        "recency_age_days": age_days,
+                    },
+                    "role": "hit",
+                }
+            )
+
+        return (out[:limit], warnings)
+
+
+def _parse_rfc3339_utc(s: str) -> Optional[dt.datetime]:
+    try:
+        t = canonicalize_rfc3339_utc(s)
+        txt = t.replace("Z", "+00:00") if t.endswith("Z") else t
+        d = dt.datetime.fromisoformat(txt)
+        if d.tzinfo is None:
+            d = d.replace(tzinfo=dt.timezone.utc)
+        return d.astimezone(dt.timezone.utc)
+    except Exception:
+        return None
+
+
+def around_notes(
+    vp: VaultPaths,
+    *,
+    note_id: str,
+    k: int,
+    by: str,
+    window_days: int,
+    visibility: List[str],
+    include_deprecated: bool,
+    quiet: bool,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    if k <= 0:
+        return ([], [])
+    by_key = (by or "updated").strip().lower()
+    if by_key not in ("updated", "created"):
+        by_key = "updated"
+    col = "updated_at" if by_key == "updated" else "created_at"
+
+    with connect_db(vp) as conn:
+        sync_res = sync_index(vp, conn, quiet=quiet)
+        warnings = list(sync_res.get("warnings") or [])
+
+        row = conn.execute(
+            f"SELECT id, title, {col} AS ts FROM notes WHERE id=?;", (note_id,)
+        ).fetchone()
+        if not row:
+            raise MemoryError(
+                f"Note not found: {note_id}",
+                code="NOT_FOUND",
+                exit_code=2,
+                hint="Pick an existing note id.",
+                suggestions=[f"loom memory recall {note_id!r}"],
+            )
+
+        base_ts = _parse_rfc3339_utc(str(row["ts"] or ""))
+        if base_ts is None:
+            return ([], warnings)
+
+        wd = int(window_days)
+        if wd <= 0:
+            wd = 1
+        start = (base_ts - dt.timedelta(days=wd)).isoformat().replace("+00:00", "Z")
+        end = (base_ts + dt.timedelta(days=wd)).isoformat().replace("+00:00", "Z")
+
+        where = ["1=1"]
+        params: List[Any] = []
+        if visibility:
+            where.append("visibility IN (" + ",".join(["?"] * len(visibility)) + ")")
+            params.extend(visibility)
+        if not include_deprecated:
+            where.append("status != 'deprecated'")
+        where.append(f"{col} >= ?")
+        where.append(f"{col} <= ?")
+        params.extend([start, end])
+
+        cand = conn.execute(
+            f"SELECT id, title, md_path, visibility, status, tags_json, aliases_json, scopes_json, created_at, updated_at, preview, {col} AS ts FROM notes WHERE "
+            + " AND ".join(where)
+            + " ORDER BY "
+            + col
+            + " DESC, id ASC LIMIT ?;",
+            (*params, max(400, k * 80)),
+        ).fetchall()
+
+        items: List[Tuple[float, Dict[str, Any]]] = []
+        for r in cand:
+            if str(r["id"] or "") == note_id:
+                continue
+            ts = _parse_rfc3339_utc(str(r["ts"] or ""))
+            if ts is None:
+                continue
+            delta_days = abs((ts - base_ts).total_seconds()) / 86400.0
+            items.append(
+                (
+                    delta_days,
+                    {
+                        "id": r["id"],
+                        "title": r["title"],
+                        "path": r["md_path"],
+                        "visibility": r["visibility"],
+                        "status": r["status"],
+                        "tags": json.loads(r["tags_json"] or "[]"),
+                        "aliases": json.loads(r["aliases_json"] or "[]"),
+                        "scopes": json.loads(r["scopes_json"] or "[]"),
+                        "created_at": r["created_at"],
+                        "updated_at": r["updated_at"],
+                        "preview": r["preview"],
+                        "why": {"temporal_delta_days": delta_days, "by": by_key},
+                        "role": "temporal",
+                    },
+                )
+            )
+
+        items.sort(key=lambda x: x[0])
+        return ([d for _delta, d in items[:k]], warnings)
+
+
+def timeline(
+    vp: VaultPaths,
+    *,
+    days: int,
+    by: str,
+    visibility: List[str],
+    include_deprecated: bool,
+    quiet: bool,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    by_key = (by or "updated").strip().lower()
+    if by_key not in ("updated", "created"):
+        by_key = "updated"
+    col = "updated_at" if by_key == "updated" else "created_at"
+    d = int(days)
+    if d <= 0:
+        d = 1
+    since_ts = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=d)).replace(
+        microsecond=0
+    )
+    since_s = since_ts.isoformat().replace("+00:00", "Z")
+
+    with connect_db(vp) as conn:
+        sync_res = sync_index(vp, conn, quiet=quiet)
+        warnings = list(sync_res.get("warnings") or [])
+
+        where = ["1=1"]
+        params: List[Any] = []
+        if visibility:
+            where.append("visibility IN (" + ",".join(["?"] * len(visibility)) + ")")
+            params.extend(visibility)
+        if not include_deprecated:
+            where.append("status != 'deprecated'")
+        where.append(f"{col} >= ?")
+        params.append(since_s)
+
+        rows = conn.execute(
+            f"SELECT id, title, {col} AS ts FROM notes WHERE "
+            + " AND ".join(where)
+            + f" ORDER BY {col} DESC, id ASC LIMIT 5000;",
+            params,
+        ).fetchall()
+
+        buckets: Dict[str, Dict[str, Any]] = {}
+        for r in rows:
+            ts = str(r["ts"] or "")
+            day = ts[:10] if len(ts) >= 10 else ""
+            if not day:
+                continue
+            b = buckets.get(day)
+            if b is None:
+                b = {"day": day, "count": 0, "sample": []}
+                buckets[day] = b
+            b["count"] = int(b["count"]) + 1
+            if len(b["sample"]) < 5:
+                b["sample"].append({"id": r["id"], "title": r["title"]})
+
+        days_sorted = sorted(buckets.keys(), reverse=True)
+        out = [buckets[d] for d in days_sorted]
+        return (out, warnings)
 
 
 def format_scope_short(scopes: Any) -> str:
@@ -382,6 +727,7 @@ def render_context_pack(
     visibility: List[str],
     include_deprecated: bool,
     since: Optional[str],
+    until: Optional[str],
     and_mode: bool,
     scoped_only: bool,
     expand: int,
@@ -389,6 +735,8 @@ def render_context_pack(
     max_body_chars: int,
     deterministic: bool,
     quiet: bool,
+    or_mode: bool,
+    fts_raw: bool,
 ) -> Tuple[str, List[Dict[str, Any]]]:
     hits, warnings = recall_notes(
         vp,
@@ -401,6 +749,7 @@ def render_context_pack(
         visibility=visibility,
         include_deprecated=include_deprecated,
         since=since,
+        until=until,
         and_mode=and_mode,
         scoped_only=scoped_only,
         include_body=True,
@@ -408,6 +757,8 @@ def render_context_pack(
         expand=int(expand or 0),
         deterministic=deterministic,
         quiet=quiet,
+        or_mode=bool(or_mode),
+        fts_raw=bool(fts_raw),
     )
 
     if not hits:
@@ -538,6 +889,7 @@ def recall(
     visibility: Optional[List[str]] = None,
     include_deprecated: bool = False,
     since: Optional[str] = None,
+    until: Optional[str] = None,
     and_mode: bool = False,
     scoped_only: bool = False,
     full: bool = False,
@@ -549,6 +901,8 @@ def recall(
     quiet: bool = False,
     allow_missing_scopes: bool = False,
     format: str = "json",
+    or_mode: bool = False,
+    fts_raw: bool = False,
 ) -> Tuple[Any, List[Dict[str, Any]]]:
     cwd = Path.cwd()
     repo_root = git_repo_root(cwd)
@@ -574,7 +928,7 @@ def recall(
         else []
     )
 
-    visibility = visibility or ["shared"]
+    visibility = visibility or default_visibility_from_env()
 
     if context:
         if format in ("json", "jsonl"):
@@ -615,6 +969,7 @@ def recall(
             visibility=visibility,
             include_deprecated=bool(include_deprecated),
             since=since,
+            until=until,
             and_mode=bool(and_mode),
             scoped_only=bool(scoped_only),
             expand=int(expand or 0),
@@ -622,6 +977,27 @@ def recall(
             max_body_chars=max_body_chars_ctx,
             deterministic=bool(deterministic),
             quiet=bool(quiet),
+            or_mode=bool(or_mode),
+            fts_raw=bool(fts_raw),
+        )
+
+    if not (query or "").strip() and not (tags or ctx_scopes):
+        return list_notes(
+            vp,
+            limit=int(limit),
+            tags=tags,
+            not_tags=not_tags,
+            ctx_scopes=ctx_scopes,
+            not_ctx_scopes=not_ctx_scopes,
+            visibility=visibility,
+            include_deprecated=bool(include_deprecated),
+            since=since,
+            until=until,
+            and_mode=bool(and_mode),
+            scoped_only=bool(scoped_only),
+            deterministic=bool(deterministic),
+            quiet=bool(quiet),
+            sort="updated",
         )
 
     max_body_chars_items = int(max_body_chars) if max_body_chars is not None else 800
@@ -636,6 +1012,7 @@ def recall(
         visibility=visibility,
         include_deprecated=bool(include_deprecated),
         since=since,
+        until=until,
         and_mode=bool(and_mode),
         scoped_only=bool(scoped_only),
         include_body=bool(full),
@@ -643,16 +1020,24 @@ def recall(
         expand=int(expand or 0),
         deterministic=bool(deterministic),
         quiet=bool(quiet),
+        or_mode=bool(or_mode),
+        fts_raw=bool(fts_raw),
     )
 
 
 __all__ = [
     "recall",
+    "list_notes",
+    "around_notes",
+    "timeline",
     "compute_recency_boost",
+    "default_visibility_from_env",
+    "build_safe_fts_query",
     "fts_sanitize_query",
     "parse_context_scopes",
     "parse_multi_csvish",
     "parse_since",
+    "parse_until",
     "print_index_warnings",
     "recall_notes",
     "render_context_pack",
