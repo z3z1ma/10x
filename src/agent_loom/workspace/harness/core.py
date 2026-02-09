@@ -33,38 +33,39 @@ from agent_loom.workspace.git.core import (
     repo_default_branch,
     require_git,
 )
+from agent_loom.workspace.git.diff import worktree_diff_by_file
 from agent_loom.workspace.guards import harness_root
-from agent_loom.workspace.models import (
-    AddRepoResult,
-    BranchResult,
-    ContextResult,
-    DeepenResult,
-    DepsShowResult,
-    DepsWhoUsesResult,
-    ListReposResult,
-    HarnessInitResult,
-    RemoveRepoResult,
-    ComponentsRefreshIndexResult,
-    SnapshotResult,
-    SnapshotDiffResult,
-    SnapshotRestoreResult,
-    StatusResult,
-    SyncResult,
-    WorktreeAddResult,
-    WorktreeGroupRemoveResult,
-    WorktreeGroupDiffResult,
-    WorktreeListResult,
-    WorktreePushResult,
-    WorktreeRebaseResult,
+from agent_loom.workspace.harness.components import (
+    components_index_path,
+    ensure_component_files,
+    refresh_components_index,
 )
 from agent_loom.workspace.harness.selection import (
     harness_has_selection,
     harness_resolve_repo_names,
 )
-from agent_loom.workspace.harness.components import (
-    components_index_path,
-    ensure_component_files,
-    refresh_components_index,
+from agent_loom.workspace.models import (
+    AddRepoResult,
+    BranchResult,
+    ComponentsRefreshIndexResult,
+    ContextResult,
+    DeepenResult,
+    DepsShowResult,
+    DepsWhoUsesResult,
+    HarnessInitResult,
+    ListReposResult,
+    RemoveRepoResult,
+    SnapshotDiffResult,
+    SnapshotRestoreResult,
+    SnapshotResult,
+    StatusResult,
+    SyncResult,
+    WorktreeAddResult,
+    WorktreeGroupDiffResult,
+    WorktreeGroupRemoveResult,
+    WorktreeListResult,
+    WorktreePushResult,
+    WorktreeRebaseResult,
 )
 from agent_loom.workspace.state import (
     Repo,
@@ -74,17 +75,15 @@ from agent_loom.workspace.state import (
     load_workspace,
     save_workspace,
     snapshot_path,
-    validate_workspace,
     validate_repo_name,
+    validate_workspace,
     worktrees_base,
-    ws_repos_dir,
     ws_components_dir,
+    ws_repos_dir,
     ws_states_dir,
     ws_worktrees_dir,
 )
 from agent_loom.workspace.utils import run, short
-
-from agent_loom.workspace.git.diff import worktree_diff_by_file
 
 
 def _touch_group_meta(*, ws_root: Path, group: str) -> None:
@@ -191,8 +190,10 @@ def harness_init(
         f"{ws_worktrees_dir(ws)}/",
         f"{ws_states_dir(ws)}/",
         f"{ws_components_dir(ws)}/index.json",
-        f"{INTERNAL_DIR}/ticket/",
-        f"{INTERNAL_DIR}/memory/",
+        f"{INTERNAL_DIR}/ticket/.locks/",
+        f"{INTERNAL_DIR}/ticket/.cache/",
+        f"{INTERNAL_DIR}/ticket/.audit/",
+        f"{INTERNAL_DIR}/memory/*.sqlite3*",
         f"{INTERNAL_DIR}/team/",
         f"{INTERNAL_DIR}/workspace/",
         f"{INTERNAL_DIR}/workspaces/meta/",
