@@ -470,10 +470,45 @@ def scope_matches_context(
             pat = s.get("pattern")
             if isinstance(pat, str) and pat:
                 pat_l = pat.casefold()
+                pat_is_glob = _looks_like_glob(pat)
                 for idx, c in enumerate(ctx_scopes):
                     if c.get("kind") == "command":
                         cmd = str(c.get("pattern") or "")
-                        if cmd and pat_l in cmd.casefold():
+                        if not cmd:
+                            continue
+                        cmd_l = cmd.casefold()
+                        cmd_is_glob = _looks_like_glob(cmd)
+                        if pat_l == cmd_l:
+                            matched.append(
+                                {
+                                    "note_scope": s,
+                                    "context": c,
+                                    "reason": "command exact",
+                                }
+                            )
+                            best = max(best, SCOPE_MATCH_SCORE["command"])
+                            _mark_ctx_satisfied(idx)
+                        elif cmd_is_glob and fnmatch.fnmatchcase(pat_l, cmd_l):
+                            matched.append(
+                                {
+                                    "note_scope": s,
+                                    "context": c,
+                                    "reason": "command matches ctx pattern",
+                                }
+                            )
+                            best = max(best, SCOPE_MATCH_SCORE["command"])
+                            _mark_ctx_satisfied(idx)
+                        elif pat_is_glob and fnmatch.fnmatchcase(cmd_l, pat_l):
+                            matched.append(
+                                {
+                                    "note_scope": s,
+                                    "context": c,
+                                    "reason": "ctx command matches note pattern",
+                                }
+                            )
+                            best = max(best, SCOPE_MATCH_SCORE["command"])
+                            _mark_ctx_satisfied(idx)
+                        elif pat_l in cmd_l:
                             matched.append(
                                 {
                                     "note_scope": s,

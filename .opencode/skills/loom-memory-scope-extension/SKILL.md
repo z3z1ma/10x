@@ -1,64 +1,41 @@
 ---
 name: loom-memory-scope-extension
-description: Procedure for changing Loom memory scope syntax/kinds without parser drift, dead paths, or UX/test mismatch.
+description: Procedure for adding or modifying Loom memory scope kinds without contract drift across code, docs, and recall UX tests.
 license: MIT
 compatibility: opencode,claude
 metadata:
-  created_at: "2026-02-11T21:21:38.402529Z"
-  source_episode_ids: "883055ed0f173f797d74a5673db40cf642b8191663f6ef312188b017e1d17914,517a7d951e2d4ae1ee98b051a0d26883aa07cc0ac86eccf1300d39920d222962,de39f751f660e27dd86ac6a3f4e9fd7bf4cbc258fdb56bb916aded03026b05fb"
-  source_instinct_ids: "scope-kind-explicit-prefixes,scope-normalize-paths-cautiously,scope-roundtrip-contract,scope-validation-errors-high-signal,centralize-scope-validation-and-normalization,memory-scope-contract-sync,scope-glob-requires-edge-coverage,memory-scope-change-is-cross-layer,remove-stale-scope-paths-immediately,scope-syntax-migration-needs-compat-tests,ship-scope-ux-with-doc-and-skill-sync"
-  tags: "docs-sync,memory,procedure,scope,testing"
-  updated_at: "2026-02-11T21:21:38.402529Z"
-  version: "3"
+  created_at: "2026-02-12T00:06:35.621586Z"
+  source_episode_ids: "883055ed0f173f797d74a5673db40cf642b8191663f6ef312188b017e1d17914,517a7d951e2d4ae1ee98b051a0d26883aa07cc0ac86eccf1300d39920d222962,de39f751f660e27dd86ac6a3f4e9fd7bf4cbc258fdb56bb916aded03026b05fb,18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d,ef4e733ef16ebd5c555da29b3edc783929b5dfe33963931871ced9cae09ea142"
+  source_instinct_ids: "scope-kind-explicit-prefixes,scope-normalize-paths-cautiously,scope-roundtrip-contract,scope-validation-errors-high-signal,centralize-scope-validation-and-normalization,memory-scope-contract-sync,scope-glob-requires-edge-coverage,memory-scope-change-is-cross-layer,remove-stale-scope-paths-immediately,scope-syntax-migration-needs-compat-tests,ship-scope-ux-with-doc-and-skill-sync,memory-scope-change-sync-docs-and-recall-tests,memory-scope-unknown-kind-explicit-failure-tests,memory-work-targeted-test-then-full-gates,memory-scope-change-requires-contract-docs-tests,recall-note-semantics-must-have-ux-regressions,sync-duplicated-skill-content-in-one-change"
+  tags: "compound,docs,memory,scopes,tests"
+  updated_at: "2026-02-12T00:06:35.621586Z"
+  version: "5"
 ---
 <!-- BEGIN:compound:skill-managed -->
-# loom-memory-scope-extension
+# Loom Memory Scope Extension
 
-Purpose: change Loom memory scope behavior safely across parser, runtime, docs, and UX tests.
+Use this procedure whenever you add or change a memory scope kind.
 
-When to use:
-- Adding a new scope kind.
-- Changing scope syntax (for example introducing or tightening `glob:` forms).
-- Deprecating/removing legacy scope input forms.
+## Steps
+1. Update the scope contract in `src/agent_loom/memory/scopes.py`.
+   - Add/adjust the canonical scope kind definition.
+   - Ensure parsing/normalization/validation paths accept exactly the intended format.
+2. Thread the change through recall behavior.
+   - Confirm all scope-aware recall/filtering paths apply the new kind consistently.
+3. Update docs in `src/agent_loom/memory/README.md`.
+   - Document supported scope kinds and examples.
+   - Keep wording aligned with actual CLI/runtime behavior.
+4. Add regression coverage in `tests/test_memory_recall_notes.py`.
+   - Add a positive case proving the new scope participates in recall as intended.
+   - Add a negative/edge case that would fail if scope handling regresses.
+5. If the skill is mirrored, sync both copies in one PR:
+   - `.opencode/skills/loom-memory-scope-extension/SKILL.md`
+   - `src/agent_loom/compound/opencode/skills/loom-memory-scope-extension/SKILL.md`
 
-Procedure:
-1. Define the contract first.
-   - Specify accepted scope inputs, normalization rules, and invalid forms.
-   - Keep one canonical representation after parsing.
-
-2. Update core scope plumbing together.
-   - `src/agent_loom/memory/scopes.py`: parse + normalize + validation.
-   - `src/agent_loom/memory/constants.py`: scope identifiers/enums.
-   - `src/agent_loom/memory/core.py`: write-time scope handling.
-   - `src/agent_loom/memory/recall.py`: read/filter behavior.
-
-3. Remove dead legacy behavior.
-   - Delete obsolete branches and compatibility shims once replacement behavior is in place.
-   - Ensure there is a single active parser path per scope form.
-
-4. Lock behavior with focused tests.
-   - Add/extend `tests/test_memory_scope_glob.py` for:
-     - valid new syntax,
-     - legacy compatibility (if intentionally retained),
-     - normalization outputs,
-     - invalid/ambiguous inputs.
-
-5. Sync user-facing guidance.
-   - Update `src/agent_loom/memory/README.md` examples and wording to match exact accepted syntax.
-
-6. Sync distributed skill copy.
-   - If `.opencode/skills/loom-memory-scope-extension/SKILL.md` changes, mirror it at `src/agent_loom/compound/opencode/skills/loom-memory-scope-extension/SKILL.md`.
-
-Validation gates:
-- `uv run basedpyright`
-- `uv run ruff check .`
-- `uv run pytest tests/test_memory_scope_glob.py`
-- Run broader `uv run pytest` when scope behavior touches shared memory flows.
-
-Done criteria:
-- Parser/runtime/docs/tests agree on accepted scope syntax.
-- No legacy dead branches remain.
-- Skill and distributed copy are in sync.
+## Done Criteria
+- Scope contract, recall behavior, docs, and tests all agree.
+- Mirrored skill files (if present) are synchronized.
+- No ambiguity remains about accepted scope syntax or recall outcomes.
 <!-- END:compound:skill-managed -->
 
 ## Manual notes

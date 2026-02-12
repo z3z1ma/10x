@@ -99,6 +99,104 @@ class TestRecallNotes(unittest.TestCase):
             self.assertEqual([r["id"] for r in res], ["exact", "folder", "filetype"])
             self.assertTrue(all(float(r["score"]["recency"]) == 0.0 for r in res))
 
+    def test_command_scope_supports_glob_context_patterns(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            vault = Path(td) / ".loom" / "memory"
+            _run(["--vault", str(vault), "init"])
+
+            _run(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "add",
+                    "--title",
+                    "Loom Ticket Create",
+                    "--id",
+                    "loom-ticket-create",
+                    "--scope",
+                    "command:loom ticket create --title foo",
+                ],
+                stdin="alpha\n",
+            )
+            _run(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "add",
+                    "--title",
+                    "Pytest",
+                    "--id",
+                    "pytest",
+                    "--scope",
+                    "command:uv run pytest",
+                ],
+                stdin="alpha\n",
+            )
+
+            out = _run(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "recall",
+                    "",
+                    "--scope",
+                    "command:loom *",
+                    "--scoped-only",
+                    "--limit",
+                    "10",
+                    "--deterministic",
+                ]
+            )
+            res = json.loads(out)
+            self.assertEqual([r["id"] for r in res], ["loom-ticket-create"])
+
+    def test_command_scope_note_patterns_match_runtime_commands(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            vault = Path(td) / ".loom" / "memory"
+            _run(["--vault", str(vault), "init"])
+
+            _run(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "add",
+                    "--title",
+                    "Loom Ticket Family",
+                    "--id",
+                    "loom-ticket-family",
+                    "--scope",
+                    "command:loom ticket *",
+                ],
+                stdin="alpha\n",
+            )
+
+            out = _run(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "recall",
+                    "",
+                    "--scope",
+                    "command:loom ticket show al-1234",
+                    "--scoped-only",
+                    "--limit",
+                    "10",
+                    "--deterministic",
+                ]
+            )
+            res = json.loads(out)
+            self.assertEqual([r["id"] for r in res], ["loom-ticket-family"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -94,6 +94,7 @@ Notes:
 
 - `file` and `folder` are repo-relative when in a git repo.
 - `file` and `folder` support glob wildcards (`*`, `?`, `[]`) in the path value.
+- `command` supports glob wildcards (`*`, `?`, `[]`) and uses fnmatch-style matching.
 - Unknown scope kinds are ignored during parsing and matching.
 - `--allow-missing-scopes` bypasses file existence checks.
 - `--command` is shorthand for `--scope command:...` (supported by `add`, `edit`, and `recall`).
@@ -155,6 +156,10 @@ Common flags:
 - `--interactive` open editor for body
 - `--allow-missing-scopes`
 
+Note:
+
+- add/edit responses include hydration feedback (`hydration_summary`) and suggested follow-up commands (`next_actions`).
+
 Examples:
 
 ```
@@ -202,6 +207,29 @@ echo "Append" | loom memory edit retry-behavior --append-from-stdin
 loom memory edit retry-behavior --tag infra --remove-tag legacy
 loom memory edit retry-behavior --scope file:src/worker.py
 loom memory edit retry-behavior --visibility personal
+```
+
+### append
+
+Append body updates to an existing note using append-first command ergonomics.
+
+Aliases:
+
+- `loom memory add-note` -> `loom memory append`
+- `loom memory append-note` -> `loom memory append`
+
+Flags:
+
+- `--append` (or `--text` or `--body`) append text
+- `--from-stdin` append from stdin
+- `--related` append `Related: [[...]]` line(s)
+
+Examples:
+
+```
+loom memory append retry-behavior --append "Observed retry spike in production"
+echo "new trace" | loom memory append retry-behavior --from-stdin
+loom memory add-note retry-behavior "More findings"
 ```
 
 ### recall
@@ -265,6 +293,8 @@ loom memory list --since 2026-02-01 --until 2026-02-09
 
 Show a note's markdown (or just its YAML frontmatter).
 
+`show` accepts note references by id, title, or alias (with strict ambiguity errors).
+
 ```
 loom memory show retry-behavior
 loom memory show retry-behavior --meta
@@ -273,6 +303,8 @@ loom memory show retry-behavior --meta
 ### open
 
 Open a note in your editor.
+
+`open` accepts note references by id, title, or alias.
 
 ```
 loom memory open retry-behavior
@@ -304,6 +336,8 @@ loom memory forget --tag secrets --hard --apply
 ### around
 
 Show notes created/updated near another note (temporal edges).
+
+`around` accepts note references by id, title, or alias.
 
 ```
 loom memory around retry-behavior
@@ -337,6 +371,8 @@ Notes:
 ### link
 
 Link graph utilities.
+
+`backlinks`, `neighbors`, `suggest`, and `validate --id` accept note references by id, title, or alias.
 
 Backlinks:
 

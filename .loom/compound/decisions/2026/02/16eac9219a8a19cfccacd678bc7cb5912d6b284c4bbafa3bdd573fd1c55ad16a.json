@@ -1,0 +1,81 @@
+{
+  "created_at": "2026-02-12T00:03:17.944357Z",
+  "decision_id": "16eac9219a8a19cfccacd678bc7cb5912d6b284c4bbafa3bdd573fd1c55ad16a",
+  "episode_id": "18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d",
+  "ops": [
+    {
+      "action": "Update scope parsing/normalization in `src/agent_loom/memory/scopes.py`, update the supported kinds list in `src/agent_loom/memory/README.md`, and add or extend `tests/test_memory_recall_notes.py` to cover accepted kinds plus unknown-kind handling.",
+      "confidence": 0.95,
+      "episode_id": "18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d",
+      "id": "memory-scope-change-sync-docs-and-recall-tests",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "docs",
+        "loom-memory",
+        "recall",
+        "scopes",
+        "tests"
+      ],
+      "title": "Sync scope changes across parser, docs, and recall tests",
+      "trigger": "When adding or changing Loom memory scope kinds (for example file/folder/command) in memory parsing or recall behavior.",
+      "ts": "2026-02-12T00:03:17.944357Z"
+    },
+    {
+      "action": "Add tests that assert unknown scope kinds are rejected with clear, user-facing errors and that known kinds still parse and round-trip correctly through recall paths.",
+      "confidence": 0.91,
+      "episode_id": "18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d",
+      "id": "memory-scope-unknown-kind-explicit-failure-tests",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "loom-memory",
+        "regression-tests",
+        "ux",
+        "validation"
+      ],
+      "title": "Require explicit unknown-scope failure coverage",
+      "trigger": "When scope parsing logic changes or a new scope kind is introduced.",
+      "ts": "2026-02-12T00:03:17.944357Z"
+    },
+    {
+      "action": "Run focused tests first (for example `uv run pytest tests/test_memory_recall_notes.py`) to validate behavior quickly, then run full required gates (`uv run basedpyright`, `uv run ruff check .`) before broader test execution.",
+      "confidence": 0.82,
+      "episode_id": "18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d",
+      "id": "memory-work-targeted-test-then-full-gates",
+      "notes": "",
+      "op": "instinct.upsert",
+      "tags": [
+        "feedback-loop",
+        "loom-memory",
+        "quality-gates",
+        "workflow"
+      ],
+      "title": "Run targeted memory tests before full quality gates",
+      "trigger": "After touching `src/agent_loom/memory/**` or memory-facing tests.",
+      "ts": "2026-02-12T00:03:17.944357Z"
+    },
+    {
+      "body": "# Loom Memory Scope Extension\n\nUse this when adding, renaming, or changing memory scope kinds used by recall and note parsing.\n\n## Procedure\n1. Define the scope contract first\n   - Decide the exact kind names and accepted forms.\n   - Decide unknown-kind behavior (must fail clearly).\n\n2. Implement parser/normalization updates\n   - Update `src/agent_loom/memory/scopes.py` so new kinds parse and normalize deterministically.\n   - Keep normalization rules explicit and minimal; remove dead branches.\n\n3. Align user-facing docs\n   - Update supported kinds in `src/agent_loom/memory/README.md`.\n   - Ensure examples reflect actual accepted scope syntax.\n\n4. Add high-signal recall tests\n   - Extend `tests/test_memory_recall_notes.py` for:\n     - recognized kinds (including the new/changed kind),\n     - normalization expectations,\n     - unknown-kind rejection with clear error text.\n\n5. Run quality gates\n   - `uv run basedpyright`\n   - `uv run ruff check .`\n   - `uv run pytest tests/test_memory_recall_notes.py`\n   - Run broader `uv run pytest` when changes could affect other memory paths.\n\n## Done when\n- Scope kinds are consistent across parser, docs, and tests.\n- Unknown kinds fail explicitly and are covered by tests.\n- Type/lint/test gates pass.",
+      "description": "Procedure for adding or changing Loom memory scope kinds while keeping parser behavior, docs, and recall UX tests aligned.",
+      "episode_id": "18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d",
+      "name": "loom-memory-scope-extension",
+      "op": "skill.upsert",
+      "source_instinct_ids": [
+        "memory-scope-change-sync-docs-and-recall-tests",
+        "memory-scope-unknown-kind-explicit-failure-tests",
+        "memory-work-targeted-test-then-full-gates"
+      ],
+      "tags": [
+        "docs-sync",
+        "loom-memory",
+        "procedure",
+        "scopes",
+        "testing"
+      ],
+      "ts": "2026-02-12T00:03:17.944357Z"
+    }
+  ],
+  "proposal_blob_sha256": "d2ceeb3f8359a96d010e5a8216d9255f22aa20918a2e811751ed287d81313ca1",
+  "version": 1
+}

@@ -53,6 +53,8 @@ class AddResult:
     visibility: str
     links: Dict[str, Any]
     hydration: Dict[str, Any] = field(default_factory=dict)
+    hydration_summary: Dict[str, int] = field(default_factory=dict)
+    next_actions: List[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -65,6 +67,8 @@ class EditResult:
     warnings: List[str]
     links: Dict[str, Any]
     hydration: Dict[str, Any] = field(default_factory=dict)
+    hydration_summary: Dict[str, int] = field(default_factory=dict)
+    next_actions: List[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)

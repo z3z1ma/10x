@@ -122,6 +122,124 @@ def find_note_path(vp: VaultPaths, note_id: str) -> Path:
     )
 
 
+def _normalize_note_ref_slug(value: str) -> str:
+    base = re.sub(r"[^A-Za-z0-9]+", "-", (value or "").strip()).strip("-")
+    return base.lower()
+
+
+def _note_ref_leaf(value: str) -> str:
+    s = str(value or "").strip().replace("\\", "/")
+    if "/" in s:
+        s = s.rsplit("/", 1)[1]
+    if s.lower().endswith(".md"):
+        s = s[:-3]
+    return s.strip()
+
+
+def resolve_note_ref_path(vp: VaultPaths, note_ref: str) -> Path:
+    ref = str(note_ref or "").strip()
+    if not ref:
+        raise MemoryError(
+            "Note reference is required",
+            code="ARG",
+            exit_code=2,
+            hint="Provide a note id, title, or alias.",
+        )
+
+    with contextlib.suppress(MemoryError):
+        return find_note_path(vp, ref)
+
+    leaf = _note_ref_leaf(ref)
+    exact_terms = {ref.casefold()}
+    slug_terms = {_normalize_note_ref_slug(ref)}
+    if leaf and leaf.casefold() not in exact_terms:
+        exact_terms.add(leaf.casefold())
+        slug_terms.add(_normalize_note_ref_slug(leaf))
+    slug_terms.discard("")
+
+    matches: List[Tuple[int, Path, str]] = []
+    for p, default_vis in iter_note_paths(vp):
+        n, _warns = try_read_note_from_path(
+            p,
+            default_visibility=default_vis,
+            repo_root=None,
+        )
+        if n is None:
+            continue
+
+        nid = str(n.id or "").strip()
+        title = str(n.title or "").strip()
+        aliases = [str(a).strip() for a in (n.aliases or []) if str(a).strip()]
+
+        nid_cf = nid.casefold()
+        title_cf = title.casefold()
+        alias_cf = {a.casefold() for a in aliases}
+
+        rank: Optional[int] = None
+        why = ""
+        if nid_cf in exact_terms:
+            rank = 0
+            why = "id"
+        elif title_cf in exact_terms:
+            rank = 1
+            why = "title"
+        elif alias_cf.intersection(exact_terms):
+            rank = 2
+            why = "alias"
+        else:
+            nid_slug = _normalize_note_ref_slug(nid)
+            title_slug = _normalize_note_ref_slug(title)
+            alias_slugs = {_normalize_note_ref_slug(a) for a in aliases}
+            if nid_slug and nid_slug in slug_terms:
+                rank = 3
+                why = "id-slug"
+            elif title_slug and title_slug in slug_terms:
+                rank = 4
+                why = "title-slug"
+            elif alias_slugs.intersection(slug_terms):
+                rank = 5
+                why = "alias-slug"
+
+        if rank is not None:
+            matches.append((rank, p, why))
+
+    if not matches:
+        raise MemoryError(
+            f"Note not found: {ref}",
+            code="NOT_FOUND",
+            exit_code=2,
+            hint="Use an existing note id, title, or alias.",
+            suggestions=[
+                f"loom memory recall {ref!r}",
+                "loom memory recall <query>",
+            ],
+            details={"reference": ref},
+        )
+
+    best_rank = min(rank for rank, _p, _why in matches)
+    best = [(p, why) for rank, p, why in matches if rank == best_rank]
+    if len(best) == 1:
+        return best[0][0]
+
+    rels = [str(p.relative_to(vp.root)).replace(os.sep, "/") for p, _ in best]
+    raise MemoryError(
+        f"Ambiguous note reference {ref!r}",
+        code="ARG",
+        exit_code=2,
+        hint="Multiple notes match that id/title/alias. Use a specific note id.",
+        suggestions=[
+            "Use one of these ids: "
+            + ", ".join(sorted({Path(r).stem for r in rels})[:10]),
+            f"Matches: {', '.join(sorted(rels)[:10])}",
+        ],
+        details={"reference": ref, "matches": sorted(rels)},
+    )
+
+
+def resolve_note_ref_id(vp: VaultPaths, note_ref: str) -> str:
+    return resolve_note_ref_path(vp, note_ref).stem
+
+
 def note_rel_path(vp: VaultPaths, p: Path) -> str:
     try:
         return str(p.relative_to(vp.root)).replace(os.sep, "/")
@@ -513,6 +631,8 @@ __all__ = [
     "note_rel_path",
     "open_in_editor",
     "read_note",
+    "resolve_note_ref_id",
+    "resolve_note_ref_path",
     "resolve_vault_root",
     "rewrite_note_frontmatter",
     "try_read_note_from_path",

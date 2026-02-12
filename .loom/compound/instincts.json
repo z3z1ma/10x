@@ -272,6 +272,30 @@
       ]
     },
     {
+      "id": "cli-ux-contract-tests-for-output-changes",
+      "title": "Lock CLI UX with focused contract tests",
+      "trigger": "Any change modifies user-visible stdout/stderr text, exit codes, or command acceptance rules.",
+      "action": "Add/adjust targeted UX tests that assert exit code, stdout, and stderr directly (no broad snapshots), covering both happy paths and representative failure paths.",
+      "tags": [
+        "cli",
+        "regression",
+        "testing",
+        "ux"
+      ],
+      "confidence": 0.95,
+      "status": "active",
+      "created_at": "2026-02-11T23:42:15.329862Z",
+      "updated_at": "2026-02-11T23:42:15.329862Z",
+      "evidence": [
+        {
+          "ts": "2026-02-11T23:42:15.329862Z",
+          "episode_id": "eabbfa5d9c3f54969ae5e5bd436f165f0fb90f9638c304f1007044108446648f",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": "015233210b392440a3e10ac404a387fe2eefc55629f5d2bf3c521c500e2f868c"
+        }
+      ]
+    },
+    {
       "id": "cli-ux-regression-tests",
       "title": "Add CLI UX regression tests when output changes",
       "trigger": "When changing any CLI command output, flags, exit codes, or user-facing error messages (especially in ticket commands).",
@@ -820,6 +844,29 @@
       ]
     },
     {
+      "id": "memory-behavior-change-must-update-readme",
+      "title": "Document memory behavior changes in README at the same time",
+      "trigger": "When memory CLI or hydration semantics change (especially user-visible link handling).",
+      "action": "Update `src/agent_loom/memory/README.md` in the same change set with concrete examples of new/changed behavior to prevent contract drift between implementation and docs.",
+      "tags": [
+        "contract-sync",
+        "docs",
+        "memory"
+      ],
+      "confidence": 0.92,
+      "status": "active",
+      "created_at": "2026-02-11T21:49:27.460760Z",
+      "updated_at": "2026-02-11T21:49:27.460760Z",
+      "evidence": [
+        {
+          "ts": "2026-02-11T21:49:27.460760Z",
+          "episode_id": "044a58c5c8dcdb13d0e53266c1e4ec08c6994465336f6f6e9b044c0edec52973",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": "c4e5412593e4308e4e19d1041c9a5f714391a80a1bdf9f584e84608a4d049b92"
+        }
+      ]
+    },
+    {
       "id": "memory-feature-docs-coevolve",
       "title": "Memory feature changes should co-evolve with README",
       "trigger": "When adding/changing Loom Memory behavior (notes merge, recall, indexing, CLI surface area).",
@@ -869,6 +916,53 @@
       ]
     },
     {
+      "id": "memory-hydration-end-to-end-touchpoints",
+      "title": "Treat hydration as an end-to-end flow across CLI/core/models",
+      "trigger": "When implementing or refactoring memory link hydration logic.",
+      "action": "Verify changes span and stay consistent across `cli.py`, `core.py`, `hydrate.py`, and `models.py`; avoid isolated edits that pass unit tests but break end-to-end behavior.",
+      "tags": [
+        "architecture",
+        "hydration",
+        "memory"
+      ],
+      "confidence": 0.9,
+      "status": "active",
+      "created_at": "2026-02-11T21:49:27.460760Z",
+      "updated_at": "2026-02-11T21:49:27.460760Z",
+      "evidence": [
+        {
+          "ts": "2026-02-11T21:49:27.460760Z",
+          "episode_id": "044a58c5c8dcdb13d0e53266c1e4ec08c6994465336f6f6e9b044c0edec52973",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": "c4e5412593e4308e4e19d1041c9a5f714391a80a1bdf9f584e84608a4d049b92"
+        }
+      ]
+    },
+    {
+      "id": "memory-note-ref-single-resolver",
+      "title": "Use one resolver for memory note references",
+      "trigger": "A Loom Memory CLI command accepts a note argument that may be an id, path-like token, or title-like reference.",
+      "action": "Route all note-target parsing through shared resolver helpers (id + path resolution) before command logic, and keep not-found/error wording consistent across commands.",
+      "tags": [
+        "cli",
+        "memory",
+        "refactor",
+        "ux-consistency"
+      ],
+      "confidence": 0.93,
+      "status": "active",
+      "created_at": "2026-02-11T23:42:15.329862Z",
+      "updated_at": "2026-02-11T23:42:15.329862Z",
+      "evidence": [
+        {
+          "ts": "2026-02-11T23:42:15.329862Z",
+          "episode_id": "eabbfa5d9c3f54969ae5e5bd436f165f0fb90f9638c304f1007044108446648f",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": "015233210b392440a3e10ac404a387fe2eefc55629f5d2bf3c521c500e2f868c"
+        }
+      ]
+    },
+    {
       "id": "memory-scope-change-is-cross-layer",
       "title": "Treat memory scope changes as cross-layer contract work",
       "trigger": "When adding, removing, or changing Loom memory scope syntax or scope kinds",
@@ -889,6 +983,56 @@
           "episode_id": "de39f751f660e27dd86ac6a3f4e9fd7bf4cbc258fdb56bb916aded03026b05fb",
           "head_sha": "2d25cfd646eaed71d4409cc7ef21fc0e697f541e",
           "patch_sha256": "624aa3d0af247cd829f7a90c3c7f0d8d182112cdec80d4374cf5ee038032fbe8"
+        }
+      ]
+    },
+    {
+      "id": "memory-scope-change-requires-contract-docs-tests",
+      "title": "Treat memory scope additions as contract changes",
+      "trigger": "When adding or changing a memory scope kind in Loom memory.",
+      "action": "Update the scope contract implementation in `src/agent_loom/memory/scopes.py`, then immediately align user-facing docs in `src/agent_loom/memory/README.md` and add/adjust focused regression tests so the new scope is exercised end-to-end.",
+      "tags": [
+        "contract",
+        "docs",
+        "memory",
+        "scopes",
+        "tests"
+      ],
+      "confidence": 0.96,
+      "status": "active",
+      "created_at": "2026-02-12T00:06:35.621586Z",
+      "updated_at": "2026-02-12T00:06:35.621586Z",
+      "evidence": [
+        {
+          "ts": "2026-02-12T00:06:35.621586Z",
+          "episode_id": "ef4e733ef16ebd5c555da29b3edc783929b5dfe33963931871ced9cae09ea142",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": ""
+        }
+      ]
+    },
+    {
+      "id": "memory-scope-change-sync-docs-and-recall-tests",
+      "title": "Sync scope changes across parser, docs, and recall tests",
+      "trigger": "When adding or changing Loom memory scope kinds (for example file/folder/command) in memory parsing or recall behavior.",
+      "action": "Update scope parsing/normalization in `src/agent_loom/memory/scopes.py`, update the supported kinds list in `src/agent_loom/memory/README.md`, and add or extend `tests/test_memory_recall_notes.py` to cover accepted kinds plus unknown-kind handling.",
+      "tags": [
+        "docs",
+        "loom-memory",
+        "recall",
+        "scopes",
+        "tests"
+      ],
+      "confidence": 0.95,
+      "status": "active",
+      "created_at": "2026-02-12T00:03:17.944357Z",
+      "updated_at": "2026-02-12T00:03:17.944357Z",
+      "evidence": [
+        {
+          "ts": "2026-02-12T00:03:17.944357Z",
+          "episode_id": "18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": "ce72e96502ab8dee551547408865803ac8f99aa6527cc6a669c455d62bff92ee"
         }
       ]
     },
@@ -914,6 +1058,78 @@
           "episode_id": "517a7d951e2d4ae1ee98b051a0d26883aa07cc0ac86eccf1300d39920d222962",
           "head_sha": "2d25cfd646eaed71d4409cc7ef21fc0e697f541e",
           "patch_sha256": "a3d9c9bdfb9e212183086aaab4bf16d28f93f3b30830e3c968fc8f87fac7e109"
+        }
+      ]
+    },
+    {
+      "id": "memory-scope-unknown-kind-explicit-failure-tests",
+      "title": "Require explicit unknown-scope failure coverage",
+      "trigger": "When scope parsing logic changes or a new scope kind is introduced.",
+      "action": "Add tests that assert unknown scope kinds are rejected with clear, user-facing errors and that known kinds still parse and round-trip correctly through recall paths.",
+      "tags": [
+        "loom-memory",
+        "regression-tests",
+        "ux",
+        "validation"
+      ],
+      "confidence": 0.91,
+      "status": "active",
+      "created_at": "2026-02-12T00:03:17.944357Z",
+      "updated_at": "2026-02-12T00:03:17.944357Z",
+      "evidence": [
+        {
+          "ts": "2026-02-12T00:03:17.944357Z",
+          "episode_id": "18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": "ce72e96502ab8dee551547408865803ac8f99aa6527cc6a669c455d62bff92ee"
+        }
+      ]
+    },
+    {
+      "id": "memory-wikilink-hydration-requires-ux-proof",
+      "title": "Pair wikilink hydration changes with explicit CLI UX proof",
+      "trigger": "When changing memory wikilink parsing, hydration, or note creation behavior in `src/agent_loom/memory/`.",
+      "action": "Add or update UX-style tests in `tests/test_memory_cli_ux.py` and focused hydration tests in `tests/test_memory_link_hydration.py` that assert stdout/stderr text and exit codes, not only internal state.",
+      "tags": [
+        "cli-ux",
+        "memory",
+        "testing",
+        "wikilink"
+      ],
+      "confidence": 0.95,
+      "status": "active",
+      "created_at": "2026-02-11T21:49:27.460760Z",
+      "updated_at": "2026-02-11T21:49:27.460760Z",
+      "evidence": [
+        {
+          "ts": "2026-02-11T21:49:27.460760Z",
+          "episode_id": "044a58c5c8dcdb13d0e53266c1e4ec08c6994465336f6f6e9b044c0edec52973",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": "c4e5412593e4308e4e19d1041c9a5f714391a80a1bdf9f584e84608a4d049b92"
+        }
+      ]
+    },
+    {
+      "id": "memory-work-targeted-test-then-full-gates",
+      "title": "Run targeted memory tests before full quality gates",
+      "trigger": "After touching `src/agent_loom/memory/**` or memory-facing tests.",
+      "action": "Run focused tests first (for example `uv run pytest tests/test_memory_recall_notes.py`) to validate behavior quickly, then run full required gates (`uv run basedpyright`, `uv run ruff check .`) before broader test execution.",
+      "tags": [
+        "feedback-loop",
+        "loom-memory",
+        "quality-gates",
+        "workflow"
+      ],
+      "confidence": 0.82,
+      "status": "active",
+      "created_at": "2026-02-12T00:03:17.944357Z",
+      "updated_at": "2026-02-12T00:03:17.944357Z",
+      "evidence": [
+        {
+          "ts": "2026-02-12T00:03:17.944357Z",
+          "episode_id": "18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": "ce72e96502ab8dee551547408865803ac8f99aa6527cc6a669c455d62bff92ee"
         }
       ]
     },
@@ -1253,6 +1469,30 @@
           "episode_id": "1df927bbce4dd1de6f9852dcc11fa41a066020502fed0dfe2a8cb12a99ac0cc1",
           "head_sha": "6326ff91e85ca070eab9b926434399720801b107",
           "patch_sha256": "a028e6551913fb20e48a0114be8e874e8246bb26f174e320cb239cd29e6c4cb2"
+        }
+      ]
+    },
+    {
+      "id": "recall-note-semantics-must-have-ux-regressions",
+      "title": "Lock recall semantics with note-focused UX tests",
+      "trigger": "When memory recall behavior or scope filtering changes.",
+      "action": "Add or update high-signal recall-note tests in `tests/test_memory_recall_notes.py` to verify expected stdout/stderr semantics and avoid future drift in user-visible recall behavior.",
+      "tags": [
+        "memory",
+        "recall",
+        "regression",
+        "ux-tests"
+      ],
+      "confidence": 0.91,
+      "status": "active",
+      "created_at": "2026-02-12T00:06:35.621586Z",
+      "updated_at": "2026-02-12T00:06:35.621586Z",
+      "evidence": [
+        {
+          "ts": "2026-02-12T00:06:35.621586Z",
+          "episode_id": "ef4e733ef16ebd5c555da29b3edc783929b5dfe33963931871ced9cae09ea142",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": ""
         }
       ]
     },
@@ -1641,6 +1881,30 @@
       ]
     },
     {
+      "id": "sync-duplicated-skill-content-in-one-change",
+      "title": "Keep mirrored skill docs synchronized",
+      "trigger": "When editing a skill that exists in both local `.opencode` and distributed `src/agent_loom/.../opencode` paths.",
+      "action": "Update both copies in the same change set and verify they remain byte-for-byte aligned to prevent local/distributed behavior drift.",
+      "tags": [
+        "compound",
+        "distribution",
+        "drift-prevention",
+        "skills"
+      ],
+      "confidence": 0.9,
+      "status": "active",
+      "created_at": "2026-02-12T00:06:35.621586Z",
+      "updated_at": "2026-02-12T00:06:35.621586Z",
+      "evidence": [
+        {
+          "ts": "2026-02-12T00:06:35.621586Z",
+          "episode_id": "ef4e733ef16ebd5c555da29b3edc783929b5dfe33963931871ced9cae09ea142",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": ""
+        }
+      ]
+    },
+    {
       "id": "template-docs-use-root-relative-paths",
       "title": "Use repo-root-relative paths in template docs",
       "trigger": "When editing README/docs content that will be scaffolded into a repo (e.g., src/agent_loom/compound/opencode/README.md, src/agent_loom/compound/opencode/.loom/compound/README.md, `.opencode/commands/*.md`).",
@@ -1660,6 +1924,30 @@
           "episode_id": "a8b5ac3ffe5219232c3770309945487b6529be88e9f52cf834208c21bdd88e3d",
           "head_sha": "4f98369282b323883f43073b37e0506c3ab64249",
           "patch_sha256": "742213b0caf9e2d73477a9c67da02f1028c4bc4ca41ae9315da1472bf28ce322"
+        }
+      ]
+    },
+    {
+      "id": "typed-result-exhaustive-cli-branching",
+      "title": "Exhaustively branch on typed result unions",
+      "trigger": "Vault/core APIs return multiple typed result variants for link/validation/suggestion/backlink operations.",
+      "action": "Handle each variant explicitly in CLI rendering paths, avoid implicit fallthrough, and add one UX test per variant so behavior is stable and intentional.",
+      "tags": [
+        "cli",
+        "memory",
+        "reliability",
+        "typing"
+      ],
+      "confidence": 0.9,
+      "status": "active",
+      "created_at": "2026-02-11T23:42:15.329862Z",
+      "updated_at": "2026-02-11T23:42:15.329862Z",
+      "evidence": [
+        {
+          "ts": "2026-02-11T23:42:15.329862Z",
+          "episode_id": "eabbfa5d9c3f54969ae5e5bd436f165f0fb90f9638c304f1007044108446648f",
+          "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+          "patch_sha256": "015233210b392440a3e10ac404a387fe2eefc55629f5d2bf3c521c500e2f868c"
         }
       ]
     },

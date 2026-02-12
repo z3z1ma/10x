@@ -7,9 +7,11 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from agent_loom.memory.constants import RE_NOTE_ID, WIKILINK_RE
 from agent_loom.memory.vault import (
+    find_note_path,
     generate_note_id,
     iter_note_paths,
     note_rel_path,
+    rewrite_note_frontmatter,
     try_read_note_from_path,
     vault_paths,
     write_note_file,
@@ -259,7 +261,23 @@ def _ensure_stub_note(
     visibility: str,
     created_at: str,
     updated_at: str,
+    origin_note_id: Optional[str],
 ) -> HydrationCreatedNote:
+    origin = str(origin_note_id or "").strip()
+    body_lines = [
+        "## Context",
+        (
+            f"Auto-created scaffold referenced from [[{origin}|{origin}]]."
+            if origin
+            else "Auto-created scaffold from wikilink hydration."
+        ),
+        "",
+        "## Definition",
+        "",
+        "## Notes",
+    ]
+    body = "\n".join(body_lines).rstrip() + "\n"
+
     # Create a brand new id; retry a few times to avoid pathological collisions.
     for _ in range(5):
         nid = generate_note_id(title)
@@ -275,7 +293,7 @@ def _ensure_stub_note(
             vp,
             note_id=nid,
             title=title,
-            body="",
+            body=body,
             tags=[],
             aliases=[],
             scopes=[],
@@ -297,6 +315,56 @@ def _ensure_stub_note(
     raise RuntimeError("failed to create stub note id after retries")
 
 
+def _maybe_seed_existing_scaffold(
+    *,
+    vp,
+    note_id: str,
+    origin_note_id: Optional[str],
+) -> bool:
+    origin = str(origin_note_id or "").strip()
+    if not origin:
+        return False
+
+    try:
+        p = find_note_path(vp, note_id)
+    except Exception:
+        return False
+
+    default_vis = "shared"
+    if str(p).startswith(str(vp.ephemeral_notes_dir)):
+        default_vis = "ephemeral"
+    elif str(p).startswith(str(vp.personal_notes_dir)):
+        default_vis = "personal"
+
+    n, _warns = try_read_note_from_path(
+        p,
+        default_visibility=default_vis,
+        repo_root=None,
+    )
+    if n is None:
+        return False
+
+    if (n.body or "").strip():
+        return False
+
+    provenance = f"Auto-created scaffold referenced from [[{origin}|{origin}]]."
+    template = (
+        "\n".join(
+            [
+                "## Context",
+                provenance,
+                "",
+                "## Definition",
+                "",
+                "## Notes",
+            ]
+        ).rstrip()
+        + "\n"
+    )
+    rewrite_note_frontmatter(p, new_fm=dict(n.frontmatter), body=template)
+    return True
+
+
 def hydrate_wikilinks(
     *,
     vault_root: Path,
@@ -304,6 +372,7 @@ def hydrate_wikilinks(
     visibility: str,
     created_at: str,
     updated_at: str,
+    origin_note_id: Optional[str] = None,
 ) -> Tuple[str, Dict[str, Any]]:
     idx = _scan_vault_indexes(vault_root)
     vp = idx["vp"]
@@ -311,17 +380,25 @@ def hydrate_wikilinks(
     created_by_slug: Dict[str, HydrationCreatedNote] = {}
     rewrites: List[HydrationRewrite] = []
     ambiguous: List[Dict[str, Any]] = []
+    seeded_note_ids: set[str] = set()
 
-    def resolve_target(target: str) -> Tuple[Optional[str], bool, List[str]]:
+    def resolve_target(target: str) -> Tuple[Optional[str], bool, bool, List[str]]:
         slug = slugify_name(target)
         if slug in created_by_slug:
-            return created_by_slug[slug].id, True, []
+            return created_by_slug[slug].id, True, False, []
 
         resolved, amb = _pick_candidate(target=target, target_slug=slug, idx=idx)
         if resolved is not None:
-            return resolved, False, []
+            seeded = _maybe_seed_existing_scaffold(
+                vp=vp,
+                note_id=resolved,
+                origin_note_id=origin_note_id,
+            )
+            if seeded:
+                seeded_note_ids.add(resolved)
+            return resolved, False, seeded, []
         if amb:
-            return None, False, amb
+            return None, False, False, amb
 
         cn = _ensure_stub_note(
             vp=vp,
@@ -329,6 +406,7 @@ def hydrate_wikilinks(
             visibility=visibility,
             created_at=created_at,
             updated_at=updated_at,
+            origin_note_id=origin_note_id,
         )
         created_by_slug[slug] = cn
         # Update indexes in-memory so subsequent resolutions in the same call reuse.
@@ -338,7 +416,7 @@ def hydrate_wikilinks(
             cn.id
         )
         (idx["id_set"]).append(cn.id)
-        return cn.id, True, []
+        return cn.id, True, False, []
 
     def rewrite_plain_text(t: str) -> str:
         if not t:
@@ -363,7 +441,7 @@ def hydrate_wikilinks(
                         base = base[:-3]
                     target = base.strip() or raw_target
 
-                resolved_id, created, amb = resolve_target(target)
+                resolved_id, created, _seeded, amb = resolve_target(target)
                 if amb:
                     ambiguous.append(
                         {
@@ -438,6 +516,8 @@ def hydrate_wikilinks(
             }
             for n in created_notes
         ],
+        "seeded_notes": sorted(seeded_note_ids),
+        "skipped": [],
         "ambiguous": ambiguous,
     }
     return new_body, hydration

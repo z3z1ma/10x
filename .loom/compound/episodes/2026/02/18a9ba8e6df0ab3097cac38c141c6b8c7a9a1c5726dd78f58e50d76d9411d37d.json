@@ -1,0 +1,3803 @@
+{
+  "created_at": "2026-02-12T00:03:17.944357Z",
+  "episode_id": "18a9ba8e6df0ab3097cac38c141c6b8c7a9a1c5726dd78f58e50d76d9411d37d",
+  "git": {
+    "base_ref": "origin/main",
+    "base_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+    "changed_files": [
+      "src/agent_loom/memory/README.md",
+      "src/agent_loom/memory/scopes.py",
+      "tests/test_memory_recall_notes.py"
+    ],
+    "diffstat": "src/agent_loom/memory/README.md   |  1 +\n src/agent_loom/memory/scopes.py   | 37 ++++++++++++++-\n tests/test_memory_recall_notes.py | 98 +++++++++++++++++++++++++++++++++++++++\n 3 files changed, 135 insertions(+), 1 deletion(-)",
+    "diffstat_sha256": "fe63bec5b68ab2b30b8e085831eb5cbded29cf4d851ee5580964d894e8509019",
+    "dirty": true,
+    "head_sha": "ea92bcb72b867fc609e107b785dce2b1d99859e7",
+    "patch": "diff --git a/src/agent_loom/memory/README.md b/src/agent_loom/memory/README.md\nindex 49d78bd..03a5fd6 100644\n--- a/src/agent_loom/memory/README.md\n+++ b/src/agent_loom/memory/README.md\n@@ -94,6 +94,7 @@ Notes:\n \n - `file` and `folder` are repo-relative when in a git repo.\n - `file` and `folder` support glob wildcards (`*`, `?`, `[]`) in the path value.\n+- `command` supports glob wildcards (`*`, `?`, `[]`) and uses fnmatch-style matching.\n - Unknown scope kinds are ignored during parsing and matching.\n - `--allow-missing-scopes` bypasses file existence checks.\n - `--command` is shorthand for `--scope command:...` (supported by `add`, `edit`, and `recall`).\ndiff --git a/src/agent_loom/memory/scopes.py b/src/agent_loom/memory/scopes.py\nindex d682f8a..bbada03 100644\n--- a/src/agent_loom/memory/scopes.py\n+++ b/src/agent_loom/memory/scopes.py\n@@ -470,10 +470,45 @@ def scope_matches_context(\n             pat = s.get(\"pattern\")\n             if isinstance(pat, str) and pat:\n                 pat_l = pat.casefold()\n+                pat_is_glob = _looks_like_glob(pat)\n                 for idx, c in enumerate(ctx_scopes):\n                     if c.get(\"kind\") == \"command\":\n                         cmd = str(c.get(\"pattern\") or \"\")\n-                        if cmd and pat_l in cmd.casefold():\n+                        if not cmd:\n+                            continue\n+                        cmd_l = cmd.casefold()\n+                        cmd_is_glob = _looks_like_glob(cmd)\n+                        if pat_l == cmd_l:\n+                            matched.append(\n+                                {\n+                                    \"note_scope\": s,\n+                                    \"context\": c,\n+                                    \"reason\": \"command exact\",\n+                                }\n+                            )\n+                            best = max(best, SCOPE_MATCH_SCORE[\"command\"])\n+                            _mark_ctx_satisfied(idx)\n+                        elif cmd_is_glob and fnmatch.fnmatchcase(pat_l, cmd_l):\n+                            matched.append(\n+                                {\n+                                    \"note_scope\": s,\n+                                    \"context\": c,\n+                                    \"reason\": \"command matches ctx pattern\",\n+                                }\n+                            )\n+                            best = max(best, SCOPE_MATCH_SCORE[\"command\"])\n+                            _mark_ctx_satisfied(idx)\n+                        elif pat_is_glob and fnmatch.fnmatchcase(cmd_l, pat_l):\n+                            matched.append(\n+                                {\n+                                    \"note_scope\": s,\n+                                    \"context\": c,\n+                                    \"reason\": \"ctx command matches note pattern\",\n+                                }\n+                            )\n+                            best = max(best, SCOPE_MATCH_SCORE[\"command\"])\n+                            _mark_ctx_satisfied(idx)\n+                        elif pat_l in cmd_l:\n                             matched.append(\n                                 {\n                                     \"note_scope\": s,\ndiff --git a/tests/test_memory_recall_notes.py b/tests/test_memory_recall_notes.py\nindex de16e96..b480039 100644\n--- a/tests/test_memory_recall_notes.py\n+++ b/tests/test_memory_recall_notes.py\n@@ -99,6 +99,104 @@ class TestRecallNotes(unittest.TestCase):\n             self.assertEqual([r[\"id\"] for r in res], [\"exact\", \"folder\", \"filetype\"])\n             self.assertTrue(all(float(r[\"score\"][\"recency\"]) == 0.0 for r in res))\n \n+    def test_command_scope_supports_glob_context_patterns(self) -> None:\n+        with tempfile.TemporaryDirectory() as td:\n+            vault = Path(td) / \".loom\" / \"memory\"\n+            _run([\"--vault\", str(vault), \"init\"])\n+\n+            _run(\n+                [\n+                    \"--vault\",\n+                    str(vault),\n+                    \"--format\",\n+                    \"json\",\n+                    \"add\",\n+                    \"--title\",\n+                    \"Loom Ticket Create\",\n+                    \"--id\",\n+                    \"loom-ticket-create\",\n+                    \"--scope\",\n+                    \"command:loom ticket create --title foo\",\n+                ],\n+                stdin=\"alpha\\n\",\n+            )\n+            _run(\n+                [\n+                    \"--vault\",\n+                    str(vault),\n+                    \"--format\",\n+                    \"json\",\n+                    \"add\",\n+                    \"--title\",\n+                    \"Pytest\",\n+                    \"--id\",\n+                    \"pytest\",\n+                    \"--scope\",\n+                    \"command:uv run pytest\",\n+                ],\n+                stdin=\"alpha\\n\",\n+            )\n+\n+            out = _run(\n+                [\n+                    \"--vault\",\n+                    str(vault),\n+                    \"--format\",\n+                    \"json\",\n+                    \"recall\",\n+                    \"\",\n+                    \"--scope\",\n+                    \"command:loom *\",\n+                    \"--scoped-only\",\n+                    \"--limit\",\n+                    \"10\",\n+                    \"--deterministic\",\n+                ]\n+            )\n+            res = json.loads(out)\n+            self.assertEqual([r[\"id\"] for r in res], [\"loom-ticket-create\"])\n+\n+    def test_command_scope_note_patterns_match_runtime_commands(self) -> None:\n+        with tempfile.TemporaryDirectory() as td:\n+            vault = Path(td) / \".loom\" / \"memory\"\n+            _run([\"--vault\", str(vault), \"init\"])\n+\n+            _run(\n+                [\n+                    \"--vault\",\n+                    str(vault),\n+                    \"--format\",\n+                    \"json\",\n+                    \"add\",\n+                    \"--title\",\n+                    \"Loom Ticket Family\",\n+                    \"--id\",\n+                    \"loom-ticket-family\",\n+                    \"--scope\",\n+                    \"command:loom ticket *\",\n+                ],\n+                stdin=\"alpha\\n\",\n+            )\n+\n+            out = _run(\n+                [\n+                    \"--vault\",\n+                    str(vault),\n+                    \"--format\",\n+                    \"json\",\n+                    \"recall\",\n+                    \"\",\n+                    \"--scope\",\n+                    \"command:loom ticket show al-1234\",\n+                    \"--scoped-only\",\n+                    \"--limit\",\n+                    \"10\",\n+                    \"--deterministic\",\n+                ]\n+            )\n+            res = json.loads(out)\n+            self.assertEqual([r[\"id\"] for r in res], [\"loom-ticket-family\"])\n+\n \n if __name__ == \"__main__\":\n     unittest.main()\n",
+    "patch_omitted": false,
+    "patch_sha256": "ce72e96502ab8dee551547408865803ac8f99aa6527cc6a669c455d62bff92ee"
+  },
+  "observations": {
+    "cursor": {
+      "end_count": 103458,
+      "end_offset_bytes": 18399874,
+      "file_prefix_sha256": "ea08844a853b43d8b06f8d9d28a0a9f67156d83075061a491564d6b3cbe1350f",
+      "reset_detected": false,
+      "start_count": 103126,
+      "start_offset_bytes": 18334630,
+      "tail_sha256": "ff91afe8fba35dc8d4f507daa77c7e41a60de2fb0a519f5385b4f93e25a7904f"
+    },
+    "included": [
+      {
+        "id": "9f370b13-a85a-4fc0-a8db-11d27236ad37",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:42:15.148Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "d59dc3b6-8cfd-4db7-b1b4-12ee69a6a373",
+        "properties": {
+          "keys": [
+            "message",
+            "variant",
+            "duration"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:42:15.372Z",
+        "type": "tui.toast.show"
+      },
+      {
+        "id": "81930325-af8a-4480-a58f-cd7b13c3d437",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:46:52.230Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "57adf506-ae8f-4930-86e3-4dde2524aa5b",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:46:52.290Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "d6d8d549-6fcb-495a-80f4-428b0769efe8",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:46:53.739Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "8c9fa7a1-4290-4d5b-a602-8f5c27aaa579",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:46:55.363Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "c8704bf7-767e-4503-afe2-73614e53401e",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:46:55.440Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "5c48a9c2-1656-4d69-898e-0832cf2c6312",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:24.776Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "7ec42eee-0e70-438d-8d87-1660537690e7",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:48:24.779Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "5a42f21b-edf1-4063-8c82-26d3a81f0e3b",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:24.780Z",
+        "type": "session.status"
+      },
+      {
+        "id": "7a2b8eca-0556-466e-87d7-b26287686763",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:25.122Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "e9c73826-2e4e-4605-9986-747f2f5a8c63",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:26.418Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "4c9db7aa-bd02-42db-8193-1be34497537e",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:48:26.466Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "199ecb1b-3591-4787-abf9-a81479d5b4d8",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:26.460Z",
+        "type": "session.status"
+      },
+      {
+        "id": "75d7358b-bb1d-4913-a078-d68bdc50f63f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:26.466Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "f1e51b9f-3ed1-45ef-867b-2dfd9451415a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:27.970Z",
+        "type": "message.updated"
+      },
+      {
+        "args": {
+          "command_len": 304,
+          "command_sha256": "a23b01bd77e9c953a77156361d2100438c2624bfea85c97f9e485e8284c89e18",
+          "redacted": true
+        },
+        "id": "1d02d77a-84d0-4eee-8d27-f2725846344f",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "command_sha256=a23b01bd77e9c953a77156361d2100438c2624bfea85c97f9e485e8284c89e18 command_len=304",
+        "tool": "bash",
+        "ts": "2026-02-11T23:48:38.327Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": {
+          "command_len": 90,
+          "command_sha256": "6b5a5de2736967cd6ccdc24262bb319716a1fac1cd5e3d086a87a47cdbf36dcd",
+          "redacted": true
+        },
+        "id": "ba55a432-80cb-4e54-903f-9b18bd3593f9",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "command_sha256=6b5a5de2736967cd6ccdc24262bb319716a1fac1cd5e3d086a87a47cdbf36dcd command_len=90",
+        "tool": "bash",
+        "ts": "2026-02-11T23:48:38.329Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "5db95a41-4e48-443d-bdd2-0bcaa0873f7e",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "bash",
+        "ts": "2026-02-11T23:48:39.082Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "args": null,
+        "id": "36b9a539-6fe6-479c-976f-472e3569cd17",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "bash",
+        "ts": "2026-02-11T23:48:39.131Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "b76d950d-c980-4e31-896e-5d95e8711aa7",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:39.133Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "be68f18c-59e4-4561-84e8-926b8052c497",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:39.137Z",
+        "type": "session.status"
+      },
+      {
+        "id": "10e3e870-d830-49d8-b4ab-77430d60ce5d",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:39.137Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "8d95648b-9968-4dca-aebf-f1bd82027781",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:39.289Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9e9f255e-348c-4950-b51a-4b9caf495763",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:39.290Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "115e987f-9784-4bde-8c2c-c31f6c0469f4",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:39.292Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "4c7f3444-ded5-490d-939a-78e52c59b3f4",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:48:39.292Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "4434281c-e779-44d3-a2df-a3d82dd3b367",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:39.910Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 389,
+          "command_sha256": "0d855da6a944f170cb0882685aef5d819106f86555fa1d1d8140eb5fba2308a3",
+          "redacted": true
+        },
+        "id": "2d1f7327-f1c5-4ce1-94c8-928f92a360c9",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "command_sha256=0d855da6a944f170cb0882685aef5d819106f86555fa1d1d8140eb5fba2308a3 command_len=389",
+        "tool": "bash",
+        "ts": "2026-02-11T23:48:45.582Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "b50d90be-53a0-4385-a76c-13c1651efdd3",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "bash",
+        "ts": "2026-02-11T23:48:46.528Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "9214df54-7d6e-49f6-a2db-61e8473e6854",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:46.529Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "3cdc2ffa-14b1-4148-9748-7f1f150d4c63",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:46.530Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b664b31e-41dc-458c-bb15-cd9f83c74660",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:46.530Z",
+        "type": "session.status"
+      },
+      {
+        "id": "02c7d81c-e41e-474c-abe8-3611080f7b7c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:46.659Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b65624ef-9fab-4837-8e33-c0809f1f8aeb",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:46.659Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6a2619f4-0e34-4b5e-8f4f-1ba3d997472f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:46.661Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "624599f1-0d02-405c-888f-0d57b94f0c5f",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:48:46.661Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "2ab2faef-489d-4f8d-b471-77ffdcebf454",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:47.273Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/scopes.py",
+          "pattern": "kind == \"command\"|_looks_like_glob|fnmatch|SCOPE_MATCH_SCORE"
+        },
+        "id": "0f4f4c96-9b8e-4883-a00d-79c652414f1b",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "pattern=kind == \"command\"|_looks_like_glob|fnmatch|SCOPE_MATCH_SCORE",
+        "tool": "grep",
+        "ts": "2026-02-11T23:48:52.281Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": {
+          "filePath": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/scopes.py",
+          "limit": 340,
+          "offset": 1
+        },
+        "id": "976ea60a-7c1f-43d5-8f91-6c9fa0e40cea",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "filePath=/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/scopes.py",
+        "tool": "read",
+        "ts": "2026-02-11T23:48:52.285Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "224f253c-c432-4a5c-8278-51d5263c7984",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "read",
+        "ts": "2026-02-11T23:48:52.289Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "args": null,
+        "id": "c48443ac-6446-402b-9a18-739100d3dff1",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "grep",
+        "ts": "2026-02-11T23:48:52.311Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "3d4a00aa-5acf-4fa0-beca-b8d195702e17",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:52.562Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "c0604aeb-3527-4ce1-ade3-ede16c4d05c8",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:52.564Z",
+        "type": "session.status"
+      },
+      {
+        "id": "cd2fee33-0bb3-44cf-a0cd-4366fa0b2972",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:52.564Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9ae5f96c-36a1-44bd-bf57-887597ea6eee",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:52.742Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "98c7948e-883c-4f6e-8611-9850d1a2ebc3",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:52.745Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "0fbe2192-e147-4837-9a54-14bae869faa3",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:52.743Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "7ee47d92-4fd7-4238-a7c1-23a855856ced",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:48:52.745Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "0bc8ce75-69f1-43cf-8ed0-16241e9bc372",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:52.960Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "baea93da-0d7c-4951-a2ef-85879823d233",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.134Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "57f15f96-0d89-4554-9d9f-d9983276992c",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.134Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "fa856aa0-eb12-459b-a75f-e09e5ccb5d8c",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.134Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "87986722-f10c-4322-865e-cd5cffe5dfa0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.134Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "f01e2bef-2369-4215-8ce4-9c91d66d461b",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:53.372Z",
+        "type": "session.status"
+      },
+      {
+        "id": "d486f3e2-8f6e-4f55-aa06-5bb5832c1634",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.381Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "5f6fd381-ecc1-4a47-98b5-4a33c758f631",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.382Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "640e7ae3-e001-4ae9-b095-a610eb5e716a",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.513Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "0f290105-70b0-49d8-825e-1667fc772b0c",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.514Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "cb7a6536-0035-4dcf-8a9c-35f98f52b3f1",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.573Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "1df32796-9ec8-4c73-a674-13a8e9c61ec9",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.621Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "c40f29bb-0da9-428c-86e8-b04025ecf790",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.621Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "a8f8b84a-5456-4b89-94ba-383cb380f35a",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.622Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "7ca0b5c0-8207-4c54-9139-b94ce3ebc36a",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.622Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "26066953-874c-4b7c-b70c-de0ceccb2e19",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.622Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "b1f6c8a7-5ecd-432c-bc72-a45de119e3a0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.622Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "b7b89907-ce6d-4c8e-8694-937868823586",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:53.622Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": {
+          "filePath": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/scopes.py",
+          "limit": 210,
+          "offset": 338
+        },
+        "id": "c03222c8-6e85-4717-81a2-4e1c4bde2e05",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "filePath=/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/scopes.py",
+        "tool": "read",
+        "ts": "2026-02-11T23:48:58.924Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "43e9294a-6c84-47f2-89b9-2f7844568710",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "read",
+        "ts": "2026-02-11T23:48:58.928Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "5d4164ad-74dc-420a-9b6f-ed25a85ae650",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:58.986Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f935529a-4627-46a9-9bd1-6ab15914574e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:58.988Z",
+        "type": "session.status"
+      },
+      {
+        "id": "2af75067-4f50-4c57-b780-c53d9e5adf72",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:58.988Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "2d402eb6-ab3b-4c1f-ae30-109f19676298",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:59.135Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "06d9bec0-59c1-43e9-b61f-a00370214d5f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:59.137Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "4c2be649-fb96-4045-a50d-8a67a08a3062",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:48:59.137Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "205a2f0b-7628-48cf-b977-0a7a72565dfe",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:59.135Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "dac11476-931f-44ba-8cd7-2b788cd4ff40",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:59.549Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "901aeaec-3982-4d90-bd39-a4b460b36d4a",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:59.710Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "1299f820-aaec-403b-ab82-ec5666810ab0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:59.710Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "571a7618-a24a-4904-b730-2d805e8ceee1",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:59.710Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "6e6a0f09-5d33-423c-895c-7fdd89857c24",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:59.710Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "293de89e-22ec-4b8b-833f-6f83b2c8652a",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:48:59.790Z",
+        "type": "session.status"
+      },
+      {
+        "id": "20c2605d-b478-423d-9e40-4df79d3ff00f",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:59.899Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "5486674c-9210-47f8-b521-04bb1f821438",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:48:59.899Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "5a96e12c-2a18-42fa-bc7c-8a6b8ed43375",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.047Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "c110f590-5a5c-4eea-b5b7-3b98a7145149",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.047Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "ae27abf9-3529-4645-928e-875331592780",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.111Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "afdf1f3d-df93-4c43-8ce0-e61d9ca10bb5",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.111Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "1e3f63c1-8eb3-46ab-9cae-e06fbb51f646",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.151Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "3893d105-b15c-4a2c-8d4b-a651b62c1b01",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.151Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "5b80635a-380e-44d5-a7ea-53c694c9d5af",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.152Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "d7488bb9-67a9-4094-b0de-22e040683b8f",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.151Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "24e6b1a4-293c-4450-af77-7b38371fee2f",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.152Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "ef90d8f2-05a0-48f4-9145-212266bb7e9c",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:00.152Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": {
+          "include": "test_memory*.py",
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom/tests",
+          "pattern": "command:|\"kind\": \"command\"|command substring|--command"
+        },
+        "id": "612deece-3a0f-4e9b-a3e5-53df59312c91",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "pattern=command:|\"kind\": \"command\"|command substring|--command include=test_memory*.py",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:06.969Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "c103ab07-4b23-4095-9b0e-d4902faa2515",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:07.002Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "86c24026-aa0b-4ced-979f-d4eebe06b40b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:07.099Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "2c669a87-b8eb-429b-bee1-9f94e07bd6e4",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:07.101Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "be38d4a6-78e6-4dd8-a89d-6ce5c330880f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:07.101Z",
+        "type": "session.status"
+      },
+      {
+        "id": "6e3aa1cc-0561-4c06-851f-3fbb2bfab14f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:07.253Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f5adcd49-bbd8-48c2-8eaf-53caac31be7d",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:49:07.257Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "92fd8042-7068-494d-8298-a11029305eaf",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:07.257Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "5d547346-da72-444b-a6e9-b540f2e2f882",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:07.257Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "65e61c01-eb7b-4178-b9d2-540f2b646c8e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:07.838Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "filePath": "/Users/alexanderbutler/code_projects/personal/agent-loom/tests/test_memory_recall_notes.py"
+        },
+        "id": "4bed128a-4df1-4de6-ab92-017be0d43086",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "filePath=/Users/alexanderbutler/code_projects/personal/agent-loom/tests/test_memory_recall_notes.py",
+        "tool": "read",
+        "ts": "2026-02-11T23:49:11.275Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "a485c3c7-4f80-42fc-ab2a-4ae2cc368bd3",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "read",
+        "ts": "2026-02-11T23:49:11.277Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "ce1a9dee-3d11-4c0c-9b2d-bb7539e7b26e",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:11.378Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "2678cd99-eff7-4d55-af25-a1fb054b7ffa",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:11.380Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d0b6a4ed-8936-4005-abe2-e528112fac19",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:11.380Z",
+        "type": "session.status"
+      },
+      {
+        "id": "cd63651b-4886-4869-8e61-38b5e8082da7",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:11.546Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "7b585dbe-5d31-4213-a9a8-299aca7f41c9",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:11.547Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d8ab4861-6238-4362-bd34-47c7c3ac4353",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:11.548Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "197097a1-37a7-4a62-8ee3-c446471858a9",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:11.550Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "c0c6d6d5-ef3c-4412-8653-8a0810881779",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:49:11.550Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "ada9baff-dbfa-47fe-86fb-6a9e5cb2dab5",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:12.170Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/utils.py",
+          "pattern": "def normcase"
+        },
+        "id": "6eba190f-5c22-471a-9799-91fa5b0f52c5",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "pattern=def normcase",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:20.768Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "e882983e-646b-4209-8ff4-4fb20faa93b7",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:20.790Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "02686777-6845-4898-82a3-41da033478d3",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:20.828Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "605209ab-ab6b-473e-b9cd-22f8571bbe8c",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:20.832Z",
+        "type": "session.status"
+      },
+      {
+        "id": "018c60a9-2a0a-482f-81d1-d27b54ed4b20",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:20.831Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6353ffc0-b2e0-4165-a9e8-73a7da6e3ba0",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:20.986Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "3f925881-6281-401b-8515-8681c8aa231a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:20.989Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f9d713ee-cbe4-4c3b-9707-78f0d29cf28f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:20.989Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "5b652303-c269-4f1d-8675-656b931ad7c8",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:49:20.989Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "10acc14d-5a91-42b9-813f-923a07a627fd",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:21.592Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "filePath": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/utils.py",
+          "limit": 24,
+          "offset": 92
+        },
+        "id": "035226d4-f9a7-44d1-9fa6-1e070598e192",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "filePath=/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/utils.py",
+        "tool": "read",
+        "ts": "2026-02-11T23:49:24.759Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "208fc629-75e8-418d-804e-47fb6e43fac5",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "read",
+        "ts": "2026-02-11T23:49:24.767Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "a32abf13-e3e8-4dba-b363-e8df08b3b934",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:24.853Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "0e3506d1-4479-47b5-aee1-41f0ceedd6b2",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:24.855Z",
+        "type": "session.status"
+      },
+      {
+        "id": "55310ca8-71fc-468c-b572-7e053d1dbc8b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:24.855Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "e077def6-5662-4b83-9127-76672e80f7d4",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.006Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "8d5cebfb-6db7-48e9-be97-ca6149390c52",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.009Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "76b06635-fffe-4308-9046-d056842f8a51",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:49:25.009Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "1d9d1ed2-182e-4a00-94ca-21ca93359d9e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:25.009Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "5089ffc7-d447-4790-ab56-42c2d49706cf",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.503Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "1e6fca79-6760-48ec-b933-f694ee001048",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.503Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "48a75f74-2ccc-497f-8a2d-95348e27ba87",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:25.648Z",
+        "type": "session.status"
+      },
+      {
+        "id": "f06deb7b-ac1d-4d69-a314-fd00cbb5ce77",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.712Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "77c657cf-a651-4246-85a6-6c0afb56f893",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.712Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "bc7361fe-65c5-454d-8d59-3e746be34093",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.712Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "dc618785-7190-4b1c-a06a-cd9d6244ebf5",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.712Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "d50291a7-769c-4099-9fba-7afa9dc93c02",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.903Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "c1ea6428-6347-46db-a804-499379fd94b0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:25.903Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "d176ff51-87f0-47f7-8a98-29fd6a48f8c1",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.075Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "5d0cee51-d509-4e1b-9df4-e248d3966c8c",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.075Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "bc02f8ab-3b79-45e0-9f0a-3620a4f03da9",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.140Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "95bde21b-aa39-4d30-af78-cf2d53af0f56",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.140Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "928f8a6e-3f24-4560-8471-4f0b25847d90",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.191Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "9f70c75f-1cbe-488e-841c-b13c449a09d4",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.192Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "aeb90d10-18ad-46e9-bdb1-d82540e91259",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.192Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "55b7c75a-21d9-440b-81e9-bee4c8a0a19f",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.192Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "ac4d9310-c988-4313-bdac-5493c14bce96",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.192Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "422fd456-b728-4b44-8b2c-e0801a46bf73",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.192Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "f20aa9ac-4f1b-4b97-b375-a2fe3079c7b6",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:26.192Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": {
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/core.py",
+          "pattern": "command and str\\(command|scope_items\\.append\\(\"command:|add_scopes_raw\\.append\\(\"command:"
+        },
+        "id": "a515a695-8c6e-4dff-bb3b-75bfe4ab70db",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "pattern=command and str\\(command|scope_items\\.append\\(\"command:|add_scopes_raw\\.append\\(\"command:",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:31.151Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "1da4d50c-bde8-4dc1-adbd-cd540f4a86d7",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:31.165Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "12732d94-3978-42e8-9e54-1ef4c360bcca",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:31.254Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "3047913d-ff3d-4a33-83f9-e517c626ef5c",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:31.255Z",
+        "type": "session.status"
+      },
+      {
+        "id": "b1fa9930-4e34-461c-9210-dbd5b5209721",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:31.255Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d95f3d57-37b8-4dfd-9b04-e1793ee20356",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:31.501Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9cbc5367-185b-4003-946e-61c095b6d6c8",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:31.504Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "2b0d5788-1101-4726-8b10-a112cff85a5f",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:49:31.504Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "e40a02fc-ace4-47cb-b8c5-89e19f577285",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:31.501Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "7700aff9-e5c6-4a2f-9394-ebab4481e51e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:32.109Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/core.py",
+          "pattern": "command="
+        },
+        "id": "7e78ae90-3e8d-41fd-b587-e956da893462",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "pattern=command=",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:36.728Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "eb79479e-b0a7-42f5-9c6b-925fc8e3ceb7",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:36.749Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "994bd155-0771-435b-88ed-69a36d1be461",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:36.831Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "c92705e7-ecd7-4867-9b11-8799b33bc699",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:36.833Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a1be61e2-6203-4ad5-bc5c-2fb4123a5883",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:36.834Z",
+        "type": "session.status"
+      },
+      {
+        "id": "7d8cb549-b1b6-4b59-b428-e5695427a5b3",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:37.000Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "59bd587b-8fb6-46c3-9bc0-3e11e43fff36",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:37.001Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "fb3cbb58-214b-47cc-ad05-4f8c486cd1e2",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:37.003Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "459d7c59-ae7d-49f9-8a38-3df5a83e8774",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:49:37.003Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "c33f30c1-9b80-4c08-83c0-37e4975d8411",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:37.617Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/core.py",
+          "pattern": "def _merge_scope_args|scope_items|command:"
+        },
+        "id": "78b8378c-ed30-4b0a-971b-bc97830d8c11",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "pattern=def _merge_scope_args|scope_items|command:",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:44.723Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "18cca9ec-bd4a-4053-84cf-28661b20af6c",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "grep",
+        "ts": "2026-02-11T23:49:44.745Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "3db8d24d-5aaa-4108-a3dc-5aef4fb0059e",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:44.773Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "596f818b-680a-4a1f-8200-eba00588209a",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:44.775Z",
+        "type": "session.status"
+      },
+      {
+        "id": "eefab7cf-79a7-41ea-89ba-147614332b41",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:44.775Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b2ddcfa3-1e4c-4819-8e3e-69c2b340f689",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:44.929Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "c8d00aeb-2e3a-4f95-8b95-fb110f59e475",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:44.931Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "5ff07c3c-6370-4ded-89cb-cc2eab7d7388",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:49:44.929Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "0d224a6a-8799-46f4-8b9d-2991c2403984",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:49:44.931Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "22cb3e0c-32a1-49b1-be40-075766e402df",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:49:45.558Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: /Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/scopes.py\n@@\n         if kind == \"command\":\n             pat = s.get(\"pattern\")\n             if isinstance(pat, str) and pat:\n                 pat_l = pat.casefold()\n+                pat_is_glob = _looks_like_glob(pat)\n                 for idx, c in enumerate(ctx_scopes):\n                     if c.get(\"kind\") == \"command\":\n                         cmd = str(c.get(\"pattern\") or \"\")\n-                        if cmd and pat_l in cmd.casefold():\n+                        if not cmd:\n+                            continue\n+                        cmd_l = cmd.casefold()\n+                        cmd_is_glob = _looks_like_glob(cmd)\n+                        if pat_l == cmd_l:\n+                            matched.append(\n+                                {\n+                                    \"note_scope\": s,\n+                                    \"context\": c,\n+                                    \"reason\": \"command exact\",\n+                                }\n+                            )\n+                            best = max(best, SCOPE_MATCH_SCORE[\"command\"])\n+                            _mark_ctx_satisfied(idx)\n+                        elif cmd_is_glob and fnmatch.fnmatchcase(pat_l, cmd_l):\n+                            matched.append(\n+                                {\n+                                    \"note_scope\": s,\n+                                    \"context\": c,\n+                                    \"reason\": \"command matches ctx pattern\",\n+                                }\n+                            )\n+                            best = max(best, SCOPE_MATCH_SCORE[\"command\"])\n+                            _mark_ctx_satisfied(idx)\n+                        elif pat_is_glob and fnmatch.fnmatchcase(cmd_l, pat_l):\n+                            matched.append(\n+                       ... (truncated, len=2627)"
+        },
+        "id": "82c3cc12-2209-4848-baf9-9690100f9aa0",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "apply_patch",
+        "ts": "2026-02-11T23:50:12.993Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "b4ce0467-d1e2-4716-af5d-1485c9e100e1",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:13.002Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "47cc212d-a3e9-4c50-8d37-e0c477242732",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:13.069Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "30591170-6bde-4fe7-986b-5ef962ed125b",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.125Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "2b274948-474c-42da-9fc2-56584a9eebc8",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "apply_patch",
+        "ts": "2026-02-11T23:50:14.276Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "d335f682-1619-4bfc-9fa5-faea1dd7a58b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.280Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "795273f5-34c1-4cb0-8be1-c4a1b3771442",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.282Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "108ff767-9122-4ebf-889f-9d31091d1be2",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:14.282Z",
+        "type": "session.status"
+      },
+      {
+        "id": "df56a672-9c40-4729-bc98-431dd188a40d",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.313Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "07d92eb7-b65b-4813-a96a-cf192eb7b3a0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.313Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "a0d29f0f-fa37-4af9-bd28-22a9523685bc",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.313Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "0d239a59-c4c5-4175-b9cb-f8c05856dc89",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.313Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "0c38b4dd-4f42-47e2-9a6e-38e291de01af",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.474Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "70757f35-6e34-4e0a-b78c-bf6b170029c9",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:50:14.478Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "3d338b52-a666-4244-8b68-2f46a4157dd8",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:14.478Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "6f72e0df-c4b0-4502-989b-c48cb1123038",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.478Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "0da2eb43-9548-4066-85b0-3beade71cafa",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.521Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "d8b805a3-33f1-4497-a854-7a28a4961770",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.521Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "ff1e16aa-cd68-49a0-92ff-a56a51a8421d",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.682Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "54e2a4cf-4d9c-42d9-945f-b4599cffe964",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.682Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "5c86a85c-29d7-45ec-a88f-1c0f97026bbc",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.745Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "732f566b-8290-42fa-a822-b89ae93c103d",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.745Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "fde726ae-a6fd-4eec-8d7e-3a8d3dd1831d",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.789Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "33dd70f1-b40a-4fc1-8501-3b31872cc253",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.790Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "b73c5c40-32cd-4de9-aac6-14d351150756",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.790Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "894ab42f-a001-4b51-a436-dd294482f7d2",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.790Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "b24bddcc-7416-4498-9591-8539e7217ae0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.789Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "f4659650-ece2-4098-a535-e8a53c97e7f0",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:14.790Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "id": "4102fb2e-caca-487e-9bcd-b6f59f1d8e75",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:15.092Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: /Users/alexanderbutler/code_projects/personal/agent-loom/tests/test_memory_recall_notes.py\n@@\n class TestRecallNotes(unittest.TestCase):\n@@\n             res = json.loads(out)\n             self.assertEqual([r[\"id\"] for r in res], [\"exact\", \"folder\", \"filetype\"])\n             self.assertTrue(all(float(r[\"score\"][\"recency\"]) == 0.0 for r in res))\n+\n+    def test_command_scope_supports_glob_context_patterns(self) -> None:\n+        with tempfile.TemporaryDirectory() as td:\n+            vault = Path(td) / \".loom\" / \"memory\"\n+            _run([\"--vault\", str(vault), \"init\"])\n+\n+            _run(\n+                [\n+                    \"--vault\",\n+                    str(vault),\n+                    \"--format\",\n+                    \"json\",\n+                    \"add\",\n+                    \"--title\",\n+                    \"Loom Ticket Create\",\n+                    \"--id\",\n+                    \"loom-ticket-create\",\n+                    \"--scope\",\n+                    \"command:loom ticket create --title foo\",\n+                ],\n+                stdin=\"alpha\\n\",\n+            )\n+            _run(\n+                [\n+                    \"--vault\",\n+                    str(vault),\n+                    \"--format\",\n+                    \"json\",\n+                    \"add\",\n+                    \"--title\",\n+                    \"Pytest\",\n+                    \"--id\",\n+                    \"pytest\",\n+                    \"--scope\",\n+                    \"command:uv run pytest\",\n+                ],\n+                stdin=\"alpha\\n\",\n+            )\n+\n+            out = _run(\n+                [\n+                    \"--vault\",\n+                    str(vault),\n+                    \"--format\",\n+                    \"json\",\n+                    \"recall\",\n+                    \"\",\n+                    \"--scope\",\n+                    \"command:loom *\",\n+                    \"--scoped-only\",\n+    ... (truncated, len=3500)"
+        },
+        "id": "7bd665d7-4c57-48fd-8e8d-144ef9f9079a",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "apply_patch",
+        "ts": "2026-02-11T23:50:30.497Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "acebcab6-6478-4458-9142-ccb8a952da40",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:30.502Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "facc5794-fc2e-499b-bf6c-204c1c09e601",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:30.524Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "74ef4a41-f53c-4da4-a7fb-8c5af4c63426",
+        "properties": {
+          "keys": [
+            "path",
+            "serverID"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:30.824Z",
+        "type": "lsp.client.diagnostics"
+      },
+      {
+        "args": null,
+        "id": "ae6e63a1-df31-43ef-ae3b-b9e20e4ffd3b",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "apply_patch",
+        "ts": "2026-02-11T23:50:30.977Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "d4a018e0-e9a4-46e3-8439-2c569a1cbc48",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:30.982Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "2bb2b58a-01bf-4bd7-81b2-aaf4bd7ddd06",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:30.985Z",
+        "type": "session.status"
+      },
+      {
+        "id": "105fe2e7-07c8-4478-bc94-317a413c0914",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:30.985Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "08a6b497-270a-442d-9fe6-feb7cfd87304",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:31.145Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "955fda08-e22a-43c4-a3ad-cc5dbf59e03a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:31.145Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "5fcfdf37-e1c9-47fa-bf59-f882bbb45846",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:31.148Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "be81c7fb-15c9-4fcc-afe2-bf527caf715c",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:50:31.148Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "e28605cb-ba79-4c23-ac8c-445154f3d7d6",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:31.730Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "path": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/README.md",
+          "pattern": "Kinds:|command:pytest|file and folder support|Unknown scope kinds"
+        },
+        "id": "a4aa9595-f4a3-4ff4-99d9-7accf5ba7d66",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "pattern=Kinds:|command:pytest|file and folder support|Unknown scope kinds",
+        "tool": "grep",
+        "ts": "2026-02-11T23:50:36.046Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "5409bcaf-e8d9-4c14-9a49-0a0f28d2de77",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "grep",
+        "ts": "2026-02-11T23:50:36.065Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "c4f941ae-4e84-472c-b055-69b958121c6f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:36.104Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "315b5588-a425-47b6-8ce2-f79ddf88db76",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:36.106Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "7aed91c4-f555-4038-a7d9-79b63738875b",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:36.106Z",
+        "type": "session.status"
+      },
+      {
+        "id": "be8f1369-ce8e-4dd9-a027-f2af3eed90c5",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:36.264Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "8e6b8ef9-2b0a-443a-9463-3ae383a44eab",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:36.265Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6b97d10f-a3bc-4c61-8403-8558fc7ffe4f",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:50:36.266Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "12ada3c2-48bf-4d84-9640-31a93210ce21",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:36.267Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "a13656e3-1189-4ece-96c0-f1789bf7ac6b",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:36.939Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "filePath": "/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/README.md",
+          "limit": 34,
+          "offset": 74
+        },
+        "id": "118c0497-0a0e-414a-8c56-a19a5ba9ef7a",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "filePath=/Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/README.md",
+        "tool": "read",
+        "ts": "2026-02-11T23:50:40.019Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "1228afee-1f7d-4f39-b787-de03fcdc0520",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "read",
+        "ts": "2026-02-11T23:50:40.022Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "b6796903-c7c9-4edb-910c-8fb8721447c4",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:40.112Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b4ededc7-f2d1-45c7-abd2-378ecaaaacfc",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:40.113Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "99d4ce02-300b-4d09-ba5f-4280ad85964f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:40.113Z",
+        "type": "session.status"
+      },
+      {
+        "id": "bf1af487-30e9-4e19-b9a9-c7296e5bdad1",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:40.276Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "1695a924-bf59-4308-9791-0e10cbaa932b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:40.278Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b4ee666e-52e9-457d-8dab-f068faa36194",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:50:40.278Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "128c6c7e-03a5-4b9e-ae2f-00446f1d6099",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:40.278Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "4aa4e114-2059-4e8c-90ae-50bb85127ae3",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:40.870Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "patchText": "*** Begin Patch\n*** Update File: /Users/alexanderbutler/code_projects/personal/agent-loom/src/agent_loom/memory/README.md\n@@\n - `file` and `folder` are repo-relative when in a git repo.\n - `file` and `folder` support glob wildcards (`*`, `?`, `[]`) in the path value.\n+- `command` supports glob wildcards (`*`, `?`, `[]`) and uses fnmatch-style matching.\n - Unknown scope kinds are ignored during parsing and matching.\n*** End Patch"
+        },
+        "id": "d5a4024a-4da8-4aa7-ba24-42da79bd06a4",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "apply_patch",
+        "ts": "2026-02-11T23:50:45.449Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "id": "fdd9bf03-6a59-4b31-a9a4-19d71c7f9577",
+        "properties": {
+          "keys": [
+            "file"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:45.459Z",
+        "type": "file.edited"
+      },
+      {
+        "id": "0f1d34f1-08b7-445a-96cd-831c5d73a91c",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:45.462Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "args": null,
+        "id": "bb1ccc28-e29a-4162-b749-1534ff6075d2",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "apply_patch",
+        "ts": "2026-02-11T23:50:45.505Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "31e5b1ba-b080-43a1-9307-9b75c190e37e",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:45.508Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "71f21c46-1484-4b2c-a0d4-8a3af5a38a7e",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:45.510Z",
+        "type": "session.status"
+      },
+      {
+        "id": "619e182a-5f6f-4eeb-bc2a-9629361dfc7a",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:45.510Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d749bb80-44bd-467f-bb0d-a3d2b5ba19ee",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:45.657Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "fe47c7a2-7574-480f-9e78-c63d6c0d0cc5",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:45.659Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "b3b4c86e-ae34-499f-ac28-ccf6cf74560f",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:45.660Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "3de6f9a6-a04d-4995-aa12-d5a841758165",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:50:45.660Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "386937b5-635a-4580-8b51-1550329309b0",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:46.260Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 19,
+          "command_sha256": "abbdbe7f68d529e81b887d45d3a9d58969b565b523ce5753aacc4dfe0b9e8a63",
+          "redacted": true
+        },
+        "id": "17b27652-28e4-4374-8690-b65ede6f5041",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "command_sha256=abbdbe7f68d529e81b887d45d3a9d58969b565b523ce5753aacc4dfe0b9e8a63 command_len=19",
+        "tool": "bash",
+        "ts": "2026-02-11T23:50:51.908Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": {
+          "command_len": 19,
+          "command_sha256": "64776c1ca0c426f361df9362b24f35323bd843c12b79af437d10aa080db1b36f",
+          "redacted": true
+        },
+        "id": "919eee32-d89a-44b3-9e4e-16c5c3706ea1",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "command_sha256=64776c1ca0c426f361df9362b24f35323bd843c12b79af437d10aa080db1b36f command_len=19",
+        "tool": "bash",
+        "ts": "2026-02-11T23:50:51.917Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "da887792-99ed-4c76-8a3d-2bc47af657b7",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "bash",
+        "ts": "2026-02-11T23:50:52.024Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "args": null,
+        "id": "0812dac4-b05c-4cde-9238-ad352ff490c9",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "bash",
+        "ts": "2026-02-11T23:50:57.545Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "407ea638-1b83-4afc-9597-2d62546ce8bb",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:57.547Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "21a57ca6-d2d3-4600-a51b-8258aa48ce6f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:57.549Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "41c765a3-6f53-49dc-aa37-98bf55f1f623",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:57.549Z",
+        "type": "session.status"
+      },
+      {
+        "id": "128484db-e89c-4b69-9acd-b7897ce5368f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:57.775Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "67f45006-f654-4cc4-bca8-242679934a93",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:50:57.778Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "0ffad52a-06f7-4e9a-a513-14c9944c2587",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:50:57.778Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "ffd4f482-40b2-4b63-9f20-013007490bb5",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:57.778Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "19549d21-fa6c-408c-9cf5-d53ca8a758f4",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:50:58.436Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 170,
+          "command_sha256": "86b1357112895dec3ce4b584d406c8b7a7dff7a68ede6d8b1d9bc21c0b2b4732",
+          "redacted": true
+        },
+        "id": "2e495294-7c1c-4b05-a317-52a4b8dbd684",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "command_sha256=86b1357112895dec3ce4b584d406c8b7a7dff7a68ede6d8b1d9bc21c0b2b4732 command_len=170",
+        "tool": "bash",
+        "ts": "2026-02-11T23:51:04.083Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "a86722e4-8724-490a-aed4-758d139c3f58",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "bash",
+        "ts": "2026-02-11T23:51:09.912Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "d064c87a-f902-4f83-ad29-fa25b2ce4340",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:51:09.914Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "571b59ea-ad28-4e3e-b74c-46ec53d28213",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:51:09.917Z",
+        "type": "session.status"
+      },
+      {
+        "id": "6715b12c-2202-4026-87de-dcefac7b4618",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:51:09.917Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f2e46638-400e-470b-a951-f8d7db99dfca",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:51:10.087Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6ad7b35a-ef03-4160-8869-f5681bdd1480",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-11T23:51:10.090Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "c049bbd7-6e14-423b-aa61-1e2e27a0acf0",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:51:10.090Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "ca527ac0-d0dd-4d29-929c-cae090fcfefc",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-11T23:51:10.090Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "8ad1aeee-84ed-4618-ab49-78f9547f7d94",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-11T23:51:10.730Z",
+        "type": "session.status"
+      },
+      {
+        "args": {
+          "command_len": 13,
+          "command_sha256": "efbb60d087c678d2718a428ddea96c5458e79f8f334c3141eb3ddacd55ae91d8",
+          "redacted": true
+        },
+        "id": "37c19bae-610d-4e7d-a0d7-c924f86922a3",
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "summary": "command_sha256=efbb60d087c678d2718a428ddea96c5458e79f8f334c3141eb3ddacd55ae91d8 command_len=13",
+        "tool": "bash",
+        "ts": "2026-02-11T23:51:15.860Z",
+        "type": "tool.execute.before"
+      },
+      {
+        "args": null,
+        "id": "787a484c-47ae-4f0d-bbcf-9d563290f0a3",
+        "ok": null,
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "tool": "bash",
+        "ts": "2026-02-12T00:02:10.561Z",
+        "type": "tool.execute.after"
+      },
+      {
+        "id": "b993e926-7053-4754-b90d-e4c23010e59f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:10.577Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "278c3452-0e9a-4bd8-829a-3478b407c866",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:10.582Z",
+        "type": "session.status"
+      },
+      {
+        "id": "23d4ba64-f399-490e-8046-77eaa8b659e2",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:10.582Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "4df8a6ef-990a-4a00-b1a2-9034347db1e6",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:11.050Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "ec2b5171-e288-41d3-ace0-932a41f0ae55",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:11.069Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "09186a29-5ad8-4d77-be38-068570671e3b",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:11.051Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "93926ca7-b7ed-43d0-b19b-00f3ba81d816",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-12T00:02:11.064Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "14451862-82f9-483d-bc31-be583340c19d",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:24.652Z",
+        "type": "session.status"
+      },
+      {
+        "id": "28e2d76d-ba75-46a8-95cd-e8ea82c4234b",
+        "properties": {
+          "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2"
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:24.652Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "e77fe268-7f1a-41a4-969b-5a9bd84501f9",
+        "properties": {
+          "keys": [
+            "file",
+            "event"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:24.730Z",
+        "type": "file.watcher.updated"
+      },
+      {
+        "id": "6c1998b6-fd03-462e-bf68-e5730ca70055",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:24.753Z",
+        "type": "session.created"
+      },
+      {
+        "id": "86dd0b93-8986-4d51-964f-41dbd78c81b5",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-12T00:02:24.754Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "1b59cd73-aba6-401c-9e33-575497170844",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:24.758Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "048c988c-3c60-42f6-a441-cbfaec929cbc",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-12T00:02:24.759Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "1813eb09-6a00-4d60-b47c-f711ec2448c7",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b0d80a8effeSxiRbOxe7sbAwP",
+        "ts": "2026-02-12T00:02:24.760Z",
+        "type": "session.status"
+      },
+      {
+        "id": "d361ed86-eba0-44e1-9110-92974e536265",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:24.761Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "488501cd-14a5-4a33-b2bd-669efe6b4d55",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:27.209Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "9c3c19d3-baee-48ac-abf3-cbe8a877651e",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-12T00:02:27.211Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "4c137cf0-4be4-4d33-a4d1-4e148baef0ae",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:27.213Z",
+        "type": "session.status"
+      },
+      {
+        "id": "e828702d-3a18-4ffc-bc47-c415fe0e1a11",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:27.377Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "d4cce9c3-afa2-4af6-8e35-fd5dce9948f2",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "error"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:30.710Z",
+        "type": "session.error"
+      },
+      {
+        "id": "b4193720-8c39-46b4-9b56-77d46b553e84",
+        "properties": {
+          "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2"
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:30.710Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "a4482348-363c-430d-8a1e-ec6c3a3235f8",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:30.710Z",
+        "type": "session.status"
+      },
+      {
+        "id": "fab39a16-6e93-47e5-8b5b-86444017fe6c",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:30.719Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a06343e3-5b09-4da7-8c40-374ae6cd6c18",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:30.731Z",
+        "type": "session.status"
+      },
+      {
+        "id": "5c6338a7-05ff-4d37-923f-ebd44300b7c3",
+        "properties": {
+          "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2"
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:30.731Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "b751eaa8-8338-4160-a9e9-d69e27f8dec0",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "error"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:47.312Z",
+        "type": "session.error"
+      },
+      {
+        "id": "7945bb13-3f45-4289-b9d8-c2e3563b187b",
+        "properties": {
+          "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2"
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:47.312Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "55b93a69-f971-489c-b660-a05188ede4fe",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:47.312Z",
+        "type": "session.status"
+      },
+      {
+        "id": "98d5986a-aa52-45c4-bdc3-fa098f0458dc",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:47.319Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "6a88b180-6fd4-4a9d-8a13-6c7fe2e49dba",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:47.319Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "840fd339-fbd5-4070-8e6e-2d34df48ea8b",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-12T00:02:47.322Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "daca44e0-a12f-4a26-aec7-36c3bcc93e64",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:47.323Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "2d6e4099-de94-485c-b8de-bb4f8684725b",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:47.324Z",
+        "type": "session.status"
+      },
+      {
+        "id": "954d823e-cb25-44f4-90a5-94dbddafdc13",
+        "properties": {
+          "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2"
+        },
+        "sessionID": "ses_3b1827661ffeuPLxndkUFNFVg2",
+        "ts": "2026-02-12T00:02:47.324Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "b3fac26f-165c-437c-821c-30f58ccdcfe2",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:02:48.157Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "f7d82474-1117-458f-98e4-f1f9f0442347",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-12T00:02:48.158Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "c03d4bd5-f2a4-4d60-a88c-a38713314357",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b0d80a8effeSxiRbOxe7sbAwP",
+        "ts": "2026-02-12T00:02:48.161Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "83cc11f9-a3fd-4126-8fca-f1075c007621",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b0d80a8effeSxiRbOxe7sbAwP",
+        "ts": "2026-02-12T00:02:48.170Z",
+        "type": "session.status"
+      },
+      {
+        "id": "2fb489ab-a9dd-4bf9-9e7a-1f40402c7a3f",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:03:08.159Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "a7d93881-14ba-47e4-a3ba-fa36a22f48b5",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:03:08.313Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "fac34615-4df8-4e0e-bbcd-226496672ee9",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:03:16.810Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "56d70955-31ab-4ef7-8497-bfd31f1f3ef1",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:03:16.825Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "8c5c7c9a-2634-4618-ad21-321dd451e4cd",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b0d80a8effeSxiRbOxe7sbAwP",
+        "ts": "2026-02-12T00:03:16.826Z",
+        "type": "session.status"
+      },
+      {
+        "id": "56141546-e921-45a0-a182-ebcba5bedbdc",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:03:16.831Z",
+        "type": "message.updated"
+      },
+      {
+        "id": "00800ea6-1cf4-481e-8225-9229a1bb79c2",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "diff"
+          ]
+        },
+        "sessionID": "ses_3b0d80a8effeSxiRbOxe7sbAwP",
+        "ts": "2026-02-12T00:03:16.832Z",
+        "type": "session.diff"
+      },
+      {
+        "id": "69c8a860-8861-48f8-bad2-21223494b09f",
+        "properties": {},
+        "sessionID": null,
+        "summary": "title=",
+        "ts": "2026-02-12T00:03:16.832Z",
+        "type": "session.updated"
+      },
+      {
+        "id": "ec8b2db8-76b6-449a-bdf7-bf03714644ff",
+        "properties": {
+          "keys": [
+            "sessionID",
+            "status"
+          ]
+        },
+        "sessionID": "ses_3b0d80a8effeSxiRbOxe7sbAwP",
+        "ts": "2026-02-12T00:03:16.839Z",
+        "type": "session.status"
+      },
+      {
+        "id": "e08b6a4a-e7d7-4147-86ea-a6f8a83af737",
+        "properties": {
+          "sessionID": "ses_3b0d80a8effeSxiRbOxe7sbAwP"
+        },
+        "sessionID": "ses_3b0d80a8effeSxiRbOxe7sbAwP",
+        "ts": "2026-02-12T00:03:16.840Z",
+        "type": "session.idle"
+      },
+      {
+        "id": "80d2c091-174e-4e35-96de-6310b03717a2",
+        "properties": {
+          "keys": [
+            "info"
+          ]
+        },
+        "sessionID": null,
+        "ts": "2026-02-12T00:03:16.909Z",
+        "type": "session.deleted"
+      }
+    ],
+    "omitted": false
+  },
+  "proposals": {
+    "instinct_candidates": [
+      {
+        "action": "Update scope parsing/normalization in `src/agent_loom/memory/scopes.py`, update the supported kinds list in `src/agent_loom/memory/README.md`, and add or extend `tests/test_memory_recall_notes.py` to cover accepted kinds plus unknown-kind handling.",
+        "confidence": 0.95,
+        "id": "memory-scope-change-sync-docs-and-recall-tests",
+        "tags": [
+          "loom-memory",
+          "scopes",
+          "docs",
+          "tests",
+          "recall"
+        ],
+        "title": "Sync scope changes across parser, docs, and recall tests",
+        "trigger": "When adding or changing Loom memory scope kinds (for example file/folder/command) in memory parsing or recall behavior."
+      },
+      {
+        "action": "Add tests that assert unknown scope kinds are rejected with clear, user-facing errors and that known kinds still parse and round-trip correctly through recall paths.",
+        "confidence": 0.91,
+        "id": "memory-scope-unknown-kind-explicit-failure-tests",
+        "tags": [
+          "loom-memory",
+          "validation",
+          "ux",
+          "regression-tests"
+        ],
+        "title": "Require explicit unknown-scope failure coverage",
+        "trigger": "When scope parsing logic changes or a new scope kind is introduced."
+      },
+      {
+        "action": "Run focused tests first (for example `uv run pytest tests/test_memory_recall_notes.py`) to validate behavior quickly, then run full required gates (`uv run basedpyright`, `uv run ruff check .`) before broader test execution.",
+        "confidence": 0.82,
+        "id": "memory-work-targeted-test-then-full-gates",
+        "tags": [
+          "workflow",
+          "feedback-loop",
+          "quality-gates",
+          "loom-memory"
+        ],
+        "title": "Run targeted memory tests before full quality gates",
+        "trigger": "After touching `src/agent_loom/memory/**` or memory-facing tests."
+      }
+    ],
+    "skill_candidates": [
+      {
+        "body": "# Loom Memory Scope Extension\n\nUse this when adding, renaming, or changing memory scope kinds used by recall and note parsing.\n\n## Procedure\n1. Define the scope contract first\n   - Decide the exact kind names and accepted forms.\n   - Decide unknown-kind behavior (must fail clearly).\n\n2. Implement parser/normalization updates\n   - Update `src/agent_loom/memory/scopes.py` so new kinds parse and normalize deterministically.\n   - Keep normalization rules explicit and minimal; remove dead branches.\n\n3. Align user-facing docs\n   - Update supported kinds in `src/agent_loom/memory/README.md`.\n   - Ensure examples reflect actual accepted scope syntax.\n\n4. Add high-signal recall tests\n   - Extend `tests/test_memory_recall_notes.py` for:\n     - recognized kinds (including the new/changed kind),\n     - normalization expectations,\n     - unknown-kind rejection with clear error text.\n\n5. Run quality gates\n   - `uv run basedpyright`\n   - `uv run ruff check .`\n   - `uv run pytest tests/test_memory_recall_notes.py`\n   - Run broader `uv run pytest` when changes could affect other memory paths.\n\n## Done when\n- Scope kinds are consistent across parser, docs, and tests.\n- Unknown kinds fail explicitly and are covered by tests.\n- Type/lint/test gates pass.",
+        "description": "Procedure for adding or changing Loom memory scope kinds while keeping parser behavior, docs, and recall UX tests aligned.",
+        "name": "loom-memory-scope-extension",
+        "source_instinct_ids": [
+          "memory-scope-change-sync-docs-and-recall-tests",
+          "memory-scope-unknown-kind-explicit-failure-tests",
+          "memory-work-targeted-test-then-full-gates"
+        ],
+        "tags": [
+          "loom-memory",
+          "scopes",
+          "docs-sync",
+          "testing",
+          "procedure"
+        ]
+      }
+    ]
+  },
+  "triage": {
+    "notes": "",
+    "status": "accepted",
+    "tags": []
+  },
+  "version": 1
+}

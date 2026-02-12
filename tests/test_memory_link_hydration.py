@@ -57,6 +57,8 @@ class TestMemoryLinkHydration(unittest.TestCase):
             vp = memory_vault.vault_paths(vault)
             py_note = memory_vault.read_note(vp, py_id)
             self.assertEqual(py_note.title, "Python")
+            self.assertIn("## Context", py_note.body)
+            self.assertIn("[[a|a]]", py_note.body)
 
     def test_add_reuses_existing_stub(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -155,6 +157,60 @@ class TestMemoryLinkHydration(unittest.TestCase):
             self.assertIn("|Python]]", a_text)
             # appended link hydrated
             self.assertIn(f"[[{go_id}|Go]]", a_text)
+
+    def test_edit_seeds_existing_empty_scaffold(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            vault = Path(td) / ".loom" / "memory"
+            _run_json(["--vault", str(vault), "--format", "json", "init"])
+
+            _run_json(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "add",
+                    "--id",
+                    "python",
+                    "--title",
+                    "Python",
+                    "--body",
+                    "",
+                ]
+            )
+            (vault / "notes" / "python.md").write_text(
+                "---\n"
+                "id: python\n"
+                "title: Python\n"
+                "created_at: 2026-01-01T00:00:00Z\n"
+                "updated_at: 2026-01-01T00:00:00Z\n"
+                "visibility: shared\n"
+                "status: active\n"
+                "---\n\n",
+                encoding="utf-8",
+            )
+
+            _run_json(
+                [
+                    "--vault",
+                    str(vault),
+                    "--format",
+                    "json",
+                    "add",
+                    "--id",
+                    "a",
+                    "--title",
+                    "A",
+                    "--body",
+                    "Ref [[Python]]\n",
+                ]
+            )
+
+            seeded = (vault / "notes" / "python.md").read_text(
+                "utf-8", errors="replace"
+            )
+            self.assertIn("## Context", seeded)
+            self.assertIn("[[a|a]]", seeded)
 
 
 if __name__ == "__main__":

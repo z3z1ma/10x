@@ -111,6 +111,8 @@ from agent_loom.memory.vault import (
     normalize_note_frontmatter,
     note_rel_path,
     open_in_editor,
+    resolve_note_ref_id,
+    resolve_note_ref_path,
     resolve_vault_root,
     rewrite_note_frontmatter,
     try_read_note_from_path,
@@ -119,6 +121,32 @@ from agent_loom.memory.vault import (
 )
 
 __all__ = ["add", "edit", "init", "janitor", "link", "prime", "recall", "reindex"]
+
+
+def _hydration_feedback(hydration: Dict[str, Any]) -> tuple[Dict[str, int], List[str]]:
+    rewrites = list(hydration.get("rewrites") or [])
+    created_notes = list(hydration.get("created_notes") or [])
+    seeded_notes = list(hydration.get("seeded_notes") or [])
+    ambiguous = list(hydration.get("ambiguous") or [])
+    skipped = list(hydration.get("skipped") or [])
+
+    summary = {
+        "rewrites": len(rewrites),
+        "created_notes": len(created_notes),
+        "seeded_notes": len(seeded_notes),
+        "ambiguous": len(ambiguous),
+        "skipped": len(skipped),
+    }
+
+    actions: List[str] = []
+    for item in created_notes[:5]:
+        nid = str(item.get("id") or "").strip()
+        if not nid:
+            continue
+        actions.append(f"loom memory edit {nid} --append 'Add high-level context'")
+    if ambiguous:
+        actions.append("loom memory link validate")
+    return summary, actions
 
 
 # -----------------------------
@@ -400,6 +428,7 @@ def add(
         visibility=visibility,
         created_at=created_at,
         updated_at=updated_at,
+        origin_note_id=note_id,
     )
 
     p = write_note_file(
@@ -419,6 +448,7 @@ def add(
     )
 
     links_info = compute_link_diagnostics(vp, note_id)
+    hydration_summary, next_actions = _hydration_feedback(hydration)
 
     return AddResult(
         ok=True,
@@ -427,6 +457,8 @@ def add(
         visibility=visibility,
         links=links_info,
         hydration=hydration,
+        hydration_summary=hydration_summary,
+        next_actions=next_actions,
     )
 
 
@@ -462,7 +494,8 @@ def edit(
     repo_root = git_repo_root(cwd)
 
     note_id = note_id.strip()
-    p = find_note_path(vp, note_id)
+    p = resolve_note_ref_path(vp, note_id)
+    note_id = p.stem
     raw_before = p.read_text("utf-8", errors="replace")
 
     if bool(interactive) and (body is not None or append is not None):
@@ -689,6 +722,7 @@ def edit(
         visibility=str(fm.get("visibility") or default_vis),
         created_at=hydration_now,
         updated_at=hydration_now,
+        origin_note_id=note_id,
     )
     if hydrated_body != body:
         body = hydrated_body
@@ -728,6 +762,8 @@ def edit(
         # fallback: no move
         pass
 
+    hydration_summary, next_actions = _hydration_feedback(hydration)
+
     return EditResult(
         ok=True,
         id=note_id,
@@ -737,6 +773,8 @@ def edit(
         warnings=warns,
         links=compute_link_diagnostics(vp, note_id),
         hydration=hydration,
+        hydration_summary=hydration_summary,
+        next_actions=next_actions,
     )
 
 
@@ -1025,7 +1063,7 @@ def show(
 ) -> str:
     vp = _vault_paths_for(vault)
     init_vault(vp)
-    p = find_note_path(vp, note_id.strip())
+    p = resolve_note_ref_path(vp, note_id.strip())
     raw = p.read_text("utf-8", errors="replace")
     if not meta_only:
         return raw.rstrip() + "\n"
@@ -1038,7 +1076,7 @@ def show(
 def open_note(*, vault: Optional[str] = None, note_id: str) -> str:
     vp = _vault_paths_for(vault)
     init_vault(vp)
-    p = find_note_path(vp, note_id.strip())
+    p = resolve_note_ref_path(vp, note_id.strip())
     open_in_editor(p)
     return note_rel_path(vp, p)
 
@@ -1200,10 +1238,11 @@ def around(
     quiet: bool = False,
 ) -> Dict[str, Any]:
     vp = _vault_paths_for(vault)
+    resolved_note_id = resolve_note_ref_id(vp, note_id)
     vis = list(visibility) if visibility else default_visibility_from_env()
     items, warnings = around_impl(
         vp,
-        note_id=note_id,
+        note_id=resolved_note_id,
         k=int(k),
         by=str(by or "updated"),
         window_days=int(window_days),
@@ -1390,19 +1429,24 @@ def link(
     | LinkSuggestResult
 ):
     vp = _vault_paths_for(vault)
+    resolved_note_id = str(note_id or "").strip()
+    if cmd in {"backlinks", "neighbors", "suggest"}:
+        resolved_note_id = resolve_note_ref_id(vp, note_id)
+    elif cmd == "validate" and resolved_note_id:
+        resolved_note_id = resolve_note_ref_id(vp, note_id)
 
     if cmd == "suggest":
         vis = list(visibility) if visibility else default_visibility_from_env()
         suggestions, warns2 = suggest_links_impl(
             vp,
-            note_id=note_id,
+            note_id=resolved_note_id,
             limit=int(limit),
             visibility=vis,
             include_deprecated=bool(include_deprecated),
             quiet=bool(quiet),
         )
         return LinkSuggestResult(
-            id=str(note_id or "").strip(),
+            id=resolved_note_id,
             suggestions=[
                 LinkSuggestItem(
                     id=str(s.get("id") or ""),
@@ -1422,7 +1466,7 @@ def link(
         warnings = list(sync_res.get("warnings") or [])
 
         if cmd == "backlinks":
-            nid = note_id
+            nid = resolved_note_id
             rows = conn.execute(
                 """
                 SELECT n.id, n.title, n.md_path, n.updated_at
@@ -1447,7 +1491,7 @@ def link(
             )
 
         if cmd == "neighbors":
-            nid = note_id
+            nid = resolved_note_id
             k = int(k)
             if k <= 0:
                 nb = graph_neighbors(conn, nid)
@@ -1465,9 +1509,9 @@ def link(
             # Broken links: missing or ambiguous.
             where = "l.resolution != 'resolved'"
             params: List[Any] = []
-            if note_id:
+            if resolved_note_id:
                 where += " AND l.src_id=?"
-                params.append(note_id)
+                params.append(resolved_note_id)
             rows = conn.execute(
                 """
                 SELECT l.src_id, l.dst_raw, l.resolution, l.style, l.alias_text, l.anchor

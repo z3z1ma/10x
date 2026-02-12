@@ -34,6 +34,8 @@ from agent_loom.memory.core import (
     timeline,
 )
 from agent_loom.memory.models import (
+    AddResult,
+    EditResult,
     JanitorFixResult,
     JanitorReportResult,
     LinkBacklinksResult,
@@ -63,6 +65,11 @@ _FLAG_ALIASES = {
     "--vault-dir": "--vault",
     "--vault_root": "--vault",
     "--stdout-format": "--format",
+    "--tags": "--tag",
+    "--aliases": "--alias",
+    "--scopes": "--scope",
+    "--links": "--link",
+    "--relateds": "--related",
 }
 
 
@@ -71,6 +78,11 @@ def _normalize_argv(argv: list[str]) -> list[str]:
     i = 0
     while i < len(argv):
         tok = argv[i]
+
+        if tok in {"append-note", "append_note", "add-note", "add_note"}:
+            out.append("append")
+            i += 1
+            continue
 
         if tok in _FLAG_ALIASES:
             out.append(_FLAG_ALIASES[tok])
@@ -118,7 +130,7 @@ def _normalize_argv(argv: list[str]) -> list[str]:
         tail = out[idx:]
 
         # Gather positional tokens immediately after the subcommand (stop at first flag).
-        pos: list[str] = []
+        pos = []
         j = idx + 1
         while j < len(out):
             tok = out[j]
@@ -143,6 +155,38 @@ def _normalize_argv(argv: list[str]) -> list[str]:
                     out = (
                         out[:body_idx] + ["--body", out[body_idx]] + out[body_idx + 1 :]
                     )
+        break
+
+    # memory edit|update|append <id> <text> -> --append <text>
+    for edit_cmd in ("edit", "update", "append"):
+        if edit_cmd not in out:
+            continue
+        idx = out.index(edit_cmd)
+        tail = out[idx:]
+
+        pos: list[str] = []
+        j = idx + 1
+        while j < len(out):
+            tok = out[j]
+            if not tok or tok.startswith("-"):
+                break
+            pos.append(tok)
+            j += 1
+
+        has_body_mode = any(
+            flg in tail
+            for flg in (
+                "--body",
+                "--from-stdin",
+                "--append",
+                "--append-from-stdin",
+                "--interactive",
+            )
+        )
+        if len(pos) >= 2 and not has_body_mode:
+            append_text = " ".join(pos[1:]).strip()
+            if append_text:
+                out = out[: idx + 2] + ["--append", append_text] + out[j:]
         break
 
     # memory link validate <id>  ->  memory link validate --id <id>
@@ -182,8 +226,9 @@ def _stdin_is_ready() -> bool:
         r, _w, _x = select.select([sys.stdin], [], [], 0)
         return bool(r)
     except Exception:
-        # Likely an in-memory stream (e.g. tests). Assume it's safe to read.
-        return True
+        # In-memory streams used in tests support getvalue(); non-readable capture
+        # wrappers should not be treated as ready.
+        return bool(hasattr(sys.stdin, "getvalue"))
 
 
 def emit(payload: Any, fmt: str) -> None:
@@ -259,7 +304,53 @@ def render_recall_results(results: list[dict[str, Any]], *, fmt: str) -> str:
     return "\n".join(lines2).rstrip() + "\n"
 
 
+def render_mutation_result(result: dict[str, Any], *, fmt: str) -> str:
+    rid = str(result.get("id") or "")
+    path = str(result.get("path") or "")
+    action = "updated" if bool(result.get("updated")) else "created"
+    lines = [f"Memory note {action}: {rid}"]
+    if path:
+        lines.append(f"path: {path}")
+
+    hs = result.get("hydration_summary") or {}
+    if isinstance(hs, dict):
+        rewrites = int(hs.get("rewrites") or 0)
+        created = int(hs.get("created_notes") or 0)
+        seeded = int(hs.get("seeded_notes") or 0)
+        ambiguous = int(hs.get("ambiguous") or 0)
+        lines.append(
+            "hydration: "
+            f"rewrites={rewrites} created={created} seeded={seeded} ambiguous={ambiguous}"
+        )
+
+    actions = result.get("next_actions") or []
+    if isinstance(actions, list) and actions:
+        lines.append("next:")
+        for item in actions[:5]:
+            s = str(item or "").strip()
+            if s:
+                lines.append(f"- {s}")
+
+    if fmt == "md":
+        if len(lines) > 1 and lines[1].startswith("path: "):
+            lines[1] = f"- {lines[1]}"
+        out: list[str] = [f"- {lines[0]}"]
+        for ln in lines[1:]:
+            out.append(ln if ln.startswith("-") else f"- {ln}")
+        return "\n".join(out).rstrip() + "\n"
+
+    if fmt == "prompt":
+        return "\n".join(lines).rstrip() + "\n"
+
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def payload_for(obj: Any, *, fmt: str) -> Any:
+    if isinstance(obj, (AddResult, EditResult)):
+        payload = asdict(obj)
+        if fmt in ("text", "md", "prompt"):
+            return render_mutation_result(payload, fmt=fmt)
+        return payload
     if isinstance(obj, PrimeResult):
         if fmt in ("json", "jsonl"):
             return obj.payload
@@ -452,7 +543,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Edit a note by id",
         aliases=["update"],
     )
-    edit_p.add_argument("id", help="Note id")
+    edit_p.add_argument("id", help="Note reference (id/title/alias)")
     edit_p.add_argument(
         "--body",
         default=None,
@@ -540,6 +631,40 @@ def build_parser() -> argparse.ArgumentParser:
     )
     edit_p.add_argument(
         "--status", choices=STATUSES, default=None, help="Change status"
+    )
+
+    append_p = sp.add_parser(
+        "append",
+        parents=[common_sub],
+        help="Append text to a note",
+        aliases=["add-note", "append-note"],
+    )
+    append_p.add_argument("id", help="Note reference (id/title/alias)")
+    append_p.add_argument(
+        "--append",
+        default=None,
+        help="Text to append",
+    )
+    append_p.add_argument(
+        "--text",
+        default=None,
+        help="Alias for --append",
+    )
+    append_p.add_argument(
+        "--body",
+        default=None,
+        help="Alias for --append",
+    )
+    append_p.add_argument(
+        "--from-stdin",
+        action="store_true",
+        help="Append text from stdin (strict)",
+    )
+    append_p.add_argument(
+        "--related",
+        action="append",
+        default=[],
+        help="Append a Related: line with [[wikilinks]] (repeatable; comma ok)",
     )
 
     recall_p = sp.add_parser(
@@ -806,11 +931,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     show_p = sp.add_parser("show", parents=[common_sub], help="Show a note by id")
-    show_p.add_argument("id", help="Note id")
+    show_p.add_argument("id", help="Note reference (id/title/alias)")
     show_p.add_argument("--meta", action="store_true", help="Show frontmatter only")
 
     open_p = sp.add_parser("open", parents=[common_sub], help="Open a note in editor")
-    open_p.add_argument("id", help="Note id")
+    open_p.add_argument("id", help="Note reference (id/title/alias)")
 
     forget_p = sp.add_parser(
         "forget",
@@ -904,7 +1029,7 @@ def build_parser() -> argparse.ArgumentParser:
         parents=[common_sub],
         help="Show notes temporally near a note",
     )
-    around_p.add_argument("id", help="Note id")
+    around_p.add_argument("id", help="Note reference (id/title/alias)")
     around_p.add_argument("--k", type=int, default=12, help="Number of neighbors")
     around_p.add_argument(
         "--by",
@@ -968,7 +1093,7 @@ def build_parser() -> argparse.ArgumentParser:
         parents=[common_sub],
         help="Show backlinks (notes that link to <id>)",
     )
-    lb.add_argument("id")
+    lb.add_argument("id", help="Note reference (id/title/alias)")
     lb.add_argument("--limit", type=int, default=50)
 
     ln = lsp.add_parser(
@@ -976,7 +1101,7 @@ def build_parser() -> argparse.ArgumentParser:
         parents=[common_sub],
         help="Show neighbors (inbound+outbound), optionally k-hop expansion",
     )
-    ln.add_argument("id")
+    ln.add_argument("id", help="Note reference (id/title/alias)")
     ln.add_argument(
         "--k", type=int, default=0, help="k-hop expansion (0 => only 1-hop lists)"
     )
@@ -985,7 +1110,9 @@ def build_parser() -> argparse.ArgumentParser:
         "validate", parents=[common_sub], help="List broken links (missing/ambiguous)"
     )
     lv.add_argument(
-        "--id", default=None, help="Only validate links originating from this id"
+        "--id",
+        default=None,
+        help="Only validate links originating from this note reference (id/title/alias)",
     )
     lv.add_argument("--limit", type=int, default=200)
 
@@ -1001,7 +1128,7 @@ def build_parser() -> argparse.ArgumentParser:
         parents=[common_sub],
         help="Suggest likely related notes for <id> (non-mutating)",
     )
-    ls.add_argument("id")
+    ls.add_argument("id", help="Note reference (id/title/alias)")
     ls.add_argument("--limit", type=int, default=12)
     ls.add_argument(
         "--visibility",
@@ -1182,13 +1309,64 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
         emit(payload_for(res, fmt=fmt), fmt)
         return 0
 
-    if args.cmd in {"edit", "update"}:
+    if args.cmd in {"edit", "update", "append", "add-note", "append-note"}:
+        is_append_cmd = args.cmd in {"append", "add-note", "append-note"}
+
+        if is_append_cmd:
+            setattr(args, "append_from_stdin", bool(getattr(args, "from_stdin", False)))
+            setattr(args, "from_stdin", False)
+            append_value = getattr(args, "append", None)
+            if append_value is None:
+                append_value = getattr(args, "text", None)
+            if append_value is None:
+                append_value = getattr(args, "body", None)
+            setattr(args, "append", append_value)
+            setattr(args, "body", None)
+            setattr(args, "interactive", False)
+            setattr(args, "title", None)
+            setattr(args, "visibility", None)
+            setattr(args, "status", None)
+            setattr(args, "tag", [])
+            setattr(args, "remove_tag", [])
+            setattr(args, "clear_tags", False)
+            setattr(args, "alias", [])
+            setattr(args, "remove_alias", [])
+            setattr(args, "clear_aliases", False)
+            setattr(args, "link", [])
+            setattr(args, "remove_link", [])
+            setattr(args, "clear_links", False)
+            setattr(args, "scope", [])
+            setattr(args, "command", None)
+            setattr(args, "remove_scope", [])
+            setattr(args, "clear_scopes", False)
+            setattr(args, "allow_missing_scopes", False)
+
         if bool(args.from_stdin) and bool(args.append_from_stdin):
             raise MemoryError(
                 "edit: cannot combine --from-stdin and --append-from-stdin",
                 code="ARG",
                 exit_code=2,
                 hint="Pick exactly one stdin mode.",
+                suggestions=[
+                    "cat file.md | loom memory edit <id> --from-stdin",
+                    "cat file.md | loom memory edit <id> --append-from-stdin",
+                ],
+            )
+
+        stdin_ready = _stdin_is_ready()
+        uses_stdin = bool(args.from_stdin) or bool(args.append_from_stdin)
+        if (
+            stdin_ready
+            and not uses_stdin
+            and args.body is None
+            and args.append is None
+            and not bool(args.interactive)
+        ):
+            raise MemoryError(
+                "stdin is piped but no body mode was selected",
+                code="ARG",
+                exit_code=2,
+                hint="Choose whether stdin should replace or append to the note body.",
                 suggestions=[
                     "cat file.md | loom memory edit <id> --from-stdin",
                     "cat file.md | loom memory edit <id> --append-from-stdin",
@@ -1234,6 +1412,22 @@ def _run_with_args(args: argparse.Namespace, *, fmt: str) -> int:
                     hint="Pipe content: cat file.md | loom memory edit <id> --append-from-stdin",
                 )
             body_append = read_all_stdin_text()
+
+        if (
+            is_append_cmd
+            and body_append is None
+            and not (getattr(args, "related", None) or [])
+        ):
+            raise MemoryError(
+                "append requires text (--append/--text/--body) or piped stdin",
+                code="ARG",
+                exit_code=2,
+                hint="Provide append text directly or pipe it on stdin.",
+                suggestions=[
+                    "loom memory append <id> --append 'New findings'",
+                    "cat update.md | loom memory append <id> --from-stdin",
+                ],
+            )
 
         res = edit(
             vault=str(args.vault),

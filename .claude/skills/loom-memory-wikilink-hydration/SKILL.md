@@ -1,63 +1,75 @@
 ---
 name: loom-memory-wikilink-hydration
-description: Procedure for making Loom memory writes hydrate `[[wikilinks]]` deterministically, with stable UX tests.
+description: Procedure for implementing or changing Loom memory wikilink hydration with deterministic behavior, UX-visible guarantees, and aligned docs/tests.
 license: MIT
 compatibility: opencode,claude
 metadata:
-  created_at: "2026-02-09T20:36:30.408023Z"
-  source_episode_ids: "e4839371bc5f19fceb720ecfddf70204dd97ec7a826c7875562727706e171b17"
-  source_instinct_ids: "hydrate-wikilinks-on-memory-write,memory-golden-tests-for-ux"
-  tags: "cli,loom,memory,python,tests,wikilinks"
-  updated_at: "2026-02-09T20:36:30.408023Z"
-  version: "1"
+  created_at: "2026-02-11T21:49:27.460760Z"
+  source_episode_ids: "e4839371bc5f19fceb720ecfddf70204dd97ec7a826c7875562727706e171b17,044a58c5c8dcdb13d0e53266c1e4ec08c6994465336f6f6e9b044c0edec52973"
+  source_instinct_ids: "hydrate-wikilinks-on-memory-write,memory-golden-tests-for-ux,memory-behavior-change-must-update-readme,memory-hydration-end-to-end-touchpoints,memory-wikilink-hydration-requires-ux-proof"
+  tags: "cli-ux,docs,hydration,memory,testing,wikilink"
+  updated_at: "2026-02-11T21:49:27.460760Z"
+  version: "2"
 ---
 <!-- BEGIN:compound:skill-managed -->
-# Loom Memory Wikilink Hydration
+---
+name: loom-memory-wikilink-hydration
+description: Procedure for implementing or changing Loom memory wikilink hydration with deterministic behavior, UX-visible guarantees, and aligned docs/tests.
+---
 
-## Goal
-When a memory note is written (create/update), `[[wikilinks]]` are resolved in the write path so recall/backlinks/search behave consistently and deterministically.
+# Loom memory wikilink hydration
 
-## When to use
-- You add/modify `loom memory add/update` behavior.
-- You change parsing/serialization in `src/agent_loom/memory/*`.
-- You introduce any new metadata derived from note content (links, tags, scopes).
+Use this when changing wikilink handling in Loom memory (creation, hydration, stubs, or CLI output).
 
-## Procedure
-1. Identify the write entrypoint(s)
-   - Locate the CLI command handler and the core function that persists a note.
-   - Ensure all write paths (create and update) flow through one hydration function.
+## 1) Define the contract first
 
-2. Define the hydration contract
-   - Parse the note body for `[[wikilinks]]`.
-   - Normalize link tokens consistently (trim whitespace, keep case rules consistent with existing behavior).
-   - Decide what “resolution” means:
-     - If a link points to an existing note-id, attach that id.
-     - If it points to a title/slug and you support implicit creation, create a referenced note-id deterministically.
-   - Persist the hydrated link set (and any necessary mapping) as part of the stored note model.
+- Specify exact user-visible behavior for `[[wikilinks]]`:
+  - normalization rules,
+  - when linked notes are created,
+  - what output the CLI prints.
+- Keep behavior deterministic; avoid order-dependent output.
 
-3. Keep it deterministic
-   - Stable ordering of links (e.g., sorted by normalized token) before persisting or rendering.
-   - Avoid time-dependent or path-dependent behavior in hydration.
+## 2) Implement across the full memory path
 
-4. Update user-visible behaviors
-   - Ensure `loom memory recall` and related commands reflect hydrated links consistently.
-   - If output format changes, update tests to match the intended UX (not internal implementation details).
+Touch all relevant layers together so behavior stays coherent:
 
-5. Add/adjust a golden UX test
-   - Add a fixture note with multiple wikilinks, including edge cases (duplicates, whitespace, mixed casing if supported).
-   - Assert the exact CLI output expected for the changed scenario.
-   - Keep the fixture small and deterministic; avoid brittle snapshots of unrelated output.
+- `src/agent_loom/memory/cli.py`
+- `src/agent_loom/memory/core.py`
+- `src/agent_loom/memory/hydrate.py`
+- `src/agent_loom/memory/models.py`
 
-6. Gate checks
-   - Run: `uv run ruff check .`
-   - Run: `uv run basedpyright`
-   - Run: `uv run pytest`
+Do not leave partial logic in one layer only.
 
-## Done means
-- Wikilinks are hydrated on write for all paths.
-- Output and behavior are deterministic.
-- Golden test(s) cover the precise UX delta.
-- Ruff + basedpyright + pytest pass.
+## 3) Prove UX behavior and hydration logic separately
+
+- Add/update CLI UX assertions in `tests/test_memory_cli_ux.py`:
+  - exact stdout/stderr expectations,
+  - exit-code expectations.
+- Add/update focused hydration tests in `tests/test_memory_link_hydration.py`:
+  - deterministic link extraction/hydration,
+  - edge cases around link formatting and stub creation.
+
+## 4) Keep docs in lockstep
+
+- Update `src/agent_loom/memory/README.md` in the same change with examples that match real CLI behavior.
+- Ensure docs describe behavior users can observe, not internal implementation details.
+
+## 5) Quality gates
+
+Run:
+
+- `uv run ruff check .`
+- `uv run basedpyright`
+- `uv run pytest tests/test_memory_cli_ux.py tests/test_memory_link_hydration.py`
+
+If these pass, run broader tests as needed.
+
+## Done checklist
+
+- Contract is deterministic and explicit.
+- CLI/core/hydrate/models stay aligned.
+- UX tests and hydration tests both cover the change.
+- README examples match actual behavior.
 <!-- END:compound:skill-managed -->
 
 ## Manual notes

@@ -68,6 +68,8 @@ class TestMemoryNotes(unittest.TestCase):
             self.assertEqual(created.get("id"), "hello")
             self.assertIn("links", created)
             self.assertIn("summary", created.get("links") or {})
+            self.assertIn("hydration_summary", created)
+            self.assertIn("next_actions", created)
 
             vp = memory_vault.vault_paths(vault)
             n = memory_vault.read_note(vp, "hello")
