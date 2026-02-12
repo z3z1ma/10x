@@ -74,6 +74,33 @@ class TestPackCliUx(unittest.TestCase):
         payload = json.loads(out.strip())
         self.assertEqual(int(payload.get("drifted") or 0), 1)
 
+    def test_install_prints_strong_drift_guidance(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            repo = Path(td)
+
+            p = repo / ".opencode" / "commands" / "pack-sample.md"
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("preexisting drift\n", encoding="utf-8")
+
+            rc, out, err = _run_text(["install", "sample"], cwd=repo)
+        self.assertEqual(rc, 0)
+        self.assertEqual(err, "")
+        self.assertIn("IMPORTANT: pack has proposed updates to existing files", out)
+        self.assertIn("loom pack install sample --diff", out)
+
+    def test_install_diff_flag_prints_drifted_patch(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            repo = Path(td)
+
+            p = repo / ".opencode" / "commands" / "pack-sample.md"
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("preexisting drift\n", encoding="utf-8")
+
+            rc, out, err = _run_text(["install", "sample", "--diff"], cwd=repo)
+        self.assertEqual(rc, 0)
+        self.assertEqual(err, "")
+        self.assertIn("diff (drifted): sample/.opencode/commands/pack-sample.md", out)
+        self.assertIn("--- pack:sample/.opencode/commands/pack-sample.md", out)
 
 if __name__ == "__main__":
     unittest.main()

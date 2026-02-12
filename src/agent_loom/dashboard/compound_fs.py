@@ -36,12 +36,27 @@ def read_skill(repo_root: Path, *, name: str) -> dict[str, str]:
 
 
 def read_instincts(repo_root: Path) -> dict:
-    p = repo_root / ".loom" / "compound" / "instincts.json"
-    if not p.exists() or not p.is_file():
-        return {}
-    import json
+    from agent_loom.compound.instincts import load_instincts
 
-    try:
-        return json.loads(p.read_text(encoding="utf-8", errors="replace"))
-    except Exception:
-        return {}
+    store = load_instincts(repo_root / ".loom" / "compound" / "instincts.json")
+    return {
+        "version": int(store.version),
+        "instincts": [
+            {
+                "id": i.id,
+                "title": i.title,
+                "trigger": i.trigger,
+                "action": i.action,
+                "domain": i.domain,
+                "source": i.source,
+                "tags": list(i.tags or []),
+                "confidence": float(i.confidence or 0.0),
+                "status": i.status,
+                "notes": i.notes,
+                "created_at": i.created_at,
+                "updated_at": i.updated_at,
+                "evidence": list(i.evidence or []),
+            }
+            for i in list(store.instincts or [])
+        ],
+    }

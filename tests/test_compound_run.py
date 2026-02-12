@@ -6,10 +6,12 @@ import os
 import subprocess
 import tempfile
 from pathlib import Path
+import sys
 
-from agent_loom.compound.engine import run_compound
+from agent_loom.compound.engine import run_instincts_update
 from agent_loom.compound.install import install_opencode
 from agent_loom.compound.paths import compound_paths
+from agent_loom.compound.state import load_state
 
 
 def _git(args: list[str], *, cwd: Path, env: dict[str, str], check: bool = True) -> str:
@@ -23,6 +25,67 @@ def _git(args: list[str], *, cwd: Path, env: dict[str, str], check: bool = True)
         check=check,
     )
     return (p.stdout or "").strip()
+
+
+def _configure_mock_derivation_command(*, root: Path, payload: dict) -> None:
+    script = root / ".mock_instincts_llm.py"
+    script.write_text(
+        "import json\n"
+        "from pathlib import Path\n"
+        + f"payload = {json.dumps(payload)}\n"
+        + "base = Path('.loom/compound/instincts/personal')\n"
+        + "base.mkdir(parents=True, exist_ok=True)\n"
+        + "for inst in payload.get('instincts', []):\n"
+        + "    instinct_id = str(inst.get('id') or '').strip()\n"
+        + "    if not instinct_id:\n"
+        + "        continue\n"
+        + "    tags = [str(t).strip() for t in list(inst.get('tags') or []) if str(t).strip()]\n"
+        + "    domain = str(inst.get('domain') or '').strip() or (tags[0] if tags else 'general')\n"
+        + "    notes = str(inst.get('notes') or '').strip()\n"
+        + "    confidence = float(inst.get('confidence') or 0.5)\n"
+        + "    content = '\\n'.join([\n"
+        + "        '---',\n"
+        + "        f\"id: {instinct_id}\",\n"
+        + "        f\"title: {str(inst.get('title') or '').strip()}\",\n"
+        + "        f\"trigger: {str(inst.get('trigger') or '').strip()}\",\n"
+        + "        f\"confidence: {confidence:.4f}\",\n"
+        + "        'status: active',\n"
+        + "        f\"domain: {domain}\",\n"
+        + "        'source: personal',\n"
+        + "        'created_at: 2026-02-12T00:00:00Z',\n"
+        + "        'updated_at: 2026-02-12T00:00:00Z',\n"
+        + "        f\"tags: {', '.join(tags)}\",\n"
+        + "        f\"notes: {notes}\",\n"
+        + "        '---',\n"
+        + "        '',\n"
+        + "        '## Action',\n"
+        + "        str(inst.get('action') or '').strip(),\n"
+        + "        '',\n"
+        + "        '## Evidence',\n"
+        + "        f\"- ts=2026-02-12T00:00:00Z source_id=seed-{instinct_id} source_hash=seed\",\n"
+        + "        '',\n"
+        + "        '## Notes',\n"
+        + "        notes or '- _(none)_',\n"
+        + "        '',\n"
+        + "    ])\n"
+        + "    (base / f\"{instinct_id}.md\").write_text(content, encoding='utf-8')\n",
+        encoding="utf-8",
+    )
+    cfg = root / ".loom" / "compound" / "config.json"
+    cfg.parent.mkdir(parents=True, exist_ok=True)
+    cfg.write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "instincts": {
+                    "derive_command": [sys.executable, str(script)],
+                },
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
 
 @contextlib.contextmanager
@@ -42,7 +105,7 @@ def _temp_git_repo():
         yield root, env
 
 
-def test_compound_run_writes_episode_and_applies_proposals() -> None:
+def test_instincts_update_creates_candidates_from_repeated_observations() -> None:
     with _temp_git_repo() as (root, env):
         install_opencode(dest=root, dry_run=False)
         _git(["add", "-A"], cwd=root, env=env)
@@ -50,174 +113,188 @@ def test_compound_run_writes_episode_and_applies_proposals() -> None:
 
         paths = compound_paths(root)
         paths.observations_file.parent.mkdir(parents=True, exist_ok=True)
-        paths.observations_file.write_text(
-            "\n".join(
-                [
-                    json.dumps(
-                        {
-                            "id": "1",
-                            "ts": "2026-02-07T00:00:00Z",
-                            "type": "tool.execute.after",
-                        }
-                    ),
-                    json.dumps(
-                        {
-                            "id": "2",
-                            "ts": "2026-02-07T00:01:00Z",
-                            "type": "command.executed",
-                        }
-                    ),
-                    "",
-                ]
-            ),
-            encoding="utf-8",
-        )
-
-        # Create a diff so the Episode has concrete evidence.
-        (root / "demo.txt").write_text("hello\n", encoding="utf-8")
-
-        proposals = {
-            "instinct_candidates": [
-                {
-                    "id": "keep-commands-safe",
-                    "title": "Keep shell commands safe",
-                    "trigger": "When running shell commands in automation",
-                    "action": "Prefer scoped, non-destructive commands and avoid force ops",
-                    "confidence": 0.8,
-                    "tags": ["safety"],
-                }
-            ],
-            "skill_candidates": [
-                {
-                    "name": "compound-episode-workflow",
-                    "description": "Package evidence into episodes and compile memory",
-                    "body": "## Steps\n\n- Run `loom compound learn` with structured proposals.\n- Verify instincts/skills outputs are updated deterministically.\n",
-                    "tags": ["compound"],
-                    "source_instinct_ids": ["keep-commands-safe"],
-                }
-            ],
-        }
-
-        res = run_compound(root=root, proposals_json=json.dumps(proposals), auto=False)
-        assert res.ok is True
-        assert res.episode_id
-        assert Path(res.episode_path).exists()
-        assert (root / ".loom" / "compound" / "episodes").exists()
-
-        assert res.decision_id
-        assert res.decision_path
-        assert Path(res.decision_path).exists()
-
-        instincts_path = root / ".loom" / "compound" / "instincts.json"
-        assert instincts_path.exists()
-        store = json.loads(instincts_path.read_text(encoding="utf-8"))
-        ids = [i.get("id") for i in store.get("instincts", [])]
-        assert "keep-commands-safe" in ids
-
-        skill_path = (
-            root / ".opencode" / "skills" / "compound-episode-workflow" / "SKILL.md"
-        )
-        assert skill_path.exists()
-        text = skill_path.read_text(encoding="utf-8")
-        assert "source_episode_ids" in text
-        assert res.episode_id in text
-
-        before_instincts = instincts_path.read_text(encoding="utf-8")
-        before_skill = skill_path.read_text(encoding="utf-8")
-
-        # No accidental churn.
-        assert instincts_path.read_text(encoding="utf-8") == before_instincts
-        assert skill_path.read_text(encoding="utf-8") == before_skill
-
-
-def test_compound_run_handles_observation_rotation_without_reingesting() -> None:
-    from agent_loom.compound.episodes import load_episode
-
-    with _temp_git_repo() as (root, env):
-        install_opencode(dest=root, dry_run=False)
-        _git(["add", "-A"], cwd=root, env=env)
-        _git(["commit", "-m", "init"], cwd=root, env=env)
-
-        paths = compound_paths(root)
-        paths.observations_file.parent.mkdir(parents=True, exist_ok=True)
-        paths.observations_file.write_text(
-            "\n".join(
-                [
-                    json.dumps({"id": "1", "ts": "2026-02-07T00:00:00Z", "type": "x"}),
-                    json.dumps({"id": "2", "ts": "2026-02-07T00:01:00Z", "type": "y"}),
-                    "",
-                ]
-            ),
-            encoding="utf-8",
-        )
-
-        (root / "demo.txt").write_text("hello\n", encoding="utf-8")
-
-        r1 = run_compound(root=root, proposals_json="{}", auto=False)
-        assert r1.ok is True
-        ep1 = load_episode(Path(r1.episode_path))
-        ids1 = [
-            str(o.get("id")) for o in ep1.observations.included if isinstance(o, dict)
+        rows = [
+            {
+                "id": "1",
+                "ts": "2026-02-12T00:00:00Z",
+                "event": "tool_complete",
+                "tool": "grep",
+                "command": "git status --porcelain",
+            },
+            {
+                "id": "2",
+                "ts": "2026-02-12T00:01:00Z",
+                "event": "tool_complete",
+                "tool": "read",
+                "command": "git status --porcelain",
+            },
+            {
+                "id": "3",
+                "ts": "2026-02-12T00:02:00Z",
+                "event": "tool_complete",
+                "tool": "edit",
+                "command": "git status --porcelain",
+            },
+            {
+                "id": "4",
+                "ts": "2026-02-12T00:03:00Z",
+                "event": "tool_complete",
+                "tool": "read",
+            },
+            {
+                "id": "5",
+                "ts": "2026-02-12T00:04:00Z",
+                "event": "tool_complete",
+                "tool": "edit",
+            },
+            {
+                "id": "6",
+                "ts": "2026-02-12T00:05:00Z",
+                "event": "tool_complete",
+                "tool": "read",
+            },
         ]
-        assert "1" in ids1
-        assert "2" in ids1
-
-        # Simulate rotation/truncation: new file is smaller than the previous cursor offset.
-        rotated = paths.observations_file.with_name(
-            paths.observations_file.name + ".bak"
+        paths.observations_file.write_text(
+            "\n".join([json.dumps(r) for r in rows]) + "\n",
+            encoding="utf-8",
         )
+
+        _configure_mock_derivation_command(
+            root=root,
+            payload={
+                "instincts": [
+                    {
+                        "id": "reuse-git-status-porcelain",
+                        "title": "Reuse git status porcelain checks",
+                        "trigger": "When iterating on code changes and verifying repo cleanliness.",
+                        "action": "Use `git status --porcelain` early and repeatedly before/after edits.",
+                        "confidence": 0.84,
+                        "tags": ["compound", "git", "workflow"],
+                        "notes": "Observed repeated command usage in recent tool events.",
+                    }
+                ]
+            },
+        )
+        res = run_instincts_update(
+            root=root,
+            auto=False,
+            min_occurrences=2,
+            max_candidates=8,
+        )
+
+        assert res.ok is True
+        assert res.skipped is False
+        assert res.observations_ingested == 6
+        assert res.instincts_candidates >= 1
+        assert res.instincts_created >= 1
+        assert res.state_updated is True
+        assert (
+            root
+            / ".loom"
+            / "compound"
+            / "instincts"
+            / "personal"
+            / "reuse-git-status-porcelain.md"
+        ).exists()
+        assert (root / ".loom" / "compound" / "INSTINCTS.md").exists()
+
+
+def test_instincts_update_auto_threshold_skips_without_state_writes() -> None:
+    with _temp_git_repo() as (root, env):
+        install_opencode(dest=root, dry_run=False)
+        _git(["add", "-A"], cwd=root, env=env)
+        _git(["commit", "-m", "init"], cwd=root, env=env)
+
+        paths = compound_paths(root)
+        paths.observations_file.parent.mkdir(parents=True, exist_ok=True)
+        paths.observations_file.write_text(
+            json.dumps(
+                {
+                    "id": "1",
+                    "ts": "2026-02-12T00:00:00Z",
+                    "event": "tool_complete",
+                    "tool": "read",
+                    "command": "git status --porcelain",
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+        res = run_instincts_update(
+            root=root,
+            auto=True,
+            min_new_observations=5,
+            min_occurrences=2,
+        )
+
+        assert res.ok is True
+        assert res.skipped is True
+        assert res.skip_reason == "insufficient_new_observations"
+        assert res.state_updated is False
+        assert res.wrote_instincts_md is True
+        assert (paths.loom_compound_dir / "INSTINCTS.md").exists()
+        assert not (paths.loom_compound_dir / "state.json").exists()
+
+
+def test_instincts_update_handles_observation_rotation() -> None:
+    with _temp_git_repo() as (root, env):
+        install_opencode(dest=root, dry_run=False)
+        _git(["add", "-A"], cwd=root, env=env)
+        _git(["commit", "-m", "init"], cwd=root, env=env)
+
+        paths = compound_paths(root)
+        paths.observations_file.parent.mkdir(parents=True, exist_ok=True)
+        paths.observations_file.write_text(
+            "\n".join(
+                [
+                    json.dumps({"id": "1", "ts": "2026-02-12T00:00:00Z", "tool": "read"}),
+                    json.dumps({"id": "2", "ts": "2026-02-12T00:01:00Z", "tool": "edit"}),
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+        _configure_mock_derivation_command(
+            root=root,
+            payload={
+                "instincts": [
+                    {
+                        "id": "prefer-read-before-edit",
+                        "title": "Prefer read before edit",
+                        "trigger": "When changing a file based on fresh observations.",
+                        "action": "Read target context before issuing edits.",
+                        "confidence": 0.76,
+                        "tags": ["compound", "tools"],
+                        "notes": "Derived from recurrent read/edit transitions.",
+                    }
+                ]
+            },
+        )
+
+        r1 = run_instincts_update(root=root, auto=False, min_occurrences=1)
+        assert r1.ok is True
+        assert r1.observations_ingested == 2
+
+        rotated = paths.observations_file.with_name(paths.observations_file.name + ".bak")
         paths.observations_file.rename(rotated)
         paths.observations_file.write_text(
-            json.dumps({"id": "3", "ts": "2026-02-07T00:02:00Z", "type": "z"}) + "\n",
+            json.dumps(
+                {
+                    "id": "3",
+                    "ts": "2026-02-12T00:02:00Z",
+                    "tool": "read",
+                    "command": "git status --porcelain",
+                }
+            )
+            + "\n",
             encoding="utf-8",
         )
 
-        r2 = run_compound(root=root, proposals_json="{}", auto=False)
+        r2 = run_instincts_update(root=root, auto=False, min_occurrences=1)
         assert r2.ok is True
-        ep2 = load_episode(Path(r2.episode_path))
-        ids2 = [
-            str(o.get("id")) for o in ep2.observations.included if isinstance(o, dict)
-        ]
-        assert ids2 == ["3"]
-        assert ep2.observations.cursor.reset_detected is True
+        assert r2.observations_reset_detected is True
+        assert r2.observations_ingested == 1
 
-
-def test_compound_run_persists_full_patch_blob_when_truncated() -> None:
-    from agent_loom.compound.episodes import load_episode
-
-    with _temp_git_repo() as (root, env):
-        install_opencode(dest=root, dry_run=False)
-        _git(["add", "-A"], cwd=root, env=env)
-        _git(["commit", "-m", "init"], cwd=root, env=env)
-
-        paths = compound_paths(root)
-        paths.observations_file.parent.mkdir(parents=True, exist_ok=True)
-        paths.observations_file.write_text(
-            json.dumps({"id": "1", "ts": "2026-02-07T00:00:00Z", "type": "x"}) + "\n",
-            encoding="utf-8",
-        )
-
-        big = "\n".join([f"line {i}" for i in range(0, 20000)]) + "\n"
-        (root / "big.txt").write_text(big, encoding="utf-8")
-        # Ensure `git diff` includes the new file (untracked files aren't included by default).
-        _git(["add", "-N", "big.txt"], cwd=root, env=env)
-
-        res = run_compound(
-            root=root,
-            proposals_json="{}",
-            auto=False,
-            max_patch_bytes=2000,
-        )
-        assert res.ok is True
-        ep = load_episode(Path(res.episode_path))
-        assert ep.git.patch_omitted is True
-        assert ep.git.patch == ""
-        assert ep.git.patch_sha256
-        assert ep.git.patch_blob_sha256
-
-        blob = (
-            root / ".loom" / "compound" / "blobs" / f"{ep.git.patch_blob_sha256}.diff"
-        )
-        assert blob.exists()
-        txt = blob.read_text(encoding="utf-8")
-        assert "diff --git" in txt
+        st = load_state(paths.loom_compound_dir / "state.json")
+        assert st.observations_count == 1

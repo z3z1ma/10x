@@ -7,81 +7,65 @@ from pathlib import Path
 @dataclass(frozen=True)
 class CompoundPaths:
     root: Path
-
-    # Cognitive state
-    skills_dir: Path
-    memory_dir: Path
-    observations_file: Path
-    instincts_file: Path
-    instincts_md: Path
-
-    # Scaffold
-    compound_dir: Path
-
-    # Evidence (committed)
-    loom_dir: Path
     loom_compound_dir: Path
-    episodes_dir: Path
-    blobs_dir: Path
-    decisions_dir: Path
-
-    # Docs
-    agents_md: Path
-    loom_md: Path
-    roadmap_md: Path
+    runtime_dir: Path
+    observations_file: Path
+    observer_pid_file: Path
+    observer_log_file: Path
+    observer_nudge_file: Path
+    instincts_dir: Path
+    instincts_personal_dir: Path
+    instincts_inherited_dir: Path
+    instincts_file: Path
+    instincts_markdown_file: Path
+    state_file: Path
+    config_file: Path
+    evolved_dir: Path
+    evolved_skills_dir: Path
+    evolved_commands_dir: Path
+    evolved_agents_dir: Path
 
 
 def compound_paths(root: Path) -> CompoundPaths:
-    root = root.resolve()
-    skills_dir = root / ".opencode" / "skills"
-    memory_dir = root / ".opencode" / "memory"
-    observations_file = memory_dir / "observations.jsonl"
+    repo_root = root.resolve()
+    loom_compound_dir = repo_root / ".loom" / "compound"
+    runtime_dir = loom_compound_dir / "runtime"
+    observations_file = runtime_dir / "observations.jsonl"
+    observer_pid_file = runtime_dir / "observer.pid"
+    observer_log_file = runtime_dir / "observer.log"
+    observer_nudge_file = runtime_dir / "observer.nudge"
 
-    compound_dir = root / ".opencode" / "compound"
-
-    loom_dir = root / ".loom"
-    loom_compound_dir = loom_dir / "compound"
-    episodes_dir = loom_compound_dir / "episodes"
-    blobs_dir = loom_compound_dir / "blobs"
-    decisions_dir = loom_compound_dir / "decisions"
-
+    instincts_dir = loom_compound_dir / "instincts"
+    instincts_personal_dir = instincts_dir / "personal"
+    instincts_inherited_dir = instincts_dir / "inherited"
     instincts_file = loom_compound_dir / "instincts.json"
-    instincts_md = loom_compound_dir / "INSTINCTS.md"
+    instincts_markdown_file = loom_compound_dir / "INSTINCTS.md"
 
-    agents_md = root / "AGENTS.md"
-    loom_md = root / "LOOM.md"
-    roadmap_md = loom_compound_dir / "ROADMAP.md"
+    state_file = loom_compound_dir / "state.json"
+    config_file = loom_compound_dir / "config.json"
+
+    evolved_dir = loom_compound_dir / "evolved"
+    evolved_skills_dir = evolved_dir / "skills"
+    evolved_commands_dir = evolved_dir / "commands"
+    evolved_agents_dir = evolved_dir / "agents"
 
     return CompoundPaths(
-        root=root,
-        skills_dir=skills_dir,
-        memory_dir=memory_dir,
-        observations_file=observations_file,
-        instincts_file=instincts_file,
-        instincts_md=instincts_md,
-        compound_dir=compound_dir,
-        loom_dir=loom_dir,
+        root=repo_root,
         loom_compound_dir=loom_compound_dir,
-        episodes_dir=episodes_dir,
-        blobs_dir=blobs_dir,
-        decisions_dir=decisions_dir,
-        agents_md=agents_md,
-        loom_md=loom_md,
-        roadmap_md=roadmap_md,
+        runtime_dir=runtime_dir,
+        observations_file=observations_file,
+        observer_pid_file=observer_pid_file,
+        observer_log_file=observer_log_file,
+        observer_nudge_file=observer_nudge_file,
+        instincts_dir=instincts_dir,
+        instincts_personal_dir=instincts_personal_dir,
+        instincts_inherited_dir=instincts_inherited_dir,
+        instincts_file=instincts_file,
+        instincts_markdown_file=instincts_markdown_file,
+        state_file=state_file,
+        config_file=config_file,
+        evolved_dir=evolved_dir,
+        evolved_skills_dir=evolved_skills_dir,
+        evolved_commands_dir=evolved_commands_dir,
+        evolved_agents_dir=evolved_agents_dir,
     )
-
-
-def required_scaffold_paths() -> list[str]:
-    # These should be installed via `loom compound init`.
-    return [
-        "AGENTS.md",
-        "LOOM.md",
-        ".loom/compound/ROADMAP.md",
-        ".loom/compound/README.md",
-        ".opencode/commands/loom-plan.md",
-        ".opencode/commands/loom-work.md",
-        ".opencode/commands/loom-review.md",
-        ".opencode/commands/loom-compound.md",
-        ".opencode/memory/.gitignore",
-        ".opencode/compound/.gitignore",
-    ]

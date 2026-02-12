@@ -31,8 +31,6 @@ Process:
    - checks/tests
    - risks + rollback
 
-Optional:
-- `loom compound refresh` (refresh derived docs)
 
 Output:
 - A concise plan document.

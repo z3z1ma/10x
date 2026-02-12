@@ -1,14 +1,23 @@
-# Loom Compound Evidence
+# Loom Compound State
 
-This folder contains **committed evidence capsules** (Episodes) used by Loom Compound.
+This directory stores Compound learning artifacts.
 
-Why this exists:
-- Raw observations are runtime-only and typically gitignored.
-- Episodes are the smallest durable unit that preserves *what happened* (bounded) and lets Loom compile durable memory deterministically.
+## Files
 
-Layout:
-- `.loom/compound/episodes/YYYY/MM/<episode_id>.json`
+- `instincts/personal/*.md` — canonical personal instincts
+- `instincts/inherited/*.md` — imported/shared instincts
+- `INSTINCTS.md` — generated instinct index
+- `runtime/observations.jsonl` — append-only observations log (gitignored)
+- `runtime/observer.{pid,log,nudge}` — observer process state (gitignored)
+- `state.json` — observation cursor and auto-learning bookkeeping
+- `config.json` — instincts derivation command template
+- `evolved/{skills,commands,agents}/` — generated evolved artifacts
+- `ROADMAP.md` — optional freeform roadmap scratchpad
 
-Notes:
-- Episodes are intended to be small. Large diffs may be stored as references (base/head sha + diffstat) instead of full patches.
-- Do not edit Episodes casually; treat them as committed evidence capsules.
+## Contract
+
+- Hook adapters capture observations and echo Claude hook payloads to keep tool execution unblocked.
+- `loom compound observer` provides background instincts compilation with cooldown + thresholds.
+- `loom compound instinct-import` and `instinct-export` handle portable instinct bundles.
+- `loom compound evolve --generate` emits learned skills/commands/agents for Claude/OpenCode.
+- Derivation command is free-form and edits instinct markdown files directly.

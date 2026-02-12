@@ -3,6 +3,62 @@
     {
       "files": [
         {
+          "path": ".claude/agents/loom-review-docs.md",
+          "sha256": "bb4769598783b3ba9f224cb8ce91cc73123c63f98b3a7c1dcf8bb24a9764b853"
+        },
+        {
+          "path": ".claude/agents/loom-review-quality.md",
+          "sha256": "df90f59b3b5aa61509ef140179f819291e9d8871d43948a0b4a325467cb511bf"
+        },
+        {
+          "path": ".claude/agents/loom-review-security.md",
+          "sha256": "9e87b062008f930c5ab741ac8a9bdcd20f149d567b7db573811a2ac08130f7bf"
+        },
+        {
+          "path": ".claude/commands/evolve.md",
+          "sha256": "4c085798b8c25e8ef228e736ebd86339f93b322469777080c71a4a6c95cb3851"
+        },
+        {
+          "path": ".claude/commands/instinct-export.md",
+          "sha256": "5f3454500287a64ee0a7bd30a775c0c7a57b4c9240d00b3f69d5c8a8aac3b43b"
+        },
+        {
+          "path": ".claude/commands/instinct-import.md",
+          "sha256": "44833c4ca7c03f33b711f10913260083d56f0fb7682314a9e93b25e96170ad12"
+        },
+        {
+          "path": ".claude/commands/instinct-status.md",
+          "sha256": "60745c13667a00c4797f2cef7e87b4b78b585e6aaf2c1de454847693aef82902"
+        },
+        {
+          "path": ".claude/commands/loom-compound.md",
+          "sha256": "f2c0e4349e92ba122b74d9f0643e4b25f72a9e6d4bf09b57b8f35007c50252c7"
+        },
+        {
+          "path": ".claude/commands/loom-plan.md",
+          "sha256": "b23144ffb88a26e2f475952104fd05118004db3222f3eed2863095da502a25f3"
+        },
+        {
+          "path": ".claude/commands/loom-review.md",
+          "sha256": "e024a8c0d00341017f336c3ee8146a412f38925ecdf5068b21bc23f33768f6ca"
+        },
+        {
+          "path": ".claude/commands/loom-work.md",
+          "sha256": "4a1e258e63bc0a2455eb2cce8f26357d1161ee3d149083f4e8a0173cecf04432"
+        },
+        {
+          "path": ".claude/commands/observer.md",
+          "sha256": "1617cbf5ce5053f88e53ff117cec186e5788f040c0b800934745f0346fe75340"
+        },
+        {
+          "path": ".claude/settings.json",
+          "sha256": "78c03dae7013e257cc623c88fefc3acbd1a512957e993e54e8c2ea60bc1b500b"
+        },
+        {
+          "path": ".omp/extensions/compound_engineering.ts",
+          "sha256": "e78b1e2fc2cf78c625aaca69cc0d38a65735e071df00a6a187f8ba30141ca542"
+        },
+        {
           "path": ".opencode/agents/loom-review-docs.md",
           "sha256": "41d6e4e7dab9e0563e8024b5b44cd79e9a77d9bfb977dda37d72ba5e4cd2162a"
         },
@@ -15,24 +71,44 @@
           "sha256": "4fe4e1e8398a2babfe10a7dff59e901baa4ec47894b47756dcb31e9efd74b630"
         },
         {
+          "path": ".opencode/commands/evolve.md",
+          "sha256": "d331833ac7dee915812c510af49ed65e1261bf2b30b204fec0b2954c580ec168"
+        },
+        {
+          "path": ".opencode/commands/instinct-export.md",
+          "sha256": "8e1b8f1773b8f18c6a76bbc37d2a6a7b08c8260fc1729b40f98a26016cd4423d"
+        },
+        {
+          "path": ".opencode/commands/instinct-import.md",
+          "sha256": "69b480bc17872d303902806faeee33032283005bc235f295130094d4c1af3c9b"
+        },
+        {
+          "path": ".opencode/commands/instinct-status.md",
+          "sha256": "3510bdd6301b233bae8ec573c9fabd61323bd16f142cbf518a3abb16edab0f54"
+        },
+        {
           "path": ".opencode/commands/loom-compound.md",
-          "sha256": "1c9a0b17ab56b4bdd2768e22a34591647ddb0794fd59b53794e4f44cfd96bf2d"
+          "sha256": "bbb0b96284ca196d751e12b77289bc739c65753c78b8cad29649d78de954e220"
         },
         {
           "path": ".opencode/commands/loom-plan.md",
-          "sha256": "21c0a00f6f39b451c1e78e43bc5bfe61ddb08b116b3e065f05da6c8fdf94cbd4"
+          "sha256": "34c5970ea6eaf7922c3fe93734fbcf1aa80c6b37fe2f92d76c7d2e352a317ce2"
         },
         {
           "path": ".opencode/commands/loom-review.md",
-          "sha256": "2922346ead20f5e34dbd01160e36b23fdd3418b14362d2c2f4cebc5d5d86dc8b"
+          "sha256": "8fa822ac8c3a63bca58782a31d2b325d21b956fd2d6e6496ad0b88cffccde91e"
         },
         {
           "path": ".opencode/commands/loom-work.md",
-          "sha256": "606fb72462a24167fc87e867da0c16ceeedb864aa5a5d5bdce3ba4392fd9fb79"
+          "sha256": "8701ef037a8f5c926cefab6842706e735a1ab26536c8c43d38fa4285711c19fe"
+        },
+        {
+          "path": ".opencode/commands/observer.md",
+          "sha256": "d03ec49e9b9e835c8bfe0c78404d8e6e069c149a94122b7b4e3973e3aeb8c081"
         },
         {
           "path": ".opencode/compound/.gitignore",
-          "sha256": "ab97d93430ab2d96b0dbfb8caf6db3745f6a81e189778772411f871fe8e709a2"
+          "sha256": "b6a7030b085d639aa52a751be0dc5db3d00cd0f24a790d63fa3e74981053ef1e"
         },
         {
           "path": ".opencode/compound/prompts/autolearn.md",
@@ -40,12 +116,12 @@
         },
         {
           "path": ".opencode/plugins/compound_engineering.ts",
-          "sha256": "cf63b7f07a77906215f0a7d54322e5614aff16151a044c96f7111cb4ab29db2a"
+          "sha256": "aa65afb64450c5cb40deeaac9e6635da5531f4c498fcd1f8276699375eadd2eb"
         }
       ],
       "id": "loom-compound-core",
       "installed_at": "2026-02-09T20:01:11.896312Z",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ],
   "version": 1

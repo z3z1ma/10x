@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "instincts": {
+    "derive_command": [
+      "omp",
+      "--model",
+      "gpt-5.3-codex",
+      "--thinking",
+      "low",
+      "--no-lsp",
+      "--no-pty",
+      "--no-extensions",
+      "-p",
+      "{prompt}"
+    ]
+  }
+}

@@ -33,8 +33,6 @@ Process:
    - add notes
    - create new tickets if issues are substantial
 
-Optional:
-- `loom compound refresh` (refresh derived docs)
 
 Output:
 - Review summary.

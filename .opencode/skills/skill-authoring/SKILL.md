@@ -10,7 +10,6 @@ metadata:
   tags: "skills,authoring"
 ---
 
-<!-- BEGIN:compound:skill-managed -->
 ## What makes a skill “good”
 
 - **Specific**: does one thing.
@@ -54,7 +53,6 @@ Create a new skill when:
 
 No "hand-wavy" steps like "just fix it".
 If a step requires a command, include the command.
-<!-- END:compound:skill-managed -->
 
 ## Manual notes
 

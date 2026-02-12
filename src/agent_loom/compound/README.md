@@ -1,24 +1,53 @@
 ## Compound Cookbook
 
-Compound is Loom's deterministic learning loop for agentic work.
+Loom Compound learning v2 pipeline:
 
-It turns recent activity into durable procedural memory (Skills) backed by committed evidence (Episodes) and replayable governance records (Decisions).
+observations -> instincts -> evolved artifacts.
 
-Core loop:
+## Runtime/data files
 
-- Plan -> Work -> Review -> Compound -> Repeat
+- Observations log: `.loom/compound/runtime/observations.jsonl` (gitignored)
+- Observer runtime: `.loom/compound/runtime/observer.{pid,log,nudge}` (gitignored)
+- Instinct store: `.loom/compound/instincts/personal/*.md`
+- Imported instincts: `.loom/compound/instincts/inherited/*.md`
+- Instinct index: `.loom/compound/INSTINCTS.md`
+- State cursor/bookkeeping: `.loom/compound/state.json`
+- Derivation config: `.loom/compound/config.json`
+- Evolved artifacts: `.loom/compound/evolved/{skills,commands,agents}/`
 
-Where things live:
+## Harness observation capture
 
-- Skills: `.opencode/skills/<name>/SKILL.md`
-- Instincts: `.loom/compound/instincts.json` (index: `.loom/compound/INSTINCTS.md`)
-- Observations: `.opencode/memory/observations.jsonl` (gitignored)
-- Episodes (evidence): `.loom/compound/episodes/YYYY/MM/<episode_id>.json`
-- Decisions (ops log): `.loom/compound/decisions/YYYY/MM/<decision_id>.json`
+Compound scaffolds feed one centralized observation log from:
 
-### Commands
+- Claude Code hooks (`.claude/settings.json` -> `loom compound claude-hook`)
+- OpenCode plugin (`.opencode/plugins/compound_engineering.ts` -> `loom compound opencode-hook`)
+- OMP extension (`.omp/extensions/compound_engineering.ts` -> `loom compound omp-hook`)
 
-Install or upgrade the compound scaffolding:
+Claude hook contract is preserved: hook stdin payload is echoed back to stdout unchanged.
+
+## Derivation config
+
+`instincts-update` reads `.loom/compound/config.json` and executes `instincts.derive_command`.
+
+The command is user-configurable so users can swap Claude/OpenCode/pi/Codex/etc. Loom does not enforce a JSON schema for derivation output. The command is expected to edit instinct markdown files directly under `.loom/compound/instincts/personal/`.
+
+`derive_command` can be:
+- array of argv tokens (recommended)
+- shell-style string (split with shlex)
+
+Supported placeholders in command tokens:
+- `{prompt}`
+- `{repo}`
+- `{loom_compound_dir}`
+- `{observations_file}`
+- `{instincts_personal_dir}`
+- `{instincts_inherited_dir}`
+- `{min_occurrences}`
+- `{max_candidates}`
+
+## Commands
+
+Install/upgrade scaffold:
 
 ```bash
 loom compound init
@@ -26,27 +55,56 @@ loom compound init --dry-run
 loom compound init --force
 ```
 
-Refresh derived docs and rule files (safe to run often):
+Compile instincts from observations:
 
 ```bash
-loom compound refresh
+loom compound instincts-update
+loom compound instincts-update --auto
+loom compound instinct-status
 ```
 
-Apply learning proposals deterministically (writes an Episode; may update skills/instincts):
+Observer lifecycle:
 
 ```bash
-loom compound learn --proposals '{"instinct_candidates":[],"skill_candidates":[]}'
+loom compound observer start
+loom compound observer status
+loom compound observer stop
+loom compound observer run-once
 ```
 
-Commit compound-owned artifacts (manager/ship step):
+Import/export:
 
 ```bash
-loom compound sync
-loom compound sync -m "chore: compound"
+loom compound instinct-export --out instincts.bundle.json
+loom compound instinct-import instincts.bundle.json
 ```
 
-Print this cookbook:
+Evolve instincts into skills/commands/agents:
 
 ```bash
-loom compound prime
+loom compound evolve --threshold 0.75
+loom compound evolve --generate
 ```
+
+Process one harness adapter payload:
+
+```bash
+loom compound claude-hook
+loom compound opencode-hook --event tool.execute.before
+loom compound omp-hook --event tool_call
+```
+
+## Environment variables
+
+- `COMPOUND_LOG_OBSERVATIONS=1|0` (default `1`)
+- `COMPOUND_OBSERVATIONS_MAX_BYTES=33554432`
+- `COMPOUND_OBSERVATIONS_MAX_BACKUPS=5`
+- `COMPOUND_OBSERVATIONS_MAX_STRING_CHARS=2000`
+- `COMPOUND_OBSERVATIONS_MAX_OBJECT_KEYS=50`
+- `COMPOUND_INSTINCTS_MIN_NEW_OBSERVATIONS=12`
+- `COMPOUND_INSTINCTS_COOLDOWN_SECONDS=120`
+- `COMPOUND_OBSERVER_POLL_SECONDS=5`
+
+## Automatic write boundaries
+
+Hook adapter paths (`claude-hook`, `opencode-hook`, `omp-hook`) append only to runtime observations and observer nudge files.

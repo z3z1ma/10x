@@ -1,8 +1,17 @@
+from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
 
-from agent_loom.compound.models import CompoundSyncResult
 from agent_loom.core.git import git_checked, git_repo_root, git_scoped_commit
+
+
+@dataclass(frozen=True)
+class CompoundSyncResult:
+    committed: bool
+    count: int
+    files: list[str]
+    sha: str
+    message: str
 
 
 def _git_status_paths(repo_root: Path, *, pathspecs: List[str]) -> List[str]:
@@ -40,19 +49,10 @@ def sync(
     if repo_root is None:
         raise ValueError("Not in a git repository")
 
-    # Deliberately scoped to compound-owned/AI-managed artifacts.
-    # Note: git pathspecs that do not exist are treated as errors by `git add`.
     pathspecs = [
         "LOOM.md",
         ".loom/compound",
-        ".opencode/agents",
-        ".opencode/memory",
-        ".opencode/skills",
     ]
-    if (repo_root / ".claude" / "agents").exists():
-        pathspecs.append(".claude/agents")
-    if (repo_root / ".claude" / "skills").exists():
-        pathspecs.append(".claude/skills")
 
     changed = _git_status_paths(repo_root, pathspecs=pathspecs)
 

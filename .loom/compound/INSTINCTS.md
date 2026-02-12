@@ -1,131 +1,15 @@
 # INSTINCTS
 
-<!-- BEGIN:compound:instincts-md -->
-## Active instincts (top confidence)
+## Active instincts (grouped by domain)
 
-- **memory-scope-change-is-cross-layer** (96%) [contract-sync, cross-layer, memory, scope]
-  - Trigger: When adding, removing, or changing Loom memory scope syntax or scope kinds
-  - Action: Update all scope touchpoints together: `src/agent_loom/memory/scopes.py` parsing/normalization, `src/agent_loom/memory/constants.py` identifiers, `src/agent_loom/memory/core.py` write paths, `src/agen...
-- **memory-scope-change-requires-contract-docs-tests** (96%) [contract, docs, memory, scopes, tests]
-  - Trigger: When adding or changing a memory scope kind in Loom memory.
-  - Action: Update the scope contract implementation in `src/agent_loom/memory/scopes.py`, then immediately align user-facing docs in `src/agent_loom/memory/README.md` and add/adjust focused regression tests so t...
-- **cli-ux-contract-tests-for-output-changes** (95%) [cli, regression, testing, ux]
-  - Trigger: Any change modifies user-visible stdout/stderr text, exit codes, or command acceptance rules.
-  - Action: Add/adjust targeted UX tests that assert exit code, stdout, and stderr directly (no broad snapshots), covering both happy paths and representative failure paths.
-- **memory-scope-change-sync-docs-and-recall-tests** (95%) [docs, loom-memory, recall, scopes, tests]
-  - Trigger: When adding or changing Loom memory scope kinds (for example file/folder/command) in memory parsing or recall behavior.
-  - Action: Update scope parsing/normalization in `src/agent_loom/memory/scopes.py`, update the supported kinds list in `src/agent_loom/memory/README.md`, and add or extend `tests/test_memory_recall_notes.py` to ...
-- **memory-wikilink-hydration-requires-ux-proof** (95%) [cli-ux, memory, testing, wikilink]
-  - Trigger: When changing memory wikilink parsing, hydration, or note creation behavior in `src/agent_loom/memory/`.
-  - Action: Add or update UX-style tests in `tests/test_memory_cli_ux.py` and focused hydration tests in `tests/test_memory_link_hydration.py` that assert stdout/stderr text and exit codes, not only internal stat...
-- **memory-scope-contract-sync** (94%) [contract-sync, docs, loom-memory, scopes, tests]
-  - Trigger: Any change to memory scope kinds, parsing rules, or matching behavior
-  - Action: Update scope constants, parser/normalizer, and docs in the same change; add or adjust focused tests that cover accepted and rejected inputs so behavior cannot drift.
-- **ship-scope-ux-with-doc-and-skill-sync** (94%) [compound, docs, memory, skills]
-  - Trigger: When memory scope behavior changes in user-facing CLI flows
-  - Action: Update `src/agent_loom/memory/README.md` and the procedural skill `.opencode/skills/loom-memory-scope-extension/SKILL.md` (and distributed copy under `src/agent_loom/compound/opencode/skills/loom-memo...
-- **memory-note-ref-single-resolver** (93%) [cli, memory, refactor, ux-consistency]
-  - Trigger: A Loom Memory CLI command accepts a note argument that may be an id, path-like token, or title-like reference.
-  - Action: Route all note-target parsing through shared resolver helpers (id + path resolution) before command logic, and keep not-found/error wording consistent across commands.
-- **scope-syntax-migration-needs-compat-tests** (93%) [memory, migration, scope-glob, tests]
-  - Trigger: When introducing a new scope syntax form (for example prefixed forms like `glob:`) or deprecating legacy forms
-  - Action: Add/expand targeted tests in `tests/test_memory_scope_glob.py` to cover accepted inputs, normalization behavior, and rejection of ambiguous forms. Include both legacy and new syntax cases until legacy...
-- **compound-autolearn-json-only** (92%) [autolearn, compound, io-contract, memory, process]
-  - Trigger: When acting as the background autolearn/compound learning agent producing memory-only updates.
-  - Action: Do not run any tools; output exactly one valid JSON object (no markdown). If there is no durable learning worth persisting, output `{}`. Keep within budgets and avoid proposing product code changes.
-- **memory-behavior-change-must-update-readme** (92%) [contract-sync, docs, memory]
-  - Trigger: When memory CLI or hydration semantics change (especially user-visible link handling).
-  - Action: Update `src/agent_loom/memory/README.md` in the same change set with concrete examples of new/changed behavior to prevent contract drift between implementation and docs.
-- **memory-scope-unknown-kind-explicit-failure-tests** (91%) [loom-memory, regression-tests, ux, validation]
-  - Trigger: When scope parsing logic changes or a new scope kind is introduced.
-  - Action: Add tests that assert unknown scope kinds are rejected with clear, user-facing errors and that known kinds still parse and round-trip correctly through recall paths.
-- **recall-note-semantics-must-have-ux-regressions** (91%) [memory, recall, regression, ux-tests]
-  - Trigger: When memory recall behavior or scope filtering changes.
-  - Action: Add or update high-signal recall-note tests in `tests/test_memory_recall_notes.py` to verify expected stdout/stderr semantics and avoid future drift in user-visible recall behavior.
-- **avoid-tooling-artifacts-in-templates** (90%) [compound, hygiene, templates]
-  - Trigger: When adding or reviewing files under template trees like src/agent_loom/compound/opencode/ (or other scaffolded outputs).
-  - Action: Exclude tool-specific project files (e.g., `.serena/*`, local IDE metadata, assistant-runner configs) from templates and committed scaffolds unless they are a deliberate product feature; prefer removi...
-- **memory-hydration-end-to-end-touchpoints** (90%) [architecture, hydration, memory]
-  - Trigger: When implementing or refactoring memory link hydration logic.
-  - Action: Verify changes span and stay consistent across `cli.py`, `core.py`, `hydrate.py`, and `models.py`; avoid isolated edits that pass unit tests but break end-to-end behavior.
-- **scope-glob-requires-edge-coverage** (90%) [determinism, glob, loom-memory, testing]
-  - Trigger: Introducing or modifying glob-based memory scopes
-  - Action: Add explicit tests for positive matches, non-matches, malformed patterns, and normalization edge cases; keep failures user-facing and deterministic.
-- **sync-duplicated-skill-content-in-one-change** (90%) [compound, distribution, drift-prevention, skills]
-  - Trigger: When editing a skill that exists in both local `.opencode` and distributed `src/agent_loom/.../opencode` paths.
-  - Action: Update both copies in the same change set and verify they remain byte-for-byte aligned to prevent local/distributed behavior drift.
-- **typed-result-exhaustive-cli-branching** (90%) [cli, memory, reliability, typing]
-  - Trigger: Vault/core APIs return multiple typed result variants for link/validation/suggestion/backlink operations.
-  - Action: Handle each variant explicitly in CLI rendering paths, avoid implicit fallthrough, and add one UX test per variant so behavior is stable and intentional.
-- **remove-stale-scope-paths-immediately** (89%) [cleanup, dead-code, maintainability, scope]
-  - Trigger: After replacing legacy scope parsing or dispatch logic
-  - Action: Search for legacy markers (for example `legacy` or old scope prefixes) and remove dead branches immediately so parser behavior has a single source of truth.
-- **plan-mode-submit-plan-before-implementation** (86%) [planning, process, safety, workflow]
-  - Trigger: When operating under Plan Mode / read-only constraints or when a plan is explicitly requested as a gate before coding
-  - Action: Do only inspection/analysis; produce a concrete, executable plan; call `submit_plan` with plan+summary; do not edit files or run write-capable tools until the plan is approved
-- **post-refactor-quality-gates** (86%) [lint, quality, tests, typing, uv]
-  - Trigger: After a broad refactor that touches many files and tests
-  - Action: Run `uv run ruff check .`, `uv run basedpyright`, then `uv run pytest`; treat failures as part of the refactor (not follow-up work).
-- **avoid-lsp-diagnostics-use-basedpyright** (85%) [python, quality-gates, type-checking, uv, workflow]
-  - Trigger: When you need to assess/resolve Python type issues in a repo that treats basedpyright as a required gate (or explicitly instructs to use it).
-  - Action: Run `uv run basedpyright` and fix reported issues; do not rely on editor/LSP diagnostics or the `lsp_diagnostics` tool as a substitute for the gate.
-- **centralize-scope-validation-and-normalization** (83%) [loom-memory, maintainability, refactor, scopes]
-  - Trigger: Scope logic starts spreading across multiple branches or call sites
-  - Action: Converge validation/normalization into shared scope helpers and keep one canonical representation of scope strings to reduce branching bugs and doc drift.
-- **add-cli-ux-tests-when-output-changes** (82%) [cli, stability, tests, ux]
-  - Trigger: When changing any CLI command behavior (stdout/stderr text, exit codes, help output, error messages)
-  - Action: Add or update a focused CLI UX test that asserts exit code and a small set of stable substrings/lines (not full output), covering both success and failure cases; avoid brittle assertions on whitespace...
-- **cli-ux-regression-tests** (82%) [cli, regression, testing, tickets, ux]
-  - Trigger: When changing any CLI command output, flags, exit codes, or user-facing error messages (especially in ticket commands).
-  - Action: Add/extend a pytest UX test that exercises the command and asserts: exit code, stdout/stderr content (including key lines and spacing), and stable formatting. Prefer small, readable golden strings (de...
-- **compound-template-determinism-first** (82%) [compound, determinism, templates, tests]
-  - Trigger: When changing compound scaffold/template contents or compound install logic (e.g., src/agent_loom/compound/scaffold.py, src/agent_loom/compound/paths.py, src/agent_loom/compound/docs.py, compound open...
-  - Action: Treat the installed `.opencode/` (and any `.loom/compound/` docs) as a contract: preserve stable paths, stable file ordering, stable newline formatting, and stable rendered content; immediately update...
-- **memory-work-targeted-test-then-full-gates** (82%) [feedback-loop, loom-memory, quality-gates, workflow]
-  - Trigger: After touching `src/agent_loom/memory/**` or memory-facing tests.
-  - Action: Run focused tests first (for example `uv run pytest tests/test_memory_recall_notes.py`) to validate behavior quickly, then run full required gates (`uv run basedpyright`, `uv run ruff check .`) before...
-- **prefer-uv-gates-before-tests** (82%) [python, quality, tooling, uv]
-  - Trigger: After non-trivial Python edits (new modules, refactors, deletes) and before running tests or claiming done
-  - Action: Run `uv run basedpyright` then `uv run ruff check .` and fix all issues before `uv run pytest`.
-- **subsystem-removal-sweep** (82%) [deletion, docs, maintenance, python, refactor, tests]
-  - Trigger: When deleting or deprecating a substantial module/package (especially with many submodules)
-  - Action: Immediately sweep for imports/exports, docs references, CLI help/examples, tests, and any API schemas; remove or rewrite references so the repo remains coherent and discoverable.
-- **uv-gates-before-done** (82%) [lint, quality, tests, typing, uv]
-  - Trigger: After implementing user-visible CLI changes (even small ones)
-  - Action: Run `uv run ruff check .`, then `uv run basedpyright`, then `uv run pytest`; fix all warnings/errors (no waivers) before considering the change complete.
-- **ignore-new-persistent-artifacts** (81%) [docs, git, hygiene, storage]
-  - Trigger: When introducing any persistent local artifact (sqlite db, index, cache dir, logs, tmp files) as part of a new subsystem
-  - Action: Update `.gitignore` to exclude the artifact(s) and add a short doc note describing where the artifact lives and how to reset it safely.
-- **remove-orphans-after-large-deletions** (80%) [cleanup, packaging, python, refactor]
-  - Trigger: When removing many files or an entire subtree (e.g., `.../poly/*`)
-  - Action: Check `__init__.py` exports, public module surface, and docs/README links for orphans; ensure imports fail nowhere and no dead entrypoints remain.
-- **cli-ux-change-requires-ux-test** (78%) [cli, loom-ticket, testing, ux-contract]
-  - Trigger: When you change CLI text output, flags, or exit-code behavior
-  - Action: Add/adjust a dedicated UX test that asserts exit code + key stdout/stderr lines for the affected command(s); keep assertions minimal but intentional (user-visible contracts only) so refactors don't ca...
-- **cli-ux-tests-for-new-commands** (78%) [cli, pytest, testing, ux]
-  - Trigger: When adding or changing a CLI command/subcommand (new noun/verb, flags, output text, exit behavior)
-  - Action: Add/adjust a UX regression test that asserts (1) exit code, (2) key stdout/stderr lines, and (3) a stable error message for failure paths. Prefer partial/regex assertions and avoid brittle full-output...
-- **prompt-tests-assert-structure-not-strings** (78%) [prompts, regression, stability, testing, ux]
-  - Trigger: Writing or updating tests that validate generated prompts, templates, or other large text blobs that can change with harmless wording edits.
-  - Action: Assert on stable structure: required sections/markers, presence of key instructions, and critical interpolated values. Avoid full-string snapshots unless the format is explicitly versioned; keep asser...
-- **python-quality-gates-before-tests** (78%) [lint, python, quality, tests, typecheck]
-  - Trigger: After making Python code changes (or before declaring work done) in Loom
-  - Action: Run `uv run basedpyright` then `uv run ruff check .` and address issues; only then run `uv run pytest`
-- **refactor-delete-module-chase-imports** (78%) [maintenance, python, refactor]
-  - Trigger: A refactor removes/renames modules (large deletions or package reshapes)
-  - Action: Search for old module names and key symbols (e.g. with ripgrep/grep), update imports, docs, and tests together; ensure no dead entrypoints remain.
-- **sync-compound-opencode-plugin-copies** (78%) [compound, distribution, drift-prevention, opencode]
-  - Trigger: When editing the compound engineering opencode plugin (or any distributed opencode settings) and you notice there is both a repo-local copy and a distributed copy under src/
-  - Action: Make the exact same change in both `.opencode/plugins/compound_engineering.ts` and `src/agent_loom/compound/opencode/plugins/compound_engineering.ts`, and sanity-check diffs so they only diverge when ...
-- **template-docs-use-root-relative-paths** (78%) [compound, docs, portability]
-  - Trigger: When editing README/docs content that will be scaffolded into a repo (e.g., src/agent_loom/compound/opencode/README.md, src/agent_loom/compound/opencode/.loom/compound/README.md, `.opencode/commands/*...
-  - Action: Write links and references using repo-root-relative paths (no absolute machine paths, no editor URIs) and avoid references to removed/retired template files (e.g., AGENTS.md copies) to keep docs porta...
-- **pack-cli-ux-test-when-user-facing-output-changes** (77%) [cli, packs, tests, ux]
-  - Trigger: When you change pack-related CLI commands (flags, help text, user-visible messaging, exit codes) or add new pack UX behavior
-  - Action: Add/update focused CLI UX tests in `tests/test_pack_cli_ux.py` that assert exit code and a few key stdout/stderr substrings; avoid brittle full-output snapshots; keep assertions resilient to formattin...
+### workflow
+
+- **prefer-surgical-edit-operations** (68%) [workflow, editing, safety, diff-quality]
+  - Trigger: When modifying existing files with Edit/Write and the change is logically small-to-medium
+  - Action: Use narrow, hash-anchored edits at the smallest logical locus; avoid whole-file or very large block replacements unless the intent is genuinely full-file replacement.
+  - Source: personal
 
 ## Notes
 
 - Instincts are the pre-skill layer: small, repeatable heuristics.
-- When an instinct proves useful across sessions, promote it into a Skill.
-<!-- END:compound:instincts-md -->
+- Promote stable instincts into harness-native skills and commands when warranted.

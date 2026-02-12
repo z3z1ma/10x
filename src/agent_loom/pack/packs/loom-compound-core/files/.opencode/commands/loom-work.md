@@ -34,8 +34,6 @@ Process:
    - run the relevant test commands
    - set status to `closed`
 
-Optional:
-- `loom compound refresh` (refresh derived docs)
 
 Output:
 - What changed.

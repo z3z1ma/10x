@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "instincts": {
+    "derive_command": [
+      "claude",
+      "--model",
+      "haiku",
+      "--max-turns",
+      "3",
+      "--print",
+      "{prompt}"
+    ]
+  }
+}

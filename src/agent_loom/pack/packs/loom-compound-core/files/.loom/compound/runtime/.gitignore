@@ -1,0 +1,5 @@
+observations.jsonl
+observations.jsonl.*.bak
+observer.pid
+observer.log
+observer.nudge

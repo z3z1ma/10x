@@ -1,144 +1,373 @@
 from __future__ import annotations
 
 import json
+import os
+import re
+import shlex
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from hashlib import sha256
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
-from agent_loom.compound.compiler_instincts import (
-    apply_instinct_candidates,
-    parse_instinct_candidates,
+from agent_loom.compound.instincts import (
+    Instinct,
+    InstinctStore,
+    load_instincts,
+    save_instincts,
+    sync_instincts_markdown,
 )
-from agent_loom.compound.compiler_skills import (
-    apply_skill_candidates,
-    parse_skill_candidates,
-)
-from agent_loom.compound.decisions import (
-    build_decision,
-    decision_path_for_id,
-    write_decision,
-)
-from agent_loom.compound.docs import sync_instincts_markdown
-from agent_loom.compound.episodes import (
-    Episode,
-    EpisodeGit,
-    EpisodeObservation,
-    EpisodeObservationCursor,
-    build_episode,
-    bounded_text,
-    episode_path_for_id,
-    load_episode,
-    write_episode,
-)
-from agent_loom.compound.blobs import write_blob_text
-from agent_loom.compound.instincts import load_instincts, save_instincts
 from agent_loom.compound.observations import (
     count_observations,
     ingest_observations_since,
     observations_prefix_sha256,
 )
 from agent_loom.compound.paths import CompoundPaths, compound_paths
-from agent_loom.compound.scaffold import require_scaffold_installed
 from agent_loom.compound.state import CompoundState, load_state, save_state
-from agent_loom.core.git import (
-    git_checked,
-    git_head_sha,
-    git_is_dirty,
-    git_merge_base,
-    git_ref_exists,
-)
+from agent_loom.core.exec import run
+
+_PLACEHOLDER_RE = re.compile(r"\{([a-z0-9_]+)\}")
 
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def _sha256_text(text: str) -> str:
-    return sha256(text.encode("utf-8")).hexdigest()
+def _parse_iso(text: str) -> datetime | None:
+    s = str(text or "").strip()
+    if not s:
+        return None
+    try:
+        if s.endswith("Z"):
+            s = s[:-1] + "+00:00"
+        return datetime.fromisoformat(s)
+    except Exception:
+        return None
 
 
-def _load_json_from_text(text: str) -> Dict[str, Any]:
-    parsed = json.loads(text)
-    if not isinstance(parsed, dict):
-        raise ValueError("proposals must be a JSON object")
-    return parsed
+def _short(text: str, *, max_len: int) -> str:
+    s = str(text or "").replace("\n", " ").strip()
+    if len(s) <= max_len:
+        return s
+    if max_len <= 3:
+        return s[:max_len]
+    return s[: max_len - 3] + "..."
 
 
-def _default_base_ref(repo: Path) -> str:
-    for ref in ["origin/main", "main", "origin/master", "master"]:
-        if git_ref_exists(repo, ref):
-            return ref
-    return "HEAD"
+
+def _observations_compact(
+    observations: list[dict[str, Any]], *, max_rows: int
+) -> list[dict[str, Any]]:
+    rows = observations[-max(1, int(max_rows)) :]
+    out: list[dict[str, Any]] = []
+    for row in rows:
+        metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
+        item = {
+            "ts": _short(str(row.get("ts") or ""), max_len=48),
+            "event": _short(str(row.get("event") or ""), max_len=64),
+            "harness": _short(str(row.get("harness") or ""), max_len=24),
+            "tool": _short(str(row.get("tool") or ""), max_len=48),
+            "command": _short(str(row.get("command") or ""), max_len=180),
+            "ok": bool(row.get("ok")) if row.get("ok") is not None else None,
+            "exit_code": row.get("exit_code")
+            if isinstance(row.get("exit_code"), int)
+            else None,
+            "reason": _short(str(row.get("reason") or ""), max_len=180),
+            "output": _short(str(row.get("output") or ""), max_len=240),
+            "prompt_excerpt": _short(
+                str((metadata or {}).get("prompt_excerpt") or ""), max_len=220
+            ),
+        }
+        out.append({k: v for k, v in item.items() if v not in (None, "")})
+    return out
 
 
-def _git_diffstat(repo: Path, *, base_sha: str, head_sha: str, dirty: bool) -> str:
-    if dirty:
-        return git_checked(repo, ["diff", "--stat"]).strip()
-    return git_checked(repo, ["diff", "--stat", f"{base_sha}..{head_sha}"]).strip()
+def _existing_instincts_compact(
+    store: InstinctStore, *, max_rows: int
+) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+    for inst in list(store.instincts)[: max(1, int(max_rows))]:
+        out.append(
+            {
+                "id": str(inst.id or ""),
+                "title": _short(str(inst.title or ""), max_len=140),
+                "trigger": _short(str(inst.trigger or ""), max_len=180),
+                "action": _short(str(inst.action or ""), max_len=180),
+                "domain": str(inst.domain or ""),
+                "source": str(inst.source or ""),
+                "tags": [str(t) for t in list(inst.tags or [])[:8]],
+                "confidence": float(inst.confidence or 0.0),
+                "status": str(inst.status or "active"),
+            }
+        )
+    return out
 
 
-def _git_patch(repo: Path, *, base_sha: str, head_sha: str, dirty: bool) -> str:
-    if dirty:
-        return git_checked(repo, ["diff"]).rstrip() + "\n"
-    return git_checked(repo, ["diff", f"{base_sha}..{head_sha}"]).rstrip() + "\n"
-
-
-def _git_changed_files(
-    repo: Path, *, base_sha: str, head_sha: str, dirty: bool
-) -> List[str]:
-    raw = (
-        git_checked(repo, ["diff", "--name-only"]).strip()
-        if dirty
-        else git_checked(
-            repo, ["diff", "--name-only", f"{base_sha}..{head_sha}"]
-        ).strip()
+def _build_freeform_prompt(
+    *,
+    paths: CompoundPaths,
+    observations: list[dict[str, Any]],
+    existing_instincts: InstinctStore,
+    min_occurrences: int,
+    max_candidates: int,
+) -> str:
+    now_iso = _now_iso()
+    observations_json = json.dumps(
+        _observations_compact(observations, max_rows=260),
+        indent=2,
     )
-    files = [ln.strip() for ln in raw.splitlines() if ln.strip()]
-    files = sorted(set(files))
-    return files
+    existing_json = json.dumps(
+        _existing_instincts_compact(existing_instincts, max_rows=200),
+        indent=2,
+    )
+    return (
+        "You are Loom continuous-learning observer (ECC-style). "
+        "Your job is to analyze observations and directly write/update instinct markdown files.\n\n"
+        "CRITICAL EXECUTION RULES\n"
+        "- Do not return JSON for parsing.\n"
+        "- Write files directly to: "
+        + str(paths.instincts_personal_dir)
+        + "\n"
+        "- One instinct per file, filename: <id>.md\n"
+        "- If no durable pattern is found, write nothing and exit successfully.\n"
+        "- Be conservative: only create/update instincts with clear repeated evidence.\n\n"
+        "MINIMUM PATTERN THRESHOLD\n"
+        "- Minimum repeated observations before creating/updating an instinct: "
+        + str(int(min_occurrences))
+        + "\n"
+        "- Maximum instincts to create/update in this run: "
+        + str(int(max_candidates))
+        + "\n\n"
+        "REQUIRED FILE FORMAT (exact structure)\n"
+        "---\n"
+        "id: <kebab-case-id>\n"
+        "title: <short title>\n"
+        "trigger: <when this applies>\n"
+        "confidence: <0.3000-0.9000>\n"
+        "status: active\n"
+        "domain: <workflow|debugging|tools|testing|general|...>\n"
+        "source: personal\n"
+        "created_at: <ISO8601 UTC Z>\n"
+        "updated_at: <ISO8601 UTC Z>\n"
+        "tags: <comma-separated-tags>\n"
+        "notes: <single-line summary>\n"
+        "---\n\n"
+        "## Action\n"
+        "<specific behavioral action>\n\n"
+        "## Evidence\n"
+        "- ts=<ISO8601 UTC Z> source_id=<stable-id> source_hash=<hash-or-label>\n"
+        "- ...\n\n"
+        "## Notes\n"
+        "<brief rationale>\n\n"
+        "FORMAT REQUIREMENTS\n"
+        "- Keep id stable for the same behavior. Update existing file instead of creating duplicates.\n"
+        "- Preserve existing created_at when updating.\n"
+        "- Set updated_at to current run time. Current run time: "
+        + now_iso
+        + "\n"
+        "- Use domain=workflow for repeated tool-sequence behaviors.\n"
+        "- Confidence guidance: tentative 0.3-0.5, moderate 0.6-0.7, strong 0.8-0.9.\n"
+        "- Never include secrets or raw sensitive content.\n\n"
+        "EXISTING INSTINCTS (JSON excerpt)\n"
+        + existing_json
+        + "\n\n"
+        "NEW OBSERVATIONS (JSON excerpt)\n"
+        + observations_json
+        + "\n"
+    )
 
 
-def _state_path(paths: CompoundPaths) -> Path:
-    return paths.compound_dir / "state.json"
+def _load_derive_command_template(paths: CompoundPaths) -> list[str]:
+    if not paths.config_file.exists():
+        raise FileNotFoundError(
+            f"Missing compound config: {paths.config_file}. Run `loom compound init --force` to install scaffold."
+        )
+
+    try:
+        parsed = json.loads(paths.config_file.read_text(encoding="utf-8"))
+    except Exception as e:
+        raise ValueError(f"Invalid JSON in {paths.config_file}: {e}") from e
+
+    if not isinstance(parsed, dict):
+        raise ValueError(
+            f"Invalid compound config shape in {paths.config_file}: expected object"
+        )
+
+    instincts = parsed.get("instincts")
+    instincts_obj: dict[str, Any] = instincts if isinstance(instincts, dict) else {}
+    command_raw = instincts_obj.get("derive_command")
+
+    if isinstance(command_raw, list):
+        template = [str(x) for x in command_raw]
+    elif isinstance(command_raw, str):
+        template = shlex.split(command_raw)
+    else:
+        raise ValueError(
+            f"Invalid or missing instincts.derive_command in {paths.config_file}. "
+            "Expected array or shell-style string."
+        )
+
+    template = [x for x in template if str(x).strip()]
+    if not template:
+        raise ValueError(
+            f"instincts.derive_command resolved to empty command in {paths.config_file}"
+        )
+    return template
+
+
+def _render_command(template: list[str], values: dict[str, str]) -> list[str]:
+    out: list[str] = []
+    for token in template:
+        names = _PLACEHOLDER_RE.findall(token)
+        rendered = token
+        for name in names:
+            if name not in values:
+                raise ValueError(f"Unknown derive_command placeholder: {{{name}}}")
+            rendered = rendered.replace("{" + name + "}", str(values[name]))
+        out.append(rendered)
+    return out
 
 
 @dataclass(frozen=True)
-class CompoundRunResult:
+class _LlmDeriveResult:
+    command: str
+
+
+def _invoke_derivation_command(
+    *,
+    paths: CompoundPaths,
+    observations: list[dict[str, Any]],
+    existing_instincts: InstinctStore,
+    min_occurrences: int,
+    max_candidates: int,
+) -> _LlmDeriveResult:
+    repo = paths.root
+
+    prompt = _build_freeform_prompt(
+        paths=paths,
+        observations=observations,
+        existing_instincts=existing_instincts,
+        min_occurrences=min_occurrences,
+        max_candidates=max_candidates,
+    )
+    values = {
+        "repo": str(paths.root),
+        "loom_compound_dir": str(paths.loom_compound_dir),
+        "observations_file": str(paths.observations_file),
+        "instincts_personal_dir": str(paths.instincts_personal_dir),
+        "instincts_inherited_dir": str(paths.instincts_inherited_dir),
+        "prompt": prompt,
+        "min_occurrences": str(int(min_occurrences)),
+        "max_candidates": str(int(max_candidates)),
+    }
+
+    command_template = _load_derive_command_template(paths)
+    cmd = _render_command(command_template, values)
+
+    p = run(cmd, cwd=repo, check=False, timeout=240)
+    if int(p.returncode) != 0:
+        stderr = _short(str(p.stderr or "").strip(), max_len=1200)
+        stdout = _short(str(p.stdout or "").strip(), max_len=800)
+        raise RuntimeError(
+            f"Instinct derivation command failed (code={int(p.returncode)}). stderr={stderr!r} stdout={stdout!r}"
+        )
+
+    return _LlmDeriveResult(command=shlex.join(cmd))
+
+
+def _cooldown_seconds() -> int:
+    return max(0, int(os.environ.get("COMPOUND_INSTINCTS_COOLDOWN_SECONDS", "120") or 120))
+
+
+def _auto_cooldown_active(state: CompoundState) -> bool:
+    cooldown = _cooldown_seconds()
+    if cooldown <= 0:
+        return False
+    last = _parse_iso(state.last_auto_run_at)
+    if last is None:
+        return False
+    elapsed = (datetime.now(timezone.utc) - last).total_seconds()
+    return elapsed < float(cooldown)
+
+
+def _instinct_fingerprint(inst: Instinct) -> tuple[Any, ...]:
+    return (
+        str(inst.title or ""),
+        str(inst.trigger or ""),
+        str(inst.action or ""),
+        tuple(str(t) for t in list(inst.tags or [])),
+        float(inst.confidence or 0.0),
+        str(inst.status or ""),
+        str(inst.domain or ""),
+        str(inst.notes or ""),
+    )
+
+
+def _diff_instinct_stores(before: InstinctStore, after: InstinctStore) -> tuple[int, int]:
+    before_by_id = {i.id: i for i in list(before.instincts or [])}
+    after_by_id = {i.id: i for i in list(after.instincts or [])}
+
+    created = 0
+    updated = 0
+    for instinct_id, after_inst in after_by_id.items():
+        before_inst = before_by_id.get(instinct_id)
+        if before_inst is None:
+            created += 1
+            continue
+        if _instinct_fingerprint(before_inst) != _instinct_fingerprint(after_inst):
+            updated += 1
+
+    return created, updated
+
+
+@dataclass(frozen=True)
+class InstinctsUpdateResult:
     ok: bool
     repo: str
-    episode_id: str
-    episode_path: str
-    episode_created: bool
-    decision_id: str
-    decision_path: str
+    observations_ingested: int
+    observations_parse_errors: int
+    observations_reset_detected: bool
+    instincts_candidates: int
     instincts_created: int
     instincts_updated: int
-    skills_created: int
-    skills_updated: int
     wrote_instincts: bool
-    wrote_docs: bool
+    wrote_instincts_md: bool
     state_updated: bool
+    skipped: bool
+    skip_reason: str
+    derivation_command: str
 
 
-def run_compound(
+def run_instincts_update(
     *,
     root: Path,
-    proposals_json: Optional[str] = None,
     auto: bool = False,
-    no_ai: bool = False,
     dry_run: bool = False,
-    mirror_claude: bool = True,
-    max_patch_bytes: int = 150_000,
     min_new_observations: int = 12,
-) -> CompoundRunResult:
+    min_occurrences: int = 3,
+    max_candidates: int = 12,
+) -> InstinctsUpdateResult:
     repo = root.resolve()
-    require_scaffold_installed(repo)
     paths = compound_paths(repo)
 
-    state_path = _state_path(paths)
-    state = load_state(state_path)
+    state = load_state(paths.state_file)
+
+    if auto and _auto_cooldown_active(state):
+        return InstinctsUpdateResult(
+            ok=True,
+            repo=str(repo),
+            observations_ingested=0,
+            observations_parse_errors=0,
+            observations_reset_detected=False,
+            instincts_candidates=0,
+            instincts_created=0,
+            instincts_updated=0,
+            wrote_instincts=False,
+            wrote_instincts_md=False,
+            state_updated=False,
+            skipped=True,
+            skip_reason="cooldown_active",
+            derivation_command="",
+        )
 
     obs_prefix = observations_prefix_sha256(paths.observations_file)
     start_offset = int(state.observations_offset_bytes or 0)
@@ -157,287 +386,110 @@ def run_compound(
         start_offset = 0
 
     ingested = ingest_observations_since(
-        paths.observations_file, start_offset_bytes=int(start_offset)
+        paths.observations_file,
+        start_offset_bytes=int(start_offset),
     )
-    included = ingested.items
+    included = [
+        i
+        for i in ingested.items
+        if isinstance(i, dict) and not bool(i.get("_compound_parse_error"))
+    ]
     new_obs = int(len(included))
     end_offset = int(ingested.end_offset_bytes)
 
-    dirty = git_is_dirty(repo)
-    head_sha = git_head_sha(repo)
-    base_ref = _default_base_ref(repo)
-    base_sha = (
-        head_sha if base_ref == "HEAD" else git_merge_base(repo, base_ref, head_sha)
-    )
+    before_store = load_instincts(paths.instincts_file)
 
-    diffstat = _git_diffstat(repo, base_sha=base_sha, head_sha=head_sha, dirty=dirty)
-    if auto and proposals_json is None and not diffstat.strip():
-        return CompoundRunResult(
+    if auto and new_obs < int(min_new_observations) and not reset_detected:
+        wrote_instincts_md = False
+        if not dry_run:
+            sync_instincts_markdown(root=repo, store=before_store)
+            wrote_instincts_md = True
+        return InstinctsUpdateResult(
             ok=True,
             repo=str(repo),
-            episode_id="",
-            episode_path="",
-            episode_created=False,
-            decision_id="",
-            decision_path="",
+            observations_ingested=int(new_obs),
+            observations_parse_errors=int(ingested.parse_errors),
+            observations_reset_detected=bool(reset_detected),
+            instincts_candidates=0,
             instincts_created=0,
             instincts_updated=0,
-            skills_created=0,
-            skills_updated=0,
             wrote_instincts=False,
-            wrote_docs=False,
+            wrote_instincts_md=bool(wrote_instincts_md),
             state_updated=False,
+            skipped=True,
+            skip_reason="insufficient_new_observations",
+            derivation_command="",
         )
 
-    if (
-        auto
-        and proposals_json is None
-        and new_obs < int(min_new_observations)
-        and not reset_detected
-    ):
-        # In auto mode we only package/run if enough new evidence accumulated.
-        return CompoundRunResult(
+    if dry_run:
+        return InstinctsUpdateResult(
             ok=True,
             repo=str(repo),
-            episode_id="",
-            episode_path="",
-            episode_created=False,
-            decision_id="",
-            decision_path="",
+            observations_ingested=int(new_obs),
+            observations_parse_errors=int(ingested.parse_errors),
+            observations_reset_detected=bool(reset_detected),
+            instincts_candidates=0,
             instincts_created=0,
             instincts_updated=0,
-            skills_created=0,
-            skills_updated=0,
             wrote_instincts=False,
-            wrote_docs=False,
+            wrote_instincts_md=False,
             state_updated=False,
+            skipped=True,
+            skip_reason="dry_run_not_executed",
+            derivation_command="",
         )
 
-    patch = _git_patch(repo, base_sha=base_sha, head_sha=head_sha, dirty=dirty)
-    patch_sha_full = _sha256_text(patch) if patch.strip() else ""
-    patch_bounded, patch_truncated = bounded_text(patch, max_bytes=int(max_patch_bytes))
-    patch_omitted = bool(patch_truncated)
-    patch_sha = patch_sha_full
-
-    patch_blob_sha256 = ""
-    if patch_omitted and patch.strip() and not dry_run:
-        # No knowledge loss: if the episode omits the patch inline, persist the full patch as a blob.
-        ref = write_blob_text(
-            blobs_dir=paths.blobs_dir,
-            text=patch,
-            ext="diff",
-            compression="none",
-            expected_sha256=patch_sha_full,
-        )
-        patch_blob_sha256 = ref.sha256
-
-    changed_files = _git_changed_files(
-        repo, base_sha=base_sha, head_sha=head_sha, dirty=dirty
+    llm_result = _invoke_derivation_command(
+        paths=paths,
+        observations=included,
+        existing_instincts=before_store,
+        min_occurrences=int(min_occurrences),
+        max_candidates=int(max_candidates),
     )
-    diffstat_sha = _sha256_text(diffstat)
+
+    after_store = load_instincts(paths.instincts_file)
+    created, updated = _diff_instinct_stores(before_store, after_store)
 
     obs_stats = count_observations(paths.observations_file)
-
     start_count = 0 if reset_detected else int(state.observations_count or 0)
     end_count = int(start_count + new_obs)
-    omitted = False
 
-    cursor = EpisodeObservationCursor(
-        start_count=int(start_count),
-        end_count=int(end_count),
-        tail_sha256=str(obs_stats.tail_sha256 or ""),
-        reset_detected=bool(reset_detected),
-        start_offset_bytes=int(ingested.start_offset_bytes),
-        end_offset_bytes=int(end_offset),
-        file_prefix_sha256=str(obs_prefix or ""),
-    )
-    ep_obs = EpisodeObservation(cursor=cursor, included=included, omitted=bool(omitted))
-    ep_git = EpisodeGit(
-        head_sha=head_sha,
-        base_sha=base_sha,
-        base_ref=base_ref,
-        dirty=bool(dirty),
-        diffstat=diffstat,
-        diffstat_sha256=diffstat_sha,
-        patch=("" if patch_omitted else patch_bounded),
-        patch_sha256=patch_sha,
-        patch_omitted=bool(patch_omitted),
-        patch_blob_sha256=str(patch_blob_sha256),
-        changed_files=changed_files,
-    )
-
-    proposals: Dict[str, Any] = {}
-    if proposals_json is not None and str(proposals_json).strip():
-        proposals = _load_json_from_text(proposals_json)
-    if no_ai:
-        proposals = {}
-
-    ep = build_episode(
-        created_at=_now_iso(),
-        git=ep_git,
-        observations=ep_obs,
-        proposals=proposals,
-        triage_status=("accepted" if auto else "pending"),
-    )
-
-    ep_path = episode_path_for_id(
-        episodes_dir=paths.episodes_dir,
-        created_at=ep.created_at,
-        episode_id=ep.episode_id,
-    )
-
-    existing: Optional[Episode] = None
-    if ep_path.exists():
-        try:
-            existing = load_episode(ep_path)
-        except Exception:
-            existing = None
-    if existing is not None and existing.episode_id == ep.episode_id:
-        ep = existing
-        ep_path = ep_path
-        created = False
-    else:
-        created = True
-
-    if not dry_run:
-        write_episode(ep_path, ep, overwrite=False)
-
-    # Advance cursor regardless of whether we applied proposals. Episode is the evidence boundary.
+    now_iso = _now_iso()
     next_state = CompoundState(
-        version=2,
+        version=3,
         observations_offset_bytes=int(end_offset),
         observations_prefix_sha256=str(obs_prefix or ""),
         observations_count=int(end_count),
         observations_tail_sha256=str(obs_stats.tail_sha256 or ""),
-        last_episode_id=str(ep.episode_id),
-        updated_at=_now_iso(),
+        last_auto_run_at=(now_iso if auto else str(state.last_auto_run_at or "")),
+        last_auto_apply_at=(
+            now_iso
+            if auto and (created or updated)
+            else str(state.last_auto_apply_at or "")
+        ),
+        updated_at=now_iso,
     )
-    if not dry_run:
-        save_state(state_path, next_state)
 
-    instincts_created = 0
-    instincts_updated = 0
-    skills_created = 0
-    skills_updated = 0
-    wrote_instincts = False
-    wrote_docs = False
+    save_state(paths.state_file, next_state)
+    save_instincts(paths.instincts_file, after_store)
+    sync_instincts_markdown(root=repo, store=after_store)
 
-    decision_id = ""
-    decision_path = ""
-
-    if ep.triage.status != "rejected" and ep.proposals:
-        proposals_blob_sha256 = ""
-        if not dry_run and proposals_json is not None and str(proposals_json).strip():
-            # Preserve raw model output (even if formatting varies) for audit/debug.
-            ref = write_blob_text(
-                blobs_dir=paths.blobs_dir,
-                text=str(proposals_json).strip() + "\n",
-                ext="json",
-                compression="none",
-            )
-            proposals_blob_sha256 = ref.sha256
-
-        store = load_instincts(paths.instincts_file)
-
-        inst_cands = parse_instinct_candidates(ep.proposals)
-        if inst_cands:
-            c, u = apply_instinct_candidates(
-                store=store,
-                candidates=inst_cands,
-                episode_id=ep.episode_id,
-                episode_ts=ep.created_at,
-                head_sha=ep.git.head_sha,
-                patch_sha256=ep.git.patch_sha256,
-            )
-            instincts_created += c
-            instincts_updated += u
-
-        skill_cands = parse_skill_candidates(ep.proposals)
-        if skill_cands:
-            c2, u2 = apply_skill_candidates(
-                skills_dir=paths.skills_dir,
-                candidates=skill_cands,
-                episode_id=ep.episode_id,
-                episode_ts=ep.created_at,
-                mirror_claude_dir=(paths.root / ".claude" / "skills")
-                if mirror_claude
-                else None,
-            )
-            skills_created += c2
-            skills_updated += u2
-
-        # Record a deterministic Decision (normalized ops) as the authority for product mutations.
-        # (Episodes remain the immutable evidence boundary; Decisions are append-only governance.)
-        if not dry_run and (inst_cands or skill_cands):
-            ops: List[Dict[str, Any]] = []
-            for i in inst_cands:
-                ops.append(
-                    {
-                        "op": "instinct.upsert",
-                        "episode_id": ep.episode_id,
-                        "ts": ep.created_at,
-                        "id": i.id,
-                        "title": i.title,
-                        "trigger": i.trigger,
-                        "action": i.action,
-                        "confidence": float(i.confidence),
-                        "tags": list(i.tags),
-                        "notes": str(i.notes or ""),
-                    }
-                )
-            for s in skill_cands:
-                ops.append(
-                    {
-                        "op": "skill.upsert",
-                        "episode_id": ep.episode_id,
-                        "ts": ep.created_at,
-                        "name": s.name,
-                        "description": s.description,
-                        "body": s.body,
-                        "tags": list(s.tags),
-                        "source_instinct_ids": list(s.source_instinct_ids),
-                    }
-                )
-            ops.sort(
-                key=lambda x: (
-                    str(x.get("op")),
-                    str(x.get("id") or x.get("name") or ""),
-                )
-            )
-            dec = build_decision(
-                created_at=ep.created_at,
-                episode_id=ep.episode_id,
-                proposal_blob_sha256=proposals_blob_sha256,
-                ops=ops,
-            )
-            dp = decision_path_for_id(
-                decisions_dir=paths.decisions_dir,
-                created_at=dec.created_at,
-                decision_id=dec.decision_id,
-            )
-            write_decision(dp, dec, overwrite=False)
-            decision_id = dec.decision_id
-            decision_path = str(dp)
-
-        if (instincts_created or instincts_updated) and not dry_run:
-            save_instincts(paths.instincts_file, store)
-            wrote_instincts = True
-            sync_instincts_markdown(root=repo, store=store)
-            wrote_docs = True
-
-    return CompoundRunResult(
+    return InstinctsUpdateResult(
         ok=True,
         repo=str(repo),
-        episode_id=ep.episode_id,
-        episode_path=str(ep_path),
-        episode_created=bool(created),
-        decision_id=str(decision_id),
-        decision_path=str(decision_path),
-        instincts_created=int(instincts_created),
-        instincts_updated=int(instincts_updated),
-        skills_created=int(skills_created),
-        skills_updated=int(skills_updated),
-        wrote_instincts=bool(wrote_instincts),
-        wrote_docs=bool(wrote_docs),
-        state_updated=(not dry_run),
+        observations_ingested=int(new_obs),
+        observations_parse_errors=int(ingested.parse_errors),
+        observations_reset_detected=bool(reset_detected),
+        instincts_candidates=int(created + updated),
+        instincts_created=int(created),
+        instincts_updated=int(updated),
+        wrote_instincts=True,
+        wrote_instincts_md=True,
+        state_updated=True,
+        skipped=False,
+        skip_reason="",
+        derivation_command=str(llm_result.command or ""),
     )
+
+
+__all__ = ["InstinctsUpdateResult", "run_instincts_update"]

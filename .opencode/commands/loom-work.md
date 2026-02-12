@@ -21,10 +21,9 @@ Process:
    - `loom ticket show $ARGUMENTS`
 3) Set status to in_progress:
    - `loom ticket update $ARGUMENTS --status in_progress`
-4) Create a worktree for this ticket:
-    - Branch naming convention: `ticket-<id>-<short-slug>`
-    - `loom workspace worktree ensure <branch> --base-ref main`
-    - NOTE: OpenCode operates in one working directory. After creating the worktree, do the actual code changes in that worktree.
+4) Create/ensure a worktree for this ticket:
+   - Branch naming convention: `ticket-<id>-<short-slug>`
+   - `loom workspace worktree ensure <branch> --base-ref main`
 5) Implement the ticket:
    - Small commits
    - Add/update tests
@@ -35,8 +34,6 @@ Process:
    - run the relevant test commands
    - set status to `closed`
 
-Optional:
-- `loom compound refresh` (refresh derived docs)
 
 Output:
 - What changed.
