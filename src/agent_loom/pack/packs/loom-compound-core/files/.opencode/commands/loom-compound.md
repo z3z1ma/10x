@@ -11,7 +11,7 @@ $ARGUMENTS
 
 Goals:
 - Keep observations flowing into `.loom/compound/runtime/observations.jsonl`.
-- Keep instincts current in `.loom/compound/instincts/personal/*.md`.
+- Keep instincts current in `.loom/compound/instincts/local/*.md`.
 - Promote stable instincts into generated artifacts when justified.
 
 Process:

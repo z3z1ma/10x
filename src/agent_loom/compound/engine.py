@@ -125,7 +125,7 @@ def _build_freeform_prompt(
         "CRITICAL EXECUTION RULES\n"
         "- Do not return JSON for parsing.\n"
         "- Write files directly to: "
-        + str(paths.instincts_personal_dir)
+        + str(paths.instincts_local_dir)
         + "\n"
         "- One instinct per file, filename: <id>.md\n"
         "- If no durable pattern is found, write nothing and exit successfully.\n"
@@ -145,7 +145,7 @@ def _build_freeform_prompt(
         "confidence: <0.3000-0.9000>\n"
         "status: active\n"
         "domain: <workflow|debugging|tools|testing|general|...>\n"
-        "source: personal\n"
+        "source: local\n"
         "created_at: <ISO8601 UTC Z>\n"
         "updated_at: <ISO8601 UTC Z>\n"
         "tags: <comma-separated-tags>\n"
@@ -253,7 +253,7 @@ def _invoke_derivation_command(
         "repo": str(paths.root),
         "loom_compound_dir": str(paths.loom_compound_dir),
         "observations_file": str(paths.observations_file),
-        "instincts_personal_dir": str(paths.instincts_personal_dir),
+        "instincts_local_dir": str(paths.instincts_local_dir),
         "instincts_inherited_dir": str(paths.instincts_inherited_dir),
         "prompt": prompt,
         "min_occurrences": str(int(min_occurrences)),

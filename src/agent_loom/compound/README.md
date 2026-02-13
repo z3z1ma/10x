@@ -8,8 +8,9 @@ observations -> instincts -> evolved artifacts.
 
 - Observations log: `.loom/compound/runtime/observations.jsonl` (gitignored)
 - Observer runtime: `.loom/compound/runtime/observer.{pid,log,nudge}` (gitignored)
-- Instinct store: `.loom/compound/instincts/personal/*.md`
+- Instinct store: `.loom/compound/instincts/local/*.md`
 - Imported instincts: `.loom/compound/instincts/inherited/*.md`
+- `local` means first-party instincts learned in this repo (not per-human identity isolation).
 - Instinct index: `.loom/compound/INSTINCTS.md`
 - State cursor/bookkeeping: `.loom/compound/state.json`
 - Derivation config: `.loom/compound/config.json`
@@ -29,7 +30,7 @@ Claude hook contract is preserved: hook stdin payload is echoed back to stdout u
 
 `instincts-update` reads `.loom/compound/config.json` and executes `instincts.derive_command`.
 
-The command is user-configurable so users can swap Claude/OpenCode/pi/Codex/etc. Loom does not enforce a JSON schema for derivation output. The command is expected to edit instinct markdown files directly under `.loom/compound/instincts/personal/`.
+The command is user-configurable so users can swap Claude/OpenCode/pi/Codex/etc. Loom does not enforce a JSON schema for derivation output. The command is expected to edit instinct markdown files directly under `.loom/compound/instincts/local/`.
 
 `derive_command` can be:
 - array of argv tokens (recommended)
@@ -40,7 +41,7 @@ Supported placeholders in command tokens:
 - `{repo}`
 - `{loom_compound_dir}`
 - `{observations_file}`
-- `{instincts_personal_dir}`
+- `{instincts_local_dir}`
 - `{instincts_inherited_dir}`
 - `{min_occurrences}`
 - `{max_candidates}`

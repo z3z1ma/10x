@@ -15,7 +15,7 @@ This scaffold wires OpenCode + Claude + OMP adapters into Loom Compound learning
 - `.omp/extensions/compound_engineering.ts` — OMP adapter forwarding events to `loom compound omp-hook`
 - `.claude/settings.json` — Claude hooks calling `loom compound claude-hook`
 - `.loom/compound/config.json` — derivation config (`instincts.derive_command`)
-- `.loom/compound/instincts/{personal,inherited}/` — markdown instinct store
+- `.loom/compound/instincts/{local,inherited}/` — markdown instinct store
 - `.loom/compound/evolved/{skills,commands,agents}/` — generated evolved artifacts
 
 ## Runtime artifacts (gitignored)

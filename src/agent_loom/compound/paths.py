@@ -14,7 +14,7 @@ class CompoundPaths:
     observer_log_file: Path
     observer_nudge_file: Path
     instincts_dir: Path
-    instincts_personal_dir: Path
+    instincts_local_dir: Path
     instincts_inherited_dir: Path
     instincts_file: Path
     instincts_markdown_file: Path
@@ -36,7 +36,7 @@ def compound_paths(root: Path) -> CompoundPaths:
     observer_nudge_file = runtime_dir / "observer.nudge"
 
     instincts_dir = loom_compound_dir / "instincts"
-    instincts_personal_dir = instincts_dir / "personal"
+    instincts_local_dir = instincts_dir / "local"
     instincts_inherited_dir = instincts_dir / "inherited"
     instincts_file = loom_compound_dir / "instincts.json"
     instincts_markdown_file = loom_compound_dir / "INSTINCTS.md"
@@ -58,7 +58,7 @@ def compound_paths(root: Path) -> CompoundPaths:
         observer_log_file=observer_log_file,
         observer_nudge_file=observer_nudge_file,
         instincts_dir=instincts_dir,
-        instincts_personal_dir=instincts_personal_dir,
+        instincts_local_dir=instincts_local_dir,
         instincts_inherited_dir=instincts_inherited_dir,
         instincts_file=instincts_file,
         instincts_markdown_file=instincts_markdown_file,

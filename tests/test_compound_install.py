@@ -66,7 +66,7 @@ def test_compound_install_creates_loom_docs_if_missing(tmp_path: Path) -> None:
     assert (dest / "LOOM.md").exists()
     assert (dest / ".loom" / "compound" / "ROADMAP.md").exists()
     assert (dest / ".loom" / "compound" / "config.json").exists()
-    assert (dest / ".loom" / "compound" / "instincts" / "personal").exists()
+    assert (dest / ".loom" / "compound" / "instincts" / "local").exists()
     assert (dest / ".loom" / "compound" / "instincts" / "inherited").exists()
     assert not (dest / "LOOM_PROJECT.md").exists()
     assert not (dest / "LOOM_CHANGELOG.md").exists()
@@ -126,7 +126,7 @@ def test_compound_install_provides_plugin_required_scaffolding(tmp_path: Path) -
         dest / ".loom" / "compound" / "ROADMAP.md",
         dest / ".loom" / "compound" / "README.md",
         dest / ".loom" / "compound" / "config.json",
-        dest / ".loom" / "compound" / "instincts" / "personal" / ".gitkeep",
+        dest / ".loom" / "compound" / "instincts" / "local" / ".gitkeep",
         dest / ".loom" / "compound" / "instincts" / "inherited" / ".gitkeep",
         dest / ".opencode" / "commands" / "loom-plan.md",
         dest / ".opencode" / "commands" / "loom-work.md",
@@ -220,7 +220,7 @@ def test_compound_install_never_overwrites_instinct_markdown_without_force(tmp_p
     dest = tmp_path
     install_opencode(dest=dest, dry_run=False)
 
-    instinct = dest / ".loom" / "compound" / "instincts" / "personal" / "custom.md"
+    instinct = dest / ".loom" / "compound" / "instincts" / "local" / "custom.md"
     instinct.parent.mkdir(parents=True, exist_ok=True)
     instinct.write_text("# custom\n", encoding="utf-8")
 

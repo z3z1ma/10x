@@ -4,7 +4,7 @@ This directory stores Compound learning artifacts.
 
 ## Files
 
-- `instincts/personal/*.md` — canonical personal instincts
+- `instincts/local/*.md` — canonical local instincts
 - `instincts/inherited/*.md` — imported/shared instincts
 - `INSTINCTS.md` — generated instinct index
 - `runtime/observations.jsonl` — append-only observations log (gitignored)

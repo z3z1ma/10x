@@ -50,7 +50,7 @@ class InstinctCandidate:
 
 def _instincts_dirs(instincts_file: Path) -> tuple[Path, Path]:
     base = instincts_file.parent / "instincts"
-    return base / "personal", base / "inherited"
+    return base / "local", base / "inherited"
 
 
 def _clamp(n: float, lo: float, hi: float) -> float:
@@ -208,7 +208,7 @@ def _load_legacy_json(file_path: Path) -> list[Instinct]:
                 confidence=_clamp(float(it.get("confidence") or 0.0), 0.0, 1.0),
                 status=status,
                 domain=_domain_for(tags),
-                source="personal",
+                source="local",
                 notes=(str(it.get("notes")) if it.get("notes") is not None else None),
                 created_at=str(it.get("created_at") or ""),
                 updated_at=str(it.get("updated_at") or ""),
@@ -219,10 +219,10 @@ def _load_legacy_json(file_path: Path) -> list[Instinct]:
 
 
 def load_instincts(file_path: Path) -> InstinctStore:
-    personal_dir, inherited_dir = _instincts_dirs(file_path)
+    local_dir, inherited_dir = _instincts_dirs(file_path)
     instincts: list[Instinct] = []
 
-    for directory, source in [(personal_dir, "personal"), (inherited_dir, "inherited")]:
+    for directory, source in [(local_dir, "local"), (inherited_dir, "inherited")]:
         if not directory.exists() or not directory.is_dir():
             continue
         for md in sorted(directory.glob("*.md"), key=lambda p: p.name):
@@ -233,8 +233,21 @@ def load_instincts(file_path: Path) -> InstinctStore:
     if not instincts:
         instincts = _load_legacy_json(file_path)
 
-    instincts.sort(key=lambda x: x.id)
-    return InstinctStore(version=2, instincts=instincts)
+    by_id: dict[str, Instinct] = {}
+    for inst in instincts:
+        existing = by_id.get(inst.id)
+        if existing is None:
+            by_id[inst.id] = inst
+            continue
+        if str(existing.source or "") != "local" and str(inst.source or "") == "local":
+            by_id[inst.id] = inst
+            continue
+        if str(existing.source or "") == str(inst.source or "") and str(inst.updated_at or "") > str(existing.updated_at or ""):
+            by_id[inst.id] = inst
+
+    resolved = list(by_id.values())
+    resolved.sort(key=lambda x: x.id)
+    return InstinctStore(version=2, instincts=resolved)
 
 
 def _render_instinct_markdown(inst: Instinct) -> str:
@@ -276,21 +289,35 @@ def _render_instinct_markdown(inst: Instinct) -> str:
 
 
 def save_instincts(file_path: Path, store: InstinctStore) -> None:
-    personal_dir, _ = _instincts_dirs(file_path)
-    personal_dir.mkdir(parents=True, exist_ok=True)
+    local_dir, inherited_dir = _instincts_dirs(file_path)
+    local_dir.mkdir(parents=True, exist_ok=True)
+    inherited_dir.mkdir(parents=True, exist_ok=True)
 
-    personal = [i for i in list(store.instincts or []) if str(i.source or "") != "inherited"]
-    expected_files: set[str] = set()
+    local = [
+        i
+        for i in list(store.instincts or [])
+        if str(i.source or "").strip() != "inherited"
+    ]
+    inherited = [
+        i
+        for i in list(store.instincts or [])
+        if str(i.source or "").strip() == "inherited"
+    ]
 
-    for inst in sorted(personal, key=lambda x: x.id):
-        filename = f"{_slug(inst.id)}.md"
-        expected_files.add(filename)
-        path = personal_dir / filename
-        path.write_text(_render_instinct_markdown(inst), encoding="utf-8")
+    def _sync_dir(target_dir: Path, items: list[Instinct]) -> None:
+        expected_files: set[str] = set()
+        for inst in sorted(items, key=lambda x: x.id):
+            filename = f"{_slug(inst.id)}.md"
+            expected_files.add(filename)
+            path = target_dir / filename
+            path.write_text(_render_instinct_markdown(inst), encoding="utf-8")
 
-    for md in sorted(personal_dir.glob("*.md"), key=lambda p: p.name):
-        if md.name not in expected_files:
-            md.unlink(missing_ok=True)
+        for md in sorted(target_dir.glob("*.md"), key=lambda p: p.name):
+            if md.name not in expected_files:
+                md.unlink(missing_ok=True)
+
+    _sync_dir(local_dir, local)
+    _sync_dir(inherited_dir, inherited)
 
     if file_path.exists():
         file_path.unlink(missing_ok=True)
@@ -335,7 +362,7 @@ def sync_instincts_markdown(*, root: Path, store: InstinctStore) -> None:
         "## Notes",
         "",
         "- Instincts are the pre-skill layer: small, repeatable heuristics.",
-        "- Promote stable instincts into harness-native skills and commands when warranted.",
+        "- Promote stable instincts into harness-native skills, commands, and agents when warranted.",
         "",
     ]
     md_path.parent.mkdir(parents=True, exist_ok=True)
@@ -383,7 +410,7 @@ def apply_instinct_candidates(
                 confidence=_clamp(float(c.confidence), 0.0, 1.0),
                 status="active",
                 domain=domain,
-                source="personal",
+                source="local",
                 notes=(str(c.notes).strip() or None),
                 created_at=source_ts,
                 updated_at=source_ts,

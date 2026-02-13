@@ -6,5 +6,5 @@
 
 ## Notes
 
-- Instincts are stored as markdown files under `.loom/compound/instincts/personal/`.
+- Instincts are stored as markdown files under `.loom/compound/instincts/local/`.
 - Promote high-confidence instincts into generated skills/commands/agents with `loom compound evolve --generate`.

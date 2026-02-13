@@ -21,7 +21,7 @@ def _configure_mock_derivation_command(*, root: Path, payload: dict) -> None:
         "import json\n"
         "from pathlib import Path\n"
         + f"payload = {json.dumps(payload)}\n"
-        + "base = Path('.loom/compound/instincts/personal')\n"
+        + "base = Path('.loom/compound/instincts/local')\n"
         + "base.mkdir(parents=True, exist_ok=True)\n"
         + "for inst in payload.get('instincts', []):\n"
         + "    instinct_id = str(inst.get('id') or '').strip()\n"
@@ -39,7 +39,7 @@ def _configure_mock_derivation_command(*, root: Path, payload: dict) -> None:
         + "        f\"confidence: {confidence:.4f}\",\n"
         + "        'status: active',\n"
         + "        f\"domain: {domain}\",\n"
-        + "        'source: personal',\n"
+        + "        'source: local',\n"
         + "        'created_at: 2026-02-12T00:00:00Z',\n"
         + "        'updated_at: 2026-02-12T00:00:00Z',\n"
         + "        f\"tags: {', '.join(tags)}\",\n"
@@ -188,13 +188,25 @@ def test_instinct_markdown_roundtrip_and_import_export_merge() -> None:
         )
         assert imp2.updated >= 1
 
+        store_after_import = load_instincts(paths.instincts_file)
+        imported_instinct = next(i for i in store_after_import.instincts if i.id == "read-before-edit")
+        assert imported_instinct.source == "inherited"
+        assert (
+            root
+            / ".loom"
+            / "compound"
+            / "instincts"
+            / "inherited"
+            / "read-before-edit.md"
+        ).exists()
+
 
 def test_evolve_is_deterministic_and_generates_harness_artifacts() -> None:
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
         install_opencode(dest=root, dry_run=False)
-        personal = root / ".loom" / "compound" / "instincts" / "personal"
-        personal.mkdir(parents=True, exist_ok=True)
+        local = root / ".loom" / "compound" / "instincts" / "local"
+        local.mkdir(parents=True, exist_ok=True)
 
         template = (
             "---\n"
@@ -204,7 +216,7 @@ def test_evolve_is_deterministic_and_generates_harness_artifacts() -> None:
             "confidence: {confidence}\n"
             "status: active\n"
             "domain: workflow\n"
-            "source: personal\n"
+            "source: local\n"
             "created_at: 2026-02-12T00:00:00Z\n"
             "updated_at: 2026-02-12T00:00:00Z\n"
             "tags: workflow\n"
@@ -249,7 +261,7 @@ def test_evolve_is_deterministic_and_generates_harness_artifacts() -> None:
         ]
 
         for entry in entries:
-            personal.joinpath(f"{entry['id']}.md").write_text(
+            local.joinpath(f"{entry['id']}.md").write_text(
                 template.format(**entry),
                 encoding="utf-8",
             )

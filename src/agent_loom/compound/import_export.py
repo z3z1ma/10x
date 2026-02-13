@@ -159,7 +159,7 @@ def instinct_import(
                 confidence=max(0.0, min(1.0, confidence)),
                 status="active",
                 domain=domain,
-                source="personal",
+                source="inherited",
                 notes=notes,
                 created_at=str(raw.get("created_at") or source_ts),
                 updated_at=source_ts,
@@ -187,7 +187,7 @@ def instinct_import(
         existing.tags = tags or list(existing.tags)
         existing.confidence = max(0.0, min(1.0, confidence))
         existing.domain = domain
-        existing.source = "personal"
+        existing.source = "inherited"
         existing.notes = notes if notes is not None else existing.notes
         existing.updated_at = source_ts
         existing.evidence.append(

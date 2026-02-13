@@ -5,7 +5,7 @@ trigger: When modifying existing files with Edit/Write and the change is logical
 confidence: 0.6800
 status: active
 domain: workflow
-source: personal
+source: local
 created_at: 2026-02-13T19:10:38.159235Z
 updated_at: 2026-02-13T19:10:38.159235Z
 tags: workflow, editing, safety, diff-quality

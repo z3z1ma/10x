@@ -79,7 +79,7 @@ def _configure_mock_derivation_command(*, root: Path, payload: dict) -> None:
         "import json\n"
         "from pathlib import Path\n"
         + f"payload = {json.dumps(payload)}\n"
-        + "base = Path('.loom/compound/instincts/personal')\n"
+        + "base = Path('.loom/compound/instincts/local')\n"
         + "base.mkdir(parents=True, exist_ok=True)\n"
         + "for inst in payload.get('instincts', []):\n"
         + "    instinct_id = str(inst.get('id') or '').strip()\n"
@@ -97,7 +97,7 @@ def _configure_mock_derivation_command(*, root: Path, payload: dict) -> None:
         + "        f\"confidence: {confidence:.4f}\",\n"
         + "        'status: active',\n"
         + "        f\"domain: {domain}\",\n"
-        + "        'source: personal',\n"
+        + "        'source: local',\n"
         + "        'created_at: 2026-02-12T00:00:00Z',\n"
         + "        'updated_at: 2026-02-12T00:00:00Z',\n"
         + "        f\"tags: {', '.join(tags)}\",\n"
@@ -257,7 +257,7 @@ class TestCompoundHookAdapterCliUx(unittest.TestCase):
                         / ".loom"
                         / "compound"
                         / "instincts"
-                        / "personal"
+                        / "local"
                         / "reuse-git-status-porcelain.md"
                     ).exists()
                 )
