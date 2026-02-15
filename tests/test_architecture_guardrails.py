@@ -14,7 +14,7 @@ import ast
 import re
 from pathlib import Path
 
-import pytest
+import pytest  # type: ignore[import-untyped]
 
 # Project root is 3 levels up from tests/
 PROJECT_ROOT = Path(__file__).parent.parent
