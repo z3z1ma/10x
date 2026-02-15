@@ -1057,91 +1057,6 @@ def _agent_prompt_text(*, workdir: Path, agent: str) -> str:
     )
 
 
-def _omp_model_available(bin: str, model: str) -> tuple[bool, str]:
-    """Check if an OMP model is available via --list-models.
-
-    Returns:
-        (available, error_msg)
-        - (True, "") if model is available or check cannot be performed
-        - (False, error_msg) if model is definitely unavailable
-    """
-    if not model.strip():
-        return (False, "OMP model is empty")
-
-    try:
-        p = _run(
-            [bin, "--list-models", model],
-            check=False,
-            timeout=10.0,
-        )
-        # OMP returns exit code 0 and prints model info if available.
-        # If model not found, it prints "No models matching" to stdout.
-        if p.returncode == 0:
-            stdout = str(p.stdout or "").strip()
-            stderr = str(p.stderr or "").strip()
-            combined = f"{stdout}\n{stderr}"
-            if "No models matching" in combined or "no models" in combined.lower():
-                return (False, f"Model '{model}' not found by provider")
-            return (True, "")
-        # Non-zero exit could mean provider issue or model missing.
-        # Treat as "not available" to be safe.
-        stderr = str(p.stderr or "").strip()
-        return (False, f"Model check failed (rc={p.returncode}): {stderr}")
-    except Exception as e:
-        # If the preflight command itself fails due to provider/environment issues,
-        # we don't want to block a potentially valid setup.
-        # Return True with a warning - the spawn will fail naturally if the model is actually bad.
-        return (True, f"Model preflight check failed: {e!r}")
-
-def _validate_omp_models(
-    *,
-    bin: str,
-    harness: str,
-    model: str,
-    manager_model: str,
-    worker_model: str,
-    investigator_model: str,
-    integrator_model: str,
-) -> None:
-    """Validate OMP model overrides before persisting to run.json.
-
-    Raises TeamError if a model is known-invalid.
-    Warns but continues if model check cannot be performed.
-    """
-    if harness != "omp":
-        return
-
-    # Collect all explicit model overrides.
-    models_to_check: list[tuple[str, str]] = []
-    if str(model or "").strip():
-        models_to_check.append(("global", str(model).strip()))
-    if str(manager_model or "").strip():
-        models_to_check.append(("manager", str(manager_model).strip()))
-    if str(worker_model or "").strip():
-        models_to_check.append(("worker", str(worker_model).strip()))
-    if str(investigator_model or "").strip():
-        models_to_check.append(("investigator", str(investigator_model).strip()))
-    if str(integrator_model or "").strip():
-        models_to_check.append(("integrator", str(integrator_model).strip()))
-
-    if not models_to_check:
-        return
-
-    for role, model_name in models_to_check:
-        available, error_msg = _omp_model_available(bin, model_name)
-        if not available:
-            # Definite failure: model is known-invalid.
-            raise TeamError(
-                f"OMP model invalid for {role}: {error_msg}",
-                code="OMP_MODEL",
-                exit_code=2,
-                hint=(
-                    f"List available models: omp --list-models <pattern>\n"
-                    f"Valid example: loom team start <team> --harness omp --{role if role != 'global' else ''}model openai/gpt-4o"
-                ),
-            )
-
-
 
 def _omp_tui_argv(
     *,
@@ -1992,56 +1907,6 @@ def tui(
             session_dir.mkdir(parents=True, exist_ok=True)
             session_path = session_dir / f"{recipient}.jsonl"
 
-            # OMP model preflight: fail fast with actionable error if model unavailable.
-            available, error_msg = _omp_model_available(agent_bin, model)
-            if not available:
-                _append_log_line(
-                    log_path,
-                    f"{_iso_z()} OMP model invalid: {error_msg} model={model}",
-                )
-                safe_write_event(
-                    paths,
-                    event_type="sidecar.omp_model_invalid",
-                    run=run,
-                    ok=False,
-                    summary=f"OMP model invalid recipient={recipient} model={model}",
-                    refs={"recipient": recipient, "pane_id": pane_id},
-                    data={"model": model, "error": error_msg, "bin": agent_bin},
-                )
-                if recipient != "manager":
-                    _inbox_write_and_maybe_nudge(
-                        paths=paths,
-                        run=run,
-                        target="manager",
-                        message=(
-                            f"OMP model invalid for {recipient}: {error_msg}. "
-                            f"Model: {model}. Bin: {agent_bin}. Pane: {pane_id}. "
-                            f"Fix: update model in run.json or via `loom team config {paths.team} --omp-model <valid-model>`."
-                        ),
-                        sender="team",
-                        kind="model_invalid",
-                        meta_extra={
-                            "recipient": recipient,
-                            "pane_id": pane_id,
-                            "model": model,
-                            "bin": agent_bin,
-                            "error": error_msg,
-                        },
-                        nudge=True,
-                        force=True,  # Always send, even if duplicate
-                        line_info="omp_model_invalid",
-                    )
-                return TuiResult(
-                    recipient=recipient,
-                    run_id=run_id,
-                    exit_reason="model_invalid",
-                )
-            # If warning was emitted but we're continuing, log it.
-            if error_msg:
-                _append_log_line(
-                    log_path,
-                    f"{_iso_z()} OMP model preflight warning (continuing): {error_msg}",
-                )
             child_argv = _omp_tui_argv(
                 prompt=prompt,
                 model=model,
@@ -2404,16 +2269,6 @@ def start(
             update_cfg["models"] = models_map
 
             run[update_harness] = update_cfg
-            # Validate OMP models before persisting (existing run path).
-            _validate_omp_models(
-                bin=str(update_cfg.get("bin") or "").strip() or update_harness,
-                harness=update_harness,
-                model=model,
-                manager_model=manager_model,
-                worker_model=worker_model,
-                investigator_model=investigator_model,
-                integrator_model=integrator_model,
-            )
 
             save_run(paths, run)
 
@@ -2558,17 +2413,6 @@ def start(
             ms = _merge_state(run)
             ms["branch"] = merge_branch_for_run(run)
             run["merge"] = ms
-            # Validate OMP models before persisting (new run path).
-            final_cfg = dict(run.get(requested_harness) or {})
-            _validate_omp_models(
-                bin=str(final_cfg.get("bin") or "").strip() or requested_harness,
-                harness=requested_harness,
-                model=model,
-                manager_model=manager_model,
-                worker_model=worker_model,
-                investigator_model=investigator_model,
-                integrator_model=integrator_model,
-            )
 
             save_run(paths, run)
 
