@@ -192,7 +192,7 @@ def _best_effort_tmux_nudge(
                 return False, "pane_missing", meta
         if not _pane_can_receive_chat(pane) and not force:
             return False, "unsafe_pane", meta
-        tmux_send_text(pane_id, line, enter=True)
+        tmux_send_text(pane_id, line, enter=True, ctrl_enter=(str(run.get("harness") or "").strip().lower() == "omp"))
         return True, "", meta
     except TeamError as e:
         if e.code == "MISSING_BIN":

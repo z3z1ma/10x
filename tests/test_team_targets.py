@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 from agent_loom.team import targets
 from agent_loom.team.errors import TeamError
@@ -103,6 +104,57 @@ class TestTeamTargets(unittest.TestCase):
             targets._resolve_target(run, "merge-queue")
         self.assertEqual(str(getattr(ctx.exception, "code", "")), "AMBIGUOUS")
 
+    def test_best_effort_tmux_nudge_uses_ctrl_enter_for_omp(self) -> None:
+        run = {"harness": "omp", "manager": {"pane_id": "%1"}, "workers": {}}
+
+        with (
+            mock.patch.object(targets, "tmux_available", return_value=True),
+            mock.patch.object(targets, "tmux_has_session", return_value=True),
+            mock.patch.object(targets, "_resolve_target", return_value=("%3", {"pane_id": "%3"})),
+            mock.patch.object(
+                targets,
+                "tmux_list_panes",
+                return_value={"%3": {"current_command": "omp", "dead": "0"}},
+            ),
+            mock.patch.object(targets, "tmux_send_text") as send_text,
+        ):
+            ok, reason, _meta = targets._best_effort_tmux_nudge(
+                run=run,
+                session="team-cobra",
+                target="manager",
+                line="TEAM inbox id=abc",
+                force=False,
+            )
+
+        self.assertTrue(ok)
+        self.assertEqual(reason, "")
+        send_text.assert_called_once_with("%3", "TEAM inbox id=abc", enter=True, ctrl_enter=True)
+
+    def test_best_effort_tmux_nudge_uses_enter_for_non_omp(self) -> None:
+        run = {"harness": "opencode", "manager": {"pane_id": "%1"}, "workers": {}}
+
+        with (
+            mock.patch.object(targets, "tmux_available", return_value=True),
+            mock.patch.object(targets, "tmux_has_session", return_value=True),
+            mock.patch.object(targets, "_resolve_target", return_value=("%3", {"pane_id": "%3"})),
+            mock.patch.object(
+                targets,
+                "tmux_list_panes",
+                return_value={"%3": {"current_command": "opencode", "dead": "0"}},
+            ),
+            mock.patch.object(targets, "tmux_send_text") as send_text,
+        ):
+            ok, reason, _meta = targets._best_effort_tmux_nudge(
+                run=run,
+                session="team-cobra",
+                target="manager",
+                line="TEAM inbox id=abc",
+                force=False,
+            )
+
+        self.assertTrue(ok)
+        self.assertEqual(reason, "")
+        send_text.assert_called_once_with("%3", "TEAM inbox id=abc", enter=True, ctrl_enter=False)
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,6 @@
 ---
 "id": "al-18ec"
-"status": "open"
+"status": "in_progress"
 "deps":
 - "al-8d66"
 "links": []
@@ -65,3 +65,21 @@ Public launch requires consistent CLI JSON/text behavior across all commands. Du
 - **Risk:** differing pretty/minified JSON expectations between CLIs.
   - **Detection:** failing tests and manual sample output checks.
   - **Mitigation:** make formatting strategy explicit in shared helper options instead of forcing one global format.
+
+## Notes
+
+**2026-02-15T20:22:59Z**
+
+Execution boundary from al-8d66: this ticket owns only shared CLI serialization/emission contract extraction and migration in team/workspace/ticket/compound/pack/init CLI files. Do not alter argparse command trees or domain business logic. Keep CLI-specific envelopes where needed; centralize primitives only.
+
+**2026-02-15T20:25:07Z**
+
+**2026-02-15 (worker w9)**
+
+Created shared CLI output module at `src/agent_loom/core/cli_output.py` with:
+- `normalize_payload`: unify to_dict + dataclass serialization
+- `emit_json`: configurable indent/minified output
+- `make_ok_envelope`: standard {"ok": True, ...} wrapper
+- `make_error_envelope`: standard error response
+
+Now migrating each CLI file.

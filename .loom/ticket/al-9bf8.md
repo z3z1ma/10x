@@ -61,3 +61,9 @@ After refactors land, we need enforceable guardrails so duplication and oversize
 - **Risk:** docs and checks drift apart.
   - **Detection:** guardrail failures contradict documented expectations.
   - **Mitigation:** co-locate docs with guard checks and update together.
+
+## Notes
+
+**2026-02-15T20:23:00Z**
+
+Execution boundary from al-8d66: guardrail checks/docs must codify boundaries established by al-f968/al-18ec/al-58c0 (file ownership, helper dedupe, hotspot size control) without introducing CLI behavior changes. Keep checks structural/deterministic to avoid flaky failures.

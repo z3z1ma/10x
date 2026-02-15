@@ -144,12 +144,12 @@ def tmux_capture(pane_id: str, *, lines: int = 200, join_wrapped: bool = True) -
     return p.stdout or ""
 
 
-def tmux_send_text(pane_id: str, text: str, *, enter: bool = True) -> None:
+def tmux_send_text(pane_id: str, text: str, *, enter: bool = True, ctrl_enter: bool = False) -> None:
     lines = (text or "").splitlines() or [""]
     for line in lines:
         tmux_cmd(["send-keys", "-t", pane_id, "-l", line], check=True)
         if enter:
-            tmux_cmd(["send-keys", "-t", pane_id, "Enter"], check=True)
+            tmux_cmd(["send-keys", "-t", pane_id, "C-Enter" if ctrl_enter else "Enter"], check=True)
 
 
 def tmux_select_window(session: str, window: str) -> None:

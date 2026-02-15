@@ -1596,7 +1596,7 @@ def tui(
             pane = panes.get(pane_id)
             if not pane or not _pane_can_receive_chat(pane):
                 return
-            tmux_send_text(pane_id, text, enter=True)
+            tmux_send_text(pane_id, text, enter=True, ctrl_enter=(harness == "omp"))
             last_nudge_at = now
         except Exception:
             return
@@ -6025,7 +6025,7 @@ def merge_enqueue(
                     pane = panes.get(pane_id)
                     if pane and _pane_can_receive_chat(pane):
                         line = f"TEAM merge_queue enqueued id={item['id']} ticket={ticket_id or '-'} branch={branch}"
-                        tmux_send_text(pane_id, line, enter=True)
+                        tmux_send_text(pane_id, line, enter=True, ctrl_enter=(str(run.get("harness") or "").strip().lower() == "omp"))
                         nudged = True
                 except Exception:
                     nudged = False
