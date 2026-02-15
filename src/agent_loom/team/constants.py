@@ -15,7 +15,7 @@ DEFAULT_WORKER_AGENT = "loom-team-worker"
 DEFAULT_INVESTIGATOR_AGENT = "loom-team-investigator"
 DEFAULT_INTEGRATOR_AGENT = "loom-team-integrator"
 
-DEFAULT_HARNESS = "opencode"  # or "claude" or "omp"
+DEFAULT_HARNESS = "opencode"  # or "claude" or "omp" or "codex"
 
 DEFAULT_OBJECTIVE_NUDGE_S = 1800.0  # 30m
 DEFAULT_DONE_CHECK_S = 900.0  # 15m

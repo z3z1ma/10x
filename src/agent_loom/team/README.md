@@ -105,7 +105,7 @@ loom team start my-team --objective "Ship the sprint" --repo /path/to/repo
 Useful flags:
 
 - `--session` override tmux session name
-- `--harness opencode|claude|omp`
+- `--harness opencode|claude|omp|codex`
 - `--bin <path>` override harness binary
 - `--model`, `--manager-model`, `--worker-model`, `--investigator-model`, `--integrator-model`
 - `--mount SRC[:DEST]` symlink repo-root paths into worktrees (repeatable)
@@ -118,19 +118,27 @@ Useful flags:
 - `--force` recreate manager window
 
 omp examples:
-
 ```
 loom team start my-team --harness omp --model opus
 loom team start my-team --harness omp --manager-model opus --worker-model gpt-4o
 ```
 
+codex examples:
+
+```
+loom team start my-team --harness codex --model gpt-5.3-codex
+loom team start my-team --harness codex --manager-model gpt-5.3-codex --worker-model gpt-5-codex
+```
+
 For `--harness omp`, Team still reads `manager_agent` / `worker_agent` / `investigator_agent` / `integrator_agent` from run state. The matching agent markdown file is parsed and appended to omp's system prompt via `--append-system-prompt`.
 
-omp tool restrictions are role-aware in sidecar mode:
-- manager / investigator / integrator are restricted to a safe read-oriented tool allowlist
-- workers keep omp defaults (full coding toolset)
+For `--harness codex`, Team extracts the same agent prompt body and writes a per-pane instructions file under `.loom/team/runs/<team>/agents/codex/<recipient>.md`, then launches codex with `--config model_instructions_file=...`.
 
-Unlike OpenCode, omp does not support per-bash-command allow/deny policies; Team can only restrict tool types via `--tools`.
+codex sidecar sandboxing is role-aware:
+- manager / investigator / integrator run with `--sandbox read-only --ask-for-approval on-request`
+- workers run with `--sandbox workspace-write --ask-for-approval on-request`
+
+codex sidecar state is isolated per pane via `CODEX_HOME=.loom/team/runs/<team>/sessions/codex/<recipient>`.
 
 ### attach
 
@@ -368,6 +376,7 @@ Sidecar harness for tmux panes (normally used by Team automatically):
 ```
 loom team tui /path/to/worktree --harness opencode --agent loom-team-worker --model gpt-4.1
 loom team tui /path/to/worktree --harness omp --agent loom-team-worker --model opus
+loom team tui /path/to/worktree --harness codex --agent loom-team-worker --model gpt-5-codex
 ```
 
 ### prime

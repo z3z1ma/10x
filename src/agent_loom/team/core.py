@@ -6,7 +6,7 @@ Authoritative systems:
   - tmux: live execution substrate and observability
   - workspace: git/worktree lifecycle and naming conventions
   - ticket: durable ticket ledger
-  - opencode / claude: interactive TUI agents
+  - opencode / claude / omp / codex: interactive TUI agents
 
 Team is orchestration only. It does not replace git, tmux, ws, or loom ticket.
 
@@ -263,7 +263,7 @@ __all__ = [
 
 def _normalize_harness(value: str) -> str:
     h = str(value or "").strip().lower()
-    if h in ("opencode", "claude", "omp"):
+    if h in ("opencode", "claude", "omp", "codex"):
         return h
     return DEFAULT_HARNESS
 
@@ -1130,6 +1130,33 @@ def _omp_tui_argv(
     return argv
 
 
+def _codex_tui_argv(
+    *,
+    prompt: str,
+    model: str,
+    instructions_file: Path,
+    sandbox: str,
+    approval: str,
+    resume_last: bool,
+    bin: str = "codex",
+) -> List[str]:
+    _require_bin(bin)
+    argv: List[str] = [bin]
+    if model:
+        argv += ["--model", model]
+    if sandbox:
+        argv += ["--sandbox", sandbox]
+    if approval:
+        argv += ["--ask-for-approval", approval]
+    instructions_value = str(instructions_file).replace("\\", "\\\\").replace('"', '\\"')
+    argv += ["--config", f'model_instructions_file="{instructions_value}"']
+    if resume_last:
+        argv += ["resume", "--last"]
+    elif prompt:
+        argv.append(prompt)
+    return argv
+
+
 def _team_tui_argv(
     *,
     project_dir: Path,
@@ -1351,7 +1378,7 @@ def tui(
     _require_bin("tmux")
 
     harness = str(harness or DEFAULT_HARNESS).strip().lower()
-    if harness not in ("opencode", "claude", "omp"):
+    if harness not in ("opencode", "claude", "omp", "codex"):
         harness = DEFAULT_HARNESS
     bin_override = str(bin_override or "").strip()
     agent_bin = bin_override or harness
@@ -1424,6 +1451,7 @@ def tui(
     respawn_times: List[float] = []
     bounce_killed_pid: Optional[int] = None
     bounce_pending = threading.Event()
+    has_spawned_once = False
 
     def stop_all(reason: str) -> None:
         nonlocal stop_reason
@@ -1873,6 +1901,7 @@ def tui(
             except Exception:
                 pass
 
+        child_env = os.environ.copy()
         if harness == "opencode":
             child_argv = _opencode_tui_argv(
                 project_dir=project_dir,
@@ -1886,6 +1915,28 @@ def tui(
                 agent=agent,
                 prompt=prompt,
                 model=model,
+                bin=agent_bin,
+            )
+        elif harness == "codex":
+            instructions_text = _agent_prompt_text(workdir=project_dir, agent=agent)
+            instructions_dir = paths.run_dir / "agents" / "codex"
+            instructions_dir.mkdir(parents=True, exist_ok=True)
+            instructions_file = instructions_dir / f"{recipient}.md"
+            instructions_file.write_text(instructions_text.rstrip() + "\n", encoding="utf-8")
+            codex_home = paths.run_dir / "sessions" / "codex" / recipient
+            codex_home.mkdir(parents=True, exist_ok=True)
+            child_env["CODEX_HOME"] = str(codex_home)
+            sandbox = "workspace-write"
+            approval = "on-request"
+            if role in (ROLE_MANAGER, ROLE_INVESTIGATOR, ROLE_INTEGRATOR):
+                sandbox = "read-only"
+            child_argv = _codex_tui_argv(
+                prompt=prompt,
+                model=model,
+                instructions_file=instructions_file,
+                sandbox=sandbox,
+                approval=approval,
+                resume_last=has_spawned_once,
                 bin=agent_bin,
             )
         else:
@@ -1916,7 +1967,7 @@ def tui(
             p = subprocess.Popen(
                 child_argv,
                 cwd=str(project_dir),
-                env=os.environ.copy(),
+                env=child_env,
                 stdin=sys.stdin,
                 stdout=sys.stdout,
                 stderr=sys.stderr,
@@ -1938,6 +1989,7 @@ def tui(
 
         with lock:
             proc = p
+        has_spawned_once = True
 
         best_effort(
             lambda: _sidecar_pid_write(
@@ -2190,7 +2242,7 @@ def start(
                     save_run(paths, run)
 
             # Normalize harness config keys (greenfield, but keep local runs usable).
-            for hname in ("opencode", "claude", "omp"):
+            for hname in ("opencode", "claude", "omp", "codex"):
                 raw_cfg = run.get(hname)
                 cfg = dict(raw_cfg) if isinstance(raw_cfg, dict) else {}
 
@@ -2344,6 +2396,20 @@ def start(
                     "bin": "",
                 },
                 "omp": {
+                    "model": str(model or "").strip(),
+                    "models": {
+                        "manager": "",
+                        "worker": "",
+                        "investigator": "",
+                        "integrator": "",
+                    },
+                    "manager_agent": DEFAULT_MANAGER_AGENT,
+                    "worker_agent": DEFAULT_WORKER_AGENT,
+                    "investigator_agent": DEFAULT_INVESTIGATOR_AGENT,
+                    "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
+                    "bin": "",
+                },
+                "codex": {
                     "model": str(model or "").strip(),
                     "models": {
                         "manager": "",
