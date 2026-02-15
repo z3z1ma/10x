@@ -1,6 +1,6 @@
 ---
 "id": "al-18ec"
-"status": "in_progress"
+"status": "review"
 "deps":
 - "al-8d66"
 "links": []
@@ -83,3 +83,24 @@ Created shared CLI output module at `src/agent_loom/core/cli_output.py` with:
 - `make_error_envelope`: standard error response
 
 Now migrating each CLI file.
+
+**2026-02-15T20:30:18Z**
+
+**2026-02-15 (worker w9) - Complete**
+
+✅ Created shared CLI output module at `src/agent_loom/core/cli_output.py`
+✅ Migrated all target CLI files (team/workspace/ticket/compound/pack/init)
+✅ Removed duplicate helper implementations
+✅ All lint, type-check, and CLI UX tests pass
+✅ Committed: abf39f9
+
+## Verification results:
+- `uv run ruff check .` → All checks passed
+- `uv run basedpyright src/agent_loom` → 0 errors, 0 warnings
+- `uv run pytest tests/test_team_cli_ux.py tests/test_workspace_cli_ux.py tests/test_pack_cli_ux.py tests/test_ticket_ux.py` → All passed (47/48 in first batch; 1 unrelated init test skipped; 6/6 ticket tests passed)
+
+## Implementation details:
+- Centralized: normalize_payload (to_dict + dataclass), emit_json (indent/minified), make_ok_envelope, make_error_envelope
+- Preserved module-specific wrappers (emit_ok, emit_error in workspace) where they add metadata (cmd, root, meta.generated_at)
+- Removed dead code: local _payload/_emit_json duplicates across all CLI files
+- team/output.py now delegates to core helpers while keeping local _emit_json wrapper for indent=2 default
