@@ -170,10 +170,6 @@ def run_init(opts: LoomInitOptions) -> LoomInitResult:
     )
 
 
-def _emit_json(obj: object) -> None:
-    sys.stdout.write(json.dumps(obj, sort_keys=True) + "\n")
-
-
 def _isatty() -> bool:
     try:
         return bool(sys.stdin.isatty())
