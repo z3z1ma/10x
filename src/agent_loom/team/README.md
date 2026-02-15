@@ -105,7 +105,7 @@ loom team start my-team --objective "Ship the sprint" --repo /path/to/repo
 Useful flags:
 
 - `--session` override tmux session name
-- `--harness opencode|claude`
+- `--harness opencode|claude|omp`
 - `--bin <path>` override harness binary
 - `--model`, `--manager-model`, `--worker-model`, `--investigator-model`, `--integrator-model`
 - `--mount SRC[:DEST]` symlink repo-root paths into worktrees (repeatable)
@@ -116,6 +116,21 @@ Useful flags:
 - `--push` / `--no-push`
 - `--manager-window <name>`
 - `--force` recreate manager window
+
+omp examples:
+
+```
+loom team start my-team --harness omp --model opus
+loom team start my-team --harness omp --manager-model opus --worker-model gpt-4o
+```
+
+For `--harness omp`, Team still reads `manager_agent` / `worker_agent` / `investigator_agent` / `integrator_agent` from run state. The matching agent markdown file is parsed and appended to omp's system prompt via `--append-system-prompt`.
+
+omp tool restrictions are role-aware in sidecar mode:
+- manager / investigator / integrator are restricted to a safe read-oriented tool allowlist
+- workers keep omp defaults (full coding toolset)
+
+Unlike OpenCode, omp does not support per-bash-command allow/deny policies; Team can only restrict tool types via `--tools`.
 
 ### attach
 
@@ -352,6 +367,7 @@ Sidecar harness for tmux panes (normally used by Team automatically):
 
 ```
 loom team tui /path/to/worktree --harness opencode --agent loom-team-worker --model gpt-4.1
+loom team tui /path/to/worktree --harness omp --agent loom-team-worker --model opus
 ```
 
 ### prime

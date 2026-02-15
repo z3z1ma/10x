@@ -43,9 +43,9 @@ import datetime as dt
 import hashlib
 import os
 import random
-import signal
 import shlex
 import shutil
+import signal
 import subprocess
 import sys
 import threading
@@ -54,7 +54,12 @@ import uuid
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Tuple
 
+from agent_loom.compound.sync import sync as compound_sync
 from agent_loom.core.time import parse_duration_seconds as core_parse_duration_seconds
+from agent_loom.pack.core import install_pack as pack_install
+from agent_loom.pack.core import update_pack as pack_update
+from agent_loom.pack.lock import index_packs as pack_index
+from agent_loom.pack.lock import load_lock as pack_load_lock
 from agent_loom.team.channels import channel_for, resolve_team_from_session
 from agent_loom.team.constants import (
     CANONICAL_TICKET_DIRNAME,
@@ -66,10 +71,10 @@ from agent_loom.team.constants import (
     DEFAULT_DONE_CHECK_S,
     DEFAULT_HARNESS,
     DEFAULT_IDLE_SCREEN_S,
+    DEFAULT_INTEGRATOR_AGENT,
     DEFAULT_INVESTIGATOR_AGENT,
     DEFAULT_MANAGER_AGENT,
     DEFAULT_MANAGER_WINDOW,
-    DEFAULT_INTEGRATOR_AGENT,
     DEFAULT_OBJECTIVE_NUDGE_S,
     DEFAULT_TMUX_SESSION_PREFIX,
     DEFAULT_WORKER_AGENT,
@@ -83,9 +88,9 @@ from agent_loom.team.constants import (
     ENV_TEAM_WORKER_ID,
     ENV_TICKET_DIR,
     INBOX_KIND_CONTROL,
+    ROLE_INTEGRATOR,
     ROLE_INVESTIGATOR,
     ROLE_MANAGER,
-    ROLE_INTEGRATOR,
     ROLE_WORKER,
     TMUX_OPT_OWNED,
     TMUX_OPT_REPO_ROOT,
@@ -123,13 +128,7 @@ from agent_loom.team.merge_queue import (
     merge_list_items,
     merge_mark_done,
 )
-from agent_loom.compound.sync import sync as compound_sync
-from agent_loom.pack.core import install_pack as pack_install
-from agent_loom.pack.core import update_pack as pack_update
-from agent_loom.pack.lock import index_packs as pack_index
-from agent_loom.pack.lock import load_lock as pack_load_lock
 from agent_loom.team.models import (
-    InitAgentsResult,
     AttachResult,
     BounceResult,
     CaptureResult,
@@ -140,12 +139,9 @@ from agent_loom.team.models import (
     InboxListResult,
     InboxSendResult,
     InboxShowResult,
+    InitAgentsResult,
     JanitorResult,
     MarkRetirableResult,
-    PrepSprintResult,
-    SprintShowResult,
-    SprintSetResult,
-    SprintClearResult,
     MergeDoneResult,
     MergeEnqueueResult,
     MergeListResult,
@@ -153,20 +149,24 @@ from agent_loom.team.models import (
     ObjectiveShowResult,
     ObjectiveUpdateResult,
     PauseResult,
-    RetireResult,
+    PrepSprintResult,
     ResumeTeamResult,
+    RetireResult,
     SendResult,
     ShipResult,
     SpawnIntegratorResult,
     SpawnResult,
+    SprintClearResult,
+    SprintSetResult,
+    SprintShowResult,
     StartResult,
     StatusResult,
     TuiResult,
     WaitResult,
 )
 from agent_loom.team.prompts import (
-    render_manager_prompt,
     render_integrator_prompt,
+    render_manager_prompt,
     render_worker_prompt,
 )
 from agent_loom.team.run_state import (
@@ -209,8 +209,8 @@ from agent_loom.team.tmux import (
     tmux_wait_for,
     tmux_window_exists,
 )
-from agent_loom.ticket.api import show as ticket_show
 from agent_loom.ticket.api import create as ticket_create
+from agent_loom.ticket.api import show as ticket_show
 from agent_loom.ticket.api import sync as ticket_sync
 from agent_loom.workspace.core import (
     repo_merge_attempt,
@@ -263,7 +263,7 @@ __all__ = [
 
 def _normalize_harness(value: str) -> str:
     h = str(value or "").strip().lower()
-    if h in ("opencode", "claude"):
+    if h in ("opencode", "claude", "omp"):
         return h
     return DEFAULT_HARNESS
 
@@ -579,13 +579,24 @@ def _require_agent_file_present(*, workdir: Path, harness: str, agent: str) -> N
     if not agent:
         raise TeamError("Missing agent name", code="AGENTS", exit_code=2)
 
-    rel_dir = ".opencode/agents" if h == "opencode" else ".claude/agents"
-    p = (workdir / rel_dir / f"{agent}.md").resolve()
-    if p.exists():
-        return
+    candidates: list[Path]
+    if h == "opencode":
+        candidates = [(workdir / ".opencode" / "agents" / f"{agent}.md").resolve()]
+    elif h == "claude":
+        candidates = [(workdir / ".claude" / "agents" / f"{agent}.md").resolve()]
+    else:
+        candidates = [
+            (workdir / ".opencode" / "agents" / f"{agent}.md").resolve(),
+            (workdir / ".claude" / "agents" / f"{agent}.md").resolve(),
+        ]
 
+    for p in candidates:
+        if p.exists():
+            return
+
+    expected = " or ".join(str(p) for p in candidates)
     raise TeamError(
-        f"Agent file missing in worktree: {p}",
+        f"Agent file missing in worktree: {expected}",
         code="AGENTS",
         exit_code=2,
         hint=(
@@ -1035,6 +1046,90 @@ def _claude_tui_argv(
     return argv
 
 
+def _strip_yaml_frontmatter(text: str) -> str:
+    lines = str(text or "").splitlines()
+    if lines and lines[0].strip() == "---":
+        for i in range(1, len(lines)):
+            if lines[i].strip() == "---":
+                return "\n".join(lines[i + 1 :]).strip()
+    return "\n".join(lines).strip()
+
+
+def _extract_prompt_from_agent_file(path: Path) -> str:
+    raw = path.read_text(encoding="utf-8")
+    lines = raw.splitlines()
+    begin = TEAM_AGENT_PROMPT_BEGIN.strip()
+    end = TEAM_AGENT_PROMPT_END.strip()
+
+    start_idx = -1
+    for i, line in enumerate(lines):
+        if line.strip() == begin:
+            start_idx = i
+            break
+
+    if start_idx >= 0:
+        out_lines: list[str] = []
+        for line in lines[start_idx + 1 :]:
+            if line.strip() == begin or line.strip() == end:
+                continue
+            out_lines.append(line)
+        text = "\n".join(out_lines).strip()
+        if text:
+            return text
+
+    return _strip_yaml_frontmatter(raw)
+
+
+def _agent_prompt_text(*, workdir: Path, agent: str) -> str:
+    name = str(agent or "").strip()
+    if not name:
+        raise TeamError("Missing agent name", code="AGENTS", exit_code=2)
+
+    candidates = [
+        (workdir / ".opencode" / "agents" / f"{name}.md").resolve(),
+        (workdir / ".claude" / "agents" / f"{name}.md").resolve(),
+    ]
+    for p in candidates:
+        if p.exists():
+            prompt = _extract_prompt_from_agent_file(p)
+            if prompt:
+                return prompt
+
+    expected = " or ".join(str(p) for p in candidates)
+    raise TeamError(
+        f"Agent file missing in worktree: {expected}",
+        code="AGENTS",
+        exit_code=2,
+        hint=(
+            "Run `loom team init` in the repo root and commit the agent files. "
+            "Then recreate or update this worktree."
+        ),
+    )
+
+
+def _omp_tui_argv(
+    *,
+    prompt: str,
+    model: str,
+    system_prompt_append: str,
+    session_path: Path,
+    tools: list[str] | None,
+    bin: str = "omp",
+) -> List[str]:
+    _require_bin(bin)
+    argv: List[str] = [bin]
+    if model:
+        argv += ["--model", model]
+    if system_prompt_append:
+        argv += ["--append-system-prompt", system_prompt_append]
+    if tools:
+        argv += ["--tools", ",".join(tools)]
+    argv += ["--resume", str(session_path)]
+    if prompt:
+        argv.append(prompt)
+    return argv
+
+
 def _team_tui_argv(
     *,
     project_dir: Path,
@@ -1256,7 +1351,7 @@ def tui(
     _require_bin("tmux")
 
     harness = str(harness or DEFAULT_HARNESS).strip().lower()
-    if harness not in ("opencode", "claude"):
+    if harness not in ("opencode", "claude", "omp"):
         harness = DEFAULT_HARNESS
     bin_override = str(bin_override or "").strip()
     agent_bin = bin_override or harness
@@ -1270,6 +1365,7 @@ def tui(
     pane_id = str(os.environ.get("TMUX_PANE") or "").strip()
     paths = _run_paths_from_env()
     recipient = _recipient_from_env()
+    role = str(os.getenv(ENV_TEAM_ROLE) or "").strip().lower()
     if not pane_id or not paths or not recipient:
         # Never print into the pane (would corrupt the TUI). Exit quietly.
         return TuiResult(
@@ -1286,7 +1382,7 @@ def tui(
     log_path = paths.sidecars_dir / f"{recipient}.log"
     _append_log_line(
         log_path,
-        f"{_iso_z()} sidecar start harness={harness} pane={pane_id} role={os.getenv(ENV_TEAM_ROLE, '')} project={project_dir}",
+        f"{_iso_z()} sidecar start harness={harness} pane={pane_id} role={role} project={project_dir}",
     )
 
     cooldown_s = float(nudge_cooldown_s or 300.0)
@@ -1777,19 +1873,45 @@ def tui(
             except Exception:
                 pass
 
-        child_argv = (
-            _opencode_tui_argv(
+        if harness == "opencode":
+            child_argv = _opencode_tui_argv(
                 project_dir=project_dir,
                 agent=agent,
                 prompt=prompt,
                 model=model,
                 bin=agent_bin,
             )
-            if harness == "opencode"
-            else _claude_tui_argv(
-                agent=agent, prompt=prompt, model=model, bin=agent_bin
+        elif harness == "claude":
+            child_argv = _claude_tui_argv(
+                agent=agent,
+                prompt=prompt,
+                model=model,
+                bin=agent_bin,
             )
-        )
+        else:
+            system_prompt_append = _agent_prompt_text(workdir=project_dir, agent=agent)
+            restricted_tools: list[str] | None = None
+            if role in (ROLE_MANAGER, ROLE_INVESTIGATOR, ROLE_INTEGRATOR):
+                restricted_tools = [
+                    "read",
+                    "grep",
+                    "find",
+                    "bash",
+                    "fetch",
+                    "web_search",
+                    "todo_write",
+                ]
+            session_dir = paths.run_dir / "sessions" / "omp"
+            session_dir.mkdir(parents=True, exist_ok=True)
+            session_path = session_dir / f"{recipient}.jsonl"
+            child_argv = _omp_tui_argv(
+                prompt=prompt,
+                model=model,
+                system_prompt_append=system_prompt_append,
+                session_path=session_path,
+                tools=restricted_tools,
+                bin=agent_bin,
+            )
         try:
             p = subprocess.Popen(
                 child_argv,
@@ -1803,11 +1925,7 @@ def tui(
             _append_log_line(log_path, f"{_iso_z()} {harness} spawn failed: {e!r}")
             safe_write_event(
                 paths,
-                event_type=(
-                    "sidecar.opencode_spawn_failed"
-                    if harness == "opencode"
-                    else "sidecar.claude_spawn_failed"
-                ),
+                event_type=f"sidecar.{harness}_spawn_failed",
                 run=run,
                 ok=False,
                 summary=f"{harness} spawn failed recipient={recipient}",
@@ -1846,11 +1964,7 @@ def tui(
         )
         safe_write_event(
             paths,
-            event_type=(
-                "sidecar.opencode_spawned"
-                if harness == "opencode"
-                else "sidecar.claude_spawned"
-            ),
+            event_type=f"sidecar.{harness}_spawned",
             run=run,
             summary=f"{harness} spawned recipient={recipient} pid={p.pid}",
             refs={"recipient": recipient, "pane_id": pane_id},
@@ -1874,11 +1988,7 @@ def tui(
         _append_log_line(log_path, f"{_iso_z()} {harness} exited rc={rc}")
         safe_write_event(
             paths,
-            event_type=(
-                "sidecar.opencode_exited"
-                if harness == "opencode"
-                else "sidecar.claude_exited"
-            ),
+            event_type=f"sidecar.{harness}_exited",
             run=run,
             ok=(rc == 0),
             summary=f"{harness} exited recipient={recipient} rc={rc}",
@@ -2080,7 +2190,7 @@ def start(
                     save_run(paths, run)
 
             # Normalize harness config keys (greenfield, but keep local runs usable).
-            for hname in ("opencode", "claude"):
+            for hname in ("opencode", "claude", "omp"):
                 raw_cfg = run.get(hname)
                 cfg = dict(raw_cfg) if isinstance(raw_cfg, dict) else {}
 
@@ -2220,6 +2330,20 @@ def start(
                     "bin": "",
                 },
                 "claude": {
+                    "model": str(model or "").strip(),
+                    "models": {
+                        "manager": "",
+                        "worker": "",
+                        "investigator": "",
+                        "integrator": "",
+                    },
+                    "manager_agent": DEFAULT_MANAGER_AGENT,
+                    "worker_agent": DEFAULT_WORKER_AGENT,
+                    "investigator_agent": DEFAULT_INVESTIGATOR_AGENT,
+                    "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
+                    "bin": "",
+                },
+                "omp": {
                     "model": str(model or "").strip(),
                     "models": {
                         "manager": "",

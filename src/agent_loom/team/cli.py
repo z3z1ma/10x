@@ -159,6 +159,10 @@ def _normalize_argv(argv: list[str]) -> list[str]:
                 out.extend([tok, "claude"])
                 i += 2
                 continue
+            if val in {"omp", "ohmypi"}:
+                out.extend([tok, "omp"])
+                i += 2
+                continue
         if tok == "--result" and i + 1 < len(argv):
             val = str(argv[i + 1]).strip().lower()
             out.extend([tok, val])
@@ -1248,7 +1252,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument(
         "--harness",
         default="",
-        choices=["opencode", "claude"],
+        choices=["opencode", "claude", "omp"],
         help="Agent harness for this run (default: existing run setting, else opencode)",
     )
     sp.add_argument(
@@ -1501,8 +1505,8 @@ def build_parser() -> argparse.ArgumentParser:
     tui_cmd.add_argument(
         "--harness",
         default=DEFAULT_HARNESS,
-        choices=["opencode", "claude"],
-        help="Agent harness (opencode or claude)",
+        choices=["opencode", "claude", "omp"],
+        help="Agent harness (opencode, claude, or omp)",
     )
     tui_cmd.add_argument(
         "--bin",
