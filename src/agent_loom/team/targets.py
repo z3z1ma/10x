@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Tuple
 
-from agent_loom.team.constants import ROLE_ARCHITECT, ROLE_INTEGRATOR, ROLE_MANAGER, ROLE_WORKER
+from agent_loom.team.constants import (
+    ROLE_ARCHITECT,
+    ROLE_INTEGRATOR,
+    ROLE_MANAGER,
+    ROLE_WORKER,
+)
 from agent_loom.team.errors import TeamError
 from agent_loom.team.tmux import (
     _pane_can_receive_chat,
@@ -405,7 +410,12 @@ def _best_effort_tmux_nudge(
                 return False, "pane_missing", meta
         if not _pane_can_receive_chat(pane) and not force:
             return False, "unsafe_pane", meta
-        tmux_send_text(pane_id, line, enter=True, ctrl_enter=(str(run.get("harness") or "").strip().lower() == "omp"))
+        tmux_send_text(
+            pane_id,
+            line,
+            enter=True,
+            ctrl_enter=(str(run.get("harness") or "").strip().lower() == "omp"),
+        )
         return True, "", meta
     except TeamError as e:
         if e.code == "MISSING_BIN":

@@ -4,11 +4,11 @@ from collections import deque
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from agent_loom.core.io import read_json
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.harness.components import components_index_path
 from agent_loom.workspace.state import load_workspace
-from agent_loom.core.io import read_json
 
 
 def _neighbors(idx: dict, name: str, key: str) -> List[str]:

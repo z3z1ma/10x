@@ -33,6 +33,7 @@ from agent_loom.memory.core import (
     show,
     timeline,
 )
+from agent_loom.memory.errors import MemoryError
 from agent_loom.memory.models import (
     AddResult,
     EditResult,
@@ -47,7 +48,6 @@ from agent_loom.memory.models import (
     RecallResult,
 )
 from agent_loom.memory.recall import print_index_warnings
-from agent_loom.memory.errors import MemoryError
 from agent_loom.memory.utils import emit_error, format_json, read_all_stdin_text
 from agent_loom.memory.vault import resolve_vault_root, vault_paths
 

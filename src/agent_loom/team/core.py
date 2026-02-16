@@ -61,9 +61,18 @@ from agent_loom.pack.core import update_pack as pack_update
 from agent_loom.pack.lock import index_packs as pack_index
 from agent_loom.pack.lock import load_lock as pack_load_lock
 from agent_loom.team.channels import channel_for, resolve_team_from_session
+from agent_loom.team.composition import load_team_roster_yaml
+from agent_loom.team.composition_runtime import (
+    ResolvedMemberProfile,
+    enforce_member_lifecycle,
+    list_always_on_member_profiles,
+    resolve_builtin_profile,
+    resolve_member_profile,
+)
 from agent_loom.team.constants import (
     CANONICAL_TICKET_DIRNAME,
     CONTROL_OP_BOUNCE,
+    DEFAULT_ARCHITECT_AGENT,
     DEFAULT_AUTOCAPTURE_LINES,
     DEFAULT_AUTOCAPTURE_MAX_S,
     DEFAULT_AUTOCAPTURE_MIN_S,
@@ -72,7 +81,6 @@ from agent_loom.team.constants import (
     DEFAULT_HARNESS,
     DEFAULT_IDLE_SCREEN_S,
     DEFAULT_INTEGRATOR_AGENT,
-    DEFAULT_ARCHITECT_AGENT,
     DEFAULT_MANAGER_AGENT,
     DEFAULT_MANAGER_WINDOW,
     DEFAULT_OBJECTIVE_NUDGE_S,
@@ -88,8 +96,8 @@ from agent_loom.team.constants import (
     ENV_TEAM_WORKER_ID,
     ENV_TICKET_DIR,
     INBOX_KIND_CONTROL,
-    ROLE_INTEGRATOR,
     ROLE_ARCHITECT,
+    ROLE_INTEGRATOR,
     ROLE_MANAGER,
     ROLE_WORKER,
     TMUX_OPT_OWNED,
@@ -97,14 +105,6 @@ from agent_loom.team.constants import (
     TMUX_OPT_RUN_DIR,
     TMUX_OPT_RUN_ID,
     TMUX_OPT_TEAM,
-)
-from agent_loom.team.composition import load_team_roster_yaml
-from agent_loom.team.composition_runtime import (
-    ResolvedMemberProfile,
-    enforce_member_lifecycle,
-    list_always_on_member_profiles,
-    resolve_builtin_profile,
-    resolve_member_profile,
 )
 from agent_loom.team.errors import TeamError
 from agent_loom.team.events import (
@@ -877,7 +877,9 @@ def _roster_summary_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
             version = 0
 
     raw_builtins = spec.get("builtins")
-    builtins: Dict[str, Any] = dict(raw_builtins) if isinstance(raw_builtins, dict) else {}
+    builtins: Dict[str, Any] = (
+        dict(raw_builtins) if isinstance(raw_builtins, dict) else {}
+    )
 
     raw_members = spec.get("members")
     members: list[Any] = list(raw_members) if isinstance(raw_members, list) else []
@@ -915,7 +917,6 @@ def _roster_mount_specs_from_run(run: Mapping[str, Any]) -> list[str]:
         if tok:
             out.append(tok)
     return out
-
 
 
 def _write_charter(paths: RunPaths, run: Mapping[str, Any]) -> Path:
@@ -1159,7 +1160,9 @@ def _agent_prompt_text(*, workdir: Path, agent: str) -> str:
     )
 
 
-def _compose_wrapped_agent_prompt(*, protocol_preamble: str, user_agent_prompt: str) -> str:
+def _compose_wrapped_agent_prompt(
+    *, protocol_preamble: str, user_agent_prompt: str
+) -> str:
     protocol = str(protocol_preamble or "").strip()
     user = str(user_agent_prompt or "").strip()
     if protocol and user:
@@ -2150,8 +2153,9 @@ def tui(
         backoff_s = min(backoff_s * 2.0, 30.0)
 
 
-
-def _default_architect_profile(*, run: Mapping[str, Any], harness: str) -> ResolvedMemberProfile:
+def _default_architect_profile(
+    *, run: Mapping[str, Any], harness: str
+) -> ResolvedMemberProfile:
     return ResolvedMemberProfile(
         member_id="architect",
         role=ROLE_ARCHITECT,
@@ -2170,7 +2174,10 @@ def _default_architect_profile(*, run: Mapping[str, Any], harness: str) -> Resol
 
 def _always_on_profiles_for_run(run: Mapping[str, Any]) -> list[ResolvedMemberProfile]:
     profiles = list(list_always_on_member_profiles(run))
-    if not any(str(profile.role or "").strip().lower() == ROLE_ARCHITECT for profile in profiles):
+    if not any(
+        str(profile.role or "").strip().lower() == ROLE_ARCHITECT
+        for profile in profiles
+    ):
         harness = _normalize_harness(str(run.get("harness") or ""))
         profiles.append(_default_architect_profile(run=run, harness=harness))
 
@@ -2213,7 +2220,9 @@ def _workspace_for_always_on_profile(profile: ResolvedMemberProfile) -> tuple[st
 
 def _persona_worktree_branch(*, run_id: str, member_id: str) -> str:
     run_key = sanitize(str(run_id or ""), allow=r"a-zA-Z0-9._-", max_len=16) or "run"
-    member_key = sanitize(str(member_id or ""), allow=r"a-zA-Z0-9._-", max_len=40) or "persona"
+    member_key = (
+        sanitize(str(member_id or ""), allow=r"a-zA-Z0-9._-", max_len=40) or "persona"
+    )
     return f"team/{run_key}-{member_key}"
 
 
@@ -2254,7 +2263,9 @@ def _ensure_always_on_personas(*, team: str, repo: Optional[Path] = None) -> Non
                 continue
 
             workspace, workspace_key = _workspace_for_always_on_profile(profile)
-            persona_harness = _normalize_harness(str(profile.harness or "") or harness_default)
+            persona_harness = _normalize_harness(
+                str(profile.harness or "") or harness_default
+            )
             cfg = (
                 (run.get(persona_harness) or {})
                 if isinstance(run.get(persona_harness), dict)
@@ -2298,7 +2309,9 @@ def _ensure_always_on_personas(*, team: str, repo: Optional[Path] = None) -> Non
                 base = str(wt.get("base") or "").strip()
                 _apply_mounts(repo_root=root, worktree_root=project_dir, mounts=mounts)
                 if persona_harness == "opencode":
-                    _ensure_opencode_worktree_runtime(workdir=project_dir, repo_root=root)
+                    _ensure_opencode_worktree_runtime(
+                        workdir=project_dir, repo_root=root
+                    )
 
             _require_agent_file_present(
                 workdir=project_dir,
@@ -2353,7 +2366,11 @@ def _ensure_always_on_personas(*, team: str, repo: Optional[Path] = None) -> Non
             pane_id = ""
             window = existing_window
 
-            if window and not bool(existing.get("retired")) and tmux_window_exists(session, window):
+            if (
+                window
+                and not bool(existing.get("retired"))
+                and tmux_window_exists(session, window)
+            ):
                 pane_id = tmux_format(f"{session}:{window}", "#{pane_id}")
             else:
                 desired_window = (
@@ -2409,7 +2426,9 @@ def _ensure_always_on_personas(*, team: str, repo: Optional[Path] = None) -> Non
                 "base": base,
                 "created_at": str(existing.get("created_at") or now_iso),
                 "spawned_at": str(existing.get("spawned_at") or now_iso),
-                "revived_at": now_iso if bool(existing.get("retired")) else str(existing.get("revived_at") or ""),
+                "revived_at": now_iso
+                if bool(existing.get("retired"))
+                else str(existing.get("revived_at") or ""),
                 "retired": False,
                 "retired_at": "",
                 "worktree_retirable": False,
@@ -2417,6 +2436,8 @@ def _ensure_always_on_personas(*, team: str, repo: Optional[Path] = None) -> Non
             }
 
         run["workers"] = workers
+
+
 # -----------------------------
 # Prompt construction (initial --prompt only)
 # -----------------------------
@@ -4666,7 +4687,9 @@ def spawn(
                 "base_ref": str(base_ref_effective or ""),
                 "branch_override": branch_override or "",
                 "resumed": bool(resume) and bool(prev),
-                "roster_member_id": str(profile.member_id) if profile is not None else "",
+                "roster_member_id": str(profile.member_id)
+                if profile is not None
+                else "",
                 "roster_source": str(profile.source) if profile is not None else "",
             },
         )
@@ -5348,7 +5371,9 @@ def spawn_integrator(
                 "base_ref": base_ref,
                 "forced": bool(force),
                 "config": dict(cfg),
-                "roster_member_id": str(profile.member_id) if profile is not None else "",
+                "roster_member_id": str(profile.member_id)
+                if profile is not None
+                else "",
                 "roster_source": str(profile.source) if profile is not None else "",
             },
         )
@@ -5881,7 +5906,12 @@ def _communication_policy_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
             from_role = str(item.get("from_role") or "").strip().lower()
             if not from_role:
                 continue
-            if from_role in {ROLE_MANAGER, ROLE_WORKER, ROLE_ARCHITECT, ROLE_INTEGRATOR}:
+            if from_role in {
+                ROLE_MANAGER,
+                ROLE_WORKER,
+                ROLE_ARCHITECT,
+                ROLE_INTEGRATOR,
+            }:
                 continue
             to_raw = item.get("to")
             if not isinstance(to_raw, list):
@@ -6002,13 +6032,17 @@ def _route_allows_target(
             return True
         if value in {"integrator", "integrators"} and role == ROLE_INTEGRATOR:
             return True
-        if value in {"architect", "architects", "investigator", "investigators"} and role == ROLE_ARCHITECT:
+        if (
+            value in {"architect", "architects", "investigator", "investigators"}
+            and role == ROLE_ARCHITECT
+        ):
             return True
         if value == worker_id and worker_id:
             return True
         if value == ticket_id and ticket_id:
             return True
     return False
+
 
 def _delivery_suggestions(
     *,
@@ -6041,6 +6075,7 @@ def _delivery_suggestions(
         )
 
     return suggestions
+
 
 def send(
     *,
@@ -6115,24 +6150,24 @@ def send(
         suggestion_set: set[str] = set()
 
         for recipient in resolved_targets:
-            dispatch_target = (
-                str(recipient.get("worker_id") or "").strip() or "manager"
-            )
-            inbox_msg, _recipient, delivered, delivery_reason, meta = _inbox_write_and_maybe_nudge(
-                paths=paths,
-                run=run,
-                target=dispatch_target,
-                message=msg,
-                sender="team",
-                kind="send",
-                meta_extra={
-                    "team": str(run.get("team") or paths.team),
-                    "requested_target": requested_target,
-                    "dispatch_target": dispatch_target,
-                },
-                nudge=True,
-                force=bool(force),
-                line_info=f"to={dispatch_target}",
+            dispatch_target = str(recipient.get("worker_id") or "").strip() or "manager"
+            inbox_msg, _recipient, delivered, delivery_reason, meta = (
+                _inbox_write_and_maybe_nudge(
+                    paths=paths,
+                    run=run,
+                    target=dispatch_target,
+                    message=msg,
+                    sender="team",
+                    kind="send",
+                    meta_extra={
+                        "team": str(run.get("team") or paths.team),
+                        "requested_target": requested_target,
+                        "dispatch_target": dispatch_target,
+                    },
+                    nudge=True,
+                    force=bool(force),
+                    line_info=f"to={dispatch_target}",
+                )
             )
 
             entry = {
@@ -6166,10 +6201,16 @@ def send(
         elif any_delivered:
             delivery_reason = "partial_delivery"
         else:
-            first_reason = str(deliveries[0].get("delivery_reason") or "") if deliveries else ""
+            first_reason = (
+                str(deliveries[0].get("delivery_reason") or "") if deliveries else ""
+            )
             delivery_reason = first_reason or "undelivered"
 
-        inbox_ids = [str(item.get("inbox_id") or "") for item in deliveries if str(item.get("inbox_id") or "")]
+        inbox_ids = [
+            str(item.get("inbox_id") or "")
+            for item in deliveries
+            if str(item.get("inbox_id") or "")
+        ]
         inbox_summary: Dict[str, Any] = {
             "id": inbox_ids[0] if inbox_ids else "",
             "ids": inbox_ids,

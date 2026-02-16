@@ -15,12 +15,12 @@ from agent_loom.dashboard.http import err, ok
 from agent_loom.dashboard.introspect import introspect_module
 from agent_loom.dashboard.workspace_read import (
     WorkspaceReadError,
+    components_index,
     detect_workspace_mode,
     harness_worktrees,
     repo_worktrees,
-    components_index,
-    worktree_diff,
     workspace_meta,
+    worktree_diff,
 )
 
 SERVER_DIR = os.path.dirname(os.path.abspath(__file__))

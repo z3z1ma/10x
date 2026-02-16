@@ -6,7 +6,8 @@ import tempfile
 from pathlib import Path
 from typing import List, Optional, Sequence
 
-from agent_loom.core.exec import ExecError, run as exec_run
+from agent_loom.core.exec import ExecError
+from agent_loom.core.exec import run as exec_run
 from agent_loom.core.paths import realpath_from
 
 

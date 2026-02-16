@@ -6,13 +6,12 @@ from typing import Dict, List
 
 from agent_loom.core.fs import fs_escape
 from agent_loom.core.io import atomic_write_json, read_json
-
 from agent_loom.workspace.constants import (
+    COMPONENTS_DIR,
     DEFAULT_DEFAULT_BRANCH,
     HARNESS_DIR,
     INTERNAL_DIR,
     REPO_NAME_RE,
-    COMPONENTS_DIR,
     REPOS_DIR,
     STATES_DIR,
     WORKSPACE_FILE,

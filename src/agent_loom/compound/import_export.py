@@ -84,7 +84,9 @@ def export_instincts(
     }
 
     out_file.parent.mkdir(parents=True, exist_ok=True)
-    out_file.write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+    out_file.write_text(
+        json.dumps(payload, sort_keys=True, indent=2) + "\n", encoding="utf-8"
+    )
     return InstinctExportResult(ok=True, out=str(out_file), exported=len(selected))
 
 
@@ -145,7 +147,11 @@ def instinct_import(
             continue
 
         tags = [_slug(str(t)) for t in list(raw.get("tags") or []) if str(t).strip()]
-        domain = _slug(str(raw.get("domain") or "")) if str(raw.get("domain") or "").strip() else (tags[0] if tags else "general")
+        domain = (
+            _slug(str(raw.get("domain") or ""))
+            if str(raw.get("domain") or "").strip()
+            else (tags[0] if tags else "general")
+        )
         notes = str(raw.get("notes") or "").strip() or None
 
         existing = by_id.get(instinct_id)
@@ -176,7 +182,9 @@ def instinct_import(
             imported += 1
             continue
 
-        should_update = bool(force) or float(confidence) > float(existing.confidence or 0.0)
+        should_update = bool(force) or float(confidence) > float(
+            existing.confidence or 0.0
+        )
         if not should_update:
             skipped += 1
             continue

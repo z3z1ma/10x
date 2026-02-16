@@ -5,9 +5,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping
 
 from agent_loom.team.constants import (
-    ENV_TICKET_DIR,
     ENV_TEAM_SPRINT_NAME,
     ENV_TEAM_SPRINT_TAG,
+    ENV_TICKET_DIR,
     ROLE_ARCHITECT,
     ROLE_INTEGRATOR,
     ROLE_WORKER,
@@ -431,7 +431,9 @@ def render_manager_prompt(*, run: Mapping[str, Any], charter_path: Path) -> str:
             if not rid or not rrole:
                 continue
             always_on = bool(item.get("always_on"))
-            workspace = str(item.get("workspace") or "repo_root").strip().lower() or "repo_root"
+            workspace = (
+                str(item.get("workspace") or "repo_root").strip().lower() or "repo_root"
+            )
             lifecycle = "always_on" if always_on else "on_demand"
             spawn_hint = (
                 "" if always_on else f" (spawn: loom team spawn-persona {team} {rid})"
@@ -675,16 +677,28 @@ def render_persona_prompt(
 
     parts.append("HARD CONSTRAINTS:\n")
     parts.append("- Do NOT run tmux directly.\n")
-    parts.append("- Use Loom ticket CLI for ticket work; do not browse `.loom/ticket` directly.\n")
-    parts.append("- Do not close tickets unless explicitly instructed by the manager.\n")
-    parts.append("- Keep communication durable via `loom team send` and inbox acknowledgements.\n\n")
+    parts.append(
+        "- Use Loom ticket CLI for ticket work; do not browse `.loom/ticket` directly.\n"
+    )
+    parts.append(
+        "- Do not close tickets unless explicitly instructed by the manager.\n"
+    )
+    parts.append(
+        "- Keep communication durable via `loom team send` and inbox acknowledgements.\n\n"
+    )
 
     if role_norm == ROLE_ARCHITECT:
         parts.append("Mode: always-on architect persona.\n")
         parts.append("- Watch inbox for sprint prep and planning requests.\n")
-        parts.append("- Produce sprint plans and high-quality tickets with clear ordering/dependencies.\n")
-        parts.append("- Escalate unclear requirements to manager with concrete options.\n")
-        parts.append("- When no immediate action is available, run `loom team wait 15m`.\n\n")
+        parts.append(
+            "- Produce sprint plans and high-quality tickets with clear ordering/dependencies.\n"
+        )
+        parts.append(
+            "- Escalate unclear requirements to manager with concrete options.\n"
+        )
+        parts.append(
+            "- When no immediate action is available, run `loom team wait 15m`.\n\n"
+        )
     else:
         if description:
             parts.append(f"Persona description: {description}\n")
@@ -696,12 +710,17 @@ def render_persona_prompt(
                 + ", ".join(str(x) for x in primary_workflows)
                 + "\n"
             )
-        parts.append("- Stay in-role and execute only relevant requests from manager/inbox.\n")
+        parts.append(
+            "- Stay in-role and execute only relevant requests from manager/inbox.\n"
+        )
         parts.append("- If blocked, escalate to manager with concrete options.\n")
         parts.append("- If idle, run `loom team wait 15m`.\n\n")
 
-    parts.append("Acknowledge incoming inbox messages before acting on follow-up requests.\n")
+    parts.append(
+        "Acknowledge incoming inbox messages before acting on follow-up requests.\n"
+    )
     return "".join(parts).strip()
+
 
 def render_integrator_prompt(
     *,

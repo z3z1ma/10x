@@ -10,9 +10,9 @@ from agent_loom.core.time import now_iso
 from agent_loom.workspace.constants import REPO_INTERNAL_DIR, SHA_RE
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.git.core import (
-    git_git_dir,
     ensure_repo_internal_ignored,
     git_current_branch,
+    git_git_dir,
     git_head_sha,
     git_is_dirty,
     git_ref_exists,
@@ -21,6 +21,7 @@ from agent_loom.workspace.git.core import (
     repo_default_branch,
     require_git,
 )
+from agent_loom.workspace.git.diff import worktree_diff_by_file
 from agent_loom.workspace.models import (
     MergeAttemptResult,
     RepoInitResult,
@@ -34,8 +35,6 @@ from agent_loom.workspace.models import (
     WorktreeEnsureResult,
 )
 from agent_loom.workspace.utils import run
-
-from agent_loom.workspace.git.diff import worktree_diff_by_file
 
 
 def repo_root() -> Path:

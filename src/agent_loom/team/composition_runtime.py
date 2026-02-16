@@ -1,11 +1,16 @@
 from __future__ import annotations
 
 import re
-
 from dataclasses import dataclass
 from typing import Any, Dict, Mapping, Tuple
 
-from agent_loom.team.constants import DEFAULT_HARNESS, ROLE_ARCHITECT, ROLE_INTEGRATOR, ROLE_MANAGER, ROLE_WORKER
+from agent_loom.team.constants import (
+    DEFAULT_HARNESS,
+    ROLE_ARCHITECT,
+    ROLE_INTEGRATOR,
+    ROLE_MANAGER,
+    ROLE_WORKER,
+)
 from agent_loom.team.errors import TeamError
 
 
@@ -126,7 +131,9 @@ def resolve_member_profile(
     return _profile_from_member(member_id=selected_member_id, member=selected_member)
 
 
-def list_always_on_member_profiles(run: Mapping[str, Any]) -> Tuple[ResolvedMemberProfile, ...]:
+def list_always_on_member_profiles(
+    run: Mapping[str, Any],
+) -> Tuple[ResolvedMemberProfile, ...]:
     spec = _composition_spec(run)
     if spec is None:
         return ()
@@ -155,7 +162,9 @@ def list_always_on_member_profiles(run: Mapping[str, Any]) -> Tuple[ResolvedMemb
     return tuple(deduped.values())
 
 
-def enforce_member_lifecycle(*, profile: ResolvedMemberProfile | None, role: str) -> None:
+def enforce_member_lifecycle(
+    *, profile: ResolvedMemberProfile | None, role: str
+) -> None:
     if profile is None:
         return
 
@@ -173,7 +182,10 @@ def enforce_member_lifecycle(*, profile: ResolvedMemberProfile | None, role: str
             hint="Worker role is ticket-scoped and always ephemeral.",
         )
 
-    if role_norm in (ROLE_MANAGER, ROLE_ARCHITECT, ROLE_INTEGRATOR) and lifecycle != "always_on":
+    if (
+        role_norm in (ROLE_MANAGER, ROLE_ARCHITECT, ROLE_INTEGRATOR)
+        and lifecycle != "always_on"
+    ):
         raise TeamError(
             (
                 f"Role '{role_norm}' must use always_on roster members; "
@@ -209,10 +221,11 @@ def _builtins_by_role(spec: Mapping[str, Any]) -> Dict[str, Dict[str, Any]]:
     return out
 
 
-
 def _members_by_id(spec: Mapping[str, Any]) -> Dict[str, Dict[str, Any]]:
     members_value = spec.get("members")
-    members_raw: list[Any] = list(members_value) if isinstance(members_value, list) else []
+    members_raw: list[Any] = (
+        list(members_value) if isinstance(members_value, list) else []
+    )
     members: Dict[str, Dict[str, Any]] = {}
     for item in members_raw:
         if not isinstance(item, dict):

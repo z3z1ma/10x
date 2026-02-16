@@ -20,7 +20,9 @@ def normalize_payload(obj: Any) -> Any:
     return obj
 
 
-def emit_json(obj: object, *, indent: int | None = None, minified: bool = False) -> None:
+def emit_json(
+    obj: object, *, indent: int | None = None, minified: bool = False
+) -> None:
     """
     Emit a JSON object to stdout with a trailing newline.
 

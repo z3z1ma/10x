@@ -21,7 +21,6 @@ from agent_loom.workspace.models import (
     LeaseShowResult,
 )
 
-
 DEFAULT_LEASE_TTL = "8h"
 
 

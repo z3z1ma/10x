@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Optional, Sequence
 
 from agent_loom.core.cli_output import emit_json
-
 from agent_loom.core.git import git_repo_root
 from agent_loom.pack.core import (
     doctor,
@@ -27,8 +26,6 @@ class ArgParseError(RuntimeError):
 class PackArgumentParser(argparse.ArgumentParser):
     def error(self, message: str) -> None:  # noqa: D401
         raise ArgParseError(message)
-
-
 
 
 def _infer_json(argv: Sequence[str]) -> bool:
@@ -183,10 +180,13 @@ def _print_drift_guidance(*, cmd: str, pack_id: str, drifted_count: int) -> None
     if drifted_count <= 0:
         return
     sys.stdout.write("\n")
-    sys.stdout.write("IMPORTANT: pack has proposed updates to existing files that were NOT applied.\n")
+    sys.stdout.write(
+        "IMPORTANT: pack has proposed updates to existing files that were NOT applied.\n"
+    )
     sys.stdout.write(f"drifted files: {int(drifted_count)}\n")
     sys.stdout.write(f"review intended changes: loom pack {cmd} {pack_id} --diff\n")
     sys.stdout.write(f"apply overwrites: loom pack {cmd} {pack_id} --force\n")
+
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     raw_argv = list(argv) if argv is not None else sys.argv[1:]
@@ -285,7 +285,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             sys.stdout.write("note: commit .loom/pack/lock.json\n")
             drifted = len(list(res.drifted or []))
             if drifted and not want_diff:
-                _print_drift_guidance(cmd="install", pack_id=str(args.pack_id), drifted_count=drifted)
+                _print_drift_guidance(
+                    cmd="install", pack_id=str(args.pack_id), drifted_count=drifted
+                )
             if want_diff and drifted:
                 sys.stdout.write("\n")
                 for it in diffs:
@@ -324,7 +326,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             sys.stdout.write("note: commit .loom/pack/lock.json\n")
             drifted = len(list(res.drifted or []))
             if drifted and not want_diff:
-                _print_drift_guidance(cmd="update", pack_id=str(args.pack_id), drifted_count=drifted)
+                _print_drift_guidance(
+                    cmd="update", pack_id=str(args.pack_id), drifted_count=drifted
+                )
             if want_diff and drifted:
                 sys.stdout.write("\n")
                 for it in diffs:
@@ -363,7 +367,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             sys.stdout.write("note: commit .loom/pack/lock.json\n")
             drifted = len(list(res.drifted or []))
             if drifted and not want_diff:
-                _print_drift_guidance(cmd="uninstall", pack_id=str(args.pack_id), drifted_count=drifted)
+                _print_drift_guidance(
+                    cmd="uninstall", pack_id=str(args.pack_id), drifted_count=drifted
+                )
             if want_diff and drifted:
                 sys.stdout.write("\n")
                 for it in diffs:

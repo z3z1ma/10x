@@ -21,6 +21,7 @@ from agent_loom.memory.constants import (
     STATUSES,
     VISIBILITIES,
 )
+from agent_loom.memory.errors import MemoryError
 from agent_loom.memory.frontmatter import (
     canonicalize_rfc3339_utc,
     dump_yaml_frontmatter,
@@ -28,7 +29,6 @@ from agent_loom.memory.frontmatter import (
 )
 from agent_loom.memory.models import Note, VaultPaths
 from agent_loom.memory.scopes import _validate_tags, normalize_scopes
-from agent_loom.memory.errors import MemoryError
 from agent_loom.memory.utils import now_iso, safe_mkdir, sha256_text
 
 

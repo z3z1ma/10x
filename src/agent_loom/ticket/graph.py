@@ -3,8 +3,8 @@ from __future__ import annotations
 import dataclasses
 from typing import Any, Dict, List, Mapping, Sequence, Tuple
 
-from agent_loom.ticket.frontmatter import normalize_list_value
 from agent_loom.ticket.constants import NON_TERMINAL_STATUSES
+from agent_loom.ticket.frontmatter import normalize_list_value
 from agent_loom.ticket.models import Ticket
 
 

@@ -4,7 +4,8 @@ import subprocess
 from pathlib import Path
 from typing import List, Optional
 
-from agent_loom.core.exec import ExecError, run as core_run
+from agent_loom.core.exec import ExecError
+from agent_loom.core.exec import run as core_run
 from agent_loom.workspace.errors import WorkspaceError
 
 

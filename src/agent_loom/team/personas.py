@@ -68,7 +68,12 @@ def spawn_persona(
     requested_member_id = str(member_id or "").strip()
     if not requested_member_id:
         raise TeamError("Missing member_id", code="ARG", exit_code=2)
-    if requested_member_id in {ROLE_MANAGER, ROLE_WORKER, ROLE_ARCHITECT, ROLE_INTEGRATOR}:
+    if requested_member_id in {
+        ROLE_MANAGER,
+        ROLE_WORKER,
+        ROLE_ARCHITECT,
+        ROLE_INTEGRATOR,
+    }:
         raise TeamError(
             f"Cannot spawn built-in role via spawn-persona: {requested_member_id}",
             code="ARG",
@@ -119,7 +124,9 @@ def spawn_persona(
             )
 
         workspace, workspace_key = _workspace_for_always_on_profile(profile)
-        persona_harness = _normalize_harness(str(profile.harness or "") or harness_default)
+        persona_harness = _normalize_harness(
+            str(profile.harness or "") or harness_default
+        )
         cfg = (
             (run.get(persona_harness) or {})
             if isinstance(run.get(persona_harness), dict)
@@ -219,9 +226,17 @@ def spawn_persona(
         pane_id = ""
         window = existing_window
 
-        if window and not bool(existing.get("retired")) and tmux_window_exists(session, window):
+        if (
+            window
+            and not bool(existing.get("retired"))
+            and tmux_window_exists(session, window)
+        ):
             pane_id = tmux_format(f"{session}:{window}", "#{pane_id}")
-            workers[requested_member_id] = {**existing, "pane_id": pane_id, "retired": False}
+            workers[requested_member_id] = {
+                **existing,
+                "pane_id": pane_id,
+                "retired": False,
+            }
             run["workers"] = workers
             return SpawnPersonaResult(
                 team=str(run.get("team") or paths.team),

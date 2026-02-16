@@ -6,8 +6,8 @@ import platform
 from pathlib import Path
 from typing import Any
 
-from agent_loom.core.io import atomic_write_json, read_json
 from agent_loom.core.fs import fs_escape
+from agent_loom.core.io import atomic_write_json, read_json
 from agent_loom.core.time import now_iso, parse_duration_seconds
 from agent_loom.workspace.constants import HARNESS_DIR, INTERNAL_DIR, REPO_INTERNAL_DIR
 from agent_loom.workspace.errors import WorkspaceError

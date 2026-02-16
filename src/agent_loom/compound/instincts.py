@@ -197,7 +197,9 @@ def _load_legacy_json(file_path: Path) -> list[Instinct]:
             continue
         tags = [_slug(str(t)) for t in list(it.get("tags") or []) if str(t).strip()]
         status_raw = str(it.get("status") or "active").strip().lower()
-        status: InstinctStatus = "deprecated" if status_raw == "deprecated" else "active"
+        status: InstinctStatus = (
+            "deprecated" if status_raw == "deprecated" else "active"
+        )
         out.append(
             Instinct(
                 id=_slug(str(it.get("id") or "")),
@@ -242,7 +244,9 @@ def load_instincts(file_path: Path) -> InstinctStore:
         if str(existing.source or "") != "local" and str(inst.source or "") == "local":
             by_id[inst.id] = inst
             continue
-        if str(existing.source or "") == str(inst.source or "") and str(inst.updated_at or "") > str(existing.updated_at or ""):
+        if str(existing.source or "") == str(inst.source or "") and str(
+            inst.updated_at or ""
+        ) > str(existing.updated_at or ""):
             by_id[inst.id] = inst
 
     resolved = list(by_id.values())

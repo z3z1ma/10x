@@ -4,6 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 from typing import Any
+
 from agent_loom.core.cli_output import emit_json, normalize_payload
 from agent_loom.core.time import now_iso
 from agent_loom.workspace.core import (
@@ -21,7 +22,6 @@ from agent_loom.workspace.core import (
     sync,
 )
 from agent_loom.workspace.guards import harness_root
-
 
 workspace_root = harness_root
 
@@ -66,9 +66,7 @@ def _cmd_name(args: argparse.Namespace) -> str:
     return cmd
 
 
-def emit_ok(
-    args: argparse.Namespace, root: Path, data: Any = None
-) -> None:
+def emit_ok(args: argparse.Namespace, root: Path, data: Any = None) -> None:
     emit_json(
         {
             "ok": True,
@@ -94,6 +92,7 @@ def emit_result(args: argparse.Namespace, root: Path, result: Any) -> None:
         return
 
     from agent_loom.workspace.cli import _render_text
+
     sys.stdout.write(_render_text(result))
 
 

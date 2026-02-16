@@ -3,7 +3,6 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 from typing import Callable, Sequence, TypeVar
 
-
 T = TypeVar("T")
 R = TypeVar("R")
 

@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, Optional, Sequence
 
 from agent_loom.core.cli_output import emit_json, normalize_payload
-
 from agent_loom.core.time import now_iso
 from agent_loom.workspace.commands.core import (
     cmd_add,
@@ -95,13 +94,17 @@ from agent_loom.workspace.commands.worktree import (
 )
 from agent_loom.workspace.constants import REPO_INTERNAL_DIR
 from agent_loom.workspace.errors import WorkspaceError
+from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.models import (
     AddRepoResult,
     BranchResult,
+    ComponentsRefreshIndexResult,
     ContextResult,
     DeepenResult,
     DepsShowResult,
     DepsWhoUsesResult,
+    HarnessExecResult,
+    HarnessInitResult,
     ImpactResult,
     LeaseAcquireResult,
     LeaseListResult,
@@ -110,8 +113,6 @@ from agent_loom.workspace.models import (
     LeaseShowResult,
     ListReposResult,
     MergeAttemptResult,
-    HarnessInitResult,
-    HarnessExecResult,
     PrimeResult,
     RemoveRepoResult,
     RepoInitResult,
@@ -121,27 +122,25 @@ from agent_loom.workspace.models import (
     RepoWorktreeListResult,
     RepoWorktreePruneResult,
     RepoWorktreeRemoveResult,
-    ComponentsRefreshIndexResult,
-    SnapshotResult,
     SnapshotDiffResult,
     SnapshotRestoreResult,
+    SnapshotResult,
     StatusResult,
     SyncResult,
     WorktreeAddResult,
     WorktreeDiffResult,
-    WorktreeGcResult,
     WorktreeEnsureResult,
+    WorktreeGcResult,
     WorktreeGroupDiffResult,
     WorktreeGroupRemoveResult,
     WorktreeListResult,
     WorktreePushResult,
     WorktreeRebaseResult,
 )
-from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.repo.core import repo_root
 
-
 workspace_root = harness_root
+
 
 def _cmd_name(args: argparse.Namespace) -> str:
     top = getattr(args, "cmd", "") or ""
@@ -181,8 +180,6 @@ def _cmd_name(args: argparse.Namespace) -> str:
     elif cmd == "merge":
         cmd = f"merge {getattr(args, 'merge_cmd', '')}".strip()
     return cmd
-
-
 
 
 def emit_ok(args: argparse.Namespace, root: Path, data: Any = None) -> None:
@@ -756,7 +753,6 @@ def emit_result(args: argparse.Namespace, root: Path, result: Any) -> None:
         return
 
     sys.stdout.write(_render_text(result))
-
 
 
 def _add_harness_parser(

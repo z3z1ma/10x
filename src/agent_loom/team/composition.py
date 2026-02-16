@@ -7,7 +7,13 @@ from typing import Any, Dict, Mapping, Tuple
 
 import yaml
 
-from agent_loom.team.constants import DEFAULT_HARNESS, ROLE_ARCHITECT, ROLE_INTEGRATOR, ROLE_MANAGER, ROLE_WORKER
+from agent_loom.team.constants import (
+    DEFAULT_HARNESS,
+    ROLE_ARCHITECT,
+    ROLE_INTEGRATOR,
+    ROLE_MANAGER,
+    ROLE_WORKER,
+)
 from agent_loom.team.errors import TeamError
 
 SCHEMA_VERSION = 3
@@ -41,7 +47,6 @@ class CompositionMetadata:
         if self.labels:
             out["labels"] = list(self.labels)
         return out
-
 
 
 @dataclass(frozen=True)
@@ -94,7 +99,6 @@ class TeamMember:
         return out
 
 
-
 @dataclass(frozen=True)
 class CommunicationRoute:
     from_role: str
@@ -111,6 +115,7 @@ class CommunicationRoute:
 class CommunicationPolicy:
     routes: Tuple[CommunicationRoute, ...]
     broadcast_groups: Tuple[Tuple[str, Tuple[str, ...]], ...]
+
     def as_dict(self) -> Dict[str, Any]:
         data: Dict[str, Any] = {}
         if self.routes:
@@ -121,6 +126,7 @@ class CommunicationPolicy:
             }
         return data
 
+
 @dataclass(frozen=True)
 class TeamComposition:
     version: int
@@ -129,6 +135,7 @@ class TeamComposition:
     builtins: Tuple[BuiltinMember, ...]
     members: Tuple[TeamMember, ...]
     communication: CommunicationPolicy | None
+
     def as_dict(self) -> Dict[str, Any]:
         data: Dict[str, Any] = {
             "version": self.version,
@@ -147,6 +154,7 @@ class TeamComposition:
                 data["communication"] = comm
         return data
 
+
 def parse_team_roster_yaml(text: str, *, source: str = "<string>") -> TeamComposition:
     try:
         raw_doc = yaml.safe_load(text)
@@ -154,9 +162,13 @@ def parse_team_roster_yaml(text: str, *, source: str = "<string>") -> TeamCompos
         raise TeamCompositionError(f"{source}: invalid YAML: {e}") from e
 
     if raw_doc is None:
-        raise TeamCompositionError(f"{source}: expected a YAML mapping/object at top level")
+        raise TeamCompositionError(
+            f"{source}: expected a YAML mapping/object at top level"
+        )
     if not isinstance(raw_doc, dict):
-        raise TeamCompositionError(f"{source}: expected a YAML mapping/object at top level")
+        raise TeamCompositionError(
+            f"{source}: expected a YAML mapping/object at top level"
+        )
 
     root = _expect_mapping(f"{source}", raw_doc)
     _require_keys(f"{source}", root, {"version", "builtins"})
@@ -247,9 +259,6 @@ def _parse_mounts(raw: Any, *, source: str) -> Tuple[str, ...]:
     return tuple(sorted(set(specs)))
 
 
-
-
-
 def _parse_metadata(raw: Any, *, source: str) -> CompositionMetadata:
     if raw is None:
         return CompositionMetadata(name="", purpose="", labels=())
@@ -258,9 +267,12 @@ def _parse_metadata(raw: Any, *, source: str) -> CompositionMetadata:
 
     name = _expect_optional_str(f"{source}.metadata.name", obj.get("name"))
     purpose = _expect_optional_str(f"{source}.metadata.purpose", obj.get("purpose"))
-    labels = _expect_str_list(f"{source}.metadata.labels", obj.get("labels"), default=())
-    return CompositionMetadata(name=name, purpose=purpose, labels=tuple(sorted(set(labels))))
-
+    labels = _expect_str_list(
+        f"{source}.metadata.labels", obj.get("labels"), default=()
+    )
+    return CompositionMetadata(
+        name=name, purpose=purpose, labels=tuple(sorted(set(labels)))
+    )
 
 
 def _parse_builtins(raw: Any, *, source: str) -> Tuple[BuiltinMember, ...]:
@@ -283,7 +295,9 @@ def _parse_builtins(raw: Any, *, source: str) -> Tuple[BuiltinMember, ...]:
         )
         agent = _expect_nonempty_str(f"{path}.agent", spec.get("agent"))
         model = _expect_optional_str(f"{path}.model", spec.get("model"))
-        builtins.append(BuiltinMember(role=role, harness=harness, agent=agent, model=model))
+        builtins.append(
+            BuiltinMember(role=role, harness=harness, agent=agent, model=model)
+        )
 
     return tuple(builtins)
 
@@ -348,7 +362,9 @@ def _parse_members(raw: Any, *, source: str) -> Tuple[TeamMember, ...]:
             _MEMBER_WORKSPACES,
             default="repo_root",
         )
-        description = _expect_optional_str(f"{path}.description", obj.get("description"))
+        description = _expect_optional_str(
+            f"{path}.description", obj.get("description")
+        )
         triggers = _expect_str_list(f"{path}.triggers", obj.get("triggers"), default=())
         primary_workflows = _expect_str_list(
             f"{path}.primary_workflows",
@@ -372,7 +388,6 @@ def _parse_members(raw: Any, *, source: str) -> Tuple[TeamMember, ...]:
         )
 
     return tuple(members)
-
 
 
 def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy | None:
@@ -401,7 +416,9 @@ def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy | None
                 )
             to_items = _expect_str_list(f"{path}.to", route_obj.get("to"), default=())
             if not to_items:
-                raise TeamCompositionError(f"{path}.to: must include at least one target")
+                raise TeamCompositionError(
+                    f"{path}.to: must include at least one target"
+                )
             normalized_to: list[str] = []
             for target_idx, raw_target in enumerate(to_items):
                 normalized_to.append(
@@ -411,12 +428,16 @@ def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy | None
                     )
                 )
             routes.append(
-                CommunicationRoute(from_role=from_role, to=tuple(sorted(set(normalized_to))))
+                CommunicationRoute(
+                    from_role=from_role, to=tuple(sorted(set(normalized_to)))
+                )
             )
     group_items: list[Tuple[str, Tuple[str, ...]]] = []
     groups_raw = obj.get("broadcast_groups")
     if groups_raw is not None:
-        groups_obj = _expect_mapping(f"{source}.communication.broadcast_groups", groups_raw)
+        groups_obj = _expect_mapping(
+            f"{source}.communication.broadcast_groups", groups_raw
+        )
         for raw_group_name in sorted(groups_obj.keys(), key=str):
             group_name = _expect_group_name(
                 f"{source}.communication.broadcast_groups.<key>",
@@ -446,6 +467,7 @@ def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy | None
         routes=tuple(sorted(routes, key=lambda x: x.from_role)),
         broadcast_groups=tuple(sorted(group_items, key=lambda x: x[0])),
     )
+
 
 def _normalize_target_token(path: str, raw: str) -> str:
     token = _expect_nonempty_str(path, raw).lower()
@@ -522,11 +544,15 @@ def _expect_enum(path: str, raw: Any, allowed: set[str]) -> str:
     value = _expect_nonempty_str(path, raw)
     if value not in allowed:
         opts = ", ".join(sorted(allowed))
-        raise TeamCompositionError(f"{path}: invalid value {value!r}; expected one of: {opts}")
+        raise TeamCompositionError(
+            f"{path}: invalid value {value!r}; expected one of: {opts}"
+        )
     return value
 
 
-def _expect_optional_enum(path: str, raw: Any, allowed: set[str], *, default: str) -> str:
+def _expect_optional_enum(
+    path: str, raw: Any, allowed: set[str], *, default: str
+) -> str:
     if raw is None:
         return default
     return _expect_enum(path, raw, allowed)
@@ -581,7 +607,9 @@ def _expect_str_list(path: str, raw: Any, *, default: Tuple[str, ...]) -> list[s
 def _require_keys(path: str, obj: Mapping[str, Any], required: set[str]) -> None:
     missing = sorted(k for k in required if k not in obj)
     if missing:
-        raise TeamCompositionError(f"{path}: missing required key(s): {', '.join(missing)}")
+        raise TeamCompositionError(
+            f"{path}: missing required key(s): {', '.join(missing)}"
+        )
 
 
 def _reject_unknown_keys(path: str, obj: Mapping[str, Any], allowed: set[str]) -> None:

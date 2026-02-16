@@ -15,7 +15,6 @@ from agent_loom.compound.engine import InstinctsUpdateResult, run_instincts_upda
 from agent_loom.compound.paths import compound_paths
 
 
-
 def _pid_alive(pid: int) -> bool:
     if pid <= 0:
         return False
@@ -181,9 +180,13 @@ def observer_status(*, repo: Path) -> ObserverStatusResult:
     nudge_mtime = ""
     if paths.observer_nudge_file.exists():
         try:
-            nudge_mtime = datetime.fromtimestamp(
-                paths.observer_nudge_file.stat().st_mtime, tz=timezone.utc
-            ).isoformat().replace("+00:00", "Z")
+            nudge_mtime = (
+                datetime.fromtimestamp(
+                    paths.observer_nudge_file.stat().st_mtime, tz=timezone.utc
+                )
+                .isoformat()
+                .replace("+00:00", "Z")
+            )
         except Exception:
             nudge_mtime = ""
 

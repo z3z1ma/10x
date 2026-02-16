@@ -1,22 +1,19 @@
 from __future__ import annotations
 
 from agent_loom.team.cli import main as cli
-from agent_loom.team.prime import prime
 from agent_loom.team.core import (
-    init_agents,
     attach,
     bounce,
     capture,
     disband,
-    pause_team,
     done,
     inbox_ack,
     inbox_list,
     inbox_send,
     inbox_show,
+    init_agents,
     janitor,
     mark_retirable,
-    prep_sprint,
     merge_done,
     merge_enqueue,
     merge_list,
@@ -24,9 +21,11 @@ from agent_loom.team.core import (
     objective_append,
     objective_set,
     objective_show,
-    retire,
+    pause_team,
+    prep_sprint,
     resume_team,
     resume_worker,
+    retire,
     send,
     ship,
     spawn,
@@ -36,6 +35,7 @@ from agent_loom.team.core import (
     tui,
     wait,
 )
+from agent_loom.team.prime import prime
 
 __all__ = [
     "cli",

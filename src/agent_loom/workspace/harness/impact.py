@@ -7,10 +7,10 @@ from typing import List, Optional, Sequence
 from agent_loom.core.io import read_json
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.guards import harness_root
-from agent_loom.workspace.models import ImpactResult
 from agent_loom.workspace.harness.components import components_index_path
-from agent_loom.workspace.state import load_workspace
 from agent_loom.workspace.harness.core import snapshot_diff
+from agent_loom.workspace.models import ImpactResult
+from agent_loom.workspace.state import load_workspace
 
 
 def _neighbors(idx: dict, svc: str, key: str) -> List[str]:

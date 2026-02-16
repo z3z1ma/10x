@@ -62,7 +62,9 @@ def load_state(path: Path) -> CompoundState:
         return CompoundState(
             version=3,
             observations_offset_bytes=int(parsed.get("observations_offset_bytes") or 0),
-            observations_prefix_sha256=str(parsed.get("observations_prefix_sha256") or ""),
+            observations_prefix_sha256=str(
+                parsed.get("observations_prefix_sha256") or ""
+            ),
             observations_count=int(parsed.get("observations_count") or 0),
             observations_tail_sha256=str(parsed.get("observations_tail_sha256") or ""),
             last_auto_run_at="",

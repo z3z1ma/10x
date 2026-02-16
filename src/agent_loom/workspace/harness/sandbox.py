@@ -4,12 +4,12 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
+from agent_loom.core.io import atomic_write_json, read_json
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.guards import harness_root
-from agent_loom.workspace.harness.core import worktree_rm, worktree_add
-from agent_loom.core.io import atomic_write_json, read_json
-from agent_loom.workspace.lifecycle import meta_is_expired
+from agent_loom.workspace.harness.core import worktree_add, worktree_rm
 from agent_loom.workspace.harness.leases import lease_is_active, lease_path
+from agent_loom.workspace.lifecycle import meta_is_expired
 from agent_loom.workspace.worktree_meta import (
     harness_group_annotate,
     harness_group_meta_dir,

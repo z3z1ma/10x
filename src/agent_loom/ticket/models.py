@@ -66,6 +66,7 @@ class TicketSprintContextResult:
     name: str
     tag: str
 
+
 @dataclasses.dataclass(frozen=True)
 class TicketCreateResult:
     id: str

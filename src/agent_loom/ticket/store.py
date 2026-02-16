@@ -22,6 +22,7 @@ from agent_loom.ticket.constants import (
     LOCKS_DIRNAME,
     VALID_STATUSES,
 )
+from agent_loom.ticket.errors import TicketArgError, TicketNotFoundError
 from agent_loom.ticket.frontmatter import (
     dump_frontmatter,
     normalize_list_value,
@@ -34,7 +35,6 @@ from agent_loom.ticket.normalize import (
     normalize_ticket_ref,
     normalize_type,
 )
-from agent_loom.ticket.errors import TicketArgError, TicketNotFoundError
 
 
 def sha256_hex(text: str) -> str:

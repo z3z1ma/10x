@@ -5,11 +5,11 @@ from pathlib import Path
 
 from agent_loom.workspace.core import (
     components_refresh_index,
-    services_refresh_index,
-    deps_show,
-    deps_who_uses,
     deps_closure,
     deps_impacted,
+    deps_show,
+    deps_who_uses,
+    services_refresh_index,
 )
 from agent_loom.workspace.guards import harness_root
 

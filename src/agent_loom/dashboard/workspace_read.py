@@ -7,6 +7,8 @@ from agent_loom.core.concurrent import parallel_map
 from agent_loom.core.fs import fs_unescape
 from agent_loom.core.git import is_git_repo
 from agent_loom.core.io import read_json
+from agent_loom.workspace.git.core import git_is_dirty, git_worktree_list_porcelain
+from agent_loom.workspace.git.diff import worktree_diff_by_file
 from agent_loom.workspace.guards import harness_context
 from agent_loom.workspace.repo.core import repo_root as repo_root_fn
 from agent_loom.workspace.state import (
@@ -16,9 +18,6 @@ from agent_loom.workspace.state import (
     ws_components_dir,
     ws_worktrees_dir,
 )
-from agent_loom.workspace.git.core import git_is_dirty, git_worktree_list_porcelain
-
-from agent_loom.workspace.git.diff import worktree_diff_by_file
 
 
 class WorkspaceReadError(RuntimeError):

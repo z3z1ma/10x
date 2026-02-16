@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional
 from agent_loom.core.fs import fs_unescape
 from agent_loom.core.git import is_git_repo
 from agent_loom.core.io import read_json
+from agent_loom.workspace.constants import HARNESS_DIR, INTERNAL_DIR
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.git.core import (
     git_is_dirty,
@@ -14,9 +15,8 @@ from agent_loom.workspace.git.core import (
     git_worktree_remove_from,
 )
 from agent_loom.workspace.guards import harness_root
-from agent_loom.workspace.models import WorktreeGcResult
 from agent_loom.workspace.harness.leases import lease_is_active, lease_path
-from agent_loom.workspace.constants import HARNESS_DIR, INTERNAL_DIR
+from agent_loom.workspace.models import WorktreeGcResult
 from agent_loom.workspace.state import (
     load_workspace,
     worktrees_base,

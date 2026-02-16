@@ -8,8 +8,8 @@ import sys
 from pathlib import Path
 
 from agent_loom.team.constants import (
-    DEFAULT_INTEGRATOR_AGENT,
     DEFAULT_ARCHITECT_AGENT,
+    DEFAULT_INTEGRATOR_AGENT,
     DEFAULT_MANAGER_AGENT,
     DEFAULT_WORKER_AGENT,
     ENV_TICKET_DIR,
@@ -41,7 +41,11 @@ def _maybe_worktree_root(invoked_from: Path) -> Path | None:
 
 
 def emit_json_result(result: object) -> None:
-    from agent_loom.core.cli_output import emit_json, make_ok_envelope, normalize_payload
+    from agent_loom.core.cli_output import (
+        emit_json,
+        make_ok_envelope,
+        normalize_payload,
+    )
 
     emit_json(make_ok_envelope(normalize_payload(result)), indent=2)
 

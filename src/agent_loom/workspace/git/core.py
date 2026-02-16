@@ -3,10 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List, Optional
 
-from agent_loom.core.exec import ExecError
-from agent_loom.core.exec import which
-from agent_loom.core.fs import ensure_dir
 from agent_loom.core import git as core_git
+from agent_loom.core.exec import ExecError, which
+from agent_loom.core.fs import ensure_dir
 from agent_loom.core.git import is_git_repo
 from agent_loom.workspace.constants import (
     DEFAULT_DEFAULT_BRANCH,

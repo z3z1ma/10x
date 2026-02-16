@@ -50,6 +50,7 @@ from agent_loom.memory.frontmatter import (
     dump_yaml_frontmatter,
     split_yaml_frontmatter,
 )
+from agent_loom.memory.hydrate import hydrate_wikilinks
 from agent_loom.memory.index import (
     compute_link_diagnostics,
     connect_db,
@@ -85,10 +86,9 @@ from agent_loom.memory.models import (
     VaultPaths,
 )
 from agent_loom.memory.recall import around_notes as around_impl
-from agent_loom.memory.recall import default_visibility_from_env
+from agent_loom.memory.recall import default_visibility_from_env, parse_multi_csvish
 from agent_loom.memory.recall import grep_notes as grep_impl
 from agent_loom.memory.recall import list_notes as list_impl
-from agent_loom.memory.recall import parse_multi_csvish
 from agent_loom.memory.recall import recall as recall_impl
 from agent_loom.memory.recall import suggest_links as suggest_links_impl
 from agent_loom.memory.recall import timeline as timeline_impl
@@ -100,7 +100,6 @@ from agent_loom.memory.scopes import (
     validate_file_scopes_exist,
 )
 from agent_loom.memory.utils import format_json, now_iso, safe_mkdir
-from agent_loom.memory.hydrate import hydrate_wikilinks
 from agent_loom.memory.vault import (
     choose_base_dir,
     edit_text_in_editor,

@@ -17,7 +17,11 @@ from agent_loom.team.core import (
 
 
 def emit_json_result(result: object) -> None:
-    from agent_loom.core.cli_output import emit_json, make_ok_envelope, normalize_payload
+    from agent_loom.core.cli_output import (
+        emit_json,
+        make_ok_envelope,
+        normalize_payload,
+    )
 
     emit_json(make_ok_envelope(normalize_payload(result)), indent=2)
 
@@ -72,7 +76,6 @@ def cmd_spawn_integrator(args: argparse.Namespace) -> None:
     print(res.worker_id)
 
 
-
 def cmd_spawn_persona(args: argparse.Namespace) -> None:
     res = spawn_persona(
         team=args.team,
@@ -86,6 +89,7 @@ def cmd_spawn_persona(args: argparse.Namespace) -> None:
     print(f"spawned {res.member_id} ({res.role})")
     print(f"- window: {res.window}")
     print(f"- worktree: {res.worktree}")
+
 
 def cmd_retire(args: argparse.Namespace) -> None:
     res = retire(

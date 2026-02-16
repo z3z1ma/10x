@@ -37,10 +37,25 @@ class HookLimits:
 
 def _limits_from_env() -> HookLimits:
     return HookLimits(
-        max_bytes=max(4096, int(os.environ.get("COMPOUND_OBSERVATIONS_MAX_BYTES", "33554432") or 33554432)),
-        max_backups=max(0, int(os.environ.get("COMPOUND_OBSERVATIONS_MAX_BACKUPS", "5") or 5)),
-        max_string_chars=max(64, int(os.environ.get("COMPOUND_OBSERVATIONS_MAX_STRING_CHARS", "2000") or 2000)),
-        max_object_keys=max(1, int(os.environ.get("COMPOUND_OBSERVATIONS_MAX_OBJECT_KEYS", "50") or 50)),
+        max_bytes=max(
+            4096,
+            int(
+                os.environ.get("COMPOUND_OBSERVATIONS_MAX_BYTES", "33554432")
+                or 33554432
+            ),
+        ),
+        max_backups=max(
+            0, int(os.environ.get("COMPOUND_OBSERVATIONS_MAX_BACKUPS", "5") or 5)
+        ),
+        max_string_chars=max(
+            64,
+            int(
+                os.environ.get("COMPOUND_OBSERVATIONS_MAX_STRING_CHARS", "2000") or 2000
+            ),
+        ),
+        max_object_keys=max(
+            1, int(os.environ.get("COMPOUND_OBSERVATIONS_MAX_OBJECT_KEYS", "50") or 50)
+        ),
     )
 
 
@@ -239,7 +254,13 @@ def _command_signature(cmd: str, *, max_len: int) -> str:
 
 
 def _normalized_observation(
-    payload: dict[str, Any], *, event_name: str, canonical_event: str, cwd: str, harness: str, limits: HookLimits
+    payload: dict[str, Any],
+    *,
+    event_name: str,
+    canonical_event: str,
+    cwd: str,
+    harness: str,
+    limits: HookLimits,
 ) -> dict[str, Any]:
     tool_name = str(payload.get("tool_name") or "").strip()
     tool_input = (
@@ -265,7 +286,8 @@ def _normalized_observation(
         )
         if tool_name.lower() in {"bash", "shell"}:
             sig = _command_signature(
-                str(tool_input.get("command") or ""), max_len=min(280, int(limits.max_string_chars))
+                str(tool_input.get("command") or ""),
+                max_len=min(280, int(limits.max_string_chars)),
             )
             if sig:
                 obs["command"] = sig
@@ -300,7 +322,9 @@ def _normalized_observation(
             "permission_mode": payload.get("permission_mode"),
             "source": payload.get("source"),
             "transcript_path": payload.get("transcript_path"),
-            "prompt_excerpt": _scrub_string(_truncate(prompt, 800), max_len=min(800, int(limits.max_string_chars)))
+            "prompt_excerpt": _scrub_string(
+                _truncate(prompt, 800), max_len=min(800, int(limits.max_string_chars))
+            )
             if prompt
             else "",
             "prompt_len": len(prompt) if prompt else 0,
@@ -345,7 +369,9 @@ def _run_hook_adapter(
     event_name = str(event or payload.get("hook_event_name") or "").strip() or "unknown"
     harness_name = str(harness or "unknown").strip() or "unknown"
 
-    log_observations = (str(os.environ.get("COMPOUND_LOG_OBSERVATIONS", "1")).strip() or "1") != "0"
+    log_observations = (
+        str(os.environ.get("COMPOUND_LOG_OBSERVATIONS", "1")).strip() or "1"
+    ) != "0"
     if log_observations:
         limits = _limits_from_env()
         paths = compound_paths(repo)

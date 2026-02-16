@@ -9,8 +9,8 @@ from agent_loom.core.git import is_git_repo
 from agent_loom.workspace.errors import WorkspaceError
 from agent_loom.workspace.git.core import git_is_dirty, require_git
 from agent_loom.workspace.guards import harness_root
-from agent_loom.workspace.models import HarnessExecResult
 from agent_loom.workspace.harness.selection import harness_resolve_repo_names
+from agent_loom.workspace.models import HarnessExecResult
 from agent_loom.workspace.state import (
     iter_repos,
     load_workspace,

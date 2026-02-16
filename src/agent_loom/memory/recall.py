@@ -10,11 +10,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from agent_loom.memory.constants import RE_WORD, SCHEMA_VERSION, SCOPE_KIND_KEY
+from agent_loom.memory.errors import MemoryError
 from agent_loom.memory.frontmatter import (
     canonicalize_rfc3339_utc,
     split_yaml_frontmatter,
 )
-from agent_loom.memory.errors import MemoryError
 from agent_loom.memory.index import (
     connect_db,
     db_init,

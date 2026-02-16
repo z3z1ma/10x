@@ -16,17 +16,21 @@ Workspace library + CLI (loom).
 
 from __future__ import annotations
 
+from agent_loom.workspace.harness.cleanup import (
+    harness_cleanup_apply,
+    harness_cleanup_suggest,
+)
 from agent_loom.workspace.harness.core import (
     add_repo,
     branch,
+    components_refresh_index,
     context,
     deepen,
     deps_show,
     deps_who_uses,
-    list_repos,
     harness_init,
+    list_repos,
     remove_repo,
-    components_refresh_index,
     services_refresh_index,
     snapshot,
     snapshot_diff,
@@ -44,17 +48,13 @@ from agent_loom.workspace.harness.core import (
     worktree_rebase,
     worktree_rm,
 )
-from agent_loom.workspace.harness.exec import harness_exec
-from agent_loom.workspace.harness.cleanup import (
-    harness_cleanup_apply,
-    harness_cleanup_suggest,
-)
 from agent_loom.workspace.harness.deps import deps_closure, deps_impacted
+from agent_loom.workspace.harness.exec import harness_exec
+from agent_loom.workspace.harness.gc import worktree_gc
 from agent_loom.workspace.harness.impact import (
     harness_impact_repos,
     harness_impact_snapshot,
 )
-from agent_loom.workspace.harness.gc import worktree_gc
 from agent_loom.workspace.harness.leases import (
     lease_acquire,
     lease_is_active,
@@ -73,13 +73,13 @@ from agent_loom.workspace.harness.meta import (
 )
 from agent_loom.workspace.prime import prime
 from agent_loom.workspace.repo.core import (
-    repo_merge_attempt,
     repo_init,
+    repo_merge_attempt,
     repo_root,
-    repo_status,
     repo_snapshot_capture,
     repo_snapshot_diff,
     repo_snapshot_restore,
+    repo_status,
     repo_worktree_add,
     repo_worktree_check_clean,
     repo_worktree_check_divergence,

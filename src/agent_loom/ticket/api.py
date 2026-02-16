@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Any, List, Optional, Sequence
 
 from agent_loom.core.git import git_checked, git_repo_root, git_scoped_commit
+from agent_loom.ticket.constants import STATUS_ORDER, TICKET_DIRNAME, VALID_STATUSES
+from agent_loom.ticket.core import create_in_dir, default_agent_id
+from agent_loom.ticket.errors import TicketArgError
 from agent_loom.ticket.frontmatter import decanonicalize_frontmatter
 from agent_loom.ticket.graph import (
     blockers_for,
@@ -16,33 +19,29 @@ from agent_loom.ticket.graph import (
 )
 from agent_loom.ticket.models import (
     GitStatusEntry,
-    TicketListResult,
-    TicketSummary,
-    TicketDetails,
+    TicketCreateResult,
     TicketDepResult,
+    TicketDetails,
     TicketGraph,
     TicketGraphEdge,
     TicketHealth,
+    TicketListResult,
     TicketRelationships,
     TicketShowResult,
+    TicketSummary,
+    TicketSwarmAgent,
+    TicketSwarmResult,
     TicketSyncResult,
     TicketUpdateResult,
     TicketViewResult,
-    TicketSwarmAgent,
-    TicketSwarmResult,
 )
-from agent_loom.ticket.core import create_in_dir
-from agent_loom.ticket.models import TicketCreateResult
+from agent_loom.ticket.normalize import normalize_status
 from agent_loom.ticket.store import (
     TicketStore,
     active_claimed_by,
     effective_lease,
     write_guard,
 )
-from agent_loom.ticket.errors import TicketArgError
-from agent_loom.ticket.normalize import normalize_status
-from agent_loom.ticket.constants import STATUS_ORDER, TICKET_DIRNAME, VALID_STATUSES
-from agent_loom.ticket.core import default_agent_id
 
 
 def show(*, ticket_id: str, tickets_dir: Path) -> TicketShowResult:
@@ -140,7 +139,7 @@ def dep(*, ticket_id: str, tickets_dir: Path) -> TicketDepResult:
 
 
 def swarm(*, tickets_dir: Path, active_within: str = "2h") -> TicketSwarmResult:
-    from agent_loom.core.time import parse_duration, utcnow, isoformat_z
+    from agent_loom.core.time import isoformat_z, parse_duration, utcnow
     from agent_loom.ticket.store import claim_state
 
     store = TicketStore(tickets_dir)

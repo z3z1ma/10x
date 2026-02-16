@@ -4,9 +4,9 @@ import sys
 from typing import Optional, Sequence
 
 from agent_loom.compound.cli import main as compound_main
-from agent_loom.pack.cli import main as pack_main
-from agent_loom.memory.cli import main as memory_main
 from agent_loom.dashboard.cli import main as dashboard_main
+from agent_loom.memory.cli import main as memory_main
+from agent_loom.pack.cli import main as pack_main
 from agent_loom.team.cli import main as team_main
 from agent_loom.ticket.cli import main as ticket_main
 from agent_loom.workspace.cli import main as workspace_main

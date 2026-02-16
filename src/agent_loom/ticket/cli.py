@@ -11,10 +11,9 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any, NoReturn, Optional, Sequence
 
-from agent_loom.core.cli_output import emit_json, make_error_envelope, make_ok_envelope
-
 import yaml
 
+from agent_loom.core.cli_output import emit_json, make_error_envelope, make_ok_envelope
 from agent_loom.core.git import git_repo_root
 from agent_loom.core.time import utcnow
 from agent_loom.ticket.constants import (
@@ -59,13 +58,13 @@ from agent_loom.ticket.core import (
     version,
     view,
 )
+from agent_loom.ticket.errors import TicketArgError, TicketUserErrorMixin
 from agent_loom.ticket.models import TicketListResult, TicketShowResult
 from agent_loom.ticket.normalize import (
     normalize_priority,
     normalize_status,
     normalize_ticket_ref,
 )
-from agent_loom.ticket.errors import TicketArgError, TicketUserErrorMixin
 from agent_loom.ticket.store import AuditLogger, LockError, TicketStore
 
 
@@ -159,6 +158,8 @@ def _emit_error(
         )
         emit_json(envelope, minified=True)
         return
+
+
 _VALUE_FLAGS = {"-p", "-m", "-a", "-T", "-N"}
 _FLAG_ALIASES = {
     "--ticket-dir": "--tickets-dir",
@@ -208,8 +209,6 @@ def _did_you_mean(value: str, choices: Sequence[str]) -> list[str]:
     if not v:
         return []
     return difflib.get_close_matches(v, list(choices), n=3, cutoff=0.6)
-
-
 
 
 def _render_ticket_line(row: dict[str, Any]) -> str:
@@ -895,6 +894,7 @@ def _handle_sprint(args: argparse.Namespace, json_mode: bool, _cwd: Path) -> int
         else:
             sys.stdout.write("No sprint context set\n")
     return 0
+
 
 def _handle_list(args: argparse.Namespace, json_mode: bool, _cwd: Path) -> int:
     response = list_tickets(

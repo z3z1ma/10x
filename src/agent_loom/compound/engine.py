@@ -53,7 +53,6 @@ def _short(text: str, *, max_len: int) -> str:
     return s[: max_len - 3] + "..."
 
 
-
 def _observations_compact(
     observations: list[dict[str, Any]], *, max_rows: int
 ) -> list[dict[str, Any]]:
@@ -124,9 +123,7 @@ def _build_freeform_prompt(
         "Your job is to analyze observations and directly write/update instinct markdown files.\n\n"
         "CRITICAL EXECUTION RULES\n"
         "- Do not return JSON for parsing.\n"
-        "- Write files directly to: "
-        + str(paths.instincts_local_dir)
-        + "\n"
+        "- Write files directly to: " + str(paths.instincts_local_dir) + "\n"
         "- One instinct per file, filename: <id>.md\n"
         "- If no durable pattern is found, write nothing and exit successfully.\n"
         "- Be conservative: only create/update instincts with clear repeated evidence.\n\n"
@@ -161,18 +158,12 @@ def _build_freeform_prompt(
         "FORMAT REQUIREMENTS\n"
         "- Keep id stable for the same behavior. Update existing file instead of creating duplicates.\n"
         "- Preserve existing created_at when updating.\n"
-        "- Set updated_at to current run time. Current run time: "
-        + now_iso
-        + "\n"
+        "- Set updated_at to current run time. Current run time: " + now_iso + "\n"
         "- Use domain=workflow for repeated tool-sequence behaviors.\n"
         "- Confidence guidance: tentative 0.3-0.5, moderate 0.6-0.7, strong 0.8-0.9.\n"
         "- Never include secrets or raw sensitive content.\n\n"
-        "EXISTING INSTINCTS (JSON excerpt)\n"
-        + existing_json
-        + "\n\n"
-        "NEW OBSERVATIONS (JSON excerpt)\n"
-        + observations_json
-        + "\n"
+        "EXISTING INSTINCTS (JSON excerpt)\n" + existing_json + "\n\n"
+        "NEW OBSERVATIONS (JSON excerpt)\n" + observations_json + "\n"
     )
 
 
@@ -275,7 +266,9 @@ def _invoke_derivation_command(
 
 
 def _cooldown_seconds() -> int:
-    return max(0, int(os.environ.get("COMPOUND_INSTINCTS_COOLDOWN_SECONDS", "120") or 120))
+    return max(
+        0, int(os.environ.get("COMPOUND_INSTINCTS_COOLDOWN_SECONDS", "120") or 120)
+    )
 
 
 def _auto_cooldown_active(state: CompoundState) -> bool:
@@ -302,7 +295,9 @@ def _instinct_fingerprint(inst: Instinct) -> tuple[Any, ...]:
     )
 
 
-def _diff_instinct_stores(before: InstinctStore, after: InstinctStore) -> tuple[int, int]:
+def _diff_instinct_stores(
+    before: InstinctStore, after: InstinctStore
+) -> tuple[int, int]:
     before_by_id = {i.id: i for i in list(before.instincts or [])}
     after_by_id = {i.id: i for i in list(after.instincts or [])}
 

@@ -9,8 +9,6 @@ from importlib import resources
 from pathlib import Path
 from typing import Optional, Sequence
 
-from agent_loom.core.cli_output import emit_json
-
 from agent_loom.compound.evolve import evolve_instincts
 from agent_loom.compound.hooks import run_claude_hook, run_omp_hook, run_opencode_hook
 from agent_loom.compound.import_export import export_instincts, instinct_import
@@ -22,6 +20,7 @@ from agent_loom.compound.observer import (
     stop_observer,
 )
 from agent_loom.compound.sync import sync as compound_sync
+from agent_loom.core.cli_output import emit_json
 from agent_loom.core.git import git_repo_root
 from agent_loom.pack.diff import any_pack_diffs, diff_pack_files
 
@@ -33,8 +32,6 @@ class ArgParseError(RuntimeError):
 class CompoundArgumentParser(argparse.ArgumentParser):
     def error(self, message: str) -> None:  # noqa: D401
         raise ArgParseError(message)
-
-
 
 
 def _resolve_repo_root(repo: Optional[str]) -> Path:
@@ -62,7 +59,11 @@ def _infer_json(argv: Sequence[str]) -> bool:
 
 
 def _echo_claude_payload(payload_raw: str, stdin_text: str) -> None:
-    text = str(payload_raw or "") if str(payload_raw or "").strip() else str(stdin_text or "")
+    text = (
+        str(payload_raw or "")
+        if str(payload_raw or "").strip()
+        else str(stdin_text or "")
+    )
     text = text if str(text).strip() else "{}"
     sys.stdout.write(text)
     if not text.endswith("\n"):
@@ -93,9 +94,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Overwrite scaffold files (adapters, commands, and docs). Never overwrites skills or memory.",
     )
     init.add_argument(
-        "--diff",
-        action="store_true",
-        help="Show diffs for skipped pack files"
+        "--diff", action="store_true", help="Show diffs for skipped pack files"
     )
     init.add_argument(
         "--json",
@@ -176,7 +175,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Path inside repo (defaults to CWD; resolves git root)",
     )
-    instinct_status.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+    instinct_status.add_argument(
+        "--json", action="store_true", help="Emit machine-readable JSON"
+    )
 
     instinct_export = sub.add_parser(
         "instinct-export",
@@ -186,7 +187,9 @@ def build_parser() -> argparse.ArgumentParser:
     instinct_export.add_argument("--out", required=True, help="Output file path")
     instinct_export.add_argument("--min-confidence", type=float, default=0.0)
     instinct_export.add_argument("--domain", default="")
-    instinct_export.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+    instinct_export.add_argument(
+        "--json", action="store_true", help="Emit machine-readable JSON"
+    )
 
     instinct_import_cmd = sub.add_parser(
         "instinct-import",
@@ -197,7 +200,9 @@ def build_parser() -> argparse.ArgumentParser:
     instinct_import_cmd.add_argument("--dry-run", action="store_true")
     instinct_import_cmd.add_argument("--force", action="store_true")
     instinct_import_cmd.add_argument("--min-confidence", type=float, default=0.0)
-    instinct_import_cmd.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+    instinct_import_cmd.add_argument(
+        "--json", action="store_true", help="Emit machine-readable JSON"
+    )
 
     evolve = sub.add_parser(
         "evolve",
@@ -206,14 +211,20 @@ def build_parser() -> argparse.ArgumentParser:
     evolve.add_argument("--repo", default=None, help="Path inside repo")
     evolve.add_argument("--threshold", type=float, default=0.75)
     evolve.add_argument("--generate", action="store_true")
-    evolve.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+    evolve.add_argument(
+        "--json", action="store_true", help="Emit machine-readable JSON"
+    )
 
-    observer = sub.add_parser("observer", help="Manage the background instincts observer")
+    observer = sub.add_parser(
+        "observer", help="Manage the background instincts observer"
+    )
     observer_sub = observer.add_subparsers(dest="observer_cmd", required=True)
     for name in ["start", "stop", "status", "run-once"]:
         op = observer_sub.add_parser(name)
         op.add_argument("--repo", default=None, help="Path inside repo")
-        op.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+        op.add_argument(
+            "--json", action="store_true", help="Emit machine-readable JSON"
+        )
 
     prime = sub.add_parser(
         "prime",
@@ -363,8 +374,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
                 repo_root = Path(res.dest).resolve()
                 diff_targets = sorted(set(list(res.skipped or [])))
-                if diff_targets and not bool(getattr(args, "diff", False)) and any_pack_diffs(
-                    repo_root=repo_root, pack_id=COMPOUND_PACK_ID, relpaths=diff_targets
+                if (
+                    diff_targets
+                    and not bool(getattr(args, "diff", False))
+                    and any_pack_diffs(
+                        repo_root=repo_root,
+                        pack_id=COMPOUND_PACK_ID,
+                        relpaths=diff_targets,
+                    )
                 ):
                     sys.stdout.write(
                         "note: some skipped pack files differ from Loom scaffold; rerun with --diff to view\n"

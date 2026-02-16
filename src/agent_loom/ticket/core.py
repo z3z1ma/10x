@@ -64,14 +64,15 @@ from agent_loom.ticket.adapters import (
 from agent_loom.ticket.constants import (
     AUDIT_LOGGER,
     AUDIT_MODE,
+    NON_TERMINAL_STATUSES,
+    STATUS_ORDER,
     SUBSYSTEM_NAME,
     SUBSYSTEM_VERSION,
     TICKET_DIR_OVERRIDE,
     TICKET_DIRNAME,
     VALID_STATUSES,
-    STATUS_ORDER,
-    NON_TERMINAL_STATUSES,
 )
+from agent_loom.ticket.errors import TicketArgError, TicketNotFoundError
 from agent_loom.ticket.frontmatter import decanonicalize_frontmatter
 from agent_loom.ticket.graph import (
     blockers_for,
@@ -102,11 +103,11 @@ from agent_loom.ticket.models import (
     TicketLinkResult,
     TicketListResult,
     TicketPrimeResult,
-    TicketSprintContextResult,
     TicketQueryResult,
     TicketRelationships,
     TicketReleaseResult,
     TicketShowResult,
+    TicketSprintContextResult,
     TicketStatusResult,
     TicketSummary,
     TicketSwarmAgent,
@@ -118,6 +119,7 @@ from agent_loom.ticket.models import (
     TicketVersionResult,
     TicketViewResult,
 )
+from agent_loom.ticket.normalize import normalize_status
 from agent_loom.ticket.store import (
     TicketStore,
     active_claimed_by,
@@ -125,8 +127,6 @@ from agent_loom.ticket.store import (
     effective_lease,
     write_guard,
 )
-from agent_loom.ticket.normalize import normalize_status
-from agent_loom.ticket.errors import TicketArgError, TicketNotFoundError
 
 JSON_MODE = False
 
@@ -422,7 +422,9 @@ def _load_config_raw(store: TicketStore) -> Dict[str, Any]:
 def _write_config_raw(store: TicketStore, raw: Mapping[str, Any]) -> None:
     store.ensure()
     data = dict(raw) if isinstance(raw, dict) else {}
-    store.config_path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    store.config_path.write_text(
+        yaml.safe_dump(data, sort_keys=False), encoding="utf-8"
+    )
 
 
 def _stored_sprint_context(store: TicketStore) -> TicketSprintContextResult:
@@ -464,7 +466,9 @@ def sprint_set(*, name: str, tag: str) -> TicketSprintContextResult:
             code="ARG",
             error="Sprint name is required",
             hint="Provide a non-empty sprint name.",
-            suggestions=["loom ticket sprint set --name 'Sprint Name' --tag sprint:sprint-name"],
+            suggestions=[
+                "loom ticket sprint set --name 'Sprint Name' --tag sprint:sprint-name"
+            ],
         )
 
     sprint_tag = str(tag or "").strip()
@@ -473,7 +477,9 @@ def sprint_set(*, name: str, tag: str) -> TicketSprintContextResult:
             code="ARG",
             error="Sprint tag is required",
             hint="Provide a non-empty sprint tag.",
-            suggestions=["loom ticket sprint set --name 'Sprint Name' --tag sprint:sprint-name"],
+            suggestions=[
+                "loom ticket sprint set --name 'Sprint Name' --tag sprint:sprint-name"
+            ],
         )
 
     store = store_for_cmd("create")
@@ -498,6 +504,7 @@ def sprint_clear() -> TicketSprintContextResult:
     if raw or store.config_path.exists():
         _write_config_raw(store, raw)
     return TicketSprintContextResult(name="", tag="")
+
 
 def create(
     *,

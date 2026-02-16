@@ -3,7 +3,8 @@ from __future__ import annotations
 import sys
 from typing import Any, Mapping, Sequence
 
-from agent_loom.core.cli_output import emit_json as _core_emit_json, make_error_envelope
+from agent_loom.core.cli_output import emit_json as _core_emit_json
+from agent_loom.core.cli_output import make_error_envelope
 
 
 def _eprint(*a: object) -> None:
@@ -28,7 +29,9 @@ def _emit_error(
             error=error,
             code=code,
             hint=hint,
-            suggestions=[str(s) for s in suggestions if str(s).strip()] if suggestions else None,
+            suggestions=[str(s) for s in suggestions if str(s).strip()]
+            if suggestions
+            else None,
             details=dict(details) if details else None,
         )
         _emit_json(envelope)

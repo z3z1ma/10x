@@ -52,8 +52,8 @@ from agent_loom.team.commands.workers import (
     cmd_resume_worker,
     cmd_retire,
     cmd_spawn,
-    cmd_spawn_persona,
     cmd_spawn_integrator,
+    cmd_spawn_persona,
 )
 from agent_loom.team.constants import (
     DEFAULT_AUTOCAPTURE_LINES,
@@ -65,8 +65,8 @@ from agent_loom.team.constants import (
     DEFAULT_OBJECTIVE_NUDGE_S,
     ROLE_WORKER,
 )
-from agent_loom.team.errors import TeamError
 from agent_loom.team.core import inbox_ack
+from agent_loom.team.errors import TeamError
 from agent_loom.team.output import _emit_error
 
 __all__ = ["build_parser", "inbox_ack", "main"]
@@ -388,7 +388,6 @@ def _did_you_mean(value: str, choices: Sequence[str]) -> list[str]:
     return difflib.get_close_matches(v, list(choices), n=3, cutoff=0.6)
 
 
-
 def build_parser() -> argparse.ArgumentParser:
     p = TeamArgumentParser(
         prog="team",
@@ -456,9 +455,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sp.add_argument("--model", default="", help="Model override")
     sp.add_argument("--manager-model", default="", help="Manager model override")
-    sp.add_argument(
-        "--architect-model", default="", help="Architect model override"
-    )
+    sp.add_argument("--architect-model", default="", help="Architect model override")
     sp.add_argument("--worker-model", default="", help="Worker model override")
     sp.add_argument("--integrator-model", default="", help="Integrator model override")
     sp.add_argument(
@@ -869,7 +866,6 @@ def build_parser() -> argparse.ArgumentParser:
     spm.add_argument("member_id", help="Roster member id")
     spm.set_defaults(func=cmd_spawn_persona)
 
-
     doc = sub.add_parser(
         "doctor",
         help="Diagnose tmux/run-state drift and suggest remediation commands",
@@ -914,9 +910,7 @@ def build_parser() -> argparse.ArgumentParser:
     clk_in.set_defaults(func=cmd_resume)
 
     # Worker lifecycle
-    spw = sub.add_parser(
-        "spawn", help="Spawn a worker for a loom ticket"
-    )
+    spw = sub.add_parser("spawn", help="Spawn a worker for a loom ticket")
     spw.add_argument("team", help="Team name")
     spw.add_argument("ticket_id", help="loom ticket id")
     spw.add_argument(
