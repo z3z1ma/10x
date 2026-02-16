@@ -211,6 +211,19 @@ from agent_loom.team.run_state import (
     run_session,
     save_run,
 )
+from agent_loom.team.start_state import (
+    StartMergeOptions,
+    StartModelOverrides,
+    adopt_start_session,
+    apply_defaults_from_merge,
+    apply_harness_bin_override,
+    apply_max_headcount,
+    apply_merge_options,
+    apply_model_overrides,
+    initialize_harness_configs,
+    migrate_merge_role_workers,
+    normalize_harness_configs,
+)
 from agent_loom.team.strings import generate_stable_key, message_preview, sanitize
 from agent_loom.team.targets import _resolve_target, _resolve_targets
 from agent_loom.team.time import _iso_z
@@ -2356,6 +2369,499 @@ def _ensure_always_on_personas(*, team: str, repo: Optional[Path] = None) -> Non
 # -----------------------------
 
 
+@dataclasses.dataclass(frozen=True)
+class _StartBootstrap:
+    harness_provided: bool
+    requested_harness: str
+    requested_bin: str
+    roster_state: Optional[Dict[str, Any]]
+    roster_harness: str
+
+
+def _validated_start_max_headcount(max_headcount: Optional[int | str]) -> Optional[int]:
+    if max_headcount is None:
+        return None
+    value = int(max_headcount)
+    if value < 0:
+        raise TeamError(
+            f"Invalid max headcount: {value}",
+            code="ARG",
+            exit_code=2,
+            hint="Use --max-headcount 0 for unlimited, or a positive integer.",
+        )
+    return value
+
+
+def _resolve_start_bootstrap(
+    *,
+    harness: str,
+    bin_override: str,
+    roster: str,
+) -> _StartBootstrap:
+    harness_raw = str(harness or "")
+    harness_provided = bool(harness_raw.strip())
+    requested_harness = _normalize_harness(harness_raw)
+    requested_bin = str(bin_override or "").strip()
+
+    roster_state: Optional[Dict[str, Any]] = None
+    roster_harness = ""
+    roster_raw = str(roster or "").strip()
+    if roster_raw:
+        roster_path = Path(roster_raw).expanduser()
+        parsed = load_team_roster_yaml(roster_path)
+        roster_state = {
+            "source": str(roster_path.resolve()),
+            "loaded_at": _iso_z(),
+            "spec": parsed.as_dict(),
+        }
+        manager_profile = resolve_builtin_profile(
+            {"roster": roster_state},
+            ROLE_MANAGER,
+        )
+        enforce_member_lifecycle(profile=manager_profile, role=ROLE_MANAGER)
+        if manager_profile is not None and manager_profile.harness:
+            roster_harness = _normalize_harness(manager_profile.harness)
+
+    if not harness_provided and roster_harness:
+        requested_harness = roster_harness
+
+    return _StartBootstrap(
+        harness_provided=harness_provided,
+        requested_harness=requested_harness,
+        requested_bin=requested_bin,
+        roster_state=roster_state,
+        roster_harness=roster_harness,
+    )
+
+
+def _ensure_start_run_paths(paths: RunPaths) -> None:
+    paths.run_dir.mkdir(parents=True, exist_ok=True)
+    paths.worktrees_dir.mkdir(parents=True, exist_ok=True)
+    paths.inbox_dir.mkdir(parents=True, exist_ok=True)
+    paths.inbox_read_dir.mkdir(parents=True, exist_ok=True)
+    paths.merge_dir.mkdir(parents=True, exist_ok=True)
+    paths.sidecars_dir.mkdir(parents=True, exist_ok=True)
+    paths.events_dir.mkdir(parents=True, exist_ok=True)
+    paths.artifacts_dir.mkdir(parents=True, exist_ok=True)
+    paths.snapshots_dir.mkdir(parents=True, exist_ok=True)
+    paths.captures_dir.mkdir(parents=True, exist_ok=True)
+
+
+def _sync_start_tickets_dir(*, paths: RunPaths, run: Dict[str, Any], root: Path) -> Path:
+    previous_tickets_dir = str(run.get("tickets_dir") or "")
+    tickets_dir = ensure_run_tickets_dir(run, repo_root=root)
+    if previous_tickets_dir != str(tickets_dir):
+        save_run(paths, run)
+    return tickets_dir
+
+
+def _ensure_start_agents(*, paths: RunPaths, run: Dict[str, Any], root: Path) -> Path:
+    charter_path = _write_charter(paths=paths, run=run)
+    agents_res = init_agents(repo=root, create_missing=False)
+    if agents_res.missing:
+        missing = ", ".join(agents_res.missing[:6])
+        more = (
+            ""
+            if len(agents_res.missing) <= 6
+            else f" (+{len(agents_res.missing) - 6} more)"
+        )
+        raise TeamError(
+            f"Team agents not initialized (missing: {missing}{more})",
+            code="AGENTS",
+            exit_code=2,
+            hint=(
+                f"Run: loom team init --repo {root}\n"
+                "Then commit the generated agent files before starting the team."
+            ),
+        )
+    return charter_path
+
+
+@dataclasses.dataclass(frozen=True)
+class _ManagerBootstrapResult:
+    manager_window: str
+    manager_pane: str
+
+
+def _start_update_existing_run(
+    *,
+    paths: RunPaths,
+    root: Path,
+    session: str,
+    session_provided: bool,
+    requested_harness: str,
+    requested_bin: str,
+    harness_provided: bool,
+    roster_state: Optional[Dict[str, Any]],
+    roster_harness: str,
+    mounts: Optional[list[str]],
+    clear_mounts: bool,
+    max_headcount: Optional[int],
+    target_branch: str,
+    remote: str,
+    push: Optional[bool],
+    model: str,
+    manager_model: str,
+    architect_model: str,
+    worker_model: str,
+    integrator_model: str,
+) -> Tuple[Dict[str, Any], str]:
+    run = load_run(paths)
+    run["merge"] = _merge_state(run)
+    if not isinstance(run.get("sprint"), dict):
+        run["sprint"] = {}
+
+    model_overrides = StartModelOverrides.from_inputs(
+        model=model,
+        manager_model=manager_model,
+        architect_model=architect_model,
+        worker_model=worker_model,
+        integrator_model=integrator_model,
+    )
+    merge_options = StartMergeOptions.from_inputs(
+        target_branch=target_branch,
+        remote=remote,
+        push=push,
+    )
+
+    if roster_state is not None:
+        run["roster"] = roster_state
+        save_run(paths, run)
+
+    if bool(clear_mounts):
+        run["mounts"] = []
+        save_run(paths, run)
+    elif mounts is not None:
+        run["mounts"] = _parse_mount_specs(
+            repo_root=root,
+            paths=paths,
+            specs=list(mounts),
+        )
+        save_run(paths, run)
+    else:
+        roster_mount_specs = _roster_mount_specs_from_run(run)
+        if roster_mount_specs:
+            run["mounts"] = _parse_mount_specs(
+                repo_root=root,
+                paths=paths,
+                specs=roster_mount_specs,
+            )
+            save_run(paths, run)
+        else:
+            raw_mounts = run.get("mounts")
+            if not isinstance(raw_mounts, list):
+                run["mounts"] = []
+                save_run(paths, run)
+
+    apply_max_headcount(run, max_headcount=max_headcount)
+    if max_headcount is not None:
+        save_run(paths, run)
+
+    merge_cfg = apply_merge_options(run, options=merge_options)
+    apply_defaults_from_merge(
+        run,
+        merge_config=merge_cfg,
+        target_branch_override=merge_options.target_branch,
+    )
+
+    existing_harness = _normalize_harness(str(run.get("harness") or ""))
+    if harness_provided:
+        if str(run.get("harness") or "") != requested_harness:
+            run["harness"] = requested_harness
+            save_run(paths, run)
+    elif roster_harness:
+        if str(run.get("harness") or "") != requested_harness:
+            run["harness"] = requested_harness
+            save_run(paths, run)
+    if requested_bin:
+        bin_harness = (
+            requested_harness if (harness_provided or roster_harness) else existing_harness
+        )
+        bin_current = (
+            str((run.get(bin_harness) or {}).get("bin") or "")
+            if isinstance(run.get(bin_harness), dict)
+            else ""
+        )
+        if bin_current != requested_bin:
+            apply_harness_bin_override(
+                run,
+                harness=bin_harness,
+                bin_override=requested_bin,
+            )
+            save_run(paths, run)
+
+    normalize_harness_configs(run)
+    migrate_merge_role_workers(run)
+
+    update_harness = requested_harness if harness_provided else existing_harness
+    if not isinstance(run.get(update_harness), dict):
+        update_harness = "opencode"
+    apply_model_overrides(run, harness=update_harness, overrides=model_overrides)
+
+    session = adopt_start_session(
+        run,
+        session=session,
+        session_provided=session_provided,
+    )
+    save_run(paths, run)
+
+    return run, session
+
+
+def _start_create_run(
+    *,
+    paths: RunPaths,
+    root: Path,
+    team: str,
+    objective: str,
+    session: str,
+    requested_harness: str,
+    requested_bin: str,
+    roster_state: Optional[Dict[str, Any]],
+    mounts: Optional[list[str]],
+    clear_mounts: bool,
+    max_headcount: Optional[int],
+    target_branch: str,
+    remote: str,
+    push: Optional[bool],
+    model: str,
+    manager_model: str,
+    architect_model: str,
+    worker_model: str,
+    integrator_model: str,
+) -> Dict[str, Any]:
+    created_at = _iso_z()
+
+    tb = str(target_branch or "").strip() or "main"
+    rm = str(remote or "").strip() or "origin"
+    tb = sanitize(tb, allow=r"a-zA-Z0-9._/-", max_len=120) or "main"
+    rm = sanitize(rm, allow=r"a-zA-Z0-9._/-", max_len=80) or "origin"
+    merge_options = StartMergeOptions(
+        target_branch=tb,
+        remote=rm,
+        push=(True if push is None else bool(push)),
+    )
+    model_overrides = StartModelOverrides.from_inputs(
+        model=model,
+        manager_model=manager_model,
+        architect_model=architect_model,
+        worker_model=worker_model,
+        integrator_model=integrator_model,
+    )
+
+    run: Dict[str, Any] = {
+        "version": 1,
+        "run_id": uuid.uuid4().hex,
+        "team": team,
+        "created_at": created_at,
+        "harness": requested_harness,
+        "objective": str(objective or "").strip(),
+        "objective_rev": 1,
+        "objective_updated_at": created_at,
+        "done_reminder": {},
+        "sprint": {},
+        "repo_root": str(root),
+        "run_dir": str(paths.run_dir),
+        "session": session,
+        "manager": {},
+        "workers": {},
+        "mounts": [],
+        "limits": {
+            "max_headcount": max_headcount if max_headcount is not None else 0,
+        },
+        "merge": {
+            "items": [],
+            "branch": "",
+            "config": {},
+        },
+        "defaults": {},
+    }
+    initialize_harness_configs(run, default_model=model_overrides.default_model)
+    if roster_state is not None:
+        run["roster"] = roster_state
+
+    apply_model_overrides(run, harness=requested_harness, overrides=model_overrides)
+
+    if requested_bin:
+        apply_harness_bin_override(
+            run,
+            harness=requested_harness,
+            bin_override=requested_bin,
+        )
+
+    if bool(clear_mounts):
+        run["mounts"] = []
+    elif mounts is not None:
+        run["mounts"] = _parse_mount_specs(
+            repo_root=root,
+            paths=paths,
+            specs=list(mounts),
+        )
+    else:
+        roster_mount_specs = _roster_mount_specs_from_run(run)
+        if roster_mount_specs:
+            run["mounts"] = _parse_mount_specs(
+                repo_root=root,
+                paths=paths,
+                specs=roster_mount_specs,
+            )
+
+    merge_cfg = apply_merge_options(run, options=merge_options)
+    apply_defaults_from_merge(
+        run,
+        merge_config=merge_cfg,
+        target_branch_override=merge_options.target_branch,
+    )
+
+    save_run(paths, run)
+    return run
+
+
+def _start_boot_manager_session(
+    *,
+    paths: RunPaths,
+    run: Dict[str, Any],
+    root: Path,
+    team: str,
+    session: str,
+    requested_harness: str,
+    manager_window: str,
+    force: bool,
+    tickets_dir: Path,
+    charter_path: Path,
+) -> _ManagerBootstrapResult:
+    manager_window = (
+        sanitize(
+            str(manager_window or ""),
+            allow=r"a-zA-Z0-9._-",
+            max_len=60,
+        )
+        or DEFAULT_MANAGER_WINDOW
+    )
+    harness = _normalize_harness(str(run.get("harness") or requested_harness))
+    manager_profile = resolve_builtin_profile(
+        run,
+        ROLE_MANAGER,
+    )
+    enforce_member_lifecycle(profile=manager_profile, role=ROLE_MANAGER)
+    if manager_profile is not None and manager_profile.harness:
+        harness = _normalize_harness(manager_profile.harness)
+    cfg = (
+        (run.get(harness) or {})
+        if isinstance(run.get(harness), dict)
+        else (run.get("opencode") or {})
+    )
+    agent_bin = str(cfg.get("bin") or "").strip() or harness
+    _require_bin(agent_bin)
+    model = _model_for_role(run, ROLE_MANAGER, harness=harness)
+    if not model and manager_profile is not None and manager_profile.model:
+        model = str(manager_profile.model)
+    manager_agent = (
+        str(manager_profile.agent)
+        if manager_profile is not None
+        else str(cfg.get("manager_agent") or DEFAULT_MANAGER_AGENT)
+    )
+    manager_prompt = render_manager_prompt(run=run, charter_path=charter_path)
+    oc_argv = _team_tui_argv(
+        project_dir=root,
+        agent=manager_agent,
+        prompt=manager_prompt,
+        model=model,
+        harness=harness,
+        bin=str(cfg.get("bin") or "").strip(),
+    )
+
+    sprint = _objective_state_sprint_state(run)
+    pane_env = {
+        ENV_TICKET_DIR: str(tickets_dir),
+        ENV_TEAM_NAME: team,
+        ENV_TEAM_RUN_ID: str(run.get("run_id") or ""),
+        ENV_TEAM_RUN_DIR: str(paths.run_dir),
+        ENV_TEAM_ROLE: ROLE_MANAGER,
+        ENV_TEAM_WORKER_ID: "",
+        ENV_TEAM_TICKET_ID: "",
+        ENV_TEAM_SPRINT_NAME: sprint.get("name", ""),
+        ENV_TEAM_SPRINT_TAG: sprint.get("tag", ""),
+        "COMPOUND_ROOT": str(root),
+    }
+
+    if not tmux_has_session(session):
+        tmux_cmd(
+            [
+                "new-session",
+                "-d",
+                "-s",
+                session,
+                "-n",
+                manager_window,
+                "-c",
+                str(root),
+                *tmux_env_flags(pane_env),
+                *oc_argv,
+            ],
+            check=True,
+        )
+    else:
+        if tmux_window_exists(session, manager_window) and bool(force):
+            tmux_kill_window(session, manager_window)
+
+        if not tmux_window_exists(session, manager_window):
+            tmux_cmd(
+                [
+                    "new-window",
+                    "-d",
+                    "-t",
+                    session,
+                    "-n",
+                    manager_window,
+                    "-c",
+                    str(root),
+                    *tmux_env_flags(pane_env),
+                    *oc_argv,
+                ],
+                check=True,
+            )
+
+    tmux_set_option(target=session, option=TMUX_OPT_OWNED, value="1")
+    tmux_set_option(target=session, option=TMUX_OPT_TEAM, value=team)
+    tmux_set_option(
+        target=session, option=TMUX_OPT_RUN_ID, value=str(run.get("run_id") or "")
+    )
+    tmux_set_option(target=session, option=TMUX_OPT_RUN_DIR, value=str(paths.run_dir))
+    tmux_set_option(target=session, option=TMUX_OPT_REPO_ROOT, value=str(root))
+
+    tmux_cmd(["set-option", "-t", session, "history-limit", "200000"], check=False)
+    tmux_cmd(["set-option", "-t", session, "remain-on-exit", "on"], check=False)
+    tmux_cmd(["set-option", "-t", session, "allow-rename", "off"], check=False)
+
+    manager_pane = tmux_format(f"{session}:{manager_window}", "#{pane_id}")
+    if manager_pane:
+        tmux_mark_pane(pane_id=manager_pane, role=ROLE_MANAGER)
+
+    run["session"] = session
+    run["manager"] = {
+        "window": manager_window,
+        "pane_id": manager_pane,
+    }
+
+    try:
+        ms = _merge_state(run)
+        cfg = dict(ms.get("config") or {})
+        tb = str(cfg.get("target_branch") or "main").strip() or "main"
+        rm = str(cfg.get("remote") or "origin").strip() or "origin"
+        p = bool(cfg.get("push"))
+        mgr = dict(run.get("manager") or {})
+        mgr["merge_target"] = f"{rm}/{tb} push={p}"
+        run["manager"] = mgr
+    except Exception:
+        pass
+
+    return _ManagerBootstrapResult(
+        manager_window=manager_window,
+        manager_pane=manager_pane,
+    )
+
+
 def start(
     *,
     team: str,
@@ -2382,42 +2888,18 @@ def start(
     _require_bin("tmux")
     _deny_if_role_set(action="loom team start")
 
-    if max_headcount is not None:
-        max_headcount = int(max_headcount)
-        if max_headcount < 0:
-            raise TeamError(
-                f"Invalid max headcount: {max_headcount}",
-                code="ARG",
-                exit_code=2,
-                hint="Use --max-headcount 0 for unlimited, or a positive integer.",
-            )
-    harness_raw = str(harness or "")
-    harness_provided = bool(harness_raw.strip())
-    requested_harness = _normalize_harness(harness_raw)
-    requested_bin = str(bin_override or "").strip()
+    max_headcount = _validated_start_max_headcount(max_headcount)
+    start_bootstrap = _resolve_start_bootstrap(
+        harness=harness,
+        bin_override=bin_override,
+        roster=roster,
+    )
+    harness_provided = start_bootstrap.harness_provided
+    requested_harness = start_bootstrap.requested_harness
+    requested_bin = start_bootstrap.requested_bin
+    roster_state = start_bootstrap.roster_state
+    roster_harness = start_bootstrap.roster_harness
 
-    roster_state: Optional[Dict[str, Any]] = None
-    roster_harness = ""
-    roster_raw = str(roster or "").strip()
-    if roster_raw:
-        roster_path = Path(roster_raw).expanduser()
-        parsed = load_team_roster_yaml(roster_path)
-        roster_state = {
-            "source": str(roster_path.resolve()),
-            "loaded_at": _iso_z(),
-            "spec": parsed.as_dict(),
-        }
-        manager_profile = resolve_builtin_profile(
-            {"roster": roster_state},
-            ROLE_MANAGER,
-        )
-        enforce_member_lifecycle(profile=manager_profile, role=ROLE_MANAGER)
-        if manager_profile is not None and manager_profile.harness:
-            roster_harness = _normalize_harness(manager_profile.harness)
-
-    # Precedence: explicit CLI override > roster > defaults.
-    if not harness_provided and roster_harness:
-        requested_harness = roster_harness
     root = canonical_repo_root(repo.resolve() if repo else Path.cwd())
     team = sanitize(team or "", max_len=80) or default_team_name(root)
     # Session selection rules:
@@ -2432,526 +2914,78 @@ def start(
     )
 
     paths = RunPaths(repo_root=root, team=team)
-    paths.run_dir.mkdir(parents=True, exist_ok=True)
-    paths.worktrees_dir.mkdir(parents=True, exist_ok=True)
-    paths.inbox_dir.mkdir(parents=True, exist_ok=True)
-    paths.inbox_read_dir.mkdir(parents=True, exist_ok=True)
-    paths.merge_dir.mkdir(parents=True, exist_ok=True)
-    paths.sidecars_dir.mkdir(parents=True, exist_ok=True)
-    paths.events_dir.mkdir(parents=True, exist_ok=True)
-    paths.artifacts_dir.mkdir(parents=True, exist_ok=True)
-    paths.snapshots_dir.mkdir(parents=True, exist_ok=True)
-    paths.captures_dir.mkdir(parents=True, exist_ok=True)
+    _ensure_start_run_paths(paths)
 
     created = False
     with FileLock(paths.lock_file):
         if paths.run_file.exists():
-            run = load_run(paths)
-            run["merge"] = _merge_state(run)
-            if not isinstance(run.get("sprint"), dict):
-                run["sprint"] = {}
-            if roster_state is not None:
-                run["roster"] = roster_state
-                save_run(paths, run)
-
-            # Mounts: persisted across start/resume.
-            # Precedence:
-            # - CLI: --clear-mounts / --mount ...
-            # - Roster: spec.mounts
-            # - Existing run state
-            if bool(clear_mounts):
-                run["mounts"] = []
-                save_run(paths, run)
-            elif mounts is not None:
-                run["mounts"] = _parse_mount_specs(
-                    repo_root=root,
-                    paths=paths,
-                    specs=list(mounts),
-                )
-                save_run(paths, run)
-            else:
-                roster_mount_specs = _roster_mount_specs_from_run(run)
-                if roster_mount_specs:
-                    run["mounts"] = _parse_mount_specs(
-                        repo_root=root,
-                        paths=paths,
-                        specs=roster_mount_specs,
-                    )
-                    save_run(paths, run)
-                else:
-                    raw_mounts = run.get("mounts")
-                    if not isinstance(raw_mounts, list):
-                        run["mounts"] = []
-                        save_run(paths, run)
-
-            if max_headcount is not None:
-                raw_limits = run.get("limits")
-                limits: Dict[str, Any] = (
-                    dict(raw_limits) if isinstance(raw_limits, dict) else {}
-                )
-                limits["max_headcount"] = max_headcount
-                run["limits"] = limits
-                save_run(paths, run)
-
-            # Merge/ship config (fail-forward, always visible).
-            ms = _merge_state(run)
-            cfg = dict(ms.get("config") or {})
-            tb = str(target_branch or "").strip()
-            rm = str(remote or "").strip()
-            if tb:
-                st = sanitize(tb, allow=r"a-zA-Z0-9._/-", max_len=120)
-                if not st:
-                    raise TeamError(
-                        f"Invalid target branch: {tb}", code="ARG", exit_code=2
-                    )
-                cfg["target_branch"] = st
-            if rm:
-                sr = sanitize(rm, allow=r"a-zA-Z0-9._/-", max_len=80)
-                if not sr:
-                    raise TeamError(f"Invalid remote: {rm}", code="ARG", exit_code=2)
-                cfg["remote"] = sr
-            if push is not None:
-                cfg["push"] = bool(push)
-            # Migration: old runs defaulted push=False; new default is push=True.
-            if push is None and bool(cfg.get("push")) is False:
-                cfg["push"] = True
-            if "push" not in cfg:
-                cfg["push"] = True
-            ms["config"] = cfg
-            run["merge"] = ms
-
-            # Ensure merge-queue branch is stable per run.
-            ms["branch"] = merge_branch_for_run(run)
-            run["merge"] = ms
-
-            # Defaults: new workers branch off the merge target by default.
-            raw_defaults = run.get("defaults")
-            defaults: Dict[str, Any] = {}
-            if isinstance(raw_defaults, dict):
-                defaults.update(raw_defaults)
-            if tb:
-                defaults["base_ref"] = cfg.get("target_branch")
-            defaults.setdefault("base_ref", str(cfg.get("target_branch") or "main"))
-            run["defaults"] = defaults
-
-            existing_harness = _normalize_harness(str(run.get("harness") or ""))
-            if harness_provided:
-                if str(run.get("harness") or "") != requested_harness:
-                    run["harness"] = requested_harness
-                    save_run(paths, run)
-            elif roster_harness:
-                if str(run.get("harness") or "") != requested_harness:
-                    run["harness"] = requested_harness
-                    save_run(paths, run)
-            if requested_bin:
-                bin_harness = (
-                    requested_harness
-                    if (harness_provided or roster_harness)
-                    else existing_harness
-                )
-                cfg = run.get(bin_harness)
-                if not isinstance(cfg, dict):
-                    cfg = {}
-                if str(cfg.get("bin") or "") != requested_bin:
-                    cfg["bin"] = requested_bin
-                    run[bin_harness] = cfg
-                    save_run(paths, run)
-
-            # Normalize harness config keys (greenfield, but keep local runs usable).
-            for hname in ("opencode", "claude", "omp", "codex"):
-                raw_cfg = run.get(hname)
-                cfg = dict(raw_cfg) if isinstance(raw_cfg, dict) else {}
-
-                # Agent key migration: merge -> integrator.
-                if "integrator_agent" not in cfg:
-                    if "merge_agent" in cfg:
-                        cfg["integrator_agent"] = cfg.pop("merge_agent")
-                    else:
-                        cfg["integrator_agent"] = DEFAULT_INTEGRATOR_AGENT
-
-                cfg.setdefault("manager_agent", DEFAULT_MANAGER_AGENT)
-                cfg.setdefault("worker_agent", DEFAULT_WORKER_AGENT)
-                cfg.setdefault("architect_agent", DEFAULT_ARCHITECT_AGENT)
-                cfg.setdefault("bin", str(cfg.get("bin") or ""))
-
-                raw_models = cfg.get("models")
-                models: Dict[str, str] = (
-                    dict(raw_models) if isinstance(raw_models, dict) else {}
-                )
-                for rk in (
-                    ROLE_MANAGER,
-                    ROLE_WORKER,
-                    ROLE_ARCHITECT,
-                    ROLE_INTEGRATOR,
-                ):
-                    models.setdefault(rk, "")
-                cfg["models"] = models
-
-                # Preserve existing global model key.
-                cfg.setdefault("model", str(cfg.get("model") or "").strip())
-                run[hname] = cfg
-
-            # Normalize worker roles: merge -> integrator.
-            if isinstance(run.get("workers"), dict):
-                workers = dict(run.get("workers") or {})
-                changed = False
-                for wid, w in workers.items():
-                    if not isinstance(w, dict):
-                        continue
-                    if str(w.get("role") or "").strip().lower() == "merge":
-                        w2 = dict(w)
-                        w2["role"] = ROLE_INTEGRATOR
-                        workers[wid] = w2
-                        changed = True
-                if changed:
-                    run["workers"] = workers
-
-            # Apply model overrides (existing runs used to ignore these).
-            update_harness = requested_harness if harness_provided else existing_harness
-            raw_update_cfg = run.get(update_harness)
-            if not isinstance(raw_update_cfg, dict):
-                raw_update_cfg = run.get("opencode")
-            update_cfg: Dict[str, Any] = (
-                dict(raw_update_cfg) if isinstance(raw_update_cfg, dict) else {}
+            run, session = _start_update_existing_run(
+                paths=paths,
+                root=root,
+                session=session,
+                session_provided=session_provided,
+                requested_harness=requested_harness,
+                requested_bin=requested_bin,
+                harness_provided=harness_provided,
+                roster_state=roster_state,
+                roster_harness=roster_harness,
+                mounts=mounts,
+                clear_mounts=bool(clear_mounts),
+                max_headcount=max_headcount,
+                target_branch=target_branch,
+                remote=remote,
+                push=push,
+                model=model,
+                manager_model=manager_model,
+                architect_model=architect_model,
+                worker_model=worker_model,
+                integrator_model=integrator_model,
             )
-
-            if str(model or "").strip():
-                update_cfg["model"] = str(model).strip()
-
-            raw_models_map = update_cfg.get("models")
-            models_map: Dict[str, str] = (
-                dict(raw_models_map) if isinstance(raw_models_map, dict) else {}
-            )
-            if str(manager_model or "").strip():
-                models_map[ROLE_MANAGER] = str(manager_model).strip()
-            if str(worker_model or "").strip():
-                models_map[ROLE_WORKER] = str(worker_model).strip()
-            if str(architect_model or "").strip():
-                models_map[ROLE_ARCHITECT] = str(architect_model).strip()
-            if str(integrator_model or "").strip():
-                models_map[ROLE_INTEGRATOR] = str(integrator_model).strip()
-            update_cfg["models"] = models_map
-
-            run[update_harness] = update_cfg
-
-            save_run(paths, run)
-
-            # Adopt persisted session unless the caller explicitly overrides.
-            persisted = sanitize(str(run.get("session") or ""), max_len=120)
-            if not session_provided and persisted:
-                session = persisted
-            elif session_provided:
-                run["session"] = session
         else:
             created = True
-            created_at = _iso_z()
-
-            tb = str(target_branch or "").strip() or "main"
-            rm = str(remote or "").strip() or "origin"
-            tb = sanitize(tb, allow=r"a-zA-Z0-9._/-", max_len=120) or "main"
-            rm = sanitize(rm, allow=r"a-zA-Z0-9._/-", max_len=80) or "origin"
-            push_default = True if push is None else bool(push)
-
-            run = {
-                "version": 1,
-                "run_id": uuid.uuid4().hex,
-                "team": team,
-                "created_at": created_at,
-                "harness": requested_harness,
-                "objective": str(objective or "").strip(),
-                "objective_rev": 1,
-                "objective_updated_at": created_at,
-                "done_reminder": {},
-                "sprint": {},
-                "repo_root": str(root),
-                "run_dir": str(paths.run_dir),
-                "session": session,
-                "manager": {},
-                "workers": {},
-                "mounts": [],
-                "limits": {
-                    "max_headcount": max_headcount if max_headcount is not None else 0,
-                },
-                "merge": {
-                    "items": [],
-                    "branch": "",
-                    "config": {
-                        "target_branch": tb,
-                        "remote": rm,
-                        "push": bool(push_default),
-                    },
-                },
-                "defaults": {
-                    "base_ref": tb,
-                },
-                "opencode": {
-                    "model": str(model or "").strip(),
-                    "models": {
-                        "manager": "",
-                        "worker": "",
-                        "architect": "",
-                        "integrator": "",
-                    },
-                    "manager_agent": DEFAULT_MANAGER_AGENT,
-                    "worker_agent": DEFAULT_WORKER_AGENT,
-                    "architect_agent": DEFAULT_ARCHITECT_AGENT,
-                    "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
-                    "bin": "",
-                },
-                "claude": {
-                    "model": str(model or "").strip(),
-                    "models": {
-                        "manager": "",
-                        "worker": "",
-                        "architect": "",
-                        "integrator": "",
-                    },
-                    "manager_agent": DEFAULT_MANAGER_AGENT,
-                    "worker_agent": DEFAULT_WORKER_AGENT,
-                    "architect_agent": DEFAULT_ARCHITECT_AGENT,
-                    "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
-                    "bin": "",
-                },
-                "omp": {
-                    "model": str(model or "").strip(),
-                    "models": {
-                        "manager": "",
-                        "worker": "",
-                        "architect": "",
-                        "integrator": "",
-                    },
-                    "manager_agent": DEFAULT_MANAGER_AGENT,
-                    "worker_agent": DEFAULT_WORKER_AGENT,
-                    "architect_agent": DEFAULT_ARCHITECT_AGENT,
-                    "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
-                    "bin": "",
-                },
-                "codex": {
-                    "model": str(model or "").strip(),
-                    "models": {
-                        "manager": "",
-                        "worker": "",
-                        "architect": "",
-                        "integrator": "",
-                    },
-                    "manager_agent": DEFAULT_MANAGER_AGENT,
-                    "worker_agent": DEFAULT_WORKER_AGENT,
-                    "architect_agent": DEFAULT_ARCHITECT_AGENT,
-                    "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
-                    "bin": "",
-                },
-            }
-            if roster_state is not None:
-                run["roster"] = roster_state
-
-            # Apply per-role model overrides to the selected harness.
-            cfg = dict(run.get(requested_harness) or {})
-            raw_models_created = cfg.get("models")
-            models_created = (
-                dict(raw_models_created) if isinstance(raw_models_created, dict) else {}
+            run = _start_create_run(
+                paths=paths,
+                root=root,
+                team=team,
+                objective=objective,
+                session=session,
+                requested_harness=requested_harness,
+                requested_bin=requested_bin,
+                roster_state=roster_state,
+                mounts=mounts,
+                clear_mounts=bool(clear_mounts),
+                max_headcount=max_headcount,
+                target_branch=target_branch,
+                remote=remote,
+                push=push,
+                model=model,
+                manager_model=manager_model,
+                architect_model=architect_model,
+                worker_model=worker_model,
+                integrator_model=integrator_model,
             )
-            if str(manager_model or "").strip():
-                models_created[ROLE_MANAGER] = str(manager_model).strip()
-            if str(worker_model or "").strip():
-                models_created[ROLE_WORKER] = str(worker_model).strip()
-            if str(architect_model or "").strip():
-                models_created[ROLE_ARCHITECT] = str(architect_model).strip()
-            if str(integrator_model or "").strip():
-                models_created[ROLE_INTEGRATOR] = str(integrator_model).strip()
-            cfg["models"] = models_created
-            run[requested_harness] = cfg
-
-            if requested_bin:
-                cfg = dict((run.get(requested_harness) or {}))
-                cfg["bin"] = requested_bin
-                run[requested_harness] = cfg
-
-            if bool(clear_mounts):
-                run["mounts"] = []
-            elif mounts is not None:
-                run["mounts"] = _parse_mount_specs(
-                    repo_root=root,
-                    paths=paths,
-                    specs=list(mounts),
-                )
-            else:
-                roster_mount_specs = _roster_mount_specs_from_run(run)
-                if roster_mount_specs:
-                    run["mounts"] = _parse_mount_specs(
-                        repo_root=root,
-                        paths=paths,
-                        specs=roster_mount_specs,
-                    )
-            # Per-run merge branch: stable, disposable, and derived from run_id.
-            ms = _merge_state(run)
-            ms["branch"] = merge_branch_for_run(run)
-            run["merge"] = ms
-
-            save_run(paths, run)
 
         # If session was updated via adoption, persist it back.
         if str(run.get("session") or "") != session:
             run["session"] = session
             save_run(paths, run)
 
-        # Resolve & persist the canonical loom ticket directory (centralized in the repo root).
-        tickets_dir = resolve_tickets_dir(repo_root=root)
-        if str(run.get("tickets_dir") or "") != str(tickets_dir):
-            run["tickets_dir"] = str(tickets_dir)
-            save_run(paths, run)
-
-        # Ensure Charter and Team agents (repo root, committed artifacts).
-        charter_path = _write_charter(paths=paths, run=run)
-        agents_res = init_agents(repo=root, create_missing=False)
-        if agents_res.missing:
-            missing = ", ".join(agents_res.missing[:6])
-            more = (
-                ""
-                if len(agents_res.missing) <= 6
-                else f" (+{len(agents_res.missing) - 6} more)"
-            )
-            raise TeamError(
-                f"Team agents not initialized (missing: {missing}{more})",
-                code="AGENTS",
-                exit_code=2,
-                hint=(
-                    f"Run: loom team init --repo {root}\n"
-                    "Then commit the generated agent files before starting the team."
-                ),
-            )
-
-        # Ensure tmux session and manager window
-        manager_window = (
-            sanitize(
-                str(manager_window or ""),
-                allow=r"a-zA-Z0-9._-",
-                max_len=60,
-            )
-            or DEFAULT_MANAGER_WINDOW
+        tickets_dir = _sync_start_tickets_dir(paths=paths, run=run, root=root)
+        charter_path = _ensure_start_agents(paths=paths, run=run, root=root)
+        manager_bootstrap = _start_boot_manager_session(
+            paths=paths,
+            run=run,
+            root=root,
+            team=team,
+            session=session,
+            requested_harness=requested_harness,
+            manager_window=manager_window,
+            force=force,
+            tickets_dir=tickets_dir,
+            charter_path=charter_path,
         )
-        harness = _normalize_harness(str(run.get("harness") or requested_harness))
-        manager_profile = resolve_builtin_profile(
-            run,
-            ROLE_MANAGER,
-        )
-        enforce_member_lifecycle(profile=manager_profile, role=ROLE_MANAGER)
-        if manager_profile is not None and manager_profile.harness:
-            harness = _normalize_harness(manager_profile.harness)
-        cfg = (
-            (run.get(harness) or {})
-            if isinstance(run.get(harness), dict)
-            else (run.get("opencode") or {})
-        )
-        agent_bin = str(cfg.get("bin") or "").strip() or harness
-        _require_bin(agent_bin)
-        model = _model_for_role(run, ROLE_MANAGER, harness=harness)
-        if not model and manager_profile is not None and manager_profile.model:
-            model = str(manager_profile.model)
-        manager_agent = (
-            str(manager_profile.agent)
-            if manager_profile is not None
-            else str(cfg.get("manager_agent") or DEFAULT_MANAGER_AGENT)
-        )
-        manager_prompt = render_manager_prompt(run=run, charter_path=charter_path)
-        oc_argv = _team_tui_argv(
-            project_dir=root,
-            agent=manager_agent,
-            prompt=manager_prompt,
-            model=model,
-            harness=harness,
-            bin=str(cfg.get("bin") or "").strip(),
-        )
-
-        sprint = _objective_state_sprint_state(run)
-        pane_env = {
-            ENV_TICKET_DIR: str(tickets_dir),
-            ENV_TEAM_NAME: team,
-            ENV_TEAM_RUN_ID: str(run.get("run_id") or ""),
-            ENV_TEAM_RUN_DIR: str(paths.run_dir),
-            ENV_TEAM_ROLE: ROLE_MANAGER,
-            ENV_TEAM_WORKER_ID: "",
-            ENV_TEAM_TICKET_ID: "",
-            ENV_TEAM_SPRINT_NAME: sprint.get("name", ""),
-            ENV_TEAM_SPRINT_TAG: sprint.get("tag", ""),
-            "COMPOUND_ROOT": str(root),
-        }
-
-        if not tmux_has_session(session):
-            tmux_cmd(
-                [
-                    "new-session",
-                    "-d",
-                    "-s",
-                    session,
-                    "-n",
-                    manager_window,
-                    "-c",
-                    str(root),
-                    *tmux_env_flags(pane_env),
-                    *oc_argv,
-                ],
-                check=True,
-            )
-        else:
-            # If session exists, ensure manager window exists.
-            if tmux_window_exists(session, manager_window) and bool(force):
-                tmux_kill_window(session, manager_window)
-
-            if not tmux_window_exists(session, manager_window):
-                tmux_cmd(
-                    [
-                        "new-window",
-                        "-d",
-                        "-t",
-                        session,
-                        "-n",
-                        manager_window,
-                        "-c",
-                        str(root),
-                        *tmux_env_flags(pane_env),
-                        *oc_argv,
-                    ],
-                    check=True,
-                )
-
-        # Mark ownership and manager pane.
-        tmux_set_option(target=session, option=TMUX_OPT_OWNED, value="1")
-        tmux_set_option(target=session, option=TMUX_OPT_TEAM, value=team)
-        tmux_set_option(
-            target=session, option=TMUX_OPT_RUN_ID, value=str(run.get("run_id") or "")
-        )
-        tmux_set_option(
-            target=session, option=TMUX_OPT_RUN_DIR, value=str(paths.run_dir)
-        )
-        tmux_set_option(target=session, option=TMUX_OPT_REPO_ROOT, value=str(root))
-
-        # Observability defaults.
-        tmux_cmd(["set-option", "-t", session, "history-limit", "200000"], check=False)
-        tmux_cmd(["set-option", "-t", session, "remain-on-exit", "on"], check=False)
-        tmux_cmd(["set-option", "-t", session, "allow-rename", "off"], check=False)
-
-        manager_pane = tmux_format(f"{session}:{manager_window}", "#{pane_id}")
-        if manager_pane:
-            tmux_mark_pane(pane_id=manager_pane, role=ROLE_MANAGER)
-
-        run["session"] = session
-        run["manager"] = {
-            "window": manager_window,
-            "pane_id": manager_pane,
-        }
-
-        # Help UIs/agents see the ship destination immediately.
-        try:
-            ms = _merge_state(run)
-            cfg = dict(ms.get("config") or {})
-            tb = str(cfg.get("target_branch") or "main").strip() or "main"
-            rm = str(cfg.get("remote") or "origin").strip() or "origin"
-            p = bool(cfg.get("push"))
-            mgr = dict(run.get("manager") or {})
-            mgr["merge_target"] = f"{rm}/{tb} push={p}"
-            run["manager"] = mgr
-        except Exception:
-            pass
+        manager_window = manager_bootstrap.manager_window
+        manager_pane = manager_bootstrap.manager_pane
         save_run(paths, run)
 
         write_event(

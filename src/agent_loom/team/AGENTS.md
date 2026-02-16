@@ -29,6 +29,7 @@
 - `team/inbox.py`: inbox storage backend
 - `team/merge_queue.py`: merge queue storage
 - `team/models.py`: run state and message dataclasses
+- `team/start_state.py`: typed run-state normalization/mutation for `start` create/update paths
 - `team/tmux.py`: tmux subprocess wrappers
 
 **Output contract** (`team/output.py`):
@@ -52,6 +53,7 @@
 - `targets.py` expands/validates send/capture targets and broadcast groups.
 - `prompts.py` renders manager/worker/architect/integrator runtime prompts.
 - `run_state.py` is the source of truth for run path resolution and persisted run state IO.
+- `start_state.py` owns reusable start-path state mutation helpers (merge/model/default/session normalization).
 
 ### Module boundaries and guardrails
 

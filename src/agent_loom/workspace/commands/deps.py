@@ -13,40 +13,39 @@ from agent_loom.workspace.core import (
 from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.output import emit_result
 
-workspace_root = harness_root
 
 
 def cmd_components_refresh_index(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = components_refresh_index(root=root)
     emit_result(args, root, res)
 
 
 def cmd_services_refresh_index(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = services_refresh_index(root=root)
     emit_result(args, root, res)
 
 
 def cmd_deps_show(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = deps_show(component=args.component, root=root)
     emit_result(args, root, res)
 
 
 def cmd_deps_who_uses(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = deps_who_uses(component=args.component, root=root)
     emit_result(args, root, res)
 
 
 def cmd_deps_closure(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = deps_closure(component=args.component, root=root)
     emit_result(args, root, res)
 
 
 def cmd_deps_impacted(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = deps_impacted(component=args.component, root=root)
     emit_result(args, root, res)

@@ -174,6 +174,7 @@ class TestImportDirection:
         SRC_ROOT / "team" / "merge_queue.py",
         SRC_ROOT / "team" / "models.py",
         SRC_ROOT / "team" / "output.py",
+        SRC_ROOT / "team" / "start_state.py",
     ]
 
     WORKSPACE_CORE_MODULES = [

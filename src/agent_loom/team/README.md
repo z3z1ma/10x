@@ -13,6 +13,7 @@ tmux orchestration, inbox durability, merge queue behavior, and sidecar health.
 - `targets.py` expands/validates send/capture targets and broadcast groups.
 - `prompts.py` renders manager/worker/architect/integrator runtime prompts.
 - `run_state.py` is the source of truth for run path resolution and persisted run state IO.
+- `start_state.py` encapsulates typed run-state mutations used by `start()` update/create flows.
 
 ### Boundaries and guardrails
 

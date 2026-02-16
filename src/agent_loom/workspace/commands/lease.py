@@ -12,11 +12,10 @@ from agent_loom.workspace.core import (
 from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.output import emit_result
 
-workspace_root = harness_root
 
 
 def cmd_lease_acquire(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = lease_acquire(
         key=args.key,
         ttl=str(getattr(args, "ttl", "") or ""),
@@ -27,24 +26,24 @@ def cmd_lease_acquire(args: argparse.Namespace) -> None:
 
 
 def cmd_lease_release(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = lease_release(key=args.key, root=root)
     emit_result(args, root, res)
 
 
 def cmd_lease_ls(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = lease_list(root=root)
     emit_result(args, root, res)
 
 
 def cmd_lease_show(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = lease_show(key=args.key, root=root)
     emit_result(args, root, res)
 
 
 def cmd_lease_renew(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = lease_renew(key=args.key, ttl=str(getattr(args, "ttl", "") or ""), root=root)
     emit_result(args, root, res)

@@ -1,7 +1,7 @@
 # Loom Cohesion + Simplification Plan (Quick Wins + Staged Deep Refactors)
 
 Date: 2026-02-16
-Owner ticket: `al-8543`
+Owner ticket: `al-3185`
 
 ## Requirements Summary
 
@@ -116,3 +116,10 @@ Owner ticket: `al-8543`
 - **PR C (Team staged refactor):** Phase 3
 
 This sequencing keeps risk controlled while delivering immediate cohesion improvements early.
+
+## Execution Progress
+
+- 2026-02-16: Phase 1 completed under `al-8543` (closed).
+- 2026-02-16: `al-3185` in progress; Phase 2 parser/output cohesion refactor completed and initial Phase 3 start-path extraction landed.
+- 2026-02-16: Phase 3 continued under `al-3185`; `team.core.start()` lock/update/create/session bootstrapping paths were extracted into focused helpers and `start()` was reduced to orchestration glue.
+- 2026-02-16: Phase 3 completed under `al-3185`; start-path run-state mutation logic moved into `team/start_state.py` with typed helper dataclasses (`StartMergeOptions`, `StartModelOverrides`), `team.core` now delegates merge/default/model/session normalization to shared helpers, and focused tests were added for state normalization, model override merges, merge config validation, mount precedence, and session adoption.

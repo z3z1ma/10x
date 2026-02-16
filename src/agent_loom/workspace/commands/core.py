@@ -21,7 +21,6 @@ from agent_loom.workspace.core import (
 from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.output import emit_ok, emit_result
 
-workspace_root = harness_root
 
 
 def cmd_add(args: argparse.Namespace) -> None:
@@ -52,13 +51,13 @@ def cmd_remove(args: argparse.Namespace) -> None:
 
 
 def cmd_list(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = list_repos(root=root)
     emit_result(args, root, res)
 
 
 def cmd_sync(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = sync(
         repos=args.repos,
         sets=args.sets,
@@ -72,7 +71,7 @@ def cmd_sync(args: argparse.Namespace) -> None:
 
 
 def cmd_status(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = status(
         repos=args.repos,
         sets=args.sets,
@@ -85,7 +84,7 @@ def cmd_status(args: argparse.Namespace) -> None:
 
 
 def cmd_context(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = context(
         repos=args.repos,
         sets=args.sets,
@@ -97,7 +96,7 @@ def cmd_context(args: argparse.Namespace) -> None:
 
 
 def cmd_branch(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = branch(
         branch=args.branch,
         reset=bool(args.reset),
@@ -116,7 +115,7 @@ def cmd_branch(args: argparse.Namespace) -> None:
 
 
 def cmd_snapshot_capture(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = snapshot(
         name=args.name,
         group=args.group,
@@ -130,13 +129,13 @@ def cmd_snapshot_capture(args: argparse.Namespace) -> None:
 
 
 def cmd_snapshot_diff(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = snapshot_diff(name=args.name, root=root)
     emit_result(args, root, res)
 
 
 def cmd_snapshot_restore(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = snapshot_restore(
         name=args.name,
         confirm=bool(args.yes),
@@ -147,7 +146,7 @@ def cmd_snapshot_restore(args: argparse.Namespace) -> None:
 
 
 def cmd_deepen(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = deepen(repo=args.repo, depth=int(args.depth), root=root)
     emit_result(args, root, res)
 

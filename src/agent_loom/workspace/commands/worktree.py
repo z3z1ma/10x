@@ -19,11 +19,10 @@ from agent_loom.workspace.core import (
 from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.output import emit_result
 
-workspace_root = harness_root
 
 
 def cmd_worktree_add(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = worktree_add(
         group=args.group,
         base_ref=args.base_ref,
@@ -40,7 +39,7 @@ def cmd_worktree_add(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_rm(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     req = str(getattr(args, "require_lease", "") or "").strip()
     if req:
         lease_require_active(key=req, root=root)
@@ -58,13 +57,13 @@ def cmd_worktree_rm(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_ls(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = worktree_ls(root=root)
     emit_result(args, root, res)
 
 
 def cmd_worktree_prune(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = worktree_prune(
         repos=args.repos,
         sets=args.sets,
@@ -76,7 +75,7 @@ def cmd_worktree_prune(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_group_status(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = worktree_group_status(
         group=args.group,
         repos=args.repos,
@@ -89,7 +88,7 @@ def cmd_worktree_group_status(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_group_check_clean(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = worktree_group_check_clean(
         group=args.group,
         allow_untracked=bool(args.allow_untracked),
@@ -103,7 +102,7 @@ def cmd_worktree_group_check_clean(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_group_check_divergence(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = worktree_group_check_divergence(
         group=args.group,
         base=str(args.base),
@@ -117,7 +116,7 @@ def cmd_worktree_group_check_divergence(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_group_diff(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     res = worktree_group_diff(
         group=str(args.group),
         diff_mode=str(getattr(args, "mode", "dirty") or "dirty"),
@@ -135,7 +134,7 @@ def cmd_worktree_group_diff(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_group_annotate(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     from agent_loom.workspace.worktree_meta import harness_group_annotate
 
     res = harness_group_annotate(
@@ -151,7 +150,7 @@ def cmd_worktree_group_annotate(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_rebase(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     req = str(getattr(args, "require_lease", "") or "").strip()
     if req:
         lease_require_active(key=req, root=root)
@@ -168,7 +167,7 @@ def cmd_worktree_rebase(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_push(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     req = str(getattr(args, "require_lease", "") or "").strip()
     if req:
         lease_require_active(key=req, root=root)
@@ -188,7 +187,7 @@ def cmd_worktree_push(args: argparse.Namespace) -> None:
 
 
 def cmd_worktree_gc(args: argparse.Namespace) -> None:
-    root = workspace_root()
+    root = harness_root()
     req = str(getattr(args, "require_lease", "") or "").strip()
     if req:
         lease_require_active(key=req, root=root)
