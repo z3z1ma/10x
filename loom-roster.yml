@@ -18,31 +18,31 @@ communication:
       - member:ux
       - member:designer
 members:
-  - role: reviewer
-    id: ux
-    agent: loom-team-worker
-    always_on: false
+  - id: ux
+    role: reviewer
     harness: codex
+    agent: loom-team-worker
     model: gpt-5.3-codex
+    always_on: false
   - id: designer
     role: designer
-    always_on: true
     harness: codex
     agent: loom-team-worker
     model: gpt-5.3-codex
+    always_on: true
 builtins:
   integrator:
     agent: loom-team-integrator
-    harness: omp
+    harness: codex
     model: gpt-5.3-codex
   worker:
     agent: loom-team-worker
     harness: codex
     model: gpt-5.3-codex
   manager:
-    harness: omp
     agent: loom-team-manager
-    model: openai-codex/gpt-5.3-codex-spark
+    harness: codex
+    model: gpt-5.3-codex-spark
   architect:
     harness: omp
     agent: loom-team-architect
