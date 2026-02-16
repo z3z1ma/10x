@@ -1,0 +1,28 @@
+---
+id: repeat-team-merge-until-queue-state-advances
+title: Repeat team merge until queue state advances
+trigger: When integrating worker-delivered branches from a Loom team merge queue
+confidence: 0.7500
+status: active
+domain: workflow
+source: local
+created_at: 2026-02-15T23:51:49.846041Z
+updated_at: 2026-02-16T00:07:15.797505Z
+tags: workflow, team, merge-queue, integration, orchestration
+notes: The command produced successive queue-state views in one run, indicating repeated invocation is required to drive and verify merge-queue progression.
+---
+
+## Action
+Run `loom team merge <team>` in a short loop during integration handoff and use each response state (`sha`, `[queued]`, claimed record) to confirm queue advancement before taking branch-level merge actions.
+
+## Evidence
+- ts=2026-02-15T23:51:20.115053Z source_id=obs-merge-235120 source_hash=loom-team-merge-returned-sha
+- ts=2026-02-15T23:51:23.027270Z source_id=obs-merge-235123 source_hash=loom-team-merge-queued-ticket
+- ts=2026-02-15T23:51:23.560064Z source_id=obs-merge-235123b source_hash=loom-team-merge-claimed-record
+- ts=2026-02-15T23:55:44.636341Z source_id=obs-merge-235544 source_hash=loom-team-merge-done
+- ts=2026-02-15T23:55:49.171182Z source_id=obs-merge-235549 source_hash=loom-team-merge-empty-then-no-output
+- ts=2026-02-16T00:06:47.697398Z source_id=obs-merge-000647 source_hash=loom-team-merge-enqueued-id
+- ts=2026-02-16T00:06:51.820180Z source_id=obs-merge-000651 source_hash=loom-team-merge-claimed-record
+
+## Notes
+The command produced successive queue-state views in one run, indicating repeated invocation is required to drive and verify merge-queue progression.

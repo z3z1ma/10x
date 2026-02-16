@@ -1,0 +1,33 @@
+---
+id: poll-team-inbox-for-acks-and-status
+title: Poll team inbox for acknowledgements and worker status
+trigger: While managing an active team run with asynchronous worker updates
+confidence: 0.8600
+status: active
+domain: workflow
+source: local
+created_at: 2026-02-15T23:40:44.698691Z
+updated_at: 2026-02-16T00:07:15.797505Z
+tags: workflow, team, inbox, orchestration, acknowledgements
+notes: Observed across multiple ack cycles for different recipients, confirming this is durable orchestration behavior.
+---
+
+## Action
+Use `loom team inbox <team>` repeatedly during active coordination loops to collect worker updates, verify ack transitions, and drive follow-up actions from observed status rather than assumptions.
+
+## Evidence
+- ts=2026-02-15T23:47:31.559884Z source_id=obs-inbox-234731 source_hash=loom-team-inbox-miyagido-unack-w2
+- ts=2026-02-15T23:47:33.805581Z source_id=obs-inbox-234733 source_hash=loom-team-inbox-miyagido-ack-w2
+- ts=2026-02-15T23:47:54.462103Z source_id=obs-inbox-234754 source_hash=loom-team-inbox-miyagido-unack-manager
+- ts=2026-02-15T23:47:57.139136Z source_id=obs-inbox-234757 source_hash=loom-team-inbox-miyagido-ack-manager
+- ts=2026-02-15T23:48:32.969803Z source_id=obs-inbox-234832 source_hash=loom-team-inbox-miyagido-unack-w2-round2
+- ts=2026-02-15T23:48:35.738466Z source_id=obs-inbox-234835 source_hash=loom-team-inbox-miyagido-ack-w2-round2
+- ts=2026-02-15T23:51:08.311306Z source_id=obs-inbox-235108 source_hash=loom-team-inbox-miyagido-unack-ready-for-review
+- ts=2026-02-15T23:51:12.409203Z source_id=obs-inbox-235112 source_hash=loom-team-inbox-miyagido-acked-ready-for-review
+- ts=2026-02-15T23:55:49.329065Z source_id=obs-inbox-235549 source_hash=loom-team-inbox-merge-unack-detail
+- ts=2026-02-15T23:55:52.819040Z source_id=obs-inbox-235552 source_hash=loom-team-inbox-ack-merge-message
+- ts=2026-02-16T00:01:10.655931Z source_id=obs-inbox-000110 source_hash=loom-team-inbox-unack-send-w3
+- ts=2026-02-16T00:06:44.968497Z source_id=obs-inbox-000644 source_hash=loom-team-inbox-ack-ready-for-review
+
+## Notes
+Observed across multiple ack cycles for different recipients, confirming this is durable orchestration behavior.

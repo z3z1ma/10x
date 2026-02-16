@@ -1,10 +1,10 @@
 {
   "last_auto_apply_at": "2026-02-15T18:43:41.419261Z",
   "last_auto_run_at": "2026-02-15T18:43:41.419261Z",
-  "observations_count": 7935,
-  "observations_offset_bytes": 6258740,
+  "observations_count": 9637,
+  "observations_offset_bytes": 7761613,
   "observations_prefix_sha256": "1b9799d1f16151acb585382cd139c4d2b0b8b8a215a504cec066795ea8b09d3a",
-  "observations_tail_sha256": "4c88729175042c056ebb790de12e30a405fd44ab54316a0d67463e0002882c7f",
-  "updated_at": "2026-02-15T21:07:17.011612Z",
+  "observations_tail_sha256": "9daab420358ea84f4ab721f9c05480870e985249a05496cda8bffdfed8e66dd2",
+  "updated_at": "2026-02-16T00:08:08.317105Z",
   "version": 3
 }
