@@ -2,28 +2,26 @@
 id: validate-focused-tests-before-full-suite
 title: Validate focused tests before full-suite gates
 trigger: When implementing or debugging changes scoped to a specific module or harness
-confidence: 0.7600
+confidence: 0.7900
 status: active
 domain: workflow
 source: local
 created_at: 2026-02-15T18:42:48.199834Z
-updated_at: 2026-02-15T23:50:38.827061Z
+updated_at: 2026-02-16T00:22:16.771339Z
 tags: workflow, testing, iteration, validation
-notes: This sequence appears across two harness integration efforts and consistently precedes full-suite verification.
+notes: The run did not proceed to full-suite until the scoped test was made green, then gates followed in order.
 ---
 
 ## Action
 Run targeted pytest files for the area being changed until green, then run repository-wide lint/type/test gates.
 
 ## Evidence
-- ts=2026-02-15T18:11:53.346482Z source_id=obs-pytest-181153 source_hash=uv-run-pytest-tests-test_team_harness_omp-py
-- ts=2026-02-15T18:12:01.741295Z source_id=obs-pytest-181201 source_hash=uv-run-pytest-tests-test_team_harness_omp-py-retry
-- ts=2026-02-15T18:12:09.398122Z source_id=obs-pytest-181209 source_hash=uv-run-pytest-tests-test_team_harness_omp-py-final
-- ts=2026-02-15T18:34:54.382298Z source_id=obs-pytest-183454 source_hash=uv-run-pytest-tests-test_team_harness_codex-py
-- ts=2026-02-15T23:50:13.936594Z source_id=obs-pytest-focused-235013 source_hash=uv-run-pytest-tests-test_ticket_ux-py
-- ts=2026-02-15T23:50:22.179208Z source_id=obs-gate-ruff-235022 source_hash=uv-run-ruff-check
-- ts=2026-02-15T23:50:24.699743Z source_id=obs-gate-pyright-235024 source_hash=uv-run-basedpyright
-- ts=2026-02-15T23:50:38.031245Z source_id=obs-pytest-full-235038 source_hash=uv-run-pytest
+- ts=2026-02-16T00:19:43.228000Z source_id=obs-pytest-focused-fail-001943 source_hash=uv-run-pytest-tests-test-team-start-yaml-composition-fail
+- ts=2026-02-16T00:19:54.256391Z source_id=obs-pytest-focused-fail-001954 source_hash=uv-run-pytest-tests-test-team-start-yaml-composition-fail-retry
+- ts=2026-02-16T00:20:06.348082Z source_id=obs-pytest-focused-pass-002006 source_hash=uv-run-pytest-tests-test-team-start-yaml-composition-pass
+- ts=2026-02-16T00:20:09.421367Z source_id=obs-gate-ruff-002009 source_hash=uv-run-ruff-check-pass
+- ts=2026-02-16T00:22:07.544781Z source_id=obs-gate-pyright-002207 source_hash=uv-run-basedpyright-pass
+- ts=2026-02-16T00:22:15.916011Z source_id=obs-gate-pytest-full-002215 source_hash=uv-run-pytest-full-start
 
 ## Notes
-This sequence appears across two harness integration efforts and consistently precedes full-suite verification.
+The run did not proceed to full-suite until the scoped test was made green, then gates followed in order.

@@ -2,12 +2,12 @@
 id: reset-team-role-env-for-full-pytest
 title: Reset team role env for full pytest runs
 trigger: When running repository-wide `uv run pytest` from team-managed or worker harness contexts
-confidence: 0.6800
+confidence: 0.7000
 status: active
 domain: testing
 source: local
 created_at: 2026-02-15T23:53:14.030817Z
-updated_at: 2026-02-16T00:07:15.797505Z
+updated_at: 2026-02-16T00:24:47.509447Z
 tags: testing, pytest, environment, team, reliability
 notes: The same full-suite command failed twice with team-role permission errors before an immediate retry with LOOM_TEAM_ROLE cleared.
 ---
@@ -21,6 +21,8 @@ Before running repository-wide `uv run pytest`, clear role-scoped environment (`
 - ts=2026-02-15T23:53:13.299323Z source_id=obs-pytest-retry-235313 source_hash=LOOM_TEAM_ROLE-empty-uv-run-pytest
 - ts=2026-02-15T23:55:32.200355Z source_id=obs-env-reset-235532 source_hash=env-u-team-role-before-pytest-session
 - ts=2026-02-16T00:07:15.067685Z source_id=obs-env-reset-000715 source_hash=env-u-team-role-pre-full-suite
+- ts=2026-02-16T00:23:36.211908Z source_id=obs-pytest-fail-002336 source_hash=uv-run-pytest-teamerror-role-worker-clock-out
+- ts=2026-02-16T00:24:46.775172Z source_id=obs-env-reset-002446 source_hash=env-u-team-role-pre-pytest-retry
 
 ## Notes
 The same full-suite command failed twice with team-role permission errors before an immediate retry with LOOM_TEAM_ROLE cleared.

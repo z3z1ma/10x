@@ -2,12 +2,12 @@
 id: check-working-tree-with-git-status
 title: Check working tree state with git status
 trigger: Before resuming edits or after tool activity that may change repository state
-confidence: 0.8200
+confidence: 0.8300
 status: active
 domain: workflow
 source: local
 created_at: 2026-02-15T21:06:52.548579Z
-updated_at: 2026-02-16T00:07:15.797505Z
+updated_at: 2026-02-16T00:24:47.509447Z
 tags: workflow, git, state-awareness, safety
 notes: This pattern appears around coordination and validation transitions, reducing state drift risk before next actions.
 ---
@@ -29,6 +29,11 @@ Run `git status --porcelain` (or `git status --short`) at key checkpoints to con
 - ts=2026-02-15T23:54:55.362053Z source_id=obs-git-status-235455 source_hash=git-status-porcelain
 - ts=2026-02-16T00:01:29.233006Z source_id=obs-git-status-000129 source_hash=git-status-short-checkpoint
 - ts=2026-02-16T00:06:54.400484Z source_id=obs-git-status-000654 source_hash=git-status-short-branch-pre-merge
+- ts=2026-02-16T00:22:56.553761Z source_id=obs-git-status-002256 source_hash=git-status-porcelain-pre-validation
+- ts=2026-02-16T00:23:40.331963Z source_id=obs-git-status-002340 source_hash=git-status-short-post-pytest
+- ts=2026-02-16T00:23:53.036305Z source_id=obs-git-status-002353 source_hash=git-status-short-clean-after-commit
+- ts=2026-02-16T00:24:26.769134Z source_id=obs-git-status-002426 source_hash=git-status-short-branch-post-merge-queue
+- ts=2026-02-16T00:24:47.342356Z source_id=obs-git-status-002447 source_hash=git-status-porcelain-post-validation
 
 ## Notes
 This pattern appears around coordination and validation transitions, reducing state drift risk before next actions.

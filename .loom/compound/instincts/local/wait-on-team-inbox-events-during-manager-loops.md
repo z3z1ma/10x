@@ -2,12 +2,12 @@
 id: wait-on-team-inbox-events-during-manager-loops
 title: Wait on team inbox events during manager loops
 trigger: When managing active team runs and expecting asynchronous worker responses
-confidence: 0.7700
+confidence: 0.7900
 status: active
 domain: workflow
 source: local
 created_at: 2026-02-15T23:49:19.074072Z
-updated_at: 2026-02-16T00:07:15.797505Z
+updated_at: 2026-02-16T00:24:47.509447Z
 tags: workflow, team, wait, orchestration, efficiency
 notes: This reduces busy polling while still keeping manager response latency low after worker updates arrive.
 ---
@@ -21,6 +21,8 @@ Use `loom team wait <team>` to block for inbox activity, then immediately inspec
 - ts=2026-02-15T23:55:45.180603Z source_id=obs-team-wait-235545 source_hash=loom-team-wait-awake-manager
 - ts=2026-02-16T00:01:04.383373Z source_id=obs-team-wait-000104 source_hash=loom-team-wait-awake-manager-round2
 - ts=2026-02-16T00:05:51.927466Z source_id=obs-team-wait-000551 source_hash=loom-team-wait-awake-integrator
+- ts=2026-02-16T00:24:12.377363Z source_id=obs-team-wait-002412 source_hash=loom-team-wait-awake-manager
+- ts=2026-02-16T00:24:23.775718Z source_id=obs-team-wait-002423 source_hash=loom-team-wait-before-merge-check
 
 ## Notes
 This reduces busy polling while still keeping manager response latency low after worker updates arrive.
