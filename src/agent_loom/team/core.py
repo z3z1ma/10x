@@ -42,7 +42,6 @@ import dataclasses
 import datetime as dt
 import hashlib
 import os
-import random
 import shlex
 import shutil
 import signal
@@ -79,8 +78,6 @@ from agent_loom.team.constants import (
     CONTROL_OP_BOUNCE,
     DEFAULT_ARCHITECT_AGENT,
     DEFAULT_AUTOCAPTURE_LINES,
-    DEFAULT_AUTOCAPTURE_MAX_S,
-    DEFAULT_AUTOCAPTURE_MIN_S,
     DEFAULT_DISBAND_REMINDER_RESEND_S,
     DEFAULT_DONE_CHECK_S,
     DEFAULT_HARNESS,
@@ -113,7 +110,6 @@ from agent_loom.team.constants import (
 )
 from agent_loom.team.errors import TeamError
 from agent_loom.team.events import (
-    _event_stamp,
     best_effort,
     safe_write_event,
     write_event,
@@ -221,7 +217,6 @@ from agent_loom.team.time import _iso_z
 from agent_loom.team.tmux import (
     _pane_can_receive_chat,
     tmux_available,
-    tmux_capture,
     tmux_cmd,
     tmux_env_flags,
     tmux_format,
@@ -239,6 +234,12 @@ from agent_loom.team.tmux import (
     tmux_unique_window_name,
     tmux_wait_for,
     tmux_window_exists,
+)
+from agent_loom.team.waiting import (
+    capture_pane_and_persist as _capture_pane_and_persist_impl,
+    manager_checkin_after_wait as _maybe_manager_checkin_after_wait_impl,
+    next_autocapture_delay_s,
+    wait_for_wake,
 )
 from agent_loom.team.worker_planning import (
     active_spawn_headcount as _active_spawn_headcount,
@@ -1407,63 +1408,17 @@ def _capture_pane_and_persist(
     no_join: bool,
     summary: str,
 ) -> Dict[str, Any]:
-    captured_at = _iso_z()
-    out = tmux_capture(pane_id, lines=int(lines), join_wrapped=not bool(no_join))
-
-    # Persist capture for later UI/audit inspection.
-    cap_id = uuid.uuid4().hex[:12]
-    safe_target = (
-        sanitize(str(target_key or ""), allow=r"a-zA-Z0-9._-", max_len=40) or "target"
-    )
-    base = f"{_event_stamp(captured_at)}_{cap_id}_{safe_target}"
-    cap_txt = paths.captures_dir / f"{base}.txt"
-    cap_json = paths.captures_dir / f"{base}.json"
-
-    def _persist_capture() -> None:
-        paths.captures_dir.mkdir(parents=True, exist_ok=True)
-        _atomic_write_text(cap_txt, out)
-        _atomic_write_json(
-            cap_json,
-            {
-                "id": cap_id,
-                "captured_at": captured_at,
-                "team": str(run.get("team") or paths.team),
-                "run_id": str(run.get("run_id") or ""),
-                "target": dict(target_meta or {}),
-                "pane": dict(pane or {}),
-                "lines": int(lines),
-                "output_file": str(cap_txt),
-                "bytes": len(out.encode("utf-8")),
-            },
-        )
-
-    best_effort(_persist_capture, label="capture.persist")
-
-    safe_write_event(
+    return _capture_pane_and_persist_impl(
         paths,
-        event_type="capture.saved",
         run=run,
-        summary=str(summary or f"Captured {safe_target} lines={int(lines)}"),
-        refs={
-            **(dict(target_meta or {})),
-            "capture_id": cap_id,
-            "capture_file": str(cap_txt),
-            "capture_meta": str(cap_json),
-        },
-        data={
-            "lines": int(lines),
-            "bytes": len(out.encode("utf-8")),
-            "no_join": bool(no_join),
-        },
+        pane_id=pane_id,
+        target_key=target_key,
+        target_meta=target_meta,
+        pane=pane,
+        lines=lines,
+        no_join=no_join,
+        summary=summary,
     )
-
-    return {
-        "id": cap_id,
-        "captured_at": captured_at,
-        "output": out,
-        "output_file": str(cap_txt),
-        "meta_file": str(cap_json),
-    }
 
 
 def tui(
@@ -1787,15 +1742,6 @@ def tui(
     # Periodic, low-overhead pane snapshots for the UI.
     # This reuses the same persistence path as `loom team capture`.
 
-    def _next_autocapture_delay_s(*, initial: bool) -> float:
-        if initial:
-            return 30.0 + (random.random() * 60.0)  # 30s..90s (stagger startup)
-        lo = float(min(DEFAULT_AUTOCAPTURE_MIN_S, DEFAULT_AUTOCAPTURE_MAX_S))
-        hi = float(max(DEFAULT_AUTOCAPTURE_MIN_S, DEFAULT_AUTOCAPTURE_MAX_S))
-        if hi <= 0 or hi <= lo:
-            return max(60.0, lo)
-        return lo + (random.random() * (hi - lo))
-
     last_capture_at: float = 0.0
     last_screen_hash: str = ""
     screen_unchanged_since: float = 0.0
@@ -1806,7 +1752,7 @@ def tui(
         nonlocal last_screen_hash
         nonlocal screen_unchanged_since
         nonlocal idle_screen_notified
-        next_at = time.time() + _next_autocapture_delay_s(initial=True)
+        next_at = time.time() + next_autocapture_delay_s(initial=True)
         while not stop.is_set():
             time.sleep(30.0)
             if stop.is_set():
@@ -1817,12 +1763,12 @@ def tui(
             try:
                 session = tmux_format(pane_id, "#{session_name}")
                 if not session or not tmux_has_session(session):
-                    next_at = now + _next_autocapture_delay_s(initial=False)
+                    next_at = now + next_autocapture_delay_s(initial=False)
                     continue
                 panes = tmux_list_panes(session)
                 pane = panes.get(pane_id)
                 if not pane:
-                    next_at = now + _next_autocapture_delay_s(initial=False)
+                    next_at = now + next_autocapture_delay_s(initial=False)
                     continue
 
                 r = load_run(paths)
@@ -1901,7 +1847,7 @@ def tui(
                     last_capture_at = now
             except Exception:
                 pass
-            next_at = time.time() + _next_autocapture_delay_s(initial=False)
+            next_at = time.time() + next_autocapture_delay_s(initial=False)
 
     threading.Thread(target=autocapture_loop, daemon=True).start()
 
@@ -6053,20 +5999,15 @@ def wait(
         op_id=op_id,
     )
 
-    use_tmux = False
-    if session and tmux_available():
-        try:
-            use_tmux = tmux_has_session(session)
-        except Exception:
-            use_tmux = False
-
-    wake_reason = "sleep"
-    signaled = False
-    if use_tmux:
-        signaled = tmux_wait_for(ch, timeout_s=float(seconds))
-        wake_reason = "signal" if signaled else "timeout"
-    else:
-        time.sleep(seconds)
+    wake_reason, signaled = wait_for_wake(
+        session=session,
+        channel=ch,
+        seconds=int(seconds),
+        tmux_available_fn=tmux_available,
+        tmux_has_session_fn=tmux_has_session,
+        tmux_wait_for_fn=tmux_wait_for,
+        sleep_fn=time.sleep,
+    )
     safe_write_event(
         paths,
         event_type="wait.finished",
@@ -6104,152 +6045,15 @@ def wait(
 
 
 def _maybe_manager_checkin_after_wait(*, paths: RunPaths, wake_reason: str) -> None:
-    timeout_like = str(wake_reason or "").strip().lower() in {"timeout", "sleep"}
-    now = time.time()
-
-    # Check-in policy (kept intentionally simple and deterministic):
-    # - after N consecutive timeout-like waits, nudge up to K active workers
-    # - per-worker cooldown prevents harassment
-    streak_threshold = 2
-    per_worker_cooldown_s = 20.0 * 60.0
-    max_targets = 2
-
-    def _get_ops_dict(run: Dict[str, Any]) -> Dict[str, Any]:
-        raw = run.get("ops")
-        return dict(raw) if isinstance(raw, dict) else {}
-
-    def _get_mgr_dict(ops: Dict[str, Any]) -> Dict[str, Any]:
-        raw = ops.get("manager")
-        return dict(raw) if isinstance(raw, dict) else {}
-
-    def _get_checkin_dict(mgr: Dict[str, Any]) -> Dict[str, Any]:
-        raw = mgr.get("checkin")
-        return dict(raw) if isinstance(raw, dict) else {}
-
-    def _coerce_float(v: Any) -> float:
-        try:
-            return float(v)
-        except Exception:
-            return 0.0
-
-    def _coerce_int(v: Any) -> int:
-        try:
-            return int(v)
-        except Exception:
-            return 0
-
-    with locked_run(paths) as run:
-        ops = _get_ops_dict(run)
-        mgr = _get_mgr_dict(ops)
-        checkin = _get_checkin_dict(mgr)
-
-        streak = _coerce_int(checkin.get("timeout_streak"))
-        by_worker_raw = checkin.get("by_worker")
-        by_worker: Dict[str, float] = {}
-        if isinstance(by_worker_raw, dict):
-            for k, v in by_worker_raw.items():
-                kk = str(k).strip()
-                if kk:
-                    by_worker[kk] = _coerce_float(v)
-
-        if not timeout_like:
-            # Any inbox signal (or other wake) breaks the streak.
-            checkin["timeout_streak"] = 0
-            checkin["updated_at"] = now
-            mgr["checkin"] = checkin
-            ops["manager"] = mgr
-            run["ops"] = ops
-            return
-
-        streak += 1
-
-        # Persist the streak even if we don't check in this time.
-        checkin["timeout_streak"] = streak
-        checkin["updated_at"] = now
-
-        if streak < streak_threshold:
-            mgr["checkin"] = checkin
-            ops["manager"] = mgr
-            run["ops"] = ops
-            return
-
-        active_count, active_ids, _active_roles = _active_spawn_headcount(run)
-        if active_count <= 0:
-            # Nothing to check in on; keep streak but don't spam.
-            mgr["checkin"] = checkin
-            ops["manager"] = mgr
-            run["ops"] = ops
-            return
-
-        eligible: list[str] = []
-        for wid in active_ids:
-            last = float(by_worker.get(str(wid), 0.0))
-            if last <= 0.0 or (now - last) >= per_worker_cooldown_s:
-                eligible.append(str(wid))
-
-        # Pick the least-recently-checkin workers first (stable ordering).
-        eligible.sort(key=lambda w: (by_worker.get(w, 0.0), w))
-        targets = eligible[: int(max_targets)]
-        if not targets:
-            # Cooldown blocks all; just persist streak.
-            mgr["checkin"] = checkin
-            ops["manager"] = mgr
-            run["ops"] = ops
-            return
-
-        sent_to: list[str] = []
-        for wid in targets:
-            try:
-                msg = (
-                    "TEAM: manager check-in. Please post a loom ticket update (status + next step). "
-                    "If blocked, summarize what you tried and give 2 options. "
-                    "If you have no moves, you may self-retire (keeps worktree): "
-                    f"`loom team retire {paths.team} {wid}`."
-                )
-                _inbox_write_and_maybe_nudge(
-                    paths=paths,
-                    run=run,
-                    target=wid,
-                    message=msg,
-                    sender="manager",
-                    kind="checkin",
-                    meta_extra={
-                        "op": "manager_checkin",
-                        "timeout_streak": streak,
-                        "worker_id": wid,
-                    },
-                    nudge=True,
-                    force=False,
-                    line_info="manager_checkin",
-                )
-                by_worker[str(wid)] = now
-                sent_to.append(str(wid))
-            except Exception:
-                continue
-
-        if sent_to:
-            # Reset streak after a successful check-in to avoid repeated mass nudges.
-            checkin["timeout_streak"] = 0
-            checkin["last_checkin_at"] = now
-            checkin["by_worker"] = dict(by_worker)
-
-            write_event(
-                paths,
-                event_type="manager.checkin",
-                run=run,
-                summary=f"Manager check-in sent_to={','.join(sent_to)}",
-                refs={"recipients": ",".join(sent_to)},
-                data={
-                    "sent_to": list(sent_to),
-                    "timeout_streak": int(streak),
-                    "cooldown_s": int(per_worker_cooldown_s),
-                    "max_targets": int(max_targets),
-                },
-            )
-
-        mgr["checkin"] = checkin
-        ops["manager"] = mgr
-        run["ops"] = ops
+    _maybe_manager_checkin_after_wait_impl(
+        paths=paths,
+        wake_reason=wake_reason,
+        now_fn=time.time,
+        locked_run_fn=locked_run,
+        active_spawn_headcount_fn=_active_spawn_headcount,
+        inbox_write_and_maybe_nudge_fn=_inbox_write_and_maybe_nudge,
+        write_event_fn=write_event,
+    )
 
 
 def merge_enqueue(
