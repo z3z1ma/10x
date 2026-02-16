@@ -7,7 +7,7 @@ status: active
 domain: workflow
 source: local
 created_at: 2026-02-15T18:42:48.199834Z
-updated_at: 2026-02-16T00:22:16.771339Z
+updated_at: 2026-02-16T00:41:48.063183Z
 tags: workflow, testing, iteration, validation
 notes: The run did not proceed to full-suite until the scoped test was made green, then gates followed in order.
 ---
@@ -22,6 +22,10 @@ Run targeted pytest files for the area being changed until green, then run repos
 - ts=2026-02-16T00:20:09.421367Z source_id=obs-gate-ruff-002009 source_hash=uv-run-ruff-check-pass
 - ts=2026-02-16T00:22:07.544781Z source_id=obs-gate-pyright-002207 source_hash=uv-run-basedpyright-pass
 - ts=2026-02-16T00:22:15.916011Z source_id=obs-gate-pytest-full-002215 source_hash=uv-run-pytest-full-start
+- ts=2026-02-16T00:40:16.646101Z source_id=obs-pytest-focused-fail-004016 source_hash=uv-run-pytest-tests-test-team-spawn-yaml-members-fail
+- ts=2026-02-16T00:41:14.658737Z source_id=obs-pytest-focused-pass-004114 source_hash=uv-run-pytest-tests-test-team-spawn-yaml-members-pass
+- ts=2026-02-16T00:41:17.513137Z source_id=obs-gate-ruff-004117 source_hash=uv-run-ruff-check-pass
+- ts=2026-02-16T00:41:29.097667Z source_id=obs-gate-pyright-004129 source_hash=uv-run-basedpyright-pass
 
 ## Notes
 The run did not proceed to full-suite until the scoped test was made green, then gates followed in order.

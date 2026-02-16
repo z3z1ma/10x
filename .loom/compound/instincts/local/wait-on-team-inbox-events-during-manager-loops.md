@@ -7,7 +7,7 @@ status: active
 domain: workflow
 source: local
 created_at: 2026-02-15T23:49:19.074072Z
-updated_at: 2026-02-16T00:24:47.509447Z
+updated_at: 2026-02-16T00:41:48.063183Z
 tags: workflow, team, wait, orchestration, efficiency
 notes: This reduces busy polling while still keeping manager response latency low after worker updates arrive.
 ---
@@ -23,6 +23,8 @@ Use `loom team wait <team>` to block for inbox activity, then immediately inspec
 - ts=2026-02-16T00:05:51.927466Z source_id=obs-team-wait-000551 source_hash=loom-team-wait-awake-integrator
 - ts=2026-02-16T00:24:12.377363Z source_id=obs-team-wait-002412 source_hash=loom-team-wait-awake-manager
 - ts=2026-02-16T00:24:23.775718Z source_id=obs-team-wait-002423 source_hash=loom-team-wait-before-merge-check
+- ts=2026-02-16T00:38:54.953734Z source_id=obs-team-wait-003854 source_hash=loom-team-wait-awake-manager-yaml-sprint
+- ts=2026-02-16T00:41:03.246260Z source_id=obs-team-wait-004103 source_hash=loom-team-wait-awake-manager-ready-check
 
 ## Notes
 This reduces busy polling while still keeping manager response latency low after worker updates arrive.
