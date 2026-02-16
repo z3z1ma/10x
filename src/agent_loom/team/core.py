@@ -1223,6 +1223,7 @@ def _codex_tui_argv(
         argv.append(prompt)
     return argv
 
+
 def _seed_codex_home_auth(*, codex_home: Path) -> None:
     shared_home_env = str(os.environ.get("CODEX_HOME") or "").strip()
     shared_home = (
@@ -1252,8 +1253,6 @@ def _seed_codex_home_auth(*, codex_home: Path) -> None:
                 shutil.copy2(src, dst)
             except Exception:
                 continue
-
-
 
 
 def _team_tui_argv(
@@ -2037,7 +2036,7 @@ def tui(
             _seed_codex_home_auth(codex_home=codex_home)
             child_env["CODEX_HOME"] = str(codex_home)
             sandbox = "workspace-write"
-            approval = "on-request"
+            approval = "never"
             if role in (ROLE_MANAGER, ROLE_ARCHITECT, ROLE_INTEGRATOR):
                 sandbox = "read-only"
             child_argv = _codex_tui_argv(
