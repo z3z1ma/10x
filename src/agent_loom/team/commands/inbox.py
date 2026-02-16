@@ -4,15 +4,10 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any
 
-from agent_loom.core.cli_output import emit_json, make_ok_envelope, normalize_payload
 from agent_loom.team.core import inbox_ack, inbox_list, inbox_send, inbox_show
+from agent_loom.team.output import emit_json_result
 from agent_loom.team.strings import message_preview
-
-
-def emit_json_result(result: Any) -> None:
-    emit_json(make_ok_envelope(normalize_payload(result)), indent=2)
 
 
 def cmd_inbox_list(args: argparse.Namespace) -> None:

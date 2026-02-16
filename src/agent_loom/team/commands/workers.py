@@ -14,16 +14,7 @@ from agent_loom.team.core import (
     spawn_integrator,
     spawn_persona,
 )
-
-
-def emit_json_result(result: object) -> None:
-    from agent_loom.core.cli_output import (
-        emit_json,
-        make_ok_envelope,
-        normalize_payload,
-    )
-
-    emit_json(make_ok_envelope(normalize_payload(result)), indent=2)
+from agent_loom.team.output import emit_json_result
 
 
 def cmd_spawn(args: argparse.Namespace) -> None:

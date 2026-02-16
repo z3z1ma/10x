@@ -3,9 +3,7 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
-from typing import Any
 
-from agent_loom.core.cli_output import emit_json, make_ok_envelope, normalize_payload
 from agent_loom.team.core import (
     objective_append,
     objective_set,
@@ -15,10 +13,7 @@ from agent_loom.team.core import (
     sprint_set,
     sprint_show,
 )
-
-
-def emit_json_result(result: Any) -> None:
-    emit_json(make_ok_envelope(normalize_payload(result)), indent=2)
+from agent_loom.team.output import emit_json_result
 
 
 def cmd_objective_show(args: argparse.Namespace) -> None:

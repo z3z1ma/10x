@@ -5,6 +5,7 @@ from typing import Any, Mapping, Sequence
 
 from agent_loom.core.cli_output import emit_json as _core_emit_json
 from agent_loom.core.cli_output import make_error_envelope
+from agent_loom.core.cli_output import make_ok_envelope, normalize_payload
 
 
 def _eprint(*a: object) -> None:
@@ -44,4 +45,8 @@ def _emit_error(
                 _eprint(f"Try: {s}")
 
 
-__all__ = ["_eprint", "_emit_error", "_emit_json"]
+def emit_json_result(result: object) -> None:
+    _emit_json(make_ok_envelope(normalize_payload(result)))
+
+
+__all__ = ["_eprint", "_emit_error", "_emit_json", "emit_json_result"]

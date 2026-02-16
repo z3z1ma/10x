@@ -24,14 +24,9 @@ from agent_loom.workspace.harness.sandbox import (
     harness_sandbox_gc,
     harness_sandbox_promote,
 )
+from agent_loom.workspace.output import emit_result
 
 workspace_root = harness_root
-
-
-def emit_result(args: argparse.Namespace, root: Path, result: object) -> None:
-    from agent_loom.workspace.cli import emit_result as _emit_result
-
-    _emit_result(args, root, result)
 
 
 def cmd_harness_init(args: argparse.Namespace) -> None:

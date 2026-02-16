@@ -13,6 +13,7 @@ from typing import Any, NoReturn, Optional, Sequence
 
 import yaml
 
+from agent_loom.core.cli_args import rewrite_flag_aliases, split_short_value_flags
 from agent_loom.core.cli_output import emit_json, make_error_envelope, make_ok_envelope
 from agent_loom.core.git import git_repo_root
 from agent_loom.core.time import utcnow
@@ -174,34 +175,10 @@ def _normalize_argv(argv: list[str]) -> list[str]:
     This is agent UX: agents often guess flags like --ticket-dir, or glue short
     flags with values like -p1.
     """
-
-    out: list[str] = []
-    for tok in argv:
-        if tok in _FLAG_ALIASES:
-            out.append(_FLAG_ALIASES[tok])
-            continue
-
-        if tok.startswith(tuple(f + "=" for f in _FLAG_ALIASES)):
-            for src, dst in _FLAG_ALIASES.items():
-                if tok.startswith(src + "="):
-                    out.append(dst + tok[len(src) :])
-                    break
-            else:
-                out.append(tok)
-            continue
-
-        # Expand glued short flag values like -p1, -mmsg.
-        if len(tok) > 2 and tok.startswith("-") and not tok.startswith("--"):
-            flag = tok[:2]
-            if flag in _VALUE_FLAGS:
-                val = tok[2:]
-                if val:
-                    out.extend([flag, val])
-                    continue
-
-        out.append(tok)
-
-    return out
+    return split_short_value_flags(
+        rewrite_flag_aliases(argv, _FLAG_ALIASES),
+        _VALUE_FLAGS,
+    )
 
 
 def _did_you_mean(value: str, choices: Sequence[str]) -> list[str]:

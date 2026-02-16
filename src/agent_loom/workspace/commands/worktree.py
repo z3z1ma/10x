@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 
 from agent_loom.workspace.core import (
     lease_require_active,
@@ -18,14 +17,9 @@ from agent_loom.workspace.core import (
     worktree_rm,
 )
 from agent_loom.workspace.guards import harness_root
+from agent_loom.workspace.output import emit_result
 
 workspace_root = harness_root
-
-
-def emit_result(args: argparse.Namespace, root: Path, result: object) -> None:
-    from agent_loom.workspace.cli import emit_result as _emit_result
-
-    _emit_result(args, root, result)
 
 
 def cmd_worktree_add(args: argparse.Namespace) -> None:

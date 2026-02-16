@@ -5,14 +5,9 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Any
 
-from agent_loom.core.cli_output import emit_json, make_ok_envelope, normalize_payload
 from agent_loom.team.core import merge_done, merge_enqueue, merge_list, merge_next, ship
-
-
-def emit_json_result(result: Any) -> None:
-    emit_json(make_ok_envelope(normalize_payload(result)), indent=2)
+from agent_loom.team.output import emit_json_result
 
 
 def cmd_merge_enqueue(args: argparse.Namespace) -> None:

@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
-from typing import Any
 
 from agent_loom.workspace.core import (
     repo_init,
@@ -33,13 +31,7 @@ from agent_loom.workspace.repo.sandbox import (
     repo_sandbox_gc,
     repo_sandbox_promote,
 )
-
-
-def emit_result(args: argparse.Namespace, root: Path, result: Any) -> None:
-    """Emit result using workspace CLI's emit_result."""
-    from agent_loom.workspace.cli import emit_result as _emit_result
-
-    _emit_result(args, root, result)
+from agent_loom.workspace.output import emit_result
 
 
 def cmd_repo_status(args: argparse.Namespace) -> None:

@@ -4,9 +4,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Any
 
-from agent_loom.core.cli_output import emit_json, make_ok_envelope, normalize_payload
 from agent_loom.core.time import parse_duration_seconds
 from agent_loom.team.constants import (
     DEFAULT_DISBAND_REMINDER_RESEND_S,
@@ -20,11 +18,8 @@ from agent_loom.team.constants import (
 )
 from agent_loom.team.core import bounce, capture, send, tui, wait
 from agent_loom.team.errors import TeamError
+from agent_loom.team.output import emit_json_result
 from agent_loom.team.strings import sanitize
-
-
-def emit_json_result(result: Any) -> None:
-    emit_json(make_ok_envelope(normalize_payload(result)), indent=2)
 
 
 def cmd_capture(args: argparse.Namespace) -> None:

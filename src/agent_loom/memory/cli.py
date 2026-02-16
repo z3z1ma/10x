@@ -10,6 +10,7 @@ from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any, Optional, Sequence
 
+from agent_loom.core.cli_args import rewrite_flag_aliases
 from agent_loom.memory.constants import (
     DEFAULT_VAULT_DIR,
     STATUSES,
@@ -74,6 +75,7 @@ _FLAG_ALIASES = {
 
 
 def _normalize_argv(argv: list[str]) -> list[str]:
+    argv = rewrite_flag_aliases(argv, _FLAG_ALIASES)
     out: list[str] = []
     i = 0
     while i < len(argv):
@@ -81,21 +83,6 @@ def _normalize_argv(argv: list[str]) -> list[str]:
 
         if tok in {"append-note", "append_note", "add-note", "add_note"}:
             out.append("append")
-            i += 1
-            continue
-
-        if tok in _FLAG_ALIASES:
-            out.append(_FLAG_ALIASES[tok])
-            i += 1
-            continue
-
-        if tok.startswith(tuple(f + "=" for f in _FLAG_ALIASES)):
-            for src, dst in _FLAG_ALIASES.items():
-                if tok.startswith(src + "="):
-                    out.append(dst + tok[len(src) :])
-                    break
-            else:
-                out.append(tok)
             i += 1
             continue
 

@@ -28,6 +28,7 @@ from agent_loom.team.core import (
     status,
 )
 from agent_loom.team.exec import _require_bin, _run
+from agent_loom.team.output import emit_json_result
 from agent_loom.team.prime import prime
 
 
@@ -38,16 +39,6 @@ def _maybe_worktree_root(invoked_from: Path) -> Path | None:
         return Path((p.stdout or "").strip()).resolve() if p.stdout else None
     except Exception:
         return None
-
-
-def emit_json_result(result: object) -> None:
-    from agent_loom.core.cli_output import (
-        emit_json,
-        make_ok_envelope,
-        normalize_payload,
-    )
-
-    emit_json(make_ok_envelope(normalize_payload(result)), indent=2)
 
 
 def cmd_start(args: argparse.Namespace) -> None:

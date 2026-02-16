@@ -17,3 +17,7 @@
 .loom/workspaces/components/index.json
 .loom/workspaces/meta/
 .loom/workspaces/leases/
+/.omx/logs
+/.omx/state
+/.omx/hud-config.json
+/.omx/metrics.json

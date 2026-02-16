@@ -37,7 +37,7 @@ class TestSharedCliOutputContract:
     # Local wrappers are allowed (e.g., team/output.py delegates to core helpers)
     ALLOWED_WRAPPERS = [
         SRC_ROOT / "team" / "output.py",
-        SRC_ROOT / "workspace" / "cli.py",  # has local emit_result/render for metadata
+        SRC_ROOT / "workspace" / "output.py",
         SRC_ROOT / "ticket" / "cli.py",  # local _emit_json wrapper delegates to core helpers
     ]
 
@@ -140,7 +140,7 @@ class TestHotspotSizeControl:
         },
         SRC_ROOT / "workspace" / "cli.py": {
             "max_lines": 1900,  # Current ~1776
-            "description": "workspace/cli.py (thin entrypoint + rendering)",
+            "description": "workspace/cli.py (thin entrypoint)",
         },
     }
 

@@ -5,6 +5,7 @@ import difflib
 import sys
 from typing import Optional, Sequence
 
+from agent_loom.core.cli_args import rewrite_flag_aliases
 from agent_loom.team.commands.inbox import (
     cmd_inbox_ack,
     cmd_inbox_list,
@@ -94,6 +95,7 @@ _FLAG_ALIASES = {
 def _normalize_argv(argv: list[str]) -> list[str]:
     """Normalize common plausible argv variants before argparse."""
 
+    argv = rewrite_flag_aliases(argv, _FLAG_ALIASES)
     out: list[str] = []
     i = 0
     while i < len(argv):
@@ -117,21 +119,6 @@ def _normalize_argv(argv: list[str]) -> list[str]:
             continue
         if tok in {"clockout", "clock-out"}:
             out.append("clock-out")
-            i += 1
-            continue
-
-        if tok in _FLAG_ALIASES:
-            out.append(_FLAG_ALIASES[tok])
-            i += 1
-            continue
-
-        if tok.startswith(tuple(f + "=" for f in _FLAG_ALIASES)):
-            for src, dst in _FLAG_ALIASES.items():
-                if tok.startswith(src + "="):
-                    out.append(dst + tok[len(src) :])
-                    break
-            else:
-                out.append(tok)
             i += 1
             continue
 
