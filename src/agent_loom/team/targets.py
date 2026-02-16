@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Tuple
 
-from agent_loom.team.constants import ROLE_MANAGER, ROLE_WORKER
+from agent_loom.team.constants import (
+    ROLE_INTEGRATOR,
+    ROLE_INVESTIGATOR,
+    ROLE_MANAGER,
+    ROLE_WORKER,
+)
 from agent_loom.team.errors import TeamError
 from agent_loom.team.tmux import (
     _pane_can_receive_chat,
@@ -13,6 +18,8 @@ from agent_loom.team.tmux import (
     tmux_send_text,
     tmux_window_exists,
 )
+
+_BUILTIN_GROUPS = {"all", "workers", "integrators", "investigators"}
 
 
 def _resolve_target(run: Mapping[str, Any], target: str) -> Tuple[str, Dict[str, str]]:
@@ -129,6 +136,169 @@ def _resolve_target(run: Mapping[str, Any], target: str) -> Tuple[str, Dict[str,
     raise TeamError(f"Unknown target: {target}", code="ARG", exit_code=2)
 
 
+def _iter_group_targets(run: Mapping[str, Any], group: str) -> List[str]:
+    members: List[str] = []
+    workers = dict(run.get("workers") or {})
+
+    if group == "all":
+        members.append("manager")
+        for wid, w in sorted(workers.items()):
+            if bool((w or {}).get("retired")):
+                continue
+            members.append(str(wid))
+        return members
+
+    for wid, w in sorted(workers.items()):
+        role = str((w or {}).get("role") or "").strip().lower()
+        if bool((w or {}).get("retired")):
+            continue
+        if group == "workers" and role == ROLE_WORKER:
+            members.append(str(wid))
+        elif group == "integrators" and role == ROLE_INTEGRATOR:
+            members.append(str(wid))
+        elif group == "investigators" and role == ROLE_INVESTIGATOR:
+            members.append(str(wid))
+
+    return members
+
+
+def _composition_broadcast_groups(run: Mapping[str, Any]) -> Dict[str, Tuple[str, ...]]:
+    composition = run.get("composition")
+    if not isinstance(composition, dict):
+        return {}
+    spec = composition.get("spec")
+    if not isinstance(spec, dict):
+        return {}
+    communication = spec.get("communication")
+    if not isinstance(communication, dict):
+        return {}
+    groups = communication.get("broadcast_groups")
+    if not isinstance(groups, dict):
+        return {}
+
+    out: Dict[str, Tuple[str, ...]] = {}
+    for raw_name, raw_members in groups.items():
+        name = str(raw_name or "").strip().lower()
+        if not name:
+            continue
+        items: List[str] = []
+        if isinstance(raw_members, list):
+            for item in raw_members:
+                value = str(item or "").strip().lower()
+                if value:
+                    items.append(value)
+        if items:
+            out[name] = tuple(items)
+    return out
+
+
+def _expand_group_targets(
+    run: Mapping[str, Any],
+    group: str,
+    *,
+    seen: set[str],
+) -> List[str]:
+    name = str(group or "").strip().lower()
+    if not name:
+        return []
+    if name in seen:
+        raise TeamError(
+            f"Broadcast group recursion detected: {name}",
+            code="ARG",
+            exit_code=2,
+        )
+
+    if name in _BUILTIN_GROUPS:
+        return _iter_group_targets(run, name)
+
+    policy_groups = _composition_broadcast_groups(run)
+    members = policy_groups.get(name)
+    if members is None:
+        return []
+
+    seen.add(name)
+    out: List[str] = []
+    for item in members:
+        if item in _BUILTIN_GROUPS or item in policy_groups:
+            out.extend(_expand_group_targets(run, item, seen=seen))
+        else:
+            out.append(item)
+    seen.remove(name)
+    return out
+
+
+def _resolve_targets(run: Mapping[str, Any], target: str) -> List[Dict[str, str]]:
+    """Resolve single or grouped Team target(s) to concrete pane metadata."""
+
+    t = str(target or "").strip()
+    if not t:
+        raise TeamError("Empty target", code="ARG", exit_code=2)
+
+    tnorm = t.lower()
+    if tnorm.startswith("group:"):
+        group_name = tnorm.split(":", 1)[1].strip()
+        groups = _composition_broadcast_groups(run)
+        if not group_name:
+            raise TeamError("Empty broadcast group name", code="ARG", exit_code=2)
+        if group_name not in groups:
+            available = sorted(groups.keys())
+            raise TeamError(
+                f"Unknown broadcast group: {group_name}",
+                code="ARG",
+                exit_code=2,
+                hint=(
+                    "Defined groups: " + ", ".join(available)
+                    if available
+                    else "No policy-defined broadcast groups are configured"
+                ),
+            )
+        expanded = _expand_group_targets(run, group_name, seen=set())
+    else:
+        expanded = _expand_group_targets(run, tnorm, seen=set())
+
+    if not expanded:
+        pane_id, meta = _resolve_target(run, t)
+        return [
+            {
+                "target": t,
+                "pane_id": pane_id,
+                "role": str(meta.get("role") or ""),
+                "worker_id": str(meta.get("worker_id") or ""),
+                "ticket_id": str(meta.get("ticket_id") or ""),
+            }
+        ]
+
+    resolved: List[Dict[str, str]] = []
+    seen_keys: set[str] = set()
+
+    for item in expanded:
+        pane_id, meta = _resolve_target(run, item)
+        worker_id = str(meta.get("worker_id") or "").strip()
+        role = str(meta.get("role") or "").strip().lower()
+        key = f"worker:{worker_id}" if worker_id else f"role:{role}:{pane_id}"
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        resolved.append(
+            {
+                "target": item,
+                "pane_id": pane_id,
+                "role": role,
+                "worker_id": worker_id,
+                "ticket_id": str(meta.get("ticket_id") or ""),
+            }
+        )
+
+    if not resolved:
+        raise TeamError(
+            f"Broadcast target resolved to zero recipients: {target}",
+            code="ARG",
+            exit_code=2,
+        )
+
+    return resolved
+
+
 def _best_effort_tmux_nudge(
     *,
     run: Mapping[str, Any],
@@ -202,4 +372,4 @@ def _best_effort_tmux_nudge(
         return False, "tmux_error", {**meta, "error": str(e)}
 
 
-__all__ = ["_best_effort_tmux_nudge", "_resolve_target"]
+__all__ = ["_best_effort_tmux_nudge", "_resolve_target", "_resolve_targets"]

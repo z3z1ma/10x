@@ -156,5 +156,91 @@ class TestTeamTargets(unittest.TestCase):
         self.assertEqual(reason, "")
         send_text.assert_called_once_with("%3", "TEAM inbox id=abc", enter=True, ctrl_enter=False)
 
+    def test_resolve_targets_workers_group(self) -> None:
+        run = {
+            "manager": {"pane_id": "%1"},
+            "workers": {
+                "w1": {
+                    "worker_id": "w1",
+                    "role": "worker",
+                    "ticket_id": "tk-1",
+                    "pane_id": "%3",
+                    "window": "alpha",
+                    "worktree_key": "tk-1",
+                    "retired": False,
+                },
+                "w2": {
+                    "worker_id": "w2",
+                    "role": "worker",
+                    "ticket_id": "tk-2",
+                    "pane_id": "%4",
+                    "window": "beta",
+                    "worktree_key": "tk-2",
+                    "retired": False,
+                },
+                "w3": {
+                    "worker_id": "w3",
+                    "role": "investigator",
+                    "ticket_id": "tk-3",
+                    "pane_id": "%5",
+                    "window": "gamma",
+                    "worktree_key": "tk-3",
+                    "retired": False,
+                },
+            },
+        }
+
+        resolved = targets._resolve_targets(run, "workers")
+        self.assertEqual([str(x.get("worker_id") or "") for x in resolved], ["w1", "w2"])
+
+    def test_resolve_targets_policy_group(self) -> None:
+        run = {
+            "manager": {"pane_id": "%1"},
+            "workers": {
+                "w1": {
+                    "worker_id": "w1",
+                    "role": "worker",
+                    "ticket_id": "tk-1",
+                    "pane_id": "%3",
+                    "window": "alpha",
+                    "worktree_key": "tk-1",
+                    "retired": False,
+                },
+                "w2": {
+                    "worker_id": "w2",
+                    "role": "integrator",
+                    "ticket_id": "",
+                    "pane_id": "%7",
+                    "window": "integrator",
+                    "worktree_key": "merge-queue",
+                    "retired": False,
+                },
+            },
+            "composition": {
+                "spec": {
+                    "communication": {
+                        "broadcast_groups": {
+                            "ops": ["workers", "integrators"],
+                        }
+                    }
+                }
+            },
+        }
+
+        resolved = targets._resolve_targets(run, "group:ops")
+        self.assertEqual([str(x.get("worker_id") or "") for x in resolved], ["w1", "w2"])
+
+    def test_resolve_targets_unknown_policy_group_raises(self) -> None:
+        run = {
+            "manager": {"pane_id": "%1"},
+            "workers": {},
+            "composition": {"spec": {"communication": {"broadcast_groups": {"ops": ["manager"]}}}},
+        }
+
+        with self.assertRaises(TeamError) as ctx:
+            targets._resolve_targets(run, "group:missing")
+        self.assertIn("Unknown broadcast group", str(ctx.exception))
+
+
 if __name__ == "__main__":
     unittest.main()

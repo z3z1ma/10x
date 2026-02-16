@@ -176,6 +176,7 @@ class SendResult:
     delivered: bool
     delivery_reason: str
     inbox: Dict[str, Any]
+    deliveries: List[Dict[str, Any]] = field(default_factory=list)
     suggestions: List[str] = field(default_factory=list)
 
 
