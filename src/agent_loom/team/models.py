@@ -141,6 +141,7 @@ class StatusResult:
     run_dir: str
     tickets_dir: str
     sprint: Dict[str, Any]
+    composition: Dict[str, Any]
     inbox: Dict[str, Any]
     merge_queue: Dict[str, Any]
     manager: Dict[str, Any]

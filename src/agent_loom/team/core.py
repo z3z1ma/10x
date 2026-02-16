@@ -98,6 +98,7 @@ from agent_loom.team.constants import (
     TMUX_OPT_RUN_ID,
     TMUX_OPT_TEAM,
 )
+from agent_loom.team.composition import load_team_composition_yaml
 from agent_loom.team.errors import TeamError
 from agent_loom.team.events import (
     _event_stamp,
@@ -834,6 +835,56 @@ def _apply_mounts(*, repo_root: Path, worktree_root: Path, mounts: list[dict]) -
             )
 
 
+def _composition_summary_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
+    raw_composition = run.get("composition")
+    raw: Dict[str, Any] = dict(raw_composition) if isinstance(raw_composition, dict) else {}
+
+    raw_spec = raw.get("spec")
+    spec: Dict[str, Any] = dict(raw_spec) if isinstance(raw_spec, dict) else {}
+
+    raw_metadata = spec.get("metadata")
+    metadata: Dict[str, Any] = (
+        dict(raw_metadata) if isinstance(raw_metadata, dict) else {}
+    )
+
+    name = str(metadata.get("name") or "").strip()
+    purpose = str(metadata.get("purpose") or "").strip()
+    source = str(raw.get("source") or "").strip()
+    loaded_at = str(raw.get("loaded_at") or "").strip()
+
+    version = 0
+    raw_version = spec.get("version")
+    if isinstance(raw_version, (int, float, str)) and str(raw_version).strip():
+        try:
+            version = int(str(raw_version).strip())
+        except Exception:
+            version = 0
+
+    raw_members = spec.get("members")
+    members: list[Any] = list(raw_members) if isinstance(raw_members, list) else []
+
+    raw_mappings = spec.get("worktree_mappings")
+    mappings: list[Any] = list(raw_mappings) if isinstance(raw_mappings, list) else []
+
+    raw_labels = metadata.get("labels")
+    labels: list[Any] = list(raw_labels) if isinstance(raw_labels, list) else []
+
+    if not any((name, purpose, source, loaded_at, version, members, mappings, labels)):
+        return {}
+
+    return {
+        "name": name,
+        "purpose": purpose,
+        "source": source,
+        "loaded_at": loaded_at,
+        "version": version,
+        "members": len(members),
+        "worktree_mappings": len(mappings),
+        "labels": [str(label) for label in labels if str(label).strip()],
+    }
+
+
+
 def _write_charter(paths: RunPaths, run: Mapping[str, Any]) -> Path:
     """Write a run-local charter (human/agent reference)."""
 
@@ -870,6 +921,24 @@ def _write_charter(paths: RunPaths, run: Mapping[str, Any]) -> Path:
         lines.append(f"Tag: {sprint_tag}\n")
         lines.append(f"Ticket rule: include tag `{sprint_tag}` on sprint tickets.\n")
     if not sprint_name:
+        lines.append("(none)\n")
+    lines.append("\n")
+    composition = _composition_summary_from_run(run)
+    lines.append("## Composition (current)\n\n")
+    if composition:
+        if composition.get("name"):
+            lines.append(f"Name: {composition.get('name')}\n")
+        if composition.get("version"):
+            lines.append(f"Schema version: {composition.get('version')}\n")
+        if composition.get("members"):
+            lines.append(f"Members: {composition.get('members')}\n")
+        if composition.get("worktree_mappings"):
+            lines.append(f"Worktree mappings: {composition.get('worktree_mappings')}\n")
+        if composition.get("source"):
+            lines.append(f"Source: {composition.get('source')}\n")
+        if composition.get("loaded_at"):
+            lines.append(f"Loaded at: {composition.get('loaded_at')}\n")
+    else:
         lines.append("(none)\n")
     lines.append("\n")
     lines.append("## Manager quickstart\n\n")
@@ -1067,6 +1136,7 @@ def _omp_tui_argv(
     bin: str = "omp",
 ) -> List[str]:
     _require_bin(bin)
+    _ = session_path
     argv: List[str] = [bin]
     if model:
         argv += ["--model", model]
@@ -2039,6 +2109,7 @@ def start(
     *,
     team: str,
     objective: str = "",
+    composition: str = "",
     session: str = "",
     harness: str = "",
     bin_override: str = "",
@@ -2074,6 +2145,28 @@ def start(
     requested_harness = _normalize_harness(harness_raw)
     requested_bin = str(bin_override or "").strip()
 
+    composition_state: Optional[Dict[str, Any]] = None
+    composition_harness = ""
+    composition_raw = str(composition or "").strip()
+    if composition_raw:
+        composition_path = Path(composition_raw).expanduser()
+        parsed = load_team_composition_yaml(composition_path)
+        composition_state = {
+            "source": str(composition_path.resolve()),
+            "loaded_at": _iso_z(),
+            "spec": parsed.as_dict(),
+        }
+        for member in composition_state["spec"].get("members") or []:
+            if not isinstance(member, dict):
+                continue
+            if str(member.get("role") or "").strip() != ROLE_MANAGER:
+                continue
+            composition_harness = _normalize_harness(str(member.get("harness") or ""))
+            break
+
+    # Precedence: explicit CLI override > composition > defaults.
+    if not harness_provided and composition_harness:
+        requested_harness = composition_harness
     root = canonical_repo_root(repo.resolve() if repo else Path.cwd())
     team = sanitize(team or "", max_len=80) or default_team_name(root)
     # Session selection rules:
@@ -2106,6 +2199,9 @@ def start(
             run["merge"] = _merge_state(run)
             if not isinstance(run.get("sprint"), dict):
                 run["sprint"] = {}
+            if composition_state is not None:
+                run["composition"] = composition_state
+                save_run(paths, run)
 
             # Mounts: persisted across start/resume.
             # - If --clear-mounts: clear.
@@ -2182,10 +2278,15 @@ def start(
                 if str(run.get("harness") or "") != requested_harness:
                     run["harness"] = requested_harness
                     save_run(paths, run)
-
+            elif composition_harness:
+                if str(run.get("harness") or "") != requested_harness:
+                    run["harness"] = requested_harness
+                    save_run(paths, run)
             if requested_bin:
                 bin_harness = (
-                    requested_harness if harness_provided else existing_harness
+                    requested_harness
+                    if (harness_provided or composition_harness)
+                    else existing_harness
                 )
                 cfg = run.get(bin_harness)
                 if not isinstance(cfg, dict):
@@ -2379,6 +2480,8 @@ def start(
                     "bin": "",
                 },
             }
+            if composition_state is not None:
+                run["composition"] = composition_state
 
             # Apply per-role model overrides to the selected harness.
             cfg = dict(run.get(requested_harness) or {})
@@ -4953,6 +5056,7 @@ def status(*, team: str, repo: Optional[Path] = None) -> StatusResult:
         "run_dir": str(run.get("run_dir") or paths.run_dir),
         "tickets_dir": str(run.get("tickets_dir") or ""),
         "sprint": dict(run.get("sprint") or {}),
+        "composition": _composition_summary_from_run(run),
         "inbox": {
             "unacked_to_manager": inbox_unacked_mgr,
             "unacked_total": inbox_unacked_all,
@@ -5009,6 +5113,7 @@ def status(*, team: str, repo: Optional[Path] = None) -> StatusResult:
         run_dir=str(payload.get("run_dir") or ""),
         tickets_dir=str(payload.get("tickets_dir") or ""),
         sprint=dict(payload.get("sprint") or {}),
+        composition=dict(payload.get("composition") or {}),
         inbox=dict(payload.get("inbox") or {}),
         merge_queue=dict(payload.get("merge_queue") or {}),
         manager=dict(payload.get("manager") or {}),
