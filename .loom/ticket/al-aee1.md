@@ -1,6 +1,6 @@
 ---
 "id": "al-aee1"
-"status": "open"
+"status": "review"
 "deps": []
 "links": []
 "created": "2026-02-16T05:31:53Z"
@@ -53,3 +53,27 @@ Risks/edge cases:
 - Objective/sprint flows are implemented in a dedicated domain module and `team/core.py` delegates to it.
 - Existing CLI-observable behavior for objective/sprint commands remains unchanged.
 - Targeted team sprint/objective tests pass and no dead helper code remains in core.
+
+## Notes
+
+**2026-02-16T06:06:34Z**
+
+Unblocked after permissions fix. Acked manager nudges, confirmed spawn_persona sprint import fix in place, and proceeding to finalize commit + review handoff.
+
+**2026-02-16T06:06:57Z**
+
+Completed extraction and committed as f856764.
+
+What changed:
+- Added dedicated domain module: src/agent_loom/team/objective_state.py
+- Moved objective input/read/show + mutation logic and sprint state normalization/mutation helpers into domain module.
+- Updated src/agent_loom/team/core.py objective/sprint entrypoints to delegate to domain helpers while preserving CLI-visible behavior.
+- Updated spawn_persona path to consume sprint_state from objective_state (fixes runtime import break from removed core helper).
+- Expanded tests/test_team_sprint.py coverage for sprint_set default-tag behavior and sprint_clear rev increments under delegated flow.
+
+Verification run:
+- UV_CACHE_DIR=/tmp/uv-cache uv run --no-sync ruff check .
+- UV_CACHE_DIR=/tmp/uv-cache uv run --no-sync basedpyright
+- UV_CACHE_DIR=/tmp/uv-cache uv run --no-sync pytest tests/test_team_sprint.py tests/test_ticket_sprint_context.py tests/test_team_cli_ux.py
+
+Results: all pass.
