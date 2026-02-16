@@ -799,7 +799,7 @@ def worktree_rm(
 
     base = worktrees_base(ws_root, ws, group)
     if not base.exists():
-        return WorktreeGroupRemoveResult(group=group, removed=[])
+        return WorktreeGroupRemoveResult(group=group, removed=[], warnings=[])
 
     targets: List[Path]
     if repos or sets or tags:
@@ -825,6 +825,10 @@ def worktree_rm(
         )
 
     removed: List[str] = []
+    warnings: List[str] = []
+
+    def _record_warning(*, action: str, exc: Exception) -> None:
+        warnings.append(f"{action}: {type(exc).__name__}: {exc}")
 
     for t in targets:
         repo_name = t.name
@@ -839,28 +843,29 @@ def worktree_rm(
     try:
         if base.exists() and not any(p.is_dir() for p in base.iterdir()):
             base.rmdir()
-    except Exception:
-        pass
+    except Exception as exc:
+        _record_warning(action=f"remove group dir {base}", exc=exc)
 
     try:
         is_empty = (not base.exists()) or (not any(p.is_dir() for p in base.iterdir()))
-    except Exception:
+    except Exception as exc:
+        _record_warning(action=f"evaluate group emptiness for {base}", exc=exc)
         is_empty = False
     if is_empty:
         try:
             from agent_loom.workspace.worktree_meta import harness_group_meta_path
 
             harness_group_meta_path(ws_root, group).unlink(missing_ok=True)
-        except Exception:
-            pass
+        except Exception as exc:
+            _record_warning(action=f"remove group metadata for {group}", exc=exc)
         try:
             from agent_loom.workspace.harness.leases import lease_path
 
             lease_path(root=ws_root, key=f"group:{group}").unlink(missing_ok=True)
-        except Exception:
-            pass
+        except Exception as exc:
+            _record_warning(action=f"remove lease key group:{group}", exc=exc)
 
-    return WorktreeGroupRemoveResult(group=group, removed=removed)
+    return WorktreeGroupRemoveResult(group=group, removed=removed, warnings=warnings)
 
 
 def worktree_ls(*, root: Optional[Path] = None) -> WorktreeListResult:

@@ -19,6 +19,32 @@ import pytest  # type: ignore[import-untyped]
 # Project root is 3 levels up from tests/
 PROJECT_ROOT = Path(__file__).parent.parent
 SRC_ROOT = PROJECT_ROOT / "src" / "agent_loom"
+BRANCH_NODES = (
+    ast.If,
+    ast.For,
+    ast.While,
+    ast.Try,
+    ast.Match,
+    ast.BoolOp,
+    ast.IfExp,
+    ast.With,
+    ast.comprehension,
+    ast.ExceptHandler,
+)
+
+
+def _max_function_branch_complexity(path: Path) -> tuple[str, int]:
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    max_name = ""
+    max_complexity = 0
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        score = sum(isinstance(sub, BRANCH_NODES) for sub in ast.walk(node))
+        if score > max_complexity:
+            max_name = node.name
+            max_complexity = score
+    return max_name, max_complexity
 
 
 class TestSharedCliOutputContract:
@@ -130,17 +156,32 @@ class TestHotspotSizeControl:
     HOTSPOTS = {
         # team/core.py is being decomposed; monitor for growth
         SRC_ROOT / "team" / "core.py": {
-            "max_lines": 7300,  # Current ~7129, temporary headroom while decomposition continues
+            "max_lines": 6900,  # Current ~6728
             "description": "team/core.py (decomposition in progress)",
         },
-        # CLI entrypoints should stay thin after modularization
-        SRC_ROOT / "team" / "cli.py": {
-            "max_lines": 1200,  # Current ~1088
-            "description": "team/cli.py (thin entrypoint)",
+        SRC_ROOT / "memory" / "cli.py": {
+            "max_lines": 1800,  # Current ~1693
+            "description": "memory/cli.py (parser hotspot)",
         },
-        SRC_ROOT / "workspace" / "cli.py": {
-            "max_lines": 1900,  # Current ~1776
-            "description": "workspace/cli.py (thin entrypoint)",
+        SRC_ROOT / "workspace" / "cli_harness.py": {
+            "max_lines": 900,  # Current ~804
+            "description": "workspace/cli_harness.py (parser hotspot)",
+        },
+        SRC_ROOT / "dashboard" / "app.py": {
+            "max_lines": 850,  # Current ~784
+            "description": "dashboard/app.py (API hotspot)",
+        },
+        SRC_ROOT / "workspace" / "render.py": {
+            "max_lines": 700,  # Current ~669
+            "description": "workspace/render.py (text rendering hotspot)",
+        },
+        SRC_ROOT / "ticket" / "core.py": {
+            "max_lines": 1850,  # Current ~1744
+            "description": "ticket/core.py (ticket workflow hotspot)",
+        },
+        SRC_ROOT / "compound" / "cli.py": {
+            "max_lines": 720,  # Current ~658
+            "description": "compound/cli.py (command dispatch hotspot)",
         },
     }
 
@@ -157,6 +198,53 @@ class TestHotspotSizeControl:
             assert lines <= max_lines, (
                 f"{desc} has {lines} lines (max {max_lines}). "
                 f"Extract functionality to domain modules to stay under threshold."
+            )
+
+
+class TestHotspotComplexityControl:
+    """Guardrail: hotspot modules must not exceed max function branch complexity."""
+
+    HOTSPOT_COMPLEXITY = {
+        SRC_ROOT / "team" / "core.py": {
+            "max_function_branch_nodes": 175,  # Current max: tui ~=163
+            "description": "team/core.py sidecar lifecycle complexity",
+        },
+        SRC_ROOT / "memory" / "cli.py": {
+            "max_function_branch_nodes": 75,  # Current max: _run_with_args ~=66
+            "description": "memory/cli.py command dispatch complexity",
+        },
+        SRC_ROOT / "workspace" / "cli_harness.py": {
+            "max_function_branch_nodes": 12,  # Current max ~=0
+            "description": "workspace/cli_harness.py parser complexity",
+        },
+        SRC_ROOT / "dashboard" / "app.py": {
+            "max_function_branch_nodes": 185,  # Current max: create_app ~=168
+            "description": "dashboard/app.py request handling complexity",
+        },
+        SRC_ROOT / "workspace" / "render.py": {
+            "max_function_branch_nodes": 40,  # Current max: _render_worktree_group_diff ~=17
+            "description": "workspace/render.py text rendering complexity",
+        },
+        SRC_ROOT / "ticket" / "core.py": {
+            "max_function_branch_nodes": 95,  # Current max: update ~=86
+            "description": "ticket/core.py update workflow complexity",
+        },
+        SRC_ROOT / "compound" / "cli.py": {
+            "max_function_branch_nodes": 30,  # Current max: _handle_init ~=14
+            "description": "compound/cli.py command routing complexity",
+        },
+    }
+
+    def test_hotspot_max_function_complexity(self) -> None:
+        for path, config in self.HOTSPOT_COMPLEXITY.items():
+            if not path.exists():
+                continue
+            fn_name, score = _max_function_branch_complexity(path)
+            max_score = int(config["max_function_branch_nodes"])
+            desc = str(config["description"])
+            assert score <= max_score, (
+                f"{desc} has function `{fn_name}` complexity={score} "
+                f"(max {max_score}). Extract branches into dedicated helpers."
             )
 
 

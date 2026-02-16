@@ -7,7 +7,7 @@ import os
 import sys
 from importlib import resources
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import Callable, Optional, Sequence
 
 from agent_loom.compound.evolve import evolve_instincts
 from agent_loom.compound.hooks import run_claude_hook, run_omp_hook, run_opencode_hook
@@ -311,6 +311,308 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
+def _wants_json(args: argparse.Namespace) -> bool:
+    return bool(getattr(args, "json", False))
+
+
+def _emit_error(args: argparse.Namespace, err: Exception) -> int:
+    payload = {"ok": False, "error": str(err)}
+    if _wants_json(args):
+        emit_json(payload)
+    else:
+        sys.stderr.write(f"Error: {err}\n")
+    return 1
+
+
+def _emit_pretty_payload(args: argparse.Namespace, payload: dict[str, object]) -> None:
+    if _wants_json(args):
+        emit_json(payload)
+    else:
+        sys.stdout.write(json.dumps(payload, indent=2) + "\n")
+
+
+def _run_catching(args: argparse.Namespace, op: Callable[[], int]) -> int:
+    try:
+        return op()
+    except Exception as err:
+        return _emit_error(args, err)
+
+
+def _handle_init(args: argparse.Namespace) -> int:
+    def _op() -> int:
+        res = install_opencode(
+            dest=_resolve_init_dest(getattr(args, "dest", None)),
+            dry_run=bool(args.dry_run),
+            force=bool(getattr(args, "force", False)),
+        )
+        payload = {
+            "ok": True,
+            "dest": res.dest,
+            "dry_run": res.dry_run,
+            "wrote": res.wrote,
+            "skipped": res.skipped,
+            "warnings": res.warnings,
+        }
+        if _wants_json(args):
+            emit_json(payload)
+            return 0
+
+        sys.stdout.write(f"installed into: {res.dest}\n")
+        sys.stdout.write(f"pack: {COMPOUND_PACK_ID}\n")
+        sys.stdout.write("note: commit .loom/pack/lock.json\n")
+        if res.dry_run:
+            sys.stdout.write("(dry-run)\n")
+        if res.wrote:
+            sys.stdout.write("wrote:\n")
+            for path in res.wrote:
+                sys.stdout.write(f"- {path}\n")
+        if res.skipped:
+            sys.stdout.write("skipped:\n")
+            for path in res.skipped:
+                sys.stdout.write(f"- {path}\n")
+        if res.warnings:
+            sys.stdout.write("warnings:\n")
+            for warning in res.warnings:
+                sys.stdout.write(f"- {warning}\n")
+
+        repo_root = Path(res.dest).resolve()
+        diff_targets = sorted(set(list(res.skipped or [])))
+        if (
+            diff_targets
+            and not bool(getattr(args, "diff", False))
+            and any_pack_diffs(
+                repo_root=repo_root,
+                pack_id=COMPOUND_PACK_ID,
+                relpaths=diff_targets,
+            )
+        ):
+            sys.stdout.write(
+                "note: some skipped pack files differ from Loom scaffold; rerun with --diff to view\n"
+            )
+        if bool(getattr(args, "diff", False)) and not bool(res.dry_run):
+            diffs = diff_pack_files(
+                repo_root=repo_root,
+                pack_id=COMPOUND_PACK_ID,
+                relpaths=diff_targets,
+                max_lines=400,
+            )
+            for diff in diffs:
+                sys.stdout.write(f"diff (skipped): {diff.relpath}\n")
+                sys.stdout.write(diff.diff)
+        return 0
+
+    return _run_catching(args, _op)
+
+
+def _handle_sync(args: argparse.Namespace) -> int:
+    def _op() -> int:
+        res = compound_sync(
+            repo=_resolve_repo_root(getattr(args, "repo", None)),
+            message=str(args.message or ""),
+        )
+        payload = {"ok": True, **dataclasses.asdict(res)}
+        if _wants_json(args):
+            emit_json(payload)
+            return 0
+        if not res.committed:
+            sys.stdout.write("compound sync: noop\n")
+        else:
+            sys.stdout.write(
+                f"compound sync: committed {res.count} file(s) sha={res.sha[:8]}\n"
+            )
+        return 0
+
+    return _run_catching(args, _op)
+
+
+def _handle_instincts_update(args: argparse.Namespace) -> int:
+    def _op() -> int:
+        from agent_loom.compound.engine import run_instincts_update
+
+        repo = _resolve_repo_root(getattr(args, "repo", None))
+        min_new_observations = getattr(args, "min_new_observations", None)
+        if min_new_observations is None:
+            min_new_observations = int(
+                os.environ.get("COMPOUND_INSTINCTS_MIN_NEW_OBSERVATIONS", "12")
+            )
+        res = run_instincts_update(
+            root=repo,
+            auto=bool(getattr(args, "auto", False)),
+            dry_run=bool(getattr(args, "dry_run", False)),
+            min_new_observations=int(min_new_observations),
+            min_occurrences=int(getattr(args, "min_occurrences", 3) or 3),
+            max_candidates=int(getattr(args, "max_candidates", 12) or 12),
+        )
+        _emit_pretty_payload(args, dataclasses.asdict(res))
+        return 0
+
+    return _run_catching(args, _op)
+
+
+def _handle_instinct_status(args: argparse.Namespace) -> int:
+    def _op() -> int:
+        from agent_loom.compound.instincts import load_instincts
+        from agent_loom.compound.paths import compound_paths
+
+        repo = _resolve_repo_root(getattr(args, "repo", None))
+        paths = compound_paths(repo)
+        store = load_instincts(paths.instincts_file)
+        status = observer_status(repo=repo)
+        active = [instinct for instinct in store.instincts if instinct.status == "active"]
+        payload = {
+            "ok": True,
+            "repo": str(repo),
+            "instincts_total": len(store.instincts),
+            "instincts_active": len(active),
+            "observer": dataclasses.asdict(status),
+        }
+        _emit_pretty_payload(args, payload)
+        return 0
+
+    return _run_catching(args, _op)
+
+
+def _handle_instinct_export(args: argparse.Namespace) -> int:
+    def _op() -> int:
+        from agent_loom.compound.paths import compound_paths
+
+        repo = _resolve_repo_root(getattr(args, "repo", None))
+        paths = compound_paths(repo)
+        res = export_instincts(
+            instincts_file=paths.instincts_file,
+            out_file=Path(str(args.out)).expanduser().resolve(),
+            min_confidence=float(getattr(args, "min_confidence", 0.0) or 0.0),
+            domain=str(getattr(args, "domain", "") or ""),
+        )
+        _emit_pretty_payload(args, dataclasses.asdict(res))
+        return 0
+
+    return _run_catching(args, _op)
+
+
+def _handle_instinct_import(args: argparse.Namespace) -> int:
+    def _op() -> int:
+        from agent_loom.compound.paths import compound_paths
+
+        repo = _resolve_repo_root(getattr(args, "repo", None))
+        paths = compound_paths(repo)
+        res = instinct_import(
+            instincts_file=paths.instincts_file,
+            source=str(args.source),
+            dry_run=bool(getattr(args, "dry_run", False)),
+            force=bool(getattr(args, "force", False)),
+            min_confidence=float(getattr(args, "min_confidence", 0.0) or 0.0),
+        )
+        _emit_pretty_payload(args, dataclasses.asdict(res))
+        return 0
+
+    return _run_catching(args, _op)
+
+
+def _handle_evolve(args: argparse.Namespace) -> int:
+    def _op() -> int:
+        repo = _resolve_repo_root(getattr(args, "repo", None))
+        res = evolve_instincts(
+            root=repo,
+            threshold=float(getattr(args, "threshold", 0.75) or 0.75),
+            generate=bool(getattr(args, "generate", False)),
+        )
+        _emit_pretty_payload(args, dataclasses.asdict(res))
+        return 0
+
+    return _run_catching(args, _op)
+
+
+def _handle_observer(args: argparse.Namespace) -> int:
+    def _op() -> int:
+        repo = _resolve_repo_root(getattr(args, "repo", None))
+        if args.observer_cmd == "start":
+            res = start_observer(repo=repo)
+        elif args.observer_cmd == "stop":
+            res = stop_observer(repo=repo)
+        elif args.observer_cmd == "status":
+            res = observer_status(repo=repo)
+        else:
+            res = run_observer_once(repo=repo)
+        _emit_pretty_payload(args, dataclasses.asdict(res))
+        return 0
+
+    return _run_catching(args, _op)
+
+
+def _handle_prime(args: argparse.Namespace) -> int:
+    traversable = resources.files("agent_loom.compound").joinpath("README.md")
+    with resources.as_file(traversable) as readme:
+        markdown = readme.read_text(encoding="utf-8", errors="replace")
+    payload = {"ok": True, "markdown": markdown}
+    if _wants_json(args):
+        emit_json(payload)
+    else:
+        sys.stdout.write(str(markdown).rstrip() + "\n")
+    return 0
+
+
+def _handle_hook(args: argparse.Namespace) -> int:
+    def _op() -> int:
+        repo = _resolve_repo_root(getattr(args, "repo", None))
+        payload_raw = str(getattr(args, "payload", "") or "")
+        event_raw = str(getattr(args, "event", "") or "")
+        stdin_text = (
+            ""
+            if payload_raw
+            else (
+                sys.stdin.read()
+                if sys.stdin is not None and not sys.stdin.isatty()
+                else ""
+            )
+        )
+        if args.cmd == "claude-hook":
+            res = run_claude_hook(
+                repo=repo,
+                stdin_text=stdin_text,
+                payload_json=payload_raw,
+                event=event_raw,
+            )
+            _echo_claude_payload(payload_raw, stdin_text)
+        elif args.cmd == "opencode-hook":
+            res = run_opencode_hook(
+                repo=repo,
+                stdin_text=stdin_text,
+                payload_json=payload_raw,
+                event=event_raw,
+            )
+            if _wants_json(args):
+                emit_json(dataclasses.asdict(res))
+        else:
+            res = run_omp_hook(
+                repo=repo,
+                stdin_text=stdin_text,
+                payload_json=payload_raw,
+                event=event_raw,
+            )
+            if _wants_json(args):
+                emit_json(dataclasses.asdict(res))
+        return 0 if bool(res.ok) else 1
+
+    return _run_catching(args, _op)
+
+
+COMMAND_HANDLERS: dict[str, Callable[[argparse.Namespace], int]] = {
+    "init": _handle_init,
+    "sync": _handle_sync,
+    "instincts-update": _handle_instincts_update,
+    "instinct-status": _handle_instinct_status,
+    "instinct-export": _handle_instinct_export,
+    "instinct-import": _handle_instinct_import,
+    "evolve": _handle_evolve,
+    "observer": _handle_observer,
+    "prime": _handle_prime,
+    "claude-hook": _handle_hook,
+    "opencode-hook": _handle_hook,
+    "omp-hook": _handle_hook,
+}
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     raw_argv = list(argv) if argv is not None else sys.argv[1:]
     try:
@@ -333,323 +635,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             sys.stderr.write("Run: loom compound -h\n")
         return 2
 
-    if args.cmd == "init":
-        try:
-            res = install_opencode(
-                dest=_resolve_init_dest(getattr(args, "dest", None)),
-                dry_run=bool(args.dry_run),
-                force=bool(getattr(args, "force", False)),
-            )
-            payload = {
-                "ok": True,
-                "dest": res.dest,
-                "dry_run": res.dry_run,
-                "wrote": res.wrote,
-                "skipped": res.skipped,
-                "warnings": res.warnings,
-            }
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stdout.write(f"installed into: {res.dest}\n")
-                sys.stdout.write(f"pack: {COMPOUND_PACK_ID}\n")
-                sys.stdout.write("note: commit .loom/pack/lock.json\n")
-                if res.dry_run:
-                    sys.stdout.write("(dry-run)\n")
-                if res.wrote:
-                    sys.stdout.write("wrote:\n")
-                    for p in res.wrote:
-                        sys.stdout.write(f"- {p}\n")
-                if res.skipped:
-                    sys.stdout.write("skipped:\n")
-                    for p in res.skipped:
-                        sys.stdout.write(f"- {p}\n")
-                if res.warnings:
-                    sys.stdout.write("warnings:\n")
-                    for w in res.warnings:
-                        sys.stdout.write(f"- {w}\n")
-
-                repo_root = Path(res.dest).resolve()
-                diff_targets = sorted(set(list(res.skipped or [])))
-                if (
-                    diff_targets
-                    and not bool(getattr(args, "diff", False))
-                    and any_pack_diffs(
-                        repo_root=repo_root,
-                        pack_id=COMPOUND_PACK_ID,
-                        relpaths=diff_targets,
-                    )
-                ):
-                    sys.stdout.write(
-                        "note: some skipped pack files differ from Loom scaffold; rerun with --diff to view\n"
-                    )
-                if bool(getattr(args, "diff", False)) and not bool(res.dry_run):
-                    diffs = diff_pack_files(
-                        repo_root=repo_root,
-                        pack_id=COMPOUND_PACK_ID,
-                        relpaths=diff_targets,
-                        max_lines=400,
-                    )
-                    for d in diffs:
-                        sys.stdout.write(f"diff (skipped): {d.relpath}\n")
-                        sys.stdout.write(d.diff)
-            return 0
-        except Exception as e:
-            payload = {"ok": False, "error": str(e)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stderr.write(f"Error: {e}\n")
-            return 1
-
-    if args.cmd == "sync":
-        try:
-            res = compound_sync(
-                repo=_resolve_repo_root(getattr(args, "repo", None)),
-                message=str(args.message or ""),
-            )
-            payload = {"ok": True, **dataclasses.asdict(res)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                if not res.committed:
-                    sys.stdout.write("compound sync: noop\n")
-                else:
-                    sys.stdout.write(
-                        f"compound sync: committed {res.count} file(s) sha={res.sha[:8]}\n"
-                    )
-            return 0
-        except Exception as e:
-            payload = {"ok": False, "error": str(e)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stderr.write(f"Error: {e}\n")
-            return 1
-
-    if args.cmd == "instincts-update":
-        repo = _resolve_repo_root(getattr(args, "repo", None))
-        try:
-            from agent_loom.compound.engine import run_instincts_update
-
-            min_new_observations = getattr(args, "min_new_observations", None)
-            if min_new_observations is None:
-                min_new_observations = int(
-                    os.environ.get("COMPOUND_INSTINCTS_MIN_NEW_OBSERVATIONS", "12")
-                )
-
-            res = run_instincts_update(
-                root=repo,
-                auto=bool(getattr(args, "auto", False)),
-                dry_run=bool(getattr(args, "dry_run", False)),
-                min_new_observations=int(min_new_observations),
-                min_occurrences=int(getattr(args, "min_occurrences", 3) or 3),
-                max_candidates=int(getattr(args, "max_candidates", 12) or 12),
-            )
-            payload = dataclasses.asdict(res)
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stdout.write(json.dumps(payload, indent=2) + "\n")
-            return 0
-        except Exception as e:
-            payload = {"ok": False, "error": str(e)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stderr.write(f"Error: {e}\n")
-            return 1
-
-    if args.cmd == "instinct-status":
-        repo = _resolve_repo_root(getattr(args, "repo", None))
-        try:
-            from agent_loom.compound.instincts import load_instincts
-            from agent_loom.compound.paths import compound_paths
-
-            paths = compound_paths(repo)
-            store = load_instincts(paths.instincts_file)
-            status = observer_status(repo=repo)
-            active = [i for i in store.instincts if i.status == "active"]
-            payload = {
-                "ok": True,
-                "repo": str(repo),
-                "instincts_total": len(store.instincts),
-                "instincts_active": len(active),
-                "observer": dataclasses.asdict(status),
-            }
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stdout.write(json.dumps(payload, indent=2) + "\n")
-            return 0
-        except Exception as e:
-            payload = {"ok": False, "error": str(e)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stderr.write(f"Error: {e}\n")
-            return 1
-
-    if args.cmd == "instinct-export":
-        repo = _resolve_repo_root(getattr(args, "repo", None))
-        try:
-            from agent_loom.compound.paths import compound_paths
-
-            paths = compound_paths(repo)
-            res = export_instincts(
-                instincts_file=paths.instincts_file,
-                out_file=Path(str(args.out)).expanduser().resolve(),
-                min_confidence=float(getattr(args, "min_confidence", 0.0) or 0.0),
-                domain=str(getattr(args, "domain", "") or ""),
-            )
-            payload = dataclasses.asdict(res)
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stdout.write(json.dumps(payload, indent=2) + "\n")
-            return 0
-        except Exception as e:
-            payload = {"ok": False, "error": str(e)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stderr.write(f"Error: {e}\n")
-            return 1
-
-    if args.cmd == "instinct-import":
-        repo = _resolve_repo_root(getattr(args, "repo", None))
-        try:
-            from agent_loom.compound.paths import compound_paths
-
-            paths = compound_paths(repo)
-            res = instinct_import(
-                instincts_file=paths.instincts_file,
-                source=str(args.source),
-                dry_run=bool(getattr(args, "dry_run", False)),
-                force=bool(getattr(args, "force", False)),
-                min_confidence=float(getattr(args, "min_confidence", 0.0) or 0.0),
-            )
-            payload = dataclasses.asdict(res)
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stdout.write(json.dumps(payload, indent=2) + "\n")
-            return 0
-        except Exception as e:
-            payload = {"ok": False, "error": str(e)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stderr.write(f"Error: {e}\n")
-            return 1
-
-    if args.cmd == "evolve":
-        repo = _resolve_repo_root(getattr(args, "repo", None))
-        try:
-            res = evolve_instincts(
-                root=repo,
-                threshold=float(getattr(args, "threshold", 0.75) or 0.75),
-                generate=bool(getattr(args, "generate", False)),
-            )
-            payload = dataclasses.asdict(res)
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stdout.write(json.dumps(payload, indent=2) + "\n")
-            return 0
-        except Exception as e:
-            payload = {"ok": False, "error": str(e)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stderr.write(f"Error: {e}\n")
-            return 1
-
-    if args.cmd == "observer":
-        repo = _resolve_repo_root(getattr(args, "repo", None))
-        try:
-            if args.observer_cmd == "start":
-                res = start_observer(repo=repo)
-            elif args.observer_cmd == "stop":
-                res = stop_observer(repo=repo)
-            elif args.observer_cmd == "status":
-                res = observer_status(repo=repo)
-            else:
-                res = run_observer_once(repo=repo)
-            payload = dataclasses.asdict(res)
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stdout.write(json.dumps(payload, indent=2) + "\n")
-            return 0
-        except Exception as e:
-            payload = {"ok": False, "error": str(e)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stderr.write(f"Error: {e}\n")
-            return 1
-
-    if args.cmd == "prime":
-        traversable = resources.files("agent_loom.compound").joinpath("README.md")
-        with resources.as_file(traversable) as p:
-            md = p.read_text(encoding="utf-8", errors="replace")
-        payload = {"ok": True, "markdown": md}
-        if bool(getattr(args, "json", False)):
-            emit_json(payload)
-        else:
-            sys.stdout.write(str(md).rstrip() + "\n")
-        return 0
-
-    if args.cmd in {"claude-hook", "opencode-hook", "omp-hook"}:
-        repo = _resolve_repo_root(getattr(args, "repo", None))
-        try:
-            payload_raw = str(getattr(args, "payload", "") or "")
-            event_raw = str(getattr(args, "event", "") or "")
-            stdin_text = (
-                ""
-                if payload_raw
-                else (
-                    sys.stdin.read()
-                    if sys.stdin is not None and not sys.stdin.isatty()
-                    else ""
-                )
-            )
-            if args.cmd == "claude-hook":
-                res = run_claude_hook(
-                    repo=repo,
-                    stdin_text=stdin_text,
-                    payload_json=payload_raw,
-                    event=event_raw,
-                )
-                _echo_claude_payload(payload_raw, stdin_text)
-            elif args.cmd == "opencode-hook":
-                res = run_opencode_hook(
-                    repo=repo,
-                    stdin_text=stdin_text,
-                    payload_json=payload_raw,
-                    event=event_raw,
-                )
-                if bool(getattr(args, "json", False)):
-                    emit_json(dataclasses.asdict(res))
-            else:
-                res = run_omp_hook(
-                    repo=repo,
-                    stdin_text=stdin_text,
-                    payload_json=payload_raw,
-                    event=event_raw,
-                )
-                if bool(getattr(args, "json", False)):
-                    emit_json(dataclasses.asdict(res))
-            return 0 if bool(res.ok) else 1
-        except Exception as e:
-            payload = {"ok": False, "error": str(e)}
-            if bool(getattr(args, "json", False)):
-                emit_json(payload)
-            else:
-                sys.stderr.write(f"Error: {e}\n")
-            return 1
-    return 2
+    handler = COMMAND_HANDLERS.get(str(getattr(args, "cmd", "") or ""))
+    if handler is None:
+        return 2
+    return handler(args)
 
 
 __all__ = [

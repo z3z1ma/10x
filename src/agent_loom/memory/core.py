@@ -757,9 +757,21 @@ def edit(
             shutil.move(str(p), str(candidate))
             new_path = candidate
             moved = True
-    except Exception:
-        # fallback: no move
-        pass
+    except Exception as exc:
+        if visibility is not None:
+            raise MemoryError(
+                "failed to move note to requested visibility location",
+                code="CONFLICT",
+                exit_code=2,
+                hint="Resolve destination conflicts and retry the visibility change.",
+                details={
+                    "id": note_id,
+                    "from": str(p),
+                    "to": str(base),
+                    "error": str(exc),
+                },
+            ) from exc
+        warns.append(f"warning: note move skipped ({exc})")
 
     hydration_summary, next_actions = _hydration_feedback(hydration)
 

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from agent_loom.core.errors import LoomError
 
-class TeamError(RuntimeError):
+
+class TeamError(LoomError):
     def __init__(
         self,
         message: str,
@@ -12,12 +14,17 @@ class TeamError(RuntimeError):
         hint: str = "",
         suggestions: list[str] | None = None,
     ) -> None:
-        super().__init__(message)
-        self.code = code
-        self.exit_code = exit_code
+        details = {"data": data} if data is not None else None
+        super().__init__(
+            message,
+            code=code,
+            hint=hint,
+            details=details,
+            suggestions=list(suggestions or []),
+            exit_code=exit_code,
+            http_status=400 if str(code) in {"ARG", "ARGPARSE"} else 500,
+        )
         self.data = data
-        self.hint = hint
-        self.suggestions = list(suggestions or [])
 
 
 __all__ = ["TeamError"]

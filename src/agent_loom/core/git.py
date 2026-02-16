@@ -3,12 +3,21 @@ from __future__ import annotations
 import os
 import subprocess
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Sequence
 
 from agent_loom.core.exec import ExecError
 from agent_loom.core.exec import run as exec_run
 from agent_loom.core.paths import realpath_from
+
+
+@dataclass(frozen=True)
+class GitCommandResult:
+    ok: bool
+    returncode: int
+    stdout: str
+    stderr: str
 
 
 def _git_exec(
@@ -27,6 +36,29 @@ def _git_exec(
         ) from e
 
 
+def git_result(
+    cwd: Path,
+    args: Sequence[str],
+    *,
+    env: Optional[dict[str, str]] = None,
+) -> GitCommandResult:
+    try:
+        p = _git_exec(cwd, args, check=False, env=env)
+        return GitCommandResult(
+            ok=bool(p.returncode == 0),
+            returncode=int(p.returncode),
+            stdout=str(p.stdout or ""),
+            stderr=str(p.stderr or ""),
+        )
+    except ExecError as e:
+        return GitCommandResult(
+            ok=False,
+            returncode=int(e.returncode),
+            stdout=str(e.stdout or ""),
+            stderr=str(e.stderr or ""),
+        )
+
+
 def is_git_repo(path: Path) -> bool:
     # normal repo has .git dir; worktree has .git file
     gitp = path / ".git"
@@ -35,49 +67,38 @@ def is_git_repo(path: Path) -> bool:
 
 def run_quiet(cmd: Sequence[str]) -> str:
     try:
-        p = subprocess.run(
+        p = exec_run(
             cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            cwd=None,
             check=False,
-            text=True,
+            env=None,
         )
         return (p.stdout or "").strip()
-    except Exception:
+    except (ExecError, OSError):
         return ""
 
 
 def git_quiet(cwd: Path, args: Sequence[str]) -> str:
-    return run_quiet(["git", "-C", str(cwd), *list(args)])
+    result = git_result(cwd, args)
+    if not result.ok:
+        return ""
+    return result.stdout.strip()
 
 
 def git_checked(cwd: Path, args: Sequence[str]) -> str:
-    p = subprocess.run(
-        ["git", "-C", str(cwd), *list(args)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        check=False,
-    )
-    if p.returncode != 0:
-        msg = (p.stderr or p.stdout or "").strip() or "git command failed"
+    result = git_result(cwd, args)
+    if not result.ok:
+        msg = (result.stderr or result.stdout).strip() or "git command failed"
         raise ValueError(msg)
-    return (p.stdout or "").rstrip()
+    return result.stdout.rstrip()
 
 
 def git_checked_env(cwd: Path, args: Sequence[str], *, env: dict[str, str]) -> str:
-    p = subprocess.run(
-        ["git", "-C", str(cwd), *list(args)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        check=False,
-        env=env,
-    )
-    if p.returncode != 0:
-        msg = (p.stderr or p.stdout or "").strip() or "git command failed"
+    result = git_result(cwd, args, env=env)
+    if not result.ok:
+        msg = (result.stderr or result.stdout).strip() or "git command failed"
         raise ValueError(msg)
-    return (p.stdout or "").rstrip()
+    return result.stdout.rstrip()
 
 
 def git_scoped_commit(
@@ -92,14 +113,8 @@ def git_scoped_commit(
     env["GIT_INDEX_FILE"] = idx
 
     try:
-        head = subprocess.run(
-            ["git", "-C", str(cwd), "rev-parse", "--verify", "HEAD"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            text=True,
-            check=False,
-        )
-        if head.returncode == 0:
+        head = git_result(cwd, ["rev-parse", "--verify", "HEAD"])
+        if head.ok:
             git_checked_env(cwd, ["read-tree", "HEAD"], env=env)
         else:
             git_checked_env(cwd, ["read-tree", "--empty"], env=env)

@@ -12,7 +12,7 @@ from agent_loom.ticket.core import (
     sprint_clear_in_dir,
     sprint_set_in_dir,
 )
-from agent_loom.ticket.errors import TicketArgError
+from agent_loom.ticket.errors import TicketArgError, TicketNotFoundError
 from agent_loom.ticket.frontmatter import decanonicalize_frontmatter
 from agent_loom.ticket.graph import (
     blockers_for,
@@ -399,8 +399,13 @@ def update(
             seen.add(cur)
             try:
                 pt = store.load_ticket_by_id(cur)
-            except Exception:
-                return
+            except TicketNotFoundError as exc:
+                raise TicketArgError(
+                    code="ARG",
+                    error=f"Parent chain references missing ticket: {cur}",
+                    hint="Choose an existing parent ticket.",
+                    suggestions=["loom ticket list", "loom ticket show <id>"],
+                ) from exc
             nxt = str(pt.fm.get("parent") or "").strip()
             if not nxt:
                 return

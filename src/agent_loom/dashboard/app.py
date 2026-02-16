@@ -3,11 +3,13 @@ from __future__ import annotations
 import importlib
 import os
 import platform
+from uuid import uuid4
 from pathlib import Path
 from typing import Any
 
 from flask import Flask, Request, jsonify, render_template, request
 
+from agent_loom.core.errors import LoomError, coerce_loom_error
 from agent_loom.dashboard.auth import authorize_request
 from agent_loom.dashboard.compound_fs import list_skills, read_instincts, read_skill
 from agent_loom.dashboard.config import ServerConfig
@@ -70,6 +72,50 @@ def _require_auth(
 def create_app(*, cfg: ServerConfig) -> Flask:
     app = Flask(__name__, template_folder=TEMPLATE_DIR)
     app.config["LOOM_SERVER_CFG"] = cfg
+
+    def _json_body() -> dict[str, Any]:
+        payload = request.get_json(silent=True)
+        if payload is None:
+            return {}
+        if isinstance(payload, dict):
+            return payload
+        raise LoomError(
+            "request body must be a JSON object",
+            code="ARG",
+            hint="Send an object payload, not a list or scalar.",
+            http_status=400,
+            exit_code=2,
+        )
+
+    def _api_error(
+        exc: BaseException,
+        *,
+        default_code: str,
+        default_message: str,
+    ) -> tuple[dict[str, Any], int]:
+        error_id = uuid4().hex
+        known = isinstance(exc, LoomError) or isinstance(
+            exc, (ValueError, FileNotFoundError, PermissionError)
+        ) or hasattr(exc, "code")
+        typed = coerce_loom_error(
+            exc,
+            default_code=default_code,
+            default_message=(default_message if known else "internal error"),
+            default_http_status=(400 if known else 500),
+            default_exit_code=2,
+            expose_message=known,
+            error_id=error_id,
+        )
+        if typed.http_status >= 500:
+            app.logger.exception("dashboard error id=%s", error_id, exc_info=exc)
+        details: dict[str, Any] = dict(typed.details)
+        if typed.hint:
+            details["hint"] = typed.hint
+        if typed.suggestions:
+            details["suggestions"] = list(typed.suggestions)
+        return err(code=typed.code, message=str(typed), details=details), int(
+            typed.http_status
+        )
 
     @app.route("/")
     def dashboard() -> Any:
@@ -227,7 +273,7 @@ def create_app(*, cfg: ServerConfig) -> Flask:
 
         from agent_loom.ticket.api import create
 
-        body = request.get_json(silent=True) or {}
+        body = _json_body()
         try:
             res = create(
                 tickets_dir=_tickets_dir(),
@@ -243,7 +289,12 @@ def create_app(*, cfg: ServerConfig) -> Flask:
                 acceptance=str(body.get("acceptance") or "").strip(),
             )
         except Exception as e:
-            return jsonify(err(code="CREATE_FAILED", message=str(e))), 400
+            payload, status = _api_error(
+                e,
+                default_code="CREATE_FAILED",
+                default_message="ticket create failed",
+            )
+            return jsonify(payload), status
         return jsonify(ok(data=res)), 201
 
     @app.patch("/api/v1/tickets/<ticket_id>")
@@ -257,7 +308,7 @@ def create_app(*, cfg: ServerConfig) -> Flask:
 
         from agent_loom.ticket.api import update
 
-        body = request.get_json(silent=True) or {}
+        body = _json_body()
         try:
             res = update(
                 tickets_dir=_tickets_dir(),
@@ -296,7 +347,12 @@ def create_app(*, cfg: ServerConfig) -> Flask:
                 force=bool(body.get("force")),
             )
         except Exception as e:
-            return jsonify(err(code="UPDATE_FAILED", message=str(e))), 400
+            payload, status = _api_error(
+                e,
+                default_code="UPDATE_FAILED",
+                default_message="ticket update failed",
+            )
+            return jsonify(payload), status
         return jsonify(ok(data=res))
 
     # -----------------
@@ -720,6 +776,9 @@ def create_app(*, cfg: ServerConfig) -> Flask:
 
     @app.errorhandler(Exception)
     def _unhandled(e: Exception) -> Any:
-        return jsonify(err(code="SERVER_ERROR", message=str(e))), 500
+        payload, status = _api_error(
+            e, default_code="SERVER_ERROR", default_message="server error"
+        )
+        return jsonify(payload), status
 
     return app

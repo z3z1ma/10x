@@ -1495,6 +1495,38 @@ def tui(
         log_path,
         f"{_iso_z()} sidecar start harness={harness} pane={pane_id} role={role} project={project_dir}",
     )
+    sidecar_warned_once: set[str] = set()
+
+    def _record_sidecar_warning(
+        code: str,
+        *,
+        error: Optional[Exception] = None,
+        detail: str = "",
+        once: bool = False,
+    ) -> None:
+        if once and code in sidecar_warned_once:
+            return
+        if once:
+            sidecar_warned_once.add(code)
+        problem = detail
+        if error is not None:
+            problem = f"{type(error).__name__}: {error}"
+        if problem:
+            _append_log_line(
+                log_path,
+                f"{_iso_z()} warning code={code} detail={problem}",
+            )
+        else:
+            _append_log_line(log_path, f"{_iso_z()} warning code={code}")
+        safe_write_event(
+            paths,
+            event_type="sidecar.warning",
+            run=run,
+            ok=False,
+            summary=f"Sidecar warning recipient={recipient} code={code}",
+            refs={"recipient": recipient, "pane_id": pane_id},
+            data={"code": code, "detail": problem},
+        )
 
     cooldown_s = float(nudge_cooldown_s or 300.0)
     stall_s = float(stall_threshold_s or 1080.0)
@@ -1548,19 +1580,20 @@ def tui(
             return
         try:
             p.send_signal(signal.SIGTERM)
-        except Exception:
+        except Exception as exc:
+            _record_sidecar_warning("stop.send_sigterm", error=exc, once=True)
             try:
                 p.terminate()
-            except Exception:
-                pass
+            except Exception as term_exc:
+                _record_sidecar_warning("stop.terminate", error=term_exc, once=True)
         deadline = time.time() + 1.5
         while time.time() < deadline and p.poll() is None:
             time.sleep(0.05)
         if p.poll() is None:
             try:
                 p.kill()
-            except Exception:
-                pass
+            except Exception as kill_exc:
+                _record_sidecar_warning("stop.kill", error=kill_exc, once=True)
 
     def _handle_signal(sig: int, _frame: Any) -> None:
         stop_all(f"signal:{sig}")
@@ -1571,8 +1604,8 @@ def tui(
         signal.signal(signal.SIGTERM, _handle_signal)
         signal.signal(signal.SIGHUP, _handle_signal)
         signal.signal(signal.SIGINT, _handle_signal)
-    except Exception:
-        pass
+    except Exception as exc:
+        _record_sidecar_warning("signal.register", error=exc, once=True)
 
     def child_alive() -> bool:
         with lock:
@@ -1596,7 +1629,8 @@ def tui(
                 return
             tmux_send_text(pane_id, text, enter=True, ctrl_enter=(harness == "omp"))
             last_nudge_at = now
-        except Exception:
+        except Exception as exc:
+            _record_sidecar_warning("nudge.send_text", error=exc, once=True)
             return
 
     def _handle_control_message(msg: Mapping[str, Any]) -> bool:
@@ -1633,11 +1667,13 @@ def tui(
         if p and p.poll() is None:
             try:
                 bounce_killed_pid = int(p.pid)
-            except Exception:
+            except Exception as exc:
+                _record_sidecar_warning("bounce.pid", error=exc, once=True)
                 bounce_killed_pid = None
             try:
                 p.send_signal(signal.SIGKILL)
-            except Exception:
+            except Exception as exc:
+                _record_sidecar_warning("bounce.sigkill", error=exc, once=True)
                 best_effort(p.kill, label="sidecar.bounce.kill")
 
         safe_write_event(
@@ -1656,7 +1692,8 @@ def tui(
     def inbox_nudge() -> None:
         try:
             msgs = inbox_list_messages(paths, to=recipient, unacked_only=True, limit=25)
-        except Exception:
+        except Exception as exc:
+            _record_sidecar_warning("inbox.list", error=exc, once=True)
             return
         if not msgs:
             return
@@ -1704,7 +1741,12 @@ def tui(
                 raw = tmux_format(pane_id, "#{pane_last_activity}")
                 try:
                     last = float(str(raw).strip())
-                except Exception:
+                except Exception as exc:
+                    _record_sidecar_warning(
+                        "stall.last_activity.parse",
+                        error=exc,
+                        once=True,
+                    )
                     last = 0.0
                 if not last:
                     continue
@@ -1718,7 +1760,8 @@ def tui(
                             timeout=5.0,
                         )
                         dirty = bool((p.stdout or "").strip())
-                    except Exception:
+                    except Exception as exc:
+                        _record_sidecar_warning("stall.git_status", error=exc, once=True)
                         dirty = False
                     safe_nudge(
                         (
@@ -1729,7 +1772,8 @@ def tui(
                             f"If you have no moves, you may self-retire (keeps worktree): `loom team retire {paths.team} {recipient}`."
                         )
                     )
-            except Exception:
+            except Exception as exc:
+                _record_sidecar_warning("stall.loop", error=exc, once=True)
                 continue
 
     threading.Thread(target=inbox_loop, daemon=True).start()
@@ -1746,7 +1790,8 @@ def tui(
                 if not session or not tmux_has_session(session):
                     stop_all("orphaned")
                     return
-            except Exception:
+            except Exception as exc:
+                _record_sidecar_warning("orphan.loop", error=exc, once=True)
                 stop_all("orphaned")
                 return
 
@@ -1850,16 +1895,24 @@ def tui(
                                         force=False,
                                         line_info="idle_screen",
                                     )
-                                except Exception:
-                                    pass
+                                except Exception as exc:
+                                    _record_sidecar_warning(
+                                        "autocapture.idle_notify",
+                                        error=exc,
+                                        once=True,
+                                    )
                             idle_screen_notified = True
                     else:
                         last_screen_hash = h
                         screen_unchanged_since = 0.0
                         idle_screen_notified = False
                     last_capture_at = now
-            except Exception:
-                pass
+            except Exception as exc:
+                _record_sidecar_warning(
+                    "autocapture.loop",
+                    error=exc,
+                    once=True,
+                )
             next_at = time.time() + next_autocapture_delay_s(initial=False)
 
     threading.Thread(target=autocapture_loop, daemon=True).start()
@@ -1887,7 +1940,8 @@ def tui(
                         f"TEAM: objective: {first} | if done: loom team disband {paths.team} | update: loom team objective {paths.team} append ..."
                     )
                     last_at = now
-                except Exception:
+                except Exception as exc:
+                    _record_sidecar_warning("objective.loop", error=exc, once=True)
                     continue
 
         def done_check_loop() -> None:
@@ -1905,7 +1959,8 @@ def tui(
                         ),
                         label="done_check",
                     )
-                except Exception:
+                except Exception as exc:
+                    _record_sidecar_warning("done_check.loop", error=exc, once=True)
                     continue
 
         threading.Thread(target=objective_loop, daemon=True).start()
@@ -1973,8 +2028,12 @@ def tui(
                         workdir=project_dir,
                         repo_root=Path(cr),
                     )
-            except Exception:
-                pass
+            except Exception as exc:
+                _record_sidecar_warning(
+                    "opencode.runtime.ensure",
+                    error=exc,
+                    once=True,
+                )
 
         child_env = os.environ.copy()
         user_agent_prompt = _agent_prompt_text(workdir=project_dir, agent=agent)

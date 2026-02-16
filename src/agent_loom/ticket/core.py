@@ -984,8 +984,13 @@ def update(
             seen.add(cur)
             try:
                 pt = store.load_ticket_by_id(cur)
-            except Exception:
-                return
+            except TicketNotFoundError as exc:
+                raise TicketArgError(
+                    code="ARG",
+                    error=f"Parent chain references missing ticket: {cur}",
+                    hint="Choose an existing parent ticket.",
+                    suggestions=["loom ticket list", "loom ticket show <id>"],
+                ) from exc
             nxt = str(pt.fm.get("parent") or "").strip()
             if not nxt:
                 return

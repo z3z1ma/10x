@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+from agent_loom.core.errors import LoomError
 
-class MemoryError(RuntimeError):
+
+class MemoryError(LoomError):
     def __init__(
         self,
         message: str,
@@ -12,12 +14,15 @@ class MemoryError(RuntimeError):
         suggestions: list[str] | None = None,
         details: dict | None = None,
     ) -> None:
-        super().__init__(message)
-        self.code = code
-        self.exit_code = exit_code
-        self.hint = hint
-        self.suggestions = list(suggestions or [])
-        self.details = details
+        super().__init__(
+            message,
+            code=code,
+            hint=hint,
+            details=details,
+            suggestions=list(suggestions or []),
+            exit_code=exit_code,
+            http_status=400 if str(code).startswith("ARG") else 500,
+        )
 
 
 __all__ = ["MemoryError"]

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional
 
 
@@ -261,6 +261,7 @@ class WorktreeAddResult:
 class WorktreeGroupRemoveResult:
     group: str
     removed: List[str]
+    warnings: List[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
