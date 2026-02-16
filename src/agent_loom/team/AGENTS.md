@@ -43,3 +43,37 @@
 3. **Hotspot size control**: `team/core.py` is monitored for growth. New functionality should extract to domain modules when feasible.
 4. **Import direction**: Domain modules may NOT import from `team/commands/*`. Command handlers import from domain modules and core.
 
+## Architecture (continued)
+
+- `core.py` orchestrates run lifecycle, tmux spawning, messaging, and merge queue flows.
+- `commands/` contains thin CLI handlers that delegate to `core.py`.
+- `composition.py` parses/validates Team YAML roster schema.
+- `composition_runtime.py` resolves runtime member profiles from roster state.
+- `targets.py` expands/validates send/capture targets and broadcast groups.
+- `prompts.py` renders manager/worker/architect/integrator runtime prompts.
+- `run_state.py` is the source of truth for run path resolution and persisted run state IO.
+
+### Module boundaries and guardrails
+
+- `commands/` must remain orchestration wrappers; business logic belongs in core/domain modules.
+- Runtime state is read/written through `run_state.py`; do not bypass it from command handlers.
+- Roster parsing/validation stays in `composition.py`; runtime resolution stays in `composition_runtime.py`.
+- Target expansion/routing behavior stays in `targets.py`; `core.py` enforces policy and delivery.
+- CLI handlers must use shared output helpers from `agent_loom.core.cli_output` for JSON envelopes and payload normalization.
+
+## Roster YAML (version 3)
+
+Roster is an optional, repo-committable artifact loaded with `loom team start --roster <path>`.
+
+Built-ins are fixed and always present under `builtins`: `manager`, `architect`, `worker`, `integrator`.
+Each built-in only supports `{harness, agent, model}`.
+
+Optional sections:
+- `mounts` for persisted worktree mounts (same syntax as `loom team start --mount SRC[:DEST]`).
+- `members` for additional custom personas (custom roles only). `always_on: true` auto-spawns; `always_on: false` is spawned on-demand via `loom team spawn-persona`.
+- `communication` for policy extensions (custom-role routes/broadcast groups only; built-in routes remain fixed in code).
+
+Built-in operating model remains immutable:
+- manager + architect live in repo root
+- workers are ticket-scoped in per-ticket worktrees
+- integrator is persistent in the merge-queue worktree
