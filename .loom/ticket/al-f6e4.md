@@ -1,6 +1,6 @@
 ---
 "id": "al-f6e4"
-"status": "open"
+"status": "review"
 "deps":
 - "al-89cc"
 "links": []
@@ -56,3 +56,40 @@ YAML composition must govern who can talk to whom, and how escalations happen, o
 - Risk: partial delivery leaves unclear operator state.
   - Detection: some recipients get message while command reports success.
   - Mitigation: return per-recipient delivery report and explicit failure reason.
+
+## Notes
+
+**2026-02-16T00:38:48Z**
+
+Implemented core draft for broadcast/comms boundaries: added grouped target resolution in team.targets, began send-path policy enforcement + escalation handling in team.core, and added draft tests (test_team_send_broadcast.py, test_team_comms_policy.py). Currently validating/fixing type+lint issues before first commit.
+
+**2026-02-16T00:39:42Z**
+
+Milestone complete: implemented broadcast target groups (, , , , and ), send fan-out with per-recipient delivery reports + dedupe, communication route enforcement, and escalation route resolution constraints in team.core/targets/composition. Added tests  and , plus target group coverage in . Verification run: ============================= test session starts ==============================
+platform darwin -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: /Users/alexanderbutler/code_projects/personal/agent-loom/.loom/team/runs/MiyagiDo/worktrees/al-f6e4
+configfile: pyproject.toml
+collected 21 items
+
+tests/test_team_targets.py .........                                     [ 42%]
+tests/test_team_send_broadcast.py .                                      [ 47%]
+tests/test_team_comms_policy.py ...                                      [ 61%]
+tests/test_team_composition_schema.py ........                           [100%]
+
+============================== 21 passed in 0.21s ==============================, All checks passed!, 0 errors, 0 warnings, 0 notes.
+
+**2026-02-16T00:40:01Z**
+
+Validation passed for current implementation. Commands: uv run pytest tests/test_team_targets.py tests/test_team_send_broadcast.py tests/test_team_comms_policy.py tests/test_team_composition_schema.py ; uv run ruff check . ; uv run basedpyright. Preparing commit now.
+
+**2026-02-16T00:40:33Z**
+
+First milestone commit landed: b0ae7f0 (feat(team): enforce broadcast targets and comms policy routes). Delivered in this commit: broadcast target resolution with builtin/policy groups, send fan-out with dedupe and per-recipient delivery report, route-based communication policy enforcement, escalation resolution constraints, and new tests covering broadcast and policy rejection paths. Verification after commit: uv run pytest tests/test_team_send_broadcast.py tests/test_team_comms_policy.py ; uv run ruff check . ; uv run basedpyright. Remaining before READY_FOR_REVIEW: assemble final review summary + risks (implementation work complete).,cwd:/Users/alexanderbutler/code_projects/personal/agent-loom/.loom/team/runs/MiyagiDo/worktrees/al-f6e4}
+
+**2026-02-16T00:40:46Z**
+
+Completion candidate moved to review. Verification commands run: uv run pytest tests/test_team_send_broadcast.py tests/test_team_comms_policy.py ; uv run ruff check . ; uv run basedpyright. Key behavior verified: broadcast fan-out deduplicates recipients and reports partial delivery deterministically; forbidden routes fail with PERMISSION errors; escalation alias resolves only for worker/investigator senders and enforces configured escalation target role resolution. Risks: route token matching is intentionally string-based (role/group/worker/ticket tokens); future schema hardening may tighten allowed route token vocabulary to avoid policy misconfiguration typos.
+
+**2026-02-16T00:43:17Z**
+
+Merged into team/merge-queue-44953bb8 via queue item 9a9219c35f. Validation on merge-queue: ruff passed; basedpyright passed with 0 errors and 0 warnings; pytest in neutral env (TEAM_* unset) had 275 passed / 7 failed. Failures: tests/test_architecture_guardrails.py::{TestHotspotSizeControl::test_hotspot_files_within_size_threshold,TestModuleBoundaryDocumentation::test_readmes_contain_architecture_sections}, tests/test_compound_adapter_hooks_cli.py::{test_hook_adapters_log_observation_json,test_init_instincts_sync_json_smoke,test_omp_hook_reads_stdin_payload_with_event}, tests/test_loom_init_cli_ux.py::{test_init_yes_json_in_git_repo_initializes_everything,test_init_yes_json_outside_git_skips_team}.
