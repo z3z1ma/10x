@@ -1,10 +1,13 @@
 import contextlib
+import json
 import os
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
 
 from agent_loom.team import core as team
+from agent_loom.team import waiting
 from agent_loom.team.run_state import RunPaths
 
 
@@ -109,6 +112,76 @@ class TestManagerWaitCheckin(unittest.TestCase):
             ((run.get("ops") or {}).get("manager") or {}).get("checkin") or {}
         ).get("timeout_streak") or 0
         self.assertEqual(int(streak), 0)
+
+
+class TestWaitingHelpers(unittest.TestCase):
+    def test_wait_for_wake_times_out_when_tmux_wait_not_signaled(self) -> None:
+        with (
+            mock.patch.object(waiting, "tmux_available", return_value=True),
+            mock.patch.object(waiting, "tmux_has_session", return_value=True),
+            mock.patch.object(waiting, "tmux_wait_for", return_value=False),
+        ):
+            wake_reason, signaled = waiting.wait_for_wake(
+                session="team-cobrakai",
+                channel="ch",
+                seconds=300,
+            )
+
+        self.assertEqual(wake_reason, "timeout")
+        self.assertFalse(signaled)
+
+    def test_capture_pane_and_persist_writes_artifacts(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            paths = RunPaths(repo_root=Path(td), team="CobraKai")
+            run = {"team": "CobraKai", "run_id": "run-123"}
+            event_calls: list[dict[str, object]] = []
+
+            with (
+                mock.patch.object(waiting, "_iso_z", return_value="2026-02-16T12:00:00Z"),
+                mock.patch.object(
+                    waiting,
+                    "tmux_capture",
+                    return_value="pane output",
+                ),
+                mock.patch.object(
+                    waiting.uuid,
+                    "uuid4",
+                    return_value=type("U", (), {"hex": "1234567890abcdef1234567890abcdef"})(),
+                ),
+                mock.patch.object(
+                    waiting,
+                    "safe_write_event",
+                    side_effect=lambda *args, **kwargs: event_calls.append(kwargs),
+                ),
+            ):
+                cap = waiting.capture_pane_and_persist(
+                    paths,
+                    run=run,
+                    pane_id="%1",
+                    target_key="manager",
+                    target_meta={"role": "manager", "pane_id": "%1"},
+                    pane={"pane_id": "%1"},
+                    lines=120,
+                    no_join=False,
+                    summary="Captured manager lines=120",
+                )
+
+            output_file = Path(str(cap.get("output_file") or ""))
+            meta_file = Path(str(cap.get("meta_file") or ""))
+            self.assertTrue(output_file.exists())
+            self.assertTrue(meta_file.exists())
+            self.assertEqual(output_file.read_text(encoding="utf-8"), "pane output")
+
+            meta = json.loads(meta_file.read_text(encoding="utf-8"))
+            self.assertEqual(meta["id"], "1234567890ab")
+            self.assertEqual(meta["team"], "CobraKai")
+            self.assertEqual(meta["run_id"], "run-123")
+            self.assertEqual(int(meta["lines"]), 120)
+            self.assertEqual(int(meta["bytes"]), len("pane output".encode("utf-8")))
+            self.assertEqual(len(event_calls), 1)
+            self.assertEqual(
+                str(event_calls[0].get("event_type") or ""), "capture.saved"
+            )
 
 
 if __name__ == "__main__":
