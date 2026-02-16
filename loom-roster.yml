@@ -1,0 +1,49 @@
+version: 3
+metadata:
+  labels:
+    - core
+  purpose: Primary development team
+  name: MiyagoDo
+mounts:
+  - .venv
+communication:
+  routes:
+    - from_role: reviewer
+      to:
+        - manager
+        - role:architect
+  broadcast_groups:
+    reviewers:
+      - role:architect
+      - member:ux
+      - member:designer
+members:
+  - role: reviewer
+    id: ux
+    agent: loom-team-worker
+    always_on: false
+    harness: codex
+    model: gpt-5.3-codex
+  - id: designer
+    role: designer
+    always_on: true
+    harness: codex
+    agent: loom-team-worker
+    model: gpt-5.3-codex
+builtins:
+  integrator:
+    agent: loom-team-integrator
+    harness: omp
+    model: gpt-5.3-codex
+  worker:
+    agent: loom-team-worker
+    harness: codex
+    model: gpt-5.3-codex
+  manager:
+    harness: omp
+    agent: loom-team-manager
+    model: openai-codex/gpt-5.3-codex-spark
+  architect:
+    harness: omp
+    agent: loom-team-architect
+    model: openai-codex/gpt-5.3-codex
