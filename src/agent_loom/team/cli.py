@@ -437,6 +437,11 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("team", help="Team name")
     sp.add_argument("--objective", default="", help="High-level objective text")
     sp.add_argument(
+        "--composition",
+        default="",
+        help="Path to YAML team composition file",
+    )
+    sp.add_argument(
         "--session",
         default="",
         help="Explicit tmux session name (defaults to team-<team>)",
