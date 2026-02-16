@@ -28,6 +28,7 @@ _MEMBER_SOURCES = {"loom", "byo"}
 _HARNESS_VALUES = {"opencode", "claude", "omp", "codex"}
 _COMM_CHANNELS = {"inbox_only", "inbox_and_tmux"}
 _ESCALATION_TARGETS = {ROLE_MANAGER, ROLE_INTEGRATOR}
+_COMM_ROUTE_SENDERS = {ROLE_MANAGER, ROLE_WORKER, ROLE_INVESTIGATOR, ROLE_INTEGRATOR}
 _PATTERN_HINT = "Use exact names or a single trailing '*' prefix pattern (examples: 'al-aec3', 'al-*', '*')."
 
 
@@ -114,17 +115,38 @@ class EscalationPolicy:
 
 
 @dataclass(frozen=True)
+class CommunicationRoute:
+    from_role: str
+    to: Tuple[str, ...]
+
+    def as_dict(self) -> Dict[str, Any]:
+        return {
+            "from_role": self.from_role,
+            "to": list(self.to),
+        }
+
+
+@dataclass(frozen=True)
 class CommunicationPolicy:
     channel: str
     require_ack: bool
     escalation: EscalationPolicy
+    routes: Tuple[CommunicationRoute, ...]
+    broadcast_groups: Tuple[Tuple[str, Tuple[str, ...]], ...]
 
     def as_dict(self) -> Dict[str, Any]:
-        return {
+        data: Dict[str, Any] = {
             "channel": self.channel,
             "require_ack": self.require_ack,
             "escalation": self.escalation.as_dict(),
         }
+        if self.routes:
+            data["routes"] = [route.as_dict() for route in self.routes]
+        if self.broadcast_groups:
+            data["broadcast_groups"] = {
+                name: list(members) for name, members in self.broadcast_groups
+            }
+        return data
 
 
 @dataclass(frozen=True)
@@ -320,7 +342,11 @@ def _parse_worktree_mappings(raw: Any, *, source: str, member_ids: set[str]) -> 
 def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy:
     obj = _expect_mapping(f"{source}.communication", raw)
     _require_keys(f"{source}.communication", obj, {"channel", "require_ack", "escalation"})
-    _reject_unknown_keys(f"{source}.communication", obj, {"channel", "require_ack", "escalation"})
+    _reject_unknown_keys(
+        f"{source}.communication",
+        obj,
+        {"channel", "require_ack", "escalation", "routes", "broadcast_groups"},
+    )
 
     channel = _expect_enum(f"{source}.communication.channel", obj.get("channel"), _COMM_CHANNELS)
     require_ack = _expect_bool(f"{source}.communication.require_ack", obj.get("require_ack"))
@@ -353,6 +379,46 @@ def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy:
         min_value=0,
     )
 
+    routes: list[CommunicationRoute] = []
+    routes_raw = obj.get("routes")
+    if routes_raw is not None:
+        route_items = _expect_list(f"{source}.communication.routes", routes_raw)
+        for idx, route_item in enumerate(route_items):
+            path = f"{source}.communication.routes[{idx}]"
+            route_obj = _expect_mapping(path, route_item)
+            _require_keys(path, route_obj, {"from_role", "to"})
+            _reject_unknown_keys(path, route_obj, {"from_role", "to"})
+
+            from_role = _expect_enum(
+                f"{path}.from_role",
+                route_obj.get("from_role"),
+                _COMM_ROUTE_SENDERS,
+            )
+            to_items = _expect_str_list(f"{path}.to", route_obj.get("to"), default=())
+            if not to_items:
+                raise TeamCompositionError(f"{path}.to: must include at least one target")
+            routes.append(CommunicationRoute(from_role=from_role, to=tuple(sorted(set(to_items)))))
+
+    group_items: list[Tuple[str, Tuple[str, ...]]] = []
+    groups_raw = obj.get("broadcast_groups")
+    if groups_raw is not None:
+        groups_obj = _expect_mapping(f"{source}.communication.broadcast_groups", groups_raw)
+        for raw_group_name in sorted(groups_obj.keys(), key=str):
+            group_name = _expect_nonempty_str(
+                f"{source}.communication.broadcast_groups.<key>",
+                raw_group_name,
+            ).lower()
+            members = _expect_str_list(
+                f"{source}.communication.broadcast_groups.{group_name}",
+                groups_obj.get(raw_group_name),
+                default=(),
+            )
+            if not members:
+                raise TeamCompositionError(
+                    f"{source}.communication.broadcast_groups.{group_name}: must include at least one target"
+                )
+            group_items.append((group_name, tuple(sorted(set(members)))))
+
     return CommunicationPolicy(
         channel=channel,
         require_ack=require_ack,
@@ -361,6 +427,8 @@ def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy:
             timeout_seconds=timeout_seconds,
             max_retries=max_retries,
         ),
+        routes=tuple(sorted(routes, key=lambda x: x.from_role)),
+        broadcast_groups=tuple(sorted(group_items, key=lambda x: x[0])),
     )
 
 

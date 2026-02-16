@@ -191,7 +191,7 @@ from agent_loom.team.run_state import (
     save_run,
 )
 from agent_loom.team.strings import generate_stable_key, message_preview, sanitize
-from agent_loom.team.targets import _resolve_target
+from agent_loom.team.targets import _resolve_target, _resolve_targets
 from agent_loom.team.time import _iso_z
 from agent_loom.team.tmux import (
     _pane_can_receive_chat,
@@ -5412,6 +5412,200 @@ def capture(
     )
 
 
+def _communication_policy_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
+    routes: Dict[str, Tuple[str, ...]] = {
+        ROLE_MANAGER: ("all",),
+        ROLE_WORKER: ("manager", "escalate"),
+        ROLE_INVESTIGATOR: ("manager", "escalate"),
+        ROLE_INTEGRATOR: ("manager",),
+    }
+    escalation_target_role = ROLE_MANAGER
+
+    raw_composition = run.get("composition")
+    composition = dict(raw_composition) if isinstance(raw_composition, dict) else {}
+    raw_spec = composition.get("spec")
+    spec = dict(raw_spec) if isinstance(raw_spec, dict) else {}
+    raw_communication = spec.get("communication")
+    communication = (
+        dict(raw_communication) if isinstance(raw_communication, dict) else {}
+    )
+
+    esc_raw = communication.get("escalation")
+    esc = dict(esc_raw) if isinstance(esc_raw, dict) else {}
+    target_role = str(esc.get("target_role") or "").strip().lower()
+    if target_role in {ROLE_MANAGER, ROLE_INTEGRATOR}:
+        escalation_target_role = target_role
+
+    raw_routes = communication.get("routes")
+    if isinstance(raw_routes, list):
+        parsed_routes: Dict[str, Tuple[str, ...]] = {}
+        for item in raw_routes:
+            if not isinstance(item, dict):
+                continue
+            from_role = str(item.get("from_role") or "").strip().lower()
+            if from_role not in {
+                ROLE_MANAGER,
+                ROLE_WORKER,
+                ROLE_INVESTIGATOR,
+                ROLE_INTEGRATOR,
+            }:
+                continue
+            to_raw = item.get("to")
+            if not isinstance(to_raw, list):
+                continue
+            to: List[str] = []
+            for entry in to_raw:
+                token = str(entry or "").strip().lower()
+                if token:
+                    to.append(token)
+            parsed_routes[from_role] = tuple(sorted(set(to)))
+        if parsed_routes:
+            routes = parsed_routes
+
+    return {
+        "routes": routes,
+        "escalation_target_role": escalation_target_role,
+    }
+
+
+def _sender_for_send() -> Tuple[str, str]:
+    role = str(os.getenv(ENV_TEAM_ROLE) or "").strip().lower()
+    worker_id = sanitize(str(os.getenv(ENV_TEAM_WORKER_ID) or ""), max_len=48)
+
+    if not role:
+        return ROLE_MANAGER, "manager"
+    if role == ROLE_MANAGER:
+        return ROLE_MANAGER, "manager"
+    if role not in {ROLE_WORKER, ROLE_INVESTIGATOR, ROLE_INTEGRATOR}:
+        raise TeamError(
+            f"Unknown sender role: {role}",
+            code="PERMISSION",
+            exit_code=2,
+        )
+    if not worker_id:
+        raise TeamError(
+            "TEAM_WORKER_ID missing for non-manager sender",
+            code="BAD_STATE",
+            exit_code=2,
+        )
+    return role, worker_id
+
+
+def _resolve_send_target(
+    *,
+    run: Mapping[str, Any],
+    target: str,
+    sender_role: str,
+) -> Tuple[str, bool]:
+    normalized = str(target or "").strip().lower()
+    if normalized not in {"escalate", "escalation"}:
+        return str(target or "").strip(), False
+
+    if sender_role not in {ROLE_WORKER, ROLE_INVESTIGATOR}:
+        raise TeamError(
+            "Escalation target is only allowed for worker/investigator senders",
+            code="PERMISSION",
+            exit_code=2,
+        )
+
+    policy = _communication_policy_from_run(run)
+    target_role = str(policy.get("escalation_target_role") or ROLE_MANAGER)
+    if target_role == ROLE_MANAGER:
+        return "manager", True
+
+    workers = dict(run.get("workers") or {})
+    integrators: List[str] = []
+    for wid, worker in workers.items():
+        if bool((worker or {}).get("retired")):
+            continue
+        if str((worker or {}).get("role") or "").strip().lower() == ROLE_INTEGRATOR:
+            integrators.append(str(wid))
+
+    if not integrators:
+        raise TeamError(
+            "Escalation target role is integrator but no active integrator is available",
+            code="BAD_STATE",
+            exit_code=2,
+            suggestions=[f"loom team spawn-integrator {str(run.get('team') or '')}"],
+        )
+    if len(integrators) > 1:
+        raise TeamError(
+            f"Escalation target role is integrator but multiple candidates exist: {integrators}",
+            code="AMBIGUOUS",
+            exit_code=2,
+        )
+
+    return integrators[0], True
+
+
+def _route_allows_target(
+    *,
+    allowed_tokens: Tuple[str, ...],
+    requested_target: str,
+    recipient: Mapping[str, Any],
+) -> bool:
+    requested = str(requested_target or "").strip().lower()
+    role = str(recipient.get("role") or "").strip().lower()
+    worker_id = str(recipient.get("worker_id") or "").strip().lower()
+    ticket_id = str(recipient.get("ticket_id") or "").strip().lower()
+
+    for token in allowed_tokens:
+        value = str(token or "").strip().lower()
+        if not value:
+            continue
+        if value == "all":
+            return True
+        if value == requested:
+            return True
+        if value in {"manager", "mgr"} and role == ROLE_MANAGER:
+            return True
+        if value in {"worker", "workers"} and role == ROLE_WORKER:
+            return True
+        if value in {"integrator", "integrators"} and role == ROLE_INTEGRATOR:
+            return True
+        if value in {"investigator", "investigators"} and role == ROLE_INVESTIGATOR:
+            return True
+        if value == "escalate" and requested in {"escalate", "escalation"}:
+            return True
+        if value == worker_id and worker_id:
+            return True
+        if value == ticket_id and ticket_id:
+            return True
+    return False
+
+
+def _delivery_suggestions(
+    *,
+    paths: RunPaths,
+    target: str,
+    delivery_reason: str,
+    meta: Mapping[str, Any],
+) -> List[str]:
+    suggestions: List[str] = [
+        f"loom team doctor {paths.team}",
+        f"loom team status {paths.team} --show-dead",
+    ]
+
+    role = str((meta or {}).get("role") or "").strip().lower()
+    wid = str((meta or {}).get("worker_id") or "").strip()
+    tnorm = str(target or "").strip()
+
+    if delivery_reason in {"session_missing", "tmux_missing"}:
+        suggestions.append(f"loom team start {paths.team} --repo {paths.repo_root}")
+    elif delivery_reason in {"pane_missing", "unknown_target"}:
+        if role == ROLE_INTEGRATOR or tnorm in {"integrator", "merge-queue"}:
+            suggestions.append(f"loom team spawn-integrator {paths.team}")
+            suggestions.append(f"loom team spawn-integrator {paths.team} --force")
+        elif wid:
+            suggestions.append(f"loom team retire {paths.team} {wid}")
+            suggestions.append(f"loom team resume-worker {paths.team} {wid}")
+    elif delivery_reason == "unsafe_pane":
+        suggestions.append(
+            f'loom team send {paths.team} {tnorm} --force --message "..."'
+        )
+
+    return suggestions
+
 def send(
     *,
     team: str,
@@ -5434,73 +5628,161 @@ def send(
         raise TeamError("Empty message", code="ARG", exit_code=2)
 
     with locked_run(paths, save=False) as run:
-        target = str(target or "")
-        inbox_msg, _recipient, delivered, delivery_reason, meta = (
-            _inbox_write_and_maybe_nudge(
+        sender_role, sender_target = _sender_for_send()
+        requested_target = str(target or "").strip()
+        concrete_target, used_escalation = _resolve_send_target(
+            run=run,
+            target=requested_target,
+            sender_role=sender_role,
+        )
+
+        resolved_targets = _resolve_targets(run, concrete_target)
+        policy = _communication_policy_from_run(run)
+        routes = dict(policy.get("routes") or {})
+        allowed_tokens = tuple(routes.get(sender_role) or ())
+
+        if not allowed_tokens:
+            raise TeamError(
+                f"Communication route forbidden: role {sender_role} has no allowed routes",
+                code="PERMISSION",
+                exit_code=2,
+            )
+
+        requested_norm = str(requested_target or "").strip().lower()
+        if used_escalation:
+            requested_norm = "escalate"
+
+        for recipient in resolved_targets:
+            if not _route_allows_target(
+                allowed_tokens=allowed_tokens,
+                requested_target=requested_norm,
+                recipient=recipient,
+            ):
+                raise TeamError(
+                    (
+                        "Communication route forbidden: "
+                        f"{sender_role} -> {recipient.get('role') or 'unknown'} "
+                        f"for target {requested_target!r}"
+                    ),
+                    code="PERMISSION",
+                    exit_code=2,
+                    data={
+                        "sender_role": sender_role,
+                        "sender_target": sender_target,
+                        "requested_target": requested_target,
+                        "recipient": dict(recipient),
+                        "allowed": list(allowed_tokens),
+                    },
+                )
+
+        deliveries: List[Dict[str, Any]] = []
+        suggestion_set: set[str] = set()
+
+        for recipient in resolved_targets:
+            dispatch_target = (
+                str(recipient.get("worker_id") or "").strip() or "manager"
+            )
+            inbox_msg, _recipient, delivered, delivery_reason, meta = _inbox_write_and_maybe_nudge(
                 paths=paths,
                 run=run,
-                target=target,
+                target=dispatch_target,
                 message=msg,
                 sender="team",
                 kind="send",
-                meta_extra={"team": str(run.get("team") or paths.team)},
+                meta_extra={
+                    "team": str(run.get("team") or paths.team),
+                    "requested_target": requested_target,
+                    "dispatch_target": dispatch_target,
+                },
                 nudge=True,
                 force=bool(force),
-                line_info=f"to={target}",
+                line_info=f"to={dispatch_target}",
             )
+
+            entry = {
+                "requested_target": requested_target,
+                "dispatch_target": dispatch_target,
+                "role": str(recipient.get("role") or ""),
+                "worker_id": str(recipient.get("worker_id") or ""),
+                "ticket_id": str(recipient.get("ticket_id") or ""),
+                "inbox_id": str(inbox_msg.get("id") or ""),
+                "delivered": bool(delivered),
+                "delivery_reason": str(delivery_reason or ""),
+                "meta": dict(meta or {}),
+            }
+            deliveries.append(entry)
+
+            if not delivered:
+                for suggestion in _delivery_suggestions(
+                    paths=paths,
+                    target=dispatch_target,
+                    delivery_reason=str(delivery_reason or ""),
+                    meta=dict(meta or {}),
+                ):
+                    suggestion_set.add(suggestion)
+
+        all_delivered = bool(deliveries) and all(
+            bool(item.get("delivered")) for item in deliveries
         )
+        any_delivered = any(bool(item.get("delivered")) for item in deliveries)
+        if all_delivered:
+            delivery_reason = ""
+        elif any_delivered:
+            delivery_reason = "partial_delivery"
+        else:
+            first_reason = str(deliveries[0].get("delivery_reason") or "") if deliveries else ""
+            delivery_reason = first_reason or "undelivered"
 
-        suggestions: List[str] = []
-        if not delivered:
-            team_name = str(run.get("team") or paths.team)
-            suggestions.append(f"loom team doctor {team_name}")
-            suggestions.append(f"loom team status {team_name} --show-dead")
-
-            role = str((meta or {}).get("role") or "").strip().lower()
-            wid = str((meta or {}).get("worker_id") or "").strip()
-            tnorm = str(target or "").strip()
-
-            if delivery_reason in {"session_missing", "tmux_missing"}:
-                suggestions.append(
-                    f"loom team start {paths.team} --repo {paths.repo_root}"
-                )
-            elif delivery_reason in {"pane_missing", "unknown_target"}:
-                if role == ROLE_INTEGRATOR or tnorm in {"integrator", "merge-queue"}:
-                    suggestions.append(f"loom team spawn-integrator {paths.team}")
-                    suggestions.append(
-                        f"loom team spawn-integrator {paths.team} --force"
-                    )
-                elif wid:
-                    suggestions.append(f"loom team retire {paths.team} {wid}")
-                    suggestions.append(f"loom team resume-worker {paths.team} {wid}")
-            elif delivery_reason == "unsafe_pane":
-                suggestions.append(
-                    f'loom team send {paths.team} {tnorm} --force --message "..."'
-                )
+        inbox_ids = [str(item.get("inbox_id") or "") for item in deliveries if str(item.get("inbox_id") or "")]
+        inbox_summary: Dict[str, Any] = {
+            "id": inbox_ids[0] if inbox_ids else "",
+            "ids": inbox_ids,
+            "count": len(inbox_ids),
+        }
+        target_summary: Dict[str, Any] = {
+            "target": requested_target,
+            "resolved": len(deliveries),
+        }
+        if len(deliveries) == 1:
+            target_summary = {
+                **target_summary,
+                "role": str(deliveries[0].get("role") or ""),
+                "worker_id": str(deliveries[0].get("worker_id") or ""),
+                "ticket_id": str(deliveries[0].get("ticket_id") or ""),
+            }
 
         write_event(
             paths,
             event_type="message.sent",
             run=run,
-            summary=f"Message queued target={target} delivered={delivered}",
+            summary=(
+                f"Message queued target={requested_target} recipients={len(deliveries)} "
+                f"delivered={all_delivered}"
+            ),
             refs={
-                **(meta or {}),
-                "inbox_id": str(inbox_msg.get("id") or ""),
+                "sender_role": sender_role,
+                "sender_target": sender_target,
+                "requested_target": requested_target,
+                "inbox_id": str(inbox_summary.get("id") or ""),
             },
             data={
-                "target": target,
-                "delivered": bool(delivered),
+                "target": requested_target,
+                "resolved_target": concrete_target,
+                "used_escalation": bool(used_escalation),
+                "delivered": bool(all_delivered),
                 "delivery_reason": str(delivery_reason or ""),
+                "deliveries": deliveries,
             },
         )
 
     return SendResult(
         team=str(run.get("team") or paths.team),
-        target=meta or {"target": target},
-        delivered=bool(delivered),
+        target=target_summary,
+        delivered=bool(all_delivered),
         delivery_reason=str(delivery_reason or ""),
-        inbox=dict(inbox_msg or {}),
-        suggestions=list(suggestions),
+        inbox=dict(inbox_summary),
+        deliveries=list(deliveries),
+        suggestions=sorted(suggestion_set),
     )
 
 
