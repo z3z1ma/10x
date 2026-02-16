@@ -1,0 +1,15 @@
+---
+id: 20260216165029-agent-onboarding-e9ec226d
+title: Agent Onboarding
+visibility: shared
+status: active
+created_at: "2026-02-16T16:50:29Z"
+updated_at: "2026-02-16T16:50:29Z"
+---
+
+## Context
+Auto-created scaffold referenced from [[20260216165029-subsystem-agents-guides-in-src-agent-loom-d10c2f17|20260216165029-subsystem-agents-guides-in-src-agent-loom-d10c2f17]].
+
+## Definition
+
+## Notes

@@ -1,81 +1,99 @@
-## Module architecture
+# Loom Team subsystem (agent guide)
 
-### Responsibility boundaries
+Scope: `src/agent_loom/team/**`
 
-**CLI layer** (`team/cli.py`):
-- Parser construction and argument validation only
-- Dispatches to command handler modules
-- Must NOT contain business logic or state manipulation
-- Uses shared output helpers from `core/cli_output.py`
+## What this module owns
 
-**Command handlers** (`team/commands/*.py`):
-- Grouped by domain: lifecycle, workers, objective, inbox, merge, utils
-- Each module owns command implementation for its domain
-- Delegates to `team/core.py` for run state and tmux orchestration
-- Uses `team/output.py` for JSON/text emission via shared primitives
+Team is Loom's tmux-native multi-agent orchestrator. It coordinates manager/architect/workers/integrator personas, run lifecycle, inbox messaging, and merge queue workflows on top of workspace/ticket primitives.
 
-**Core orchestration** (`team/core.py`):
-- Run state management (start/pause/resume/disband)
-- Worker lifecycle and worktree coordination
-- Inbox and messaging
-- Merge queue
-- Sprint and objective state
-- tmux session/window/pane management
-- **Critical:** This file is a known hotspot (~6500 LOC) undergoing decomposition
+## Architectural boundaries (critical)
 
-**Domain modules**:
-- `team/permissions.py`: role guards and environment checks
-- `team/utilities.py`: shared helpers (parsing, git, pathing)
-- `team/inbox.py`: inbox storage backend
-- `team/merge_queue.py`: merge queue storage
-- `team/models.py`: run state and message dataclasses
-- `team/start_state.py`: typed run-state normalization/mutation for `start` create/update paths
-- `team/tmux.py`: tmux subprocess wrappers
+### 1) CLI + command handler layer (thin)
 
-**Output contract** (`team/output.py`):
-- Wraps `core/cli_output.py` shared primitives
-- Adds team-specific JSON envelope metadata if needed
-- All CLI commands MUST use these helpers, not local duplicates
+- `team/cli.py`: argparse surface and dispatch only.
+- `team/commands/*.py`: thin command adapters grouped by domain.
 
-### Guardrails
+These files should parse args, call core/domain functions, and emit output. They should not hold heavy business logic.
 
-1. **No duplicate output helpers**: All CLI serialization/emission uses `core/cli_output.py` primitives via `team/output.py`. Local helper duplication is a regression.
-2. **Command handlers stay thin**: Business logic belongs in `team/core.py` or domain modules, not in `team/commands/*.py`.
-3. **Hotspot size control**: `team/core.py` is monitored for growth. New functionality should extract to domain modules when feasible.
-4. **Import direction**: Domain modules may NOT import from `team/commands/*`. Command handlers import from domain modules and core.
+### 2) Core orchestration layer
 
-## Architecture (continued)
+- `team/core.py`: orchestration hotspot for lifecycle, worker flows, messaging, merge queue, tmux integration.
 
-- `core.py` orchestrates run lifecycle, tmux spawning, messaging, and merge queue flows.
-- `commands/` contains thin CLI handlers that delegate to `core.py`.
-- `composition.py` parses/validates Team YAML roster schema.
-- `composition_runtime.py` resolves runtime member profiles from roster state.
-- `targets.py` expands/validates send/capture targets and broadcast groups.
-- `prompts.py` renders manager/worker/architect/integrator runtime prompts.
-- `run_state.py` is the source of truth for run path resolution and persisted run state IO.
-- `start_state.py` owns reusable start-path state mutation helpers (merge/model/default/session normalization).
+### 3) Domain/state/policy helpers
 
-### Module boundaries and guardrails
+- `run_state.py`: canonical run-path resolution and persisted run state IO (`run.json` lifecycle).
+- `start_state.py`: typed mutations used by start/resume flows.
+- `composition.py` / `composition_runtime.py`: roster schema and runtime role/profile resolution.
+- `communication_policy.py`: route authorization and delivery policy.
+- `permissions.py`: role/environment guardrails.
+- `targets.py`: target resolution for send/capture.
+- `inbox.py`: durable inbox storage.
+- `merge_queue.py`: merge queue persistence.
+- `tmux.py`: tmux command wrappers.
+- `output.py`: team wrappers around shared core output utilities.
 
-- `commands/` must remain orchestration wrappers; business logic belongs in core/domain modules.
-- Runtime state is read/written through `run_state.py`; do not bypass it from command handlers.
-- Roster parsing/validation stays in `composition.py`; runtime resolution stays in `composition_runtime.py`.
-- Target expansion/routing behavior stays in `targets.py`; `core.py` enforces policy and delivery.
-- CLI handlers must use shared output helpers from `agent_loom.core.cli_output` for JSON envelopes and payload normalization.
+## Command/control flow
 
-## Roster YAML (version 3)
+Typical command flow:
 
-Roster is an optional, repo-committable artifact loaded with `loom team start --roster <path>`.
+1. `cli.py` parses command and routes to `commands/*.py`.
+2. Command module calls `core.py` (or domain helper when appropriate).
+3. `core.py` reads/writes run state via `run_state.py` (usually with locking).
+4. `core.py` invokes policy modules (`permissions`, `communication_policy`, `targets`) and tmux wrappers (`tmux.py`).
+5. Results are emitted through `output.py`/shared `core.cli_output` helpers.
 
-Built-ins are fixed and always present under `builtins`: `manager`, `architect`, `worker`, `integrator`.
-Each built-in only supports `{harness, agent, model}`.
+Start/resume path centers on `run_state.py` and `start_state.py`; messaging path centers on `core.send` + communication/target modules; worker lifecycle path centers on `core.spawn/retire/resume-worker` + tmux/run-state coordination.
 
-Optional sections:
-- `mounts` for persisted worktree mounts (same syntax as `loom team start --mount SRC[:DEST]`).
-- `members` for additional custom personas (custom roles only). `always_on: true` auto-spawns; `always_on: false` is spawned on-demand via `loom team spawn-persona`.
-- `communication` for policy extensions (custom-role routes/broadcast groups only; built-in routes remain fixed in code).
+## Storage contract
 
-Built-in operating model remains immutable:
-- manager + architect live in repo root
-- workers are ticket-scoped in per-ticket worktrees
-- integrator is persistent in the merge-queue worktree
+Canonical run root:
+
+- `.loom/team/runs/<team>/`
+  - `run.json`
+  - `CHARTER.md`
+  - `inbox/`
+  - `worktrees/`
+  - merge queue files
+  - captures/events/snapshots/sidecars (module-managed)
+
+`run.json` is the source of truth for persisted team state. Live pane/process state is managed through tmux and reconciled through core helpers.
+
+## Where to change code
+
+- New command surface: `cli.py` + matching `commands/*.py` module.
+- New orchestration behavior: `core.py` (extract reusable helpers into domain modules when possible).
+- New run-state schema/persistence behavior: `run_state.py` and `start_state.py`.
+- Messaging/routing rules: `communication_policy.py` + `targets.py`.
+- Role/permission logic: `permissions.py`.
+- tmux interaction behavior: `tmux.py`.
+
+## Guardrails
+
+- Keep `commands/*.py` thin (size and responsibility).
+- Domain modules must not import from `team/commands/*`.
+- Keep JSON output plumbing shared through core output helpers.
+- Preserve `run_state.py` as canonical persistence path; avoid ad-hoc writes.
+- Preserve built-in persona semantics (manager/architect/worker/integrator operating model).
+- `team/core.py` is a known hotspot; prefer decomposition over growth when adding substantial logic.
+
+## Roster model (version 3)
+
+Roster YAML is optional and loaded by `loom team start --roster <path>`.
+
+- Built-ins: `manager`, `architect`, `worker`, `integrator`
+- Optional sections include `mounts`, `members`, and `communication`
+- Built-in operating model remains fixed:
+  - manager + architect in repo root
+  - workers in ticket-scoped worktrees
+  - integrator in persistent merge-queue worktree
+
+## Fast tests for team changes
+
+- `uv run pytest tests/test_architecture_guardrails.py`
+- `uv run pytest tests/test_team_cli_ux.py`
+- `uv run pytest tests/test_team_start_state.py`
+- `uv run pytest tests/test_team_comms_policy.py`
+- `uv run pytest tests/test_team_targets.py`
+- `uv run pytest tests/test_team_helpers.py`
+
+Add scenario-specific suites for spawn/ship/sprint/harness changes as needed.
