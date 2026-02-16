@@ -1,12 +1,13 @@
 ---
 "id": "al-2bfa"
-"status": "in_progress"
+"status": "review"
 "deps":
 - "al-041e"
 - "al-6677"
 - "al-7193"
 - "al-aee1"
-"links": []
+"links":
+- "al-52ce"
 "created": "2026-02-16T05:32:27Z"
 "type": "task"
 "priority": 2
@@ -69,3 +70,7 @@ Progress: audited current team regression coverage and module layout. Existing t
 **2026-02-16T06:42:14Z**
 
 Implemented boundary/parity updates: added Team decomposition guardrails (core delegation checks for objective/send/spawn/wait; no team command handler imports to team.cli or other command modules), added objective command parity tests, and removed team.commands.inbox ack dependency on team.cli by calling core.inbox_ack directly. Updated spawn headcount tests for role-gating parity.
+
+**2026-02-16T06:43:39Z**
+
+Verification pass complete. Commands run: (1) uv run pytest tests/test_architecture_guardrails.py tests/test_team_objective_parity.py tests/test_team_comms_policy.py tests/test_team_spawn_headcount.py tests/test_team_wait_checkin.py tests/test_team_sprint.py (28 passed), (2) env -u TEAM_ROLE -u TEAM_WORKER_ID -u TEAM_NAME -u TEAM_RUN_ID -u TEAM_RUN_DIR -u TEAM_TICKET_ID uv run pytest tests/test_team_*.py (151 passed), (3) uv run ruff check . (pass), (4) uv run basedpyright (0 errors). Remaining hotspot documented via follow-up ticket al-52ce: team tests can fail spuriously if TEAM_* env leaks from worker panes; suite should centrally sanitize env.
