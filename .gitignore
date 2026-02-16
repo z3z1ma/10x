@@ -21,3 +21,4 @@
 /.omx/state
 /.omx/hud-config.json
 /.omx/metrics.json
+/.omx/tmux-hook.json

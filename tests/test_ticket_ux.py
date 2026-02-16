@@ -378,6 +378,117 @@ class TestTicketUx(unittest.TestCase):
             self.assertEqual(str(cleared.get("name") or ""), "")
             self.assertEqual(str(cleared.get("tag") or ""), "")
 
+    def test_require_claim_rejects_expired_self_claim(self) -> None:
+        with _temp_git_repo() as (root, env):
+            tickets_dir = root / ".loom" / "ticket"
+            env = {
+                **env,
+                "TICKET_DIR": str(tickets_dir),
+                "TK_REQUIRE_CLAIM": "1",
+                "TICKET_AGENT": "agent-1",
+            }
+
+            code, created = _ticket_json(
+                ["--json", "--no-audit", "create", "Test", "--no-sprint-tag"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+            tid = str(created.get("id") or "")
+            self.assertTrue(tid)
+
+            code, _ = _ticket_json(
+                ["--json", "--no-audit", "claim", tid, "--ttl", "30m"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+
+            lease_path = tickets_dir / ".locks" / "leases" / f"{tid}.json"
+            lease = json.loads(lease_path.read_text(encoding="utf-8"))
+            lease["claim_expires"] = "2000-01-01T00:00:00Z"
+            lease["heartbeat"] = "2000-01-01T00:00:00Z"
+            lease_path.write_text(
+                json.dumps(lease, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+
+            code, denied = _ticket_json(
+                ["--json", "--no-audit", "update", tid, "--title", "Changed"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 2)
+            self.assertEqual(str(denied.get("code") or ""), "PERMISSION")
+            self.assertIn("active claim", str(denied.get("error") or "").lower())
+
+            code, _ = _ticket_json(
+                ["--json", "--no-audit", "claim", tid, "--ttl", "30m"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+
+            code, _ = _ticket_json(
+                ["--json", "--no-audit", "update", tid, "--title", "Changed"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+
+            code, shown = _ticket_json(
+                ["--json", "--no-audit", "show", tid],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+            self.assertEqual(str(shown["ticket"]["title"] or ""), "Changed")
+
+    def test_ls_alias_matches_list_behavior(self) -> None:
+        with _temp_git_repo() as (root, env):
+            tickets_dir = root / ".loom" / "ticket"
+            env = {**env, "TICKET_DIR": str(tickets_dir)}
+
+            _, t1 = _ticket_json(
+                ["--json", "--no-audit", "create", "Open", "--no-sprint-tag"],
+                cwd=root,
+                env=env,
+            )
+            _, t2 = _ticket_json(
+                ["--json", "--no-audit", "create", "Review", "--no-sprint-tag"],
+                cwd=root,
+                env=env,
+            )
+            t2_id = str(t2.get("id") or "")
+            self.assertTrue(str(t1.get("id") or ""))
+            self.assertTrue(t2_id)
+
+            code, _ = _ticket_json(
+                ["--json", "--no-audit", "status", t2_id, "review"],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+
+            argv = ["--status", "open", "--type", "task", "-N", "50"]
+            code, listed = _ticket_json(
+                ["--json", "--no-audit", "list", *argv],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+            code, lsed = _ticket_json(
+                ["--json", "--no-audit", "ls", *argv],
+                cwd=root,
+                env=env,
+            )
+            self.assertEqual(code, 0)
+
+            list_ids = sorted(str(t.get("id") or "") for t in listed.get("tickets", []))
+            ls_ids = sorted(str(t.get("id") or "") for t in lsed.get("tickets", []))
+            self.assertEqual(list_ids, ls_ids)
+            self.assertEqual(int(listed.get("count") or 0), int(lsed.get("count") or 0))
+
 
 if __name__ == "__main__":
     unittest.main()

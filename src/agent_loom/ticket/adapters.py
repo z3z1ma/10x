@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import base64
-import hashlib
 import os
 import re
 from typing import Any, Dict, Tuple
@@ -9,6 +8,7 @@ from typing import Any, Dict, Tuple
 import requests
 
 from agent_loom.core.time import isoformat_z, utcnow
+from agent_loom.ticket.hashing import sha256_hex
 from agent_loom.ticket.models import Ticket
 from agent_loom.ticket.store import TicketStore
 
@@ -125,10 +125,6 @@ _JIRA_URL_RE = re.compile(
     r"^https?://[^/]+/(?:.*?/)?browse/(?P<key>[A-Za-z][A-Za-z0-9]+-\d+)",
     re.IGNORECASE,
 )
-
-
-def _sha256_hex(text: str) -> str:
-    return hashlib.sha256((text or "").encode("utf-8")).hexdigest()
 
 
 def _ticket_h1_and_rest(body: str) -> Tuple[str, str]:
@@ -358,11 +354,11 @@ class JiraIssueAdapter(ExternalAdapter):
         updated_at = str(fields.get("updated") or "")
         remote_adf = fields.get("description")
         remote_text = _adf_to_text(remote_adf)
-        remote_hash = _sha256_hex(_normalize_text_for_hash(remote_text))
+        remote_hash = sha256_hex(_normalize_text_for_hash(remote_text))
 
         h1, local_desc = _ticket_h1_and_rest(ticket.body)
         local_desc_norm = _normalize_text_for_hash(local_desc)
-        local_hash = _sha256_hex(local_desc_norm)
+        local_hash = sha256_hex(local_desc_norm)
 
         ext0 = ticket.fm.get("external")
         ext: Dict[str, Any] = ext0 if isinstance(ext0, dict) else {}
@@ -455,7 +451,7 @@ class JiraIssueAdapter(ExternalAdapter):
                 updated_at = str(fields.get("updated") or "")
                 remote_adf = fields.get("description")
                 remote_text = _adf_to_text(remote_adf)
-                remote_hash = _sha256_hex(_normalize_text_for_hash(remote_text))
+                remote_hash = sha256_hex(_normalize_text_for_hash(remote_text))
 
         updated_ext = {
             "system": "jira",

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import contextlib
 import datetime as dt
-import hashlib
 import json
 import os
 import socket
@@ -28,6 +27,7 @@ from agent_loom.ticket.frontmatter import (
     normalize_list_value,
     split_frontmatter,
 )
+from agent_loom.ticket.hashing import sha256_hex
 from agent_loom.ticket.models import Ticket, TicketConfig
 from agent_loom.ticket.normalize import (
     normalize_priority,
@@ -35,11 +35,6 @@ from agent_loom.ticket.normalize import (
     normalize_ticket_ref,
     normalize_type,
 )
-
-
-def sha256_hex(text: str) -> str:
-    return hashlib.sha256((text or "").encode("utf-8", errors="replace")).hexdigest()
-
 
 class LockError(RuntimeError):
     pass
@@ -647,7 +642,7 @@ def write_guard(
             f"Ticket is claimed by {who} (expires {exp_s}, heartbeat {hb_s}). Use --force to override."
         )
 
-    if require and (not who or who != agent_id) and not force:
+    if require and (not active or who != agent_id) and not force:
         if store.audit is not None and store.audit.audit_mode != "off":
             store.audit.log(
                 {
@@ -655,6 +650,7 @@ def write_guard(
                     "ticket_id": t.id,
                     "reason": "require_claim",
                     "claimed_by": who,
+                    "claim_active": bool(active),
                     "force": bool(force),
                 }
             )

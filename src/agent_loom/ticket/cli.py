@@ -100,6 +100,28 @@ def _arg_priority(v: str) -> int:
         raise argparse.ArgumentTypeError(str(e)) from e
 
 
+def _add_list_query_args(
+    parser: argparse.ArgumentParser, *, include_status: bool, include_all: bool
+) -> None:
+    if include_status:
+        parser.add_argument("--status", default="")
+    parser.add_argument("--type", default="")
+    parser.add_argument("--priority", type=_arg_priority, default=None)
+    parser.add_argument("--prio-min", dest="prio_min", type=_arg_priority, default=None)
+    parser.add_argument("--prio-max", dest="prio_max", type=_arg_priority, default=None)
+    parser.add_argument("-a", "--assignee", default="")
+    parser.add_argument("-T", "--tag", default="")
+    if include_all:
+        parser.add_argument("--all", action="store_true", help="Include closed")
+    parser.add_argument(
+        "-N",
+        "--limit",
+        type=int,
+        default=0,
+        help="Maximum tickets to return (0 = unlimited)",
+    )
+
+
 _WRITE_COMMANDS = {
     "init",
     "create",
@@ -403,53 +425,13 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--force", action="store_true")
 
     sp = sub.add_parser("list", parents=[common], help="List tickets")
-    sp.add_argument("--status", default="")
-    sp.add_argument("--type", default="")
-    sp.add_argument("--priority", type=_arg_priority, default=None)
-    sp.add_argument("--prio-min", dest="prio_min", type=_arg_priority, default=None)
-    sp.add_argument("--prio-max", dest="prio_max", type=_arg_priority, default=None)
-    sp.add_argument("-a", "--assignee", default="")
-    sp.add_argument("-T", "--tag", default="")
-    sp.add_argument("--all", action="store_true", help="Include closed")
-    sp.add_argument(
-        "-N",
-        "--limit",
-        type=int,
-        default=0,
-        help="Maximum tickets to return (0 = unlimited)",
-    )
+    _add_list_query_args(sp, include_status=True, include_all=True)
 
     sp = sub.add_parser("ls", parents=[common], help="Alias for list")
-    sp.add_argument("--status", default="")
-    sp.add_argument("--type", default="")
-    sp.add_argument("--priority", type=_arg_priority, default=None)
-    sp.add_argument("--prio-min", dest="prio_min", type=_arg_priority, default=None)
-    sp.add_argument("--prio-max", dest="prio_max", type=_arg_priority, default=None)
-    sp.add_argument("-a", "--assignee", default="")
-    sp.add_argument("-T", "--tag", default="")
-    sp.add_argument("--all", action="store_true", help="Include closed")
-    sp.add_argument(
-        "-N",
-        "--limit",
-        type=int,
-        default=0,
-        help="Maximum tickets to return (0 = unlimited)",
-    )
+    _add_list_query_args(sp, include_status=True, include_all=True)
 
     sp = sub.add_parser("ready", parents=[common], help="List ready tickets")
-    sp.add_argument("--type", default="")
-    sp.add_argument("--priority", type=_arg_priority, default=None)
-    sp.add_argument("--prio-min", dest="prio_min", type=_arg_priority, default=None)
-    sp.add_argument("--prio-max", dest="prio_max", type=_arg_priority, default=None)
-    sp.add_argument("-a", "--assignee", default="")
-    sp.add_argument("-T", "--tag", default="")
-    sp.add_argument(
-        "-N",
-        "--limit",
-        type=int,
-        default=0,
-        help="Maximum tickets to return (0 = unlimited)",
-    )
+    _add_list_query_args(sp, include_status=False, include_all=False)
 
     sp = sub.add_parser("blocked", parents=[common], help="List blocked tickets")
     sp.add_argument("-a", "--assignee", default="")

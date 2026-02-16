@@ -174,10 +174,6 @@ def short_hash(text: str, n: int = 4) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:n]
 
 
-def sha256_hex(text: str) -> str:
-    return hashlib.sha256((text or "").encode("utf-8", errors="replace")).hexdigest()
-
-
 def dirname_prefix(path: Path) -> str:
     name = path.name
     parts = re.split(r"[-_]+", name)
