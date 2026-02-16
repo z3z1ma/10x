@@ -4,6 +4,45 @@ This cookbook documents the Team subsystem CLI and the operating model behind
 it. It is based on direct code tracing of the team module, including run state,
 tmux orchestration, inbox durability, merge queue behavior, and sidecar health.
 
+## Architecture
+
+- `core.py` orchestrates run lifecycle, tmux spawning, messaging, and merge queue flows.
+- `commands/` contains thin CLI handlers that delegate to `core.py`.
+- `composition.py` parses/validates Team YAML roster schema.
+- `composition_runtime.py` resolves runtime member profiles from roster state.
+- `targets.py` expands/validates send/capture targets and broadcast groups.
+- `prompts.py` renders manager/worker/architect/integrator runtime prompts.
+- `run_state.py` is the source of truth for run path resolution and persisted run state IO.
+
+### Module boundaries and guardrails
+
+- `commands/` must remain orchestration wrappers; business logic belongs in core/domain modules.
+- Runtime state is read/written through `run_state.py`; do not bypass it from command handlers.
+- Roster parsing/validation stays in `composition.py`; runtime resolution stays in `composition_runtime.py`.
+- Target expansion/routing behavior stays in `targets.py`; `core.py` enforces policy and delivery.
+- CLI handlers must use shared output helpers from `agent_loom.core.cli_output` for JSON envelopes and payload normalization.
+
+## Roster YAML (version 3)
+
+Roster is an optional, repo-committable artifact loaded with `loom team start --roster <path>`.
+
+Built-ins are fixed and always present under `builtins`: `manager`, `architect`, `worker`, `integrator`.
+Each built-in only supports `{harness, agent, model}`.
+
+Optional sections:
+- `mounts` for persisted worktree mounts (same syntax as `loom team start --mount SRC[:DEST]`).
+- `members` for additional custom personas (custom roles only). `always_on: true` auto-spawns; `always_on: false` is spawned on-demand via `loom team spawn-persona`.
+- `communication` for policy extensions (custom-role routes/broadcast groups only; built-in routes remain fixed in code).
+
+Built-in operating model remains immutable:
+- manager + architect live in repo root
+- workers are ticket-scoped in per-ticket worktrees
+- integrator is persistent in the merge-queue worktree
+
+
+
+
+
 ## Mental model
 
 - Team is tmux-native orchestration for long-horizon, multi-agent work.
@@ -55,7 +94,7 @@ Team injects these into tmux panes:
 - `TEAM_NAME`
 - `TEAM_RUN_ID`
 - `TEAM_RUN_DIR`
-- `TEAM_ROLE` (manager|worker|investigator|integrator)
+- `TEAM_ROLE` (manager|worker|architect|integrator)
 - `TEAM_WORKER_ID`
 - `TEAM_TICKET_ID`
 - `TEAM_SPRINT_NAME`
@@ -107,10 +146,11 @@ Useful flags:
 - `--session` override tmux session name
 - `--harness opencode|claude|omp|codex`
 - `--bin <path>` override harness binary
-- `--model`, `--manager-model`, `--worker-model`, `--investigator-model`, `--integrator-model`
+- `--roster <path>` load deterministic Team roster YAML
+- `--model`, `--manager-model`, `--worker-model`, `--architect-model`, `--integrator-model`
 - `--mount SRC[:DEST]` symlink repo-root paths into worktrees (repeatable)
 - `--clear-mounts` clear persisted mounts
-- `--max-headcount N` limit active worker+investigator count (0 = unlimited)
+- `--max-headcount N` limit active worker count (0 = unlimited)
 - `--target-branch main` (ship target)
 - `--remote origin`
 - `--push` / `--no-push`
@@ -130,12 +170,12 @@ loom team start my-team --harness codex --model gpt-5.3-codex
 loom team start my-team --harness codex --manager-model gpt-5.3-codex --worker-model gpt-5-codex
 ```
 
-For `--harness omp`, Team still reads `manager_agent` / `worker_agent` / `investigator_agent` / `integrator_agent` from run state. The matching agent markdown file is parsed and appended to omp's system prompt via `--append-system-prompt`.
+For `--harness omp`, Team still reads `manager_agent` / `worker_agent` / `architect_agent` / `integrator_agent` from run state. The matching agent markdown file is parsed and appended to omp's system prompt via `--append-system-prompt`.
 
 For `--harness codex`, Team extracts the same agent prompt body and writes a per-pane instructions file under `.loom/team/runs/<team>/agents/codex/<recipient>.md`, then launches codex with `--config model_instructions_file=...`.
 
 codex sidecar sandboxing is role-aware:
-- manager / investigator / integrator run with `--sandbox read-only --ask-for-approval on-request`
+- manager / architect / integrator run with `--sandbox read-only --ask-for-approval on-request`
 - workers run with `--sandbox workspace-write --ask-for-approval on-request`
 
 codex sidecar state is isolated per pane via `CODEX_HOME=.loom/team/runs/<team>/sessions/codex/<recipient>`.
@@ -225,15 +265,14 @@ loom team sprint my-team set --name "Bridge cleanup" --tag sprint:bridge
 loom team sprint my-team clear
 ```
 
-`prep-sprint` creates a prep ticket and optionally spawns an investigator.
+`prep-sprint` creates a prep ticket and optionally spawns the architect.
 
-### spawn (worker or investigator)
+### spawn (worker)
 
 Spawn a worker for a ticket (each worker owns one ticket):
 
 ```
 loom team spawn my-team ab-1234
-loom team spawn my-team ab-1234 --role investigator
 loom team spawn my-team ab-1234 --worker-id w7 --window "w7-ab-1234"
 loom team spawn my-team ab-1234 --worktree-key auth-spike
 loom team spawn my-team ab-1234 --branch team/ab-1234 --base-ref origin/main
@@ -245,6 +284,15 @@ Resume a retired worker in its existing worktree:
 loom team spawn my-team ab-1234 --worker-id w3 --resume
 loom team resume-worker my-team w3
 ```
+
+### spawn-persona
+
+Spawn an additional roster persona (custom role) by member id. This is how you start on-demand personas (`always_on: false`):
+
+```
+loom team spawn-persona my-team ux
+```
+
 
 ### retire / mark-retirable
 

@@ -275,11 +275,11 @@ class TestTeamCliUx(unittest.TestCase):
         self.assertEqual(str(getattr(args, "target", "") or ""), "manager")
         self.assertEqual(str(getattr(args, "message_opt", "") or ""), "hello there")
 
-    def test_normalize_role_alias_inv(self) -> None:
-        argv = ["spawn", "MyTeam", "tk-123", "--role", "inv"]
+    def test_normalize_role_alias_work(self) -> None:
+        argv = ["spawn", "MyTeam", "tk-123", "--role", "work"]
         norm = team._normalize_argv(argv)
         args = team.build_parser().parse_args(norm)
-        self.assertEqual(str(getattr(args, "role", "") or ""), "investigator")
+        self.assertEqual(str(getattr(args, "role", "") or ""), "worker")
 
     def test_normalize_clock_in_two_words(self) -> None:
         argv = ["clock", "in", "MyTeam"]

@@ -195,7 +195,7 @@ class TestTeamHarnessOmp(unittest.TestCase):
                 "model": "github-copilot/claude-sonnet-4.5",
                 "models": {
                     "worker": "github-copilot/claude-sonnet-4.5",
-                    "investigator": "openai-codex/gpt-5.3-codex",
+                    "architect": "openai-codex/gpt-5.3-codex",
                     "manager": "github-copilot/gemini-3-flash-preview",
                     "integrator": "github-copilot/claude-sonnet-4.5",
                 },

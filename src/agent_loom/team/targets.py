@@ -2,12 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Mapping, Tuple
 
-from agent_loom.team.constants import (
-    ROLE_INTEGRATOR,
-    ROLE_INVESTIGATOR,
-    ROLE_MANAGER,
-    ROLE_WORKER,
-)
+from agent_loom.team.constants import ROLE_ARCHITECT, ROLE_INTEGRATOR, ROLE_MANAGER, ROLE_WORKER
 from agent_loom.team.errors import TeamError
 from agent_loom.team.tmux import (
     _pane_can_receive_chat,
@@ -19,7 +14,7 @@ from agent_loom.team.tmux import (
     tmux_window_exists,
 )
 
-_BUILTIN_GROUPS = {"all", "workers", "integrators", "investigators"}
+_BUILTIN_GROUPS = {"all", "workers", "integrators", "architects", "investigators"}
 
 
 def _resolve_target(run: Mapping[str, Any], target: str) -> Tuple[str, Dict[str, str]]:
@@ -29,7 +24,14 @@ def _resolve_target(run: Mapping[str, Any], target: str) -> Tuple[str, Dict[str,
     if not t:
         raise TeamError("Empty target", code="ARG", exit_code=2)
 
-    if t in ("manager", "mgr"):
+    tnorm = t.lower()
+    if tnorm.startswith("member:"):
+        member = tnorm.split(":", 1)[1].strip()
+        if not member:
+            raise TeamError("Empty member target", code="ARG", exit_code=2)
+        return _resolve_target(run, member)
+
+    if tnorm in ("manager", "mgr"):
         mgr = run.get("manager") or {}
         pane_id = str(mgr.get("pane_id") or "")
         if not pane_id:
@@ -136,6 +138,38 @@ def _resolve_target(run: Mapping[str, Any], target: str) -> Tuple[str, Dict[str,
     raise TeamError(f"Unknown target: {target}", code="ARG", exit_code=2)
 
 
+def _iter_role_targets(run: Mapping[str, Any], role: str) -> List[str]:
+    members: List[str] = []
+    role_norm = str(role or "").strip().lower()
+    if not role_norm:
+        return members
+
+    if role_norm == ROLE_MANAGER:
+        members.append("manager")
+
+    workers = dict(run.get("workers") or {})
+    for wid, w in sorted(workers.items()):
+        if bool((w or {}).get("retired")):
+            continue
+        worker_role = str((w or {}).get("role") or "").strip().lower()
+        if worker_role == role_norm:
+            members.append(str(wid))
+    return members
+
+
+def _expand_target_token(run: Mapping[str, Any], token: str) -> List[str]:
+    value = str(token or "").strip().lower()
+    if not value:
+        return []
+    if value.startswith("member:"):
+        member = value.split(":", 1)[1].strip()
+        return [member] if member else []
+    if value.startswith("role:"):
+        role = value.split(":", 1)[1].strip()
+        return _iter_role_targets(run, role)
+    return [value]
+
+
 def _iter_group_targets(run: Mapping[str, Any], group: str) -> List[str]:
     members: List[str] = []
     workers = dict(run.get("workers") or {})
@@ -156,17 +190,17 @@ def _iter_group_targets(run: Mapping[str, Any], group: str) -> List[str]:
             members.append(str(wid))
         elif group == "integrators" and role == ROLE_INTEGRATOR:
             members.append(str(wid))
-        elif group == "investigators" and role == ROLE_INVESTIGATOR:
+        elif group in {"architects", "investigators"} and role == ROLE_ARCHITECT:
             members.append(str(wid))
 
     return members
 
 
-def _composition_broadcast_groups(run: Mapping[str, Any]) -> Dict[str, Tuple[str, ...]]:
-    composition = run.get("composition")
-    if not isinstance(composition, dict):
+def _roster_broadcast_groups(run: Mapping[str, Any]) -> Dict[str, Tuple[str, ...]]:
+    roster = run.get("roster")
+    if not isinstance(roster, dict):
         return {}
-    spec = composition.get("spec")
+    spec = roster.get("spec")
     if not isinstance(spec, dict):
         return {}
     communication = spec.get("communication")
@@ -211,7 +245,7 @@ def _expand_group_targets(
     if name in _BUILTIN_GROUPS:
         return _iter_group_targets(run, name)
 
-    policy_groups = _composition_broadcast_groups(run)
+    policy_groups = _roster_broadcast_groups(run)
     members = policy_groups.get(name)
     if members is None:
         return []
@@ -219,10 +253,16 @@ def _expand_group_targets(
     seen.add(name)
     out: List[str] = []
     for item in members:
-        if item in _BUILTIN_GROUPS or item in policy_groups:
-            out.extend(_expand_group_targets(run, item, seen=seen))
-        else:
-            out.append(item)
+        value = str(item or "").strip().lower()
+        if not value:
+            continue
+        if value.startswith("group:"):
+            out.extend(_expand_group_targets(run, value.split(":", 1)[1], seen=seen))
+            continue
+        if value in _BUILTIN_GROUPS or value in policy_groups:
+            out.extend(_expand_group_targets(run, value, seen=seen))
+            continue
+        out.extend(_expand_target_token(run, value))
     seen.remove(name)
     return out
 
@@ -235,13 +275,14 @@ def _resolve_targets(run: Mapping[str, Any], target: str) -> List[Dict[str, str]
         raise TeamError("Empty target", code="ARG", exit_code=2)
 
     tnorm = t.lower()
+    policy_groups = _roster_broadcast_groups(run)
+
     if tnorm.startswith("group:"):
         group_name = tnorm.split(":", 1)[1].strip()
-        groups = _composition_broadcast_groups(run)
         if not group_name:
             raise TeamError("Empty broadcast group name", code="ARG", exit_code=2)
-        if group_name not in groups:
-            available = sorted(groups.keys())
+        if group_name not in _BUILTIN_GROUPS and group_name not in policy_groups:
+            available = sorted(set(_BUILTIN_GROUPS).union(policy_groups.keys()))
             raise TeamError(
                 f"Unknown broadcast group: {group_name}",
                 code="ARG",
@@ -249,12 +290,14 @@ def _resolve_targets(run: Mapping[str, Any], target: str) -> List[Dict[str, str]
                 hint=(
                     "Defined groups: " + ", ".join(available)
                     if available
-                    else "No policy-defined broadcast groups are configured"
+                    else "No broadcast groups are configured"
                 ),
             )
         expanded = _expand_group_targets(run, group_name, seen=set())
-    else:
+    elif tnorm in _BUILTIN_GROUPS or tnorm in policy_groups:
         expanded = _expand_group_targets(run, tnorm, seen=set())
+    else:
+        expanded = _expand_target_token(run, tnorm)
 
     if not expanded:
         pane_id, meta = _resolve_target(run, t)

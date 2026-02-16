@@ -9,7 +9,7 @@ from pathlib import Path
 
 from agent_loom.team.constants import (
     DEFAULT_INTEGRATOR_AGENT,
-    DEFAULT_INVESTIGATOR_AGENT,
+    DEFAULT_ARCHITECT_AGENT,
     DEFAULT_MANAGER_AGENT,
     DEFAULT_WORKER_AGENT,
     ENV_TICKET_DIR,
@@ -52,13 +52,13 @@ def cmd_start(args: argparse.Namespace) -> None:
     res = start(
         team=args.team,
         objective=args.objective,
-        composition=str(getattr(args, "composition", "") or ""),
+        roster=str(getattr(args, "roster", "") or ""),
         session=args.session,
         harness=args.harness,
         bin_override=args.bin,
         model=args.model,
         manager_model=str(getattr(args, "manager_model", "") or ""),
-        investigator_model=str(getattr(args, "investigator_model", "") or ""),
+        architect_model=str(getattr(args, "architect_model", "") or ""),
         worker_model=str(getattr(args, "worker_model", "") or ""),
         integrator_model=str(getattr(args, "integrator_model", "") or ""),
         mounts=(list(mounts) if mounts is not None else None),
@@ -122,11 +122,11 @@ def cmd_init(args: argparse.Namespace) -> None:
     rels = [
         f".opencode/agents/{DEFAULT_MANAGER_AGENT}.md",
         f".opencode/agents/{DEFAULT_WORKER_AGENT}.md",
-        f".opencode/agents/{DEFAULT_INVESTIGATOR_AGENT}.md",
+        f".opencode/agents/{DEFAULT_ARCHITECT_AGENT}.md",
         f".opencode/agents/{DEFAULT_INTEGRATOR_AGENT}.md",
         f".claude/agents/{DEFAULT_MANAGER_AGENT}.md",
         f".claude/agents/{DEFAULT_WORKER_AGENT}.md",
-        f".claude/agents/{DEFAULT_INVESTIGATOR_AGENT}.md",
+        f".claude/agents/{DEFAULT_ARCHITECT_AGENT}.md",
         f".claude/agents/{DEFAULT_INTEGRATOR_AGENT}.md",
     ]
 
@@ -168,19 +168,19 @@ def cmd_status(args: argparse.Namespace) -> None:
         print(f"tickets_dir: {res.tickets_dir} ({ENV_TICKET_DIR})")
     if res.sprint and res.sprint.get("name"):
         print(f"sprint: {res.sprint.get('name')} tag={res.sprint.get('tag')}")
-    if res.composition:
-        name = str(res.composition.get("name") or "").strip()
-        source = str(res.composition.get("source") or "").strip()
-        members = int(res.composition.get("members") or 0)
-        mappings = int(res.composition.get("worktree_mappings") or 0)
+    if res.roster:
+        name = str(res.roster.get("name") or "").strip()
+        source = str(res.roster.get("source") or "").strip()
+        builtins = int(res.roster.get("builtins") or 0)
+        members = int(res.roster.get("members") or 0)
         details = []
         if name:
             details.append(name)
         if source:
             details.append(f"source={source}")
+        details.append(f"builtins={builtins}")
         details.append(f"members={members}")
-        details.append(f"mappings={mappings}")
-        print(f"composition: {' '.join(details)}")
+        print(f"roster: {' '.join(details)}")
     print(
         f"inbox: unacked_to_manager={res.inbox.get('unacked_to_manager', 0)} unacked_total={res.inbox.get('unacked_total', 0)}"
     )

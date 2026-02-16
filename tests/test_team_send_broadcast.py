@@ -34,7 +34,7 @@ class TestTeamSendBroadcast(unittest.TestCase):
                     "retired": False,
                 },
             },
-            "composition": {
+            "roster": {
                 "spec": {
                     "communication": {
                         "broadcast_groups": {

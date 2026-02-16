@@ -68,7 +68,7 @@ def cmd_prep_sprint(args: argparse.Namespace) -> None:
         team=args.team,
         name=str(getattr(args, "name", "") or ""),
         force=bool(getattr(args, "force", False)),
-        spawn_investigator=not bool(getattr(args, "no_spawn", False)),
+        notify_architect=not bool(getattr(args, "no_spawn", False)),
         ticket_type=str(getattr(args, "ticket_type", "task") or "task"),
         ticket_priority=int(getattr(args, "priority", 1) or 1),
         repo=Path(args.repo).resolve() if args.repo else None,
@@ -81,7 +81,7 @@ def cmd_prep_sprint(args: argparse.Namespace) -> None:
     print(f"tag: {sprint.get('tag')}")
     print(f"prep_ticket: {res.ticket_id}")
     if res.spawned:
-        print(f"investigator: {res.worker_id}")
+        print(f"architect_notified: {res.worker_id}")
 
 
 def cmd_sprint_show(args: argparse.Namespace) -> None:

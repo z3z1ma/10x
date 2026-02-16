@@ -37,7 +37,7 @@ class TestTeamSpawnIntegrator(unittest.TestCase):
                 for a in (
                     team.DEFAULT_MANAGER_AGENT,
                     team.DEFAULT_WORKER_AGENT,
-                    team.DEFAULT_INVESTIGATOR_AGENT,
+                    team.DEFAULT_ARCHITECT_AGENT,
                     team.DEFAULT_INTEGRATOR_AGENT,
                 ):
                     (agents_dir / f"{a}.md").write_text("---\n---\n", encoding="utf-8")
@@ -102,7 +102,7 @@ class TestTeamSpawnIntegrator(unittest.TestCase):
                 for a in (
                     team.DEFAULT_MANAGER_AGENT,
                     team.DEFAULT_WORKER_AGENT,
-                    team.DEFAULT_INVESTIGATOR_AGENT,
+                    team.DEFAULT_ARCHITECT_AGENT,
                     team.DEFAULT_INTEGRATOR_AGENT,
                 ):
                     (agents_dir / f"{a}.md").write_text("---\n---\n", encoding="utf-8")
@@ -179,7 +179,7 @@ class TestTeamSpawnIntegrator(unittest.TestCase):
                 for a in (
                     team.DEFAULT_MANAGER_AGENT,
                     team.DEFAULT_WORKER_AGENT,
-                    team.DEFAULT_INVESTIGATOR_AGENT,
+                    team.DEFAULT_ARCHITECT_AGENT,
                     team.DEFAULT_INTEGRATOR_AGENT,
                 ):
                     (agents_dir / f"{a}.md").write_text("---\n---\n", encoding="utf-8")

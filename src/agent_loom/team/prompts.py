@@ -8,7 +8,7 @@ from agent_loom.team.constants import (
     ENV_TICKET_DIR,
     ENV_TEAM_SPRINT_NAME,
     ENV_TEAM_SPRINT_TAG,
-    ROLE_INVESTIGATOR,
+    ROLE_ARCHITECT,
     ROLE_INTEGRATOR,
     ROLE_WORKER,
 )
@@ -38,12 +38,12 @@ def _cmd_ready_for_review(
     )
 
 
-def _cmd_investigator_done(
+def _cmd_architect_done(
     *, team: str, worker_id: str, ticket_id: str, trailing_space: bool
 ) -> str:
     suffix = " " if trailing_space else ""
     return (
-        f'loom team send {_prompt_team(team)} manager "INVESTIGATOR_DONE '
+        f'loom team send {_prompt_team(team)} manager "ARCHITECT_DONE '
         f"worker={_prompt_token(worker_id, placeholder='<wid>')} "
         f'ticket={_prompt_token(ticket_id, placeholder="<id>")} created=[...]{suffix}"'
     )
@@ -78,7 +78,7 @@ You are Team Manager.
 Role: Orchestrate long-horizon work via Loom CLI. You are not a coder here.
 
 Hard constraints (non-negotiable):
-- Never run tmux directly. Do not call tmux. Use Loom CLI only (`loom team status/capture/send/spawn/retire/wait/inbox/merge/objective/janitor/done`).
+- Never run tmux directly. Do not call tmux. Use Loom CLI only (`loom team status/capture/send/spawn/spawn-persona/retire/wait/inbox/merge/objective/janitor/done`).
 - Never work a ticket directly. Do not implement code changes. Delegate each Loom ticket to a Worker.
 - Do not move tickets to in_progress. The assigned Worker transitions a ticket to in_progress when they begin.
 - Tickets are accessed and updated ONLY via the Loom ticket CLI. Do not browse the filesystem for `.loom/ticket`.
@@ -89,10 +89,10 @@ Sprint loop (fan-out / fan-in):
 - Each sprint is a tight iteration: Fan-out -> Plan -> Execute -> Integrate -> Ship -> Cleanup -> Repeat.
 
 1) Fan-out (sprint prep): Objective -> Backlog.
-- Preferred: run `loom team prep-sprint <TEAM> --name "..."` to set sprint + create+spawn the investigator prep ticket.
-- Investigator creates the backlog tickets directly.
+- Preferred: run `loom team prep-sprint <TEAM> --name "..."` to set sprint + create+spawn the architect prep ticket.
+- Architect creates the backlog tickets directly.
 - You may create one-off tickets yourself if it is truly small and obvious.
-- For open-ended objectives and big work: always use the Investigator.
+- For open-ended objectives and big work: always use the Architect.
 
 2) Plan: Backlog -> Parallel work.
 - Decide what can run concurrently and what must sequence.
@@ -100,6 +100,7 @@ Sprint loop (fan-out / fan-in):
 
 3) Execute: Tickets -> Workers.
 - Spawn workers into isolated worktrees.
+- Spawn on-demand roster personas: `loom team spawn-persona <TEAM> <MEMBER_ID>`.
 - Unblock fast.
 - Review with the bigger picture in mind.
 
@@ -142,7 +143,7 @@ Merge queue (tight, boring, fast):
  - Integrator merges into the per-run merge branch only (default: `team/merge-queue-<8hex>`); you ship to the configured target branch with `{cmd_ship}`.
 - On merge success, retire the originating worker.
 - When a worktree is safe to delete: mark it retirable; janitor is the only thing that deletes worktrees.
-- Retire Investigators when they report `INVESTIGATOR_DONE`. Keep integrator persistent.
+- Retire Architects when they report `ARCHITECT_DONE`. Keep integrator persistent.
 
 Follow-ups:
 - Workers may create follow-up tickets. Treat them as backlog input.
@@ -160,7 +161,7 @@ Compound learning (repo-root only):
 Objective changes:
 - Treat the run CHARTER as the current source of truth.
 - When you get an objective update in your inbox: re-read the CHARTER and pivot immediately.
-- If the objective implies new tickets: spawn an Investigator to produce a crisp ticket set.
+- If the objective implies new tickets: spawn an Architect to produce a crisp ticket set.
 
 Completion + disband:
 - When the objective is satisfied AND everything is merged/shipped: disband the team.
@@ -237,8 +238,8 @@ Environment: {env_tickets_dir} is set to the centralized ticket directory.
 """
 
 
-INVESTIGATOR_AGENT_PROMPT_TEMPLATE = """\
-You are a Team Investigator.
+ARCHITECT_AGENT_PROMPT_TEMPLATE = """\
+You are a Team Architect.
 
 Purpose: Convert objectives + ambiguity into a sprint plan and a set of high-quality Loom tickets.
 
@@ -321,7 +322,7 @@ Ticket tagging rule:
 
 Completion protocol:
 - Update the assigned ticket with a concise summary + list of created/updated ticket IDs.
-- Notify the manager you are done: `{cmd_investigator_done}`
+- Notify the manager you are done: `{cmd_architect_done}`
 - Then stop. The manager will retire your pane.
 Idling policy (critical):
 - If you have produced tickets and are waiting: run `loom team wait 15m` and stop output.
@@ -370,7 +371,7 @@ def default_agent_prompts() -> Dict[str, str]:
         "cmd_ready_for_review": _cmd_ready_for_review(
             team="", ticket_id="", worker_id="", branch=""
         ),
-        "cmd_investigator_done": _cmd_investigator_done(
+        "cmd_architect_done": _cmd_architect_done(
             team="", worker_id="", ticket_id="", trailing_space=True
         ),
         "cmd_merge_next": _cmd_merge_next(team="", worker_id=""),
@@ -382,7 +383,7 @@ def default_agent_prompts() -> Dict[str, str]:
     return {
         "manager": MANAGER_AGENT_PROMPT_TEMPLATE.format(**fmt),
         "worker": WORKER_AGENT_PROMPT_TEMPLATE.format(**fmt),
-        "investigator": INVESTIGATOR_AGENT_PROMPT_TEMPLATE.format(**fmt),
+        "architect": ARCHITECT_AGENT_PROMPT_TEMPLATE.format(**fmt),
         "integrator": INTEGRATOR_AGENT_PROMPT_TEMPLATE.format(**fmt),
     }
 
@@ -411,12 +412,42 @@ def render_manager_prompt(*, run: Mapping[str, Any], charter_path: Path) -> str:
     if sprint_tag:
         sprint_lines += f"SPRINT_TAG: {sprint_tag}\n"
 
+    roster_lines = ""
+    raw_roster = run.get("roster")
+    roster: Dict[str, Any] = dict(raw_roster) if isinstance(raw_roster, dict) else {}
+    roster_source = str(roster.get("source") or "").strip()
+    if roster_source:
+        roster_lines += f"ROSTER: {roster_source}\n"
+    raw_spec = roster.get("spec")
+    spec: Dict[str, Any] = dict(raw_spec) if isinstance(raw_spec, dict) else {}
+    raw_members = spec.get("members")
+    if isinstance(raw_members, list):
+        members_lines: list[str] = []
+        for item in raw_members:
+            if not isinstance(item, dict):
+                continue
+            rid = str(item.get("id") or "").strip()
+            rrole = str(item.get("role") or "").strip().lower()
+            if not rid or not rrole:
+                continue
+            always_on = bool(item.get("always_on"))
+            workspace = str(item.get("workspace") or "repo_root").strip().lower() or "repo_root"
+            lifecycle = "always_on" if always_on else "on_demand"
+            spawn_hint = (
+                "" if always_on else f" (spawn: loom team spawn-persona {team} {rid})"
+            )
+            members_lines.append(
+                f"- {rid}: role={rrole} {lifecycle} workspace={workspace}{spawn_hint}"
+            )
+        if members_lines:
+            roster_lines += "ROSTER_MEMBERS:\n" + "\n".join(members_lines) + "\n"
+
     return (
         "You are Team Manager.\n\n"
         f"TEAM: {team}\n"
         f"RUN_ID: {run_id}\n"
         f"TMUX_SESSION: {session}\n"
-        f"CHARTER: {charter_path}\n{tickets_line}{sprint_lines}\n"
+        f"CHARTER: {charter_path}\n{tickets_line}{sprint_lines}{roster_lines}\n"
         "HARD CONSTRAINTS (non-negotiable):\n"
         "- Do NOT run tmux directly. Use Loom CLI only.\n"
         "- Do NOT implement tickets or edit code. Delegate tickets to workers.\n"
@@ -425,7 +456,7 @@ def render_manager_prompt(*, run: Mapping[str, Any], charter_path: Path) -> str:
         "OBJECTIVE:\n"
         f"{objective}\n\n"
         "Immediate sprint loop:\n"
-        f'1) Fan-out: if backlog is unclear, start a sprint + spawn investigator: `loom team prep-sprint {team} --name "..."`.\n'
+        f'1) Fan-out: if backlog is unclear, start a sprint + spawn architect: `loom team prep-sprint {team} --name "..."`.\n'
         f"   - You may create a one-off ticket yourself if it is truly small and obvious.\n"
         f"2) Plan: decide what runs in parallel and what must sequence.\n"
         f"3) Execute: spawn workers: `loom team spawn {team} <TICKET_ID>`.\n"
@@ -490,9 +521,9 @@ def render_worker_prompt(
         sprint_lines += f"SPRINT_TAG: {sprint_tag}\n"
 
     role_specific = ""
-    if role == ROLE_INVESTIGATOR:
+    if role == ROLE_ARCHITECT:
         role_specific = (
-            "ROLE-SPECIFIC (INVESTIGATOR):\n"
+            "ROLE-SPECIFIC (ARCHITECT):\n"
             "- You are the sprint PM. Your job is to turn the objective + current state into a coherent sprint and a crisp backlog.\n"
             "- First, read the run CHARTER to understand objective + historical direction.\n"
             "- Then inspect current backlog + repo state enough to remove ambiguity (tickets + git status/log).\n"
@@ -500,7 +531,7 @@ def render_worker_prompt(
             "- Create/refine sprint tickets directly (prefer `loom ticket create --parent <THIS_TICKET>`).\n"
             "- Every ticket must include: scope/non-goals, step-by-step plan, acceptance criteria, verification commands (use `uv run ...` for Python), risks/edge cases, deps/ordering.\n"
             "- Before you stop: update THIS assigned ticket with (1) the list of created/updated ticket IDs and (2) suggested ordering + parallelization.\n"
-            f"- Then notify manager: `{_cmd_investigator_done(team=team, worker_id=worker_id, ticket_id=ticket_id, trailing_space=False)}`.\n"
+            f"- Then notify manager: `{_cmd_architect_done(team=team, worker_id=worker_id, ticket_id=ticket_id, trailing_space=False)}`.\n"
             "- Then stop. The manager will retire your pane.\n"
         )
     elif role == ROLE_WORKER:
@@ -591,6 +622,87 @@ def render_worker_prompt(
     return "".join(parts).strip()
 
 
+def render_architect_prompt(
+    *,
+    run: Mapping[str, Any],
+    worker_id: str,
+    charter_path: Path,
+) -> str:
+    return render_persona_prompt(
+        run=run,
+        role=ROLE_ARCHITECT,
+        worker_id=worker_id,
+        charter_path=charter_path,
+        description="",
+        triggers=[],
+        primary_workflows=[],
+    )
+
+
+def render_persona_prompt(
+    *,
+    run: Mapping[str, Any],
+    role: str,
+    worker_id: str,
+    charter_path: Path,
+    description: str,
+    triggers: List[str],
+    primary_workflows: List[str],
+) -> str:
+    team = str(run.get("team") or "")
+    run_id = str(run.get("run_id") or "")
+    role_norm = str(role or "").strip().lower()
+    role_label = role_norm.title() if role_norm else "Persona"
+    tickets_dir = str(run.get("tickets_dir") or "").strip()
+    sprint = run.get("sprint") if isinstance(run.get("sprint"), dict) else {}
+    sprint_name = str((sprint or {}).get("name") or "").strip()
+    sprint_tag = str((sprint or {}).get("tag") or "").strip()
+
+    tickets_line = f"{ENV_TICKET_DIR}: {tickets_dir}\n" if tickets_dir else ""
+    sprint_lines = ""
+    if sprint_name:
+        sprint_lines += f"SPRINT: {sprint_name}\n"
+    if sprint_tag:
+        sprint_lines += f"SPRINT_TAG: {sprint_tag}\n"
+
+    parts: List[str] = []
+    parts.append(f"You are Team {role_label}.\n\n")
+    parts.append(f"TEAM: {team}\n")
+    parts.append(f"RUN_ID: {run_id}\n")
+    parts.append(f"WORKER_ID: {worker_id}\n")
+    parts.append(f"ROLE: {role_norm}\n")
+    parts.append(f"CHARTER: {charter_path}\n{tickets_line}{sprint_lines}\n")
+
+    parts.append("HARD CONSTRAINTS:\n")
+    parts.append("- Do NOT run tmux directly.\n")
+    parts.append("- Use Loom ticket CLI for ticket work; do not browse `.loom/ticket` directly.\n")
+    parts.append("- Do not close tickets unless explicitly instructed by the manager.\n")
+    parts.append("- Keep communication durable via `loom team send` and inbox acknowledgements.\n\n")
+
+    if role_norm == ROLE_ARCHITECT:
+        parts.append("Mode: always-on architect persona.\n")
+        parts.append("- Watch inbox for sprint prep and planning requests.\n")
+        parts.append("- Produce sprint plans and high-quality tickets with clear ordering/dependencies.\n")
+        parts.append("- Escalate unclear requirements to manager with concrete options.\n")
+        parts.append("- When no immediate action is available, run `loom team wait 15m`.\n\n")
+    else:
+        if description:
+            parts.append(f"Persona description: {description}\n")
+        if triggers:
+            parts.append(f"Primary triggers: {', '.join(str(x) for x in triggers)}\n")
+        if primary_workflows:
+            parts.append(
+                "Primary workflows: "
+                + ", ".join(str(x) for x in primary_workflows)
+                + "\n"
+            )
+        parts.append("- Stay in-role and execute only relevant requests from manager/inbox.\n")
+        parts.append("- If blocked, escalate to manager with concrete options.\n")
+        parts.append("- If idle, run `loom team wait 15m`.\n\n")
+
+    parts.append("Acknowledge incoming inbox messages before acting on follow-up requests.\n")
+    return "".join(parts).strip()
+
 def render_integrator_prompt(
     *,
     run: Mapping[str, Any],
@@ -662,10 +774,12 @@ def render_integrator_prompt(
 __all__ = [
     "MANAGER_AGENT_PROMPT_TEMPLATE",
     "WORKER_AGENT_PROMPT_TEMPLATE",
-    "INVESTIGATOR_AGENT_PROMPT_TEMPLATE",
+    "ARCHITECT_AGENT_PROMPT_TEMPLATE",
     "INTEGRATOR_AGENT_PROMPT_TEMPLATE",
     "default_agent_prompts",
     "render_manager_prompt",
+    "render_architect_prompt",
+    "render_persona_prompt",
     "render_worker_prompt",
     "render_integrator_prompt",
 ]

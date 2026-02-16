@@ -72,7 +72,7 @@ from agent_loom.team.constants import (
     DEFAULT_HARNESS,
     DEFAULT_IDLE_SCREEN_S,
     DEFAULT_INTEGRATOR_AGENT,
-    DEFAULT_INVESTIGATOR_AGENT,
+    DEFAULT_ARCHITECT_AGENT,
     DEFAULT_MANAGER_AGENT,
     DEFAULT_MANAGER_WINDOW,
     DEFAULT_OBJECTIVE_NUDGE_S,
@@ -89,7 +89,7 @@ from agent_loom.team.constants import (
     ENV_TICKET_DIR,
     INBOX_KIND_CONTROL,
     ROLE_INTEGRATOR,
-    ROLE_INVESTIGATOR,
+    ROLE_ARCHITECT,
     ROLE_MANAGER,
     ROLE_WORKER,
     TMUX_OPT_OWNED,
@@ -98,9 +98,12 @@ from agent_loom.team.constants import (
     TMUX_OPT_RUN_ID,
     TMUX_OPT_TEAM,
 )
-from agent_loom.team.composition import load_team_composition_yaml
+from agent_loom.team.composition import load_team_roster_yaml
 from agent_loom.team.composition_runtime import (
+    ResolvedMemberProfile,
     enforce_member_lifecycle,
+    list_always_on_member_profiles,
+    resolve_builtin_profile,
     resolve_member_profile,
 )
 from agent_loom.team.errors import TeamError
@@ -160,6 +163,7 @@ from agent_loom.team.models import (
     SendResult,
     ShipResult,
     SpawnIntegratorResult,
+    SpawnPersonaResult,
     SpawnResult,
     SprintClearResult,
     SprintSetResult,
@@ -175,8 +179,10 @@ from agent_loom.team.permissions import (
     _require_self_worker_id,
 )
 from agent_loom.team.prompts import (
+    render_architect_prompt,
     render_integrator_prompt,
     render_manager_prompt,
+    render_persona_prompt,
     render_worker_prompt,
 )
 from agent_loom.team.run_state import (
@@ -467,7 +473,7 @@ def _required_team_agent_relpaths() -> list[str]:
     names = [
         str(DEFAULT_MANAGER_AGENT),
         str(DEFAULT_WORKER_AGENT),
-        str(DEFAULT_INVESTIGATOR_AGENT),
+        str(DEFAULT_ARCHITECT_AGENT),
         str(DEFAULT_INTEGRATOR_AGENT),
     ]
     out: list[str] = []
@@ -839,9 +845,15 @@ def _apply_mounts(*, repo_root: Path, worktree_root: Path, mounts: list[dict]) -
             )
 
 
-def _composition_summary_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
-    raw_composition = run.get("composition")
-    raw: Dict[str, Any] = dict(raw_composition) if isinstance(raw_composition, dict) else {}
+def _roster_state_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
+    raw_roster = run.get("roster")
+    if isinstance(raw_roster, dict):
+        return dict(raw_roster)
+    return {}
+
+
+def _roster_summary_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
+    raw = _roster_state_from_run(run)
 
     raw_spec = raw.get("spec")
     spec: Dict[str, Any] = dict(raw_spec) if isinstance(raw_spec, dict) else {}
@@ -864,16 +876,16 @@ def _composition_summary_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
         except Exception:
             version = 0
 
+    raw_builtins = spec.get("builtins")
+    builtins: Dict[str, Any] = dict(raw_builtins) if isinstance(raw_builtins, dict) else {}
+
     raw_members = spec.get("members")
     members: list[Any] = list(raw_members) if isinstance(raw_members, list) else []
-
-    raw_mappings = spec.get("worktree_mappings")
-    mappings: list[Any] = list(raw_mappings) if isinstance(raw_mappings, list) else []
 
     raw_labels = metadata.get("labels")
     labels: list[Any] = list(raw_labels) if isinstance(raw_labels, list) else []
 
-    if not any((name, purpose, source, loaded_at, version, members, mappings, labels)):
+    if not any((name, purpose, source, loaded_at, version, builtins, members, labels)):
         return {}
 
     return {
@@ -882,10 +894,27 @@ def _composition_summary_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
         "source": source,
         "loaded_at": loaded_at,
         "version": version,
+        "builtins": len(builtins),
         "members": len(members),
-        "worktree_mappings": len(mappings),
         "labels": [str(label) for label in labels if str(label).strip()],
     }
+
+
+def _roster_mount_specs_from_run(run: Mapping[str, Any]) -> list[str]:
+    raw = _roster_state_from_run(run)
+    raw_spec = raw.get("spec")
+    spec: Dict[str, Any] = dict(raw_spec) if isinstance(raw_spec, dict) else {}
+
+    raw_mounts = spec.get("mounts")
+    if not isinstance(raw_mounts, list):
+        return []
+
+    out: list[str] = []
+    for item in raw_mounts:
+        tok = str(item or "").strip()
+        if tok:
+            out.append(tok)
+    return out
 
 
 
@@ -927,21 +956,21 @@ def _write_charter(paths: RunPaths, run: Mapping[str, Any]) -> Path:
     if not sprint_name:
         lines.append("(none)\n")
     lines.append("\n")
-    composition = _composition_summary_from_run(run)
-    lines.append("## Composition (current)\n\n")
-    if composition:
-        if composition.get("name"):
-            lines.append(f"Name: {composition.get('name')}\n")
-        if composition.get("version"):
-            lines.append(f"Schema version: {composition.get('version')}\n")
-        if composition.get("members"):
-            lines.append(f"Members: {composition.get('members')}\n")
-        if composition.get("worktree_mappings"):
-            lines.append(f"Worktree mappings: {composition.get('worktree_mappings')}\n")
-        if composition.get("source"):
-            lines.append(f"Source: {composition.get('source')}\n")
-        if composition.get("loaded_at"):
-            lines.append(f"Loaded at: {composition.get('loaded_at')}\n")
+    roster = _roster_summary_from_run(run)
+    lines.append("## Roster (current)\n\n")
+    if roster:
+        if roster.get("name"):
+            lines.append(f"Name: {roster.get('name')}\n")
+        if roster.get("version"):
+            lines.append(f"Schema version: {roster.get('version')}\n")
+        if roster.get("builtins"):
+            lines.append(f"Built-ins: {roster.get('builtins')}\n")
+        if roster.get("members"):
+            lines.append(f"Additional members: {roster.get('members')}\n")
+        if roster.get("source"):
+            lines.append(f"Source: {roster.get('source')}\n")
+        if roster.get("loaded_at"):
+            lines.append(f"Loaded at: {roster.get('loaded_at')}\n")
     else:
         lines.append("(none)\n")
     lines.append("\n")
@@ -949,7 +978,7 @@ def _write_charter(paths: RunPaths, run: Mapping[str, Any]) -> Path:
     lines.append("Sprint loop:\n")
     lines.append(f'- Start sprint: `loom team prep-sprint {paths.team} --name "..."`\n')
     lines.append(
-        "- Fan-out (preferred): spawn an Investigator; investigator creates tickets directly.\n"
+        "- Fan-out (preferred): spawn an Architect; architect creates tickets directly.\n"
     )
     lines.append("- Plan: decide concurrency + ordering.\n")
     lines.append("- Execute: spawn workers.\n")
@@ -1307,6 +1336,10 @@ def _run_paths_from_env() -> Optional[RunPaths]:
 
 def _paths_for(*, team: str, repo: Optional[Path]) -> RunPaths:
     repo_root = repo.resolve() if repo is not None else None
+    if repo_root is not None:
+        candidate = RunPaths(repo_root=repo_root, team=team)
+        if candidate.run_file.exists() or candidate.run_dir.exists():
+            return candidate
     return resolve_run_paths(team=team, repo=repo_root)
 
 
@@ -1770,7 +1803,7 @@ def tui(
                 # Idle detection: "screen unchanged" across captures.
                 # This is intentionally separate from tmux pane_last_activity (stall detection).
                 role_norm = str(role or "").strip().lower()
-                if role_norm in (ROLE_WORKER, ROLE_INVESTIGATOR):
+                if role_norm in (ROLE_WORKER, ROLE_ARCHITECT):
                     out = str((cap or {}).get("output") or "")
                     h = hashlib.sha256(out.encode("utf-8")).hexdigest()
                     if last_screen_hash and h == last_screen_hash:
@@ -1969,7 +2002,7 @@ def tui(
             child_env["CODEX_HOME"] = str(codex_home)
             sandbox = "workspace-write"
             approval = "on-request"
-            if role in (ROLE_MANAGER, ROLE_INVESTIGATOR, ROLE_INTEGRATOR):
+            if role in (ROLE_MANAGER, ROLE_ARCHITECT, ROLE_INTEGRATOR):
                 sandbox = "read-only"
             child_argv = _codex_tui_argv(
                 prompt=prompt,
@@ -1982,7 +2015,7 @@ def tui(
             )
         else:
             restricted_tools: list[str] | None = None
-            if role in (ROLE_MANAGER, ROLE_INVESTIGATOR, ROLE_INTEGRATOR):
+            if role in (ROLE_MANAGER, ROLE_ARCHITECT, ROLE_INTEGRATOR):
                 restricted_tools = [
                     "read",
                     "grep",
@@ -2117,6 +2150,273 @@ def tui(
         backoff_s = min(backoff_s * 2.0, 30.0)
 
 
+
+def _default_architect_profile(*, run: Mapping[str, Any], harness: str) -> ResolvedMemberProfile:
+    return ResolvedMemberProfile(
+        member_id="architect",
+        role=ROLE_ARCHITECT,
+        lifecycle="always_on",
+        source="loom",
+        agent=_agent_for_role(run, ROLE_ARCHITECT, harness=harness),
+        harness=harness,
+        model="",
+        workspace="repo_root",
+        worktree_key="",
+        description="",
+        triggers=(),
+        primary_workflows=(),
+    )
+
+
+def _always_on_profiles_for_run(run: Mapping[str, Any]) -> list[ResolvedMemberProfile]:
+    profiles = list(list_always_on_member_profiles(run))
+    if not any(str(profile.role or "").strip().lower() == ROLE_ARCHITECT for profile in profiles):
+        harness = _normalize_harness(str(run.get("harness") or ""))
+        profiles.append(_default_architect_profile(run=run, harness=harness))
+
+    deduped: dict[str, ResolvedMemberProfile] = {}
+    for profile in profiles:
+        member_id = str(profile.member_id or "").strip()
+        if not member_id:
+            continue
+        deduped[member_id] = profile
+
+    return sorted(
+        deduped.values(),
+        key=lambda profile: (
+            0 if str(profile.role or "").strip().lower() == ROLE_ARCHITECT else 1,
+            str(profile.member_id or "").strip(),
+        ),
+    )
+
+
+def _workspace_for_always_on_profile(profile: ResolvedMemberProfile) -> tuple[str, str]:
+    role = str(profile.role or "").strip().lower()
+    if role in {ROLE_MANAGER, ROLE_ARCHITECT}:
+        return "repo_root", ""
+    if role == ROLE_INTEGRATOR:
+        return "worktree", "merge-queue"
+
+    workspace = str(profile.workspace or "").strip().lower()
+    if workspace not in {"repo_root", "worktree"}:
+        workspace = "repo_root"
+
+    worktree_key = sanitize(str(profile.worktree_key or ""), max_len=80) or sanitize(
+        str(profile.member_id or ""),
+        max_len=80,
+    )
+    if not worktree_key:
+        worktree_key = f"persona-{uuid.uuid4().hex[:8]}"
+
+    return workspace, worktree_key
+
+
+def _persona_worktree_branch(*, run_id: str, member_id: str) -> str:
+    run_key = sanitize(str(run_id or ""), allow=r"a-zA-Z0-9._-", max_len=16) or "run"
+    member_key = sanitize(str(member_id or ""), allow=r"a-zA-Z0-9._-", max_len=40) or "persona"
+    return f"team/{run_key}-{member_key}"
+
+
+def _ensure_always_on_personas(*, team: str, repo: Optional[Path] = None) -> None:
+    paths = _paths_for(team=team, repo=repo)
+
+    with locked_run(paths) as run:
+        session = run_session(run)
+        if not tmux_has_session(session):
+            raise TeamError(
+                f"tmux session not found while ensuring always-on roster: {session}",
+                code="TMUX",
+                exit_code=2,
+            )
+
+        root = run_root(paths, run)
+        tickets_dir = ensure_run_tickets_dir(run, repo_root=root)
+        sprint = _sprint_state(run)
+        defaults = run.get("defaults") if isinstance(run.get("defaults"), dict) else {}
+        base_ref_default = str((defaults or {}).get("base_ref") or "").strip() or None
+
+        harness_default = _normalize_harness(str(run.get("harness") or ""))
+        raw_mounts = run.get("mounts")
+        mounts: list[dict] = []
+        if isinstance(raw_mounts, list):
+            mounts = [dict(item) for item in raw_mounts if isinstance(item, dict)]
+
+        now_iso = _iso_z()
+        workers = dict(run.get("workers") or {})
+
+        for profile in _always_on_profiles_for_run(run):
+            role = str(profile.role or "").strip().lower()
+            if role in {ROLE_MANAGER, ROLE_INTEGRATOR}:
+                continue
+
+            member_id = sanitize(str(profile.member_id or ""), max_len=48)
+            if not member_id:
+                continue
+
+            workspace, workspace_key = _workspace_for_always_on_profile(profile)
+            persona_harness = _normalize_harness(str(profile.harness or "") or harness_default)
+            cfg = (
+                (run.get(persona_harness) or {})
+                if isinstance(run.get(persona_harness), dict)
+                else (run.get("opencode") or {})
+            )
+            agent_bin = str(cfg.get("bin") or "").strip() or persona_harness
+            _require_bin(agent_bin)
+
+            agent = str(profile.agent or "").strip() or _agent_for_role(
+                run,
+                role,
+                harness=persona_harness,
+            )
+            project_dir = root
+            branch = ""
+            base = ""
+            worktree_key = ""
+
+            if workspace == "worktree":
+                worktree_key = workspace_key
+                desired_wt_path = (paths.worktrees_dir / worktree_key).resolve()
+                if not _is_path_within(paths.worktrees_dir, desired_wt_path):
+                    raise TeamError(
+                        f"Refusing to create worktree outside run worktrees dir: {desired_wt_path}",
+                        code="WORKTREE_PATH",
+                        exit_code=2,
+                    )
+
+                wt = _ensure_worktree(
+                    cwd=root,
+                    path=desired_wt_path,
+                    branch=_persona_worktree_branch(
+                        run_id=str(run.get("run_id") or ""),
+                        member_id=member_id,
+                    ),
+                    base_ref=base_ref_default,
+                    allow_dirty=True,
+                )
+                project_dir = Path(str(wt.get("path") or desired_wt_path)).resolve()
+                branch = str(wt.get("branch") or "").strip()
+                base = str(wt.get("base") or "").strip()
+                _apply_mounts(repo_root=root, worktree_root=project_dir, mounts=mounts)
+                if persona_harness == "opencode":
+                    _ensure_opencode_worktree_runtime(workdir=project_dir, repo_root=root)
+
+            _require_agent_file_present(
+                workdir=project_dir,
+                harness=persona_harness,
+                agent=agent,
+            )
+            model = _model_for_role(run, role, harness=persona_harness)
+            if not model and profile.model:
+                model = str(profile.model)
+
+            if role == ROLE_ARCHITECT:
+                prompt = render_architect_prompt(
+                    run=run,
+                    worker_id=member_id,
+                    charter_path=paths.charter_file,
+                )
+            else:
+                prompt = render_persona_prompt(
+                    run=run,
+                    role=role,
+                    worker_id=member_id,
+                    charter_path=paths.charter_file,
+                    description=str(profile.description or ""),
+                    triggers=list(profile.triggers),
+                    primary_workflows=list(profile.primary_workflows),
+                )
+
+            oc_argv = _team_tui_argv(
+                project_dir=project_dir,
+                agent=agent,
+                prompt=prompt,
+                model=model,
+                harness=persona_harness,
+                bin=str(cfg.get("bin") or "").strip(),
+            )
+
+            pane_env = {
+                ENV_TICKET_DIR: str(tickets_dir),
+                ENV_TEAM_NAME: str(run.get("team") or paths.team),
+                ENV_TEAM_RUN_ID: str(run.get("run_id") or ""),
+                ENV_TEAM_RUN_DIR: str(paths.run_dir),
+                ENV_TEAM_ROLE: role,
+                ENV_TEAM_WORKER_ID: member_id,
+                ENV_TEAM_TICKET_ID: "",
+                ENV_TEAM_SPRINT_NAME: sprint.get("name", ""),
+                ENV_TEAM_SPRINT_TAG: sprint.get("tag", ""),
+                "COMPOUND_ROOT": str(root),
+            }
+
+            existing = dict(workers.get(member_id) or {})
+            existing_window = str(existing.get("window") or "").strip()
+            pane_id = ""
+            window = existing_window
+
+            if window and not bool(existing.get("retired")) and tmux_window_exists(session, window):
+                pane_id = tmux_format(f"{session}:{window}", "#{pane_id}")
+            else:
+                desired_window = (
+                    sanitize(
+                        existing_window or member_id,
+                        allow=r"a-zA-Z0-9._-",
+                        max_len=60,
+                    )
+                    or member_id
+                )
+                window = tmux_unique_window_name(session, desired_window)
+                tmux_cmd(
+                    [
+                        "new-window",
+                        "-d",
+                        "-t",
+                        session,
+                        "-n",
+                        window,
+                        "-c",
+                        str(project_dir),
+                        *tmux_env_flags(pane_env),
+                        *oc_argv,
+                    ],
+                    check=True,
+                )
+                pane_id = tmux_format(f"{session}:{window}", "#{pane_id}")
+                if pane_id:
+                    tmux_mark_pane(
+                        pane_id=pane_id,
+                        role=role,
+                        worker_id=member_id,
+                        ticket_id="",
+                    )
+
+            workers[member_id] = {
+                **existing,
+                "worker_id": member_id,
+                "role": role,
+                "ticket_id": "",
+                "roster_member_id": str(profile.member_id or ""),
+                "roster_source": str(profile.source or ""),
+                "roster_lifecycle": str(profile.lifecycle or ""),
+                "roster_description": str(profile.description or ""),
+                "roster_triggers": list(profile.triggers),
+                "roster_primary_workflows": list(profile.primary_workflows),
+                "window": window,
+                "pane_id": pane_id,
+                "workspace": workspace,
+                "worktree": str(project_dir),
+                "worktree_key": worktree_key,
+                "branch": branch,
+                "base": base,
+                "created_at": str(existing.get("created_at") or now_iso),
+                "spawned_at": str(existing.get("spawned_at") or now_iso),
+                "revived_at": now_iso if bool(existing.get("retired")) else str(existing.get("revived_at") or ""),
+                "retired": False,
+                "retired_at": "",
+                "worktree_retirable": False,
+                "worktree_retirable_at": "",
+            }
+
+        run["workers"] = workers
 # -----------------------------
 # Prompt construction (initial --prompt only)
 # -----------------------------
@@ -2126,13 +2426,13 @@ def start(
     *,
     team: str,
     objective: str = "",
-    composition: str = "",
+    roster: str = "",
     session: str = "",
     harness: str = "",
     bin_override: str = "",
     model: str = "",
     manager_model: str = "",
-    investigator_model: str = "",
+    architect_model: str = "",
     worker_model: str = "",
     integrator_model: str = "",
     mounts: Optional[list[str]] = None,
@@ -2162,28 +2462,28 @@ def start(
     requested_harness = _normalize_harness(harness_raw)
     requested_bin = str(bin_override or "").strip()
 
-    composition_state: Optional[Dict[str, Any]] = None
-    composition_harness = ""
-    composition_raw = str(composition or "").strip()
-    if composition_raw:
-        composition_path = Path(composition_raw).expanduser()
-        parsed = load_team_composition_yaml(composition_path)
-        composition_state = {
-            "source": str(composition_path.resolve()),
+    roster_state: Optional[Dict[str, Any]] = None
+    roster_harness = ""
+    roster_raw = str(roster or "").strip()
+    if roster_raw:
+        roster_path = Path(roster_raw).expanduser()
+        parsed = load_team_roster_yaml(roster_path)
+        roster_state = {
+            "source": str(roster_path.resolve()),
             "loaded_at": _iso_z(),
             "spec": parsed.as_dict(),
         }
-        manager_profile = resolve_member_profile(
-            {"composition": composition_state},
-            role=ROLE_MANAGER,
+        manager_profile = resolve_builtin_profile(
+            {"roster": roster_state},
+            ROLE_MANAGER,
         )
         enforce_member_lifecycle(profile=manager_profile, role=ROLE_MANAGER)
         if manager_profile is not None and manager_profile.harness:
-            composition_harness = _normalize_harness(manager_profile.harness)
+            roster_harness = _normalize_harness(manager_profile.harness)
 
-    # Precedence: explicit CLI override > composition > defaults.
-    if not harness_provided and composition_harness:
-        requested_harness = composition_harness
+    # Precedence: explicit CLI override > roster > defaults.
+    if not harness_provided and roster_harness:
+        requested_harness = roster_harness
     root = canonical_repo_root(repo.resolve() if repo else Path.cwd())
     team = sanitize(team or "", max_len=80) or default_team_name(root)
     # Session selection rules:
@@ -2216,14 +2516,15 @@ def start(
             run["merge"] = _merge_state(run)
             if not isinstance(run.get("sprint"), dict):
                 run["sprint"] = {}
-            if composition_state is not None:
-                run["composition"] = composition_state
+            if roster_state is not None:
+                run["roster"] = roster_state
                 save_run(paths, run)
 
             # Mounts: persisted across start/resume.
-            # - If --clear-mounts: clear.
-            # - Else if mounts were provided: replace.
-            # - Else: keep existing.
+            # Precedence:
+            # - CLI: --clear-mounts / --mount ...
+            # - Roster: spec.mounts
+            # - Existing run state
             if bool(clear_mounts):
                 run["mounts"] = []
                 save_run(paths, run)
@@ -2235,10 +2536,19 @@ def start(
                 )
                 save_run(paths, run)
             else:
-                raw_mounts = run.get("mounts")
-                if not isinstance(raw_mounts, list):
-                    run["mounts"] = []
+                roster_mount_specs = _roster_mount_specs_from_run(run)
+                if roster_mount_specs:
+                    run["mounts"] = _parse_mount_specs(
+                        repo_root=root,
+                        paths=paths,
+                        specs=roster_mount_specs,
+                    )
                     save_run(paths, run)
+                else:
+                    raw_mounts = run.get("mounts")
+                    if not isinstance(raw_mounts, list):
+                        run["mounts"] = []
+                        save_run(paths, run)
 
             if max_headcount is not None:
                 raw_limits = run.get("limits")
@@ -2295,14 +2605,14 @@ def start(
                 if str(run.get("harness") or "") != requested_harness:
                     run["harness"] = requested_harness
                     save_run(paths, run)
-            elif composition_harness:
+            elif roster_harness:
                 if str(run.get("harness") or "") != requested_harness:
                     run["harness"] = requested_harness
                     save_run(paths, run)
             if requested_bin:
                 bin_harness = (
                     requested_harness
-                    if (harness_provided or composition_harness)
+                    if (harness_provided or roster_harness)
                     else existing_harness
                 )
                 cfg = run.get(bin_harness)
@@ -2327,7 +2637,7 @@ def start(
 
                 cfg.setdefault("manager_agent", DEFAULT_MANAGER_AGENT)
                 cfg.setdefault("worker_agent", DEFAULT_WORKER_AGENT)
-                cfg.setdefault("investigator_agent", DEFAULT_INVESTIGATOR_AGENT)
+                cfg.setdefault("architect_agent", DEFAULT_ARCHITECT_AGENT)
                 cfg.setdefault("bin", str(cfg.get("bin") or ""))
 
                 raw_models = cfg.get("models")
@@ -2337,7 +2647,7 @@ def start(
                 for rk in (
                     ROLE_MANAGER,
                     ROLE_WORKER,
-                    ROLE_INVESTIGATOR,
+                    ROLE_ARCHITECT,
                     ROLE_INTEGRATOR,
                 ):
                     models.setdefault(rk, "")
@@ -2382,8 +2692,8 @@ def start(
                 models_map[ROLE_MANAGER] = str(manager_model).strip()
             if str(worker_model or "").strip():
                 models_map[ROLE_WORKER] = str(worker_model).strip()
-            if str(investigator_model or "").strip():
-                models_map[ROLE_INVESTIGATOR] = str(investigator_model).strip()
+            if str(architect_model or "").strip():
+                models_map[ROLE_ARCHITECT] = str(architect_model).strip()
             if str(integrator_model or "").strip():
                 models_map[ROLE_INTEGRATOR] = str(integrator_model).strip()
             update_cfg["models"] = models_map
@@ -2445,12 +2755,12 @@ def start(
                     "models": {
                         "manager": "",
                         "worker": "",
-                        "investigator": "",
+                        "architect": "",
                         "integrator": "",
                     },
                     "manager_agent": DEFAULT_MANAGER_AGENT,
                     "worker_agent": DEFAULT_WORKER_AGENT,
-                    "investigator_agent": DEFAULT_INVESTIGATOR_AGENT,
+                    "architect_agent": DEFAULT_ARCHITECT_AGENT,
                     "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
                     "bin": "",
                 },
@@ -2459,12 +2769,12 @@ def start(
                     "models": {
                         "manager": "",
                         "worker": "",
-                        "investigator": "",
+                        "architect": "",
                         "integrator": "",
                     },
                     "manager_agent": DEFAULT_MANAGER_AGENT,
                     "worker_agent": DEFAULT_WORKER_AGENT,
-                    "investigator_agent": DEFAULT_INVESTIGATOR_AGENT,
+                    "architect_agent": DEFAULT_ARCHITECT_AGENT,
                     "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
                     "bin": "",
                 },
@@ -2473,12 +2783,12 @@ def start(
                     "models": {
                         "manager": "",
                         "worker": "",
-                        "investigator": "",
+                        "architect": "",
                         "integrator": "",
                     },
                     "manager_agent": DEFAULT_MANAGER_AGENT,
                     "worker_agent": DEFAULT_WORKER_AGENT,
-                    "investigator_agent": DEFAULT_INVESTIGATOR_AGENT,
+                    "architect_agent": DEFAULT_ARCHITECT_AGENT,
                     "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
                     "bin": "",
                 },
@@ -2487,18 +2797,18 @@ def start(
                     "models": {
                         "manager": "",
                         "worker": "",
-                        "investigator": "",
+                        "architect": "",
                         "integrator": "",
                     },
                     "manager_agent": DEFAULT_MANAGER_AGENT,
                     "worker_agent": DEFAULT_WORKER_AGENT,
-                    "investigator_agent": DEFAULT_INVESTIGATOR_AGENT,
+                    "architect_agent": DEFAULT_ARCHITECT_AGENT,
                     "integrator_agent": DEFAULT_INTEGRATOR_AGENT,
                     "bin": "",
                 },
             }
-            if composition_state is not None:
-                run["composition"] = composition_state
+            if roster_state is not None:
+                run["roster"] = roster_state
 
             # Apply per-role model overrides to the selected harness.
             cfg = dict(run.get(requested_harness) or {})
@@ -2510,8 +2820,8 @@ def start(
                 models_created[ROLE_MANAGER] = str(manager_model).strip()
             if str(worker_model or "").strip():
                 models_created[ROLE_WORKER] = str(worker_model).strip()
-            if str(investigator_model or "").strip():
-                models_created[ROLE_INVESTIGATOR] = str(investigator_model).strip()
+            if str(architect_model or "").strip():
+                models_created[ROLE_ARCHITECT] = str(architect_model).strip()
             if str(integrator_model or "").strip():
                 models_created[ROLE_INTEGRATOR] = str(integrator_model).strip()
             cfg["models"] = models_created
@@ -2530,7 +2840,14 @@ def start(
                     paths=paths,
                     specs=list(mounts),
                 )
-
+            else:
+                roster_mount_specs = _roster_mount_specs_from_run(run)
+                if roster_mount_specs:
+                    run["mounts"] = _parse_mount_specs(
+                        repo_root=root,
+                        paths=paths,
+                        specs=roster_mount_specs,
+                    )
             # Per-run merge branch: stable, disposable, and derived from run_id.
             ms = _merge_state(run)
             ms["branch"] = merge_branch_for_run(run)
@@ -2579,10 +2896,9 @@ def start(
             or DEFAULT_MANAGER_WINDOW
         )
         harness = _normalize_harness(str(run.get("harness") or requested_harness))
-        manager_profile = resolve_member_profile(
+        manager_profile = resolve_builtin_profile(
             run,
-            role=ROLE_MANAGER,
-            worktree_key=manager_window,
+            ROLE_MANAGER,
         )
         enforce_member_lifecycle(profile=manager_profile, role=ROLE_MANAGER)
         if manager_profile is not None and manager_profile.harness:
@@ -2595,6 +2911,8 @@ def start(
         agent_bin = str(cfg.get("bin") or "").strip() or harness
         _require_bin(agent_bin)
         model = _model_for_role(run, ROLE_MANAGER, harness=harness)
+        if not model and manager_profile is not None and manager_profile.model:
+            model = str(manager_profile.model)
         manager_agent = (
             str(manager_profile.agent)
             if manager_profile is not None
@@ -2717,6 +3035,11 @@ def start(
             },
         )
 
+    if tmux_has_session(session):
+        spawn_integrator(team=paths.team, repo=root)
+        _ensure_always_on_personas(team=paths.team, repo=root)
+
+    run = load_run(paths)
     return StartResult(
         team=team,
         session=session,
@@ -2879,7 +3202,7 @@ def _objective_mutate(
         "Next actions (manager):\n"
         "- Re-read CHARTER and pivot immediately.\n"
         "- Map objective -> tickets (loom ticket).\n"
-        "- If no crisp tickets exist: spawn an Investigator to produce a ticket set.\n"
+        "- If no crisp tickets exist: spawn an Architect to produce a ticket set.\n"
         "- When 100% done (tickets closed + merges shipped): disband the team.\n\n"
         "Current objective:\n"
         f"{str(run.get('objective') or '').strip()}\n"
@@ -3599,7 +3922,7 @@ def _respawn_active_worker_if_missing(
     repo_root: Path,
 ) -> tuple[bool, Dict[str, Any]]:
     role = str(worker.get("role") or "").strip().lower()
-    if role not in (ROLE_WORKER, ROLE_INVESTIGATOR):
+    if role != ROLE_WORKER:
         return False, dict(worker)
 
     ticket_id = str(worker.get("ticket_id") or "").strip()
@@ -3634,6 +3957,16 @@ def _respawn_active_worker_if_missing(
         return False, out
 
     harness = _normalize_harness(str(run.get("harness") or ""))
+    profile = resolve_member_profile(
+        run,
+        role=role,
+        ticket_id=ticket_id,
+        worktree_key=str(worker.get("worktree_key") or ""),
+    )
+    enforce_member_lifecycle(profile=profile, role=role)
+    if profile is not None and profile.harness:
+        harness = _normalize_harness(profile.harness)
+
     cfg = (
         (run.get(harness) or {})
         if isinstance(run.get(harness), dict)
@@ -3667,8 +4000,15 @@ def _respawn_active_worker_if_missing(
         charter_path=charter_path,
     )
 
-    agent = _agent_for_role(run, role, harness=harness)
+    agent = (
+        str(profile.agent)
+        if profile is not None
+        else _agent_for_role(run, role, harness=harness)
+    )
+    _require_agent_file_present(workdir=worktree_path, harness=harness, agent=agent)
     model = _model_for_role(run, role, harness=harness)
+    if not model and profile is not None and profile.model:
+        model = str(profile.model)
     oc_argv = _team_tui_argv(
         project_dir=worktree_path,
         agent=agent,
@@ -3788,7 +4128,7 @@ def resume_team(*, team: str, repo: Optional[Path] = None) -> ResumeTeamResult:
                 }
                 continue
 
-            if role not in (ROLE_WORKER, ROLE_INVESTIGATOR):
+            if role != ROLE_WORKER:
                 continue
 
             try:
@@ -3890,8 +4230,8 @@ def _agent_for_role(run: Mapping[str, Any], role: str, *, harness: str) -> str:
     )
     if role == ROLE_WORKER:
         return str(cfg.get("worker_agent") or DEFAULT_WORKER_AGENT)
-    if role == ROLE_INVESTIGATOR:
-        return str(cfg.get("investigator_agent") or DEFAULT_INVESTIGATOR_AGENT)
+    if role == ROLE_ARCHITECT:
+        return str(cfg.get("architect_agent") or DEFAULT_ARCHITECT_AGENT)
     if role == ROLE_INTEGRATOR:
         return str(cfg.get("integrator_agent") or DEFAULT_INTEGRATOR_AGENT)
     if role == ROLE_MANAGER:
@@ -3953,7 +4293,7 @@ def _active_spawn_headcount(
         if bool(w.get("retired")):
             continue
         role = str(w.get("role") or "").strip().lower()
-        if role not in (ROLE_WORKER, ROLE_INVESTIGATOR):
+        if role != ROLE_WORKER:
             continue
         active_ids.append(str(wid))
         active_roles[str(wid)] = role
@@ -3989,7 +4329,7 @@ def spawn(
             )
 
         role = str(role or ROLE_WORKER).strip().lower()
-        if role not in (ROLE_WORKER, ROLE_INVESTIGATOR):
+        if role != ROLE_WORKER:
             raise TeamError(f"Invalid role: {role}", code="ARG", exit_code=2)
 
         ticket_id = str(ticket_id).strip()
@@ -4076,9 +4416,9 @@ def spawn(
                     exit_code=2,
                 )
             existing_role = str(existing.get("role") or "").strip().lower()
-            if existing_role not in (ROLE_WORKER, ROLE_INVESTIGATOR):
+            if existing_role != ROLE_WORKER:
                 raise TeamError(
-                    f"Refusing to resume role={existing_role} (only worker/investigator)",
+                    f"Refusing to resume role={existing_role} (only worker)",
                     code="ARG",
                     exit_code=2,
                 )
@@ -4219,6 +4559,8 @@ def spawn(
         )
         _require_agent_file_present(workdir=worktree_path, harness=harness, agent=agent)
         model = _model_for_role(run, role, harness=harness)
+        if not model and profile is not None and profile.model:
+            model = str(profile.model)
         oc_argv = _team_tui_argv(
             project_dir=worktree_path,
             agent=agent,
@@ -4275,9 +4617,9 @@ def spawn(
             "worker_id": worker_id,
             "role": role,
             "ticket_id": ticket_id,
-            "composition_member_id": str(profile.member_id) if profile is not None else "",
-            "composition_source": str(profile.source) if profile is not None else "",
-            "composition_lifecycle": str(profile.lifecycle) if profile is not None else "",
+            "roster_member_id": str(profile.member_id) if profile is not None else "",
+            "roster_source": str(profile.source) if profile is not None else "",
+            "roster_lifecycle": str(profile.lifecycle) if profile is not None else "",
             "window": window,
             "pane_id": pane_id,
             "worktree": str(worktree_path),
@@ -4324,8 +4666,8 @@ def spawn(
                 "base_ref": str(base_ref_effective or ""),
                 "branch_override": branch_override or "",
                 "resumed": bool(resume) and bool(prev),
-                "composition_member_id": str(profile.member_id) if profile is not None else "",
-                "composition_source": str(profile.source) if profile is not None else "",
+                "roster_member_id": str(profile.member_id) if profile is not None else "",
+                "roster_source": str(profile.source) if profile is not None else "",
             },
         )
     return SpawnResult(
@@ -4368,9 +4710,9 @@ def resume_worker(
             f"Worker has no ticket_id: {wid}", code="BAD_STATE", exit_code=2
         )
     role = str(w.get("role") or "").strip().lower()
-    if role not in (ROLE_WORKER, ROLE_INVESTIGATOR):
+    if role != ROLE_WORKER:
         raise TeamError(
-            f"Refusing to resume role={role} (only worker/investigator)",
+            f"Refusing to resume role={role} (only worker)",
             code="ARG",
             exit_code=2,
         )
@@ -4390,12 +4732,12 @@ def prep_sprint(
     team: str,
     name: str,
     force: bool = False,
-    spawn_investigator: bool = True,
+    notify_architect: bool = True,
     ticket_type: str = "task",
     ticket_priority: int = 1,
     repo: Optional[Path] = None,
 ) -> PrepSprintResult:
-    """Set the current sprint and kick off fan-out via an investigator ticket."""
+    """Set the current sprint and create a prep ticket, then notify architect personas."""
 
     _require_role(action="loom team prep-sprint", allowed_roles={ROLE_MANAGER})
     paths = _paths_for(team=team, repo=repo)
@@ -4512,18 +4854,44 @@ def prep_sprint(
 
     spawned = False
     wid = ""
-    if spawn_investigator:
-        res = spawn(
-            team=paths.team,
-            ticket_id=str(created.id),
-            role=ROLE_INVESTIGATOR,
-            repo=repo,
-        )
+    run2 = load_run(paths)
+
+    if notify_architect:
+        architects = [
+            recipient
+            for recipient in _resolve_targets(run2, "role:architect")
+            if str(recipient.get("worker_id") or "").strip()
+        ]
+        if not architects:
+            raise TeamError(
+                "No active architect persona available for sprint prep notification",
+                code="BAD_STATE",
+                exit_code=2,
+                suggestions=[f"loom team start {paths.team} --repo {paths.repo_root}"],
+            )
+        for recipient in architects:
+            architect_id = str(recipient.get("worker_id") or "").strip()
+            if not wid:
+                wid = architect_id
+            _inbox_write_and_maybe_nudge(
+                paths=paths,
+                run=run2,
+                target=architect_id,
+                message=(
+                    f"Sprint prep ticket created: {created.id}. "
+                    f"Sprint={sprint_name} tag={tag}. "
+                    "Complete prep ticket and fan out sprint tickets."
+                ),
+                sender="team",
+                kind="sprint",
+                meta_extra={"sprint": dict(run2.get("sprint") or {})},
+                nudge=True,
+                force=False,
+                line_info=f"sprint_prep_to={architect_id}",
+            )
         spawned = True
-        wid = str((res.worker or {}).get("worker_id") or "")
 
     # Notify manager (durable), with sprint prefixing handled centrally.
-    run2 = load_run(paths)
     _inbox_write_and_maybe_nudge(
         paths=paths,
         run=run2,
@@ -4531,7 +4899,7 @@ def prep_sprint(
         message=(
             f"Sprint started. Tag tickets with `{tag}`. "
             f"Prep ticket={created.id}. "
-            + (f"Investigator={wid}." if spawned and wid else "")
+            + (f"Architect={wid}." if spawned and wid else "")
         ),
         sender="team",
         kind="sprint",
@@ -4674,10 +5042,9 @@ def spawn_integrator(
 
     with locked_run(paths) as run:
         harness = _normalize_harness(str(run.get("harness") or ""))
-        profile = resolve_member_profile(
+        profile = resolve_builtin_profile(
             run,
-            role=ROLE_INTEGRATOR,
-            worktree_key=str(worktree or ""),
+            ROLE_INTEGRATOR,
         )
         enforce_member_lifecycle(profile=profile, role=ROLE_INTEGRATOR)
         if profile is not None and profile.harness:
@@ -4817,6 +5184,8 @@ def spawn_integrator(
             else (run.get("opencode") or {})
         )
         model = _model_for_role(run, ROLE_INTEGRATOR, harness=harness)
+        if not model and profile is not None and profile.model:
+            model = str(profile.model)
         prompt = render_integrator_prompt(
             run=run,
             worker_id=worker_id,
@@ -4927,9 +5296,9 @@ def spawn_integrator(
             "worker_id": worker_id,
             "role": ROLE_INTEGRATOR,
             "ticket_id": "",
-            "composition_member_id": str(profile.member_id) if profile is not None else "",
-            "composition_source": str(profile.source) if profile is not None else "",
-            "composition_lifecycle": str(profile.lifecycle) if profile is not None else "",
+            "roster_member_id": str(profile.member_id) if profile is not None else "",
+            "roster_source": str(profile.source) if profile is not None else "",
+            "roster_lifecycle": str(profile.lifecycle) if profile is not None else "",
             "worktree": str(wt_path),
             "worktree_key": worktree_key,
             "branch": str(wt.get("branch") or merge_branch),
@@ -4979,8 +5348,8 @@ def spawn_integrator(
                 "base_ref": base_ref,
                 "forced": bool(force),
                 "config": dict(cfg),
-                "composition_member_id": str(profile.member_id) if profile is not None else "",
-                "composition_source": str(profile.source) if profile is not None else "",
+                "roster_member_id": str(profile.member_id) if profile is not None else "",
+                "roster_source": str(profile.source) if profile is not None else "",
             },
         )
     return SpawnIntegratorResult(
@@ -4992,6 +5361,18 @@ def spawn_integrator(
         respawned=True,
         worker=dict(workers.get(worker_id) or {}),
     )
+
+
+def spawn_persona(
+    *,
+    team: str,
+    member_id: str,
+    repo: Optional[Path] = None,
+    force: bool = False,
+) -> SpawnPersonaResult:
+    from agent_loom.team.personas import spawn_persona as _spawn_persona
+
+    return _spawn_persona(team=team, member_id=member_id, repo=repo, force=force)
 
 
 def status(*, team: str, repo: Optional[Path] = None) -> StatusResult:
@@ -5100,6 +5481,9 @@ def status(*, team: str, repo: Optional[Path] = None) -> StatusResult:
         if not bool((w or {}).get("retired"))
     }
     for wid, w in active_workers_for_checks.items():
+        workspace = str((w or {}).get("workspace") or "").strip().lower()
+        if workspace == "repo_root":
+            continue
         wt = str((w or {}).get("worktree") or "").strip()
         if wt and not _is_path_within(paths.worktrees_dir, Path(wt)):
             warnings.append(
@@ -5117,7 +5501,7 @@ def status(*, team: str, repo: Optional[Path] = None) -> StatusResult:
         "run_dir": str(run.get("run_dir") or paths.run_dir),
         "tickets_dir": str(run.get("tickets_dir") or ""),
         "sprint": dict(run.get("sprint") or {}),
-        "composition": _composition_summary_from_run(run),
+        "roster": _roster_summary_from_run(run),
         "inbox": {
             "unacked_to_manager": inbox_unacked_mgr,
             "unacked_total": inbox_unacked_all,
@@ -5174,7 +5558,7 @@ def status(*, team: str, repo: Optional[Path] = None) -> StatusResult:
         run_dir=str(payload.get("run_dir") or ""),
         tickets_dir=str(payload.get("tickets_dir") or ""),
         sprint=dict(payload.get("sprint") or {}),
-        composition=dict(payload.get("composition") or {}),
+        roster=dict(payload.get("roster") or {}),
         inbox=dict(payload.get("inbox") or {}),
         merge_queue=dict(payload.get("merge_queue") or {}),
         manager=dict(payload.get("manager") or {}),
@@ -5477,39 +5861,27 @@ def _communication_policy_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
     routes: Dict[str, Tuple[str, ...]] = {
         ROLE_MANAGER: ("all",),
         ROLE_WORKER: ("manager", "escalate"),
-        ROLE_INVESTIGATOR: ("manager", "escalate"),
-        ROLE_INTEGRATOR: ("manager",),
+        ROLE_ARCHITECT: ("all", "escalate"),
+        ROLE_INTEGRATOR: ("manager", "role:architect"),
     }
-    escalation_target_role = ROLE_MANAGER
 
-    raw_composition = run.get("composition")
-    composition = dict(raw_composition) if isinstance(raw_composition, dict) else {}
-    raw_spec = composition.get("spec")
+    roster = _roster_state_from_run(run)
+    raw_spec = roster.get("spec")
     spec = dict(raw_spec) if isinstance(raw_spec, dict) else {}
     raw_communication = spec.get("communication")
     communication = (
         dict(raw_communication) if isinstance(raw_communication, dict) else {}
     )
 
-    esc_raw = communication.get("escalation")
-    esc = dict(esc_raw) if isinstance(esc_raw, dict) else {}
-    target_role = str(esc.get("target_role") or "").strip().lower()
-    if target_role in {ROLE_MANAGER, ROLE_INTEGRATOR}:
-        escalation_target_role = target_role
-
     raw_routes = communication.get("routes")
     if isinstance(raw_routes, list):
-        parsed_routes: Dict[str, Tuple[str, ...]] = {}
         for item in raw_routes:
             if not isinstance(item, dict):
                 continue
             from_role = str(item.get("from_role") or "").strip().lower()
-            if from_role not in {
-                ROLE_MANAGER,
-                ROLE_WORKER,
-                ROLE_INVESTIGATOR,
-                ROLE_INTEGRATOR,
-            }:
+            if not from_role:
+                continue
+            if from_role in {ROLE_MANAGER, ROLE_WORKER, ROLE_ARCHITECT, ROLE_INTEGRATOR}:
                 continue
             to_raw = item.get("to")
             if not isinstance(to_raw, list):
@@ -5519,30 +5891,21 @@ def _communication_policy_from_run(run: Mapping[str, Any]) -> Dict[str, Any]:
                 token = str(entry or "").strip().lower()
                 if token:
                     to.append(token)
-            parsed_routes[from_role] = tuple(sorted(set(to)))
-        if parsed_routes:
-            routes = parsed_routes
+            if to:
+                routes[from_role] = tuple(sorted(set(to)))
 
     return {
         "routes": routes,
-        "escalation_target_role": escalation_target_role,
     }
 
 
 def _sender_for_send() -> Tuple[str, str]:
     role = str(os.getenv(ENV_TEAM_ROLE) or "").strip().lower()
     worker_id = sanitize(str(os.getenv(ENV_TEAM_WORKER_ID) or ""), max_len=48)
-
     if not role:
         return ROLE_MANAGER, "manager"
     if role == ROLE_MANAGER:
         return ROLE_MANAGER, "manager"
-    if role not in {ROLE_WORKER, ROLE_INVESTIGATOR, ROLE_INTEGRATOR}:
-        raise TeamError(
-            f"Unknown sender role: {role}",
-            code="PERMISSION",
-            exit_code=2,
-        )
     if not worker_id:
         raise TeamError(
             "TEAM_WORKER_ID missing for non-manager sender",
@@ -5550,6 +5913,23 @@ def _sender_for_send() -> Tuple[str, str]:
             exit_code=2,
         )
     return role, worker_id
+
+
+def _active_targets_for_role(run: Mapping[str, Any], role: str) -> List[str]:
+    role_norm = str(role or "").strip().lower()
+    if not role_norm:
+        return []
+    targets: List[str] = []
+    if role_norm == ROLE_MANAGER:
+        targets.append("manager")
+    workers = dict(run.get("workers") or {})
+    for wid, worker in workers.items():
+        if bool((worker or {}).get("retired")):
+            continue
+        worker_role = str((worker or {}).get("role") or "").strip().lower()
+        if worker_role == role_norm:
+            targets.append(str(wid))
+    return sorted(set(targets))
 
 
 def _resolve_send_target(
@@ -5562,41 +5942,22 @@ def _resolve_send_target(
     if normalized not in {"escalate", "escalation"}:
         return str(target or "").strip(), False
 
-    if sender_role not in {ROLE_WORKER, ROLE_INVESTIGATOR}:
+    if sender_role == ROLE_MANAGER:
         raise TeamError(
-            "Escalation target is only allowed for worker/investigator senders",
+            "Escalation target is only allowed for non-manager senders",
             code="PERMISSION",
             exit_code=2,
         )
 
-    policy = _communication_policy_from_run(run)
-    target_role = str(policy.get("escalation_target_role") or ROLE_MANAGER)
-    if target_role == ROLE_MANAGER:
-        return "manager", True
-
-    workers = dict(run.get("workers") or {})
-    integrators: List[str] = []
-    for wid, worker in workers.items():
-        if bool((worker or {}).get("retired")):
-            continue
-        if str((worker or {}).get("role") or "").strip().lower() == ROLE_INTEGRATOR:
-            integrators.append(str(wid))
-
-    if not integrators:
+    candidates = _active_targets_for_role(run, ROLE_MANAGER)
+    if not candidates:
         raise TeamError(
-            "Escalation target role is integrator but no active integrator is available",
+            "Escalation target has no active manager recipient",
             code="BAD_STATE",
             exit_code=2,
-            suggestions=[f"loom team spawn-integrator {str(run.get('team') or '')}"],
+            suggestions=[f"loom team start {str(run.get('team') or '')}"],
         )
-    if len(integrators) > 1:
-        raise TeamError(
-            f"Escalation target role is integrator but multiple candidates exist: {integrators}",
-            code="AMBIGUOUS",
-            exit_code=2,
-        )
-
-    return integrators[0], True
+    return candidates[0], True
 
 
 def _route_allows_target(
@@ -5618,22 +5979,36 @@ def _route_allows_target(
             return True
         if value == requested:
             return True
+        if value == "escalate" and requested in {"escalate", "escalation"}:
+            return True
+        if value.startswith("member:"):
+            member = value.split(":", 1)[1].strip()
+            if member and member == worker_id:
+                return True
+            continue
+        if value.startswith("role:"):
+            target_role = value.split(":", 1)[1].strip()
+            if target_role and target_role == role:
+                return True
+            continue
+        if value.startswith("group:"):
+            group_name = value.split(":", 1)[1].strip()
+            if group_name and requested in {value, group_name}:
+                return True
+            continue
         if value in {"manager", "mgr"} and role == ROLE_MANAGER:
             return True
         if value in {"worker", "workers"} and role == ROLE_WORKER:
             return True
         if value in {"integrator", "integrators"} and role == ROLE_INTEGRATOR:
             return True
-        if value in {"investigator", "investigators"} and role == ROLE_INVESTIGATOR:
-            return True
-        if value == "escalate" and requested in {"escalate", "escalation"}:
+        if value in {"architect", "architects", "investigator", "investigators"} and role == ROLE_ARCHITECT:
             return True
         if value == worker_id and worker_id:
             return True
         if value == ticket_id and ticket_id:
             return True
     return False
-
 
 def _delivery_suggestions(
     *,

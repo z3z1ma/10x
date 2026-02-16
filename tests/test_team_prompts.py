@@ -63,7 +63,7 @@ OBJECTIVE:
 Ship fast, stay correct.
 
 Immediate sprint loop:
-1) Fan-out: if backlog is unclear, start a sprint + spawn investigator: `loom team prep-sprint CobraKai --name "..."`.
+1) Fan-out: if backlog is unclear, start a sprint + spawn architect: `loom team prep-sprint CobraKai --name "..."`.
    - You may create a one-off ticket yourself if it is truly small and obvious.
 2) Plan: decide what runs in parallel and what must sequence.
 3) Execute: spawn workers: `loom team spawn CobraKai <TICKET_ID>`.
@@ -191,8 +191,8 @@ class TestRenderWorkerPrompt(unittest.TestCase):
         )
 
 
-class TestRenderInvestigatorPrompt(unittest.TestCase):
-    def test_snapshot_investigator_role(self) -> None:
+class TestRenderArchitectPrompt(unittest.TestCase):
+    def test_snapshot_architect_role(self) -> None:
         run = {
             "objective": "Freeze prompt UX.",
             "team": "CobraKai",
@@ -209,7 +209,7 @@ class TestRenderInvestigatorPrompt(unittest.TestCase):
 
         out = team.render_worker_prompt(
             run=run,
-            role=team.ROLE_INVESTIGATOR,
+            role=team.ROLE_ARCHITECT,
             worker_id="w9",
             ticket=ticket,
             ticket_payload=ticket_payload,
@@ -223,7 +223,7 @@ class TestRenderInvestigatorPrompt(unittest.TestCase):
             out,
             textwrap.dedent(
                 """\
-                You are Team Investigator.
+                You are Team Architect.
 
                 TEAM: CobraKai
                 RUN_ID: b2ede2554eec
@@ -267,7 +267,7 @@ class TestRenderInvestigatorPrompt(unittest.TestCase):
                 - Use `loom memory` to leave notes for yourself or other workers.
                 - Notes can be associated with files, directories, file types, or commands.
 
-                ROLE-SPECIFIC (INVESTIGATOR):
+                ROLE-SPECIFIC (ARCHITECT):
                 - You are the sprint PM. Your job is to turn the objective + current state into a coherent sprint and a crisp backlog.
                 - First, read the run CHARTER to understand objective + historical direction.
                 - Then inspect current backlog + repo state enough to remove ambiguity (tickets + git status/log).
@@ -275,7 +275,7 @@ class TestRenderInvestigatorPrompt(unittest.TestCase):
                 - Create/refine sprint tickets directly (prefer `loom ticket create --parent <THIS_TICKET>`).
                 - Every ticket must include: scope/non-goals, step-by-step plan, acceptance criteria, verification commands (use `uv run ...` for Python), risks/edge cases, deps/ordering.
                 - Before you stop: update THIS assigned ticket with (1) the list of created/updated ticket IDs and (2) suggested ordering + parallelization.
-                - Then notify manager: `loom team send CobraKai manager "INVESTIGATOR_DONE worker=w9 ticket=t-1 created=[...]"`.
+                - Then notify manager: `loom team send CobraKai manager "ARCHITECT_DONE worker=w9 ticket=t-1 created=[...]"`.
                 - Then stop. The manager will retire your pane.
 
                 Ticket payload (from Loom ticket) is available; follow acceptance criteria and dependencies.
@@ -352,7 +352,7 @@ class TestEnsureOpenCodeAgents(unittest.TestCase):
     def test_default_agent_markdown_snapshot_sha256(self) -> None:
         expected = {
             "loom-team-integrator.md": "117230b87c34c0d6899724e29c116e998cc9449826c74aad084a52616bfc72fd",
-            "loom-team-investigator.md": "33025d6ed6f090aada7622477892a1c7d19ec1bc9ad4fde6dcd3bc5e952ce4ec",
+            "loom-team-architect.md": "33025d6ed6f090aada7622477892a1c7d19ec1bc9ad4fde6dcd3bc5e952ce4ec",
             "loom-team-manager.md": "6120aaee3cf12089fc2728623c0a2ccce2035e93c44ccf3520a77e91e24139aa",
             "loom-team-worker.md": "bc575a1f793d32f917d913dbe995a5837984aaeadbb8765e3fa303ee34fedbbd",
         }
@@ -374,7 +374,7 @@ class TestEnsureClaudeAgents(unittest.TestCase):
     def test_default_agent_markdown_snapshot_sha256(self) -> None:
         expected = {
             "loom-team-integrator.md": "61439d8e9cdbaaee174586fe87b180308fd1483e4e6fb0a6f0fc543d7cafa8a9",
-            "loom-team-investigator.md": "eac69402cb208eba1f6d9dd7455dabcac36e014ed987b6be32894292017692bd",
+            "loom-team-architect.md": "eac69402cb208eba1f6d9dd7455dabcac36e014ed987b6be32894292017692bd",
             "loom-team-manager.md": "ed904d4706d26c8a980385ba4ab688aa018220986ce7806efd542208159c8e0e",
             "loom-team-worker.md": "9986678c38498c0bd3031ab06490bc803e2e808d5b4a3ea58ff5bf56b76f25cd",
         }

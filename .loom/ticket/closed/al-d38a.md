@@ -1,6 +1,6 @@
 ---
 "id": "al-d38a"
-"status": "review"
+"status": "closed"
 "deps": []
 "links": []
 "created": "2026-02-15T23:22:28Z"

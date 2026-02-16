@@ -72,7 +72,16 @@ class TestPrepSprint(unittest.TestCase):
                 "objective_updated_at": "",
                 "harness": "opencode",
                 "opencode": {"model": "", "models": {}},
-                "workers": {},
+                "workers": {
+                    "arch-1": {
+                        "worker_id": "arch-1",
+                        "role": "architect",
+                        "ticket_id": "",
+                        "pane_id": "%9",
+                        "window": "architect",
+                        "retired": False,
+                    }
+                },
                 "merge": {"items": [], "config": {}},
                 "sprint": {},
             }
@@ -97,19 +106,7 @@ class TestPrepSprint(unittest.TestCase):
                     "ticket_create",
                     return_value=TicketCreateResult(id="t-1", path="t-1.md"),
                 ) as create,
-                mock.patch.object(
-                    team,
-                    "spawn",
-                    return_value=team.SpawnResult(
-                        team="CobraKai",
-                        session="team-cobrakai",
-                        repo_root=str(repo_root),
-                        run_dir=str(paths.run_dir),
-                        tickets_dir=str(repo_root / ".loom" / "ticket"),
-                        worker={"worker_id": "w9"},
-                        ticket={"id": "t-1"},
-                    ),
-                ),
+
                 mock.patch.object(team, "load_run", return_value=run),
                 mock.patch.object(team, "_inbox_write_and_maybe_nudge"),
             ):
@@ -117,7 +114,7 @@ class TestPrepSprint(unittest.TestCase):
 
             self.assertEqual(res.ticket_id, "t-1")
             self.assertTrue(res.spawned)
-            self.assertEqual(res.worker_id, "w9")
+            self.assertEqual(res.worker_id, "arch-1")
             self.assertEqual(run["sprint"]["name"], "Alpha Sprint")
             self.assertTrue(str(run["sprint"]["tag"]).startswith("sprint:"))
 

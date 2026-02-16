@@ -1,18 +1,22 @@
-version: 1
+version: 3
 metadata:
   name: YAML Sprint Foundations
-members:
-  - id: manager
-    role: manager
-    lifecycle: persistent
-    source: loom
+builtins:
+  manager:
+    harness: opencode
     agent: loom-team-manager
-worktree_mappings:
-  - pattern: "*"
-    member: manager
-communication:
-  channel: inbox_only
-  require_ack: true
-  escalation:
-    target_role: manager
-    timeout_seconds: 900
+  architect:
+    harness: opencode
+    agent: loom-team-architect
+  worker:
+    harness: codex
+    agent: loom-team-worker
+  integrator:
+    harness: claude
+    agent: loom-team-integrator
+members:
+  - id: designer
+    role: designer
+    harness: codex
+    agent: loom-team-worker
+    always_on: "true"

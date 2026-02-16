@@ -133,6 +133,20 @@ class SpawnIntegratorResult:
 
 
 @dataclass(frozen=True)
+class SpawnPersonaResult:
+    team: str
+    member_id: str
+    role: str
+    window: str
+    pane_id: str
+    workspace: str
+    worktree: str
+    worktree_key: str
+    respawned: bool
+    worker: Optional[Dict[str, Any]] = None
+
+
+@dataclass(frozen=True)
 class StatusResult:
     team: str
     run_id: str
@@ -141,7 +155,7 @@ class StatusResult:
     run_dir: str
     tickets_dir: str
     sprint: Dict[str, Any]
-    composition: Dict[str, Any]
+    roster: Dict[str, Any]
     inbox: Dict[str, Any]
     merge_queue: Dict[str, Any]
     manager: Dict[str, Any]

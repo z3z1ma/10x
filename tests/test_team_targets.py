@@ -180,7 +180,7 @@ class TestTeamTargets(unittest.TestCase):
                 },
                 "w3": {
                     "worker_id": "w3",
-                    "role": "investigator",
+                    "role": "architect",
                     "ticket_id": "tk-3",
                     "pane_id": "%5",
                     "window": "gamma",
@@ -216,7 +216,7 @@ class TestTeamTargets(unittest.TestCase):
                     "retired": False,
                 },
             },
-            "composition": {
+            "roster": {
                 "spec": {
                     "communication": {
                         "broadcast_groups": {
@@ -234,7 +234,7 @@ class TestTeamTargets(unittest.TestCase):
         run = {
             "manager": {"pane_id": "%1"},
             "workers": {},
-            "composition": {"spec": {"communication": {"broadcast_groups": {"ops": ["manager"]}}}},
+            "roster": {"spec": {"communication": {"broadcast_groups": {"ops": ["manager"]}}}},
         }
 
         with self.assertRaises(TeamError) as ctx:

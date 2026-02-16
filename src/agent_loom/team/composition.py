@@ -1,35 +1,24 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Mapping, Tuple
 
 import yaml
 
-from agent_loom.team.constants import (
-    DEFAULT_HARNESS,
-    ROLE_INTEGRATOR,
-    ROLE_INVESTIGATOR,
-    ROLE_MANAGER,
-    ROLE_WORKER,
-)
+from agent_loom.team.constants import DEFAULT_HARNESS, ROLE_ARCHITECT, ROLE_INTEGRATOR, ROLE_MANAGER, ROLE_WORKER
 from agent_loom.team.errors import TeamError
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 3
 
-_MEMBER_ROLES = {
-    ROLE_MANAGER,
-    ROLE_WORKER,
-    ROLE_INVESTIGATOR,
-    ROLE_INTEGRATOR,
-}
-_MEMBER_LIFECYCLES = {"always_on", "ephemeral"}
-_MEMBER_SOURCES = {"loom", "byo"}
+_BUILTIN_ROLES = (ROLE_MANAGER, ROLE_ARCHITECT, ROLE_WORKER, ROLE_INTEGRATOR)
+_MEMBER_WORKSPACES = {"repo_root", "worktree"}
 _HARNESS_VALUES = {"opencode", "claude", "omp", "codex"}
-_COMM_CHANNELS = {"inbox_only", "inbox_and_tmux"}
-_ESCALATION_TARGETS = {ROLE_MANAGER, ROLE_INTEGRATOR}
-_COMM_ROUTE_SENDERS = {ROLE_MANAGER, ROLE_WORKER, ROLE_INVESTIGATOR, ROLE_INTEGRATOR}
-_PATTERN_HINT = "Use exact names or a single trailing '*' prefix pattern (examples: 'al-aec3', 'al-*', '*')."
+
+_ROLE_PATTERN = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
+_IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
+_GROUP_PATTERN = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
 
 
 class TeamCompositionError(TeamError):
@@ -44,7 +33,9 @@ class CompositionMetadata:
     labels: Tuple[str, ...]
 
     def as_dict(self) -> Dict[str, Any]:
-        out: Dict[str, Any] = {"name": self.name}
+        out: Dict[str, Any] = {}
+        if self.name:
+            out["name"] = self.name
         if self.purpose:
             out["purpose"] = self.purpose
         if self.labels:
@@ -52,19 +43,21 @@ class CompositionMetadata:
         return out
 
 
+
 @dataclass(frozen=True)
-class BYOAgent:
-    id: str
-    command: str
-    cwd: str
-    env: Tuple[Tuple[str, str], ...]
+class BuiltinMember:
+    role: str
+    harness: str
+    agent: str
+    model: str
 
     def as_dict(self) -> Dict[str, Any]:
-        out: Dict[str, Any] = {"command": self.command}
-        if self.cwd:
-            out["cwd"] = self.cwd
-        if self.env:
-            out["env"] = {k: v for k, v in self.env}
+        out: Dict[str, Any] = {
+            "harness": self.harness,
+            "agent": self.agent,
+        }
+        if self.model:
+            out["model"] = self.model
         return out
 
 
@@ -72,46 +65,34 @@ class BYOAgent:
 class TeamMember:
     id: str
     role: str
-    lifecycle: str
-    source: str
-    agent: str
     harness: str
+    agent: str
+    model: str
+    always_on: bool
+    workspace: str
+    description: str
+    triggers: Tuple[str, ...]
+    primary_workflows: Tuple[str, ...]
 
     def as_dict(self) -> Dict[str, Any]:
-        return {
+        out: Dict[str, Any] = {
             "id": self.id,
             "role": self.role,
-            "lifecycle": self.lifecycle,
-            "source": self.source,
-            "agent": self.agent,
             "harness": self.harness,
+            "agent": self.agent,
+            "always_on": self.always_on,
+            "workspace": self.workspace,
         }
+        if self.model:
+            out["model"] = self.model
+        if self.description:
+            out["description"] = self.description
+        if self.triggers:
+            out["triggers"] = list(self.triggers)
+        if self.primary_workflows:
+            out["primary_workflows"] = list(self.primary_workflows)
+        return out
 
-
-@dataclass(frozen=True)
-class WorktreeMapping:
-    pattern: str
-    member: str
-
-    def as_dict(self) -> Dict[str, str]:
-        return {
-            "pattern": self.pattern,
-            "member": self.member,
-        }
-
-
-@dataclass(frozen=True)
-class EscalationPolicy:
-    target_role: str
-    timeout_seconds: int
-    max_retries: int
-
-    def as_dict(self) -> Dict[str, Any]:
-        return {
-            "target_role": self.target_role,
-            "timeout_seconds": self.timeout_seconds,
-            "max_retries": self.max_retries,
-        }
 
 
 @dataclass(frozen=True)
@@ -128,18 +109,10 @@ class CommunicationRoute:
 
 @dataclass(frozen=True)
 class CommunicationPolicy:
-    channel: str
-    require_ack: bool
-    escalation: EscalationPolicy
     routes: Tuple[CommunicationRoute, ...]
     broadcast_groups: Tuple[Tuple[str, Tuple[str, ...]], ...]
-
     def as_dict(self) -> Dict[str, Any]:
-        data: Dict[str, Any] = {
-            "channel": self.channel,
-            "require_ack": self.require_ack,
-            "escalation": self.escalation.as_dict(),
-        }
+        data: Dict[str, Any] = {}
         if self.routes:
             data["routes"] = [route.as_dict() for route in self.routes]
         if self.broadcast_groups:
@@ -148,28 +121,33 @@ class CommunicationPolicy:
             }
         return data
 
-
 @dataclass(frozen=True)
 class TeamComposition:
     version: int
     metadata: CompositionMetadata
+    mounts: Tuple[str, ...]
+    builtins: Tuple[BuiltinMember, ...]
     members: Tuple[TeamMember, ...]
-    worktree_mappings: Tuple[WorktreeMapping, ...]
-    communication: CommunicationPolicy
-    byo_agents: Tuple[BYOAgent, ...]
-
+    communication: CommunicationPolicy | None
     def as_dict(self) -> Dict[str, Any]:
-        return {
+        data: Dict[str, Any] = {
             "version": self.version,
-            "metadata": self.metadata.as_dict(),
-            "members": [m.as_dict() for m in self.members],
-            "worktree_mappings": [m.as_dict() for m in self.worktree_mappings],
-            "communication": self.communication.as_dict(),
-            "byo_agents": {a.id: a.as_dict() for a in self.byo_agents},
+            "builtins": {builtin.role: builtin.as_dict() for builtin in self.builtins},
         }
+        metadata = self.metadata.as_dict()
+        if metadata:
+            data["metadata"] = metadata
+        if self.mounts:
+            data["mounts"] = list(self.mounts)
+        if self.members:
+            data["members"] = [m.as_dict() for m in self.members]
+        if self.communication is not None:
+            comm = self.communication.as_dict()
+            if comm:
+                data["communication"] = comm
+        return data
 
-
-def parse_team_composition_yaml(text: str, *, source: str = "<string>") -> TeamComposition:
+def parse_team_roster_yaml(text: str, *, source: str = "<string>") -> TeamComposition:
     try:
         raw_doc = yaml.safe_load(text)
     except yaml.YAMLError as e:
@@ -181,11 +159,11 @@ def parse_team_composition_yaml(text: str, *, source: str = "<string>") -> TeamC
         raise TeamCompositionError(f"{source}: expected a YAML mapping/object at top level")
 
     root = _expect_mapping(f"{source}", raw_doc)
-    _require_keys(f"{source}", root, {"version", "metadata", "members", "worktree_mappings", "communication"})
+    _require_keys(f"{source}", root, {"version", "builtins"})
     _reject_unknown_keys(
         f"{source}",
         root,
-        {"version", "metadata", "members", "worktree_mappings", "communication", "byo_agents"},
+        {"version", "metadata", "mounts", "builtins", "members", "communication"},
     )
 
     version = _expect_int(f"{source}.version", root.get("version"), min_value=1)
@@ -196,189 +174,216 @@ def parse_team_composition_yaml(text: str, *, source: str = "<string>") -> TeamC
         )
 
     metadata = _parse_metadata(root.get("metadata"), source=source)
-    byo_agents = _parse_byo_agents(root.get("byo_agents"), source=source)
-    members = _parse_members(root.get("members"), source=source, byo_agent_ids={x.id for x in byo_agents})
-    mappings = _parse_worktree_mappings(
-        root.get("worktree_mappings"), source=source, member_ids={x.id for x in members}
-    )
+    mounts = _parse_mounts(root.get("mounts"), source=source)
+    members = _parse_members(root.get("members"), source=source)
+    builtins = _parse_builtins(root.get("builtins"), source=source)
     communication = _parse_communication(root.get("communication"), source=source)
-
     return TeamComposition(
         version=version,
         metadata=metadata,
+        mounts=mounts,
+        builtins=tuple(sorted(builtins, key=lambda x: _BUILTIN_ROLES.index(x.role))),
         members=tuple(sorted(members, key=lambda x: x.id)),
-        worktree_mappings=tuple(sorted(mappings, key=lambda x: (x.pattern, x.member))),
         communication=communication,
-        byo_agents=tuple(sorted(byo_agents, key=lambda x: x.id)),
     )
 
 
-def load_team_composition_yaml(path: Path | str) -> TeamComposition:
+def load_team_roster_yaml(path: Path | str) -> TeamComposition:
     p = Path(path)
     try:
         text = p.read_text(encoding="utf-8")
     except OSError as e:
-        raise TeamCompositionError(f"Unable to read composition file {p}: {e}") from e
-    return parse_team_composition_yaml(text, source=str(p))
+        raise TeamCompositionError(f"Unable to read roster file {p}: {e}") from e
+    return parse_team_roster_yaml(text, source=str(p))
+
+
+def _parse_mounts(raw: Any, *, source: str) -> Tuple[str, ...]:
+    if raw is None:
+        return ()
+
+    items = _expect_list(f"{source}.mounts", raw)
+
+    def _validate_rel(path: str, raw_value: str) -> str:
+        s = str(raw_value or "").strip()
+        if not s:
+            raise TeamCompositionError(f"{path}: empty mount path")
+        if s.startswith(("/", "\\")) or s.startswith("~"):
+            raise TeamCompositionError(
+                f"{path}: mount path must be repo-root-relative: {s}",
+            )
+        p = Path(s)
+        if p.is_absolute():
+            raise TeamCompositionError(
+                f"{path}: mount path must be repo-root-relative: {s}",
+            )
+        if any(part == ".." for part in p.parts):
+            raise TeamCompositionError(
+                f"{path}: mount path must not contain '..': {s}",
+            )
+        norm = p.as_posix().strip()
+        if norm in {"", "."}:
+            raise TeamCompositionError(
+                f"{path}: mount path must not be empty or '.': {s}",
+            )
+        if norm == ".git" or norm.startswith(".git/"):
+            raise TeamCompositionError(
+                f"{path}: refusing to mount .git: {norm}",
+            )
+        return norm
+
+    specs: list[str] = []
+    for idx, item in enumerate(items):
+        mount_path = f"{source}.mounts[{idx}]"
+        tok = _expect_nonempty_str(mount_path, item)
+        if ":" in tok:
+            src_raw, dst_raw = tok.split(":", 1)
+            src = _validate_rel(f"{mount_path}.src", src_raw)
+            dst = _validate_rel(f"{mount_path}.dst", dst_raw)
+            specs.append(src if src == dst else f"{src}:{dst}")
+        else:
+            src = _validate_rel(f"{mount_path}.src", tok)
+            specs.append(src)
+
+    return tuple(sorted(set(specs)))
+
+
+
 
 
 def _parse_metadata(raw: Any, *, source: str) -> CompositionMetadata:
+    if raw is None:
+        return CompositionMetadata(name="", purpose="", labels=())
     obj = _expect_mapping(f"{source}.metadata", raw)
-    _require_keys(f"{source}.metadata", obj, {"name"})
     _reject_unknown_keys(f"{source}.metadata", obj, {"name", "purpose", "labels"})
 
-    name = _expect_nonempty_str(f"{source}.metadata.name", obj.get("name"))
+    name = _expect_optional_str(f"{source}.metadata.name", obj.get("name"))
     purpose = _expect_optional_str(f"{source}.metadata.purpose", obj.get("purpose"))
     labels = _expect_str_list(f"{source}.metadata.labels", obj.get("labels"), default=())
     return CompositionMetadata(name=name, purpose=purpose, labels=tuple(sorted(set(labels))))
 
 
-def _parse_byo_agents(raw: Any, *, source: str) -> Tuple[BYOAgent, ...]:
+
+def _parse_builtins(raw: Any, *, source: str) -> Tuple[BuiltinMember, ...]:
+    obj = _expect_mapping(f"{source}.builtins", raw)
+    _require_keys(f"{source}.builtins", obj, set(_BUILTIN_ROLES))
+    _reject_unknown_keys(f"{source}.builtins", obj, set(_BUILTIN_ROLES))
+
+    builtins: list[BuiltinMember] = []
+    for role in _BUILTIN_ROLES:
+        path = f"{source}.builtins.{role}"
+        spec = _expect_mapping(path, obj.get(role))
+        _require_keys(path, spec, {"agent"})
+        _reject_unknown_keys(path, spec, {"harness", "agent", "model"})
+
+        harness = _expect_optional_enum(
+            f"{path}.harness",
+            spec.get("harness"),
+            _HARNESS_VALUES,
+            default=DEFAULT_HARNESS,
+        )
+        agent = _expect_nonempty_str(f"{path}.agent", spec.get("agent"))
+        model = _expect_optional_str(f"{path}.model", spec.get("model"))
+        builtins.append(BuiltinMember(role=role, harness=harness, agent=agent, model=model))
+
+    return tuple(builtins)
+
+
+def _parse_members(raw: Any, *, source: str) -> Tuple[TeamMember, ...]:
     if raw is None:
         return ()
-    obj = _expect_mapping(f"{source}.byo_agents", raw)
-    agents: list[BYOAgent] = []
-    for agent_id in sorted(obj.keys(), key=str):
-        aid = _expect_nonempty_str(f"{source}.byo_agents.<key>", agent_id)
-        spec = _expect_mapping(f"{source}.byo_agents.{aid}", obj.get(agent_id))
-        _require_keys(f"{source}.byo_agents.{aid}", spec, {"command"})
-        _reject_unknown_keys(f"{source}.byo_agents.{aid}", spec, {"command", "cwd", "env"})
 
-        command = _expect_nonempty_str(f"{source}.byo_agents.{aid}.command", spec.get("command"))
-        cwd = _expect_optional_str(f"{source}.byo_agents.{aid}.cwd", spec.get("cwd"))
-
-        env_raw = spec.get("env")
-        env_items: Tuple[Tuple[str, str], ...] = ()
-        if env_raw is not None:
-            env_obj = _expect_mapping(f"{source}.byo_agents.{aid}.env", env_raw)
-            env_pairs: list[Tuple[str, str]] = []
-            for k, v in env_obj.items():
-                ek = _expect_nonempty_str(f"{source}.byo_agents.{aid}.env.<key>", k)
-                ev = _expect_nonempty_str(f"{source}.byo_agents.{aid}.env.{ek}", v)
-                env_pairs.append((ek, ev))
-            env_items = tuple(sorted(env_pairs, key=lambda x: x[0]))
-
-        agents.append(BYOAgent(id=aid, command=command, cwd=cwd, env=env_items))
-
-    return tuple(agents)
-
-
-def _parse_members(raw: Any, *, source: str, byo_agent_ids: set[str]) -> Tuple[TeamMember, ...]:
     items = _expect_list(f"{source}.members", raw)
-    if not items:
-        raise TeamCompositionError(f"{source}.members: must include at least one member")
-
     members: list[TeamMember] = []
     seen_ids: set[str] = set()
     for idx, item in enumerate(items):
         path = f"{source}.members[{idx}]"
         obj = _expect_mapping(path, item)
-        _require_keys(path, obj, {"id", "role", "lifecycle", "source", "agent"})
-        _reject_unknown_keys(path, obj, {"id", "role", "lifecycle", "source", "agent", "harness"})
-
-        member_id = _expect_nonempty_str(f"{path}.id", obj.get("id"))
-        if member_id in seen_ids:
-            raise TeamCompositionError(f"{path}.id: duplicate member id {member_id!r}")
-        seen_ids.add(member_id)
-
-        role = _expect_enum(f"{path}.role", obj.get("role"), _MEMBER_ROLES)
-        lifecycle = _expect_enum(f"{path}.lifecycle", obj.get("lifecycle"), _MEMBER_LIFECYCLES)
-        source_kind = _expect_enum(f"{path}.source", obj.get("source"), _MEMBER_SOURCES)
-        agent = _expect_nonempty_str(f"{path}.agent", obj.get("agent"))
-        harness = _expect_optional_enum(
-            f"{path}.harness", obj.get("harness"), _HARNESS_VALUES, default=DEFAULT_HARNESS
+        _require_keys(path, obj, {"id", "role", "agent", "always_on"})
+        _reject_unknown_keys(
+            path,
+            obj,
+            {
+                "id",
+                "role",
+                "harness",
+                "agent",
+                "model",
+                "always_on",
+                "workspace",
+                "description",
+                "triggers",
+                "primary_workflows",
+            },
         )
 
-        if source_kind == "byo" and agent not in byo_agent_ids:
-            available = ", ".join(sorted(byo_agent_ids)) if byo_agent_ids else "<none>"
+        member_id = _expect_identifier(f"{path}.id", obj.get("id"))
+        if member_id in seen_ids:
+            raise TeamCompositionError(f"{path}.id: duplicate member id {member_id!r}")
+        if member_id in _BUILTIN_ROLES:
             raise TeamCompositionError(
-                f"{path}.agent: unknown BYO agent reference {agent!r}",
-                hint=f"Define it under byo_agents. Available refs: {available}",
+                f"{path}.id: member id {member_id!r} conflicts with a reserved built-in role",
+                hint="Use custom member ids that do not overlap manager/architect/worker/integrator.",
             )
+        seen_ids.add(member_id)
+
+        role = _expect_role(f"{path}.role", obj.get("role"))
+        if role in _BUILTIN_ROLES:
+            raise TeamCompositionError(
+                f"{path}.role: built-in role {role!r} must be configured under builtins",
+                hint="Use members[] only for additional always-on personas with custom roles.",
+            )
+
+        harness = _expect_optional_enum(
+            f"{path}.harness",
+            obj.get("harness"),
+            _HARNESS_VALUES,
+            default=DEFAULT_HARNESS,
+        )
+        agent = _expect_nonempty_str(f"{path}.agent", obj.get("agent"))
+        model = _expect_optional_str(f"{path}.model", obj.get("model"))
+        always_on = _expect_bool(f"{path}.always_on", obj.get("always_on"))
+        workspace = _expect_optional_enum(
+            f"{path}.workspace",
+            obj.get("workspace"),
+            _MEMBER_WORKSPACES,
+            default="repo_root",
+        )
+        description = _expect_optional_str(f"{path}.description", obj.get("description"))
+        triggers = _expect_str_list(f"{path}.triggers", obj.get("triggers"), default=())
+        primary_workflows = _expect_str_list(
+            f"{path}.primary_workflows",
+            obj.get("primary_workflows"),
+            default=(),
+        )
 
         members.append(
             TeamMember(
                 id=member_id,
                 role=role,
-                lifecycle=lifecycle,
-                source=source_kind,
-                agent=agent,
                 harness=harness,
+                agent=agent,
+                model=model,
+                always_on=always_on,
+                workspace=workspace,
+                description=description,
+                triggers=tuple(sorted(set(triggers))),
+                primary_workflows=tuple(sorted(set(primary_workflows))),
             )
         )
 
     return tuple(members)
 
 
-def _parse_worktree_mappings(raw: Any, *, source: str, member_ids: set[str]) -> Tuple[WorktreeMapping, ...]:
-    items = _expect_list(f"{source}.worktree_mappings", raw)
-    if not items:
-        raise TeamCompositionError(f"{source}.worktree_mappings: must include at least one mapping")
 
-    mappings: list[WorktreeMapping] = []
-    for idx, item in enumerate(items):
-        path = f"{source}.worktree_mappings[{idx}]"
-        obj = _expect_mapping(path, item)
-        _require_keys(path, obj, {"pattern", "member"})
-        _reject_unknown_keys(path, obj, {"pattern", "member"})
-
-        pattern = _expect_nonempty_str(f"{path}.pattern", obj.get("pattern"))
-        _validate_pattern(pattern, path=f"{path}.pattern")
-
-        member = _expect_nonempty_str(f"{path}.member", obj.get("member"))
-        if member not in member_ids:
-            known = ", ".join(sorted(member_ids))
-            raise TeamCompositionError(
-                f"{path}.member: unknown member {member!r}",
-                hint=f"Use one of: {known}",
-            )
-
-        mappings.append(WorktreeMapping(pattern=pattern, member=member))
-
-    _reject_ambiguous_pattern_overlap(source=source, mappings=mappings)
-    return tuple(mappings)
-
-
-def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy:
+def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy | None:
+    if raw is None:
+        return None
     obj = _expect_mapping(f"{source}.communication", raw)
-    _require_keys(f"{source}.communication", obj, {"channel", "require_ack", "escalation"})
     _reject_unknown_keys(
         f"{source}.communication",
         obj,
-        {"channel", "require_ack", "escalation", "routes", "broadcast_groups"},
+        {"routes", "broadcast_groups"},
     )
-
-    channel = _expect_enum(f"{source}.communication.channel", obj.get("channel"), _COMM_CHANNELS)
-    require_ack = _expect_bool(f"{source}.communication.require_ack", obj.get("require_ack"))
-
-    esc_obj = _expect_mapping(f"{source}.communication.escalation", obj.get("escalation"))
-    _require_keys(
-        f"{source}.communication.escalation",
-        esc_obj,
-        {"target_role", "timeout_seconds"},
-    )
-    _reject_unknown_keys(
-        f"{source}.communication.escalation",
-        esc_obj,
-        {"target_role", "timeout_seconds", "max_retries"},
-    )
-
-    target_role = _expect_enum(
-        f"{source}.communication.escalation.target_role",
-        esc_obj.get("target_role"),
-        _ESCALATION_TARGETS,
-    )
-    timeout_seconds = _expect_int(
-        f"{source}.communication.escalation.timeout_seconds",
-        esc_obj.get("timeout_seconds"),
-        min_value=1,
-    )
-    max_retries = _expect_int(
-        f"{source}.communication.escalation.max_retries",
-        esc_obj.get("max_retries", 1),
-        min_value=0,
-    )
-
     routes: list[CommunicationRoute] = []
     routes_raw = obj.get("routes")
     if routes_raw is not None:
@@ -388,26 +393,35 @@ def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy:
             route_obj = _expect_mapping(path, route_item)
             _require_keys(path, route_obj, {"from_role", "to"})
             _reject_unknown_keys(path, route_obj, {"from_role", "to"})
-
-            from_role = _expect_enum(
-                f"{path}.from_role",
-                route_obj.get("from_role"),
-                _COMM_ROUTE_SENDERS,
-            )
+            from_role = _expect_role(f"{path}.from_role", route_obj.get("from_role"))
+            if from_role in _BUILTIN_ROLES:
+                raise TeamCompositionError(
+                    f"{path}.from_role: built-in route overrides are not allowed for {from_role!r}",
+                    hint="Define routes only for custom roles; built-in manager/worker/architect/integrator routes are fixed.",
+                )
             to_items = _expect_str_list(f"{path}.to", route_obj.get("to"), default=())
             if not to_items:
                 raise TeamCompositionError(f"{path}.to: must include at least one target")
-            routes.append(CommunicationRoute(from_role=from_role, to=tuple(sorted(set(to_items)))))
-
+            normalized_to: list[str] = []
+            for target_idx, raw_target in enumerate(to_items):
+                normalized_to.append(
+                    _normalize_target_token(
+                        f"{path}.to[{target_idx}]",
+                        raw_target,
+                    )
+                )
+            routes.append(
+                CommunicationRoute(from_role=from_role, to=tuple(sorted(set(normalized_to))))
+            )
     group_items: list[Tuple[str, Tuple[str, ...]]] = []
     groups_raw = obj.get("broadcast_groups")
     if groups_raw is not None:
         groups_obj = _expect_mapping(f"{source}.communication.broadcast_groups", groups_raw)
         for raw_group_name in sorted(groups_obj.keys(), key=str):
-            group_name = _expect_nonempty_str(
+            group_name = _expect_group_name(
                 f"{source}.communication.broadcast_groups.<key>",
                 raw_group_name,
-            ).lower()
+            )
             members = _expect_str_list(
                 f"{source}.communication.broadcast_groups.{group_name}",
                 groups_obj.get(raw_group_name),
@@ -417,60 +431,53 @@ def _parse_communication(raw: Any, *, source: str) -> CommunicationPolicy:
                 raise TeamCompositionError(
                     f"{source}.communication.broadcast_groups.{group_name}: must include at least one target"
                 )
-            group_items.append((group_name, tuple(sorted(set(members)))))
-
+            normalized_members: list[str] = []
+            for target_idx, raw_target in enumerate(members):
+                normalized_members.append(
+                    _normalize_target_token(
+                        f"{source}.communication.broadcast_groups.{group_name}[{target_idx}]",
+                        raw_target,
+                    )
+                )
+            group_items.append((group_name, tuple(sorted(set(normalized_members)))))
+    if not routes and not group_items:
+        return None
     return CommunicationPolicy(
-        channel=channel,
-        require_ack=require_ack,
-        escalation=EscalationPolicy(
-            target_role=target_role,
-            timeout_seconds=timeout_seconds,
-            max_retries=max_retries,
-        ),
         routes=tuple(sorted(routes, key=lambda x: x.from_role)),
         broadcast_groups=tuple(sorted(group_items, key=lambda x: x[0])),
     )
 
-
-def _validate_pattern(pattern: str, *, path: str) -> None:
-    wildcard_count = pattern.count("*")
-    if wildcard_count == 0:
-        return
-    if wildcard_count > 1 or not pattern.endswith("*"):
-        raise TeamCompositionError(
-            f"{path}: invalid pattern {pattern!r}",
-            hint=_PATTERN_HINT,
-        )
-
-
-def _reject_ambiguous_pattern_overlap(*, source: str, mappings: list[WorktreeMapping]) -> None:
-    normalized: list[Tuple[WorktreeMapping, str, bool]] = []
-    for item in mappings:
-        wildcard = item.pattern.endswith("*")
-        prefix = item.pattern[:-1] if wildcard else item.pattern
-        normalized.append((item, prefix, wildcard))
-
-    for idx, (left_item, left_prefix, left_wildcard) in enumerate(normalized):
-        for right_item, right_prefix, right_wildcard in normalized[idx + 1 :]:
-            if _patterns_overlap(left_prefix, left_wildcard, right_prefix, right_wildcard):
-                raise TeamCompositionError(
-                    (
-                        f"{source}.worktree_mappings: ambiguous pattern overlap between "
-                        f"{left_item.pattern!r} (member={left_item.member}) and "
-                        f"{right_item.pattern!r} (member={right_item.member})"
-                    ),
-                    hint="Patterns must be disjoint. Prefer exact matches or non-overlapping prefixes.",
-                )
-
-
-def _patterns_overlap(left_prefix: str, left_wildcard: bool, right_prefix: str, right_wildcard: bool) -> bool:
-    if left_wildcard and right_wildcard:
-        return left_prefix.startswith(right_prefix) or right_prefix.startswith(left_prefix)
-    if left_wildcard and not right_wildcard:
-        return right_prefix.startswith(left_prefix)
-    if not left_wildcard and right_wildcard:
-        return left_prefix.startswith(right_prefix)
-    return left_prefix == right_prefix
+def _normalize_target_token(path: str, raw: str) -> str:
+    token = _expect_nonempty_str(path, raw).lower()
+    if token in {
+        "all",
+        "escalate",
+        "manager",
+        "mgr",
+        "worker",
+        "workers",
+        "integrator",
+        "integrators",
+        "architect",
+        "architects",
+    }:
+        return token
+    if token.startswith("member:"):
+        member_id = token.split(":", 1)[1].strip()
+        if not _IDENTIFIER_PATTERN.match(member_id):
+            raise TeamCompositionError(f"{path}: invalid member token {token!r}")
+        return f"member:{member_id}"
+    if token.startswith("role:"):
+        role = token.split(":", 1)[1].strip()
+        if not _ROLE_PATTERN.match(role):
+            raise TeamCompositionError(f"{path}: invalid role token {token!r}")
+        return f"role:{role}"
+    if token.startswith("group:"):
+        group = token.split(":", 1)[1].strip()
+        if not _GROUP_PATTERN.match(group):
+            raise TeamCompositionError(f"{path}: invalid group token {token!r}")
+        return f"group:{group}"
+    return token
 
 
 def _expect_mapping(path: str, raw: Any) -> Mapping[str, Any]:
@@ -525,6 +532,42 @@ def _expect_optional_enum(path: str, raw: Any, allowed: set[str], *, default: st
     return _expect_enum(path, raw, allowed)
 
 
+def _expect_identifier(path: str, raw: Any) -> str:
+    value = _expect_nonempty_str(path, raw)
+    if not _IDENTIFIER_PATTERN.match(value):
+        raise TeamCompositionError(
+            f"{path}: invalid identifier {value!r}",
+            hint="Use letters, numbers, '.', '_' or '-'; must start with a letter or number.",
+        )
+    return value
+
+
+def _expect_optional_identifier(path: str, raw: Any) -> str:
+    if raw is None:
+        return ""
+    return _expect_identifier(path, raw)
+
+
+def _expect_role(path: str, raw: Any) -> str:
+    value = _expect_nonempty_str(path, raw).lower()
+    if not _ROLE_PATTERN.match(value):
+        raise TeamCompositionError(
+            f"{path}: invalid role {value!r}",
+            hint="Use lowercase role names matching ^[a-z][a-z0-9_-]{0,63}$",
+        )
+    return value
+
+
+def _expect_group_name(path: str, raw: Any) -> str:
+    value = _expect_nonempty_str(path, raw).lower()
+    if not _GROUP_PATTERN.match(value):
+        raise TeamCompositionError(
+            f"{path}: invalid group name {value!r}",
+            hint="Use lowercase group names matching ^[a-z][a-z0-9_-]{0,63}$",
+        )
+    return value
+
+
 def _expect_str_list(path: str, raw: Any, *, default: Tuple[str, ...]) -> list[str]:
     if raw is None:
         return list(default)
@@ -552,15 +595,14 @@ def _reject_unknown_keys(path: str, obj: Mapping[str, Any], allowed: set[str]) -
 
 
 __all__ = [
-    "BYOAgent",
+    "BuiltinMember",
     "CommunicationPolicy",
     "CompositionMetadata",
-    "EscalationPolicy",
     "SCHEMA_VERSION",
     "TeamComposition",
     "TeamCompositionError",
     "TeamMember",
-    "WorktreeMapping",
-    "load_team_composition_yaml",
-    "parse_team_composition_yaml",
+    "CommunicationRoute",
+    "load_team_roster_yaml",
+    "parse_team_roster_yaml",
 ]

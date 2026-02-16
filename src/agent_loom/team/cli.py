@@ -52,6 +52,7 @@ from agent_loom.team.commands.workers import (
     cmd_resume_worker,
     cmd_retire,
     cmd_spawn,
+    cmd_spawn_persona,
     cmd_spawn_integrator,
 )
 from agent_loom.team.constants import (
@@ -62,7 +63,6 @@ from agent_loom.team.constants import (
     DEFAULT_IDLE_SCREEN_S,
     DEFAULT_MANAGER_WINDOW,
     DEFAULT_OBJECTIVE_NUDGE_S,
-    ROLE_INVESTIGATOR,
     ROLE_WORKER,
 )
 from agent_loom.team.errors import TeamError
@@ -138,10 +138,6 @@ def _normalize_argv(argv: list[str]) -> list[str]:
         # Normalize common choice aliases.
         if tok == "--role" and i + 1 < len(argv):
             val = str(argv[i + 1]).strip().lower()
-            if val in {"inv", "invest", "investigation", "investigator"}:
-                out.extend([tok, ROLE_INVESTIGATOR])
-                i += 2
-                continue
             if val in {"work", "worker"}:
                 out.extend([tok, ROLE_WORKER])
                 i += 2
@@ -437,9 +433,10 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("team", help="Team name")
     sp.add_argument("--objective", default="", help="High-level objective text")
     sp.add_argument(
-        "--composition",
+        "--roster",
+        dest="roster",
         default="",
-        help="Path to YAML team composition file",
+        help="Path to YAML team roster file",
     )
     sp.add_argument(
         "--session",
@@ -460,7 +457,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--model", default="", help="Model override")
     sp.add_argument("--manager-model", default="", help="Manager model override")
     sp.add_argument(
-        "--investigator-model", default="", help="Investigator model override"
+        "--architect-model", default="", help="Architect model override"
     )
     sp.add_argument("--worker-model", default="", help="Worker model override")
     sp.add_argument("--integrator-model", default="", help="Integrator model override")
@@ -487,7 +484,7 @@ def build_parser() -> argparse.ArgumentParser:
         dest="max_headcount",
         type=int,
         default=None,
-        help="Maximum active worker+investigator count (0 = unlimited). Persisted in run state.",
+        help="Maximum active worker count (0 = unlimited). Persisted in run state.",
     )
     sp.add_argument(
         "--target-branch",
@@ -865,6 +862,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sm.set_defaults(func=cmd_spawn_integrator)
 
+    spm = sub.add_parser(
+        "spawn-persona", help="Spawn an additional roster persona by member id"
+    )
+    spm.add_argument("team", help="Team name")
+    spm.add_argument("member_id", help="Roster member id")
+    spm.set_defaults(func=cmd_spawn_persona)
+
+
     doc = sub.add_parser(
         "doctor",
         help="Diagnose tmux/run-state drift and suggest remediation commands",
@@ -910,13 +915,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     # Worker lifecycle
     spw = sub.add_parser(
-        "spawn", help="Spawn a worker or investigator for a loom ticket"
+        "spawn", help="Spawn a worker for a loom ticket"
     )
     spw.add_argument("team", help="Team name")
     spw.add_argument("ticket_id", help="loom ticket id")
     spw.add_argument(
         "--role",
-        choices=[ROLE_WORKER, ROLE_INVESTIGATOR],
+        choices=[ROLE_WORKER],
         default=ROLE_WORKER,
     )
     spw.add_argument("--worker-id", default="", help="Explicit worker id")
@@ -962,7 +967,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     ps = sub.add_parser(
         "prep-sprint",
-        help="Start a sprint (set sprint + create+spawn investigator prep ticket)",
+        help="Start a sprint (set sprint + create prep ticket + notify architect)",
     )
     ps.add_argument("team", help="Team name")
     ps.add_argument("--name", required=True, help="Sprint name (2-5 words)")
@@ -972,7 +977,7 @@ def build_parser() -> argparse.ArgumentParser:
     ps.add_argument(
         "--no-spawn",
         action="store_true",
-        help="Do not spawn investigator (only set sprint and create ticket)",
+        help="Do not notify architect (only set sprint and create ticket)",
     )
     ps.add_argument(
         "--type",

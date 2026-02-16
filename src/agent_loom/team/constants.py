@@ -12,7 +12,7 @@ DEFAULT_WORKTREES_DIRNAME = "worktrees"
 
 DEFAULT_MANAGER_AGENT = "loom-team-manager"
 DEFAULT_WORKER_AGENT = "loom-team-worker"
-DEFAULT_INVESTIGATOR_AGENT = "loom-team-investigator"
+DEFAULT_ARCHITECT_AGENT = "loom-team-architect"
 DEFAULT_INTEGRATOR_AGENT = "loom-team-integrator"
 
 DEFAULT_HARNESS = "opencode"  # or "claude" or "omp" or "codex"
@@ -39,7 +39,7 @@ TMUX_OPT_TICKET_ID = "@team_ticket_id"
 
 ROLE_MANAGER = "manager"
 ROLE_WORKER = "worker"
-ROLE_INVESTIGATOR = "investigator"
+ROLE_ARCHITECT = "architect"
 ROLE_INTEGRATOR = "integrator"
 
 INBOX_KIND_CONTROL = "control"
@@ -68,7 +68,7 @@ __all__ = [
     "DEFAULT_DONE_CHECK_S",
     "DEFAULT_HARNESS",
     "DEFAULT_IDLE_SCREEN_S",
-    "DEFAULT_INVESTIGATOR_AGENT",
+    "DEFAULT_ARCHITECT_AGENT",
     "DEFAULT_MANAGER_AGENT",
     "DEFAULT_MANAGER_WINDOW",
     "DEFAULT_INTEGRATOR_AGENT",
@@ -86,7 +86,7 @@ __all__ = [
     "ENV_TEAM_TICKET_ID",
     "ENV_TEAM_WORKER_ID",
     "ENV_TICKET_DIR",
-    "ROLE_INVESTIGATOR",
+    "ROLE_ARCHITECT",
     "ROLE_INTEGRATOR",
     "ROLE_MANAGER",
     "ROLE_WORKER",

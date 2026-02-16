@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest import mock
 
 from agent_loom.team import core as team
+from agent_loom.team.composition_runtime import list_always_on_member_profiles
 
 
 @dataclasses.dataclass
@@ -23,7 +24,13 @@ class _TicketPayload:
 
 
 class TestTeamSpawnYamlMembers(unittest.TestCase):
-    def _write_run(self, repo_root: Path, *, composition_spec: dict, harness: str = "opencode") -> team.RunPaths:
+    def _write_run(
+        self,
+        repo_root: Path,
+        *,
+        roster_spec: dict,
+        harness: str = "opencode",
+    ) -> team.RunPaths:
         team_name = "MiyagiDo"
         paths = team.RunPaths(repo_root=repo_root, team=team.sanitize(team_name) or "miyagido")
         paths.run_dir.mkdir(parents=True, exist_ok=True)
@@ -35,22 +42,22 @@ class TestTeamSpawnYamlMembers(unittest.TestCase):
             "harness": harness,
             "workers": {},
             "mounts": [],
-            "composition": {
-                "source": str(repo_root / "composition.yaml"),
+            "roster": {
+                "source": str(repo_root / "roster.yaml"),
                 "loaded_at": "2026-01-01T00:00:00Z",
-                "spec": composition_spec,
+                "spec": roster_spec,
             },
             "opencode": {
                 "model": "",
                 "models": {
                     "manager": "",
                     "worker": "",
-                    "investigator": "",
+                    "architect": "",
                     "integrator": "",
                 },
                 "manager_agent": team.DEFAULT_MANAGER_AGENT,
                 "worker_agent": team.DEFAULT_WORKER_AGENT,
-                "investigator_agent": team.DEFAULT_INVESTIGATOR_AGENT,
+                "architect_agent": team.DEFAULT_ARCHITECT_AGENT,
                 "integrator_agent": team.DEFAULT_INTEGRATOR_AGENT,
                 "bin": "",
             },
@@ -59,12 +66,12 @@ class TestTeamSpawnYamlMembers(unittest.TestCase):
                 "models": {
                     "manager": "",
                     "worker": "",
-                    "investigator": "",
+                    "architect": "",
                     "integrator": "",
                 },
                 "manager_agent": team.DEFAULT_MANAGER_AGENT,
                 "worker_agent": team.DEFAULT_WORKER_AGENT,
-                "investigator_agent": team.DEFAULT_INVESTIGATOR_AGENT,
+                "architect_agent": team.DEFAULT_ARCHITECT_AGENT,
                 "integrator_agent": team.DEFAULT_INTEGRATOR_AGENT,
                 "bin": "",
             },
@@ -72,32 +79,20 @@ class TestTeamSpawnYamlMembers(unittest.TestCase):
         paths.run_file.write_text(json.dumps(run), encoding="utf-8")
         return paths
 
-    def test_spawn_uses_mapped_yaml_member_harness_and_agent(self) -> None:
+    def test_spawn_uses_builtin_worker_profile_harness_and_agent(self) -> None:
         spec = {
-            "version": 1,
-            "metadata": {"name": "x"},
-            "members": [
-                {
-                    "id": "worker-template",
-                    "role": "worker",
-                    "lifecycle": "ephemeral",
-                    "source": "byo",
-                    "agent": "custom-worker",
-                    "harness": "codex",
-                }
-            ],
-            "worktree_mappings": [{"pattern": "al-1234", "member": "worker-template"}],
-            "communication": {
-                "channel": "inbox_only",
-                "require_ack": True,
-                "escalation": {"target_role": "manager", "timeout_seconds": 60, "max_retries": 1},
+            "version": 3,
+            "builtins": {
+                "manager": {"harness": "opencode", "agent": "loom-team-manager"},
+                "architect": {"harness": "opencode", "agent": "loom-team-architect"},
+                "worker": {"harness": "codex", "agent": "custom-worker"},
+                "integrator": {"harness": "claude", "agent": "loom-team-integrator"},
             },
-            "byo_agents": {"custom-worker": {"command": "codex --mode worker"}},
         }
 
         with tempfile.TemporaryDirectory() as td:
             repo_root = Path(td)
-            self._write_run(repo_root, composition_spec=spec)
+            self._write_run(repo_root, roster_spec=spec)
 
             argv_calls: list[dict[str, str]] = []
 
@@ -118,7 +113,13 @@ class TestTeamSpawnYamlMembers(unittest.TestCase):
                 mock.patch.object(team, "_require_role"),
                 mock.patch.object(team, "_require_bin"),
                 mock.patch.object(team, "tmux_has_session", return_value=True),
-                mock.patch.object(team, "ticket_show", return_value=_TicketPayload(ticket=_Ticket(id="al-1234", title="x", status="open"))),
+                mock.patch.object(
+                    team,
+                    "ticket_show",
+                    return_value=_TicketPayload(
+                        ticket=_Ticket(id="al-1234", title="x", status="open")
+                    ),
+                ),
                 mock.patch.object(team, "_ensure_worktree", side_effect=fake_ensure_worktree),
                 mock.patch.object(team, "tmux_unique_window_name", return_value="w1-al-1234"),
                 mock.patch.object(team, "tmux_cmd"),
@@ -129,114 +130,175 @@ class TestTeamSpawnYamlMembers(unittest.TestCase):
             ):
                 res = team.spawn(team="MiyagiDo", ticket_id="al-1234", repo=repo_root)
 
-            self.assertEqual(str((res.worker or {}).get("composition_member_id") or ""), "worker-template")
-            self.assertEqual(str((res.worker or {}).get("composition_source") or ""), "byo")
+            self.assertEqual(str((res.worker or {}).get("roster_member_id") or ""), "worker")
+            self.assertEqual(str((res.worker or {}).get("roster_source") or ""), "loom")
             self.assertTrue(argv_calls)
             self.assertEqual(argv_calls[0].get("harness"), "codex")
             self.assertEqual(argv_calls[0].get("agent"), "custom-worker")
 
-    def test_spawn_rejects_always_on_worker_member(self) -> None:
+    def test_spawn_ignores_custom_members_for_worker_resolution(self) -> None:
         spec = {
-            "version": 1,
-            "metadata": {"name": "x"},
+            "version": 3,
+            "builtins": {
+                "manager": {"harness": "opencode", "agent": "loom-team-manager"},
+                "architect": {"harness": "opencode", "agent": "loom-team-architect"},
+                "worker": {"harness": "opencode", "agent": "loom-team-worker"},
+                "integrator": {"harness": "claude", "agent": "loom-team-integrator"},
+            },
             "members": [
                 {
-                    "id": "worker-always",
-                    "role": "worker",
-                    "lifecycle": "always_on",
-                    "source": "loom",
+                    "id": "designer",
+                    "role": "designer",
+                    "harness": "codex",
                     "agent": "loom-team-worker",
-                    "harness": "opencode",
+                    "always_on": True,
+                    "workspace": "worktree",
                 }
             ],
-            "worktree_mappings": [{"pattern": "al-2000", "member": "worker-always"}],
-            "communication": {
-                "channel": "inbox_only",
-                "require_ack": True,
-                "escalation": {"target_role": "manager", "timeout_seconds": 60, "max_retries": 1},
-            },
-            "byo_agents": {},
+            "communication": {"routes": []},
         }
 
         with tempfile.TemporaryDirectory() as td:
             repo_root = Path(td)
-            self._write_run(repo_root, composition_spec=spec)
+            self._write_run(repo_root, roster_spec=spec)
+
+            argv_calls: list[dict[str, str]] = []
 
             def fake_ensure_worktree(**kwargs):
                 wt_path = Path(str(kwargs["path"]))
                 wt_path.mkdir(parents=True, exist_ok=True)
-                return {"path": str(wt_path), "branch": "team/al-2000", "base": "main"}
-
-            with (
-                mock.patch("agent_loom.team.run_state.canonical_repo_root", return_value=repo_root),
-                mock.patch.object(team, "_require_role"),
-                mock.patch.object(team, "_require_bin"),
-                mock.patch.object(team, "tmux_has_session", return_value=True),
-                mock.patch.object(team, "ticket_show", return_value=_TicketPayload(ticket=_Ticket(id="al-2000", title="x", status="open"))),
-                mock.patch.object(team, "_ensure_worktree", side_effect=fake_ensure_worktree),
-                mock.patch.object(team, "tmux_unique_window_name", return_value="w1-al-2000"),
-            ):
-                with self.assertRaises(team.TeamError) as ctx:
-                    team.spawn(team="MiyagiDo", ticket_id="al-2000", repo=repo_root)
-
-            self.assertIn("must use ephemeral", str(ctx.exception))
-
-    def test_spawn_fails_on_ambiguous_yaml_member_mapping(self) -> None:
-        spec = {
-            "version": 1,
-            "metadata": {"name": "x"},
-            "members": [
-                {
-                    "id": "worker-a",
-                    "role": "worker",
-                    "lifecycle": "ephemeral",
-                    "source": "loom",
-                    "agent": "loom-team-worker",
-                    "harness": "opencode",
-                },
-                {
-                    "id": "worker-b",
-                    "role": "worker",
-                    "lifecycle": "ephemeral",
-                    "source": "loom",
-                    "agent": "loom-team-worker",
-                    "harness": "opencode",
-                },
-            ],
-            "worktree_mappings": [
-                {"pattern": "al-9999", "member": "worker-a"},
-                {"pattern": "al-*", "member": "worker-b"},
-            ],
-            "communication": {
-                "channel": "inbox_only",
-                "require_ack": True,
-                "escalation": {"target_role": "manager", "timeout_seconds": 60, "max_retries": 1},
-            },
-            "byo_agents": {},
-        }
-
-        with tempfile.TemporaryDirectory() as td:
-            repo_root = Path(td)
-            self._write_run(repo_root, composition_spec=spec)
-
-            def fake_ensure_worktree(**kwargs):
-                wt_path = Path(str(kwargs["path"]))
-                wt_path.mkdir(parents=True, exist_ok=True)
+                agents = wt_path / ".opencode" / "agents"
+                agents.mkdir(parents=True, exist_ok=True)
+                (agents / "loom-team-worker.md").write_text("---\n---\n", encoding="utf-8")
                 return {"path": str(wt_path), "branch": "team/al-9999", "base": "main"}
 
+            def fake_team_tui_argv(**kwargs):
+                argv_calls.append({k: str(v) for k, v in kwargs.items()})
+                return ["loom", "team", "tui"]
+
             with (
                 mock.patch("agent_loom.team.run_state.canonical_repo_root", return_value=repo_root),
                 mock.patch.object(team, "_require_role"),
                 mock.patch.object(team, "_require_bin"),
                 mock.patch.object(team, "tmux_has_session", return_value=True),
-                mock.patch.object(team, "ticket_show", return_value=_TicketPayload(ticket=_Ticket(id="al-9999", title="x", status="open"))),
+                mock.patch.object(
+                    team,
+                    "ticket_show",
+                    return_value=_TicketPayload(
+                        ticket=_Ticket(id="al-9999", title="x", status="open")
+                    ),
+                ),
                 mock.patch.object(team, "_ensure_worktree", side_effect=fake_ensure_worktree),
                 mock.patch.object(team, "tmux_unique_window_name", return_value="w1-al-9999"),
+                mock.patch.object(team, "tmux_cmd"),
+                mock.patch.object(team, "tmux_format", return_value="%11"),
+                mock.patch.object(team, "tmux_mark_pane"),
+                mock.patch.object(team, "write_event"),
+                mock.patch.object(team, "_team_tui_argv", side_effect=fake_team_tui_argv),
             ):
-                with self.assertRaises(team.TeamError) as ctx:
-                    team.spawn(team="MiyagiDo", ticket_id="al-9999", repo=repo_root)
+                res = team.spawn(team="MiyagiDo", ticket_id="al-9999", repo=repo_root)
 
-            self.assertIn("ambiguous", str(ctx.exception).lower())
+            self.assertEqual(str((res.worker or {}).get("roster_member_id") or ""), "worker")
+            self.assertEqual(argv_calls[0].get("harness"), "opencode")
+            self.assertEqual(argv_calls[0].get("agent"), "loom-team-worker")
+
+    def test_on_demand_member_not_in_always_on_profiles(self) -> None:
+        run = {
+            "roster": {
+                "spec": {
+                    "version": 3,
+                    "builtins": {
+                        "manager": {"harness": "opencode", "agent": "loom-team-manager"},
+                        "architect": {"harness": "opencode", "agent": "loom-team-architect"},
+                        "worker": {"harness": "opencode", "agent": "loom-team-worker"},
+                        "integrator": {"harness": "claude", "agent": "loom-team-integrator"},
+                    },
+                    "members": [
+                        {
+                            "id": "designer",
+                            "role": "designer",
+                            "harness": "codex",
+                            "agent": "loom-team-worker",
+                            "always_on": True,
+                            "workspace": "worktree",
+                        },
+                        {
+                            "id": "ux",
+                            "role": "reviewer",
+                            "harness": "codex",
+                            "agent": "loom-team-worker",
+                            "always_on": False,
+                        },
+                    ],
+                }
+            }
+        }
+
+        profiles = list(list_always_on_member_profiles(run))
+        member_ids = {str(p.member_id) for p in profiles}
+        self.assertNotIn("ux", member_ids)
+        self.assertIn("designer", member_ids)
+
+    def test_spawn_persona_registers_member(self) -> None:
+        spec = {
+            "version": 3,
+            "builtins": {
+                "manager": {"harness": "opencode", "agent": "loom-team-manager"},
+                "architect": {"harness": "opencode", "agent": "loom-team-architect"},
+                "worker": {"harness": "opencode", "agent": "loom-team-worker"},
+                "integrator": {"harness": "claude", "agent": "loom-team-integrator"},
+            },
+            "members": [
+                {
+                    "id": "ux",
+                    "role": "reviewer",
+                    "harness": "codex",
+                    "agent": "loom-team-worker",
+                    "always_on": False,
+                    "workspace": "repo_root",
+                }
+            ],
+            "communication": {"routes": []},
+        }
+
+        with tempfile.TemporaryDirectory() as td:
+            repo_root = Path(td)
+            paths = self._write_run(repo_root, roster_spec=spec)
+            agents = repo_root / ".opencode" / "agents"
+            agents.mkdir(parents=True, exist_ok=True)
+            (agents / "loom-team-worker.md").write_text("---\n---\n", encoding="utf-8")
+
+            argv_calls: list[dict[str, str]] = []
+
+            def fake_team_tui_argv(**kwargs):
+                argv_calls.append({k: str(v) for k, v in kwargs.items()})
+                return ["loom", "team", "tui"]
+
+            with (
+                mock.patch("agent_loom.team.run_state.canonical_repo_root", return_value=repo_root),
+                mock.patch("agent_loom.team.personas._require_role"),
+                mock.patch("agent_loom.team.personas._require_bin"),
+                mock.patch("agent_loom.team.personas.tmux_has_session", return_value=True),
+                mock.patch("agent_loom.team.personas.tmux_window_exists", return_value=False),
+                mock.patch(
+                    "agent_loom.team.personas.tmux_unique_window_name",
+                    return_value="w1-ux",
+                ),
+                mock.patch("agent_loom.team.personas.tmux_cmd"),
+                mock.patch("agent_loom.team.personas.tmux_format", return_value="%99"),
+                mock.patch("agent_loom.team.personas.tmux_mark_pane"),
+                mock.patch.object(team, "_team_tui_argv", side_effect=fake_team_tui_argv),
+            ):
+                res = team.spawn_persona(team="MiyagiDo", member_id="ux", repo=repo_root)
+
+            self.assertEqual(res.member_id, "ux")
+            self.assertEqual(res.role, "reviewer")
+            self.assertTrue(argv_calls)
+
+            run_doc = json.loads(paths.run_file.read_text(encoding="utf-8"))
+            workers = dict(run_doc.get("workers") or {})
+            self.assertIn("ux", workers)
+            self.assertEqual(str((workers.get("ux") or {}).get("role") or ""), "reviewer")
 
 
 if __name__ == "__main__":

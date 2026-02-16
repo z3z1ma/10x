@@ -24,7 +24,7 @@ class TestTeamInitAgents(unittest.TestCase):
                 repo_root
                 / ".opencode"
                 / "agents"
-                / f"{team.DEFAULT_INVESTIGATOR_AGENT}.md",
+                / f"{team.DEFAULT_ARCHITECT_AGENT}.md",
                 repo_root
                 / ".opencode"
                 / "agents"
@@ -34,7 +34,7 @@ class TestTeamInitAgents(unittest.TestCase):
                 repo_root
                 / ".claude"
                 / "agents"
-                / f"{team.DEFAULT_INVESTIGATOR_AGENT}.md",
+                / f"{team.DEFAULT_ARCHITECT_AGENT}.md",
                 repo_root
                 / ".claude"
                 / "agents"
