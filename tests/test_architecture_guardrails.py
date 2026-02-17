@@ -160,8 +160,16 @@ class TestHotspotSizeControl:
             "description": "team/core.py (decomposition in progress)",
         },
         SRC_ROOT / "memory" / "cli.py": {
-            "max_lines": 1850,  # Current ~1805
-            "description": "memory/cli.py (parser hotspot)",
+            "max_lines": 140,  # Public shim should remain thin.
+            "description": "memory/cli.py (public shim)",
+        },
+        SRC_ROOT / "memory" / "cli_runtime.py": {
+            "max_lines": 900,  # Current ~823
+            "description": "memory/cli_runtime.py (dispatch/runtime hotspot)",
+        },
+        SRC_ROOT / "memory" / "cli_parser.py": {
+            "max_lines": 1100,  # Current ~994
+            "description": "memory/cli_parser.py (parser hotspot)",
         },
         SRC_ROOT / "workspace" / "cli_harness.py": {
             "max_lines": 120,  # Public shim should remain thin.
@@ -230,8 +238,16 @@ class TestHotspotComplexityControl:
             "description": "team/core.py sidecar lifecycle complexity",
         },
         SRC_ROOT / "memory" / "cli.py": {
+            "max_function_branch_nodes": 2,  # Public shim should not branch.
+            "description": "memory/cli.py shim complexity",
+        },
+        SRC_ROOT / "memory" / "cli_runtime.py": {
             "max_function_branch_nodes": 45,  # Current max: payload_for ~=35
-            "description": "memory/cli.py command dispatch complexity",
+            "description": "memory/cli_runtime.py command dispatch complexity",
+        },
+        SRC_ROOT / "memory" / "cli_parser.py": {
+            "max_function_branch_nodes": 35,  # Current max: _normalize_argv ~=30
+            "description": "memory/cli_parser.py parser complexity",
         },
         SRC_ROOT / "workspace" / "cli_harness.py": {
             "max_function_branch_nodes": 2,  # Public shim should not branch.
