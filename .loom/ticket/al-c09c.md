@@ -1,6 +1,6 @@
 ---
 "id": "al-c09c"
-"status": "in_progress"
+"status": "review"
 "deps":
 - "al-d94d"
 "links": []
@@ -65,3 +65,11 @@ Finish and harden the operator-facing drift diff workflow so pack drift inspecti
 **2026-02-17T06:36:25Z**
 
 Started implementation. Audited pack CLI: status/install/update/uninstall each currently duplicate diff rendering; status guidance text differs from install/update/uninstall guidance. Next: consolidate diff payload/render helpers and expand tests for status+install/update/uninstall text/json parity including diff-unavailable path.
+
+**2026-02-17T06:38:10Z**
+
+Implemented CLI drift/diff contract consolidation in src/agent_loom/pack/cli.py: unified diff item collection + rendering for status/install/update/uninstall, standardized drift guidance messaging when --diff omitted, and aligned JSON diff payloads to include deterministic entries for unavailable diffs (ok=false,diff=''). Expanded tests/test_pack_cli_ux.py to cover no-drift status --diff, status/install JSON diff-unavailable branches, and update/uninstall guidance parity. Verified with uv run pytest tests/test_pack_cli_ux.py and uv run pytest tests/test_pack_lifecycle.py -k pack.
+
+**2026-02-17T06:39:08Z**
+
+Verification sweep: uv run ruff check . and uv run basedpyright both pass. Targeted pack tests pass: uv run pytest tests/test_pack_cli_ux.py and uv run pytest tests/test_pack_lifecycle.py -k pack. Full uv run pytest currently fails on unrelated pre-existing compound/init suites (20 fails, e.g. loom-compound-core pack manifest validation for .opencode/.gitignore and init CLI rc mismatches); no failures in modified pack CLI tests.
