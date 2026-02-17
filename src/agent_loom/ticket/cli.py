@@ -327,7 +327,7 @@ def _render_prime_text(payload: dict[str, Any]) -> str:
     return "\n".join(md).rstrip() + "\n"
 
 
-def build_parser() -> argparse.ArgumentParser:
+def _build_common_parser() -> TicketArgumentParser:
     common = TicketArgumentParser(add_help=False)
     common.add_argument(
         "--json",
@@ -353,13 +353,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=argparse.SUPPRESS,
         help="Only audit write commands",
     )
+    return common
 
-    p = TicketArgumentParser(prog=SUBSYSTEM_NAME, add_help=True, parents=[common])
-    sub = p.add_subparsers(dest="cmd")
 
-    sub.add_parser("version", parents=[common], help="Print version")
-    sub.add_parser("init", parents=[common], help="Initialize .loom/ticket")
-
+def _add_create_parsers(sub: Any, common: TicketArgumentParser) -> None:
     sp = sub.add_parser("create", parents=[common], help="Create a ticket")
     sp.add_argument("title_pos", nargs="?", default=None, metavar="title")
     sp.add_argument(
@@ -389,17 +386,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Do not auto-add sprint tag from ticket sprint context or TEAM_SPRINT_TAG",
     )
 
+
+def _add_sprint_parsers(sub: Any, common: TicketArgumentParser) -> None:
     sp = sub.add_parser("sprint", parents=[common], help="Manage sprint context")
     spr_sub = sp.add_subparsers(dest="sprint_cmd", required=True)
-
     spr_sub.add_parser("show", help="Show configured sprint context")
-
     spr_set = spr_sub.add_parser("set", help="Set sprint context")
     spr_set.add_argument("--name", required=True, help="Sprint name")
     spr_set.add_argument("--tag", required=True, help="Sprint tag")
-
     spr_sub.add_parser("clear", help="Clear sprint context")
 
+
+def _add_transition_parsers(sub: Any, common: TicketArgumentParser) -> None:
     sp = sub.add_parser("status", parents=[common], help="Set ticket status")
     sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("new_status", type=_arg_status)
@@ -417,6 +415,8 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
 
+
+def _add_listing_parsers(sub: Any, common: TicketArgumentParser) -> None:
     sp = sub.add_parser("list", parents=[common], help="List tickets")
     _add_list_query_args(sp, include_status=True, include_all=True)
 
@@ -437,6 +437,8 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("-a", "--assignee", default="")
     sp.add_argument("-T", "--tag", default="")
 
+
+def _add_show_update_note_parsers(sub: Any, common: TicketArgumentParser) -> None:
     sp = sub.add_parser("show", parents=[common], help="Show a ticket")
     sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--raw", action="store_true")
@@ -508,30 +510,21 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sp.add_argument("--force", action="store_true")
 
-    sp = sub.add_parser("add-note", parents=[common], help="Append a note")
-    sp.add_argument("ticket", type=_arg_ticket_ref)
-    sp.add_argument("note", nargs="?", default="")
-    sp.add_argument(
-        "--note",
-        "--body",
-        dest="note_flag",
-        default=None,
-        help="Note body (alternative to positional note; stdin also supported)",
-    )
-    sp.add_argument("--force", action="store_true")
+    for cmd, help_text in [("add-note", "Append a note"), ("note", "Alias for add-note")]:
+        sp = sub.add_parser(cmd, parents=[common], help=help_text)
+        sp.add_argument("ticket", type=_arg_ticket_ref)
+        sp.add_argument("note", nargs="?", default="")
+        sp.add_argument(
+            "--note",
+            "--body",
+            dest="note_flag",
+            default=None,
+            help="Note body (alternative to positional note; stdin also supported)",
+        )
+        sp.add_argument("--force", action="store_true")
 
-    sp = sub.add_parser("note", parents=[common], help="Alias for add-note")
-    sp.add_argument("ticket", type=_arg_ticket_ref)
-    sp.add_argument("note", nargs="?", default="")
-    sp.add_argument(
-        "--note",
-        "--body",
-        dest="note_flag",
-        default=None,
-        help="Note body (alternative to positional note; stdin also supported)",
-    )
-    sp.add_argument("--force", action="store_true")
 
+def _add_dependency_parsers(sub: Any, common: TicketArgumentParser) -> None:
     sp = sub.add_parser("dep", parents=[common], help="Show dependency tree")
     sp.add_argument("ticket", type=_arg_ticket_ref)
     sp.add_argument("--max-depth", type=int, default=0)
@@ -548,6 +541,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("dep-cycle", parents=[common], help="Find dep cycles")
 
+
+def _add_link_view_claim_parsers(sub: Any, common: TicketArgumentParser) -> None:
     sp = sub.add_parser("link", parents=[common], help="Link tickets")
     sp.add_argument("tickets", nargs="+", type=_arg_ticket_ref)
     sp.add_argument("--force", action="store_true")
@@ -578,6 +573,8 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("swarm", parents=[common], help="Show swarm activity")
     sp.add_argument("--active-within", default="2h")
 
+
+def _add_sync_query_parsers(sub: Any, common: TicketArgumentParser) -> None:
     sp = sub.add_parser(
         "sync", parents=[common], help="Stage+commit .loom/ticket changes"
     )
@@ -599,6 +596,22 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("prime", parents=[common], help="Print ticket cookbook")
 
+
+def build_parser() -> argparse.ArgumentParser:
+    common = _build_common_parser()
+    p = TicketArgumentParser(prog=SUBSYSTEM_NAME, add_help=True, parents=[common])
+    sub = p.add_subparsers(dest="cmd")
+
+    sub.add_parser("version", parents=[common], help="Print version")
+    sub.add_parser("init", parents=[common], help="Initialize .loom/ticket")
+    _add_create_parsers(sub, common)
+    _add_sprint_parsers(sub, common)
+    _add_transition_parsers(sub, common)
+    _add_listing_parsers(sub, common)
+    _add_show_update_note_parsers(sub, common)
+    _add_dependency_parsers(sub, common)
+    _add_link_view_claim_parsers(sub, common)
+    _add_sync_query_parsers(sub, common)
     return p
 
 

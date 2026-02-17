@@ -63,66 +63,24 @@ from agent_loom.workspace.commands.worktree import (
 )
 
 
-def add_harness_parser(
-    root_sub: Any,
+def _add_selection_flags(
+    parser: argparse.ArgumentParser,
     *,
-    name: str = "harness",
-    help_text: str = "Workspace harness control plane",
-    description_text: str = "Workspace harness control plane",
+    include_all: bool,
+    repos_help: str,
 ) -> None:
-    p = root_sub.add_parser(name, help=help_text, description=description_text)
-    sub = p.add_subparsers(dest="harness_cmd", required=True)
+    if include_all:
+        parser.add_argument(
+            "--all",
+            action="store_true",
+            help="Confirm operating on multiple repos when no selection is provided",
+        )
+    parser.add_argument("--repos", nargs="*", help=repos_help)
+    parser.add_argument("--set", dest="sets", action="append", help="Select repos by set")
+    parser.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
 
-    sp = sub.add_parser(
-        "init",
-        help="Initialize harness manifest + dirs + baseline .gitignore",
-    )
-    sp.add_argument(
-        "--root",
-        default="",
-        help="Initialize the harness at a specific root (default: current directory)",
-    )
-    sp.add_argument(
-        "--symlinks",
-        action="store_true",
-        help="Create root-level symlinks (repos/, worktrees/, states/, components/) into .loom/workspaces",
-    )
-    sp.set_defaults(func=cmd_harness_init)
 
-    sp = sub.add_parser(
-        "exec", help="Run a command across repos (optionally a worktree group)"
-    )
-    sp.add_argument(
-        "--group",
-        default=None,
-        help="Run in worktrees/<group>/<repo> instead of repos/<repo>",
-    )
-    sp.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    sp.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp.add_argument(
-        "--jobs",
-        type=int,
-        default=1,
-        help="Parallelism for command execution (default: 1)",
-    )
-    sp.add_argument(
-        "--require-clean",
-        action="store_true",
-        help="Skip dirty repos/worktrees",
-    )
-    sp.add_argument(
-        "cmd_argv",
-        nargs=argparse.REMAINDER,
-        help="Command to run (use: exec -- <cmd...>)",
-    )
-    sp.set_defaults(func=cmd_harness_exec)
-
+def _add_repo_parsers(sub: Any) -> None:
     sp = sub.add_parser("repo", help="Edit workspace repo metadata")
     sub_repo = sp.add_subparsers(dest="repo_cmd", required=True)
 
@@ -139,6 +97,8 @@ def add_harness_parser(
     spe.add_argument("--depth", type=int, default=None)
     spe.set_defaults(func=cmd_harness_repo_edit)
 
+
+def _add_set_parsers(sub: Any) -> None:
     sp = sub.add_parser("set", help="Manage repo sets (workspace.json repo_sets)")
     sub_set = sp.add_subparsers(dest="set_cmd", required=True)
 
@@ -158,6 +118,8 @@ def add_harness_parser(
     sps = sub_set.add_parser("ls", help="List repo sets")
     sps.set_defaults(func=cmd_harness_set_ls)
 
+
+def _add_lease_parsers(sub: Any) -> None:
     sp = sub.add_parser(
         "lease",
         help="Coordination leases (optional in-use marker + exclusive coordination lock)",
@@ -204,6 +166,368 @@ def add_harness_parser(
     spl = sub_lease.add_parser("ls", help="List leases")
     spl.set_defaults(func=cmd_lease_ls)
 
+
+def _add_worktree_parsers(sub: Any) -> None:
+    sp = sub.add_parser("worktree", help="Worktree operations")
+    sub2 = sp.add_subparsers(dest="worktree_cmd", required=True)
+
+    sp2 = sub2.add_parser("add", help="Add worktrees under worktrees/<group>/<repo>")
+    sp2.add_argument("group")
+    sp2.add_argument(
+        "--path",
+        default="",
+        help="Override group worktrees base dir (creates worktrees under <path>/<repo>)",
+    )
+    _add_selection_flags(sp2, include_all=True, repos_help="Subset of repos (default all)")
+    sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
+    sp2.add_argument(
+        "--clone", action="store_true", help="Clone missing repos automatically"
+    )
+    sp2.add_argument(
+        "--allow-dirty",
+        action="store_true",
+        help="Allow checking out a safe branch when local changes exist",
+    )
+    sp2.set_defaults(func=cmd_worktree_add)
+
+    sp2 = sub2.add_parser(
+        "ensure",
+        help="Ensure worktrees exist under worktrees/<group>/<repo> (resumable)",
+    )
+    sp2.add_argument("group")
+    sp2.add_argument(
+        "--path",
+        default="",
+        help="Override group worktrees base dir (creates worktrees under <path>/<repo>)",
+    )
+    _add_selection_flags(sp2, include_all=True, repos_help="Subset of repos (default all)")
+    sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
+    sp2.add_argument(
+        "--clone", action="store_true", help="Clone missing repos automatically"
+    )
+    sp2.add_argument(
+        "--allow-dirty",
+        action="store_true",
+        help="Allow checking out a safe branch when local changes exist",
+    )
+    sp2.set_defaults(func=cmd_worktree_add)
+
+    sp2 = sub2.add_parser(
+        "rm", help="Remove worktrees for a group (optionally subset repos)"
+    )
+    sp2.add_argument("group")
+    sp2.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before deleting worktrees (example: group:<group>)",
+    )
+    sp2.add_argument(
+        "--yes",
+        action="store_true",
+        help="Confirm deletion (required)",
+    )
+    _add_selection_flags(
+        sp2,
+        include_all=True,
+        repos_help="Subset of repos (default: all under group)",
+    )
+    sp2.add_argument(
+        "--force",
+        action="store_true",
+        help="Force removal even if worktree has local changes",
+    )
+    sp2.set_defaults(func=cmd_worktree_rm)
+
+    sp2 = sub2.add_parser("ls", help="List all worktrees with group/repo/branch/sha/status")
+    sp2.set_defaults(func=cmd_worktree_ls)
+
+    sp2 = sub2.add_parser("prune", help="Prune stale git worktree metadata in repos")
+    _add_selection_flags(sp2, include_all=True, repos_help="Subset of repos (default all)")
+    sp2.set_defaults(func=cmd_worktree_prune)
+
+    sp2 = sub2.add_parser("status", help="Show status for a worktree group")
+    sp2.add_argument("group")
+    _add_selection_flags(
+        sp2,
+        include_all=True,
+        repos_help="Subset of repos (default: all under group)",
+    )
+    sp2.set_defaults(func=cmd_worktree_group_status)
+
+    sp2 = sub2.add_parser(
+        "diff",
+        help="Print per-repo worktree diffs for a group (tracked files; requires explicit intent)",
+    )
+    sp2.add_argument("group")
+    sp2.add_argument(
+        "--mode",
+        default="dirty",
+        choices=["dirty", "cumulative"],
+        help="Diff mode: dirty (uncommitted) or cumulative (merge-base)",
+    )
+    sp2.add_argument(
+        "--base",
+        default="",
+        help="Base ref-ish (default: HEAD when available)",
+    )
+    sp2.add_argument(
+        "--max-bytes",
+        dest="max_bytes",
+        type=int,
+        default=2_000_000,
+        help="Max patch bytes per repo (default: 2000000)",
+    )
+    _add_selection_flags(
+        sp2,
+        include_all=True,
+        repos_help="Subset of repos (default: all under group)",
+    )
+    sp2.set_defaults(func=cmd_worktree_group_diff)
+
+    sp2 = sub2.add_parser("check-clean", help="Fail if any group worktree is dirty")
+    sp2.add_argument("group")
+    sp2.add_argument(
+        "--allow-untracked",
+        action="store_true",
+        help="Ignore untracked files when determining cleanliness",
+    )
+    _add_selection_flags(
+        sp2,
+        include_all=True,
+        repos_help="Subset of repos (default: all under group)",
+    )
+    sp2.set_defaults(func=cmd_worktree_group_check_clean)
+
+    sp2 = sub2.add_parser(
+        "check-divergence", help="Ahead/behind vs --base for group worktrees"
+    )
+    sp2.add_argument("group")
+    sp2.add_argument("--base", required=True, help="Base ref-ish")
+    _add_selection_flags(
+        sp2,
+        include_all=True,
+        repos_help="Subset of repos (default: all under group)",
+    )
+    sp2.set_defaults(func=cmd_worktree_group_check_divergence)
+
+    sp2 = sub2.add_parser("annotate", help="Annotate a group with purpose/ttl")
+    sp2.add_argument("group")
+    sp2.add_argument("--purpose", required=True)
+    sp2.add_argument("--ticket", default="")
+    sp2.add_argument("--owner", default="")
+    sp2.add_argument("--ttl", default="")
+    sp2.add_argument("--kind", default="normal", choices=["normal", "sandbox"])
+    sp2.set_defaults(func=cmd_worktree_group_annotate)
+
+    sp2 = sub2.add_parser("rebase", help="Rebase worktrees for a group onto their base branch")
+    sp2.add_argument("group")
+    sp2.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before rebasing worktrees (example: group:<group>)",
+    )
+    _add_selection_flags(
+        sp2,
+        include_all=True,
+        repos_help="Subset of repos (default: all under group)",
+    )
+    sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
+    sp2.set_defaults(func=cmd_worktree_rebase)
+
+    sp2 = sub2.add_parser("push", help="Push worktrees for a group to their remote branch")
+    sp2.add_argument("group")
+    sp2.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before pushing worktrees (example: group:<group>)",
+    )
+    _add_selection_flags(
+        sp2,
+        include_all=True,
+        repos_help="Subset of repos (default: all under group)",
+    )
+
+    push_mode = sp2.add_mutually_exclusive_group()
+    push_mode.add_argument(
+        "-u", "--set-upstream", action="store_true", help="Set upstream tracking branch"
+    )
+    push_mode.add_argument(
+        "--force", action="store_true", help="Force push (use with caution)"
+    )
+    push_mode.add_argument(
+        "--force-with-lease", action="store_true", help="Force push with lease (safer)"
+    )
+    sp2.add_argument(
+        "--yes",
+        action="store_true",
+        help="Confirm destructive operations (required with --force/--force-with-lease)",
+    )
+    sp2.set_defaults(func=cmd_worktree_push)
+
+    sp2 = sub2.add_parser(
+        "gc",
+        help="Garbage collect old worktrees (requires --yes; optionally skip leased groups)",
+    )
+    sp2.add_argument(
+        "--require-lease",
+        default="",
+        help="Require this lease key before running GC",
+    )
+    sp2.add_argument(
+        "--older-than",
+        type=int,
+        default=0,
+        help="Only remove groups older than N days (0 = no age filter)",
+    )
+    sp2.add_argument(
+        "--skip-leased",
+        action="store_true",
+        help="Skip groups that have an active group:<name> lease",
+    )
+    sp2.add_argument(
+        "--force",
+        action="store_true",
+        help="Force removal even if worktrees have local changes",
+    )
+    sp2.add_argument("--yes", action="store_true", help="Confirm deletions")
+    sp2.set_defaults(func=cmd_worktree_gc)
+
+
+def _add_snapshot_parsers(sub: Any) -> None:
+    sp = sub.add_parser("snapshot", help="Snapshot/compare/restore repo or worktree state")
+    sub_snap = sp.add_subparsers(dest="snapshot_cmd", required=True)
+
+    spc = sub_snap.add_parser(
+        "capture",
+        help="Write states/<name>.json with branch/sha/dirty per repo (or per worktree group)",
+    )
+    spc.add_argument("name")
+    spc.add_argument(
+        "--group",
+        default=None,
+        help="Capture from worktrees/<group>/<repo> instead of repos/<repo>",
+    )
+    _add_selection_flags(spc, include_all=True, repos_help="Subset of repos (default all)")
+    spc.set_defaults(func=cmd_snapshot_capture)
+
+    spd = sub_snap.add_parser("diff", help="Compare current state to a snapshot")
+    spd.add_argument("name")
+    spd.set_defaults(func=cmd_snapshot_diff)
+
+    spr = sub_snap.add_parser(
+        "restore",
+        help="Restore repos/worktrees to a snapshot (requires --yes)",
+    )
+    spr.add_argument("name")
+    spr.add_argument("--yes", action="store_true", help="Confirm restore")
+    spr.add_argument(
+        "--force-clean",
+        action="store_true",
+        help="Abort merges, hard reset, and clean before restoring",
+    )
+    spr.set_defaults(func=cmd_snapshot_restore)
+
+
+def _add_deps_parsers(sub: Any) -> None:
+    sp = sub.add_parser("deps", help="Dependency queries (from components/index.json)")
+    sub4 = sp.add_subparsers(dest="deps_cmd", required=True)
+
+    sp4 = sub4.add_parser("show", help="Show deps + reverse deps for a component")
+    sp4.add_argument("component")
+    sp4.set_defaults(func=cmd_deps_show)
+
+    sp4 = sub4.add_parser("who-uses", help="List components that depend on a component")
+    sp4.add_argument("component")
+    sp4.set_defaults(func=cmd_deps_who_uses)
+
+    sp4 = sub4.add_parser("closure", help="Transitive deps + reverse deps for a component")
+    sp4.add_argument("component")
+    sp4.set_defaults(func=cmd_deps_closure)
+
+    sp4 = sub4.add_parser(
+        "impacted", help="Transitive reverse deps (who is impacted by changes)"
+    )
+    sp4.add_argument("component")
+    sp4.set_defaults(func=cmd_deps_impacted)
+
+
+def _add_impact_parsers(sub: Any) -> None:
+    sp = sub.add_parser(
+        "impact",
+        help="Impact analysis: changed repos -> impacted components (from components/index.json)",
+    )
+    subi = sp.add_subparsers(dest="impact_cmd", required=True)
+
+    spi = subi.add_parser("repos", help="Report impacted components from changed repos")
+    spi.add_argument("changed", nargs="+", help="Changed repo/component names")
+    spi.set_defaults(func=cmd_harness_impact_repos)
+
+    spi = subi.add_parser("snapshot", help="Report impacted components from snapshot diff")
+    spi.add_argument("name", help="Snapshot name")
+    spi.add_argument(
+        "--no-missing",
+        action="store_true",
+        help="Do not treat missing repos/worktrees as changed",
+    )
+    spi.set_defaults(func=cmd_harness_impact_snapshot)
+
+
+def add_harness_parser(
+    root_sub: Any,
+    *,
+    name: str = "harness",
+    help_text: str = "Workspace harness control plane",
+    description_text: str = "Workspace harness control plane",
+) -> None:
+    p = root_sub.add_parser(name, help=help_text, description=description_text)
+    sub = p.add_subparsers(dest="harness_cmd", required=True)
+
+    sp = sub.add_parser(
+        "init",
+        help="Initialize harness manifest + dirs + baseline .gitignore",
+    )
+    sp.add_argument(
+        "--root",
+        default="",
+        help="Initialize the harness at a specific root (default: current directory)",
+    )
+    sp.add_argument(
+        "--symlinks",
+        action="store_true",
+        help="Create root-level symlinks (repos/, worktrees/, states/, components/) into .loom/workspaces",
+    )
+    sp.set_defaults(func=cmd_harness_init)
+
+    sp = sub.add_parser(
+        "exec", help="Run a command across repos (optionally a worktree group)"
+    )
+    sp.add_argument(
+        "--group",
+        default=None,
+        help="Run in worktrees/<group>/<repo> instead of repos/<repo>",
+    )
+    _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
+    sp.add_argument(
+        "--jobs",
+        type=int,
+        default=1,
+        help="Parallelism for command execution (default: 1)",
+    )
+    sp.add_argument(
+        "--require-clean",
+        action="store_true",
+        help="Skip dirty repos/worktrees",
+    )
+    sp.add_argument(
+        "cmd_argv",
+        nargs=argparse.REMAINDER,
+        help="Command to run (use: exec -- <cmd...>)",
+    )
+    sp.set_defaults(func=cmd_harness_exec)
+    _add_repo_parsers(sub)
+    _add_set_parsers(sub)
+    _add_lease_parsers(sub)
+
     sp = sub.add_parser("sandbox", help="Sandbox worktrees (harness)")
     subs = sp.add_subparsers(dest="sandbox_cmd", required=True)
 
@@ -215,14 +539,7 @@ def add_harness_parser(
     spc.add_argument(
         "--clone", action="store_true", help="Clone missing repos automatically"
     )
-    spc.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    spc.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    spc.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    spc.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
+    _add_selection_flags(spc, include_all=True, repos_help="Subset of repos (default all)")
     spc.set_defaults(func=cmd_harness_sandbox_create)
 
     spp = subs.add_parser("promote", help="Promote a sandbox group (metadata only)")
@@ -317,14 +634,7 @@ def add_harness_parser(
     sp.add_argument(
         "--clone", action="store_true", help="Clone missing repos before fetching"
     )
-    sp.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    sp.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
+    _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
     sp.add_argument(
         "--jobs",
         type=int,
@@ -334,25 +644,16 @@ def add_harness_parser(
     sp.set_defaults(func=cmd_sync)
 
     sp = sub.add_parser("status", help="Show branch/sha/dirty for repos")
-    sp.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    sp.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
     sp.add_argument(
         "--jobs", type=int, default=1, help="Parallelism for git status (default: 1)"
     )
-    sp.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
+    _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
     sp.set_defaults(func=cmd_status)
 
     sp = sub.add_parser(
         "context", help="Emit a compact workspace context bundle (ideal for AI prompts)"
     )
-    sp.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    sp.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
+    _add_selection_flags(sp, include_all=False, repos_help="Subset of repos (default all)")
     sp.add_argument(
         "--jobs",
         type=int,
@@ -366,14 +667,7 @@ def add_harness_parser(
         help="Ensure+checkout a branch across repos (use --reset for git checkout -B)",
     )
     sp.add_argument("branch")
-    sp.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    sp.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
+    _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
     sp.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
     sp.add_argument(
         "--clone", action="store_true", help="Clone missing repos automatically"
@@ -400,333 +694,9 @@ def add_harness_parser(
     )
     sp.set_defaults(func=cmd_branch)
 
-    sp = sub.add_parser("worktree", help="Worktree operations")
-    sub2 = sp.add_subparsers(dest="worktree_cmd", required=True)
+    _add_worktree_parsers(sub)
 
-    sp2 = sub2.add_parser("add", help="Add worktrees under worktrees/<group>/<repo>")
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--path",
-        default="",
-        help="Override group worktrees base dir (creates worktrees under <path>/<repo>)",
-    )
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
-    sp2.add_argument(
-        "--clone", action="store_true", help="Clone missing repos automatically"
-    )
-    sp2.add_argument(
-        "--allow-dirty",
-        action="store_true",
-        help="Allow checking out a safe branch when local changes exist",
-    )
-    sp2.set_defaults(func=cmd_worktree_add)
-
-    sp2 = sub2.add_parser(
-        "ensure",
-        help="Ensure worktrees exist under worktrees/<group>/<repo> (resumable)",
-    )
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--path",
-        default="",
-        help="Override group worktrees base dir (creates worktrees under <path>/<repo>)",
-    )
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
-    sp2.add_argument(
-        "--clone", action="store_true", help="Clone missing repos automatically"
-    )
-    sp2.add_argument(
-        "--allow-dirty",
-        action="store_true",
-        help="Allow checking out a safe branch when local changes exist",
-    )
-    sp2.set_defaults(func=cmd_worktree_add)
-
-    sp2 = sub2.add_parser(
-        "rm", help="Remove worktrees for a group (optionally subset repos)"
-    )
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--require-lease",
-        default="",
-        help="Require this lease key before deleting worktrees (example: group:<group>)",
-    )
-    sp2.add_argument(
-        "--yes",
-        action="store_true",
-        help="Confirm deletion (required)",
-    )
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument(
-        "--repos", nargs="*", help="Subset of repos (default: all under group)"
-    )
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp2.add_argument(
-        "--force",
-        action="store_true",
-        help="Force removal even if worktree has local changes",
-    )
-    sp2.set_defaults(func=cmd_worktree_rm)
-
-    sp2 = sub2.add_parser(
-        "ls", help="List all worktrees with group/repo/branch/sha/status"
-    )
-    sp2.set_defaults(func=cmd_worktree_ls)
-
-    sp2 = sub2.add_parser("prune", help="Prune stale git worktree metadata in repos")
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp2.set_defaults(func=cmd_worktree_prune)
-
-    sp2 = sub2.add_parser("status", help="Show status for a worktree group")
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument(
-        "--repos", nargs="*", help="Subset of repos (default: all under group)"
-    )
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp2.set_defaults(func=cmd_worktree_group_status)
-
-    sp2 = sub2.add_parser(
-        "diff",
-        help="Print per-repo worktree diffs for a group (tracked files; requires explicit intent)",
-    )
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--mode",
-        default="dirty",
-        choices=["dirty", "cumulative"],
-        help="Diff mode: dirty (uncommitted) or cumulative (merge-base)",
-    )
-    sp2.add_argument(
-        "--base",
-        default="",
-        help="Base ref-ish (default: HEAD when available)",
-    )
-    sp2.add_argument(
-        "--max-bytes",
-        dest="max_bytes",
-        type=int,
-        default=2_000_000,
-        help="Max patch bytes per repo (default: 2000000)",
-    )
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument(
-        "--repos", nargs="*", help="Subset of repos (default: all under group)"
-    )
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp2.set_defaults(func=cmd_worktree_group_diff)
-
-    sp2 = sub2.add_parser("check-clean", help="Fail if any group worktree is dirty")
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--allow-untracked",
-        action="store_true",
-        help="Ignore untracked files when determining cleanliness",
-    )
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument(
-        "--repos", nargs="*", help="Subset of repos (default: all under group)"
-    )
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp2.set_defaults(func=cmd_worktree_group_check_clean)
-
-    sp2 = sub2.add_parser(
-        "check-divergence", help="Ahead/behind vs --base for group worktrees"
-    )
-    sp2.add_argument("group")
-    sp2.add_argument("--base", required=True, help="Base ref-ish")
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument(
-        "--repos", nargs="*", help="Subset of repos (default: all under group)"
-    )
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp2.set_defaults(func=cmd_worktree_group_check_divergence)
-
-    sp2 = sub2.add_parser("annotate", help="Annotate a group with purpose/ttl")
-    sp2.add_argument("group")
-    sp2.add_argument("--purpose", required=True)
-    sp2.add_argument("--ticket", default="")
-    sp2.add_argument("--owner", default="")
-    sp2.add_argument("--ttl", default="")
-    sp2.add_argument("--kind", default="normal", choices=["normal", "sandbox"])
-    sp2.set_defaults(func=cmd_worktree_group_annotate)
-
-    sp2 = sub2.add_parser(
-        "rebase", help="Rebase worktrees for a group onto their base branch"
-    )
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--require-lease",
-        default="",
-        help="Require this lease key before rebasing worktrees (example: group:<group>)",
-    )
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument(
-        "--repos", nargs="*", help="Subset of repos (default: all under group)"
-    )
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
-    sp2.set_defaults(func=cmd_worktree_rebase)
-
-    sp2 = sub2.add_parser(
-        "push", help="Push worktrees for a group to their remote branch"
-    )
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--require-lease",
-        default="",
-        help="Require this lease key before pushing worktrees (example: group:<group>)",
-    )
-    sp2.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    sp2.add_argument(
-        "--repos", nargs="*", help="Subset of repos (default: all under group)"
-    )
-    sp2.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    sp2.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-
-    push_mode = sp2.add_mutually_exclusive_group()
-    push_mode.add_argument(
-        "-u", "--set-upstream", action="store_true", help="Set upstream tracking branch"
-    )
-    push_mode.add_argument(
-        "--force", action="store_true", help="Force push (use with caution)"
-    )
-    push_mode.add_argument(
-        "--force-with-lease", action="store_true", help="Force push with lease (safer)"
-    )
-    sp2.add_argument(
-        "--yes",
-        action="store_true",
-        help="Confirm destructive operations (required with --force/--force-with-lease)",
-    )
-    sp2.set_defaults(func=cmd_worktree_push)
-
-    sp2 = sub2.add_parser(
-        "gc",
-        help="Garbage collect old worktrees (requires --yes; optionally skip leased groups)",
-    )
-    sp2.add_argument(
-        "--require-lease",
-        default="",
-        help="Require this lease key before running GC",
-    )
-    sp2.add_argument(
-        "--older-than",
-        type=int,
-        default=0,
-        help="Only remove groups older than N days (0 = no age filter)",
-    )
-    sp2.add_argument(
-        "--skip-leased",
-        action="store_true",
-        help="Skip groups that have an active group:<name> lease",
-    )
-    sp2.add_argument(
-        "--force",
-        action="store_true",
-        help="Force removal even if worktrees have local changes",
-    )
-    sp2.add_argument("--yes", action="store_true", help="Confirm deletions")
-    sp2.set_defaults(func=cmd_worktree_gc)
-
-    sp = sub.add_parser(
-        "snapshot", help="Snapshot/compare/restore repo or worktree state"
-    )
-    sub_snap = sp.add_subparsers(dest="snapshot_cmd", required=True)
-
-    spc = sub_snap.add_parser(
-        "capture",
-        help="Write states/<name>.json with branch/sha/dirty per repo (or per worktree group)",
-    )
-    spc.add_argument("name")
-    spc.add_argument(
-        "--group",
-        default=None,
-        help="Capture from worktrees/<group>/<repo> instead of repos/<repo>",
-    )
-    spc.add_argument(
-        "--all",
-        action="store_true",
-        help="Confirm operating on multiple repos when no selection is provided",
-    )
-    spc.add_argument("--repos", nargs="*", help="Subset of repos (default all)")
-    spc.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    spc.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
-    spc.set_defaults(func=cmd_snapshot_capture)
-
-    spd = sub_snap.add_parser("diff", help="Compare current state to a snapshot")
-    spd.add_argument("name")
-    spd.set_defaults(func=cmd_snapshot_diff)
-
-    spr = sub_snap.add_parser(
-        "restore",
-        help="Restore repos/worktrees to a snapshot (requires --yes)",
-    )
-    spr.add_argument("name")
-    spr.add_argument("--yes", action="store_true", help="Confirm restore")
-    spr.add_argument(
-        "--force-clean",
-        action="store_true",
-        help="Abort merges, hard reset, and clean before restoring",
-    )
-    spr.set_defaults(func=cmd_snapshot_restore)
+    _add_snapshot_parsers(sub)
 
     sp = sub.add_parser("components", help="Component metadata cache operations")
     sub3 = sp.add_subparsers(dest="components_cmd", required=True)
@@ -747,49 +717,8 @@ def add_harness_parser(
     )
     sp3.set_defaults(func=cmd_services_refresh_index)
 
-    sp = sub.add_parser("deps", help="Dependency queries (from components/index.json)")
-    sub4 = sp.add_subparsers(dest="deps_cmd", required=True)
-
-    sp4 = sub4.add_parser("show", help="Show deps + reverse deps for a component")
-    sp4.add_argument("component")
-    sp4.set_defaults(func=cmd_deps_show)
-
-    sp4 = sub4.add_parser("who-uses", help="List components that depend on a component")
-    sp4.add_argument("component")
-    sp4.set_defaults(func=cmd_deps_who_uses)
-
-    sp4 = sub4.add_parser(
-        "closure", help="Transitive deps + reverse deps for a component"
-    )
-    sp4.add_argument("component")
-    sp4.set_defaults(func=cmd_deps_closure)
-
-    sp4 = sub4.add_parser(
-        "impacted", help="Transitive reverse deps (who is impacted by changes)"
-    )
-    sp4.add_argument("component")
-    sp4.set_defaults(func=cmd_deps_impacted)
-
-    sp = sub.add_parser(
-        "impact",
-        help="Impact analysis: changed repos -> impacted components (from components/index.json)",
-    )
-    subi = sp.add_subparsers(dest="impact_cmd", required=True)
-
-    spi = subi.add_parser("repos", help="Report impacted components from changed repos")
-    spi.add_argument("changed", nargs="+", help="Changed repo/component names")
-    spi.set_defaults(func=cmd_harness_impact_repos)
-
-    spi = subi.add_parser(
-        "snapshot", help="Report impacted components from snapshot diff"
-    )
-    spi.add_argument("name", help="Snapshot name")
-    spi.add_argument(
-        "--no-missing",
-        action="store_true",
-        help="Do not treat missing repos/worktrees as changed",
-    )
-    spi.set_defaults(func=cmd_harness_impact_snapshot)
+    _add_deps_parsers(sub)
+    _add_impact_parsers(sub)
 
     sp = sub.add_parser("deepen", help="Deepen history of a shallow repo")
     sp.add_argument("repo", help="Repo name")
