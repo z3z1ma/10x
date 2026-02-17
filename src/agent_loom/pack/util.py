@@ -18,11 +18,6 @@ def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def norm_rel_path(rel: str) -> str:
-    # Normalize to posix-ish relative paths for lockfiles.
-    return str(rel).replace("\\", "/").lstrip("/")
-
-
 def ensure_parent_dir(dest: Path, *, dry_run: bool) -> None:
     if dry_run:
         return

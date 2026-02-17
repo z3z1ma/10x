@@ -12,10 +12,14 @@ from agent_loom.pack.models import (
     PackApplyResult,
     PackManifest,
 )
-from agent_loom.pack.packs import iter_pack_files, list_pack_ids, load_manifest
+from agent_loom.pack.packs import (
+    iter_pack_files,
+    list_pack_ids,
+    load_manifest,
+    normalize_repo_relpath,
+)
 from agent_loom.pack.util import (
     ensure_parent_dir,
-    norm_rel_path,
     prune_empty_dirs,
     safe_unlink,
     sha256_file,
@@ -36,7 +40,7 @@ def _managed_paths_for_pack(
     # (We treat these globs as repo-relative.)
     out: List[str] = []
     for rel in pack_files:
-        rp = norm_rel_path(rel)
+        rp = normalize_repo_relpath(rel, pack_id=manifest.id, field="pack file")
         if _match_any(rp, manifest.managed_globs):
             out.append(rp)
     return sorted(set(out))
@@ -47,16 +51,17 @@ def _scaffold_paths_for_pack(
 ) -> List[str]:
     out: List[str] = []
     for rel in pack_files:
-        rp = norm_rel_path(rel)
+        rp = normalize_repo_relpath(rel, pack_id=manifest.id, field="pack file")
         if _match_any(rp, manifest.scaffold_globs):
             out.append(rp)
     return sorted(set(out))
 
 
-def _build_file_index(files: Iterable[Tuple[str, Path]]) -> Dict[str, Path]:
+def _build_file_index(files: Iterable[Tuple[str, Path]], *, pack_id: str) -> Dict[str, Path]:
     idx: Dict[str, Path] = {}
     for rel, p in files:
-        idx[norm_rel_path(rel)] = p
+        normalized = normalize_repo_relpath(rel, pack_id=pack_id, field="pack file")
+        idx[normalized] = p
     return idx
 
 
@@ -146,7 +151,7 @@ def install_pack(
     existing = packs_by_id.get(pack_id)
 
     pack_files = list(iter_pack_files(pack_id))
-    file_index = _build_file_index(pack_files)
+    file_index = _build_file_index(pack_files, pack_id=manifest.id)
     managed = _managed_paths_for_pack(manifest, file_index.keys())
     scaffold = [
         p
@@ -255,7 +260,7 @@ def update_pack(
         raise FileNotFoundError(f"pack not installed: {pack_id}")
 
     pack_files = list(iter_pack_files(pack_id))
-    file_index = _build_file_index(pack_files)
+    file_index = _build_file_index(pack_files, pack_id=manifest.id)
     managed = _managed_paths_for_pack(manifest, file_index.keys())
     scaffold = [
         p
