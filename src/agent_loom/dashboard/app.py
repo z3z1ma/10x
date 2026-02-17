@@ -11,6 +11,7 @@ from flask import Blueprint, Flask, Request, jsonify, render_template, request
 
 from agent_loom.core.errors import LoomError, coerce_loom_error
 from agent_loom.dashboard.auth import authorize_request
+from agent_loom.dashboard.capabilities import CAPABILITY_ENDPOINTS
 from agent_loom.dashboard.compound_fs import list_skills, read_instincts, read_skill
 from agent_loom.dashboard.config import ServerConfig
 from agent_loom.dashboard.http import err, ok
@@ -134,35 +135,7 @@ def _create_health_blueprint(cfg: ServerConfig) -> Blueprint:
                         "supported": ["bearer", "x-loom-token"],
                         "require_token": bool(cfg.require_token),
                     },
-                    "endpoints": [
-                        {"method": "GET", "path": "/api/v1/health"},
-                        {"method": "GET", "path": "/api/v1/capabilities"},
-                        {"method": "GET", "path": "/api/v1/introspect/<subsystem>"},
-                        {"method": "GET", "path": "/api/v1/tickets"},
-                        {"method": "GET", "path": "/api/v1/tickets/<id>"},
-                        {"method": "GET", "path": "/api/v1/tickets/<id>/view"},
-                        {"method": "GET", "path": "/api/v1/tickets/<id>/dep"},
-                        {"method": "GET", "path": "/api/v1/tickets/swarm"},
-                        {"method": "POST", "path": "/api/v1/tickets"},
-                        {"method": "PATCH", "path": "/api/v1/tickets/<id>"},
-                        {"method": "GET", "path": "/api/v1/teams"},
-                        {"method": "GET", "path": "/api/v1/teams/<team>/status"},
-                        {"method": "GET", "path": "/api/v1/teams/<team>/run"},
-                        {"method": "GET", "path": "/api/v1/teams/<team>/events"},
-                        {"method": "GET", "path": "/api/v1/teams/<team>/inbox"},
-                        {"method": "GET", "path": "/api/v1/teams/<team>/captures"},
-                        {"method": "GET", "path": "/api/v1/teams/<team>/captures/text"},
-                        {"method": "GET", "path": "/api/v1/memory/recall"},
-                        {"method": "GET", "path": "/api/v1/memory/notes/<id>"},
-                        {"method": "GET", "path": "/api/v1/workspace/meta"},
-                        {"method": "GET", "path": "/api/v1/workspace/worktrees"},
-                        {"method": "GET", "path": "/api/v1/workspace/worktree/diff"},
-                        {"method": "GET", "path": "/api/v1/workspace/components/index"},
-                        {"method": "GET", "path": "/api/v1/workspace/services/index"},
-                        {"method": "GET", "path": "/api/v1/compound/skills"},
-                        {"method": "GET", "path": "/api/v1/compound/skills/<name>"},
-                        {"method": "GET", "path": "/api/v1/compound/instincts"},
-                    ],
+                    "endpoints": CAPABILITY_ENDPOINTS,
                 },
                 meta={"subsystem_versions": _subsystem_versions()},
             )
@@ -340,7 +313,7 @@ def _create_tickets_blueprint(
     return bp
 
 
-def _create_team_blueprint(cfg: ServerConfig) -> Blueprint:
+def _create_team_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
     bp = Blueprint("dashboard_team", __name__, url_prefix="/api/v1/teams")
 
     @bp.get("")
@@ -384,7 +357,12 @@ def _create_team_blueprint(cfg: ServerConfig) -> Blueprint:
         try:
             res = team_status_fn(team=str(team), repo=cfg.repo_root)
         except Exception as e:
-            return jsonify(err(code="TEAM_STATUS_FAILED", message=str(e))), 400
+            payload, status = api_error(
+                e,
+                default_code="TEAM_STATUS_FAILED",
+                default_message="team status failed",
+            )
+            return jsonify(payload), status
         return jsonify(ok(data=res))
 
     @bp.get("/<team>/run")
@@ -398,7 +376,12 @@ def _create_team_blueprint(cfg: ServerConfig) -> Blueprint:
         try:
             run = json.loads(run_json.read_text(encoding="utf-8", errors="replace"))
         except Exception as e:
-            return jsonify(err(code="READ_FAILED", message=str(e))), 400
+            payload, status = api_error(
+                e,
+                default_code="READ_FAILED",
+                default_message="failed to read team run state",
+            )
+            return jsonify(payload), status
         return jsonify(ok(data=run))
 
     @bp.get("/<team>/events")
@@ -517,7 +500,12 @@ def _create_team_blueprint(cfg: ServerConfig) -> Blueprint:
             with open(txt_file, "rb") as f:
                 raw = f.read(cap_bytes + 1)
         except Exception as e:
-            return jsonify(err(code="READ_FAILED", message=str(e))), 400
+            payload, status = api_error(
+                e,
+                default_code="READ_FAILED",
+                default_message="failed to read capture text",
+            )
+            return jsonify(payload), status
 
         if len(raw) > cap_bytes:
             truncated = True
@@ -546,7 +534,7 @@ def _create_team_blueprint(cfg: ServerConfig) -> Blueprint:
     return bp
 
 
-def _create_memory_blueprint(cfg: ServerConfig) -> Blueprint:
+def _create_memory_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
     bp = Blueprint("dashboard_memory", __name__, url_prefix="/api/v1/memory")
 
     @bp.get("/recall")
@@ -595,7 +583,12 @@ def _create_memory_blueprint(cfg: ServerConfig) -> Blueprint:
         try:
             p = find_note_path(vp, str(note_id))
         except Exception as e:
-            return jsonify(err(code="NOT_FOUND", message=str(e))), 404
+            payload, status = api_error(
+                e,
+                default_code="NOT_FOUND",
+                default_message="memory note not found",
+            )
+            return jsonify(payload), status
         note, warns = try_read_note_from_path(
             p, default_visibility="shared", repo_root=cfg.repo_root
         )
@@ -606,7 +599,7 @@ def _create_memory_blueprint(cfg: ServerConfig) -> Blueprint:
     return bp
 
 
-def _create_workspace_blueprint(cfg: ServerConfig) -> Blueprint:
+def _create_workspace_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
     bp = Blueprint("dashboard_workspace", __name__, url_prefix="/api/v1/workspace")
 
     @bp.get("/meta")
@@ -622,7 +615,12 @@ def _create_workspace_blueprint(cfg: ServerConfig) -> Blueprint:
             )
             payload = workspace_meta(mode=mode, root=root)
         except Exception as e:
-            return jsonify(err(code="WS_ERROR", message=str(e))), 400
+            payload, status = api_error(
+                e,
+                default_code="WS_ERROR",
+                default_message="workspace metadata request failed",
+            )
+            return jsonify(payload), status
         return jsonify(ok(data=payload))
 
     @bp.get("/worktrees")
@@ -651,10 +649,13 @@ def _create_workspace_blueprint(cfg: ServerConfig) -> Blueprint:
                     dirty_only=(str(q.get("dirty") or "0") == "1"),
                     missing_only=(str(q.get("missing") or "0") == "1"),
                 )
-        except WorkspaceReadError as e:
-            return jsonify(err(code="WS_ERROR", message=str(e))), 400
         except Exception as e:
-            return jsonify(err(code="WS_ERROR", message=str(e))), 400
+            payload, status = api_error(
+                e,
+                default_code="WS_ERROR",
+                default_message="workspace worktrees request failed",
+            )
+            return jsonify(payload), status
         return jsonify(ok(data=payload))
 
     @bp.get("/components/index")
@@ -673,7 +674,12 @@ def _create_workspace_blueprint(cfg: ServerConfig) -> Blueprint:
             idx = components_index(root=root)
             return jsonify(ok(data={"index": idx}))
         except Exception as e:
-            return jsonify(err(code="WS_ERROR", message=str(e))), 400
+            payload, status = api_error(
+                e,
+                default_code="WS_ERROR",
+                default_message="workspace components index request failed",
+            )
+            return jsonify(payload), status
 
     @bp.get("/services/index")
     def ws_services_index() -> Any:
@@ -702,16 +708,19 @@ def _create_workspace_blueprint(cfg: ServerConfig) -> Blueprint:
                     else 2_000_000
                 ),
             )
-        except WorkspaceReadError as e:
-            return jsonify(err(code="WS_ERROR", message=str(e))), 400
         except Exception as e:
-            return jsonify(err(code="WS_ERROR", message=str(e))), 400
+            payload, status = api_error(
+                e,
+                default_code="WS_ERROR",
+                default_message="workspace diff request failed",
+            )
+            return jsonify(payload), status
         return jsonify(ok(data=payload))
 
     return bp
 
 
-def _create_compound_blueprint(cfg: ServerConfig) -> Blueprint:
+def _create_compound_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
     bp = Blueprint("dashboard_compound", __name__, url_prefix="/api/v1/compound")
 
     @bp.get("/skills")
@@ -722,8 +731,13 @@ def _create_compound_blueprint(cfg: ServerConfig) -> Blueprint:
     def compound_skill(name: str) -> Any:
         try:
             return jsonify(ok(data=read_skill(cfg.repo_root, name=str(name))))
-        except FileNotFoundError as e:
-            return jsonify(err(code="NOT_FOUND", message=str(e))), 404
+        except Exception as e:
+            payload, status = api_error(
+                e,
+                default_code="NOT_FOUND",
+                default_message="skill not found",
+            )
+            return jsonify(payload), status
 
     @bp.get("/instincts")
     def compound_instincts() -> Any:
@@ -761,13 +775,20 @@ def create_app(*, cfg: ServerConfig) -> Flask:
     ) -> tuple[dict[str, Any], int]:
         error_id = uuid4().hex
         known = isinstance(exc, LoomError) or isinstance(
-            exc, (ValueError, FileNotFoundError, PermissionError)
+            exc, (ValueError, FileNotFoundError, PermissionError, WorkspaceReadError)
         ) or hasattr(exc, "code")
+        default_http_status = 500
+        if known:
+            default_http_status = 400
+            if isinstance(exc, FileNotFoundError):
+                default_http_status = 404
+            elif isinstance(exc, PermissionError):
+                default_http_status = 403
         typed = coerce_loom_error(
             exc,
             default_code=default_code,
             default_message=(default_message if known else "internal error"),
-            default_http_status=(400 if known else 500),
+            default_http_status=default_http_status,
             default_exit_code=2,
             expose_message=known,
             error_id=error_id,
@@ -789,10 +810,10 @@ def create_app(*, cfg: ServerConfig) -> Flask:
 
     app.register_blueprint(_create_health_blueprint(cfg))
     app.register_blueprint(_create_tickets_blueprint(cfg, api_error=_api_error))
-    app.register_blueprint(_create_team_blueprint(cfg))
-    app.register_blueprint(_create_memory_blueprint(cfg))
-    app.register_blueprint(_create_workspace_blueprint(cfg))
-    app.register_blueprint(_create_compound_blueprint(cfg))
+    app.register_blueprint(_create_team_blueprint(cfg, api_error=_api_error))
+    app.register_blueprint(_create_memory_blueprint(cfg, api_error=_api_error))
+    app.register_blueprint(_create_workspace_blueprint(cfg, api_error=_api_error))
+    app.register_blueprint(_create_compound_blueprint(cfg, api_error=_api_error))
     _register_error_handlers(app, api_error=_api_error)
 
     return app

@@ -65,40 +65,32 @@ def is_git_repo(path: Path) -> bool:
     return gitp.is_dir() or gitp.is_file()
 
 
-def run_quiet(cmd: Sequence[str]) -> str:
-    try:
-        p = exec_run(
-            cmd,
-            cwd=None,
-            check=False,
-            env=None,
-        )
-        return (p.stdout or "").strip()
-    except (ExecError, OSError):
-        return ""
+def git_quiet_result(
+    cwd: Path, args: Sequence[str], *, env: Optional[dict[str, str]] = None
+) -> GitCommandResult:
+    return git_result(cwd, args, env=env)
 
 
 def git_quiet(cwd: Path, args: Sequence[str]) -> str:
-    result = git_result(cwd, args)
+    result = git_quiet_result(cwd, args)
     if not result.ok:
         return ""
     return result.stdout.strip()
 
 
-def git_checked(cwd: Path, args: Sequence[str]) -> str:
-    result = git_result(cwd, args)
+def _stdout_or_raise(result: GitCommandResult) -> str:
     if not result.ok:
         msg = (result.stderr or result.stdout).strip() or "git command failed"
         raise ValueError(msg)
     return result.stdout.rstrip()
+
+
+def git_checked(cwd: Path, args: Sequence[str]) -> str:
+    return _stdout_or_raise(git_result(cwd, args))
 
 
 def git_checked_env(cwd: Path, args: Sequence[str], *, env: dict[str, str]) -> str:
-    result = git_result(cwd, args, env=env)
-    if not result.ok:
-        msg = (result.stderr or result.stdout).strip() or "git command failed"
-        raise ValueError(msg)
-    return result.stdout.rstrip()
+    return _stdout_or_raise(git_result(cwd, args, env=env))
 
 
 def git_scoped_commit(

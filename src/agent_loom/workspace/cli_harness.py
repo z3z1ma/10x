@@ -171,46 +171,16 @@ def _add_worktree_parsers(sub: Any) -> None:
     sp = sub.add_parser("worktree", help="Worktree operations")
     sub2 = sp.add_subparsers(dest="worktree_cmd", required=True)
 
-    sp2 = sub2.add_parser("add", help="Add worktrees under worktrees/<group>/<repo>")
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--path",
-        default="",
-        help="Override group worktrees base dir (creates worktrees under <path>/<repo>)",
+    _add_worktree_create_parser(
+        sub2,
+        command="add",
+        help_text="Add worktrees under worktrees/<group>/<repo>",
     )
-    _add_selection_flags(sp2, include_all=True, repos_help="Subset of repos (default all)")
-    sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
-    sp2.add_argument(
-        "--clone", action="store_true", help="Clone missing repos automatically"
+    _add_worktree_create_parser(
+        sub2,
+        command="ensure",
+        help_text="Ensure worktrees exist under worktrees/<group>/<repo> (resumable)",
     )
-    sp2.add_argument(
-        "--allow-dirty",
-        action="store_true",
-        help="Allow checking out a safe branch when local changes exist",
-    )
-    sp2.set_defaults(func=cmd_worktree_add)
-
-    sp2 = sub2.add_parser(
-        "ensure",
-        help="Ensure worktrees exist under worktrees/<group>/<repo> (resumable)",
-    )
-    sp2.add_argument("group")
-    sp2.add_argument(
-        "--path",
-        default="",
-        help="Override group worktrees base dir (creates worktrees under <path>/<repo>)",
-    )
-    _add_selection_flags(sp2, include_all=True, repos_help="Subset of repos (default all)")
-    sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
-    sp2.add_argument(
-        "--clone", action="store_true", help="Clone missing repos automatically"
-    )
-    sp2.add_argument(
-        "--allow-dirty",
-        action="store_true",
-        help="Allow checking out a safe branch when local changes exist",
-    )
-    sp2.set_defaults(func=cmd_worktree_add)
 
     sp2 = sub2.add_parser(
         "rm", help="Remove worktrees for a group (optionally subset repos)"
@@ -393,6 +363,25 @@ def _add_worktree_parsers(sub: Any) -> None:
     sp2.set_defaults(func=cmd_worktree_gc)
 
 
+def _add_worktree_create_parser(sub2: Any, *, command: str, help_text: str) -> None:
+    sp2 = sub2.add_parser(command, help=help_text)
+    sp2.add_argument("group")
+    sp2.add_argument(
+        "--path",
+        default="",
+        help="Override group worktrees base dir (creates worktrees under <path>/<repo>)",
+    )
+    _add_selection_flags(sp2, include_all=True, repos_help="Subset of repos (default all)")
+    sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
+    sp2.add_argument("--clone", action="store_true", help="Clone missing repos automatically")
+    sp2.add_argument(
+        "--allow-dirty",
+        action="store_true",
+        help="Allow checking out a safe branch when local changes exist",
+    )
+    sp2.set_defaults(func=cmd_worktree_add)
+
+
 def _add_snapshot_parsers(sub: Any) -> None:
     sp = sub.add_parser("snapshot", help="Snapshot/compare/restore repo or worktree state")
     sub_snap = sp.add_subparsers(dest="snapshot_cmd", required=True)
@@ -472,16 +461,7 @@ def _add_impact_parsers(sub: Any) -> None:
     spi.set_defaults(func=cmd_harness_impact_snapshot)
 
 
-def add_harness_parser(
-    root_sub: Any,
-    *,
-    name: str = "harness",
-    help_text: str = "Workspace harness control plane",
-    description_text: str = "Workspace harness control plane",
-) -> None:
-    p = root_sub.add_parser(name, help=help_text, description=description_text)
-    sub = p.add_subparsers(dest="harness_cmd", required=True)
-
+def _add_init_parser(sub: Any) -> None:
     sp = sub.add_parser(
         "init",
         help="Initialize harness manifest + dirs + baseline .gitignore",
@@ -498,6 +478,8 @@ def add_harness_parser(
     )
     sp.set_defaults(func=cmd_harness_init)
 
+
+def _add_exec_parser(sub: Any) -> None:
     sp = sub.add_parser(
         "exec", help="Run a command across repos (optionally a worktree group)"
     )
@@ -524,10 +506,9 @@ def add_harness_parser(
         help="Command to run (use: exec -- <cmd...>)",
     )
     sp.set_defaults(func=cmd_harness_exec)
-    _add_repo_parsers(sub)
-    _add_set_parsers(sub)
-    _add_lease_parsers(sub)
 
+
+def _add_sandbox_parsers(sub: Any) -> None:
     sp = sub.add_parser("sandbox", help="Sandbox worktrees (harness)")
     subs = sp.add_subparsers(dest="sandbox_cmd", required=True)
 
@@ -536,9 +517,7 @@ def add_harness_parser(
     spc.add_argument("--base-ref", required=True, help="Base ref-ish")
     spc.add_argument("--ttl", default="2h")
     spc.add_argument("--purpose", default="sandbox")
-    spc.add_argument(
-        "--clone", action="store_true", help="Clone missing repos automatically"
-    )
+    spc.add_argument("--clone", action="store_true", help="Clone missing repos automatically")
     _add_selection_flags(spc, include_all=True, repos_help="Subset of repos (default all)")
     spc.set_defaults(func=cmd_harness_sandbox_create)
 
@@ -556,6 +535,8 @@ def add_harness_parser(
     spg.add_argument("--yes", action="store_true")
     spg.set_defaults(func=cmd_harness_sandbox_gc)
 
+
+def _add_cleanup_parsers(sub: Any) -> None:
     sp = sub.add_parser("cleanup", help="Suggest/apply TTL-based group cleanup")
     subc = sp.add_subparsers(dest="cleanup_cmd", required=True)
 
@@ -573,6 +554,8 @@ def add_harness_parser(
     spa.add_argument("--yes", action="store_true")
     spa.set_defaults(func=cmd_harness_cleanup_apply)
 
+
+def _add_repo_lifecycle_parsers(sub: Any) -> None:
     sp = sub.add_parser(
         "add", help="Imperatively add a repo to workspace.json (optionally clone)"
     )
@@ -593,9 +576,7 @@ def add_harness_parser(
         help="History depth for shallow repos (default: 1)",
     )
     sp.add_argument("--clone", action="store_true", help="Clone + fetch immediately")
-    sp.add_argument(
-        "--force", action="store_true", help="Overwrite existing repo entry"
-    )
+    sp.add_argument("--force", action="store_true", help="Overwrite existing repo entry")
     sp.set_defaults(func=cmd_add)
 
     sp = sub.add_parser(
@@ -631,9 +612,7 @@ def add_harness_parser(
         "sync",
         help="Fetch/prune repos; optionally clone missing; refresh components index",
     )
-    sp.add_argument(
-        "--clone", action="store_true", help="Clone missing repos before fetching"
-    )
+    sp.add_argument("--clone", action="store_true", help="Clone missing repos before fetching")
     _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
     sp.add_argument(
         "--jobs",
@@ -669,9 +648,7 @@ def add_harness_parser(
     sp.add_argument("branch")
     _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
     sp.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
-    sp.add_argument(
-        "--clone", action="store_true", help="Clone missing repos automatically"
-    )
+    sp.add_argument("--clone", action="store_true", help="Clone missing repos automatically")
     sp.add_argument(
         "--reset",
         action="store_true",
@@ -694,38 +671,68 @@ def add_harness_parser(
     )
     sp.set_defaults(func=cmd_branch)
 
-    _add_worktree_parsers(sub)
 
-    _add_snapshot_parsers(sub)
+def _add_refresh_index_parser(
+    subcommands: Any, *, help_text: str, handler: Any
+) -> None:
+    sp = subcommands.add_parser("refresh-index", help=help_text)
+    sp.add_argument("--print", action="store_true", help="Print a concise view after refresh")
+    sp.set_defaults(func=handler)
 
+
+def _add_components_parsers(sub: Any) -> None:
     sp = sub.add_parser("components", help="Component metadata cache operations")
     sub3 = sp.add_subparsers(dest="components_cmd", required=True)
-
-    sp3 = sub3.add_parser(
-        "refresh-index", help="Rebuild components/index.json from components/*.md"
+    _add_refresh_index_parser(
+        sub3,
+        help_text="Rebuild components/index.json from components/*.md",
+        handler=cmd_components_refresh_index,
     )
-    sp3.add_argument(
-        "--print", action="store_true", help="Print a concise view after refresh"
-    )
-    sp3.set_defaults(func=cmd_components_refresh_index)
 
+
+def _add_services_parsers(sub: Any) -> None:
     sp = sub.add_parser("services", help="Alias for components (microservice naming)")
     sub3 = sp.add_subparsers(dest="components_cmd", required=True)
-    sp3 = sub3.add_parser("refresh-index", help="Alias for components refresh-index")
-    sp3.add_argument(
-        "--print", action="store_true", help="Print a concise view after refresh"
+    _add_refresh_index_parser(
+        sub3,
+        help_text="Alias for components refresh-index",
+        handler=cmd_services_refresh_index,
     )
-    sp3.set_defaults(func=cmd_services_refresh_index)
 
-    _add_deps_parsers(sub)
-    _add_impact_parsers(sub)
 
+def _add_deepen_parser(sub: Any) -> None:
     sp = sub.add_parser("deepen", help="Deepen history of a shallow repo")
     sp.add_argument("repo", help="Repo name")
-    sp.add_argument(
-        "--depth", type=int, default=50, help="Number of commits to deepen by"
-    )
+    sp.add_argument("--depth", type=int, default=50, help="Number of commits to deepen by")
     sp.set_defaults(func=cmd_deepen)
+
+
+def add_harness_parser(
+    root_sub: Any,
+    *,
+    name: str = "harness",
+    help_text: str = "Workspace harness control plane",
+    description_text: str = "Workspace harness control plane",
+) -> None:
+    p = root_sub.add_parser(name, help=help_text, description=description_text)
+    sub = p.add_subparsers(dest="harness_cmd", required=True)
+
+    _add_init_parser(sub)
+    _add_exec_parser(sub)
+    _add_repo_parsers(sub)
+    _add_set_parsers(sub)
+    _add_lease_parsers(sub)
+    _add_sandbox_parsers(sub)
+    _add_cleanup_parsers(sub)
+    _add_repo_lifecycle_parsers(sub)
+
+    _add_worktree_parsers(sub)
+    _add_snapshot_parsers(sub)
+    _add_components_parsers(sub)
+    _add_services_parsers(sub)
+    _add_deps_parsers(sub)
+    _add_impact_parsers(sub)
+    _add_deepen_parser(sub)
 
     return None
 
