@@ -1319,6 +1319,36 @@ def _append_log_line(path: Path, line: str) -> None:
     best_effort(_write, label="append_log_line")
 
 
+def _exception_detail(error: BaseException) -> str:
+    return f"{type(error).__name__}: {error}"
+
+
+def _record_runtime_warning(
+    *,
+    paths: RunPaths,
+    run: Mapping[str, Any],
+    code: str,
+    summary: str,
+    error: Optional[BaseException] = None,
+    refs: Optional[Mapping[str, Any]] = None,
+    data: Optional[Mapping[str, Any]] = None,
+) -> None:
+    payload_data: dict[str, Any] = {"code": str(code or "").strip() or "warning"}
+    if data:
+        payload_data.update(dict(data))
+    if error is not None:
+        payload_data["detail"] = _exception_detail(error)
+    safe_write_event(
+        paths,
+        event_type="run.warning",
+        run=run,
+        ok=False,
+        summary=summary,
+        refs=dict(refs or {}),
+        data=payload_data,
+    )
+
+
 def _sidecar_pid_file(paths: RunPaths, recipient: str) -> Path:
     safe = (
         sanitize(str(recipient or ""), allow=r"a-zA-Z0-9._-", max_len=48) or "unknown"
@@ -2912,8 +2942,15 @@ def _start_boot_manager_session(
         mgr = dict(run.get("manager") or {})
         mgr["merge_target"] = f"{rm}/{tb} push={p}"
         run["manager"] = mgr
-    except Exception:
-        pass
+    except Exception as exc:
+        _record_runtime_warning(
+            paths=paths,
+            run=run,
+            code="manager.merge_target",
+            summary="Failed to derive manager merge target hint",
+            error=exc,
+            refs={"session": session, "window": manager_window},
+        )
 
     return _ManagerBootstrapResult(
         manager_window=manager_window,
@@ -5603,8 +5640,15 @@ def doctor(*, team: str, repo: Optional[Path] = None) -> DoctorResult:
                     add_suggestion(
                         f"loom team spawn-integrator {paths.team} --require-clean"
                     )
-    except Exception:
-        pass
+    except Exception as exc:
+        _record_runtime_warning(
+            paths=paths,
+            run=run,
+            code="doctor.integrator_dirty_check",
+            summary="Failed to evaluate integrator worktree dirtiness",
+            error=exc,
+            refs={"team": paths.team},
+        )
 
     return DoctorResult(
         team=str(run.get("team") or paths.team),
@@ -5667,8 +5711,19 @@ def capture(
                         w2["pane_id"] = pane_id
                         workers[wid] = w2
                         run["workers"] = workers
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        _record_runtime_warning(
+                            paths=paths,
+                            run=run,
+                            code="capture.refresh_pane_id",
+                            summary="Failed to persist refreshed pane id",
+                            error=exc,
+                            refs={
+                                "worker_id": wid,
+                                "window": win,
+                                "pane_id": pane_id,
+                            },
+                        )
                     panes = tmux_list_panes(session)
                     pane = panes.get(pane_id)
 
@@ -6485,8 +6540,15 @@ def ship(
             force=False,
             line_info="ship",
         )
-    except Exception:
-        pass
+    except Exception as exc:
+        _record_runtime_warning(
+            paths=paths,
+            run=run,
+            code="ship.notify_manager",
+            summary="Failed to send ship completion notification to manager inbox",
+            error=exc,
+            refs={"team": paths.team},
+        )
 
     if merged and push_enabled and not push_ok:
         raise TeamError(
