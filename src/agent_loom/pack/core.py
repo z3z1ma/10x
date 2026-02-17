@@ -4,7 +4,7 @@ import fnmatch
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
 
-from agent_loom.pack.lock import index_packs, load_lock, now_iso, save_lock
+from agent_loom.pack.lock import index_packs, load_lock_detail, now_iso, save_lock
 from agent_loom.pack.models import (
     InstalledPack,
     LockFile,
@@ -70,7 +70,7 @@ def list_packs() -> List[PackManifest]:
 
 
 def status(repo_root: Path) -> Dict[str, object]:
-    lock = load_lock(repo_root)
+    lock, lock_warnings = load_lock_detail(repo_root, repair=True)
     packs = index_packs(lock)
     drift_total = 0
     missing_total = 0
@@ -94,11 +94,12 @@ def status(repo_root: Path) -> Dict[str, object]:
         "packs": by_pack,
         "drifted": drift_total,
         "missing": missing_total,
+        "warnings": sorted(set(lock_warnings)),
     }
 
 
 def doctor(repo_root: Path, *, pack_id: Optional[str] = None) -> Dict[str, object]:
-    lock = load_lock(repo_root)
+    lock, lock_warnings = load_lock_detail(repo_root, repair=True)
     packs = index_packs(lock)
     want = [pack_id] if pack_id else sorted(packs.keys())
     results: List[Dict[str, object]] = []
@@ -120,7 +121,7 @@ def doctor(repo_root: Path, *, pack_id: Optional[str] = None) -> Dict[str, objec
                 "missing": missing,
             }
         )
-    return {"ok": ok, "results": results}
+    return {"ok": ok, "results": results, "warnings": sorted(set(lock_warnings))}
 
 
 def _scan_drift_missing(
@@ -146,7 +147,7 @@ def install_pack(
     force: bool = False,
 ) -> PackApplyResult:
     manifest = load_manifest(pack_id)
-    lock = load_lock(repo_root)
+    lock, lock_warnings = load_lock_detail(repo_root, repair=True, dry_run=dry_run)
     packs_by_id = index_packs(lock)
     existing = packs_by_id.get(pack_id)
 
@@ -164,7 +165,7 @@ def install_pack(
     drifted: List[str] = []
     missing: List[str] = []
     removed: List[str] = []
-    warnings: List[str] = []
+    warnings: List[str] = list(lock_warnings)
 
     # If already installed, treat install as update.
     if existing is not None:
@@ -253,7 +254,7 @@ def update_pack(
     force: bool = False,
 ) -> PackApplyResult:
     manifest = load_manifest(pack_id)
-    lock = load_lock(repo_root)
+    lock, lock_warnings = load_lock_detail(repo_root, repair=True, dry_run=dry_run)
     packs_by_id = index_packs(lock)
     existing = packs_by_id.get(pack_id)
     if existing is None:
@@ -276,7 +277,7 @@ def update_pack(
     wrote: List[str] = []
     skipped: List[str] = []
     removed: List[str] = []
-    warnings: List[str] = []
+    warnings: List[str] = list(lock_warnings)
 
     drifted_tracked: set[str] = set()
     for pth, sha in existing_files.items():
@@ -400,7 +401,7 @@ def uninstall_pack(
     force: bool = False,
 ) -> PackApplyResult:
     manifest = load_manifest(pack_id)
-    lock = load_lock(repo_root)
+    lock, lock_warnings = load_lock_detail(repo_root, repair=True, dry_run=dry_run)
     packs_by_id = index_packs(lock)
     existing = packs_by_id.get(pack_id)
     if existing is None:
@@ -410,7 +411,7 @@ def uninstall_pack(
     removed: List[str] = []
     skipped: List[str] = []
     wrote: List[str] = []
-    warnings: List[str] = []
+    warnings: List[str] = list(lock_warnings)
     touched: List[Path] = []
 
     for e in existing.files:
