@@ -1,6 +1,6 @@
 ---
 "id": "al-d94d"
-"status": "in_progress"
+"status": "review"
 "deps": []
 "links": []
 "created": "2026-02-17T06:25:54Z"
@@ -75,3 +75,7 @@ Implemented strict lockfile parser in pack/lock.py with schema validation, sha/p
 **2026-02-17T06:34:33Z**
 
 Validation + CLI UX + regression tests implemented. Verified: uv run ruff check . (pass), uv run basedpyright (pass), uv run pytest tests/test_pack_lifecycle.py (pass), uv run pytest tests/test_pack_cli_ux.py (pass). Full uv run pytest currently fails in existing unrelated suites (compound adapter hooks + loom init expectations), no failures in pack suites.
+
+**2026-02-17T06:35:28Z**
+
+Committed 1763178: strict lock schema validation (top-level + pack + file entry invariants), deterministic duplicate repair path (safe dedupe + lock rewrite), hard-fail on conflicting duplicates, CLI LOCK_INVALID error envelope with actionable hint, and malformed-lock regression tests in lifecycle + CLI UX suites. Added changelog fragment .changes/unreleased/Fixed-20260216-233508.yaml.

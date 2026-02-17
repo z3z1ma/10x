@@ -1,6 +1,6 @@
 ---
 "id": "al-c09c"
-"status": "open"
+"status": "in_progress"
 "deps":
 - "al-d94d"
 "links": []
@@ -59,3 +59,9 @@ Finish and harden the operator-facing drift diff workflow so pack drift inspecti
 - Diff rendering for large files can overwhelm output.
 - Non-text/binary files may not produce diffs; messaging must remain clear.
 - Mitigation: preserve truncation limits and explicit “diff unavailable” messaging.
+
+## Notes
+
+**2026-02-17T06:36:25Z**
+
+Started implementation. Audited pack CLI: status/install/update/uninstall each currently duplicate diff rendering; status guidance text differs from install/update/uninstall guidance. Next: consolidate diff payload/render helpers and expand tests for status+install/update/uninstall text/json parity including diff-unavailable path.
