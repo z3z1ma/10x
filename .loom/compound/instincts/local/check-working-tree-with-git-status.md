@@ -7,7 +7,7 @@ status: active
 domain: workflow
 source: local
 created_at: 2026-02-15T21:06:52.548579Z
-updated_at: 2026-02-16T06:46:10.120387Z
+updated_at: 2026-02-17T06:33:21.212308Z
 tags: workflow, git, state-awareness, safety
 notes: This pattern appears around coordination and validation transitions, reducing state drift risk before next actions.
 ---
@@ -50,6 +50,8 @@ Run `git status --porcelain` (or `git status --short`) at key checkpoints to con
 - ts=2026-02-16T06:24:33.632915Z source_id=obs-git-status-062433 source_hash=git-status-porcelain
 - ts=2026-02-16T06:24:47.048522Z source_id=obs-git-status-062447 source_hash=git-status-porcelain
 - ts=2026-02-16T06:46:09.886820Z source_id=obs-git-status-064609 source_hash=git-status-porcelain
+- ts=2026-02-16T06:46:27.488209Z source_id=obs-git-status-064627 source_hash=git-status-porcelain
+- ts=2026-02-17T06:33:20.989643Z source_id=obs-git-status-063320 source_hash=git-status-porcelain
 
 ## Notes
 This pattern appears around coordination and validation transitions, reducing state drift risk before next actions.
