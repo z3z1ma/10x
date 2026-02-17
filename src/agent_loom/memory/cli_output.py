@@ -19,6 +19,7 @@ from agent_loom.memory.models import (
 )
 from agent_loom.memory.utils import format_json
 
+
 def emit(payload: Any, fmt: str) -> None:
     if fmt == "json":
         print(format_json(payload))

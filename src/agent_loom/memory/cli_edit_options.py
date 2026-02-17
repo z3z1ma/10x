@@ -188,7 +188,9 @@ def _build_edit_options(args: argparse.Namespace) -> _EditRunOptions:
     return _EditRunOptions(
         note_id=str(getattr(args, "id", "") or ""),
         title=(str(title) if title is not None else None),
-        visibility=(str(visibility).strip().lower() if visibility is not None else None),
+        visibility=(
+            str(visibility).strip().lower() if visibility is not None else None
+        ),
         status=(str(status).strip().lower() if status is not None else None),
         tag=tag,
         remove_tag=remove_tag,

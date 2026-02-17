@@ -500,7 +500,9 @@ def _extract_tool_fields(
         [raw.get("tool_name"), raw.get("toolName"), *fallback_name_candidates]
     )
     tool_input = _first_mapping([raw.get("tool_input"), *fallback_input_candidates])
-    tool_response = _first_mapping([raw.get("tool_response"), *fallback_response_candidates])
+    tool_response = _first_mapping(
+        [raw.get("tool_response"), *fallback_response_candidates]
+    )
     return tool_name, tool_input, tool_response
 
 

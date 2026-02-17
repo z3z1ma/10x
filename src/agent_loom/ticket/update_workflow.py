@@ -141,12 +141,16 @@ def _apply_frontmatter_updates(
     if spec.assignee:
         ticket.fm["assignee"] = spec.assignee
     if spec.tags is not None:
-        ticket.fm["tags"] = [x.strip() for x in (spec.tags or "").split(",") if x.strip()]
+        ticket.fm["tags"] = [
+            x.strip() for x in (spec.tags or "").split(",") if x.strip()
+        ]
     if spec.external_ref is not None:
         ticket.fm["external_ref"] = str(spec.external_ref or "").strip()
 
 
-def _apply_parent_update(store: TicketStore, ticket: Ticket, *, spec: TicketUpdateSpec) -> None:
+def _apply_parent_update(
+    store: TicketStore, ticket: Ticket, *, spec: TicketUpdateSpec
+) -> None:
     if spec.remove_parent:
         ticket.fm["parent"] = ""
 
@@ -217,10 +221,14 @@ def _apply_dependency_update(
     ticket.fm["deps"] = dep_ids
 
 
-def _apply_link_replace(store: TicketStore, ticket: Ticket, *, links: Optional[str]) -> None:
+def _apply_link_replace(
+    store: TicketStore, ticket: Ticket, *, links: Optional[str]
+) -> None:
     if links is None:
         return
-    link_ids = [] if _is_clear_token(str(links or "")) else _parse_ref_list(store, links)
+    link_ids = (
+        [] if _is_clear_token(str(links or "")) else _parse_ref_list(store, links)
+    )
     if ticket.id in link_ids:
         raise TicketArgError(
             code="ARG",
@@ -300,7 +308,9 @@ def _apply_incremental_link_update(
     ticket.fm["links"] = sorted(current_links)
 
 
-def _apply_body_title_updates(ticket: Ticket, *, body: Optional[str], title: Optional[str]) -> None:
+def _apply_body_title_updates(
+    ticket: Ticket, *, body: Optional[str], title: Optional[str]
+) -> None:
     if body is not None:
         ticket.body = body if body.endswith("\n") else (body + "\n")
     if title:

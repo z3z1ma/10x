@@ -203,11 +203,15 @@ def _move_note_for_visibility(
                     "error": f"{type(exc).__name__}: {exc}",
                 },
             ) from exc
-        return note_path, False, _format_move_skipped_warning(
-            note_id=note_id,
-            from_path=note_path,
-            to_path=candidate,
-            error=exc,
+        return (
+            note_path,
+            False,
+            _format_move_skipped_warning(
+                note_id=note_id,
+                from_path=note_path,
+                to_path=candidate,
+                error=exc,
+            ),
         )
 
 

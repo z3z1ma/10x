@@ -510,7 +510,10 @@ def _add_show_update_note_parsers(sub: Any, common: TicketArgumentParser) -> Non
     )
     sp.add_argument("--force", action="store_true")
 
-    for cmd, help_text in [("add-note", "Append a note"), ("note", "Alias for add-note")]:
+    for cmd, help_text in [
+        ("add-note", "Append a note"),
+        ("note", "Alias for add-note"),
+    ]:
         sp = sub.add_parser(cmd, parents=[common], help=help_text)
         sp.add_argument("ticket", type=_arg_ticket_ref)
         sp.add_argument("note", nargs="?", default="")

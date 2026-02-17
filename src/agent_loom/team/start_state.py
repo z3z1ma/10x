@@ -124,7 +124,9 @@ def normalize_harness_configs(run: Dict[str, Any]) -> None:
         cfg.setdefault("bin", str(cfg.get("bin") or ""))
 
         raw_models = cfg.get("models")
-        models: Dict[str, str] = dict(raw_models) if isinstance(raw_models, dict) else {}
+        models: Dict[str, str] = (
+            dict(raw_models) if isinstance(raw_models, dict) else {}
+        )
         for role in ROLE_MODEL_KEYS:
             models.setdefault(role, "")
         cfg["models"] = models

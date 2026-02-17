@@ -164,17 +164,23 @@ def clear_sprint_state(*, run: MutableMapping[str, Any]) -> int:
     return rev
 
 
-def build_prep_sprint_ticket_description(*, objective: str, sprint_name: str, tag: str) -> str:
+def build_prep_sprint_ticket_description(
+    *, objective: str, sprint_name: str, tag: str
+) -> str:
     desc_lines = []
     if objective:
         desc_lines.append("Objective:")
         desc_lines.append(objective)
         desc_lines.append("")
-    desc_lines.append("Sprint prep deliverable (fill this ticket in, then create tickets):")
+    desc_lines.append(
+        "Sprint prep deliverable (fill this ticket in, then create tickets):"
+    )
     desc_lines.append("")
     desc_lines.append("## Sprint Brief")
     desc_lines.append("")
-    desc_lines.append("Write a short sprint brief that a cheaper worker model can follow.")
+    desc_lines.append(
+        "Write a short sprint brief that a cheaper worker model can follow."
+    )
     desc_lines.append("")
     desc_lines.append("Required sections:")
     desc_lines.append("- Objective restatement: ...")
@@ -182,7 +188,9 @@ def build_prep_sprint_ticket_description(*, objective: str, sprint_name: str, ta
     desc_lines.append("- Why this sprint focus is the best next step: ...")
     desc_lines.append("- Current state:")
     desc_lines.append("  - Existing tickets that matter: ...")
-    desc_lines.append("  - Codebase state that matters (git status/log, key modules): ...")
+    desc_lines.append(
+        "  - Codebase state that matters (git status/log, key modules): ..."
+    )
     desc_lines.append("- Risks + unknowns (and how we'll resolve them): ...")
     desc_lines.append("")
     desc_lines.append("## Ticket Set")
@@ -197,7 +205,9 @@ def build_prep_sprint_ticket_description(*, objective: str, sprint_name: str, ta
     desc_lines.append("")
     desc_lines.append("Ticket quality rubric (non-negotiable):")
     desc_lines.append("- Scope + explicit non-goals")
-    desc_lines.append("- Step-by-step implementation plan (include file paths when possible)")
+    desc_lines.append(
+        "- Step-by-step implementation plan (include file paths when possible)"
+    )
     desc_lines.append("- Acceptance criteria (observable outcomes)")
     desc_lines.append("- Verification commands (use `uv run ...` for Python)")
     desc_lines.append("- Risks/edge cases")

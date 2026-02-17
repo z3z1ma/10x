@@ -20,7 +20,6 @@ from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.output import emit_result
 
 
-
 def cmd_worktree_add(args: argparse.Namespace) -> None:
     root = harness_root()
     res = worktree_add(

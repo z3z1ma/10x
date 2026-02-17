@@ -30,9 +30,7 @@ def ensure_writes_enabled(cfg: ServerConfig) -> tuple[bool, dict[str, Any] | Non
     return False, err(code="WRITES_DISABLED", message="Writes are disabled")
 
 
-def require_auth(
-    cfg: ServerConfig, req: Request
-) -> tuple[bool, dict[str, Any] | None]:
+def require_auth(cfg: ServerConfig, req: Request) -> tuple[bool, dict[str, Any] | None]:
     need = require_token_default(str(req.host.split(":")[0]), cfg.require_token)
     res = authorize_request(req=req, token=cfg.token, require_token=need)
     if res.ok:

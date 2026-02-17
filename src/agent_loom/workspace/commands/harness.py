@@ -27,7 +27,6 @@ from agent_loom.workspace.harness.sandbox import (
 from agent_loom.workspace.output import emit_result
 
 
-
 def cmd_harness_init(args: argparse.Namespace) -> None:
     root_arg = str(getattr(args, "root", "") or "").strip()
     root = Path(root_arg).expanduser().resolve() if root_arg else Path.cwd().resolve()

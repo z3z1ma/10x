@@ -14,8 +14,9 @@ def create_team_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
 
     @bp.get("")
     def teams_list() -> Any:
-        from agent_loom.team.constants import DEFAULT_RUNS_DIR
         import json
+
+        from agent_loom.team.constants import DEFAULT_RUNS_DIR
 
         runs_dir = cfg.repo_root / DEFAULT_RUNS_DIR
         teams: list[dict[str, Any]] = []
@@ -27,7 +28,9 @@ def create_team_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
                 if not run_json.exists():
                     continue
                 try:
-                    run = json.loads(run_json.read_text(encoding="utf-8", errors="replace"))
+                    run = json.loads(
+                        run_json.read_text(encoding="utf-8", errors="replace")
+                    )
                 except Exception:
                     run = {}
                 teams.append(
@@ -62,8 +65,9 @@ def create_team_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
 
     @bp.get("/<team>/run")
     def team_run(team: str) -> Any:
-        from agent_loom.team.constants import DEFAULT_RUNS_DIR
         import json
+
+        from agent_loom.team.constants import DEFAULT_RUNS_DIR
 
         run_json = cfg.repo_root / DEFAULT_RUNS_DIR / str(team) / "run.json"
         if not run_json.exists():
@@ -81,8 +85,9 @@ def create_team_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
 
     @bp.get("/<team>/events")
     def team_events(team: str) -> Any:
-        from agent_loom.team.constants import DEFAULT_RUNS_DIR
         import json
+
+        from agent_loom.team.constants import DEFAULT_RUNS_DIR
 
         q = request.args
         limit = int(q.get("limit") or 100)
@@ -111,8 +116,9 @@ def create_team_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
 
     @bp.get("/<team>/inbox")
     def team_inbox(team: str) -> Any:
-        from agent_loom.team.constants import DEFAULT_RUNS_DIR
         import json
+
+        from agent_loom.team.constants import DEFAULT_RUNS_DIR
 
         base = cfg.repo_root / DEFAULT_RUNS_DIR / str(team) / "inbox"
         read_dir = base / "read"
@@ -144,8 +150,9 @@ def create_team_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
 
     @bp.get("/<team>/captures")
     def team_captures(team: str) -> Any:
-        from agent_loom.team.constants import DEFAULT_RUNS_DIR
         import json
+
+        from agent_loom.team.constants import DEFAULT_RUNS_DIR
 
         captures_dir = cfg.repo_root / DEFAULT_RUNS_DIR / str(team) / "captures"
         if not captures_dir.exists():
@@ -169,8 +176,9 @@ def create_team_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
 
     @bp.get("/<team>/captures/text")
     def team_capture_text(team: str) -> Any:
-        from agent_loom.team.constants import DEFAULT_RUNS_DIR
         import json
+
+        from agent_loom.team.constants import DEFAULT_RUNS_DIR
 
         meta = str(request.args.get("meta") or "").strip()
         if not meta:
@@ -208,7 +216,9 @@ def create_team_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprint:
 
         meta_payload: dict[str, Any] = {}
         try:
-            meta_payload0 = json.loads(meta_file.read_text(encoding="utf-8", errors="replace"))
+            meta_payload0 = json.loads(
+                meta_file.read_text(encoding="utf-8", errors="replace")
+            )
             if isinstance(meta_payload0, dict):
                 meta_payload = meta_payload0
         except Exception:

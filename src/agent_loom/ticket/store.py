@@ -36,6 +36,7 @@ from agent_loom.ticket.normalize import (
     normalize_type,
 )
 
+
 class LockError(RuntimeError):
     pass
 

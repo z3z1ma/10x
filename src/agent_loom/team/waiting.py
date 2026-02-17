@@ -9,7 +9,12 @@ from agent_loom.team.constants import (
     DEFAULT_AUTOCAPTURE_MAX_S,
     DEFAULT_AUTOCAPTURE_MIN_S,
 )
-from agent_loom.team.events import _event_stamp, best_effort, safe_write_event, write_event
+from agent_loom.team.events import (
+    _event_stamp,
+    best_effort,
+    safe_write_event,
+    write_event,
+)
 from agent_loom.team.inbox import _inbox_write_and_maybe_nudge
 from agent_loom.team.io import _atomic_write_json, _atomic_write_text
 from agent_loom.team.run_state import RunPaths, locked_run
@@ -238,7 +243,7 @@ def manager_checkin_after_wait(
                 eligible.append(str(wid))
 
         eligible.sort(key=lambda w: (by_worker.get(w, 0.0), w))
-        targets = eligible[: _CHECKIN_MAX_TARGETS]
+        targets = eligible[:_CHECKIN_MAX_TARGETS]
         if not targets:
             mgr["checkin"] = checkin
             ops["manager"] = mgr

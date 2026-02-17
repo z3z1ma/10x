@@ -17,6 +17,7 @@ from agent_loom.memory.constants import (
 )
 from agent_loom.memory.utils import emit_error
 
+
 class MemoryArgumentParser(StrictArgumentParser):
     pass
 
@@ -990,5 +991,3 @@ def _effective_format(args: argparse.Namespace) -> str:
     if args.format is None and args.cmd in {"show", "open"}:
         return "text"
     return args.format or "json"
-
-

@@ -168,7 +168,9 @@ def _render_repo_worktree_prune(result: RepoWorktreePruneResult) -> str:
     return f"pruned: {_bool(result.pruned)}\n"
 
 
-def _render_repo_worktree_ensure_detached(result: RepoWorktreeEnsureDetachedResult) -> str:
+def _render_repo_worktree_ensure_detached(
+    result: RepoWorktreeEnsureDetachedResult,
+) -> str:
     return (
         "\n".join(
             [
@@ -533,7 +535,9 @@ def _render_snapshot_restore(result: SnapshotRestoreResult) -> str:
 
 
 def _render_components_refresh_index(result: ComponentsRefreshIndexResult) -> str:
-    components = result.index.get("components", {}) if isinstance(result.index, dict) else {}
+    components = (
+        result.index.get("components", {}) if isinstance(result.index, dict) else {}
+    )
     return (
         "\n".join(
             [

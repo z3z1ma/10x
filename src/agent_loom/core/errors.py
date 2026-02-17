@@ -89,11 +89,14 @@ def coerce_loom_error(
     suggestions_obj = getattr(exc, "suggestions", None)
     suggestions = (
         [str(s) for s in suggestions_obj if str(s).strip()]
-        if isinstance(suggestions_obj, Sequence) and not isinstance(suggestions_obj, str)
+        if isinstance(suggestions_obj, Sequence)
+        and not isinstance(suggestions_obj, str)
         else []
     )
 
-    http_status = int(getattr(exc, "http_status", default_http_status) or default_http_status)
+    http_status = int(
+        getattr(exc, "http_status", default_http_status) or default_http_status
+    )
     exit_code = int(getattr(exc, "exit_code", default_exit_code) or default_exit_code)
     message = str(exc) if expose_message else str(default_message)
     return LoomError(

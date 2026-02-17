@@ -27,7 +27,8 @@ def create_workspace_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprin
                 cfg,
                 mode=str(q.get("mode") or cfg.workspace_mode),
                 root_arg=str(
-                    q.get("root") or (str(cfg.workspace_root) if cfg.workspace_root else "")
+                    q.get("root")
+                    or (str(cfg.workspace_root) if cfg.workspace_root else "")
                 ),
             )
             payload = workspace_meta(mode=mode, root=root)
@@ -48,7 +49,8 @@ def create_workspace_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprin
                 cfg,
                 mode=str(q.get("mode") or cfg.workspace_mode),
                 root_arg=str(
-                    q.get("root") or (str(cfg.workspace_root) if cfg.workspace_root else "")
+                    q.get("root")
+                    or (str(cfg.workspace_root) if cfg.workspace_root else "")
                 ),
             )
             if mode == "repo":
@@ -83,7 +85,8 @@ def create_workspace_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprin
                 cfg,
                 mode=str(q.get("mode") or cfg.workspace_mode),
                 root_arg=str(
-                    q.get("root") or (str(cfg.workspace_root) if cfg.workspace_root else "")
+                    q.get("root")
+                    or (str(cfg.workspace_root) if cfg.workspace_root else "")
                 ),
             )
             if mode != "harness":
@@ -110,7 +113,8 @@ def create_workspace_blueprint(cfg: ServerConfig, *, api_error: Any) -> Blueprin
                 cfg,
                 mode=str(q.get("mode") or cfg.workspace_mode),
                 root_arg=str(
-                    q.get("root") or (str(cfg.workspace_root) if cfg.workspace_root else "")
+                    q.get("root")
+                    or (str(cfg.workspace_root) if cfg.workspace_root else "")
                 ),
             )
             payload = worktree_diff(

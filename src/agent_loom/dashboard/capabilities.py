@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Final
 
-
 CAPABILITY_ENDPOINTS: Final[list[dict[str, str]]] = [
     {"method": "GET", "path": "/api/v1/health"},
     {"method": "GET", "path": "/api/v1/capabilities"},
@@ -32,4 +31,3 @@ CAPABILITY_ENDPOINTS: Final[list[dict[str, str]]] = [
     {"method": "GET", "path": "/api/v1/compound/skills/<name>"},
     {"method": "GET", "path": "/api/v1/compound/instincts"},
 ]
-

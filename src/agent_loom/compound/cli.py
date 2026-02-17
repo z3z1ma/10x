@@ -458,7 +458,9 @@ def _handle_instinct_status(args: argparse.Namespace) -> int:
         paths = compound_paths(repo)
         store = load_instincts(paths.instincts_file)
         status = observer_status(repo=repo)
-        active = [instinct for instinct in store.instincts if instinct.status == "active"]
+        active = [
+            instinct for instinct in store.instincts if instinct.status == "active"
+        ]
         payload = {
             "ok": True,
             "repo": str(repo),

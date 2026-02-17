@@ -21,6 +21,7 @@ from agent_loom.workspace.core import (
     repo_worktree_rm_path,
     repo_worktree_status,
 )
+from agent_loom.workspace.output import emit_result
 from agent_loom.workspace.repo.cleanup import (
     repo_worktree_cleanup_apply,
     repo_worktree_cleanup_suggest,
@@ -31,7 +32,6 @@ from agent_loom.workspace.repo.sandbox import (
     repo_sandbox_gc,
     repo_sandbox_promote,
 )
-from agent_loom.workspace.output import emit_result
 
 
 def cmd_repo_status(args: argparse.Namespace) -> None:

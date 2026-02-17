@@ -13,7 +13,6 @@ from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.output import emit_result
 
 
-
 def cmd_lease_acquire(args: argparse.Namespace) -> None:
     root = harness_root()
     res = lease_acquire(

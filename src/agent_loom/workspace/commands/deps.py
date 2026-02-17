@@ -14,7 +14,6 @@ from agent_loom.workspace.guards import harness_root
 from agent_loom.workspace.output import emit_result
 
 
-
 def cmd_components_refresh_index(args: argparse.Namespace) -> None:
     root = harness_root()
     res = components_refresh_index(root=root)

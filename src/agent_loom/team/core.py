@@ -176,12 +176,26 @@ from agent_loom.team.models import (
 )
 from agent_loom.team.objective_state import (
     apply_objective_mutation as _objective_state_apply_objective_mutation,
+)
+from agent_loom.team.objective_state import (
     build_prep_sprint_ticket_description as _build_prep_sprint_ticket_description,
+)
+from agent_loom.team.objective_state import (
     clear_sprint_state as _objective_state_clear_sprint_state,
+)
+from agent_loom.team.objective_state import (
     objective_show as _objective_state_objective_show,
+)
+from agent_loom.team.objective_state import (
     read_text_input as _objective_state_read_text_input,
+)
+from agent_loom.team.objective_state import (
     set_sprint_state as _objective_state_set_sprint_state,
+)
+from agent_loom.team.objective_state import (
     sprint_state as _objective_state_sprint_state,
+)
+from agent_loom.team.objective_state import (
     start_sprint_state as _objective_state_start_sprint_state,
 )
 from agent_loom.team.permissions import (
@@ -250,24 +264,42 @@ from agent_loom.team.tmux import (
 )
 from agent_loom.team.waiting import (
     capture_pane_and_persist as _capture_pane_and_persist_impl,
+)
+from agent_loom.team.waiting import (
     manager_checkin_after_wait as _maybe_manager_checkin_after_wait_impl,
+)
+from agent_loom.team.waiting import (
     next_autocapture_delay_s,
     wait_for_wake,
 )
 from agent_loom.team.worker_planning import (
     active_spawn_headcount as _active_spawn_headcount,
+)
+from agent_loom.team.worker_planning import (
     agent_for_role as _agent_for_role,
+)
+from agent_loom.team.worker_planning import (
     always_on_profiles_for_run as _always_on_profiles_for_run,
+)
+from agent_loom.team.worker_planning import (
     max_headcount as _max_headcount,
+)
+from agent_loom.team.worker_planning import (
     model_for_role as _model_for_role,
+)
+from agent_loom.team.worker_planning import (
     normalize_harness as _normalize_harness,
+)
+from agent_loom.team.worker_planning import (
     persona_worktree_branch as _persona_worktree_branch,
+)
+from agent_loom.team.worker_planning import (
     workspace_for_always_on_profile as _workspace_for_always_on_profile,
 )
 from agent_loom.ticket.api import create as ticket_create
+from agent_loom.ticket.api import show as ticket_show
 from agent_loom.ticket.api import sprint_clear as ticket_sprint_clear
 from agent_loom.ticket.api import sprint_set as ticket_sprint_set
-from agent_loom.ticket.api import show as ticket_show
 from agent_loom.ticket.api import sync as ticket_sync
 from agent_loom.workspace.core import (
     repo_merge_attempt,
@@ -1791,7 +1823,9 @@ def tui(
                         )
                         dirty = bool((p.stdout or "").strip())
                     except Exception as exc:
-                        _record_sidecar_warning("stall.git_status", error=exc, once=True)
+                        _record_sidecar_warning(
+                            "stall.git_status", error=exc, once=True
+                        )
                         dirty = False
                     safe_nudge(
                         (
@@ -2536,7 +2570,9 @@ def _ensure_start_run_paths(paths: RunPaths) -> None:
     paths.captures_dir.mkdir(parents=True, exist_ok=True)
 
 
-def _sync_start_tickets_dir(*, paths: RunPaths, run: Dict[str, Any], root: Path) -> Path:
+def _sync_start_tickets_dir(
+    *, paths: RunPaths, run: Dict[str, Any], root: Path
+) -> Path:
     previous_tickets_dir = str(run.get("tickets_dir") or "")
     tickets_dir = ensure_run_tickets_dir(run, repo_root=root)
     if previous_tickets_dir != str(tickets_dir):
@@ -2664,7 +2700,9 @@ def _start_update_existing_run(
             save_run(paths, run)
     if requested_bin:
         bin_harness = (
-            requested_harness if (harness_provided or roster_harness) else existing_harness
+            requested_harness
+            if (harness_provided or roster_harness)
+            else existing_harness
         )
         bin_current = (
             str((run.get(bin_harness) or {}).get("bin") or "")
@@ -3241,7 +3279,10 @@ def objective_set(
             message=msg,
             sender="team",
             kind="objective",
-            meta_extra={"objective_rev": int(run.get("objective_rev") or 0), "mode": "set"},
+            meta_extra={
+                "objective_rev": int(run.get("objective_rev") or 0),
+                "mode": "set",
+            },
             nudge=bool(nudge),
             force=bool(force),
             line_info=f"objective_set rev={run['objective_rev']}",

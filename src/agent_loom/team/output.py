@@ -4,8 +4,11 @@ import sys
 from typing import Any, Mapping, Sequence
 
 from agent_loom.core.cli_output import emit_json as _core_emit_json
-from agent_loom.core.cli_output import make_error_envelope
-from agent_loom.core.cli_output import make_ok_envelope, normalize_payload
+from agent_loom.core.cli_output import (
+    make_error_envelope,
+    make_ok_envelope,
+    normalize_payload,
+)
 
 
 def _eprint(*a: object) -> None:

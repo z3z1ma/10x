@@ -18,7 +18,9 @@ def build_parser() -> argparse.ArgumentParser:
         prog="loom workspace",
         description="Workspace + worktree tooling (repo mode + harness control plane)",
     )
-    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+    parser.add_argument(
+        "--json", action="store_true", help="Emit machine-readable JSON"
+    )
     sub = parser.add_subparsers(dest="cmd", required=True)
     add_repo_mode_parsers(sub)
     add_harness_parser(sub)

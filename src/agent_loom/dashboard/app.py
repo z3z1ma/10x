@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import os
-from uuid import uuid4
 from typing import Any
+from uuid import uuid4
 
 from flask import Flask, jsonify, render_template
 
@@ -30,7 +30,9 @@ def _register_error_handlers(app: Flask, *, api_error: Any) -> None:
 
     @app.errorhandler(405)
     def _method_not_allowed(_e: Exception) -> Any:
-        return jsonify(err(code="METHOD_NOT_ALLOWED", message="method not allowed")), 405
+        return jsonify(
+            err(code="METHOD_NOT_ALLOWED", message="method not allowed")
+        ), 405
 
     @app.errorhandler(Exception)
     def _unhandled(e: Exception) -> Any:

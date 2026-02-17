@@ -76,8 +76,12 @@ def _add_selection_flags(
             help="Confirm operating on multiple repos when no selection is provided",
         )
     parser.add_argument("--repos", nargs="*", help=repos_help)
-    parser.add_argument("--set", dest="sets", action="append", help="Select repos by set")
-    parser.add_argument("--tag", dest="tags", action="append", help="Select repos by tag")
+    parser.add_argument(
+        "--set", dest="sets", action="append", help="Select repos by set"
+    )
+    parser.add_argument(
+        "--tag", dest="tags", action="append", help="Select repos by tag"
+    )
 
 
 def _add_repo_parsers(sub: Any) -> None:
@@ -208,11 +212,15 @@ def _add_worktree_parsers(sub: Any) -> None:
     )
     sp2.set_defaults(func=cmd_worktree_rm)
 
-    sp2 = sub2.add_parser("ls", help="List all worktrees with group/repo/branch/sha/status")
+    sp2 = sub2.add_parser(
+        "ls", help="List all worktrees with group/repo/branch/sha/status"
+    )
     sp2.set_defaults(func=cmd_worktree_ls)
 
     sp2 = sub2.add_parser("prune", help="Prune stale git worktree metadata in repos")
-    _add_selection_flags(sp2, include_all=True, repos_help="Subset of repos (default all)")
+    _add_selection_flags(
+        sp2, include_all=True, repos_help="Subset of repos (default all)"
+    )
     sp2.set_defaults(func=cmd_worktree_prune)
 
     sp2 = sub2.add_parser("status", help="Show status for a worktree group")
@@ -289,7 +297,9 @@ def _add_worktree_parsers(sub: Any) -> None:
     sp2.add_argument("--kind", default="normal", choices=["normal", "sandbox"])
     sp2.set_defaults(func=cmd_worktree_group_annotate)
 
-    sp2 = sub2.add_parser("rebase", help="Rebase worktrees for a group onto their base branch")
+    sp2 = sub2.add_parser(
+        "rebase", help="Rebase worktrees for a group onto their base branch"
+    )
     sp2.add_argument("group")
     sp2.add_argument(
         "--require-lease",
@@ -304,7 +314,9 @@ def _add_worktree_parsers(sub: Any) -> None:
     sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
     sp2.set_defaults(func=cmd_worktree_rebase)
 
-    sp2 = sub2.add_parser("push", help="Push worktrees for a group to their remote branch")
+    sp2 = sub2.add_parser(
+        "push", help="Push worktrees for a group to their remote branch"
+    )
     sp2.add_argument("group")
     sp2.add_argument(
         "--require-lease",
@@ -371,9 +383,13 @@ def _add_worktree_create_parser(sub2: Any, *, command: str, help_text: str) -> N
         default="",
         help="Override group worktrees base dir (creates worktrees under <path>/<repo>)",
     )
-    _add_selection_flags(sp2, include_all=True, repos_help="Subset of repos (default all)")
+    _add_selection_flags(
+        sp2, include_all=True, repos_help="Subset of repos (default all)"
+    )
     sp2.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
-    sp2.add_argument("--clone", action="store_true", help="Clone missing repos automatically")
+    sp2.add_argument(
+        "--clone", action="store_true", help="Clone missing repos automatically"
+    )
     sp2.add_argument(
         "--allow-dirty",
         action="store_true",
@@ -383,7 +399,9 @@ def _add_worktree_create_parser(sub2: Any, *, command: str, help_text: str) -> N
 
 
 def _add_snapshot_parsers(sub: Any) -> None:
-    sp = sub.add_parser("snapshot", help="Snapshot/compare/restore repo or worktree state")
+    sp = sub.add_parser(
+        "snapshot", help="Snapshot/compare/restore repo or worktree state"
+    )
     sub_snap = sp.add_subparsers(dest="snapshot_cmd", required=True)
 
     spc = sub_snap.add_parser(
@@ -396,7 +414,9 @@ def _add_snapshot_parsers(sub: Any) -> None:
         default=None,
         help="Capture from worktrees/<group>/<repo> instead of repos/<repo>",
     )
-    _add_selection_flags(spc, include_all=True, repos_help="Subset of repos (default all)")
+    _add_selection_flags(
+        spc, include_all=True, repos_help="Subset of repos (default all)"
+    )
     spc.set_defaults(func=cmd_snapshot_capture)
 
     spd = sub_snap.add_parser("diff", help="Compare current state to a snapshot")
@@ -429,7 +449,9 @@ def _add_deps_parsers(sub: Any) -> None:
     sp4.add_argument("component")
     sp4.set_defaults(func=cmd_deps_who_uses)
 
-    sp4 = sub4.add_parser("closure", help="Transitive deps + reverse deps for a component")
+    sp4 = sub4.add_parser(
+        "closure", help="Transitive deps + reverse deps for a component"
+    )
     sp4.add_argument("component")
     sp4.set_defaults(func=cmd_deps_closure)
 
@@ -451,7 +473,9 @@ def _add_impact_parsers(sub: Any) -> None:
     spi.add_argument("changed", nargs="+", help="Changed repo/component names")
     spi.set_defaults(func=cmd_harness_impact_repos)
 
-    spi = subi.add_parser("snapshot", help="Report impacted components from snapshot diff")
+    spi = subi.add_parser(
+        "snapshot", help="Report impacted components from snapshot diff"
+    )
     spi.add_argument("name", help="Snapshot name")
     spi.add_argument(
         "--no-missing",
@@ -488,7 +512,9 @@ def _add_exec_parser(sub: Any) -> None:
         default=None,
         help="Run in worktrees/<group>/<repo> instead of repos/<repo>",
     )
-    _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
+    _add_selection_flags(
+        sp, include_all=True, repos_help="Subset of repos (default all)"
+    )
     sp.add_argument(
         "--jobs",
         type=int,
@@ -517,8 +543,12 @@ def _add_sandbox_parsers(sub: Any) -> None:
     spc.add_argument("--base-ref", required=True, help="Base ref-ish")
     spc.add_argument("--ttl", default="2h")
     spc.add_argument("--purpose", default="sandbox")
-    spc.add_argument("--clone", action="store_true", help="Clone missing repos automatically")
-    _add_selection_flags(spc, include_all=True, repos_help="Subset of repos (default all)")
+    spc.add_argument(
+        "--clone", action="store_true", help="Clone missing repos automatically"
+    )
+    _add_selection_flags(
+        spc, include_all=True, repos_help="Subset of repos (default all)"
+    )
     spc.set_defaults(func=cmd_harness_sandbox_create)
 
     spp = subs.add_parser("promote", help="Promote a sandbox group (metadata only)")
@@ -576,7 +606,9 @@ def _add_repo_lifecycle_parsers(sub: Any) -> None:
         help="History depth for shallow repos (default: 1)",
     )
     sp.add_argument("--clone", action="store_true", help="Clone + fetch immediately")
-    sp.add_argument("--force", action="store_true", help="Overwrite existing repo entry")
+    sp.add_argument(
+        "--force", action="store_true", help="Overwrite existing repo entry"
+    )
     sp.set_defaults(func=cmd_add)
 
     sp = sub.add_parser(
@@ -612,8 +644,12 @@ def _add_repo_lifecycle_parsers(sub: Any) -> None:
         "sync",
         help="Fetch/prune repos; optionally clone missing; refresh components index",
     )
-    sp.add_argument("--clone", action="store_true", help="Clone missing repos before fetching")
-    _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
+    sp.add_argument(
+        "--clone", action="store_true", help="Clone missing repos before fetching"
+    )
+    _add_selection_flags(
+        sp, include_all=True, repos_help="Subset of repos (default all)"
+    )
     sp.add_argument(
         "--jobs",
         type=int,
@@ -626,13 +662,17 @@ def _add_repo_lifecycle_parsers(sub: Any) -> None:
     sp.add_argument(
         "--jobs", type=int, default=1, help="Parallelism for git status (default: 1)"
     )
-    _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
+    _add_selection_flags(
+        sp, include_all=True, repos_help="Subset of repos (default all)"
+    )
     sp.set_defaults(func=cmd_status)
 
     sp = sub.add_parser(
         "context", help="Emit a compact workspace context bundle (ideal for AI prompts)"
     )
-    _add_selection_flags(sp, include_all=False, repos_help="Subset of repos (default all)")
+    _add_selection_flags(
+        sp, include_all=False, repos_help="Subset of repos (default all)"
+    )
     sp.add_argument(
         "--jobs",
         type=int,
@@ -646,9 +686,13 @@ def _add_repo_lifecycle_parsers(sub: Any) -> None:
         help="Ensure+checkout a branch across repos (use --reset for git checkout -B)",
     )
     sp.add_argument("branch")
-    _add_selection_flags(sp, include_all=True, repos_help="Subset of repos (default all)")
+    _add_selection_flags(
+        sp, include_all=True, repos_help="Subset of repos (default all)"
+    )
     sp.add_argument("--base-ref", help="Base ref (default origin/<default_branch>)")
-    sp.add_argument("--clone", action="store_true", help="Clone missing repos automatically")
+    sp.add_argument(
+        "--clone", action="store_true", help="Clone missing repos automatically"
+    )
     sp.add_argument(
         "--reset",
         action="store_true",
@@ -676,7 +720,9 @@ def _add_refresh_index_parser(
     subcommands: Any, *, help_text: str, handler: Any
 ) -> None:
     sp = subcommands.add_parser("refresh-index", help=help_text)
-    sp.add_argument("--print", action="store_true", help="Print a concise view after refresh")
+    sp.add_argument(
+        "--print", action="store_true", help="Print a concise view after refresh"
+    )
     sp.set_defaults(func=handler)
 
 
@@ -703,7 +749,9 @@ def _add_services_parsers(sub: Any) -> None:
 def _add_deepen_parser(sub: Any) -> None:
     sp = sub.add_parser("deepen", help="Deepen history of a shallow repo")
     sp.add_argument("repo", help="Repo name")
-    sp.add_argument("--depth", type=int, default=50, help="Number of commits to deepen by")
+    sp.add_argument(
+        "--depth", type=int, default=50, help="Number of commits to deepen by"
+    )
     sp.set_defaults(func=cmd_deepen)
 
 
