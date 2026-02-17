@@ -8,7 +8,7 @@ import sys
 import uuid
 from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Optional, Sequence
+from typing import Any, Callable, Optional, Sequence
 
 import yaml
 
@@ -1236,44 +1236,46 @@ def _handle_prime(_args: argparse.Namespace, json_mode: bool, _cwd: Path) -> int
     return 0
 
 
+_HANDLERS: dict[str, Callable[[argparse.Namespace, bool, Path], int]] = {
+    "version": _handle_version,
+    "init": _handle_init,
+    "create": _handle_create,
+    "status": _handle_status,
+    "start": _handle_start,
+    "close": _handle_close,
+    "reopen": _handle_reopen,
+    "sprint": _handle_sprint,
+    "list": _handle_list,
+    "ls": _handle_list,
+    "ready": _handle_ready,
+    "blocked": _handle_blocked,
+    "closed": _handle_closed,
+    "show": _handle_show,
+    "update": _handle_update,
+    "add-note": _handle_add_note,
+    "note": _handle_add_note,
+    "dep": _handle_dep,
+    "dep-add": _handle_dep_add,
+    "dep-rm": _handle_dep_rm,
+    "dep-cycle": _handle_dep_cycle,
+    "link": _handle_link,
+    "unlink": _handle_unlink,
+    "view": _handle_view,
+    "claim": _handle_claim,
+    "heartbeat": _handle_heartbeat,
+    "release": _handle_release,
+    "swarm": _handle_swarm,
+    "sync": _handle_sync,
+    "sync-external": _handle_sync_external,
+    "query": _handle_query,
+    "prime": _handle_prime,
+}
+
+
 def _dispatch(cmd: str, args: argparse.Namespace, *, json_mode: bool, cwd: Path) -> int:
-    handlers = {
-        "version": _handle_version,
-        "init": _handle_init,
-        "create": _handle_create,
-        "status": _handle_status,
-        "start": _handle_start,
-        "close": _handle_close,
-        "reopen": _handle_reopen,
-        "sprint": _handle_sprint,
-        "list": _handle_list,
-        "ls": _handle_list,
-        "ready": _handle_ready,
-        "blocked": _handle_blocked,
-        "closed": _handle_closed,
-        "show": _handle_show,
-        "update": _handle_update,
-        "add-note": _handle_add_note,
-        "note": _handle_add_note,
-        "dep": _handle_dep,
-        "dep-add": _handle_dep_add,
-        "dep-rm": _handle_dep_rm,
-        "dep-cycle": _handle_dep_cycle,
-        "link": _handle_link,
-        "unlink": _handle_unlink,
-        "view": _handle_view,
-        "claim": _handle_claim,
-        "heartbeat": _handle_heartbeat,
-        "release": _handle_release,
-        "swarm": _handle_swarm,
-        "sync": _handle_sync,
-        "sync-external": _handle_sync_external,
-        "query": _handle_query,
-        "prime": _handle_prime,
-    }
-    handler = handlers.get(cmd)
+    handler = _HANDLERS.get(cmd)
     if not handler:
-        hints = did_you_mean(cmd, list(handlers.keys()))
+        hints = did_you_mean(cmd, list(_HANDLERS.keys()))
         raise TicketArgError(
             code="ARG",
             error=f"Unknown command: {cmd}",
@@ -1281,7 +1283,7 @@ def _dispatch(cmd: str, args: argparse.Namespace, *, json_mode: bool, cwd: Path)
             if hints
             else "Run `loom ticket -h`.",
             suggestions=["loom ticket -h"],
-            details={"cmd": cmd, "known": sorted(list(handlers.keys()))},
+            details={"cmd": cmd, "known": sorted(list(_HANDLERS.keys()))},
         )
     return handler(args, json_mode, cwd)
 
