@@ -164,8 +164,12 @@ class TestHotspotSizeControl:
             "description": "memory/cli.py (parser hotspot)",
         },
         SRC_ROOT / "workspace" / "cli_harness.py": {
-            "max_lines": 900,  # Current ~804
-            "description": "workspace/cli_harness.py (parser hotspot)",
+            "max_lines": 120,  # Public shim should remain thin.
+            "description": "workspace/cli_harness.py (public shim)",
+        },
+        SRC_ROOT / "workspace" / "cli_harness_groups.py": {
+            "max_lines": 900,  # Current ~740
+            "description": "workspace/cli_harness_groups.py (parser hotspot)",
         },
         SRC_ROOT / "dashboard" / "app.py": {
             "max_lines": 820,  # Current ~798
@@ -214,8 +218,12 @@ class TestHotspotComplexityControl:
             "description": "memory/cli.py command dispatch complexity",
         },
         SRC_ROOT / "workspace" / "cli_harness.py": {
-            "max_function_branch_nodes": 12,  # Current max ~=0
-            "description": "workspace/cli_harness.py parser complexity",
+            "max_function_branch_nodes": 2,  # Public shim should not branch.
+            "description": "workspace/cli_harness.py shim complexity",
+        },
+        SRC_ROOT / "workspace" / "cli_harness_groups.py": {
+            "max_function_branch_nodes": 12,  # Current max ~=1
+            "description": "workspace/cli_harness_groups.py parser complexity",
         },
         SRC_ROOT / "dashboard" / "app.py": {
             "max_function_branch_nodes": 80,  # Current max: _create_team_blueprint ~=55

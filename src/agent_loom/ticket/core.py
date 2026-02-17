@@ -53,7 +53,12 @@ from typing import (
 import jmespath
 import yaml
 
-from agent_loom.core.git import git_checked, git_quiet, git_repo_root, git_scoped_commit
+from agent_loom.core.git import (
+    git_checked,
+    git_repo_root,
+    git_scoped_commit,
+    git_stdout_result,
+)
 from agent_loom.core.paths import safe_relpath
 from agent_loom.core.time import isoformat_z, parse_duration, utcnow
 from agent_loom.ticket.adapters import (
@@ -225,7 +230,8 @@ def _git_status_entries(
 
 def default_assignee() -> str:
     base = git_repo_root(Path.cwd()) or Path.cwd()
-    return git_quiet(base, ["config", "user.name"])
+    res = git_stdout_result(base, ["config", "user.name"])
+    return str(res.value or "")
 
 
 def default_agent_id() -> str:

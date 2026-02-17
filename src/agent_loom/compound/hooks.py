@@ -474,6 +474,56 @@ def _extract_opencode_prompt(payload: dict[str, Any]) -> str:
     return ""
 
 
+def _first_non_empty_string(candidates: list[Any]) -> str:
+    for value in candidates:
+        text = str(value or "").strip()
+        if text:
+            return text
+    return ""
+
+
+def _first_mapping(candidates: list[Any]) -> dict[str, Any] | None:
+    for value in candidates:
+        if isinstance(value, dict):
+            return cast(dict[str, Any], value)
+    return None
+
+
+def _extract_tool_fields(
+    raw: dict[str, Any],
+    *,
+    fallback_name_candidates: list[Any],
+    fallback_input_candidates: list[Any],
+    fallback_response_candidates: list[Any],
+) -> tuple[str, dict[str, Any] | None, dict[str, Any] | None]:
+    tool_name = _first_non_empty_string(
+        [raw.get("tool_name"), raw.get("toolName"), *fallback_name_candidates]
+    )
+    tool_input = _first_mapping([raw.get("tool_input"), *fallback_input_candidates])
+    tool_response = _first_mapping([raw.get("tool_response"), *fallback_response_candidates])
+    return tool_name, tool_input, tool_response
+
+
+def _apply_outcome_fields(
+    normalized: dict[str, Any],
+    *,
+    raw: dict[str, Any],
+    invert_error_flag_key: str = "",
+) -> None:
+    explicit_ok = raw.get("ok")
+    if isinstance(explicit_ok, bool):
+        normalized["ok"] = bool(explicit_ok)
+
+    if invert_error_flag_key:
+        explicit_err = raw.get(invert_error_flag_key)
+        if isinstance(explicit_err, bool):
+            normalized["ok"] = not bool(explicit_err)
+
+    reason = _first_non_empty_string([raw.get("reason"), raw.get("error")])
+    if reason:
+        normalized["reason"] = reason
+
+
 def _normalize_opencode_payload(
     raw: dict[str, Any], *, event_override: str
 ) -> tuple[str, dict[str, Any]]:
@@ -487,66 +537,37 @@ def _normalize_opencode_payload(
         "hook_event_name": event_name,
         "session_id": _extract_opencode_session_id(raw),
     }
-
-    tool_name = str(raw.get("tool_name") or raw.get("toolName") or "").strip()
-    if not tool_name:
-        input_obj = cast(
-            dict[str, Any],
-            raw.get("input") if isinstance(raw.get("input"), dict) else {},
-        )
-        output_obj = cast(
-            dict[str, Any],
-            raw.get("output") if isinstance(raw.get("output"), dict) else {},
-        )
-        tool_name = str(
-            input_obj.get("tool")
-            or input_obj.get("name")
-            or output_obj.get("tool")
-            or output_obj.get("name")
-            or ""
-        ).strip()
-
-    tool_input = (
-        raw.get("tool_input") if isinstance(raw.get("tool_input"), dict) else None
+    input_obj = cast(
+        dict[str, Any],
+        raw.get("input") if isinstance(raw.get("input"), dict) else {},
     )
-    if tool_input is None:
-        input_obj = cast(
-            dict[str, Any],
-            raw.get("input") if isinstance(raw.get("input"), dict) else {},
-        )
-        output_obj = cast(
-            dict[str, Any],
-            raw.get("output") if isinstance(raw.get("output"), dict) else {},
-        )
-        for candidate in [
+    output_obj = cast(
+        dict[str, Any],
+        raw.get("output") if isinstance(raw.get("output"), dict) else {},
+    )
+    tool_name, tool_input, tool_response = _extract_tool_fields(
+        raw,
+        fallback_name_candidates=[
+            input_obj.get("tool"),
+            input_obj.get("name"),
+            output_obj.get("tool"),
+            output_obj.get("name"),
+        ],
+        fallback_input_candidates=[
             raw.get("args"),
             output_obj.get("args"),
             input_obj.get("args"),
-        ]:
-            if isinstance(candidate, dict):
-                tool_input = candidate
-                break
-
+        ],
+        fallback_response_candidates=[raw.get("output")],
+    )
     if tool_name:
         normalized["tool_name"] = tool_name
-    if isinstance(tool_input, dict):
+    if tool_input is not None:
         normalized["tool_input"] = tool_input
-
-    tool_response = (
-        raw.get("tool_response") if isinstance(raw.get("tool_response"), dict) else None
-    )
-    if tool_response is None and isinstance(raw.get("output"), dict):
-        tool_response = cast(dict[str, Any], raw.get("output"))
-    if isinstance(tool_response, dict):
+    if tool_response is not None:
         normalized["tool_response"] = tool_response
 
-    explicit_ok = raw.get("ok")
-    if isinstance(explicit_ok, bool):
-        normalized["ok"] = bool(explicit_ok)
-
-    reason = str(raw.get("reason") or raw.get("error") or "").strip()
-    if reason:
-        normalized["reason"] = reason
+    _apply_outcome_fields(normalized, raw=raw)
 
     prompt = _extract_opencode_prompt(raw)
     if prompt:
@@ -619,44 +640,21 @@ def _normalize_omp_payload(
         prompt = str(raw.get("prompt") or "").strip()
         if prompt:
             normalized["prompt"] = prompt
-
-    tool_name = str(raw.get("tool_name") or raw.get("toolName") or "").strip()
-    tool_input = (
-        raw.get("tool_input") if isinstance(raw.get("tool_input"), dict) else None
+    tool_name, tool_input, tool_response = _extract_tool_fields(
+        raw,
+        fallback_name_candidates=[raw.get("tool")],
+        fallback_input_candidates=[raw.get("input")],
+        fallback_response_candidates=[raw.get("output")],
     )
-    tool_response = (
-        raw.get("tool_response") if isinstance(raw.get("tool_response"), dict) else None
-    )
-
-    if not tool_name:
-        tool_name = str(raw.get("tool") or "").strip()
-    if tool_input is None:
-        candidate = raw.get("input")
-        if isinstance(candidate, dict):
-            tool_input = cast(dict[str, Any], candidate)
-    if tool_response is None:
-        candidate = raw.get("output")
-        if isinstance(candidate, dict):
-            tool_response = cast(dict[str, Any], candidate)
 
     if tool_name:
         normalized["tool_name"] = tool_name
-    if isinstance(tool_input, dict):
+    if tool_input is not None:
         normalized["tool_input"] = tool_input
-    if isinstance(tool_response, dict):
+    if tool_response is not None:
         normalized["tool_response"] = tool_response
 
-    explicit_ok = raw.get("ok")
-    if isinstance(explicit_ok, bool):
-        normalized["ok"] = bool(explicit_ok)
-
-    explicit_err = raw.get("is_error")
-    if isinstance(explicit_err, bool):
-        normalized["ok"] = not bool(explicit_err)
-
-    reason = str(raw.get("reason") or raw.get("error") or "").strip()
-    if reason:
-        normalized["reason"] = reason
+    _apply_outcome_fields(normalized, raw=raw, invert_error_flag_key="is_error")
 
     return event_name, normalized
 

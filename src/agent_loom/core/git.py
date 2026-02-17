@@ -20,6 +20,12 @@ class GitCommandResult:
     stderr: str
 
 
+@dataclass(frozen=True)
+class GitStdoutResult:
+    value: Optional[str]
+    command: GitCommandResult
+
+
 def _git_exec(
     cwd: Path,
     args: Sequence[str],
@@ -69,6 +75,20 @@ def git_quiet_result(
     cwd: Path, args: Sequence[str], *, env: Optional[dict[str, str]] = None
 ) -> GitCommandResult:
     return git_result(cwd, args, env=env)
+
+
+def git_stdout_result(
+    cwd: Path,
+    args: Sequence[str],
+    *,
+    env: Optional[dict[str, str]] = None,
+    strip: bool = True,
+) -> GitStdoutResult:
+    command = git_result(cwd, args, env=env)
+    if not command.ok:
+        return GitStdoutResult(value=None, command=command)
+    stdout = command.stdout.strip() if strip else command.stdout
+    return GitStdoutResult(value=(stdout or None), command=command)
 
 
 def git_quiet(cwd: Path, args: Sequence[str]) -> str:
@@ -130,30 +150,30 @@ def git_scoped_commit(
 
     # Keep the real index consistent with the working tree for these paths.
     git_checked(cwd, ["add", "-A", "--", *list(pathspecs)])
-    return git_quiet(cwd, ["rev-parse", "HEAD"]).strip() or None
+    return git_checked(cwd, ["rev-parse", "HEAD"]).strip() or None
 
 
 def git_toplevel(cwd: Path) -> Optional[Path]:
-    s = git_quiet(cwd, ["rev-parse", "--show-toplevel"])
-    if not s:
+    out = git_stdout_result(cwd, ["rev-parse", "--show-toplevel"])
+    if out.value is None:
         return None
-    return realpath_from(cwd, s)
+    return realpath_from(cwd, out.value)
 
 
 def git_common_dir(toplevel: Path) -> Optional[Path]:
-    s = git_quiet(toplevel, ["rev-parse", "--git-common-dir"])
-    if not s:
+    out = git_stdout_result(toplevel, ["rev-parse", "--git-common-dir"])
+    if out.value is None:
         return None
-    return realpath_from(toplevel, s)
+    return realpath_from(toplevel, out.value)
 
 
 def git_abs_git_dir(toplevel: Path) -> Optional[Path]:
-    s = git_quiet(toplevel, ["rev-parse", "--absolute-git-dir"])
-    if not s:
-        s = git_quiet(toplevel, ["rev-parse", "--git-dir"])
-    if not s:
+    out = git_stdout_result(toplevel, ["rev-parse", "--absolute-git-dir"])
+    if out.value is None:
+        out = git_stdout_result(toplevel, ["rev-parse", "--git-dir"])
+    if out.value is None:
         return None
-    return realpath_from(toplevel, s)
+    return realpath_from(toplevel, out.value)
 
 
 def git_worktree_paths(toplevel: Path) -> List[Path]:

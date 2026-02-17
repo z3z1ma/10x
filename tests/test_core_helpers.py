@@ -123,6 +123,16 @@ class TestCoreGit(unittest.TestCase):
             resolved = core_git.resolve_repo_root(nested)
             self.assertEqual(resolved, root)
 
+    def test_git_stdout_result_preserves_failure_details(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            out = core_git.git_stdout_result(
+                Path(td), ["rev-parse", "--show-toplevel"]
+            )
+            self.assertIsNone(out.value)
+            self.assertFalse(out.command.ok)
+            self.assertNotEqual(out.command.returncode, 0)
+            self.assertTrue(bool(out.command.stderr or out.command.stdout))
+
 
 if __name__ == "__main__":
     unittest.main()
