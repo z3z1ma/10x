@@ -127,7 +127,7 @@
       "files": [
         {
           "path": ".claude/agents/loom-team-architect.md",
-          "sha256": "eac69402cb208eba1f6d9dd7455dabcac36e014ed987b6be32894292017692bd"
+          "sha256": "899ddb3d135cf3ef02f8fea37eb081193f3a30e96a518ac3557db66f48eff48e"
         },
         {
           "path": ".claude/agents/loom-team-integrator.md",
@@ -135,7 +135,7 @@
         },
         {
           "path": ".claude/agents/loom-team-manager.md",
-          "sha256": "ed904d4706d26c8a980385ba4ab688aa018220986ce7806efd542208159c8e0e"
+          "sha256": "c83490162f5769ede39e5ce154a94ca6d4443a442d9eebfe079aa456b64005ab"
         },
         {
           "path": ".claude/agents/loom-team-worker.md",
@@ -143,7 +143,7 @@
         },
         {
           "path": ".opencode/agents/loom-team-architect.md",
-          "sha256": "33025d6ed6f090aada7622477892a1c7d19ec1bc9ad4fde6dcd3bc5e952ce4ec"
+          "sha256": "385fb3c359830d39369808d4ac155ea4a0e1a8abfb392f4e42549d5ae14e6881"
         },
         {
           "path": ".opencode/agents/loom-team-integrator.md",
@@ -151,7 +151,7 @@
         },
         {
           "path": ".opencode/agents/loom-team-manager.md",
-          "sha256": "6120aaee3cf12089fc2728623c0a2ccce2035e93c44ccf3520a77e91e24139aa"
+          "sha256": "5ac0b10c83e2277b40d6724666df59005716860394dd5a6d8939aad57a28c39a"
         },
         {
           "path": ".opencode/agents/loom-team-worker.md",
