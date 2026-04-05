@@ -2,9 +2,9 @@
 
 ## What This Repo Is
 
-This repository develops a distributable product. The product is the entire `src/` directory. End users copy the contents of `src/` into their own projects (typically into `.opencode/` or a similar harness-specific location). The product is Markdown-first with bundled Python helpers -- not a normal app, service, or library.
+This repository develops a distributable product. The product is the top-level `rules/`, `skills/`, and `commands/` directories plus the bundled `loom` CLI. End users copy those directories into their own projects (typically into `.opencode/` or a similar harness-specific location). The product is Markdown-first with bundled Python helpers -- not a normal app, service, or library.
 
-There is no `package.json`, `pyproject.toml`, `Makefile`, test runner, or CI pipeline.
+There is no `package.json`, `Makefile`, test runner, or CI pipeline. The Python CLI is a small root-level package with a root `pyproject.toml` and a zipapp build script.
 
 ## Agent and Script Boundary
 
@@ -32,47 +32,45 @@ Workflow steps like Ralph execution, critique, and docs work are agent actions -
 
 ## Repo Structure
 
-Everything lives in `src/`. There is no build step.
+The repository is flat at the top level. The bundled CLI is built into `skills/loom` via `tools/build.py`.
 
-### Product source: `src/`
+### Product source
 
 Everything a user receives lives here:
 
-- `src/rules/` -- always-on doctrine files (Markdown + `appendices/`)
-- `src/skills/` -- self-contained skill directories, each with `SKILL.md`, `references/`, and `scripts/`
-- `src/skills/_loom/` -- shared Python library used by skill scripts (`core.py` for record primitives, `cli.py` for argparse helpers)
-- `src/commands/` -- slash-command definitions (Markdown files that define prompt-based commands)
+- `rules/` -- always-on doctrine files (Markdown + `appendices/`)
+- `skills/` -- self-contained skill directories, each with `SKILL.md`, `references/`, and `scripts/`
+- `loom/` -- the bundled Python CLI package (`core.py`, `cli.py`, `schema.py`, and `commands/`)
+- `commands/` -- slash-command definitions (Markdown files that define prompt-based commands)
 
-**Isolation rule**: nothing inside `src/` may reference anything outside `src/`. No `.loom/` paths, no repo-root paths. When `src/` is copied to a user's machine, only `src/`-internal paths exist. Skills reference their own scripts as `scripts/...` and their own docs as `references/...`. Scripts import from `_loom` via the `sys.path.insert(0, str(SCRIPT_DIR.parent.parent))` pattern.
+**Isolation rule**: nothing inside `rules/`, `skills/`, or `commands/` may reference anything outside those product directories. No `.loom/` paths, no repo-root paths. Skills reference their own scripts as `scripts/...` and their own docs as `references/...`. Each skill's `scripts/loom` symlink points at the bundled `skills/loom` zipapp.
 
 ### Dogfooding artifacts: `.opencode/` and `.loom/`
 
-This repo uses its own product. `.opencode/rules`, `.opencode/skills`, and `.opencode/commands` are symlinks pointing back into `src/`, so the development environment consumes the product in the same way an end user would. `.loom/` contains Loom records (tickets, specs, plans, etc.) created by using the product on this repo.
+This repo uses its own product. `.opencode/rules`, `.opencode/skills`, and `.opencode/commands` are symlinks pointing back into the top-level product directories, so the development environment consumes the product in the same way an end user would. `.loom/` contains Loom records (tickets, specs, plans, etc.) created by using the product on this repo.
 
-Neither `.opencode/` nor `.loom/` is a maintained source surface. They are consumption artifacts. Do not treat them as source of truth for how the product works -- look at `src/` instead.
+Neither `.opencode/` nor `.loom/` is a maintained source surface. They are consumption artifacts. Do not treat them as source of truth for how the product works -- look at `rules/`, `skills/`, `commands/`, and `loom/` instead.
 
 ## Commands
 
 ### Linting
 
 ```bash
-uvx ruff check src/                   # lint all Python
+uvx ruff check loom/                  # lint the Loom CLI package
 uvx ruff check path/to/file.py        # lint a single file
-uvx ruff format --check src/          # verify formatting
+uvx ruff format --check loom/         # verify formatting
 uvx ruff format path/to/file.py       # auto-format a single file
 ```
 
-E402 (module-level import not at top of file) is suppressed in `ruff.toml` because every CLI script uses the `sys.path.insert` pattern before importing from `_loom`.
-
-### Validation scripts (run from any skill's scripts/ dir or use full paths)
+### Validation commands (run from any skill's `scripts/` dir or via `skills/loom`)
 
 ```bash
-python3 src/skills/loom-workspace/scripts/validate_record.py                     # validate all Loom records
-python3 src/skills/loom-workspace/scripts/validate_record.py .loom/tickets/x.md  # validate one record
-python3 src/skills/loom-workspace/scripts/check_links.py                         # check cross-record link integrity
-python3 src/skills/loom-workspace/scripts/diagnose_workspace.py                  # workspace health report
-python3 src/skills/loom-workspace/scripts/diagnose_workspace.py --fix            # create missing .loom/ dirs
-python3 src/skills/loom-workspace/scripts/diagnose_workspace.py --json           # machine-readable output
+skills/loom create ticket                     # validate ticket records
+skills/loom check-links                       # check cross-record link integrity
+skills/loom diagnose                          # workspace health report
+skills/loom diagnose --fix                    # create missing .loom/ dirs
+skills/loom diagnose --json                   # machine-readable output
+python3 tools/build.py                        # rebuild the bundled zipapp at skills/loom
 ```
 
 ### Testing
@@ -81,28 +79,22 @@ There is no test suite. Verification is structural: run `ruff check` and the val
 
 ## Python Style
 
-Match the existing style in `src/skills/_loom/` and skill scripts.
+Match the existing style in `loom/`.
 
 ### File structure
 
-- Shebang: `#!/usr/bin/env python3`
 - First import: `from __future__ import annotations`
 - Standard-library imports only (no third-party dependencies)
-- CLI scripts use the `sys.path.insert(0, str(SCRIPT_DIR.parent.parent))` pattern, then `# noqa: E402` on `_loom` imports
+- CLI command modules live under `loom/commands/` and use normal package-relative imports
 
-### Import pattern for skill scripts
+### Import pattern for the Loom package
 
-Every script that uses the shared library follows this pattern:
+Modules in `loom/commands/` import helpers with normal relative imports such as:
 
 ```python
-SCRIPT_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(SCRIPT_DIR.parent.parent))
-
-from _loom.core import find_workspace_root, ...  # noqa: E402
-from _loom.cli import ...  # noqa: E402
+from ..core import find_workspace_root
+from ..cli import add_scope_arguments
 ```
-
-The `SCRIPT_DIR.parent.parent` resolves to `src/skills/` (or `.opencode/skills/` when installed), where the `_loom` package lives.
 
 ### CLI entrypoint pattern
 
@@ -148,7 +140,7 @@ if __name__ == "__main__":
 ### Imports
 
 - Standard-library only; never add third-party deps
-- Group: stdlib first, then blank line, then `_loom` imports
+- Group: stdlib first, then blank line, then `loom` package-relative imports
 - Keep import lists alphabetical within groups
 - `from pathlib import Path` is always present
 
@@ -169,33 +161,31 @@ if __name__ == "__main__":
 ## Markdown Content Guidelines
 
 - Records use JSON frontmatter between `---` fences
-- Required sections per record kind are defined in `src/skills/_loom/core.py` (`SECTIONS_BY_KIND`)
-- Valid statuses per kind are in `STATUS_BY_KIND` in the same file
+- Required sections and valid statuses per record kind are defined in `loom/schema.py`
 - SKILL.md frontmatter must include `name` (matching directory) and `description` (must contain "Use when" and "Not for")
-- Command files in `src/commands/` are pure Markdown prompt definitions with no script dependencies
+- Command files in `commands/` are pure Markdown prompt definitions with no script dependencies
 
 ## Editing Guidance
 
 - Prefer the smallest correct change
-- Content inside `src/` must be self-contained -- no references to `.loom/` or repo-root paths
-- When changing `src/skills/_loom/`, check that dependent scripts still work
+- Content inside `rules/`, `skills/`, and `commands/` must be self-contained -- no references to `.loom/` or repo-root paths
+- When changing `loom/`, rebuild `skills/loom` and check that dependent skill symlinks still work
 - When changing a rule, check related skills, references, and helper scripts
 - Do not add dependencies, scaffolding, or invent a monolithic CLI without explicit need
 
 ### Cross-surface review checklist
 
 If a change touches multiple surfaces, verify:
-- `src/rules/` doctrine wording
-- `src/skills/*/SKILL.md` instructions
-- `src/skills/*/references/` docs
-- `src/skills/_loom/` shared library
-- `src/commands/` command definitions
+- `rules/` doctrine wording
+- `skills/*/SKILL.md` instructions
+- `skills/*/references/` docs
+- `loom/` CLI package
+- `commands/` command definitions
 
 ## Key Architecture Facts
 
-- `src/skills/_loom/core.py` (~810 lines) is the shared library: workspace discovery, frontmatter parsing, record CRUD, scope resolution, and record mutation helpers
-- `src/skills/_loom/cli.py` (~100 lines) has argparse helpers (scope args, link/assignment parsing)
-- Feature-specific logic (validation, link checking, packet compilation, diagnostics, memory indexing) is inlined directly into the scripts that use it
-- Each skill owns its scripts directly in `scripts/` -- no assembly step, no copying
-- Skill-local create scripts (e.g., `create_critique.py`) are authored per-skill
-- Scripts that appear in multiple skills (e.g., `validate_record.py`) are identical copies -- edit one and propagate to the others
+- `loom/core.py` is the shared library: workspace discovery, frontmatter parsing, record CRUD, scope resolution, and record mutation helpers
+- `loom/cli.py` has argparse helpers (scope args, link/assignment parsing)
+- `loom/schema.py` holds record-kind schemas for the unified create command and workspace validation
+- Feature-specific logic lives in `loom/commands/`
+- Each skill's `scripts/loom` symlink points at the bundled zipapp `skills/loom`
