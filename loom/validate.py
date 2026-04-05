@@ -8,15 +8,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .core import (
+from .primitives import (
     extract_headings,
     flatten_link_values,
     issue,
-    normalize_repository_scope,
     parse_timestamp,
     read_record,
     scan_records,
 )
+from .scope import normalize_repository_scope
 from .schema import SCHEMAS
 
 COMMON_FIELDS = [
