@@ -1,6 +1,6 @@
 ---
 name: loom-workspace
-description: Parent-side Loom control-plane skill for workspace discovery, status, diagnostics, repository and worktree scope resolution, record discovery, validation routing, and subsystem selection. Use when entering the repo fresh, diagnosing workspace health, resolving path or repository ownership, discovering records, or deciding which skill should own the next durable action. Not for cases where the owning subsystem is already clear and no control-plane step is needed.
+description: Parent-side Loom control-plane skill for workspace discovery, status, diagnostics, repository and worktree scope resolution, record discovery, validation routing, and subsystem selection. Use when entering the repo fresh, diagnosing workspace health, resolving path or repository ownership, discovering records, deciding which skill should own the next durable action, when a `.loom/` directory is missing or incomplete where Loom expects one, or when the user explicitly asks to set up, initialize, bootstrap, or scaffold Loom. Not for cases where the owning subsystem is already clear and no control-plane step is needed.
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom
