@@ -1,6 +1,6 @@
 ---
 name: loom-memory-reflect
-description: Reflect on Loom memory and distill what should become patterns, hot-memory updates, threads, or sharper supporting context. Deep synthesis — pattern recognition, condensation, consistency sweeps, thread detection, entity format enforcement, and proactive synthesis suggestions. Use when memory needs a deeper synthesis or consistency pass across observations, patterns, entities, links, and current-state summaries. Not for ordinary one-off memory writes, canonical record updates, or purely mechanical archive rebuilds.
+description: "Reflect on Loom's supporting-memory layer and distill what should become patterns, hot-memory updates, threads, or sharper supporting context. Use when memory needs a deeper synthesis or consistency pass across observations, patterns, entities, links, and current-state summaries; when hot memory has drifted from warmer files; or when the user asks what has been learned, what should improve, or for an explicit reflection pass. Not for ordinary one-off memory writes, canonical record updates, or purely mechanical archive rebuilds."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

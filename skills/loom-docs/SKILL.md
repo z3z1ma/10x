@@ -1,6 +1,6 @@
 ---
 name: loom-docs
-description: Authoritative Loom documentation skill for durable explanatory records, documentation updates, operator guides, workflow guides, and architecture explanations grounded in evidence. Use when accepted system reality, workflows, or architecture need durable explanation for future operators or maintainers. Not for unsettled proposals, live execution journaling, or speculative future state.
+description: "Authoritative Loom documentation layer for durable explanatory records, documentation updates, operator guides, workflow guides, and architecture explanations grounded in evidence. Use when accepted system reality, workflows, or architecture need durable explanation; when implementation or review has landed and another agent or operator should be able to enter cold and understand the accepted shape; or when a governed doc should replace chat summary. Not for unsettled proposals, live execution journaling, or speculative future state."
 compatibility: Designed for this Markdown-first Loom repository. Assumes repository-local scripts, canonical Markdown records, and harness-agnostic child launches resolved through `.loom/harness.md` profiles, harness self-discovery, or operator guidance.
 metadata:
   author: agent-loom

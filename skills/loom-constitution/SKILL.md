@@ -1,6 +1,6 @@
 ---
 name: loom-constitution
-description: Maintain Loom constitutional memory: constitution, policy, doctrine, principles, constraints, strategic direction, roadmap records, and decision records. Use when project identity, architecture principles, policy, doctrine, roadmap direction, or durable strategic decisions change. Not for ticket progress, implementation journaling, or operator-facing documentation.
+description: "Maintain Loom's constitutional-memory layer: constitution, policy, doctrine, principles, constraints, roadmap direction, and durable decision records. Use when what the project is, what it values, what constraints it accepts, or what strategic direction should remain durable changes; when a principle, policy, architectural constraint, roadmap shift, or major decision needs canonical authority beyond the current execution cycle. Not for ticket progress, implementation journaling, evidence gathering, or operator-facing documentation."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

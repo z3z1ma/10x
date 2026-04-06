@@ -1,6 +1,6 @@
 ---
 name: loom-memory-context
-description: Maintain Loom's plain-text cognitive layer under `.loom/memories/` — persistent memory with hot/warm/glacier tiers, L0/L1/L2 progressive retrieval, wiki-link navigation, SSOT routing, and progressive condensation. Use when normal work needs targeted non-canonical memory retrieval or updates, including query routing, fact storage, entity tracking, and observation logging. Not for canonical record updates, deep synthesis passes, or mechanical archive maintenance.
+description: "Maintain Loom's supporting-memory layer under `.loom/memories/` through ordinary hot, warm, and glacier read/write work, query routing, fact storage, entity tracking, observation logging, and deep-recall retrieval. Use when the user asks to remember something, retrieve prior context, answer history questions, update entities or reminders, or route supporting context that should not live only in chat. Not for canonical record updates, deep synthesis passes, or mechanical archive maintenance."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

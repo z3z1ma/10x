@@ -1,6 +1,6 @@
 ---
 name: loom-initiatives
-description: Maintain Loom initiative records for strategic outcomes spanning multiple specs, plans, and tickets. Use when a cross-cutting goal, strategic objective, success metric, milestone set, or grouped downstream work needs one durable owner. Not for single bounded tasks, implementation details, or live progress tracking.
+description: "Maintain Loom's strategic-context layer through initiative records that own cross-cutting outcomes above specs, plans, and tickets. Use when a strategic objective spans multiple downstream artifacts; when milestones, success metrics, or outcome framing need to stay visible above the ticket layer; or when grouped work needs one durable strategic owner. Not for single bounded tasks, implementation details, or live progress tracking."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

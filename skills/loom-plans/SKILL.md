@@ -1,6 +1,6 @@
 ---
 name: loom-plans
-description: Maintain Loom execution plans and strategy: plan records, sequencing, milestones, dependencies, validation, recovery, rollout, rollback, and linked ticket coverage. Use when execution strategy or milestone sequencing across linked tickets needs a durable plan. Not for live task-by-task progress tracking, ticket journaling, or final behavior contracts.
+description: "Maintain Loom's execution-strategy layer through plan records covering sequencing, milestones, dependencies, validation, recovery, rollout, rollback, and linked ticket coverage. Use when work is too large or risky for one ticket without durable strategy; when milestone ordering, dependency management, recovery thinking, or validation approach must be explicit; or when multiple tickets need one execution plan. Not for live task-by-task progress tracking, ticket journaling, or final behavior contracts."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

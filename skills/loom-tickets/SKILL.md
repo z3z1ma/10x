@@ -1,6 +1,6 @@
 ---
 name: loom-tickets
-description: Maintain Loom ticket records as the live execution ledger: ticket status, scope, acceptance, implementation plan, verification, blockers, handoff notes, journal updates, and documentation disposition. Use when work needs a live execution owner or when execution truth, blockers, verification, review state, or docs disposition changed. Not for strategy, behavior design, or final explanatory docs.
+description: "Maintain Loom's execution-ledger layer through ticket records: live scope, status, acceptance, implementation plan, verification, blockers, handoff notes, journal updates, and documentation disposition. Use when new work needs a live execution owner; when status, blockers, verification, review state, or docs disposition changed; or when Ralph, critique, docs, or local execution produced durable consequences that must reconcile back into ticket truth. Not for strategy, behavior design, or final explanatory docs."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

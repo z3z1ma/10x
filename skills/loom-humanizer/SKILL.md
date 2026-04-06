@@ -1,6 +1,6 @@
 ---
 name: loom-humanizer
-description: Use this skill when the user wants to humanize, de-AI, or clean up AI-generated text. Use when the user says things like "Humanize this", "make this sound human", "de-AI this", "clean up AI slop", "make this less robotic", or "make this sound more natural". Not for original writing tasks — use /explainer instead.
+description: "Text-revision utility for humanizing existing prose and removing obvious AI tells without losing the underlying meaning. Use when the user provides draft text and asks to humanize it, de-AI it, make it sound natural, less robotic, less generic, or more like a real person wrote it; when the job is tone cleanup rather than blank-page drafting. Not for original writing tasks or first-pass explanation work; use `loom-explainer` instead."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

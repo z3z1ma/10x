@@ -1,6 +1,6 @@
 ---
 name: loom-critique
-description: First-class Loom review skill for durable adversarial critique, review packets, explicit verdicts, audits, risk analysis, and structured findings with severity, confidence, and follow-up action. Use when code, docs, packets, or workflow changes need durable review before acceptance. Not for implementation, optimistic self-review, or silent execution-ledger mutation.
+description: "First-class Loom review layer for durable adversarial critique, review packets, explicit verdicts, audits, risk analysis, and structured findings with severity, confidence, and follow-up action. Use when code, docs, packets, workflows, or accepted-shape claims need durable review before acceptance; when residual risk or contradictory evidence needs pressure-testing; or when the outcome should be a governed verdict instead of chat feedback. Not for implementation, optimistic self-review, or silent execution-ledger mutation."
 compatibility: Designed for this Markdown-first Loom repository. Assumes repository-local scripts, canonical Markdown records, and harness-agnostic child launches resolved through `.loom/harness.md` profiles, harness self-discovery, or operator guidance.
 metadata:
   author: agent-loom

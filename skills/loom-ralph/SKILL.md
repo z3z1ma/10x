@@ -1,6 +1,6 @@
 ---
 name: loom-ralph
-description: Managed Loom orchestration skill for Ralph packetized execution: bounded ticket execution through persisted packets, fresh child runs, verification, and ticket-ledger reconciliation. Use when one exact ticket should advance through one bounded fresh-context execution step with explicit scope and write boundaries. Not for local-only edits, critique-first work, or vague multi-ticket execution.
+description: "Managed Loom orchestration layer for Ralph packetized execution: bounded ticket advancement through persisted packets, fresh child runs, verification, and reconciliation back into ticket truth. Use when one exact ticket is ready for one bounded fresh-context execution step; when the parent needs a packetized handoff with explicit scope and write boundaries; or when local editing should give way to a governed child run. Not for local-only edits, critique-first work, or vague multi-ticket execution."
 compatibility: Designed for this Markdown-first Loom repository. Assumes repository-local scripts, canonical Markdown records, and harness-agnostic child launches resolved through `.loom/harness.md` profiles, harness self-discovery, or operator guidance.
 metadata:
   author: agent-loom

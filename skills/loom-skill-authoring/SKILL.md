@@ -1,6 +1,6 @@
 ---
 name: skill-authoring
-description: "Create high-quality skills: scoped, procedural, and durable. Prefer updates over duplicates. Use when working with SKILL.md files, authoring new skills, improving existing skills, or understanding skill structure and best practices."
+description: "Create and improve high-quality skills: scoped, procedural, durable, and easy to discover. Prefer updates over duplicates. Use when working with SKILL.md files, authoring new skills, tightening frontmatter descriptions or activation criteria, refining workflows or references, auditing skill structure against repo conventions, or asking how a skill should be scoped and organized. Not for ordinary product docs, canonical Loom records, or non-skill implementation work."
 license: MIT
 metadata:
   version: "1"

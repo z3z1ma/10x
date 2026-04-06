@@ -1,6 +1,6 @@
 ---
 name: loom-research
-description: Maintain Loom research memory: durable evidence, experiments, investigations, comparisons, spikes, synthesis notes, and reusable findings. Use when evidence gathering, option analysis, technical investigation, experiments, or discovery work should inform later specs, plans, tickets, critique, or docs. Not for live execution tracking, behavior contracts, or final accepted documentation.
+description: "Maintain Loom's evidence-memory layer: durable research notes, experiments, investigations, comparisons, spikes, synthesis notes, and reusable findings. Use when the team needs evidence before choosing a spec, plan, ticket, critique, or doc direction; when an investigation, experiment, option comparison, or discovery pass should remain citable; or when findings need a durable home beyond chat. Not for live execution tracking, behavior contracts, or final accepted documentation."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

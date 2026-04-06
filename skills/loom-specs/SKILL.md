@@ -1,6 +1,6 @@
 ---
 name: loom-specs
-description: Maintain Loom behavior contracts and specifications: specs, desired behavior, requirements, constraints, scenarios, acceptance criteria, and design notes. Use when intended behavior, acceptance, or requirements need a durable contract before or during implementation. Not for research-only notes, live execution updates, or final accepted documentation.
+description: "Maintain Loom's behavior-contract layer through specs that define intended behavior, requirements, constraints, scenarios, acceptance criteria, and design notes. Use when expected behavior is still fuzzy and needs a durable contract before or during implementation; when acceptance criteria or scenarios must become explicit; or when downstream plans, tickets, critique, or docs need one canonical behavior source. Not for research-only notes, live execution updates, or final accepted documentation."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

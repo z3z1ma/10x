@@ -1,6 +1,6 @@
 ---
 name: loom-explainer
-description: Use this skill when the user wants to write, explain, draft, or craft content. Trigger if the conversation involves writing articles, essays, posts, or explanations; drafting long-form pieces; explaining a complex topic clearly; crafting talks, presentations, or narratives; or review/editing of written content. Do NOT trigger for code documentation, commit messages, or technical dev-log entries.
+description: "Writing-and-explanation utility for drafting, structuring, revising, and clarifying non-canonical prose. Use when the user wants an article, essay, post, talk, presentation, narrative, briefing, or clear explanation of a topic; when they ask to outline, rewrite, or sharpen long-form writing; or when a written piece needs stronger audience-aware structure and voice. Not for code documentation, commit messages, or technical dev-log entries."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom

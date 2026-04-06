@@ -1,6 +1,6 @@
 ---
 name: loom-memory-housekeeping
-description: Perform mechanical Loom memory maintenance so `.loom/memories/` stays small, indexed, linked, and structurally healthy. Archive stale data, prune hot-memory by structural rules, enforce entity format, maintain temporal facts, run link audits, rebuild glacier and link indexes, and maintain L0 headers. Use when memory needs pruning, archive upkeep, link-index rebuilds, or index validation across the module. Not for semantic reflection, ordinary one-off memory writes, or canonical record changes.
+description: "Perform mechanical maintenance for Loom's supporting-memory layer so `.loom/memories/` stays small, indexed, linked, and structurally healthy. Use when memory needs pruning, archive upkeep, manifest or L0 validation, glacier or link-index rebuilds, or a user explicitly asks for housekeeping, cleanup, or pruning; archive stale data and repair structure without making semantic decisions that belong to reflection. Not for semantic reflection, ordinary one-off memory writes, or canonical record changes."
 compatibility: Designed for this Markdown-first Loom repository.
 metadata:
   author: agent-loom
