@@ -4,6 +4,36 @@ Use package-local script paths from this skill bundle.
 
 The examples below assume invocation through `scripts/docs.py` inside `loom-docs`.
 
+## Direct Docs Query Ideas
+
+The bundled CLI creates docs records, docs packets, links, and verification artifacts.
+
+The queries below are examples, not a canonical command surface. Use them as portable patterns when you need to inspect `.loom/docs/` and `.loom/runs/docs/` directly.
+
+Docs by lifecycle state:
+
+```bash
+rg -n '"status":\s*"(draft|accepted|stale|superseded)"|"updated_at":' .loom/docs/*.md
+```
+
+Docs tied to one target ticket, spec, plan, or critique:
+
+```bash
+rg -n 'ticket:0002|spec:minimum-proven-core-workflow-surface|plan:bootstrap-cli-reference-docs|critique:' .loom/docs/*.md
+```
+
+Compiled docs packets that likely still need reconciliation back into canonical docs:
+
+```bash
+rg -n '"status":\s*"compiled"|"generated_at":|"ref":' .loom/runs/docs/*.md
+```
+
+Newest doc updates first:
+
+```bash
+rg -H -o '"updated_at":\s*"[^"]+"' .loom/docs | sort -t'"' -k4,4r
+```
+
 ## `scripts/docs.py create`
 
 Purpose:

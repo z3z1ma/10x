@@ -4,6 +4,36 @@ Use package-local script paths from this skill bundle.
 
 The examples below assume invocation through `scripts/workspace.py` inside `loom-workspace`.
 
+## Direct Workspace Query Ideas
+
+The bundled CLI handles diagnosis, scaffolding, scope resolution, and link checks.
+
+The queries below are examples, not a canonical command surface. Use them as portable patterns when you need to inspect the workspace corpus directly.
+
+State rollup across the main Loom layers:
+
+```bash
+rg --no-filename -o '"kind":\s*"[^"]+"|"status":\s*"[^"]+"' .loom/{constitution,research,initiatives,specs,plans,tickets,critique,docs,verification} | sort | uniq -c
+```
+
+Records with workspace-wide or multi-repository scope that deserve extra care before editing:
+
+```bash
+rg --multiline -l '"repository_scope":\s*\{\s*"kind":\s*"(workspace|multi_repository)"' .loom/{constitution,research,initiatives,specs,plans,tickets,critique,docs,verification}
+```
+
+Execution-facing queue across tickets, plans, critique, and docs:
+
+```bash
+rg -n '"status":\s*"(active|blocked|review_required|complete_pending_acceptance|draft|accepted|stale)"' .loom/{tickets,plans,critique,docs}
+```
+
+Everything that references one target record across the corpus:
+
+```bash
+rg -n 'ticket:0002|plan:bootstrap-cli-reference-docs|spec:minimum-proven-core-workflow-surface' .loom
+```
+
 ## `scripts/workspace.py diagnose`
 
 Purpose:

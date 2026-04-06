@@ -4,6 +4,36 @@ Use package-local script paths from this skill bundle.
 
 The examples below assume invocation through `scripts/ralph.py` inside `loom-ralph`.
 
+## Direct Ralph Query Ideas
+
+The bundled CLI compiles Ralph packet artifacts and writes verification records.
+
+The queries below are examples, not a canonical command surface. Use them as portable patterns when you need to inspect `.loom/runs/ralph/` and Ralph-linked verification directly.
+
+Compiled Ralph packets by recency and target:
+
+```bash
+rg -n '"status":\s*"compiled"|"generated_at":\s*"[^"]+"|"ref":\s*"ticket:[^"]+"' .loom/runs/ralph/*.md
+```
+
+All Ralph packet artifacts for one target ticket:
+
+```bash
+rg -l '"target":\s*\{\s*"kind":\s*"ticket",\s*"ref":\s*"ticket:0002"' .loom/runs/ralph
+```
+
+Allowed write refs for one target ticket's packet family:
+
+```bash
+rg -n '"ref":\s*"ticket:0002"|"allowed_write_refs":\s*\[' .loom/runs/ralph/*.md
+```
+
+Verification artifacts linked to the same ticket before acceptance:
+
+```bash
+rg -l 'ticket:0002' .loom/verification
+```
+
 ## `scripts/ralph.py packet`
 
 Purpose:

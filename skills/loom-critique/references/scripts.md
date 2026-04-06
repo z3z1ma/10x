@@ -4,6 +4,36 @@ Use package-local script paths from this skill bundle.
 
 The examples below assume invocation through `scripts/critique.py` inside `loom-critique`.
 
+## Direct Critique Query Ideas
+
+The bundled CLI creates critique records, critique packets, links, and verification artifacts.
+
+The queries below are examples, not a canonical command surface. Use them as portable patterns when you need to inspect `.loom/critique/`, `.loom/runs/critique/`, and critique-linked verification directly.
+
+Critique records by state and recency:
+
+```bash
+rg -n '"status":\s*"(active|revised|superseded)"|"updated_at":' .loom/critique/*.md
+```
+
+Critique sections that usually determine what to do next:
+
+```bash
+rg -n '^# (Verdict|Residual Risks|Follow-up Tickets|Evidence Reviewed)$' .loom/critique/*.md
+```
+
+Everything that references critique records downstream:
+
+```bash
+rg -n 'critique:' .loom/{tickets,plans,specs,docs,verification,runs}
+```
+
+Compiled critique packets that may still need reconciliation:
+
+```bash
+rg -n '"status":\s*"compiled"|"generated_at":|"ref":' .loom/runs/critique/*.md
+```
+
 ## `scripts/critique.py create`
 
 Purpose:
