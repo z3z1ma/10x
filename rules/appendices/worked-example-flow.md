@@ -18,13 +18,17 @@ The parent starts with always-on doctrine and workspace health.
 
 Before choosing a task-specific path, the parent reads `constitution:main` so the next actions stay aligned with durable project policy.
 
+The parent treats Loom artifacts as ordinary files first. That means the normal order is: read the rules, read the relevant records directly, search the corpus directly, and use the workspace CLI only for deterministic health or scope checks.
+
 Typical actions:
 
 ```bash
-# Read the loom-workspace skill; the bundled CLI is exposed as scripts/workspace.py
+# Use the workspace CLI only for deterministic checks
 scripts/workspace.py diagnose --json
-scripts/workspace.py status --json
 scripts/workspace.py scope --json --path ".loom/constitution/constitution.md"
+
+# Read and search the actual corpus with native tools
+grep -R "<ticket-ref>" .loom
 ```
 
 The parent uses these checks to confirm:
@@ -43,6 +47,8 @@ The parent also reads the main constitution record and should now know:
 
 After reading the constitution, the parent reads the ticket and linked plan/spec records.
 
+This is ordinary agent work. The parent reads the files directly rather than asking a helper CLI to restate them.
+
 Typical governing artifacts include:
 
 - the target ticket
@@ -59,10 +65,12 @@ The parent should now know:
 
 The parent compiles a persisted Ralph packet for the bounded execution step.
 
+This is the point where a CLI is useful again: packet scaffolding is deterministic, bounded, and easier to trust when generated mechanically.
+
 Example:
 
 ```bash
-# Read the loom-ralph skill; the bundled CLI is exposed as scripts/ralph.py
+# Use the Ralph CLI to scaffold the packet artifact
 scripts/ralph.py packet "<ticket-ref>" ralph --mode execution --style reference-first --allow-write-ref "<ticket-ref>"
 ```
 
@@ -110,6 +118,17 @@ The parent:
 2. confirms the child stayed inside the allowed write set
 3. updates the ticket journal or verification section as needed
 4. records or links durable verification evidence
+
+If reconciliation includes deleting or renaming records, the parent also searches `.loom/` for affected canonical IDs, updates those references directly, and only then removes or renames the file.
+
+Typical native-tool shape there is simple:
+
+```bash
+grep -R "<canonical-id>" .loom
+rm "<obsolete-record-path>"
+```
+
+The important part is the sequence: search, reconcile, then remove.
 
 The outcome should be recorded in:
 

@@ -26,6 +26,8 @@ Use this order:
 
 If the current working directory is a non-root subdirectory of a git repository and no established workspace exists above it, fail closed rather than creating or trusting one by guesswork.
 
+Scope resolution is one of the few places where a deterministic CLI may be useful. Ordinary reading, searching, editing, and deletion are still normal native-tool work rather than scope-tool work.
+
 ## Scope Identities
 
 Use these scope identities:

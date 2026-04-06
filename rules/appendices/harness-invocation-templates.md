@@ -6,6 +6,8 @@ Harness invocation templates explain how the parent turns a compiled packet into
 
 The key idea is that the packet is the main local contract. The command and prompt are the launch mechanism.
 
+This appendix only matters after the parent has already read the governing records, decided that packet-consuming work is needed, and compiled the packet. Ordinary Loom record work happens before this step with the agent's native tools.
+
 Loom is harness-agnostic. The operator chooses their own CLI tools (OpenCode, Claude Code, Gemini CLI, Codex, Aider, or anything else that can accept a file and a prompt). The agent discovers how to invoke the operator's harness rather than assuming a specific tool.
 
 ## Harness Resolution Order
@@ -102,6 +104,8 @@ The command template is the illustration. The prose is the instruction.
 ## General Rule
 
 Packet-consuming skills document their own invocation references (prompt shape, preflight checklist, expected output, reconciliation). The harness resolution order above determines which CLI command carries that prompt.
+
+Harness resolution is a launch concern, not a corpus-navigation concern. Reading records, searching `.loom/`, editing prose, and reconciling references are normal parent-side agent work that happens outside this appendix.
 
 ## What A Good Invocation Doc Should Cover
 

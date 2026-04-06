@@ -1,5 +1,13 @@
 # Appendix B — Layer Schemas
 
+## How To Use This Appendix
+
+The schemas below define the minimum durable shape for each record kind.
+
+In practice, helper CLIs may scaffold these headings and frontmatter for the agent. After creation, the agent is expected to continue editing the record directly until the content is truthful, specific, and operationally useful.
+
+Treat the schema as the starting structure that makes later direct editing safe and consistent.
+
 ## Constitution
 
 ### Main constitution

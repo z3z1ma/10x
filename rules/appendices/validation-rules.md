@@ -32,6 +32,8 @@ When the parent needs confidence in the repository state, run validation in this
 
 This order is useful because later validation depends on earlier layers being trustworthy.
 
+The parent usually reaches this point after reading and searching the relevant records directly with native tools. Validation confirms structural trust; it does not replace ordinary corpus reading.
+
 ## Record Validation
 
 Record validation checks:
@@ -60,6 +62,8 @@ Link validation checks:
 Link validation exists to keep the graph interpretable by a future agent.
 
 If an important relationship exists only in prose and not in a typed link field, that should be treated as a quality gap even if the file is otherwise readable.
+
+When validation follows a deletion, rename, or supersession, the parent should search `.loom/` directly for the affected canonical ID, reconcile those references with normal edits, and then rerun validation.
 
 ## Scope Validation
 
@@ -103,6 +107,8 @@ Skill validation checks:
 Skill validation should prefer self-contained clarity.
 
 If a loaded skill still forces the reader to infer its real workflow from unrelated files, the skill is structurally present but operationally weak.
+
+Skill validation complements native work. It does not replace reading the skill, its references, and the owned records directly.
 
 ## Acceptance Use
 

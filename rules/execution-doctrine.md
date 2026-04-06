@@ -1,35 +1,32 @@
 # Execution Doctrine
 
-Loom execution stays reliable by separating parent workflow judgment from child bounded execution.
+Loom execution stays reliable by separating parent workflow judgment from child bounded execution. Both roles operate on the corpus with standard file tools. Helper CLIs enter only for deterministic scaffolding and structural validation.
 
 ## Parent and Child Roles
 
 The parent context owns:
 
-- task classification
-- skill hydration
+- task classification and skill selection
 - scope resolution
-- packet compilation
-- allowed write set declaration
+- reading and searching the corpus directly
+- packet compilation and allowed-write-set declaration
 - child launch
-- post-run validation and reconciliation
+- post-run validation, reconciliation, and ticket-ledger update
 
 The child context owns:
 
 - bounded work inside the packet contract
-- direct edits only inside the allowed write set
+- edits only inside the allowed write set
 - verification evidence generation
-- explicit continue, stop, blocked, or escalate outcomes
+- an explicit continue, stop, blocked, or escalate outcome
 
-The parent owns workflow judgment.
+Both roles read records, search references, and edit files with the same standard tools. The parent does this to prepare and reconcile. The child does this to execute the bounded task. Neither role needs a special CLI layer for ordinary corpus work.
 
-The child owns bounded execution inside the packet contract.
-
-Read `appendices/worked-example-flow.md` when you want one concrete parent/child flow instead of the abstract rule set.
+Read `appendices/worked-example-flow.md` for one concrete parent/child flow.
 
 ## Fresh-Context Rule
 
-The following flows SHOULD run in a fresh harness context:
+These flows SHOULD run in a fresh harness context:
 
 - Ralph execution
 - critique
@@ -37,7 +34,7 @@ The following flows SHOULD run in a fresh harness context:
 
 Prefer fresh child sessions for packet-consuming work because the packet should carry the bounded contract more reliably than a long saturated transcript.
 
-Read `appendices/harness-invocation-templates.md` when you need the launch shape, prompt shape, or post-return reconciliation checklist.
+Read `appendices/harness-invocation-templates.md` for launch shapes, prompt conventions, and post-return reconciliation.
 
 ## Write-Back Rule
 
@@ -47,4 +44,4 @@ Review-only and diagnostic packets SHOULD return findings or proposed changes in
 
 If a child returns without durable write-back where durable write-back was required, treat the run as incomplete.
 
-Read `appendices/acceptance-and-packet-playbook.md` when the next parent decision after a child run is still ambiguous.
+Read `appendices/acceptance-and-packet-playbook.md` when the next parent decision after a child run is ambiguous.

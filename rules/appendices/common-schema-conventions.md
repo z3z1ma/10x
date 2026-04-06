@@ -6,6 +6,19 @@ Canonical records and packet artifacts in this repository use JSON-compatible fr
 
 This keeps records human-readable while allowing deterministic parsing with the Python standard library.
 
+## Scaffold Intent
+
+Helper CLIs create records as structural starting points.
+
+That means a generated record is expected to be:
+
+- structurally valid
+- correctly placed in the corpus
+- equipped with the right frontmatter and required section headers
+- incomplete until an agent fills in the actual content with normal editing tools
+
+Scaffolding is the handoff into ordinary record writing, not the end of the record-writing process.
+
 ## Required Common Fields
 
 Every canonical record MUST declare:

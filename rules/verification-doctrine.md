@@ -31,6 +31,8 @@ At minimum, Loom work should provide or preserve:
 - doctor/status readiness checks
 - proof workflow evidence
 
+When a record is being removed, renamed, or otherwise retired from active use, the minimum gate also includes reconciling references to its canonical ID so the graph remains truthful.
+
 Read `appendices/validation-rules.md` when you need the exact validation order or what each validation layer is supposed to prove.
 
 ## Parent Acceptance Decision Tree
@@ -45,7 +47,26 @@ After bounded execution or review work returns, the parent should ask these ques
 
 If the answer to one of these is no, the parent should not close the work yet.
 
-Use this as the standard parent-side acceptance loop after Ralph, critique, docs, or major local mutations.
+## Reference Reconciliation
+
+Reference reconciliation is part of ordinary verification, not a special feature. Because every link in the corpus is a text string in a Markdown file, standard search tools are the reconciliation mechanism:
+
+```bash
+# Find everything that references a record about to be deleted
+grep -R "ticket:0003" .loom
+
+# Find everything that references a path about to be renamed
+grep -R "agel-0003-old-ticket.md" .loom
+```
+
+When a record is deleted, renamed, split, or superseded:
+
+1. search the `.loom/` tree for direct references to the canonical ID or affected path
+2. update or remove those references with normal editing tools
+3. remove or rename the file
+4. run structural validation afterward
+
+Do not treat broken links as acceptable temporary cleanup debt when the parent is claiming completion.
 
 Read `appendices/acceptance-and-packet-playbook.md` when this loop needs a more concrete decision sequence.
 
@@ -64,11 +85,7 @@ Use this matrix as the default policy until a more formal policy record replaces
 
 ### Low-risk local record maintenance
 
-Examples:
-
-- fixing links
-- clarifying a small ticket note
-- tightening a local doc section without changing accepted system shape
+Examples: fixing links, clarifying a small ticket note, tightening a local doc section without changing accepted system shape.
 
 Default expectations:
 
@@ -78,11 +95,7 @@ Default expectations:
 
 ### Medium-risk bounded execution or behavior clarification
 
-Examples:
-
-- changes to packet behavior
-- changes to execution or verification workflow behavior
-- meaningful spec or plan refinement
+Examples: changes to packet behavior, changes to execution or verification workflow behavior, meaningful spec or plan refinement.
 
 Default expectations:
 
@@ -92,19 +105,14 @@ Default expectations:
 
 ### High-risk scope or authority-model change
 
-Examples:
-
-- truth-hierarchy changes
-- packet trust-boundary changes
-- scope and multi-repo behavior changes
-- docs claiming a new accepted system shape
+Examples: truth-hierarchy changes, packet trust-boundary changes, scope and multi-repo behavior changes, docs claiming a new accepted system shape.
 
 Default expectations:
 
 - critique mandatory by default
 - docs update required when the change is accepted
 - ticket should not move directly from `active` to `closed`
-- expected path is usually `active -> review_required -> complete_pending_acceptance -> closed`
+- expected path: `active -> review_required -> complete_pending_acceptance -> closed`
 
 ## When Docs Work Is Commonly Required
 
