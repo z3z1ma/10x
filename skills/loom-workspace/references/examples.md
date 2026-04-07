@@ -14,10 +14,11 @@ These questions are about orientation, trust, and routing. That is why they belo
 ## Example Fresh-Entry Procedure
 
 ```text
-1. Inspect status to see where active work is concentrated.
+1. Resolve the single workspace root that owns `.loom/`.
 2. Inspect the workspace trees directly before trusting packet or review workflows.
-3. Resolve repository ownership for the target path or artifact.
-4. Choose the owning artifact skill only after health and scope are clear.
+3. Read `constitution:main` once the workspace is trustworthy enough to proceed.
+4. Resolve repository ownership for the target path or artifact.
+5. Choose the owning artifact skill only after health and scope are clear.
 ```
 
 ## Example Routing Pattern
@@ -39,7 +40,24 @@ Good first questions:
 
 Good next action:
 - Use direct workspace inspection first.
+- Keep canonical Loom artifacts in the workspace-root `.loom/` tree.
+- Use repository scope fields to bind work to any child repository that owns the target path.
 - Then switch to the owning sibling skill once the next step is clear.
+
+## Example Parent Workspace With Child Repositories
+
+```text
+Situation: The workspace root contains `services/api/` and `services/web/`, each with its own `.git/`, and the target file lives under `services/api/src/handler.ts`.
+
+Good reasoning:
+- The parent workspace root still owns the single canonical `.loom/` tree.
+- `services/api/` owns the target code path.
+- The next ticket, spec, or packet should stay under the parent `.loom/` tree and bind execution to `repo:services-api`.
+
+Good next action:
+- Keep reading and writing canonical records under the parent `.loom/` tree.
+- Use `repository_scope`, packet `scope`, and `allowed_repositories` to narrow execution authority to `repo:services-api`.
+```
 ```
 
 ## Example Implementation Helper Pattern
@@ -53,6 +71,7 @@ git -C "<target-dir>" rev-parse --show-toplevel
 These commands are only one implementation of the larger control-plane procedure above. The important concept is:
 
 - establish trust
+- establish the workspace root
 - establish scope ownership
 - choose the next owning Loom layer
 
@@ -89,7 +108,8 @@ It is bad because it skips the exact control-plane work that prevents scope mist
 ```text
 I do not yet know whether this is a ticket update, a critique pass, a docs update, or a planning task.
 
-First I should inspect the workspace directly enough to trust it.
+First I should resolve the workspace root and inspect it directly enough to trust it.
+Then I should read `constitution:main`.
 Then I should confirm which repository owns the target.
 Then I should choose the owning sibling skill and move into that artifact layer.
 ```
@@ -103,5 +123,6 @@ This sounds like docs, so I will jump straight into editing explanations.
 Why this is weak:
 
 - the workspace may not be healthy enough to trust yet
+- the workspace root and target repository may not be the same thing
 - the work may actually belong to tickets, critique, or specs instead
 - scope ownership may still be ambiguous

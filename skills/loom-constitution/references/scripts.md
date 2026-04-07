@@ -10,6 +10,12 @@ The bundled CLI scaffolds constitutional records, mutates links, and validates s
 
 The queries below are examples, not a canonical command surface. Use them as portable patterns when you need to inspect `.loom/constitution/` directly.
 
+Remember the workspace/repository split while reading these examples:
+
+- constitutional records still live under the one workspace-root `.loom/constitution/` tree
+- `constitution:main` is workspace-scoped by default
+- downstream records may still bind execution to one child repository or a bounded multi-repository scope
+
 Constitutional records by kind, state, and recency:
 
 ```bash
@@ -38,14 +44,20 @@ rg -n 'constitution:main|decision:[0-9]{4}|roadmap:' .loom/{research,initiatives
 
 Purpose:
 
-- create or intentionally replace a constitution record scaffold
-- with no slug, validate constitution records instead
+- create or intentionally replace the workspace-level constitution scaffold
+- keep `constitution:main` workspace-scoped unless you are deliberately creating a narrower constitutional record in a different family
 
 Example:
 
 ```bash
 scripts/constitution.py create constitution main
 ```
+
+Good follow-through:
+
+- fill in the actual constitutional content immediately after scaffolding
+- keep `links: {}` on `constitution:main`
+- express repository binding in downstream records and packets, not by creating child `.loom/constitution/` trees
 
 ## `scripts/constitution.py create decision`
 

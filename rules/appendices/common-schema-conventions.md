@@ -71,6 +71,8 @@ For practical record-writing:
 
 All of these records still live in the one workspace `.loom/` tree. Scope tells you who owns the work, not where the Markdown file is stored.
 
+In a workspace with child repositories, keep using the parent `.loom/` tree for all canonical records. Express child-repository ownership with `repository_scope`, packet scope, and allowed repository/worktree fields rather than with additional `.loom/` directories inside those child repositories.
+
 ## ID Conventions
 
 - `constitution:main`

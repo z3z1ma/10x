@@ -21,7 +21,7 @@ Use this skill when the work changes what the project is, what it values, what c
 - a major decision needs to stay visible to future agents
 - strategic direction needs roadmap-level framing
 
-## Do Not Use This Skill When
+## Prefer Another Layer When
 
 - you are updating day-to-day execution state
 - you are tracking progress, blockers, or implementation notes
@@ -107,10 +107,10 @@ Read `references/scripts.md` for the bundled CLI surface, including argument mea
 
 ## Failure Conditions
 
-- the record claims durable policy but only describes a local implementation detail
-- a decision is made durable without stating why it matters or what it constrains
-- downstream consequences are left implicit
-- a newly created record remains a mostly empty scaffold
+- the record reads like a local implementation note instead of durable policy
+- a decision record states the choice but not why it matters or what it constrains
+- downstream consequences are missing where future agents would need them
+- a newly created record still reads like an empty scaffold instead of a usable constitutional artifact
 
 ## Done Means
 

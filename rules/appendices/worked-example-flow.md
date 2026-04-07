@@ -37,8 +37,11 @@ grep -R "<ticket-ref>" .loom
 The parent uses these checks to confirm:
 
 - the workspace is structurally healthy
-- the root repository is the correct scope owner
+- the workspace root that owns `.loom/` is explicit
+- the owning repository for the target path is explicit
 - the next action can proceed without scope guessing
+
+If the target path lives inside a child repository under the parent workspace, the parent keeps using the parent `.loom/` tree and carries the child repository identity forward through `repository_scope`, packet `scope`, `allowed_repositories`, and `allowed_worktrees`.
 
 The parent also reads the main constitution record and should now know:
 
@@ -82,6 +85,7 @@ The resulting packet is a durable Ralph packet artifact for that ticket.
 The packet tells the child:
 
 - the target ticket
+- the scope identity and allowed repositories/worktrees
 - the allowed write set
 - the source refs that matter
 - the trust boundary
