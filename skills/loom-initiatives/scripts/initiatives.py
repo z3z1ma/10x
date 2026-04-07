@@ -41,7 +41,9 @@ def find_workspace_root(start: Path | None = None) -> Path:
     for candidate in [current, *current.parents]:
         if (candidate / ".git").exists() and (candidate / ".loom").exists():
             return candidate
-    return current
+    raise SystemExit(
+        "No Loom workspace found. Run loom-setup from the intended workspace root before using this CLI."
+    )
 
 
 def relative_to_workspace(path: Path, workspace: Path) -> str:
@@ -125,6 +127,14 @@ def resolve_repository_id_for_path(workspace: Path, target: str) -> str:
     )
 
 
+def validate_repository_ids(workspace: Path, repository_ids: set[str]) -> set[str]:
+    known_ids = {repo_id for _repo_path, repo_id in discover_repositories(workspace)}
+    unknown_ids = sorted(repository_ids - known_ids)
+    if unknown_ids:
+        raise SystemExit(f"Unknown repository id(s): {', '.join(unknown_ids)}")
+    return repository_ids
+
+
 def resolve_repository_scope(args: argparse.Namespace, workspace: Path) -> dict:
     if args.workspace_scope:
         if args.repository or args.path:
@@ -132,11 +142,11 @@ def resolve_repository_scope(args: argparse.Namespace, workspace: Path) -> dict:
                 "Use either --workspace-scope or --repository/--path, not both"
             )
         return {"kind": "workspace", "workspace_id": WORKSPACE_SCOPE_ID}
-    repository_ids = set(args.repository)
+    repository_ids = validate_repository_ids(workspace, set(args.repository))
     for path in args.path:
         repository_ids.add(resolve_repository_id_for_path(workspace, path))
     if not repository_ids:
-        return {"kind": "repository", "repository_id": "repo:root"}
+        return {"kind": "workspace", "workspace_id": WORKSPACE_SCOPE_ID}
     if len(repository_ids) == 1:
         return {"kind": "repository", "repository_id": next(iter(repository_ids))}
     return {"kind": "multi_repository", "repository_ids": sorted(repository_ids)}

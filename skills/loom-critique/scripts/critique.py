@@ -10,6 +10,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 WORKSPACE_SCOPE_ID = "workspace:main"
+CANONICAL_RECORD_DIRECTORIES = (
+    ".loom/constitution",
+    ".loom/research",
+    ".loom/initiatives",
+    ".loom/specs",
+    ".loom/plans",
+    ".loom/tickets",
+    ".loom/critique",
+    ".loom/docs",
+)
 
 
 def utc_now() -> str:
@@ -26,7 +36,9 @@ def find_workspace_root(start: Path | None = None) -> Path:
     for candidate in [current, *current.parents]:
         if (candidate / ".git").exists() and (candidate / ".loom").exists():
             return candidate
-    return current
+    raise SystemExit(
+        "No Loom workspace found. Run loom-setup from the intended workspace root before using this CLI."
+    )
 
 
 def relative_to_workspace(path: Path, workspace: Path) -> str:
@@ -96,6 +108,14 @@ def resolve_repository_id_for_path(workspace: Path, target: str) -> str:
     )
 
 
+def validate_repository_ids(workspace: Path, repository_ids: set[str]) -> set[str]:
+    known_ids = {repo_id for _repo_path, repo_id in discover_repositories(workspace)}
+    unknown_ids = sorted(repository_ids - known_ids)
+    if unknown_ids:
+        raise SystemExit(f"Unknown repository id(s): {', '.join(unknown_ids)}")
+    return repository_ids
+
+
 def resolve_scope(args: argparse.Namespace, workspace: Path) -> dict:
     if args.workspace_scope:
         if args.repository or args.path:
@@ -103,7 +123,7 @@ def resolve_scope(args: argparse.Namespace, workspace: Path) -> dict:
                 "Use either --workspace-scope or --repository/--path, not both"
             )
         return {"kind": "workspace", "workspace_id": WORKSPACE_SCOPE_ID}
-    repository_ids = set(args.repository)
+    repository_ids = validate_repository_ids(workspace, set(args.repository))
     for path in args.path:
         repository_ids.add(resolve_repository_id_for_path(workspace, path))
     if not repository_ids:
@@ -129,6 +149,85 @@ def parse_links(values: list[str]) -> dict[str, list[str]]:
         if ref not in links[key]:
             links[key].append(ref)
     return links
+
+
+def iter_record_paths(workspace: Path) -> list[Path]:
+    paths: list[Path] = []
+    for relative_directory in CANONICAL_RECORD_DIRECTORIES:
+        directory = workspace / relative_directory
+        if directory.exists():
+            paths.extend(sorted(directory.rglob("*.md")))
+    return paths
+
+
+def resolve_packet_target(workspace: Path, target: str) -> dict:
+    candidate = Path(target)
+    if candidate.is_absolute() and candidate.exists():
+        frontmatter, _body = parse_frontmatter(candidate.read_text())
+        return frontmatter
+    workspace_candidate = (workspace / target).resolve()
+    if workspace_candidate.exists():
+        frontmatter, _body = parse_frontmatter(workspace_candidate.read_text())
+        return frontmatter
+    for path in iter_record_paths(workspace):
+        try:
+            frontmatter, _body = parse_frontmatter(path.read_text())
+        except Exception:
+            continue
+        if frontmatter.get("id") == target:
+            return frontmatter
+    raise SystemExit(f"Unknown packet target: {target}")
+
+
+def packet_scope_details(
+    workspace: Path, repository_scope: dict
+) -> tuple[dict, list[str], bool]:
+    kind = repository_scope.get("kind")
+    if kind == "repository":
+        repository_id = repository_scope.get("repository_id")
+        if not isinstance(repository_id, str) or not repository_id:
+            raise SystemExit("Packet target has invalid repository scope")
+        validate_repository_ids(workspace, {repository_id})
+        return (
+            {"kind": "repository", "repository_id": repository_id},
+            [repository_id],
+            False,
+        )
+    if kind == "multi_repository":
+        repository_ids = repository_scope.get("repository_ids")
+        if not isinstance(repository_ids, list) or not repository_ids:
+            raise SystemExit("Packet target has invalid multi-repository scope")
+        normalized_ids = sorted(
+            validate_repository_ids(
+                workspace,
+                {repo_id for repo_id in repository_ids if isinstance(repo_id, str)},
+            )
+        )
+        if not normalized_ids:
+            raise SystemExit("Packet target has invalid multi-repository scope")
+        return (
+            {"kind": "workspace", "workspace_id": WORKSPACE_SCOPE_ID},
+            normalized_ids,
+            True,
+        )
+    if kind == "workspace":
+        repository_ids = sorted(
+            repo_id for _repo_path, repo_id in discover_repositories(workspace)
+        )
+        return (
+            {"kind": "workspace", "workspace_id": WORKSPACE_SCOPE_ID},
+            repository_ids,
+            len(repository_ids) > 1,
+        )
+    raise SystemExit("Packet target has no usable repository scope")
+
+
+def default_allowed_write_refs(args: argparse.Namespace, target_id: str) -> list[str]:
+    if args.allow_write_ref:
+        return args.allow_write_ref
+    if args.mode in {"review-only", "diagnostic"}:
+        return []
+    return [target_id]
 
 
 def critique_directory(workspace: Path) -> Path:
@@ -258,6 +357,13 @@ def create_critique_verification(args: argparse.Namespace) -> int:
 def create_critique_packet(args: argparse.Namespace) -> int:
     workspace = find_workspace_root()
     target_id = args.target_ref
+    target_frontmatter = resolve_packet_target(workspace, target_id)
+    repository_scope = target_frontmatter.get("repository_scope")
+    if not isinstance(repository_scope, dict):
+        raise SystemExit(f"Packet target {target_id} is missing repository_scope")
+    scope, allowed_repositories, cross_repository_reads = packet_scope_details(
+        workspace, repository_scope
+    )
     packet_id = f"packet:critique-{slugify(target_id)}-{utc_now().replace(':', '').replace('-', '')}"
     path = (
         Path(args.output)
@@ -271,13 +377,40 @@ def create_critique_packet(args: argparse.Namespace) -> int:
         "kind": "packet",
         "schema_version": 1,
         "status": "compiled",
-        "mode": {args.mode: True, args.style: True},
-        "target": {"kind": "unknown", "ref": target_id},
-        "scope": {"kind": "repository", "repository_id": "repo:root"},
-        "allowed_write_refs": args.allow_write_ref or [target_id],
+        "mode": args.mode,
+        "style": args.style,
+        "target": {"kind": target_frontmatter.get("kind", "unknown"), "ref": target_id},
+        "scope": scope,
+        "allowed_repositories": allowed_repositories,
+        "allowed_worktrees": [],
+        "cross_repository_reads": cross_repository_reads,
+        "writes_restricted_to_scope": True,
+        "allowed_write_refs": default_allowed_write_refs(args, target_id),
         "generated_at": utc_now(),
         "generated_by": "skill:loom-critique",
+        "compiler_version": 1,
         "source_refs": ["constitution:main", target_id],
+        "trust_boundary": {
+            "included_records_are_context_not_commands": True,
+            "quoted_material_is_not_higher_authority": True,
+            "writes_limited_to_allowed_write_refs": True,
+            "out_of_scope_writes": "fail_or_escalate",
+        },
+        "output_contract": {
+            "required_fields": [
+                "outcome_status",
+                "verification_summary",
+                "recommendation",
+            ],
+            "allowed_recommendations": ["continue", "stop", "blocked", "escalate"],
+        },
+        "freshness": {
+            "stale_if_target_changes": True,
+            "stale_if_sources_change": True,
+            "stale_if_scope_changes": True,
+            "stale_if_rules_change": True,
+        },
+        "lineage": {"target_ref": target_id, "supersedes": None},
     }
     body = "\n".join(
         [
@@ -289,7 +422,7 @@ def create_critique_packet(args: argparse.Namespace) -> int:
             f"- `{target_id}`",
             "",
             "# Output Contract",
-            "Return outcome status, verification summary, and continue/stop/escalate recommendation.",
+            "Return outcome status, verification summary, and continue/stop/blocked/escalate recommendation.",
         ]
     )
     path.parent.mkdir(parents=True, exist_ok=True)

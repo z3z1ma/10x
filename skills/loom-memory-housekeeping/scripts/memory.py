@@ -29,7 +29,9 @@ def find_workspace_root(start: Path | None = None) -> Path:
     for candidate in [current, *current.parents]:
         if (candidate / ".git").exists() and (candidate / ".loom").exists():
             return candidate
-    return current
+    raise SystemExit(
+        "No Loom workspace found. Run loom-setup from the intended workspace root before using this CLI."
+    )
 
 
 def memory_root(workspace: Path) -> Path:

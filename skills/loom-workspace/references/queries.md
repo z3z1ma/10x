@@ -36,9 +36,11 @@ Everything that references one target record across the corpus:
 rg -n 'ticket:0002|plan:bootstrap-cli-reference-docs|spec:minimum-proven-core-workflow-surface' .loom
 ```
 
-## Direct bootstrap
+## Bootstrap And Repair
 
-Create the standard Loom directory tree directly when you need to bootstrap or repair missing structure:
+Bootstrap a new workspace with the full `loom-setup` procedure so the starter file layer is present as well as the directories.
+
+Use direct `mkdir -p` repair only when the workspace is already initialized and one known directory is missing:
 
 ```bash
 mkdir -p .loom/{constitution,research,initiatives,specs,plans,tickets,critique,docs,runs,verification}

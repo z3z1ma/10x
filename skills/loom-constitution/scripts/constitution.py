@@ -26,7 +26,9 @@ def find_workspace_root(start: Path | None = None) -> Path:
     for candidate in [current, *current.parents]:
         if (candidate / ".git").exists() and (candidate / ".loom").exists():
             return candidate
-    return current
+    raise SystemExit(
+        "No Loom workspace found. Run loom-setup from the intended workspace root before using this CLI."
+    )
 
 
 def relative_to_workspace(path: Path, workspace: Path) -> str:
@@ -96,6 +98,14 @@ def resolve_repository_id_for_path(workspace: Path, target: str) -> str:
     )
 
 
+def validate_repository_ids(workspace: Path, repository_ids: set[str]) -> set[str]:
+    known_ids = {repo_id for _repo_path, repo_id in discover_repositories(workspace)}
+    unknown_ids = sorted(repository_ids - known_ids)
+    if unknown_ids:
+        raise SystemExit(f"Unknown repository id(s): {', '.join(unknown_ids)}")
+    return repository_ids
+
+
 def resolve_scope(args: argparse.Namespace, workspace: Path) -> dict:
     if args.workspace_scope:
         if args.repository or args.path:
@@ -103,7 +113,7 @@ def resolve_scope(args: argparse.Namespace, workspace: Path) -> dict:
                 "Use either --workspace-scope or --repository/--path, not both"
             )
         return {"kind": "workspace", "workspace_id": WORKSPACE_SCOPE_ID}
-    repository_ids = set(args.repository)
+    repository_ids = validate_repository_ids(workspace, set(args.repository))
     for path in args.path:
         repository_ids.add(resolve_repository_id_for_path(workspace, path))
     if not repository_ids:
@@ -164,6 +174,10 @@ def next_decision_number(workspace: Path) -> int:
 def create_constitution(args: argparse.Namespace) -> int:
     workspace = find_workspace_root()
     if args.kind == "constitution":
+        if args.repository or args.path:
+            raise SystemExit(
+                "constitution:main is workspace-scoped. Use the default workspace scope or pass --workspace-scope."
+            )
         path = constitution_main_path(workspace)
         if path.exists():
             raise SystemExit(
@@ -174,7 +188,10 @@ def create_constitution(args: argparse.Namespace) -> int:
             "kind": "constitution",
             "schema_version": 1,
             "status": args.status or "active",
-            "repository_scope": resolve_scope(args, workspace),
+            "repository_scope": {
+                "kind": "workspace",
+                "workspace_id": WORKSPACE_SCOPE_ID,
+            },
             "links": {},
             "created_at": utc_now(),
             "updated_at": utc_now(),

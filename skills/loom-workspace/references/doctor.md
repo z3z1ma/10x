@@ -10,8 +10,8 @@ Use this reference when the next question is whether the workspace is healthy en
 
 A good workspace health check should make the current trust state legible by checking:
 
-- Loom bundle presence such as `.opencode/rules/` and `.opencode/skills/`
-- source-tree `rules/` and `skills/` only when the workspace is the Loom source repository
+- visible Loom bundle presence such as `.opencode/rules/` and `.opencode/skills/` when the harness installs the product there
+- source-tree `rules/`, `skills/`, and `commands/` only when the workspace is the Loom source repository itself
 - `.loom` canonical tree presence
 - scope discovery
 - record validation health
@@ -40,7 +40,8 @@ A strong health check usually inspects:
 Treat workspace health output as a routing decision, not just a report.
 
 - if direct inspection shows the workspace is healthy, continue with the owning subsystem workflow
-- if direct inspection shows missing structure, repair that structure first
+- if direct inspection shows the workspace is uninitialized or missing starter files, run the full setup workflow first
+- if direct inspection shows one known missing path inside an initialized workspace, repair that path first
 - if validation or link checks show issues, fix those before trusting packetized work
 - if ownership or scope is unclear, resolve scope before continuing
 
@@ -56,12 +57,13 @@ Run a workspace health check:
 2. before a significant build or packet run
 3. after broad structural changes
 4. after assembling skills
+5. before routing work to a nested repository from a parent workspace
 
 Native tools are usually enough:
 
 - use `find` to inspect the `.loom/`, `rules/`, and `skills/` trees directly
 - use `rg` to spot active work, malformed frontmatter, or suspiciously sparse record families
-- use `mkdir -p` to restore missing Loom directories
+- use `mkdir -p` only to restore one known missing directory inside an already initialized workspace
 - use targeted `rg` across `.loom/` when you need to reconcile refs before an important handoff or packet run
 
 ## Strong Workspace Health Output Characteristics

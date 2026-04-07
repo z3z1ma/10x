@@ -17,6 +17,13 @@ Arbitrary remote or distributed repository discovery is out of scope.
 
 Resolve the workspace root before trying to assign repository or worktree ownership.
 
+Use this as a two-step algorithm:
+
+1. resolve the single workspace root that owns the canonical `.loom/` tree
+2. resolve the owning repository or worktree for the target path or record
+
+Keep those answers separate. The workspace root answers where canonical Loom artifacts live. Repository and worktree scope answer which code surface the work is allowed to touch.
+
 Use this order:
 
 1. prefer the nearest ancestor that contains both `.git/` and `.loom/`
@@ -105,5 +112,14 @@ The workspace-wide packet scope there does not mean "all repositories are in sco
 ### Example: fail-closed behavior
 
 If a path is outside the workspace or cannot be assigned one unambiguous repository owner, the parent should stop and escalate rather than choosing a best guess.
+
+### Example: parent workspace with child repositories
+
+If the workspace root contains child repositories such as `services/api/` and `services/web/`, keep canonical records in the parent `.loom/` tree.
+
+- create or update canonical records under the parent workspace `.loom/`
+- resolve `services/api/...` to `repo:services-api`
+- bind execution authority with `repository_scope`, packet `scope`, `allowed_repositories`, and `allowed_worktrees`
+- do not create additional child `.loom/` trees just because the target code lives in a nested repository
 
 Read `appendices/worked-example-flow.md` when you want to see scope resolution inside the larger parent workflow.

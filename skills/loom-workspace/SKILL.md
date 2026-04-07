@@ -20,7 +20,7 @@ Use this skill as the parent-side Loom control plane for workspace discovery, re
 - you need to inspect workspace health before trusting records or packet work
 - scope ownership of a path or repository is unclear
 
-## Do Not Use This Skill When
+## Prefer Another Skill When
 
 - you already know the exact owning subsystem and only need that artifact-layer workflow
 - the task is purely local and has no durable Loom consequences
@@ -38,21 +38,22 @@ Use this skill as the parent-side Loom control plane for workspace discovery, re
 - fail closed when repository or worktree ownership is ambiguous
 - prefer explicit health checks over silent assumptions
 - prefer native file inspection for workspace health checks
+- read `constitution:main` before downstream Loom work once the workspace is structurally trustworthy
 - prefer reading canonical state before packet launch
 - route into the owning subsystem instead of letting one skill absorb unrelated responsibilities
 - treat health and validation as decision inputs, not decorative reports
 
 ## Execution Playbook
 
-1. if `.loom/` does not exist or is missing canonical subtrees, create the missing directories directly with `mkdir -p` before doing anything else
-2. start with direct `find` and `rg` queries to summarize the current workspace state and locate likely owning surfaces
-3. inspect `.loom/`, `rules/`, and `skills/` directly before trusting downstream records, packets, or operator guidance
-4. check for `.loom/harness.md` — if present, the operator has defined harness profiles for child invocation; note which profiles exist so downstream skills can use them
-5. use `find .loom -name '*.md'` and targeted `rg` when you need canonical refs before linking, reviewing, or compiling packets
-6. use `git rev-parse --show-toplevel` from the target path or a nearest ancestor to confirm repository ownership and fail closed if the answer is still ambiguous
-7. use direct file queries across `.loom/` before depending on a record graph that may have drifted
-8. route into the owning subsystem only after the workspace is structurally trustworthy enough to proceed
-9. if the workspace is not trustworthy, fix that first instead of pushing uncertainty into the next skill
+1. resolve the single workspace root that should own the canonical `.loom/` tree
+2. inspect the current `.loom/` state before writing anything
+3. if the workspace is uninitialized or missing starter files, stop normal work and run the full `loom-setup` procedure at that workspace root
+4. if the workspace is already initialized and only one known directory is missing, repair that gap surgically
+5. inspect the visible Loom bundle and canonical records directly before trusting downstream records, packets, or operator guidance
+6. read `constitution:main` once the workspace is structurally trustworthy enough to continue
+7. resolve the owning repository or worktree for the target path with `git rev-parse --show-toplevel` or equivalent path-based inspection
+8. keep canonical artifacts in the workspace-root `.loom/` tree even when the target code lives in a nested repository
+9. route into the owning subsystem only after workspace trust and repository ownership are explicit
 
 ## Decision Rules
 
@@ -78,11 +79,11 @@ Read `references/queries.md` for native workspace query patterns and example inv
 
 - use `find` to enumerate records, directories, and likely owning surfaces
 - use `rg` to inspect statuses, IDs, links, and cross-record references directly
-- use `mkdir -p` to bootstrap or repair missing `.loom/` directories
+- use `mkdir -p` only for surgical repair inside an already initialized workspace
 - use `git rev-parse --show-toplevel` from the target path when repository ownership needs confirmation
 - switch to the owning skill's script only when you need record-aware scaffolding, validation, or mutation
 
-Prefer native file tools such as `find`, `rg`, `mkdir -p`, and `git` for workspace health checks and bootstrapping. Use record-aware commands only in the owning skill.
+Prefer native file tools such as `find`, `rg`, `mkdir -p`, and `git` for workspace health checks and repository discovery. Use the full `loom-setup` workflow for bootstrap, and use record-aware commands only in the owning skill.
 
 ## What Good Looks Like
 

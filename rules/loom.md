@@ -130,10 +130,14 @@ Helper-created records are structural scaffolds. They are valid starting points 
 
 When entering a repository for Loom work, resolve the workspace root before reading or mutating Loom artifacts.
 
-1. search upward for the nearest directory containing both `.git/` and `.loom/`
+Use this operating sequence:
+
+1. resolve the single workspace root that owns canonical `.loom/` artifacts
 2. if no established workspace exists, allow the current working directory as the workspace root unless it is a non-root subdirectory of a git repository
-3. if `.loom/` does not exist or is incomplete, the workspace must be initialized before proceeding
-4. if `.loom/` exists but workspace health is uncertain, inspect it directly with native file tools before trusting records for downstream work
+3. initialize or repair `.loom/` at that workspace root before proceeding
+4. resolve the owning repository or worktree for the target path or record
+5. keep canonical records in the workspace-root `.loom/` tree even when the target work belongs to a nested repository
+6. if workspace health is uncertain, inspect it directly with native file tools before trusting records for downstream work
 
 If the current working directory is a non-root subdirectory of a git repository and no established workspace exists above it, fail closed.
 
@@ -170,7 +174,7 @@ Avoid records that are technically present but operationally thin:
 
 ## Instruction-Writing Doctrine
 
-Rules and skills SHOULD lead with positive operating instructions: what to do, what evidence to produce, when to escalate. Prohibitions close known failure modes after the positive path is stated.
+Rules and skills SHOULD lead with a positive operating sequence: what to resolve first, what to read next, what evidence to produce, and when to escalate. Add prohibitions only after the happy-path instructions are clear enough to follow without guesswork.
 
 ## Working Defaults
 

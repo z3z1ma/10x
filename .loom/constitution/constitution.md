@@ -5,12 +5,12 @@
   "kind": "constitution",
   "links": {},
   "repository_scope": {
-    "kind": "repository",
-    "repository_id": "repo:root"
+    "kind": "workspace",
+    "workspace_id": "workspace:main"
   },
   "schema_version": 1,
   "status": "active",
-  "updated_at": "2026-04-06T06:53:44Z"
+  "updated_at": "2026-04-07T06:37:10Z"
 }
 ---
 
@@ -85,3 +85,4 @@ The immediate quality bar is no longer just that the files exist. The most impor
 - 2026-04-01: reconciled `constitution:main` with `CONSTITUTION.md`, the shipped rules/skills/build layout, and new supporting decision and roadmap records
 - 2026-04-01: expanded the constitutional baseline to capture control-plane/data-plane boundaries, self-contained flat skill distribution, and a sharper inventory of shipped repository state
 - 2026-04-06: replaced the committed shared zipapp with committed standalone skill-local CLI files as the direct source of truth
+- 2026-04-07: clarified that `constitution:main` is workspace-scoped and that nested repositories bind work through explicit scope fields instead of child `.loom/` trees

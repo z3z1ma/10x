@@ -20,6 +20,7 @@ Every packet MUST declare:
 - `kind`
 - `schema_version`
 - `mode`
+- `style`
 - `target`
 - `scope`
 - `generated_at`
@@ -52,6 +53,8 @@ Loom supports these packet modes:
 - reconciliation
 
 Modes are orthogonal.
+
+Represent them explicitly. `mode` should name the run posture such as `execution` or `review-only`. `style` should name the source-shape choice such as `reference-first` or `hermetic`.
 
 ### Mode Selection Guidance
 

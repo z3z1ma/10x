@@ -42,7 +42,7 @@ Everything a user receives lives here:
 - `skills/` -- self-contained skill directories, each with `SKILL.md` and optional `references/` / `scripts/` surfaces when that skill ships them
 - `commands/` -- slash-command definitions (Markdown files that define prompt-based commands)
 
-**Isolation rule**: nothing inside `rules/`, `skills/`, or `commands/` may reference anything outside those product directories. No `.loom/` paths, no repo-root paths. Skills reference their own scripts as `scripts/...` and their own docs as `references/...`. Each skill ships its own standalone `scripts/*.py` file.
+**Isolation rule**: nothing inside `rules/`, `skills/`, or `commands/` may depend on source-repo-only paths or dogfooding-only layout. Use generic Loom workspace paths such as `.loom/...` when the product needs to describe runtime artifacts, and keep examples self-contained within the shipped bundle. Skills reference their own scripts as `scripts/...` and their own docs as `references/...`. Each skill ships its own standalone `scripts/*.py` file.
 
 ### Dogfooding artifacts: `.opencode/` and `.loom/`
 
@@ -154,7 +154,7 @@ if __name__ == "__main__":
 ## Editing Guidance
 
 - Prefer the smallest correct change
-- Content inside `rules/`, `skills/`, and `commands/` must be self-contained -- no references to `.loom/` or repo-root paths
+- Content inside `rules/`, `skills/`, and `commands/` must be self-contained -- avoid source-repo-only or dogfooding-only paths, and use generic `.loom/` runtime paths when the product needs to describe workspace artifacts
 - When changing a skill-local CLI, edit `skills/*/scripts/*.py` directly
 - When changing a rule, check related skills, references, and helper scripts
 - Do not add dependencies, scaffolding, or invent a monolithic CLI without explicit need

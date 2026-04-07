@@ -18,10 +18,11 @@ Prefer additive repair over replacement:
 
 1. Resolve the workspace root using Loom's normal rule:
    - prefer the nearest ancestor containing both `.git/` and `.loom/`
-   - if `.loom/` does not exist yet, use the current repository root
+   - if no established workspace exists yet, use the current working directory unless it is a non-root subdirectory of a git repository
    - if the current working directory is a non-root subdirectory of a git repository and no established workspace exists above it, fail closed and ask the user which repository root should own the workspace
 2. Inspect the current `.loom/` state before writing anything.
 3. Treat existing records and memories as user data. Fill gaps; do not reset them.
+4. After resolving the workspace root, resolve target repository ownership separately when the workspace contains nested repositories. Keep canonical artifacts in the workspace-root `.loom/` tree and use scope fields to bind work to child repositories.
 
 ## 1. Create The Full Directory Tree
 
@@ -79,7 +80,7 @@ If the main constitution record is missing, create a starter scaffold with:
 - `id: "constitution:main"`
 - `kind: "constitution"`
 - `links: {}`
-- `repository_scope: {"kind": "repository", "repository_id": "repo:root"}`
+- `repository_scope: {"kind": "workspace", "workspace_id": "workspace:main"}`
 - `schema_version: 1`
 - `status: "active"`
 - `created_at` and `updated_at` set to the current UTC timestamp
@@ -299,11 +300,11 @@ Use this exact structure:
 
 While creating the scaffold:
 
-1. Do not overwrite an existing file just because it differs from the starter template.
-2. If a required memory file exists but is empty, seed it with the matching starter content.
-3. If a memory file exists without an L0 header, add the L0 header as line 1 and preserve the rest.
-4. If `.loom/harness.md` exists, preserve the operator's profiles.
-5. If `.loom/constitution/constitution.md` exists, preserve it unless the user explicitly asked for a reset.
+1. Preserve existing files when they already contain user data.
+2. Seed a required memory file with starter content when it exists but is empty.
+3. Add the L0 header to an existing memory file when it is missing and preserve the rest of the file.
+4. Preserve operator-defined profiles in `.loom/harness.md`.
+5. Preserve `.loom/constitution/constitution.md` unless the user explicitly asked for a reset.
 
 ## 4. Verify The Setup
 
@@ -326,4 +327,4 @@ When you finish:
 3. list any existing files you preserved unchanged
 4. call out any malformed pre-existing files you could not safely repair without user guidance
 
-Do not stop after creating only `.loom/` and the canonical subdirectories. This command is complete only when the starter file layer exists too, especially `.loom/harness.md` and the full memory scaffold.
+This command is complete only when both the directory scaffold and the starter file layer exist, especially `.loom/harness.md`, `.loom/constitution/constitution.md`, and the full memory scaffold.
