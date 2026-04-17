@@ -53,10 +53,10 @@ Reference reconciliation is part of ordinary verification, not a special feature
 
 ```bash
 # Find everything that references a record about to be deleted
-grep -R "ticket:0003" .loom
+grep -R "ticket:abcd1234" .loom
 
 # Find everything that references a path about to be renamed
-grep -R "agel-0003-old-ticket.md" .loom
+grep -R "20260408-abcd1234-old-ticket.md" .loom
 ```
 
 When a record is deleted, renamed, split, or superseded:

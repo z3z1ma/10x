@@ -33,7 +33,7 @@ find .loom -maxdepth 2 -type d | sort
 Everything that references one target record across the corpus:
 
 ```bash
-rg -n 'ticket:0002|plan:bootstrap-cli-reference-docs|spec:minimum-proven-core-workflow-surface' .loom
+rg -n 'ticket:z8h0g58e|plan:bootstrap-cli-reference-docs|spec:minimum-proven-core-workflow-surface' .loom
 ```
 
 ## Bootstrap And Repair

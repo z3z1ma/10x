@@ -1,7 +1,7 @@
 ---
 {
   "created_at": "2026-04-04T23:57:49Z",
-  "id": "ticket:0004",
+  "id": "ticket:zomng8h3",
   "kind": "ticket",
   "links": {
     "initiative": [
@@ -14,7 +14,7 @@
       "spec:minimum-proven-core-workflow-surface"
     ],
     "ticket": [
-      "ticket:0003"
+      "ticket:1ypcbj0m"
     ]
   },
   "repository_scope": {
@@ -45,7 +45,7 @@ the operator what to do next.
 
 # Why This Work Matters Now
 
-Once `ticket:0003` proves one real workflow slice, the next highest-leverage
+Once `ticket:1ypcbj0m` proves one real workflow slice, the next highest-leverage
 improvement is to expose that path through a small, obvious command surface.
 That improves operator usability without introducing a hidden runtime or a
 monolithic CLI.
@@ -84,7 +84,7 @@ monolithic CLI.
 
 # Implementation Plan
 
-1. Use the result of `ticket:0003` to choose the smallest stable command set.
+1. Use the result of `ticket:1ypcbj0m` to choose the smallest stable command set.
 2. Draft the new command files under `src/commands/`.
 3. Update any affected references so the command surface is discoverable and not
    contradictory.
@@ -94,7 +94,7 @@ monolithic CLI.
 
 # Dependencies
 
-- `ticket:0003` should land first or at least narrow the minimal command set
+- `ticket:1ypcbj0m` should land first or at least narrow the minimal command set
 - existing skill-local create, critique, docs, and validation scripts already
   distributed through the bundle
 - the repository's current command-file style and package-local path rules
@@ -129,7 +129,7 @@ skill references alone.
 
 # Journal
 
-- 2026-04-04: created `ticket:0004` as the proposed follow-up for turning the
+- 2026-04-04: created `ticket:zomng8h3` as the proposed follow-up for turning the
   proved core workflow path into a discoverable command surface inside the
   shipped bundle.
 - 2026-04-04: updated scope to reinforce that commands guide the agent to use

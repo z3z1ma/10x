@@ -11,9 +11,9 @@
       "spec:minimum-proven-core-workflow-surface"
     ],
     "ticket": [
-      "ticket:0003",
-      "ticket:0004",
-      "ticket:0005"
+      "ticket:1ypcbj0m",
+      "ticket:zomng8h3",
+      "ticket:vyypge85"
     ]
   },
   "repository_scope": {
@@ -97,13 +97,13 @@ protocol path rather than add more disconnected surfaces.
 
 - Spec: `spec:minimum-proven-core-workflow-surface`
 - Plan: `plan:bootstrap-core-workflow-backlog`
-- Ticket: `ticket:0003` - prove one end-to-end flow
-- Ticket: `ticket:0004` - add core command entry points
-- Ticket: `ticket:0005` - harden structural validation
+- Ticket: `ticket:1ypcbj0m` - prove one end-to-end flow
+- Ticket: `ticket:zomng8h3` - add core command entry points
+- Ticket: `ticket:vyypge85` - harden structural validation
 
 # Status Summary
 
 This initiative now owns the next three increments for the repository's main
-workflow maturation. `ticket:0003` is the first ready execution slice. `ticket:0004`
-and `ticket:0005` are sequenced follow-up tickets that should stay bounded by
+workflow maturation. `ticket:1ypcbj0m` is the first ready execution slice. `ticket:zomng8h3`
+and `ticket:vyypge85` are sequenced follow-up tickets that should stay bounded by
 what the proof slice actually teaches.

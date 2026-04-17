@@ -69,13 +69,13 @@ rg -H -o '"updated_at":\s*"[^"]+"' .loom/tickets | sort -t'"' -k4,4r
 Tickets with first-class upstream dependencies:
 
 ```bash
-rg --multiline -P -l '"depends_on":\s*\[\s*"ticket:\d+' .loom/tickets
+rg --multiline -P -l '"depends_on":\s*\[\s*"ticket:[a-z0-9]{8}"' .loom/tickets
 ```
 
 Tickets that depend on one specific upstream ticket:
 
 ```bash
-rg --multiline -P -l '"depends_on":\s*\[(?:(?!\]).)*"ticket:0003"' .loom/tickets
+rg --multiline -P -l '"depends_on":\s*\[(?:(?!\]).)*"ticket:1ypcbj0m"' .loom/tickets
 ```
 
 Use `--multiline -P` for dependency queries because `depends_on` is formatted as a multi-line JSON array in frontmatter.
@@ -111,7 +111,7 @@ Arguments:
 
 - `slug`: ticket slug used in the generated filename
 - `--status`: optional ticket status override
-- `--depends-on`: repeatable upstream ticket dependency; accepts a ticket ref or an existing ticket path and stores the canonical `ticket:NNNN` ref in `depends_on`
+- `--depends-on`: repeatable upstream ticket dependency; accepts a ticket ref or an existing ticket path and stores the canonical `ticket:<token>` ref in `depends_on`
 - `--link=KEY=REF` or `--link=kind:ref`: repeatable typed link assignment; plain refs infer their link key from the ref prefix
 - `--path`, `--repository`, `--workspace-scope`: scope controls
 
@@ -135,14 +135,14 @@ Arguments:
 
 Behavior:
 
-- dependencies are stored as canonical `ticket:NNNN` refs in frontmatter `depends_on`
+- dependencies are stored as canonical `ticket:<token>` refs in frontmatter `depends_on`
 - the CLI resolves refs or ticket paths to existing tickets before writing
 - a ticket cannot depend on itself
 
 Example:
 
 ```bash
-scripts/tickets.py depends-on "ticket:0005" --add "ticket:0003"
+scripts/tickets.py depends-on "ticket:vyypge85" --add "ticket:1ypcbj0m"
 ```
 
 ## `scripts/tickets.py link`
@@ -162,7 +162,7 @@ Arguments:
 Example:
 
 ```bash
-scripts/tickets.py link "ticket:0002" --add "verification:admin-query-contract-sync-validation"
+scripts/tickets.py link "ticket:z8h0g58e" --add "verification:admin-query-contract-sync-validation"
 ```
 
 ## `scripts/tickets.py verify`
@@ -180,5 +180,5 @@ Arguments:
 Example:
 
 ```bash
-scripts/tickets.py verify admin-query-contract-sync-validation --link "ticket:0002"
+scripts/tickets.py verify admin-query-contract-sync-validation --link "ticket:z8h0g58e"
 ```

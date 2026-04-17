@@ -19,7 +19,7 @@ rg -n '"status":\s*"(draft|accepted|stale|superseded)"|"updated_at":' .loom/docs
 Docs tied to one target ticket, spec, plan, or critique:
 
 ```bash
-rg -n 'ticket:0002|spec:minimum-proven-core-workflow-surface|plan:bootstrap-cli-reference-docs|critique:' .loom/docs/*.md
+rg -n 'ticket:z8h0g58e|spec:minimum-proven-core-workflow-surface|plan:bootstrap-cli-reference-docs|critique:' .loom/docs/*.md
 ```
 
 Compiled docs packets that likely still need reconciliation back into canonical docs:
@@ -43,7 +43,7 @@ Purpose:
 Example:
 
 ```bash
-scripts/docs.py create admin-query-contract-reference --status draft --link ticket=ticket:0002
+scripts/docs.py create admin-query-contract-reference --status draft --link ticket=ticket:z8h0g58e
 ```
 
 ## `scripts/docs.py packet`
@@ -55,7 +55,7 @@ Purpose:
 Example:
 
 ```bash
-scripts/docs.py packet "ticket:0002" docs --mode execution --style reference-first --allow-write-ref "ticket:0002"
+scripts/docs.py packet "ticket:z8h0g58e" docs --mode execution --style reference-first --allow-write-ref "ticket:z8h0g58e"
 ```
 
 ## `scripts/docs.py link`

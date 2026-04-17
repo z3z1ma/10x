@@ -1,7 +1,7 @@
 ---
 {
   "created_at": "2026-04-04T23:57:49Z",
-  "id": "ticket:0003",
+  "id": "ticket:1ypcbj0m",
   "kind": "ticket",
   "links": {
     "initiative": [
@@ -142,7 +142,7 @@ explicitly instead of implying it.
 
 # Journal
 
-- 2026-04-04: created `ticket:0003` as the first ready execution slice for the
+- 2026-04-04: created `ticket:1ypcbj0m` as the first ready execution slice for the
   new core-workflow initiative, with the explicit goal of proving one bounded
   Ralph -> critique -> docs path in `repo:root`.
 - 2026-04-04: updated scope, non-goals, and implementation plan to reflect the

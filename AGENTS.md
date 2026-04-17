@@ -111,7 +111,7 @@ if __name__ == "__main__":
 - Functions and variables: `snake_case`
 - Constants: `UPPER_SNAKE_CASE` (module-level)
 - Skill directories: `loom-<name>` (kebab-case)
-- Record IDs: `<kind>:<slug>` (e.g., `ticket:0004`, `constitution:main`, `spec:my-feature`)
+- Record IDs: `<kind>:<slug>` (e.g., `ticket:14eh8c66`, `constitution:main`, `spec:my-feature`)
 - File slugs for records: lowercase kebab-case derived from title
 
 ### Formatting

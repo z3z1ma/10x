@@ -6,7 +6,7 @@ Loom is a Markdown-first protocol for organizing long-horizon work so that anoth
 
 Everything in Loom is a plain file in a directory tree. That is the design, not a limitation. Because the corpus is ordinary Markdown on disk, every tool that operates on files operates on Loom:
 
-- `grep -R "ticket:0004" .loom` is a graph query
+- `grep -R "ticket:abcd1234" .loom` is a graph query
 - `find .loom/tickets -name "*.md"` is record discovery
 - `git log --oneline .loom/specs/` is a change history
 - reading a file is reading the record
@@ -73,9 +73,9 @@ Edit record prose directly with the harness edit tools or any text editor. Recor
 When removing or renaming a record, search for references first, update them, then perform the file operation:
 
 ```bash
-grep -R "ticket:0003" .loom    # find all references
+grep -R "ticket:abcd1234" .loom    # find all references
 # ... edit those files to remove or update the references ...
-rm .loom/tickets/agel-0003-old-ticket.md
+rm .loom/tickets/20260408-abcd1234-old-ticket.md
 ```
 
 The sequence matters: search, reconcile, then remove.

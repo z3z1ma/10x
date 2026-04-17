@@ -8,7 +8,7 @@
       "roadmap:bootstrap-the-markdown-first-protocol-corpus"
     ],
     "ticket": [
-      "ticket:0002"
+      "ticket:z8h0g58e"
     ]
   },
   "repository_scope": {
@@ -103,7 +103,7 @@ If the docs pass is interrupted, a later actor can resume by rereading the plan,
 
 - Governing roadmap: `roadmap:bootstrap-the-markdown-first-protocol-corpus`
 - Research note: `research:shared-script-cli-inventory`
-- Execution ticket: `ticket:0002`
+- Execution ticket: `ticket:z8h0g58e`
 - Published script references: `src/skills/*/references/scripts.md`
 - Shared helper scope: `compile_packet.py`, `list_records.py`, `validate_record.py`, `resolve_scope.py`, `show_status.py`, `diagnose_workspace.py`, `check_links.py`, `link_records.py`, `create_verification.py`
 
@@ -117,7 +117,7 @@ Existing examples in `src/skills/loom-workspace/references/examples.md`, `src/sk
 
 # Linked Tickets
 
-- `ticket:0002` owns the live execution truth for this first CLI inventory slice.
+- `ticket:z8h0g58e` owns the live execution truth for this first CLI inventory slice.
 
 # Risks and Open Questions
 

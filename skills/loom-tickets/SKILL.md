@@ -83,8 +83,8 @@ Read `references/scripts.md` for the bundled CLI surface, including argument mea
 
 - `scripts/tickets.py create`: use when a new ticket record needs to be created in `.loom/tickets/`
 - `scripts/tickets.py create`: after running it, fill the body immediately; the command only scaffolds the record
-- `scripts/tickets.py create`: use `--depends-on ticket:0004` for hard upstream ticket prerequisites that should be machine-visible in frontmatter
-- `scripts/tickets.py create`: prefer shorthand links like `--link ticket:0004` when you already know the related refs
+- `scripts/tickets.py create`: use `--depends-on ticket:zomng8h3` for hard upstream ticket prerequisites that should be machine-visible in frontmatter
+- `scripts/tickets.py create`: prefer shorthand links like `--link ticket:zomng8h3` when you already know the related refs
 - `scripts/tickets.py link`: use to add or remove typed refs such as verification, critique, docs, and related work after the body is in place
 - `scripts/tickets.py depends-on`: use to add or remove first-class upstream ticket dependencies without editing frontmatter manually
 - `scripts/tickets.py verify`: use as soon as the ticket gains real execution evidence that should participate in the durable graph

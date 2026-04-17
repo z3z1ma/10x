@@ -8,7 +8,7 @@
       "plan:bootstrap-cli-reference-docs"
     ],
     "ticket": [
-      "ticket:0002"
+      "ticket:z8h0g58e"
     ]
   },
   "repository_scope": {
@@ -143,5 +143,5 @@ The worked-flow appendix also confirms the expected invocation shape for packet 
 # Linked Downstream Artifacts
 
 - `plan:bootstrap-cli-reference-docs`
-- `ticket:0002`
+- `ticket:z8h0g58e`
 - `src/skills/*/references/scripts.md`

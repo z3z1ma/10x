@@ -11,9 +11,9 @@
       "plan:bootstrap-core-workflow-backlog"
     ],
     "ticket": [
-      "ticket:0003",
-      "ticket:0004",
-      "ticket:0005"
+      "ticket:1ypcbj0m",
+      "ticket:zomng8h3",
+      "ticket:vyypge85"
     ]
   },
   "repository_scope": {
@@ -99,7 +99,7 @@ helpers rather than depending on hidden runtime behavior or transcript memory.
 # Scenarios
 
 - a fresh maintainer reads the canonical records and can safely begin
-  `ticket:0003`
+  `ticket:1ypcbj0m`
 - a user wants to create or advance core Loom work through a command entry point
   instead of discovering everything from skill surfaces alone
 - packet or scope information is incomplete and validation fails closed with a
@@ -111,7 +111,7 @@ helpers rather than depending on hidden runtime behavior or transcript memory.
 
 - the initiative, spec, plan, and three backlog tickets exist and are linked
   coherently
-- `ticket:0003` is actionable without transcript archaeology
+- `ticket:1ypcbj0m` is actionable without transcript archaeology
 - later command and helper changes can be judged against this contract without
   redefining what the workflow is supposed to do
 - no accepted addition violates package-local isolation or the no-monolithic-CLI

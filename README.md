@@ -153,7 +153,7 @@ rg -n '"status":\s*"(active|blocked|review_required|complete_pending_acceptance|
 mkdir -p .loom/{constitution,research,initiatives,specs,plans,tickets,critique,docs,runs,verification}
 git rev-parse --show-toplevel
 skills/loom-tickets/scripts/tickets.py create ticket
-skills/loom-ralph/scripts/ralph.py packet "ticket:0002" ralph --mode execution --style reference-first --allow-write-ref "ticket:0002"
+skills/loom-ralph/scripts/ralph.py packet "ticket:z8h0g58e" ralph --mode execution --style reference-first --allow-write-ref "ticket:z8h0g58e"
 ```
 
 ## Contributing

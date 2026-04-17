@@ -19,19 +19,19 @@ rg -n '"status":\s*"compiled"|"generated_at":\s*"[^"]+"|"ref":\s*"ticket:[^"]+"'
 All Ralph packet artifacts for one target ticket:
 
 ```bash
-rg -l '"target":\s*\{\s*"kind":\s*"ticket",\s*"ref":\s*"ticket:0002"' .loom/runs/ralph
+rg -l '"target":\s*\{\s*"kind":\s*"ticket",\s*"ref":\s*"ticket:z8h0g58e"' .loom/runs/ralph
 ```
 
 Allowed write refs for one target ticket's packet family:
 
 ```bash
-rg -n '"ref":\s*"ticket:0002"|"allowed_write_refs":\s*\[' .loom/runs/ralph/*.md
+rg -n '"ref":\s*"ticket:z8h0g58e"|"allowed_write_refs":\s*\[' .loom/runs/ralph/*.md
 ```
 
 Verification artifacts linked to the same ticket before acceptance:
 
 ```bash
-rg -l 'ticket:0002' .loom/verification
+rg -l 'ticket:z8h0g58e' .loom/verification
 ```
 
 ## `scripts/ralph.py packet`
@@ -56,7 +56,7 @@ Output:
 Example:
 
 ```bash
-scripts/ralph.py packet "ticket:0002" ralph --mode execution --style reference-first --allow-write-ref "ticket:0002"
+scripts/ralph.py packet "ticket:z8h0g58e" ralph --mode execution --style reference-first --allow-write-ref "ticket:z8h0g58e"
 ```
 
 ## `scripts/ralph.py verify`
@@ -74,5 +74,5 @@ Arguments:
 Example:
 
 ```bash
-scripts/ralph.py verify ralph-ticket-0002-run --link "ticket:0002"
+scripts/ralph.py verify ralph-ticket-z8h0g58e-run --link "ticket:z8h0g58e"
 ```

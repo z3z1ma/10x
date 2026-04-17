@@ -21,7 +21,7 @@ The next step is one bounded execution move against one ticket. Compile a packet
 
 ```text
 Outcome: blocked.
-Changed records: `.loom/runs/ralph/packet-ticket-0002-...md`, `.loom/tickets/<repo-short-slug>-0002-helper-layer.md`
+Changed records: `.loom/runs/ralph/packet-ticket-z8h0g58e-...md`, `.loom/tickets/20260408-z8h0g58e-helper-layer.md`
 Verification: validated packet structure and confirmed repository ownership for the intended write scope.
 Blocker: helper naming drift made one invocation path inconsistent with the packet contract.
 Recommendation: stop and refresh the packet after repairing the helper naming mismatch.

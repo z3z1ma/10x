@@ -99,7 +99,7 @@ The child should be able to infer this procedure from the packet:
 ## Example Strong Packet Summary
 
 ```text
-Target: ticket:0002
+Target: ticket:z8h0g58e
 Mode: execution
 Style: reference-first
 Scope: derived from the target ticket's `repository_scope`

@@ -56,5 +56,5 @@ Purpose:
 Example:
 
 ```bash
-scripts/plans.py link "plan:bootstrap-cli-reference-docs" --add "ticket:0002"
+scripts/plans.py link "plan:bootstrap-cli-reference-docs" --add "ticket:z8h0g58e"
 ```

@@ -11,9 +11,9 @@
       "spec:minimum-proven-core-workflow-surface"
     ],
     "ticket": [
-      "ticket:0003",
-      "ticket:0004",
-      "ticket:0005"
+      "ticket:1ypcbj0m",
+      "ticket:zomng8h3",
+      "ticket:vyypge85"
     ]
   },
   "repository_scope": {
@@ -76,7 +76,7 @@ records, exercise real Ralph, critique, and docs flows, and tighten validation
 only where it mechanizes published rules.
 
 The repository has already completed one documentation-oriented slice for shared
-CLI references in `ticket:0002`. The next step should move from better static
+CLI references in `ticket:z8h0g58e`. The next step should move from better static
 explanation to proving the actual workflow path.
 
 # Milestones
@@ -96,16 +96,16 @@ fail.
 
 # Concrete Steps
 
-1. Advance `ticket:0003` on one small shipped change that benefits the product
+1. Advance `ticket:1ypcbj0m` on one small shipped change that benefits the product
    bundle.
 2. Keep the execution packet bounded and explicit about scope, trust boundary,
    and allowed writes.
 3. Reconcile the execution outcome into the ticket, critique surface, docs
    disposition, and verification evidence.
-4. Use that proved path to scope the minimal command set in `ticket:0004`.
+4. Use that proved path to scope the minimal command set in `ticket:zomng8h3`.
 5. Add or update only the command files and references needed to make the path
    discoverable.
-6. Use observed workflow failures and ambiguities to scope `ticket:0005`.
+6. Use observed workflow failures and ambiguities to scope `ticket:vyypge85`.
 7. Run structural verification after each landed slice.
 
 # Validation and Acceptance
@@ -124,7 +124,7 @@ fail.
 Each milestone is resumable because the strategy lives here while live progress
 stays in the linked tickets.
 
-If the proof slice fails or blocks, the next actor should update `ticket:0003`
+If the proof slice fails or blocks, the next actor should update `ticket:1ypcbj0m`
 instead of rewriting the plan. If command or validation follow-up proves
 unnecessary after the proof slice, close or cancel those tickets explicitly
 rather than quietly letting them drift.
@@ -133,10 +133,10 @@ rather than quietly letting them drift.
 
 - Governing initiative: `initiative:prove-core-loom-workflow`
 - Governing spec: `spec:minimum-proven-core-workflow-surface`
-- Primary execution ticket: `ticket:0003`
-- Follow-up command ticket: `ticket:0004`
-- Follow-up validation ticket: `ticket:0005`
-- Existing related completed slice: `ticket:0002`
+- Primary execution ticket: `ticket:1ypcbj0m`
+- Follow-up command ticket: `ticket:zomng8h3`
+- Follow-up validation ticket: `ticket:vyypge85`
+- Existing related completed slice: `ticket:z8h0g58e`
 
 # Interfaces and Dependencies
 
@@ -150,9 +150,9 @@ rather than quietly letting them drift.
 
 # Linked Tickets
 
-- `ticket:0003` - exercise one end-to-end proof flow
-- `ticket:0004` - add core slash-command entry points
-- `ticket:0005` - harden packet, scope, and workspace validation
+- `ticket:1ypcbj0m` - exercise one end-to-end proof flow
+- `ticket:zomng8h3` - add core slash-command entry points
+- `ticket:vyypge85` - harden packet, scope, and workspace validation
 
 # Risks and Open Questions
 

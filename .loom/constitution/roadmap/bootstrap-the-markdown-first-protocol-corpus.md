@@ -75,7 +75,7 @@ Current shipped state at the time of this roadmap update:
 
 No downstream initiative, spec, or plan graph exists yet beneath this roadmap.
 
-`ticket:0001` exists as a smoke-test ticket, but it is a workflow example rather than the delivery vehicle for this roadmap. Real roadmap progress should eventually be expressed through linked specs, plans, research notes, and execution tickets.
+`ticket:14eh8c66` exists as a smoke-test ticket, but it is a workflow example rather than the delivery vehicle for this roadmap. Real roadmap progress should eventually be expressed through linked specs, plans, research notes, and execution tickets.
 
 The most important still-missing canonical depth is in:
 

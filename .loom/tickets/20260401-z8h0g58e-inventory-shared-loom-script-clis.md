@@ -1,7 +1,7 @@
 ---
 {
   "created_at": "2026-04-01T17:44:27Z",
-  "id": "ticket:0002",
+  "id": "ticket:z8h0g58e",
   "kind": "ticket",
   "links": {
     "plan": [
@@ -84,7 +84,7 @@ This ticket's first verification gate was structural and linkage-oriented rather
 
 Executed evidence for the completed slice:
 
-- `validate_record.py` passes for `plan:bootstrap-cli-reference-docs`, `research:shared-script-cli-inventory`, and `ticket:0002`
+- `validate_record.py` passes for `plan:bootstrap-cli-reference-docs`, `research:shared-script-cli-inventory`, and `ticket:z8h0g58e`
 - `check_links.py` reports no unresolved link issues after the new records were linked
 - skill-local `references/scripts.md` files were written from direct parser inspection of the bundled helper definitions and create-script entrypoints
 
@@ -96,7 +96,7 @@ Follow-up documentation is still expected for the broader `create_<kind>.py` fam
 
 # Journal
 
-- 2026-04-01: created `ticket:0002` to own the first bounded CLI inventory slice after identifying shared helper discoverability as a high-leverage next step.
+- 2026-04-01: created `ticket:z8h0g58e` to own the first bounded CLI inventory slice after identifying shared helper discoverability as a high-leverage next step.
 - 2026-04-01: linked the ticket to `plan:bootstrap-cli-reference-docs` and `research:shared-script-cli-inventory` so the work has durable strategy and evidence context.
 - 2026-04-01: replaced the rule-level appendix approach with skill-local `references/scripts.md` files so bundled script docs stay on the shipped package surfaces.
-- 2026-04-01: validated `plan:bootstrap-cli-reference-docs`, `research:shared-script-cli-inventory`, and `ticket:0002`, confirmed workspace link integrity, and moved the ticket to `complete_pending_acceptance` pending review of the documentation shape.
+- 2026-04-01: validated `plan:bootstrap-cli-reference-docs`, `research:shared-script-cli-inventory`, and `ticket:z8h0g58e`, confirmed workspace link integrity, and moved the ticket to `complete_pending_acceptance` pending review of the documentation shape.

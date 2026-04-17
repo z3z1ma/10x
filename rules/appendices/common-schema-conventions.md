@@ -82,8 +82,8 @@ In a workspace with child repositories, keep using the parent `.loom/` tree for 
 - `initiative:improve-operator-workflows`
 - `spec:packet-governance`
 - `plan:execution-rollout`
-- `ticket:0001`
-- `packet:ticket-0001-2026-03-31T120000Z`
+- `ticket:14eh8c66`
+- `packet:ticket-14eh8c66-2026-03-31T120000Z`
 
 ## Timestamp Format
 

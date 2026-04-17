@@ -1,7 +1,7 @@
 ---
 {
   "created_at": "2026-04-01T08:49:37Z",
-  "id": "ticket:0001",
+  "id": "ticket:14eh8c66",
   "kind": "ticket",
   "links": {},
   "repository_scope": {
@@ -80,7 +80,7 @@ No behavioral or integration verification is expected because the user explicitl
 
 Evidence:
 
-- `validate_record.py` passes for `.loom/tickets/agel2-0001-smoke-test-ticket-creation.md`
+- `validate_record.py` passes for `.loom/tickets/20260401-14eh8c66-smoke-test-ticket-creation.md`
 - workspace-wide `check_links.py` still reports pre-existing missing refs in `.loom/constitution/*`; those issues were not introduced by this ticket and were left unchanged
 
 # Documentation Disposition
@@ -91,5 +91,5 @@ This ticket does not introduce an accepted workflow change; it only provides a c
 
 # Journal
 
-- 2026-04-01: created `ticket:0001` as a non-execution smoke-test ticket to exercise Loom ticket creation in a workspace that previously had no ticket records.
+- 2026-04-01: created `ticket:14eh8c66` as a non-execution smoke-test ticket to exercise Loom ticket creation in a workspace that previously had no ticket records.
 - 2026-04-01: validated the ticket structure successfully with `validate_record.py` and observed unrelated pre-existing missing-link errors from workspace-wide `check_links.py` under `.loom/constitution`.

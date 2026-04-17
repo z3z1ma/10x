@@ -6,10 +6,15 @@ import argparse
 import json
 import os
 import re
+import secrets
+import string
 from datetime import datetime, timezone
 from pathlib import Path
 
 WORKSPACE_SCOPE_ID = "workspace:main"
+TICKET_TOKEN_LENGTH = 8
+TICKET_TOKEN_ALPHABET = string.ascii_lowercase + string.digits
+TICKET_REF_PATTERN = re.compile(rf"^ticket:[a-z0-9]{{{TICKET_TOKEN_LENGTH}}}$")
 
 
 def utc_now() -> str:
@@ -21,13 +26,20 @@ def utc_now() -> str:
     )
 
 
+def date_stamp_from_timestamp(timestamp: str) -> str:
+    return timestamp[:10].replace("-", "")
+
+
 def find_workspace_root(start: Path | None = None) -> Path:
     current = (start or Path.cwd()).resolve()
     for candidate in [current, *current.parents]:
         if (candidate / ".git").exists() and (candidate / ".loom").exists():
             return candidate
+    for candidate in [current, *current.parents]:
+        if (candidate / ".loom").exists():
+            return candidate
     raise SystemExit(
-        "No Loom workspace found. Run loom-setup from the intended workspace root before using this CLI."
+        f"No Loom workspace found from {current}. Run loom-setup from the intended workspace root before using this CLI."
     )
 
 
@@ -141,6 +153,10 @@ def parse_links(values: list[str]) -> dict[str, list[str]]:
     return links
 
 
+def is_ticket_ref(value: str) -> bool:
+    return bool(TICKET_REF_PATTERN.match(value))
+
+
 def normalize_ticket_ref(workspace: Path, target: str) -> str:
     path = resolve_ticket_target(workspace, target)
     try:
@@ -150,7 +166,7 @@ def normalize_ticket_ref(workspace: Path, target: str) -> str:
             f"Failed to parse dependency target {relative_to_workspace(path, workspace)}: {exc}"
         ) from exc
     record_id = frontmatter.get("id")
-    if not isinstance(record_id, str) or not re.match(r"^ticket:\d+$", record_id):
+    if not isinstance(record_id, str) or not is_ticket_ref(record_id):
         raise SystemExit(
             f"Dependency target is not a valid ticket ref: {relative_to_workspace(path, workspace)}"
         )
@@ -178,7 +194,7 @@ def read_depends_on(frontmatter: dict, path: Path, workspace: Path) -> list[str]
         )
     refs: list[str] = []
     for item in depends_on:
-        if not re.match(r"^ticket:\d+$", item):
+        if not is_ticket_ref(item):
             raise SystemExit(
                 f"Ticket has invalid dependency ref {item!r}: {relative_to_workspace(path, workspace)}"
             )
@@ -191,22 +207,31 @@ def ticket_directory(workspace: Path) -> Path:
     return workspace / ".loom/tickets"
 
 
-def next_ticket_number(workspace: Path) -> int:
-    highest = 0
+def existing_ticket_ids(workspace: Path) -> set[str]:
+    record_ids: set[str] = set()
     directory = ticket_directory(workspace)
     if not directory.exists():
-        return 1
+        return record_ids
     for path in directory.glob("*.md"):
         try:
             frontmatter, _body = parse_frontmatter(path.read_text())
         except Exception:
             continue
         record_id = frontmatter.get("id")
-        if isinstance(record_id, str):
-            match = re.match(r"^ticket:(\d+)$", record_id)
-            if match:
-                highest = max(highest, int(match.group(1)))
-    return highest + 1
+        if isinstance(record_id, str) and is_ticket_ref(record_id):
+            record_ids.add(record_id)
+    return record_ids
+
+
+def generate_ticket_token(workspace: Path) -> str:
+    known_ids = existing_ticket_ids(workspace)
+    for _attempt in range(100):
+        token = "".join(
+            secrets.choice(TICKET_TOKEN_ALPHABET) for _ in range(TICKET_TOKEN_LENGTH)
+        )
+        if f"ticket:{token}" not in known_ids:
+            return token
+    raise SystemExit("Failed to generate a unique ticket token after 100 attempts")
 
 
 def resolve_ticket_target(workspace: Path, target: str) -> Path:
@@ -229,20 +254,22 @@ def resolve_ticket_target(workspace: Path, target: str) -> Path:
 
 def create_ticket(args: argparse.Namespace) -> int:
     workspace = find_workspace_root()
-    number = next_ticket_number(workspace)
+    token = generate_ticket_token(workspace)
     slug = slugify(args.slug)
-    path = ticket_directory(workspace) / f"ticket-{number:04d}-{slug}.md"
+    timestamp = utc_now()
+    date_stamp = date_stamp_from_timestamp(timestamp)
+    path = ticket_directory(workspace) / f"{date_stamp}-{token}-{slug}.md"
     depends_on = normalize_ticket_refs(workspace, args.depends_on)
     frontmatter = {
-        "id": f"ticket:{number:04d}",
+        "id": f"ticket:{token}",
         "kind": "ticket",
         "schema_version": 1,
         "status": args.status or "active",
         "repository_scope": resolve_scope(args, workspace),
         "depends_on": depends_on,
         "links": parse_links(args.link),
-        "created_at": utc_now(),
-        "updated_at": utc_now(),
+        "created_at": timestamp,
+        "updated_at": timestamp,
     }
     body = render_blank_body(
         [
@@ -306,7 +333,7 @@ def update_ticket_dependencies(args: argparse.Namespace) -> int:
     path = resolve_ticket_target(workspace, args.target)
     frontmatter, body = parse_frontmatter(path.read_text())
     ticket_id = frontmatter.get("id")
-    if not isinstance(ticket_id, str) or not re.match(r"^ticket:\d+$", ticket_id):
+    if not isinstance(ticket_id, str) or not is_ticket_ref(ticket_id):
         raise SystemExit(
             f"Ticket has invalid id: {relative_to_workspace(path, workspace)}"
         )

@@ -10,7 +10,7 @@ Tickets should be written as self-contained units of execution.
 
 A novice reader should be able to pick up the ticket, read its explicit links, and understand what to do next without reconstructing the task from hidden context or prior chat.
 
-Ticket refs remain stable as `ticket:0001`, while ticket filenames use a repository-derived prefix such as `<repo-short-slug>-0001-<slug>.md`.
+Ticket refs remain stable as `ticket:<token>`, where `<token>` is a short random lowercase alphanumeric identifier. Ticket filenames prefix the UTC creation date and reuse that same token as `YYYYMMDD-<token>-<slug>.md`.
 
 ## A Strong Ticket Answers
 
@@ -48,7 +48,7 @@ Each section should be specific enough that a fresh agent knows what it is for. 
 
 Tickets should preserve:
 
-- stable `id` like `ticket:0001`
+- stable `id` like `ticket:14eh8c66`
 - `kind: ticket`
 - truthful `status`
 - `repository_scope`
@@ -56,7 +56,7 @@ Tickets should preserve:
 - links to governing plan, spec, initiative, related tickets, critique, docs, and verification where relevant
 - timestamps that move when the durable execution state changes
 
-Ticket ids remain stable as `ticket:<number>`. Ticket filenames may include a repository-derived prefix such as `<repo-short-slug>-0001-<slug>.md`.
+Ticket ids remain stable as `ticket:<token>`. Ticket filenames should prefix the UTC creation date and reuse that token as `YYYYMMDD-<token>-<slug>.md`.
 
 ## Dependency Semantics
 

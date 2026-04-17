@@ -13,27 +13,23 @@
 - initiatives: `<slug>.md`
 - specs: `<slug>.md`
 - plans: `<slug>.md`
-- tickets: `<repo-short-slug>-0001-<slug>.md`
+- tickets: `YYYYMMDD-<token>-<slug>.md`
 - critique records: `<slug>.md`
 - docs records: `<slug>.md`
 
-## Ticket Filename Prefixes
+## Ticket Filenames
 
-- derive the ticket filename prefix from the owning repository's git remote when available
-- use the remote repository name, not the host or full URL, as the source string
-- if no parseable remote is available, fall back to the repository directory name
-- convert that source string into a short slug by taking the first three characters of the first token plus the first character of each later token or digit chunk, capped at eight characters
-- keep ticket refs stable as `ticket:0001`; only the filename prefix is repository-derived
-- if the ticket scope is `multi_repository`, use the fixed filename prefix `multi`
-- if the ticket scope is `workspace`, use the fixed filename prefix `wksp`
+- generate one random lowercase alphanumeric token for each new ticket
+- keep the canonical ticket ref stable as `ticket:<token>`
+- prefix the filename with the UTC creation date as `YYYYMMDD`
+- reuse that same token in the filename as `YYYYMMDD-<token>-<slug>.md`
+- keep the descriptive slug lowercase kebab-case
+- do not encode repository prefixes, scope markers, or autoincremented numbers in the filename
 
 Examples:
 
-- `agent-loom` -> `agel2-0001-<slug>.md`
-- `payments-api` -> `paya-0001-<slug>.md`
-- `cli` -> `cli-0001-<slug>.md`
-- `multi_repository` ticket -> `multi-0001-<slug>.md`
-- `workspace` ticket -> `wksp-0001-<slug>.md`
+- `ticket:14eh8c66` created on 2026-04-08 -> `20260408-14eh8c66-<slug>.md`
+- `ticket:z8h0g58e` created on 2026-04-01 -> `20260401-z8h0g58e-<slug>.md`
 
 ## Ref Prefixes
 

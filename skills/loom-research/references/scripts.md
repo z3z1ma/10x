@@ -56,5 +56,5 @@ Purpose:
 Example:
 
 ```bash
-scripts/research.py link "research:shared-script-cli-inventory" --add "ticket:0002"
+scripts/research.py link "research:shared-script-cli-inventory" --add "ticket:z8h0g58e"
 ```

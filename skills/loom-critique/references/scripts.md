@@ -43,7 +43,7 @@ Purpose:
 Example:
 
 ```bash
-scripts/critique.py create review-ticket-0002 --link ticket=ticket:0002
+scripts/critique.py create review-ticket-z8h0g58e --link ticket=ticket:z8h0g58e
 ```
 
 ## `scripts/critique.py packet`
@@ -56,7 +56,7 @@ Purpose:
 Example:
 
 ```bash
-scripts/critique.py packet "ticket:0002" critique --mode review-only --style reference-first
+scripts/critique.py packet "ticket:z8h0g58e" critique --mode review-only --style reference-first
 ```
 
 Common pattern after packet creation:
@@ -74,7 +74,7 @@ Purpose:
 Example:
 
 ```bash
-scripts/critique.py link "critique:review-ticket-0002" --add "doc:admin-query-contract-reference"
+scripts/critique.py link "critique:review-ticket-z8h0g58e" --add "doc:admin-query-contract-reference"
 ```
 
 ## `scripts/critique.py verify`
@@ -86,4 +86,4 @@ Purpose:
 Example:
 
 ```bash
-scripts/critique.py verify critique-ticket-0002-evidence --link "critique:review-ticket-0002"
+scripts/critique.py verify critique-ticket-z8h0g58e-evidence --link "critique:review-ticket-z8h0g58e"

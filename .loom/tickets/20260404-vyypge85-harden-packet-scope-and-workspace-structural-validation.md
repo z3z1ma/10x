@@ -1,7 +1,7 @@
 ---
 {
   "created_at": "2026-04-04T23:57:49Z",
-  "id": "ticket:0005",
+  "id": "ticket:vyypge85",
   "kind": "ticket",
   "links": {
     "initiative": [
@@ -14,7 +14,7 @@
       "spec:minimum-proven-core-workflow-surface"
     ],
     "ticket": [
-      "ticket:0003"
+      "ticket:1ypcbj0m"
     ]
   },
   "repository_scope": {
@@ -40,7 +40,7 @@ diagnostics, and record integrity checks are the main guardrails.
 
 The doctrine already defines fail-closed scope behavior, required packet fields,
 and a minimum verification gate. The right next validation work is to mechanize
-those published requirements more sharply where `ticket:0003` reveals real gaps.
+those published requirements more sharply where `ticket:1ypcbj0m` reveals real gaps.
 
 # Why This Work Matters Now
 
@@ -85,7 +85,7 @@ threaten truthful bounded execution.
 
 # Implementation Plan
 
-1. Review the proof-flow evidence from `ticket:0003` and note structural
+1. Review the proof-flow evidence from `ticket:1ypcbj0m` and note structural
    failure modes or ambiguities.
 2. Map each candidate validation change back to existing doctrine.
 3. Implement the smallest checks and error-message improvements that close those
@@ -95,8 +95,8 @@ threaten truthful bounded execution.
 
 # Dependencies
 
-- `ticket:0003` should provide the main evidence for what to harden
-- `ticket:0004` may reveal additional operator-facing failure modes if command
+- `ticket:1ypcbj0m` should provide the main evidence for what to harden
+- `ticket:zomng8h3` may reveal additional operator-facing failure modes if command
   entry points land first
 - the shared helper layer under `build/shared/_loom_lib/` and
   `build/shared/scripts/`
@@ -130,7 +130,7 @@ be necessary.
 
 # Journal
 
-- 2026-04-04: created `ticket:0005` as the proposed hardening slice for packet,
+- 2026-04-04: created `ticket:vyypge85` as the proposed hardening slice for packet,
   scope, and workspace validation after the first real workflow proof run.
 - 2026-04-04: updated scope and non-goals to reinforce that new scripts are
   justified only for deterministic structural checks; the agent handles all
