@@ -1,118 +1,55 @@
 ---
 name: loom-specs
-description: "Maintain Loom's behavior-contract layer through specs that define intended behavior, requirements, constraints, scenarios, acceptance criteria, and design notes. Use when expected behavior is still fuzzy and needs a durable contract before or during implementation; when acceptance criteria or scenarios must become explicit; or when downstream plans, tickets, critique, or docs need one canonical behavior source. Not for research-only notes, live execution updates, or final accepted documentation."
-compatibility: Designed for this Markdown-first Loom repository.
+description: "Maintain behavior contracts, requirements, scenarios, constraints, and acceptance criteria. Use when intended behavior is still fuzzy, when downstream implementation needs one canonical contract, or when critique and wiki will need a stable statement of what the system is supposed to do."
+compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  author: agent-loom
-  version: "0.1"
-  loom-layer: behavior-contract
+  loom_layer: spec
+  protocol_version: "2.0"
 ---
 
 # loom-specs
 
-Specs are the Loom behavior-contract layer.
+Specs own intended behavior.
 
-Use this skill to write behavior contracts that define what the system should do, what constraints matter, and what evidence will count as acceptance.
+They turn ambiguity into a durable contract.
+
+## What This Skill Owns
+
+- behavior contracts
+- requirements
+- scenarios
+- acceptance criteria
+- explicit constraints that shape implementation
 
 ## Use This Skill When
 
-- intended behavior needs to become durable and testable
-- implementation work is starting but expected behavior is still fuzzy
-- acceptance criteria need to be made explicit before execution or critique
+- several implementations are plausible and the intended behavior matters
+- acceptance criteria are vague
+- a ticket or critique would otherwise keep redefining what "correct" means
+- a workflow or capability needs one stable behavioral source
 
 ## Do Not Use This Skill When
 
-- you are recording research evidence without locking intended behavior
-- you are tracking progress or blockers
-- the work is accepted explanatory documentation rather than a contract
+- you are still only gathering evidence
+- you only need execution sequencing
+- you are writing a user-facing explanation page
 
-## What This Skill Governs
+## Good Spec Questions
 
-- specification records
-
-## Spec Posture
-
-Specs should remain behavior-first.
-
-They should tell another agent:
+A strong spec answers:
 
 - what problem is being solved
 - what desired behavior is expected
-- what constraints apply
-- what scenarios exercise the behavior
-- what acceptance evidence will count
-
-Do not let specs degrade into rollout notes, progress notes, or ledger state.
-
-## Before You Write
-
-1. read existing specs and research so you do not create competing contracts
-2. define the actual behavior boundary before deciding whether a new spec is necessary
-3. identify the downstream plans, tickets, critique, and docs work this spec will drive
-
-## Execution Playbook
-
-1. create a new spec only when the behavior does not already have a durable owner
-2. if you create one, populate the problem framing, desired behavior, constraints, requirements, scenarios, acceptance, and design notes immediately
-3. write requirements in language that downstream work can test or verify
-4. keep implementation notes subordinate to intended behavior
-5. link upstream evidence and downstream work after the contract is clear
-6. validate the record before other layers start relying on it
-
-## How To Use The Scripts
-
-Read `references/scripts.md` for the bundled CLI surface, including argument meanings and example invocations.
-
-- `scripts/specs.py create`: use when new behavior needs a durable contract in `.loom/specs/`
-- `scripts/specs.py create`: after running it, fill the body immediately; the command only creates the scaffold
-- `scripts/specs.py link`: use to add or remove typed upstream and downstream links once the contract shape is real
-
-## Neighboring Layer Boundaries
-
-- research feeds evidence into specs
-- plans sequence the strategy that realizes the spec
-- tickets carry execution truth while implementing it
-- docs explain accepted reality after the work lands
-- specs should not become a second plan or a ticket journal
-
-## What Good Looks Like
-
-- the problem framing is legible
-- desired behavior is concrete
-- constraints and scenarios are explicit
-- acceptance is strong enough to guide implementation and critique
-- linked evidence and downstream work are visible where needed
-
-## Validation Focus
-
-- required sections present
-- acceptance exists
-- scenarios and constraints are explicit
-- spec language remains behavioral rather than drifting into rollout status or ledger state
-
-## Failure Conditions
-
-- the spec duplicates an existing active contract
-- requirements are vague or impossible to verify
-- the record mostly describes implementation activity rather than intended behavior
-- acceptance is missing or too weak to guide downstream work
-- a newly created spec stays mostly blank
+- what constraints matter
+- what scenarios matter
+- how acceptance should be judged
 
 ## Done Means
 
-- one spec clearly owns the behavior boundary
-- behavior, constraints, scenarios, and acceptance are explicit
-- relevant links are present
-- the scaffold and frontmatter are explicit enough for later workspace validation
+- the behavior is explicit enough that implementation and critique can reference one contract
+- the spec is precise without becoming implementation trivia
 
 ## Read In This Order
 
-1. `references/schema-specs.md`
-2. `references/scripts.md`
-3. `references/examples.md`
-
-## References
-
-- `references/schema-specs.md`
-- `references/scripts.md`
-- `references/examples.md`
+1. `references/spec-shape.md`
+2. `templates/spec.md`

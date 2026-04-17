@@ -1,0 +1,87 @@
+---
+name: loom-wiki
+description: "Maintain the persistent, interlinked explanation layer for accepted truth. Use when an answer, architecture concept, workflow, troubleshooting pattern, or operator reference should compound into durable knowledge rather than disappear into chat. This replaces the older docs layer with a stronger wiki model."
+compatibility: Markdown-native, script-free Loom protocol.
+metadata:
+  loom_layer: wiki
+  protocol_version: "2.0"
+---
+
+# loom-wiki
+
+Wiki is Loom's accepted-knowledge layer.
+
+Use it when understanding should persist and compound.
+
+## What This Skill Owns
+
+- concept pages
+- workflow pages
+- reference pages
+- inter-page linking
+- wiki packets for synthesis passes
+- page maintenance when accepted truth changes
+
+## What Makes Wiki Valuable
+
+A good wiki page saves future agents from re-deriving the same understanding from scratch.
+
+Wiki is where you promote:
+
+- architecture explanations
+- recurring answers
+- workflow guides
+- concepts worth naming
+- troubleshooting knowledge
+- references that summarize accepted patterns
+
+## Use This Skill When
+
+- another agent will likely need this explanation later
+- the answer synthesizes several records
+- a workflow changed materially
+- the accepted architecture deserves a clear page
+- critique or research produced durable understanding that should become easier to reuse
+
+## Do Not Use This Skill When
+
+- the truth is still unsettled
+- the work belongs in the ticket or spec instead
+- the page would be mere transcript residue
+- you are trying to sneak policy or behavior-contract authority into a wiki page
+
+## Wiki Page Families
+
+This package ships templates for:
+
+- concept pages
+- workflow pages
+- reference pages
+
+Those are enough to start.
+You can add more page types if the project genuinely needs them.
+
+## Wiki Procedure
+
+1. choose the page family
+2. gather the accepted source records and evidence
+3. decide whether the work merits a wiki packet
+4. write or update the page from accepted truth
+5. add sources and related pages
+6. link the page back into relevant tickets, critiques, or plans when useful
+
+## Done Means
+
+- accepted understanding now lives in a durable page
+- the page cites the records or evidence that ground it
+- the page links outward and inward where that helps navigation
+- future agents can reuse the page instead of re-deriving it
+
+## Read In This Order
+
+1. `references/wiki-philosophy.md`
+2. `references/page-types.md`
+3. `references/maintenance.md`
+4. `templates/index.md`
+5. the page template you need
+6. `templates/wiki-packet.md` when a fresh synthesis pass is warranted

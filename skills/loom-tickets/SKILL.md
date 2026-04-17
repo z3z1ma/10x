@@ -1,133 +1,86 @@
 ---
 name: loom-tickets
-description: "Maintain Loom's execution-ledger layer through ticket records: live scope, status, acceptance, implementation plan, verification, blockers, handoff notes, journal updates, and documentation disposition. Use when new work needs a live execution owner; when status, blockers, verification, review state, or docs disposition changed; or when Ralph, critique, docs, or local execution produced durable consequences that must reconcile back into ticket truth. Not for strategy, behavior design, or final explanatory docs."
-compatibility: Designed for this Markdown-first Loom repository.
+description: "Maintain the sole live execution ledger. Use when new work needs a bounded owner, when execution status changes, when blockers or evidence change, or when Ralph, critique, or wiki passes must reconcile their consequences back into durable execution truth."
+compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  author: agent-loom
-  version: "0.1"
-  loom-layer: execution-ledger
+  loom_layer: ticket
+  protocol_version: "2.0"
 ---
 
 # loom-tickets
 
-Tickets are the canonical Loom execution ledger.
+Tickets are the sole live execution ledger.
 
-Use this skill to create, maintain, and close the durable record of live execution state.
+That sentence is not metaphorical.
+If execution truth changed, the ticket should absorb it.
+
+## What This Skill Owns
+
+- ticket creation
+- ticket status transitions
+- execution notes
+- acceptance criteria
+- dependencies
+- evidence / critique / wiki disposition
+- journal updates
 
 ## Use This Skill When
 
-- new work needs a live execution owner
-- implementation truth changed and the ticket ledger must absorb it
-- verification, blockers, next steps, or docs disposition changed
-- another layer produced durable execution consequences that must reconcile back into the ticket
+- new bounded work needs an owner
+- status changed
+- blockers changed
+- evidence changed
+- critique changed what the ticket should say
+- wiki follow-through happened or was deferred
+- a Ralph run needs to be reconciled
 
 ## Do Not Use This Skill When
 
-- the work is still only strategic framing, behavioral design, or research without active execution ownership
-- you are trying to preserve packet output as if it were the primary ledger
-- you want to explain accepted reality rather than track current execution truth
+- the real work is still strategic framing
+- the work is still only a behavior contract
+- you are tempted to use a plan or wiki page as the live ledger
 
-## What This Skill Governs
+## The Ticket Standard
 
-- ticket records
-- ticket status transitions
-- first-class upstream ticket dependencies via `depends_on`
-- the durable ledger view of execution work
+A good ticket should let a fresh agent answer:
 
-## Ticket Posture
-
-Tickets should answer, at any moment:
-
-- what the work is
-- why it matters now
+- what is this
+- why now
 - what is in scope
+- what is out of scope
 - what counts as done
 - what evidence exists
-- what blocked or changed
-- what should happen next
+- what the blockers are
+- what the next move is
 
-If another layer changes execution reality, the ticket should absorb that truth so a future agent can resume from the ticket instead of reconstructing state from scattered artifacts.
+## Dependency Model
 
-## Before You Write
+Use `depends_on` for hard upstream ticket prerequisites.
 
-1. read related tickets first so you do not split one work item across multiple ledger entries
-2. decide whether the work is genuinely new or is already owned by an existing ticket
-3. resolve repository ownership before broadening the ticket scope
-4. decide whether you are creating a new ticket or reconciling truth into an existing one
+Use `links:` for softer relationships such as critique, wiki, or related work.
 
-## Execution Playbook
+## Native Creation Pattern
 
-1. create a new ticket only when the work is genuinely new or when you intentionally need a separate ledger entry
-2. if you create one, populate it immediately; a ticket shell is not a usable ledger record
-3. write the body so `Summary`, `Context`, `Scope`, `Acceptance Criteria`, `Implementation Plan`, `Verification`, `Documentation Disposition`, and `Journal` teach the next actor what to do
-4. record hard upstream ticket prerequisites in frontmatter `depends_on`, then explain the blocking context in the `Dependencies` section or `Journal`
-5. create verification records as soon as execution produces durable evidence
-6. validate structure and link integrity before changing status or handing the ticket off
-7. after Ralph, critique, docs, or local execution changes reality, update the ticket immediately so it remains the single live ledger
-8. close the ticket only when acceptance, verification, journal truthfulness, and docs disposition all support closure
+A common shell flow is:
 
-## Status Playbook
+```bash
+token="$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8)"
+stamp="$(date -u +%Y%m%d)"
+cp skills/loom-tickets/templates/ticket.md ".loom/tickets/${stamp}-${token}-short-slug.md"
+```
 
-- use `proposed` when the work exists conceptually but is not yet execution-ready
-- use `ready` when the ticket is strong enough that another agent can begin without guessing
-- use `active` when execution is underway now
-- use `blocked` when progress depends on an unresolved external or upstream condition; if another ticket is the blocker, keep that ticket in `depends_on`
-- use `review_required` when execution landed far enough that critique or acceptance review is now next
-- use `complete_pending_acceptance` when implementation and validation are substantially done but final acceptance or reconciliation remains
-- use `closed` only when the durable state really supports completion
-- use `cancelled` when the work is intentionally no longer being pursued
-
-## How To Use The Scripts
-
-Read `references/scripts.md` for the bundled CLI surface, including argument meanings and example invocations.
-
-- `scripts/tickets.py create`: use when a new ticket record needs to be created in `.loom/tickets/`
-- `scripts/tickets.py create`: after running it, fill the body immediately; the command only scaffolds the record
-- `scripts/tickets.py create`: use `--depends-on ticket:zomng8h3` for hard upstream ticket prerequisites that should be machine-visible in frontmatter
-- `scripts/tickets.py create`: prefer shorthand links like `--link ticket:zomng8h3` when you already know the related refs
-- `scripts/tickets.py link`: use to add or remove typed refs such as verification, critique, docs, and related work after the body is in place
-- `scripts/tickets.py depends-on`: use to add or remove first-class upstream ticket dependencies without editing frontmatter manually
-- `scripts/tickets.py verify`: use as soon as the ticket gains real execution evidence that should participate in the durable graph
-
-## Neighboring Layer Boundaries
-
-- plans explain execution strategy
-- tickets explain current execution truth
-- critique evaluates that work
-- docs explain accepted reality after the work lands
-- packets and runs support execution but do not replace the ticket ledger
-
-## What Good Looks Like
-
-- another agent can resume from the ticket alone plus its explicit links
-- the next action is clear
-- acceptance and verification are concrete enough to judge later
-- blockers and changes are recorded explicitly
-- the journal captures meaningful execution change rather than empty progress language
-
-## Failure Conditions
-
-- a significant execution event happened but the ticket was not updated
-- the ticket claims completion without linked evidence
-- the docs disposition is stale after a meaningful accepted change
-- the ticket body no longer matches the actual execution state of the work
-- a newly created ticket remains a shell but still gets treated as ready
+Then replace the placeholders in the copied file.
 
 ## Done Means
 
-- one ticket clearly owns the live execution truth
+- the ticket tells the truth about live execution
 - status matches reality
-- verification and docs disposition are explicit
-- link integrity is explicit in frontmatter and can be validated later by workspace tooling
+- the next move is legible
+- evidence and follow-through are linked or explicitly absent for a reason
 
 ## Read In This Order
 
-1. `references/schema-tickets.md`
-2. `references/scripts.md`
-3. `references/examples.md`
-
-## References
-
-- `references/schema-tickets.md`
-- `references/scripts.md`
-- `references/examples.md`
+1. `references/state-machine.md`
+2. `references/dependencies.md`
+3. `references/readiness.md`
+4. `templates/ticket.md`

@@ -1,132 +1,71 @@
 ---
 name: loom-constitution
-description: "Maintain Loom's constitutional-memory layer: constitution, policy, doctrine, principles, constraints, roadmap direction, and durable decision records. Use when what the project is, what it values, what constraints it accepts, or what strategic direction should remain durable changes; when a principle, policy, architectural constraint, roadmap shift, or major decision needs canonical authority beyond the current execution cycle. Not for ticket progress, implementation journaling, evidence gathering, or operator-facing documentation."
-compatibility: Designed for this Markdown-first Loom repository.
+description: "Maintain durable project identity, principles, constraints, strategic direction, decision records, and roadmap records. Use when the work changes what the project is, what it values, what it refuses, or what long-lived direction it is committing to beyond current execution."
+compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  author: agent-loom
-  version: "0.1"
-  loom-layer: constitutional-memory
+  loom_layer: constitution
+  protocol_version: "2.0"
 ---
 
 # loom-constitution
 
-Constitution is the durable Loom policy and identity layer above execution-facing records and below the already-active Loom doctrine carried by the session.
+Constitution is Loom's highest project-facing owner layer.
 
-Use this skill when the work changes what the project is, what it values, what constraints it accepts, or what strategic direction should remain durable over time.
+Use it when the project needs to remember what it is and how it should judge future work.
+
+## What This Skill Owns
+
+- `constitution:main`
+- constitutional decision records
+- roadmap records
+- durable principles and constraints
 
 ## Use This Skill When
 
-- the project identity or core mission needs to change
-- a principle or hard constraint should become durable policy
-- a major decision needs to stay visible to future agents
-- strategic direction needs roadmap-level framing
+- a principle should become durable policy
+- an architectural constraint should become explicit
+- a major choice should outlive the current ticket or plan
+- the project's strategic direction changed materially
+- a roadmap theme or milestone sequence deserves durable expression
 
-## Prefer Another Layer When
+## Do Not Use This Skill When
 
-- you are updating day-to-day execution state
-- you are tracking progress, blockers, or implementation notes
-- the work belongs to tickets, plans, critique, or docs instead of policy
-
-## What This Skill Governs
-
-- constitution records
-- decision records
-- roadmap records
+- you are tracking live progress
+- you are describing one bounded implementation step
+- the change belongs to a spec, plan, or ticket instead of durable policy
+- you only need accepted explanation rather than policy authority
 
 ## Constitutional Posture
 
-Constitutional work should be durable, explicit, and relatively stable.
+Good constitutional writing is:
 
-Use this layer to explain:
+- durable
+- explicit
+- constraining
+- useful as a judgment frame
+- not confused with day-to-day execution
 
-- what Loom is in this repository
-- what principles constrain future design choices
-- what strategic direction is active now
-- which major decisions should remain visible later
+A constitutional record should help a future agent decide, not merely admire the prose.
 
-Treat every constitutional edit as something a future agent may rely on without seeing this transcript.
+## Default Procedure
 
-## Before You Write
-
-1. read the existing constitution, related decisions, and active roadmap entries first
-2. decide whether the change is identity-level, one bounded decision, or roadmap-level direction
-3. read the downstream initiative, spec, or plan records that this change will constrain
-4. decide whether you are updating an existing canonical record or creating a new one
-
-## Record Selection Playbook
-
-1. update the main constitution when the durable project identity, principles, constraints, or strategic direction itself is changing
-2. create a decision record when one bounded architectural or policy choice needs its own durable history
-3. create a roadmap record when the work is about strategic direction, sequencing, milestones, or focus areas rather than one decision
-
-If more than one of those sounds plausible, prefer the narrowest record that still preserves the durable truth.
-
-## Execution Playbook
-
-1. identify the exact constitutional change being made
-2. choose the owning record family deliberately
-3. create the record only if no existing record already owns that truth
-4. if you create a record, immediately populate it; creation alone is not completion
-5. write the strategic meaning of the change, not a recap of the chat that led to it
-6. state downstream implications clearly enough that initiatives, specs, plans, and tickets can align without guessing
-7. keep downstream implications explicit in prose; use typed links for decision and roadmap records, but not for `constitution:main`
-8. validate the final record before treating it as durable policy
-
-## How To Use The Scripts
-
-Read `references/scripts.md` for the bundled CLI surface, including argument meanings and example invocations.
-
-- `scripts/constitution.py create constitution`: use when the main constitution record itself must be seeded or intentionally replaced
-- `scripts/constitution.py create constitution`: after running it, fill in the actual constitutional content immediately; the command only scaffolds the record and does not accept outbound links for `constitution:main`
-- `scripts/constitution.py create decision`: use when one bounded decision needs its own durable record under `.loom/constitution/decisions/`
-- `scripts/constitution.py create decision`: after running it, explain the decision, why it matters, and what it changes downstream
-- `scripts/constitution.py create roadmap`: use when strategic direction needs roadmap framing rather than identity or one decision
-- `scripts/constitution.py create roadmap`: after running it, populate milestones, scope, and strategic intent so the roadmap is operationally useful
-- `scripts/constitution.py link`: use after the prose is in place to add or remove typed downstream links on decision and roadmap records; `constitution:main` is implicitly linked to everything and should stay link-free
-- `scripts/constitution.py diagnose`: use before leaving the constitutional layer so structure, status, and required sections are trustworthy
-
-## Neighboring Layer Boundaries
-
-- constitution records explain durable project identity and strategic framing
-- initiatives, specs, plans, tickets, critique, and docs should align with constitutional direction rather than redefine it silently
-- constitutional records should not become a shadow ticket ledger or a vague philosophy note with no operational meaning
-
-## What Good Looks Like
-
-- a future agent can read the record and understand the durable policy change without transcript archaeology
-- the record makes downstream implications visible
-- decision and roadmap links are explicit where they materially help
-- the record reads as policy or strategy, not as execution churn
-
-## Validation Focus
-
-- required sections exist
-- decisions declare supersession where relevant
-- roadmap items link downstream work explicitly
-- constitutional records describe strategic meaning rather than live execution state
-
-## Failure Conditions
-
-- the record reads like a local implementation note instead of durable policy
-- a decision record states the choice but not why it matters or what it constrains
-- downstream consequences are missing where future agents would need them
-- a newly created record still reads like an empty scaffold instead of a usable constitutional artifact
+1. decide whether the work belongs in `constitution:main`, a decision record, or a roadmap record
+2. copy the right template
+3. fill in the policy truth, not just abstract philosophy
+4. link downstream work where useful, except for `constitution:main`, which usually stays link-light
+5. reconcile any plan/spec/wiki pages that are now out of date because the constitutional frame changed
 
 ## Done Means
 
-- the right constitutional record owns the change
-- the prose preserves durable strategic meaning
-- `constitution:main` stays link-free while decision and roadmap links remain explicit where needed
-- `scripts/constitution.py diagnose` passes
+- the durable principle or direction is explicit
+- downstream work can now inherit the judgment
+- the record reads as policy, not as a ticket
+- a fresh agent would know how this should influence later work
 
 ## Read In This Order
 
-1. `references/schema-constitution.md`
-2. `references/scripts.md`
-3. `references/examples.md`
-
-## References
-
-- `references/schema-constitution.md`
-- `references/scripts.md`
-- `references/examples.md`
+1. `references/record-families.md`
+2. `references/writing-standard.md`
+3. `templates/constitution.md`
+4. `templates/decision.md`
+5. `templates/roadmap.md`

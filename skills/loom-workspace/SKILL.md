@@ -1,114 +1,89 @@
 ---
 name: loom-workspace
-description: "Parent-side Loom control-plane skill for workspace discovery, status, repository and worktree scope resolution, record discovery, validation routing, and subsystem selection. Use when entering the repo fresh, when `.loom/` is missing or incomplete where Loom expects it, when the user explicitly asks to set up, initialize, bootstrap, or scaffold Loom, when workspace health or scope ownership is unclear, or when you do not yet know which Loom layer owns the next durable action. Not for cases where the owning subsystem is already clear and no control-plane step is needed."
-compatibility: Designed for this Markdown-first Loom repository.
+description: "Enter a Loom workspace safely: discover structure, bootstrap the tree, resolve ownership, read constitution first, and route to the correct subsystem before downstream work. Use when the next owner layer is unclear, the workspace may be uninitialized, scope looks ambiguous, or you need to decide whether the next move is outer-loop framing, Ralph execution, critique, or wiki."
+compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  author: agent-loom
-  version: "0.1"
-  loom-layer: control-plane
+  loom_layer: control-plane
+  protocol_version: "2.0"
 ---
 
 # loom-workspace
 
-Use this skill as the parent-side Loom control plane for workspace discovery, readiness checks, routing, and scope resolution.
+Use this skill first when you are entering a Loom repository cold or when the next owner layer is not yet obvious.
+
+This skill replaces the old "doctor", "status", and "scope helper" mindset with a more agent-native posture:
+inspect the workspace directly, make structural trust explicit, then route to the owning layer.
+
+## What This Skill Owns
+
+- workspace bootstrap
+- workspace diagnosis
+- repository / scope discovery
+- first-read order
+- subsystem routing
+
+## First Read Order
+
+When Loom is present and the repo looks structurally plausible:
+
+1. inspect `.loom/`
+2. read `constitution:main`
+3. read the obvious owner chain for the current task
+4. choose the next skill
+
+Do not start deep work before the workspace is structurally trustworthy enough to trust its records.
 
 ## Use This Skill When
 
-- you entered the repository fresh and need orientation
-- you need to bootstrap a new Loom workspace (`.loom/` does not exist or is incomplete)
-- you do not yet know which Loom layer owns the next durable action
-- you need to inspect workspace health before trusting records or packet work
-- scope ownership of a path or repository is unclear
+- `.loom/` is missing, partial, or suspicious
+- the target path may belong to one of several repositories
+- you do not yet know whether the task belongs to constitution, research, spec, plan, ticket, Ralph, critique, or wiki
+- the user asked to set up Loom in a repository
+- the workspace needs a health pass before packet work
 
-## Prefer Another Skill When
+## Do Not Use This Skill When
 
-- you already know the exact owning subsystem and only need that artifact-layer workflow
-- the task is purely local and has no durable Loom consequences
+- the owner layer is already obvious and structurally sound
+- you are already inside a bounded ticket iteration and only need the owning execution skill
 
-## What This Skill Governs
+## Default Workspace Procedure
 
-- workspace initialization and directory bootstrapping
-- workspace-level health checks
-- repository and worktree scope discovery
-- parent-side readiness decisions
-- status and health-check guidance
+1. confirm the workspace root
+2. inspect the `.loom/` tree and read order
+3. verify `constitution:main` exists or create it if the user is bootstrapping Loom
+4. verify the canonical subdirectories exist
+5. resolve repository ownership of the target path
+6. read the governing artifact chain
+7. route into the next owner skill
 
-## Default Workspace Posture
+## Signals That You Should Halt Or Escalate
 
-- fail closed when repository or worktree ownership is ambiguous
-- prefer explicit health checks over silent assumptions
-- prefer native file inspection for workspace health checks
-- read `constitution:main` before downstream Loom work once the workspace is structurally trustworthy
-- prefer reading canonical state before packet launch
-- route into the owning subsystem instead of letting one skill absorb unrelated responsibilities
-- treat health and validation as decision inputs, not decorative reports
+Halt or escalate when:
 
-## Execution Playbook
+- the workspace root is ambiguous
+- multiple repository owners look plausible for the same target path
+- `.loom/` exists but the canonical tree is malformed enough that you cannot trust it
+- the task would require widening scope without a ticket/plan update
 
-1. resolve the single workspace root that should own the canonical `.loom/` tree
-2. inspect the current `.loom/` state before writing anything
-3. if the workspace is uninitialized or missing starter files, stop normal work and run the full `loom-setup` procedure at that workspace root
-4. if the workspace is already initialized and only one known directory is missing, repair that gap surgically
-5. inspect the visible Loom bundle and canonical records directly before trusting downstream records, packets, or operator guidance
-6. read `constitution:main` once the workspace is structurally trustworthy enough to continue
-7. resolve the owning repository or worktree for the target path with `git rev-parse --show-toplevel` or equivalent path-based inspection
-8. keep canonical artifacts in the workspace-root `.loom/` tree even when the target code lives in a nested repository
-9. route into the owning subsystem only after workspace trust and repository ownership are explicit
+## Native Tool Posture
 
-## Decision Rules
+Prefer direct inspection before inventing a helper abstraction:
 
-If direct workspace inspection or validation reports structural issues, fix those before trusting downstream packet work.
-
-If native repository inspection still cannot assign ownership cleanly, escalate immediately rather than guessing.
-
-If subsystem ownership is unclear, read the relevant canonical record and choose the skill that owns the next durable mutation or review step.
-
-## Failure Conditions
-
-Do not proceed as if the workspace is trustworthy when:
-
-- repository ownership is ambiguous
-- validation is failing
-- links are broken
-- required rule or skill surfaces are missing
-- packet-consuming work is being attempted without adequate structural trust
-
-## How To Use Native Tooling
-
-Read `references/queries.md` for native workspace query patterns and example invocations.
-
-- use `find` to enumerate records, directories, and likely owning surfaces
-- use `rg` to inspect statuses, IDs, links, and cross-record references directly
-- use `mkdir -p` only for surgical repair inside an already initialized workspace
-- use `git rev-parse --show-toplevel` from the target path when repository ownership needs confirmation
-- switch to the owning skill's script only when you need record-aware scaffolding, validation, or mutation
-
-Prefer native file tools such as `find`, `rg`, `mkdir -p`, and `git` for workspace health checks and repository discovery. Use the full `loom-setup` workflow for bootstrap, and use record-aware commands only in the owning skill.
-
-## What Good Looks Like
-
-- you know whether the workspace is healthy enough to trust
-- you know which repository owns the target path or record
-- you know which Loom skill should own the next durable action
-- you do not need to guess about structure, scope, or routing
+- `find` / `fd` for tree discovery
+- `rg` for IDs, statuses, and refs
+- `git rev-parse --show-toplevel` for repository ownership
+- `git status --short` and `git diff --stat` for current mutation awareness
 
 ## Done Means
 
-- workspace health is explicit enough to trust or explicitly unsafe enough to halt
-- ownership is resolved or the ambiguity is surfaced clearly
-- the next owning skill is identified without guesswork
-- downstream work starts from structural trust instead of optimism
+- the workspace root is explicit
+- structural trust is explicit
+- the next owner skill is explicit
+- you are not guessing about scope or routing
 
 ## Read In This Order
 
-1. `references/queries.md`
-2. `references/doctor.md`
-3. `references/status.md`
-4. `references/examples.md`
-
-## References
-
-- `references/queries.md`
-- `references/status.md`
-- `references/doctor.md`
-- `references/examples.md`
+1. `references/workspace-tree.md`
+2. `references/routing.md`
+3. `references/doctor.md`
+4. `templates/harness.md` when fresh-context invocation needs documenting

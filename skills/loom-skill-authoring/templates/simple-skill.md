@@ -1,33 +1,22 @@
 ---
-name: {{SKILL_NAME}}
-description: {{What it does}} Use when {{trigger conditions}}.
+name: my-skill
+description: "What it does, when to use it, and when not to."
+compatibility: Markdown-native Loom.
+metadata:
+  loom_layer: custom
+  protocol_version: "2.0"
 ---
 
-<objective>
-{{Clear statement of what this skill accomplishes}}
-</objective>
+# my-skill
 
-<quick_start>
-{{Immediate actionable guidance - what the agent should do first}}
-</quick_start>
+## What This Skill Owns
 
-<process>
-## Step 1: {{First action}}
+## Use This Skill When
 
-{{Instructions for step 1}}
+## Do Not Use This Skill When
 
-## Step 2: {{Second action}}
+## Default Procedure
 
-{{Instructions for step 2}}
+## Done Means
 
-## Step 3: {{Third action}}
-
-{{Instructions for step 3}}
-</process>
-
-<success_criteria>
-{{Skill name}} is complete when:
-- [ ] {{First success criterion}}
-- [ ] {{Second success criterion}}
-- [ ] {{Third success criterion}}
-</success_criteria>
+## Read In This Order

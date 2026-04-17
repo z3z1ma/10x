@@ -1,115 +1,56 @@
 ---
 name: loom-plans
-description: "Maintain Loom's execution-strategy layer through plan records covering sequencing, milestones, dependencies, validation, recovery, rollout, rollback, and linked ticket coverage. Use when work is too large or risky for one ticket without durable strategy; when milestone ordering, dependency management, recovery thinking, or validation approach must be explicit; or when multiple tickets need one execution plan. Not for live task-by-task progress tracking, ticket journaling, or final behavior contracts."
-compatibility: Designed for this Markdown-first Loom repository.
+description: "Maintain execution strategy, decomposition, sequencing, rollout, and milestone coordination. Use when the work needs more than one ticket, when order matters, or when the project needs an explicit route from strategy to bounded execution without letting the plan become the execution ledger."
+compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  author: agent-loom
-  version: "0.1"
-  loom-layer: execution-strategy
+  loom_layer: plan
+  protocol_version: "2.0"
 ---
 
 # loom-plans
 
-Plans are the Loom execution-strategy layer.
+Plans own execution strategy.
 
-Use this skill to define execution strategy across a linked ticket set.
+They explain how the work should be sequenced without trying to replace ticket truth.
+
+## What This Skill Owns
+
+- rollout strategy
+- decomposition
+- sequencing
+- milestones at the execution-strategy layer
+- explicit route from initiative/spec to ticket work
 
 ## Use This Skill When
 
-- the work needs durable sequencing or milestone planning
-- the team needs a strategy for how to realize a spec
-- rollback, recovery, or validation approach needs to be made explicit
+- multiple tickets need one sequencing owner
+- rollout order matters
+- dependencies need to be made visible
+- the project needs an execution strategy that should outlive one ticket
 
 ## Do Not Use This Skill When
 
-- you are writing the intended behavior itself
-- you are updating the live execution ledger
-- the work only needs one small ticket and no broader sequencing record
+- the work is already one bounded ticket
+- the layer should really be initiative or spec
+- you are tempted to use the plan as a progress log
 
-## What This Skill Governs
+## Good Plan Questions
 
-- plan records
+A strong plan answers:
 
-## Plan Posture
-
-Plans should answer:
-
-- what the big picture is
-- what order of work makes sense
-- what milestones matter
-- what risks or dependencies shape the sequence
-- which tickets execute the strategy
-
-Plans explain how work should unfold. They do not replace the ticket ledger.
-
-## Before You Write
-
-1. read the governing spec, initiative, and active tickets first
-2. decide whether the work truly needs a separate durable strategy record
-3. identify the tickets that will execute the plan so the strategy stays grounded
-
-## Execution Playbook
-
-1. create a plan only when the work needs its own durable strategy record
-2. if you create one, populate purpose, milestones, plan of work, validation, recovery, and risks immediately
-3. make the intended order of work legible enough that another agent can resume safely
-4. link governing and downstream records after the strategy is written
-5. revise the plan when sequencing, dependencies, validation, recovery, or milestone shape changes materially
-6. validate the final record before expecting others to follow it
-
-## How To Use The Scripts
-
-Read `references/scripts.md` for the bundled CLI surface, including argument meanings and example invocations.
-
-- `scripts/plans.py create`: use when execution strategy needs a durable home in `.loom/plans/`
-- `scripts/plans.py create`: after running it, populate the body immediately; the command only creates the scaffold
-- `scripts/plans.py link`: use to add or remove linked constitution, initiative, spec, and ticket refs once the strategy is real
-
-## Neighboring Layer Boundaries
-
-- specs define intended behavior
-- plans define execution strategy
-- tickets define live execution state
-- plans should not become a second ticket ledger full of micro-updates
-
-## What Good Looks Like
-
-- milestones make the path legible
-- dependencies and risks are explicit
-- validation and recovery thinking are present
-- linked tickets show who actually executes the strategy
-- the plan can guide work without pretending to be the live ledger
-
-## Validation Focus
-
-- required sections present
-- linked tickets explicit
-- status and revision notes truthful
-- the plan remains strategy-oriented rather than becoming a second execution ledger
-
-## Failure Conditions
-
-- the plan duplicates another active strategy record
-- the strategy is so vague that no downstream ticket can act from it
-- the plan becomes a progress diary instead of sequencing guidance
-- dependencies, rollback, or validation thinking are omitted when they matter
-- a newly created plan remains an empty shell
+- what the overall route is
+- why the sequence is ordered this way
+- what milestones exist
+- what risks and dependencies shape the sequence
+- which tickets should exist beneath it
 
 ## Done Means
 
-- the strategy is durable, legible, and linked to real ticket execution
-- milestones, dependencies, validation, and risks are explicit
-- relevant links are present
-- the scaffold and frontmatter are explicit enough for later workspace validation
+- a future agent can see the intended route without reading transcript history
+- the plan sequences the work without swallowing live execution state
 
 ## Read In This Order
 
-1. `references/schema-plans.md`
-2. `references/scripts.md`
-3. `references/examples.md`
-
-## References
-
-- `references/schema-plans.md`
-- `references/scripts.md`
-- `references/examples.md`
+1. `references/plan-shape.md`
+2. `references/slicing.md`
+3. `templates/plan.md`
