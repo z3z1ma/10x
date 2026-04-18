@@ -213,8 +213,8 @@ lived compatibility mechanism.
 - Current canonical ticket files:
   `.loom/tickets/20260401-14eh8c66-smoke-test-ticket-creation.md`,
   `.loom/tickets/20260401-z8h0g58e-inventory-shared-loom-script-clis.md`,
-  `.loom/tickets/20260404-1ypcbj0m-exercise-one-end-to-end-ralph-critique-and-docs-flow.md`,
-  `.loom/tickets/20260404-zomng8h3-add-core-slash-command-entry-points-for-canonical-workflows.md`,
+  `.loom/tickets/20260404-1ypcbj0m-exercise-one-end-to-end-ralph-critique-and-wiki-flow.md`,
+  `.loom/tickets/20260404-zomng8h3-evaluate-optional-wrapper-commands-for-core-workflows.md`,
   `.loom/tickets/20260404-vyypge85-harden-packet-scope-and-workspace-structural-validation.md`,
   `.loom/tickets/20260408-psh7h282-migrate-ticket-identity-to-random-tokens.md`
 

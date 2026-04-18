@@ -1,158 +1,62 @@
 # loom-memory-housekeeping
 
-Use this command to perform memory housekeeping. Trigger if the user says "housekeeping", "clean up memory", "prune memory", "archive old data", or similar maintenance requests.
+Use this command to perform routine memory housekeeping. Trigger if the user
+says "housekeeping", "clean up memory", "prune memory", or similar maintenance
+requests.
 
-This command is pure prompt guidance. It should be executable by the model from the visible memory files and normal file tools alone. No Python scripts are available.
+This command is pure prompt guidance. It should be executable from the visible
+memory files and normal file tools alone.
 
-## 0. Orientation (run FIRST, before any file reads)
+## Goal
 
-Use these shell commands to scope your work before reading files:
+Keep Loom's optional memory surface small, current, and clearly subordinate to
+the canonical Loom layers.
+
+## Orientation (run FIRST, before deep reads)
+
+Use quick filesystem checks to scope the pass:
 
 ```bash
-# What changed since last run? Focus here first.
-find .loom/memories/ -type f -name "*.md" -mtime -1 | sort
-
-# Quick entry counts for archival threshold checks (>50 = archive)
-grep -c "^- " .loom/memories/system/self-observations.md .loom/memories/user/observations.md 2>/dev/null
-
-# Completed action items count (>10 = archive)
-grep -c "^\- \[x\]" .loom/memories/user/action-items.md 2>/dev/null
+find .loom/memory -type f -name "*.md" 2>/dev/null | sort
+rg -n '^<!-- L0:' .loom/memory 2>/dev/null
+rg -n '^- ' .loom/memory/*/action-items.md .loom/memory/*/observations.md 2>/dev/null
 ```
 
-Only read files that need work based on these results. Skip unchanged files.
+Only read files that appear to need work.
 
-## 1. Garbage Collect Memory
+## Housekeeping Pass
 
-Review and archive stale data per glacier rules. All glacier files must have JSON-compatible frontmatter.
+1. Prune hot memory.
+   - Keep every `hot-memory.md` short and high-signal.
+   - Move older supporting detail into `observations.md` when it still matters.
+2. Check action items.
+   - Remove or mark completed support tasks.
+   - Move real execution work into Loom tickets instead of leaving it in memory.
+3. Tighten entities.
+   - Keep entity entries compact.
+   - Add or fix `[[links]]` when they materially help retrieval.
+4. Check boundaries.
+   - Remove duplicated canonical truth from memory.
+   - Point at the canonical Loom record instead when that is clearer.
+5. Fix headers.
+   - Add an `<!-- L0: ... -->` header to any active memory file missing one.
 
-**Observations — archive by primary tag:**
+## Write Rules
 
-- If any `observations.md` has >50 entries, group oldest entries by primary tag and move to `.loom/memories/glacier/{domain}/observations-{tag}.md`
-- If `system/self-observations.md` has >50 entries, group by primary tag → `.loom/memories/glacier/system/observations-{tag}.md`
-- When a single tag file exceeds 50 entries, split by year: `observations-{tag}-{YYYY}.md`
+- prefer direct file edits over inventing maintenance machinery
+- keep memory files small and readable
+- do not create archive systems or extra structure unless the repository
+  already clearly uses them
+- if a change would affect canonical project truth, update the owning Loom layer
+  instead of hiding the fix in memory
 
-**Other files — standard rules:**
+## Debrief
 
-- If any `action-items.md` has >10 completed items, move to `.loom/memories/glacier/{domain}/action-items-done.md`
-- If `system/improvements.md` has >10 implemented items, move to `.loom/memories/glacier/system/improvements-done-{YYYY}.md`
+Summarize:
 
-## 2. Prune Hot Memory (rule-based)
+- every file you modified
+- what you pruned or clarified
+- any support tasks moved out of memory
+- any stale memory you left untouched and why
 
-Keep ALL `hot-memory.md` files under 50 lines. Relevance judgment (promote/demote) is loom-memory-reflect's job — you apply structural rules:
-
-**Files to check:**
-
-Check `hot-memory.md` for each domain, plus the cross-domain `.loom/memories/hot-memory.md`.
-
-**Pruning priority (trim in this order):**
-
-1. **Resolved items** — anything with ~~strikethrough~~, "DONE", "RESOLVED"
-2. **Past events** — entries about dates that have already occurred
-3. **SSOT violations** — same fact in hot-memory AND the canonical file (entities, action-items, etc.). Keep in canonical file, replace hot-memory copy with `[[link]]` or remove
-4. **Stale entries** — items not referenced in 14+ days
-5. **Low-signal entries** — FYI items with no action or deadline
-
-**Where trimmed entries go:**
-
-- Entries with lasting value → append to domain's `observations.md`
-- Entries that are purely historical → let them go
-- Never silently delete — always move or note removal in debrief
-
-## 3. Surface Opportunities & Accountability
-
-Review all `action-items.md` files across every domain:
-
-- **Stale items** (open >2 weeks): list with age and suggested next action
-- **Dormant domains**: if any domain has 0 new observations in >4 weeks, flag
-- **Escalation**: items open >6 months get flagged with urgency label
-
-Be direct. Don't just report — recommend specific actions.
-
-## 4. Rebuild Glacier Index
-
-Scan all `.loom/memories/glacier/**/*.md` files. Extract frontmatter. Write results to `.loom/memories/glacier/index.md`:
-
-```markdown
-<!-- L0: Archive catalog for stored memory snapshots -->
-# Memory Glacier Index
-
-<!-- Auto-generated by housekeeping. Do not edit. -->
-<!-- Last updated: YYYY-MM-DD -->
-
-| File | Domain | Type | Tags | Date Range | Entries | Summary |
-|------|--------|------|------|------------|---------|---------|
-```
-
-## 5. Link Audit (discover missing links)
-
-For each non-glacier memory file:
-
-1. **Entity mentions**: Scan for names matching `### <Name>` headers in entities.md — add `[[links]]` if missing
-2. **Cross-domain references**: If a file mentions a topic from another domain, add a cross-domain link
-3. **Action item references**: If an observation references a task, link it
-
-Only add links where the reference is substantive.
-
-## 6. Entity Registry Format Enforcement
-
-Scan all `entities.md` files for registry format compliance:
-
-1. **3-line max**: Any `### entry` with >3 content lines should be compressed. If the entry has an associated detail file (`-> [[link]]`), compress to: name/relationship, pipe-separated key facts, status+link. If no detail file exists and entry is >5 lines, flag as a promotion candidate (suggest creating a thread file).
-2. **Glacier candidates**: Entries with `status: inactive` or `last:` date >6 months ago → move to `glacier/{domain}/entities-inactive.md` (leave a stub with archived comment).
-3. **Missing metadata**: Flag entries missing `status:` or `last:` fields.
-
-## 7. Temporal Fact Maintenance
-
-Scan all `entities.md` files for `(until YYYY-MM)` markers with past dates:
-
-1. If the line has no ~~strikethrough~~, add it
-2. If already struck through, move to a `## Historical` subsection at the bottom of that entity's block (create the subsection if absent)
-3. Report moved facts in the debrief
-
-## 8. Rebuild Link Index
-
-Scan all memory files (excluding `glacier/`) for `[[wiki-links]]`. For each link, record: target → source.
-
-Rewrite `.loom/memories/link-index.md`:
-
-```markdown
-<!-- L0: Backlink map showing which memory files point to which topics -->
-# Memory Link Index
-
-<!-- Auto-generated by housekeeping. Do not edit. -->
-<!-- Last updated: YYYY-MM-DD -->
-
-| Target | Linked from |
-|--------|-------------|
-| `user/entities` | `user/observations`, `user/hot-memory` |
-```
-
-Rules:
-
-- Only include targets with at least one inbound link
-- Combine multiple sources per target on one row (comma-separated)
-- Exclude glacier files from both source and target
-
-## 9. L0 Header Maintenance
-
-Check all active memory files for missing `<!-- L0: ... -->` headers. If a file is missing its L0:
-
-- Read the file content, write a one-line summary (max 80 chars)
-- Add as the first line of the file
-
-L0 headers are the first tier of the retrieval protocol — they let any skill scan what a file contains before deciding to read it.
-
-## 10. Compose Debrief
-
-Summarize everything done:
-
-- What was archived/pruned
-- Action items surfaced
-- Links added
-- Entities compressed or archived
-- Temporal facts maintained
-- Indexes rebuilt
-
-Keep it concise but informative.
-
-**IMPORTANT**: Your debrief MUST list every file you modified and summarize the changes. Never respond with just "Done" — always enumerate your concrete actions. If you made no changes in a step, state that explicitly.
+Never respond with only "Done".
