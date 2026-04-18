@@ -121,3 +121,42 @@ or expose it via a root instruction file that points to the copied package.
 
 Loom itself is agnostic.
 The only important thing is that the rules are always on and the skills are discoverable.
+
+## Makefile Installers
+
+This repository also ships a top-level `Makefile` for global user-level installs
+from the canonical product surface in the current working tree.
+
+Use:
+
+```bash
+make install harness=opencode
+make install harness=claude
+make install harness=codex
+make install harness=gemini
+make install harness=all
+
+make uninstall harness=opencode
+```
+
+The Makefile copies only top-level `rules/`, `skills/`, and optional
+`commands/`.
+
+It does not install dogfooding `.loom/` records or `.opencode/` consumption
+state.
+
+Because harnesses do not expose identical file formats, the installer keeps
+direct copies where possible and uses the smallest honest translation where
+needed:
+
+- OpenCode: copies skills and commands, copies rules into a Loom-owned
+  directory, and updates `~/.config/opencode/opencode.json` so those rules load
+  through `instructions`
+- Claude Code: copies rules, skills, and commands into `~/.claude/`
+- Codex: copies skills, converts commands into `~/.codex/prompts/*.md`, and
+  mirrors Loom rules into a managed block inside `~/.codex/AGENTS.md`
+- Gemini CLI: copies skills, converts commands into `~/.gemini/commands/*.toml`,
+  and mirrors Loom rules into a managed block inside `~/.gemini/GEMINI.md`
+
+Those generated blocks are bracketed with Loom markers so `make uninstall` can
+remove only Loom-managed content.
