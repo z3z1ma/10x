@@ -1,9 +1,9 @@
 ---
 id: ticket:vyypge85
 kind: ticket
-status: proposed
+status: active
 created_at: 2026-04-04T23:57:49Z
-updated_at: 2026-04-17T23:58:42Z
+updated_at: 2026-04-19T21:12:40Z
 scope:
   kind: repository
   repositories:
@@ -82,9 +82,20 @@ checks or overfitting to imagined failures.
 
 # Evidence
 
-No validation hardening evidence exists yet.
+Current evidence for this ticket includes:
 
-Expected evidence for this ticket includes:
+- 2026-04-19: `rules/06-filesystem-and-tooling.md` and the mirrored
+  `.opencode/rules/06-filesystem-and-tooling.md` now encourage the
+  `awk 'BEGIN{found=0} /^---$/{found++; next} found==1' .loom/... | yq ...`
+  pattern as the canonical native-tool baseline for single-record frontmatter
+  inspection
+- 2026-04-19: the same rule and mirror now explicitly treat ordinary shell
+  pipelines as first-class Loom behavior and warn against collapsing tool usage
+  to only a tiny fixed subset of harness-native search helpers
+- 2026-04-19: refined the rule wording so shell composition reads as baseline
+  Loom doctrine rather than a narrow exception layered onto the tooling rule
+
+Expected additional evidence for this ticket includes:
 
 - diffs to the rules, skill references, templates, or optional wrappers that
   now describe the exercised failures more clearly
@@ -120,3 +131,12 @@ rules or skill references.
 - 2026-04-17: reconciled the ticket to the rewrite-era model where validation
   hardening happens in visible guidance and query recipes rather than in a core
   helper-script layer.
+- 2026-04-19: started this ticket by adding an explicit `awk ... | yq ...`
+  frontmatter extraction recipe to the filesystem/tooling rule and its
+  `.opencode` mirror as encouraged native-tool query guidance.
+- 2026-04-19: broadened the filesystem/tooling rule and its `.opencode` mirror
+  so ordinary shell composition is explicitly encouraged beyond `rg`/`find`
+  style discovery, with harness-native single-file read/edit helpers framed as
+  narrow ergonomic exceptions rather than the main tooling model.
+- 2026-04-19: revised the same rule again to blend that tooling posture more
+  cleanly into the surrounding doctrine and anti-pattern language.
