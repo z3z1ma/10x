@@ -31,7 +31,7 @@ rg -l '^status: stale$' .loom/wiki
 ### Trace one acceptance claim
 
 ```bash
-rg -n 'ACC-002' .loom
+rg -n 'spec:acceptance-hardening#ACC-002' .loom
 ```
 
 ### Find evidence support declarations

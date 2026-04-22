@@ -52,5 +52,9 @@ A strong initiative answers:
 
 ## Read In This Order
 
-1. `references/initiative-shape.md`
-2. `templates/initiative.md`
+Read immediately when the strategic outcome needs an initiative owner:
+
+1. `references/initiative-shape.md` when deciding what belongs in the
+   initiative and how success should be framed.
+2. `templates/initiative.md` only when creating or substantially reshaping an
+   initiative record.

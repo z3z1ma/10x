@@ -87,36 +87,16 @@ Produce or update one targeted wiki page from accepted truth.
 
 Walk the wiki (or the named scope) and surface maintenance debt without silently rewriting it.
 
-### Goals
+Use `skills/loom-wiki/references/wiki-audit.md` as the canonical audit
+procedure.
 
-- verify cited sources still exist and still say what the page claims
-- surface staleness against recent ticket journals, critiques, and decision records
-- surface duplicate or overlapping pages that should be merged
-- surface policy or behavior-contract authority that has leaked into wiki
-- apply only the low-risk mechanical fixes; route substantive rewrites
+In short:
 
-### Procedure
-
-1. **Walk the scope.**
-   - List every page, or every page under the named scope.
-   - For each page, read the frontmatter, the cited sources, and the body claims.
-
-2. **Classify each finding.**
-   - `current` — page is accurate and grounded
-   - `needs-update` — page is still correct in frame but cites stale sources or omits accepted truth
-   - `stale` — page no longer matches accepted truth; mark stale with a forward link if a replacement exists
-   - `duplicate` — page overlaps another; propose a merge with chosen survivor
-   - `misplaced-authority` — page carries policy or behavior-contract authority that belongs in constitution or spec
-
-3. **Apply only low-risk mechanical fixes.**
-   - Broken intra-wiki link repair when the target clearly renamed.
-   - Obvious stale-mark additions when a newer page already supersedes.
-   - Keep these edits small, auditable, and one-record-at-a-time.
-
-4. **Route everything else.**
-   - Substantive rewrites → `/loom-wiki <page>` in write mode.
-   - Misplaced authority → `/loom-spec` or `/loom-decide` as the destination demands, usually disciplined by `/loom-plan`.
-   - Graph drift beyond the wiki → `/loom-repair`.
+1. walk the page scope
+2. compare claims to accepted sources
+3. classify findings
+4. apply only low-risk mechanical fixes
+5. route substantive rewrites to the owning workflow
 
 ### Audit-mode required output
 

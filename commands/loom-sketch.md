@@ -40,15 +40,18 @@ Hydrate only what you need from:
 - critique the variants before acceptance
 - route accepted behavior to specs and accepted explanation to wiki
 
-## Procedure
+## Canonical Procedure
 
-1. Frame the design question.
-2. Search existing specs, wiki pages, research, and evidence.
-3. Produce two or three bounded variants.
-4. Capture screenshots, mockups, notes, or artifacts as evidence.
-5. Critique the variants with relevant profiles.
-6. Record conclusions and rejected options in research.
-7. Update spec or wiki only for accepted outcomes.
+Use `skills/loom-spike/SKILL.md` as the procedure. Sketch is the design
+variant of the spike workflow.
+
+In short:
+
+1. frame the design question
+2. produce a small set of variants
+3. capture artifacts as evidence
+4. critique variants before acceptance
+5. route accepted behavior to specs and accepted explanation to wiki
 
 ## Guardrails
 

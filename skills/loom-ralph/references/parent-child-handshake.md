@@ -46,7 +46,8 @@ from Loom records before launch.
 For parallel Ralph, parent must verify:
 
 - no `depends_on` conflict
-- no `write_scope` overlap
+- no `child_write_scope` overlap
+- no legacy `write_scope` overlap when reviewing older packet records
 - no shared migration, generated-file, lockfile, or stateful resource
   contention
 - each child gets its own packet

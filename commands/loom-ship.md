@@ -37,16 +37,18 @@ Hydrate only what you need from:
 - make risks and follow-ups visible
 - keep external summaries subordinate to Loom records
 
-## Procedure
+## Canonical Procedure
 
-1. Anchor the ticket, plan, or release slice.
-2. Read ticket status, acceptance criteria, evidence, critique, and wiki disposition.
-3. Stop and route back if evidence or required critique is missing.
-4. Draft a PR or handoff summary from Loom records.
-5. Draft test/evidence summary.
-6. Draft risk summary and follow-up list.
-7. Draft release notes when useful.
-8. Recommend `/loom-accept` only when closure is the remaining governed step.
+Use `skills/loom-shipping/SKILL.md` as the procedure.
+
+In short:
+
+1. anchor the ticket, plan, or release slice
+2. read ticket, evidence, critique, and wiki disposition
+3. stop if the durable story is not truthful
+4. package PR, handoff, evidence, risk, and follow-up summaries from Loom
+   records
+5. leave closure to acceptance
 
 ## Guardrails
 

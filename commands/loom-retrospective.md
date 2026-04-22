@@ -114,33 +114,17 @@ For each repeated mistake, choose exactly one prevention artifact:
 
 If no repeated mistake exists, say so and avoid creating filler artifacts.
 
-## Procedure
+## Canonical Procedure
 
-1. **Anchor the source slice.**
-   - Identify the governing ticket, initiative, or topic.
-   - Read the most relevant critiques, packets, evidence, and wiki pages.
+Use `skills/loom-records/references/retrospective.md` as the procedure.
 
-2. **Find repeated or stable learning.**
-   - Look for answers the agent had to rediscover.
-   - Look for lessons that changed how future work should be done.
-   - Look for explanations that future agents would otherwise have to reconstruct.
-   - Look for rejected options or null results that would otherwise be re-attempted.
+In short:
 
-3. **Promote into the right owners.**
-   - Prefer the wiki for accepted explanation.
-   - Use research, spec, plan, initiative, or constitution only if that layer truly owns the new truth.
-   - For constitutional shifts, write a decision record with the rejected alternatives, not a prose amendment alone.
-   - Use memory sparingly for support continuity, not for canonical facts.
-
-4. **Link and prune.**
-   - Link originating tickets, critiques, wiki pages, research notes, and specs.
-   - If memory now duplicates canonical truth, replace or trim the duplicate.
-   - If the wiki page already exists, improve it rather than forking another one.
-
-5. **Recommend the next move.**
-   - `/loom-accept` if closure is the remaining question.
-   - `/loom-wiki` if more targeted page work is still needed.
-   - `/loom-plan` if the learning materially changed the route forward.
+1. observe the source slice
+2. distill durable learning
+3. promote into the right owners
+4. choose exactly one prevention artifact per repeated mistake
+5. recommend the next owner
 
 ## Native tools to prefer
 

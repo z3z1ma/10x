@@ -21,6 +21,7 @@ inspect the workspace directly, make structural trust explicit, then route to th
 - repository / scope discovery
 - first-read order
 - subsystem routing
+- status snapshot synthesis
 
 ## First Read Order
 
@@ -83,7 +84,17 @@ Prefer direct inspection before inventing a helper abstraction:
 
 ## Read In This Order
 
-1. `references/workspace-tree.md`
-2. `references/routing.md`
-3. `references/doctor.md`
-4. `templates/harness.md` when fresh-context invocation needs documenting
+Read immediately for normal workspace entry:
+
+1. `references/workspace-tree.md` when checking or bootstrapping the `.loom`
+   directory shape.
+2. `references/routing.md` when deciding which owner skill or command should
+   handle the request.
+
+Then read conditionally:
+
+3. `references/status-snapshot.md` when summarizing current queues, blockers,
+   review debt, or acceptance debt.
+4. `references/doctor.md` when structural trust is questionable.
+5. `templates/harness.md` only when documenting fresh-context invocation
+   mechanics.

@@ -1,11 +1,11 @@
 ---
 name: loom-explainer
 description: "Writing-and-explanation utility for drafting, structuring, revising, and clarifying non-canonical prose. Use when the user wants an article, essay, post, talk, presentation, narrative, briefing, or clear explanation of a topic; when they ask to outline, rewrite, or sharpen long-form writing; or when a written piece needs stronger audience-aware structure and voice. Not for code documentation, commit messages, or technical dev-log entries."
-compatibility: Designed for this Markdown-first Loom repository.
+compatibility: Optional local writing utility; not part of the Loom protocol kernel.
 metadata:
   author: agent-loom
   version: "0.1"
-  loom-layer: utilities
+  loom_layer: utilities
 ---
 
 ## Domain
@@ -70,14 +70,6 @@ Same setup, but organize for flexibility, verbalize with reflection, and anticip
 - Use precision + openness: say exactly what you mean, admit where understanding is incomplete.
 - Treat tangents as potential insights — provided they return to the flow.
 - Use anecdotes, memory, and curiosity to make abstract concepts human and engaging.
-
-## Memory Files
-
-Read on activation:
-- `memory/personal/observations.md` for lived experience and reflections
-
-Write to (if producing drafts or notes):
-- Share drafts directly in conversation — don't persist unless asked
 
 ## Success Criteria
 

@@ -37,33 +37,19 @@ Hydrate only what you need from:
 - correct links, dependencies, acceptance criteria, and status
 - stop before implementation
 
-## Procedure
+## Canonical Procedure
 
-1. **Locate or decide the ticket.**
-   - If `$ARGUMENTS` names an existing ticket, open that ticket first.
-   - If `$ARGUMENTS` is prose, find the governing plan or initiative and decide whether a new ticket or sibling ticket is needed.
+Use `skills/loom-tickets/SKILL.md`,
+`skills/loom-tickets/references/readiness.md`, and
+`skills/loom-records/references/claim-coverage.md` as the procedure.
 
-2. **Read the governing chain.**
-   - Read the linked plan, and any relevant spec or research.
-   - Pull in only the upstream context that matters for execution readiness.
+In short:
 
-3. **Tighten or split.**
-   - Tighten summary, scope, non-goals, acceptance criteria, evidence expectations, and critique/wiki disposition.
-   - Add `# Coverage` entries for spec acceptance IDs this ticket covers.
-   - Add critique risk class and required profiles when the work warrants review.
-   - If several independent slices are hiding inside one ticket, split them.
-   - Use `depends_on` only for hard prerequisites.
-
-4. **Set truthful status.**
-   - `proposed` if outer-loop work still remains.
-   - `ready` only if a fresh worker could start without transcript archaeology.
-   - `active` only if work is genuinely underway.
-   - `blocked` only with a named blocker.
-
-5. **Recommend the next step.**
-   - `/loom-work <ticket-id>` when ready.
-   - `/loom-plan ...` if the ticket revealed missing outer-loop structure.
-   - `/loom-spec ...` or `/loom-research ...` if the ticket exposed missing contract or evidence.
+1. locate or decide the ticket
+2. read the governing chain
+3. tighten, split, or relink
+4. set truthful status
+5. recommend the next owner
 
 ## Native tools to prefer
 

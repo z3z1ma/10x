@@ -14,5 +14,15 @@ Each example names:
 - expected final state
 - common wrong behavior
 
+Stronger examples may also include:
+
+```text
+before/
+operator-request.md
+expected-route.md
+after/
+common-wrong-behavior.md
+```
+
 Examples are outside the core product source. They may demonstrate the product,
 but they do not define Loom truth.

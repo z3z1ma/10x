@@ -149,6 +149,15 @@ route, expected artifacts, final state, and common wrong behavior. That gives
 contributors a way to review whether a protocol change preserves Loom's
 intended shape across harnesses.
 
+### 10. Commands and utilities stay outside the kernel
+
+Commands are invocation adapters. If deleting `commands/` removes a Loom
+capability, the behavior belongs in a skill or reference.
+
+Local writing or style utilities belong under `optional-utilities/`, not in the
+default protocol skill set. They may be useful, but they are not Loom protocol
+semantics.
+
 ## Design Philosophy
 
 This rewrite optimizes for:

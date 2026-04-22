@@ -69,6 +69,8 @@ remove_skill_dirs() {
     name="${dir##*/}"
     rm -rf "$dest_dir/$name"
   done
+  # These were shipped in earlier default installs but are now optional local utilities.
+  rm -rf "$dest_dir/loom-explainer" "$dest_dir/loom-humanizer"
   rmdir "$dest_dir" 2>/dev/null || true
 }
 

@@ -35,16 +35,18 @@ Hydrate only what you need from:
 - promote accepted structure into wiki pages
 - keep behavior, policy, and live execution in their owner layers
 
-## Procedure
+## Canonical Procedure
 
-1. Confirm repository root and map scope.
-2. Search existing wiki, research, specs, plans, and evidence for prior maps.
-3. Inspect the codebase with native tools.
-4. Record uncertain interpretation or rejected readings in research.
-5. Record important scan commands or observations as evidence.
-6. Create or update wiki atlas pages for accepted structure.
-7. If path-local context adapters are requested, make them point to Loom owner
-   records and state that they are not truth owners.
+Use `skills/loom-codebase-atlas/SKILL.md` as the procedure.
+
+In short:
+
+1. confirm repository root and map scope
+2. inspect existing atlas/wiki/research/evidence
+3. scan structure with native tools
+4. route uncertainty to research and proof to evidence
+5. update wiki for accepted structure
+6. keep path-local adapters as pointers to owner records
 
 ## Native Tools To Prefer
 

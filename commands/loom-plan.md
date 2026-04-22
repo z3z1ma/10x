@@ -44,49 +44,19 @@ Hydrate only what you need from:
 - slice the work into bounded, dependency-aware tickets
 - stop before implementation
 
-## Procedure
+## Canonical Procedure
 
-1. **Orient first.**
-   - Confirm the workspace root and `.loom/` structure.
-   - Read `constitution:main`.
-   - Find the initiatives, plans, tickets, wiki pages, and optional memory already relevant to `$ARGUMENTS`.
+Use `skills/loom-plans/SKILL.md`, `skills/loom-plans/references/plan-shape.md`,
+and `skills/loom-tickets/references/readiness.md` as the procedure.
 
-2. **Recall before inventing.**
-   - Search `.loom/wiki/`, `.loom/research/`, `.loom/specs/`, `.loom/plans/`, `.loom/tickets/`, and optional `.loom/memory/`.
-   - Reuse accepted understanding and prior evidence instead of re-deriving basics.
-   - If a durable explanation already exists in the wiki, let it reduce planning thrash.
+In short:
 
-3. **Choose the minimal owner chain.**
-   - Create or refine an **initiative** only if the outcome is strategic and spans multiple downstream artifacts.
-   - Create **research** only if evidence is missing.
-   - Create a **spec** only if intended behavior is unclear.
-   - Create or update a **plan** when sequencing or rollout strategy needs a durable owner.
-   - Always leave live execution owned by one or more **tickets**.
-
-4. **Write or refine the records.**
-   - Use the Loom templates and record grammar.
-   - Keep truth in the right layer.
-   - Link the chain in frontmatter and in concise prose where helpful.
-
-5. **Slice into tickets.**
-   - Favor the next smallest meaningful slice.
-   - Each ticket should be independently legible, bounded, and testable or reviewable.
-   - Use `depends_on` only for hard prerequisites.
-   - Keep status truthful: usually `proposed` or `ready`.
-
-6. **Check ticket readiness.**
-   - A fresh worker should not need transcript archaeology.
-   - Scope, non-goals, acceptance criteria, and evidence path should be visible.
-   - If a ticket is not ready, refine it instead of forcing Ralph.
-
-7. **Decide the next command.**
-   - Usually `/loom-work <ticket-id>`.
-   - If evidence is still missing, `/loom-research ...`.
-   - If the work is a bounded experiment, `/loom-spike ...`.
-   - If the work is bug investigation, `/loom-debug ...`.
-   - If orientation is the blocker, `/loom-map ...`.
-   - If behavior is still missing, `/loom-spec ...`.
-   - If the work hinges on a citable architectural or policy choice, `/loom-decide ...` before proceeding.
+1. orient and recall prior knowledge
+2. choose the minimal owner chain
+3. write or refine owner records
+4. slice into bounded tickets
+5. check readiness
+6. recommend the next owner
 
 ## Native tools to prefer
 

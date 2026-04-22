@@ -36,14 +36,14 @@ They are useful when the project needs bounded discovery before commitment.
 
 ## Spike Flow
 
-`question -> experiment matrix -> bounded throwaway write_scope -> evidence -> conclusions/null results -> downstream route`
+`question -> experiment matrix -> bounded throwaway child write scope -> evidence -> conclusions/null results -> downstream route`
 
 Record:
 
 - question
 - method
 - experiment matrix
-- write scope and cleanup expectation
+- child write scope and cleanup expectation
 - evidence gathered
 - conclusions
 - null results or rejected paths
@@ -72,8 +72,16 @@ Record:
 
 ## Read In This Order
 
-1. `skills/loom-research/SKILL.md`
-2. `skills/loom-records/templates/evidence.md`
-3. `skills/loom-specs/SKILL.md`
-4. `skills/loom-wiki/SKILL.md`
-5. `skills/loom-critique/SKILL.md`
+Read immediately for spike or sketch work:
+
+1. `skills/loom-research/SKILL.md` when recording experiment method,
+   conclusions, rejected options, or null results.
+2. `skills/loom-records/templates/evidence.md` when preserving screenshots,
+   logs, artifacts, or observed outputs.
+
+Then read conditionally:
+
+3. `skills/loom-critique/SKILL.md` when variants or experiment conclusions need
+   adversarial review.
+4. `skills/loom-specs/SKILL.md` when accepted behavior should become a contract.
+5. `skills/loom-wiki/SKILL.md` when accepted explanation should become reusable.

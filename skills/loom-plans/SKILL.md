@@ -51,6 +51,14 @@ A strong plan answers:
 
 ## Read In This Order
 
-1. `references/plan-shape.md`
-2. `references/slicing.md`
-3. `templates/plan.md`
+Read immediately for normal plan creation or review:
+
+1. `references/plan-shape.md` when creating or reviewing a plan's structure.
+
+Then read conditionally:
+
+2. `references/problem-shaping.md` when the request is still fuzzy and should
+   not yet become a plan.
+3. `references/slicing.md` when decomposing a plan into ticket-sized work.
+4. `templates/plan.md` only when creating or substantially reshaping a plan
+   record.

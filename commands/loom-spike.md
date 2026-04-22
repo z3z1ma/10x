@@ -21,7 +21,7 @@ Spike question:
 
 The spike route is:
 
-`question -> experiment matrix -> bounded throwaway write_scope -> evidence -> conclusions/null results -> downstream route`
+`question -> experiment matrix -> bounded throwaway child write scope -> evidence -> conclusions/null results -> downstream route`
 
 Hydrate only what you need from:
 - `loom-workspace`
@@ -38,15 +38,17 @@ Hydrate only what you need from:
 - preserve evidence, rejected paths, and null results
 - route accepted conclusions to the right owner layer
 
-## Procedure
+## Canonical Procedure
 
-1. Frame the question and success criteria.
-2. Search prior research, evidence, specs, and wiki pages.
-3. Define the experiment matrix and throwaway write scope.
-4. Run only the smallest useful experiment.
-5. Capture evidence and observations.
-6. Record conclusions, null results, and rejected paths in research.
-7. Route behavior to spec, explanation to wiki, and execution to tickets.
+Use `skills/loom-spike/SKILL.md` as the procedure.
+
+In short:
+
+1. frame the question
+2. search prior research and evidence
+3. define the experiment matrix and throwaway child write scope
+4. capture evidence and null results
+5. route conclusions to the owning layer
 
 ## Guardrails
 

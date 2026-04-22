@@ -20,3 +20,10 @@ If the skill creates records or pages, include templates.
 
 Put nuance in `references/`.
 Keep the main skill file strong enough to orient the reader quickly.
+
+## 6. Progressive disclosure with judgment
+
+Do not make `Read In This Order` a bare index.
+
+Name which references are immediate for normal use and which are conditional.
+Each entry should say when the agent should open it.

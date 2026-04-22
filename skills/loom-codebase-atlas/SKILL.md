@@ -89,7 +89,16 @@ Read:
 
 ## Read In This Order
 
-1. `skills/loom-wiki/SKILL.md`
-2. `skills/loom-research/SKILL.md`
-3. `skills/loom-records/templates/evidence.md`
-4. `skills/loom-workspace/references/workspace-tree.md`
+Read immediately for atlas work:
+
+1. `skills/loom-workspace/references/workspace-tree.md` when the repository
+   structure or ownership boundary is not yet clear.
+
+Then read conditionally:
+
+2. `skills/loom-research/SKILL.md` when scan results include uncertainty,
+   rejected interpretations, or null results.
+3. `skills/loom-records/templates/evidence.md` when scan commands or observed
+   structure should be preserved as proof.
+4. `skills/loom-wiki/SKILL.md` when accepted structure should become a
+   reusable atlas or module page.

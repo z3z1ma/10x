@@ -44,6 +44,10 @@ A record is structurally credible when:
 
 Use ticket states deliberately.
 
+### `proposed`
+
+The ticket exists, but readiness has not been earned.
+
 ### `ready`
 
 The ticket is clear enough to begin.
@@ -67,6 +71,10 @@ The work and evidence are substantially complete, but final acceptance or follow
 ### `closed`
 
 The graph tells a complete and truthful story.
+
+### `cancelled`
+
+The work should not proceed, and the cancellation reason is recorded.
 
 Do not jump to `closed` just because a child returned `stop`.
 

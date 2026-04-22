@@ -1,7 +1,7 @@
 ---
 id: ticket:<token>
 kind: ticket
-status: ready
+status: proposed
 created_at: <UTC timestamp>
 updated_at: <UTC timestamp>
 scope:
@@ -40,7 +40,7 @@ What must be true for this ticket to be accepted.
 # Coverage
 
 Covers:
-- ACC-000
+- spec:<slug>#ACC-000
 
 # Execution Notes
 
@@ -56,6 +56,9 @@ Risk class: low | medium | high
 
 Required critique profiles:
 - operator-clarity
+
+Findings:
+- critique:<slug>#FIND-001 — open | resolved | accepted_risk | superseded
 
 Status: required | completed | deferred | not_required
 

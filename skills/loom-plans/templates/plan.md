@@ -36,7 +36,7 @@ Why the order looks the way it does.
 Use when multiple tickets can be sequenced or run independently from the plan.
 
 Wave 1:
-- ticket:<id> — reason it can run independently — expected write scope
+- ticket:<id> — reason it can run independently — expected child write scope
 
 Wave 2:
 - ticket:<id> — depends on Wave 1 result

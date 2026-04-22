@@ -1,11 +1,11 @@
 ---
 name: loom-humanizer
 description: "Text-revision utility for humanizing existing prose and removing obvious AI tells without losing the underlying meaning. Use when the user provides draft text and asks to humanize it, de-AI it, make it sound natural, less robotic, less generic, or more like a real person wrote it; when the job is tone cleanup rather than blank-page drafting. Not for original writing tasks or first-pass explanation work; use `loom-explainer` instead."
-compatibility: Designed for this Markdown-first Loom repository.
+compatibility: Optional local writing utility; not part of the Loom protocol kernel.
 metadata:
   author: agent-loom
   version: "0.1"
-  loom-layer: utilities
+  loom_layer: utilities
 ---
 
 ## Domain

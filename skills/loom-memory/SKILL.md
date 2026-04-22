@@ -64,7 +64,15 @@ That allows cheap scanning before deep reading.
 
 ## Read In This Order
 
-1. `references/memory-model.md`
-2. `references/retrieval.md`
-3. `references/housekeeping.md`
-4. the template you need
+Read immediately for memory work:
+
+1. `references/memory-model.md` when deciding whether a fact belongs in memory
+   or a canonical owner layer.
+
+Then read conditionally:
+
+2. `references/retrieval.md` when searching memory without letting it become
+   shadow truth.
+3. `references/housekeeping.md` when pruning stale support context or
+   reconciling memory against canonical records.
+4. The relevant template only when creating the specific memory shape requested.

@@ -37,45 +37,24 @@ Hydrate only what you need from:
 - identify contradictions or suspicious state drift
 - recommend the next explicit command
 
-## Procedure
+## Canonical Procedure
 
-1. **Orient quickly.**
-   - Confirm the workspace root and `.loom/` structure.
-   - Read `constitution:main` only as much as needed for context.
+Use `skills/loom-workspace/references/status-snapshot.md` as the procedure.
 
-2. **Collect the execution ledger.**
-   - List tickets grouped by status:
-     `ready`, `active`, `blocked`, `review_required`, `complete_pending_acceptance`.
-   - If `$ARGUMENTS` is specific, narrow to the relevant slice and its linked artifacts.
+In short:
 
-3. **Collect nearby owners.**
-   - For the relevant slice, note linked initiatives, plans, research, specs, critiques, wiki pages, and evidence.
-
-4. **Check for state drift.**
-   - A ticket says `review_required` but has no critique path.
-   - A ticket says `complete_pending_acceptance` but evidence is weak or dispositions are unresolved.
-   - A ticket names coverage IDs but evidence does not support them.
-   - A non-ticket record uses a status outside the shared lifecycle grammar.
-   - A plan is driving live execution instead of the ticket.
-   - A wiki page or memory note is carrying owner truth it should not own.
-
-5. **Summarize the queues.**
-   - What's most ready to execute next?
-   - What is blocked and on what?
-   - What is waiting for critique?
-   - What is waiting for wiki or acceptance?
-   - What looks stale or suspicious?
-
-6. **Recommend the next move.**
-   - Usually one of `/loom-plan`, `/loom-work`, `/loom-debug`,
-     `/loom-review`, `/loom-ship`, `/loom-retrospective`, `/loom-accept`, or
-     `/loom-repair` when graph drift is the blocker.
+1. orient quickly
+2. collect the ticket ledger
+3. collect nearby owner records
+4. check for state drift
+5. summarize queues
+6. recommend the next move
 
 ## Native tools to prefer
 
 - `rg -n '^status:' .loom/tickets --glob '*.md'`
 - `rg -n '^status:' .loom/{constitution,initiatives,research,specs,plans,critique,wiki,evidence,packets} --glob '*.md'`
-- `rg -n 'REQ-[0-9]{3}|ACC-[0-9]{3}|CLAIM-[0-9]{3}' .loom --glob '*.md'`
+- `rg -n '[a-z]+:[a-z0-9-]+#(REQ|ACC|CLAIM)-[0-9]{3}' .loom --glob '*.md'`
 - `rg -n '^(id|status|review_target):' .loom/{plans,tickets,critique,wiki} --glob '*.md'`
 - `find .loom/{tickets,critique,wiki,evidence} -type f -name '*.md' | sort`
 - `git status --short`

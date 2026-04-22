@@ -39,29 +39,18 @@ Hydrate only what you need from:
 - make acceptance criteria and scenarios durable
 - reconcile downstream tickets and critique with one contract
 
-## Procedure
+## Canonical Procedure
 
-1. **Anchor the spec.**
-   - Identify the governing initiative, plan, research, and tickets tied to `$ARGUMENTS`.
-   - Determine whether a spec already exists and should be refined rather than replaced.
+Use `skills/loom-specs/SKILL.md` and
+`skills/loom-specs/references/spec-shape.md` as the procedure.
 
-2. **Read the evidence and constraints.**
-   - Pull from research, accepted critiques, existing tickets, and relevant implementation context.
-   - Read enough to avoid writing a fantasy spec.
+In short:
 
-3. **Write or refine the spec.**
-   - Make problem, desired behavior, constraints, scenarios, and acceptance explicit.
-   - Keep the spec precise; do not collapse it into code-level trivia.
-   - Name edge cases that matter.
-
-4. **Reconcile downstream artifacts.**
-   - If tickets or plans now conflict with the spec, fix the owner chain or note the required follow-up.
-   - Make sure ticket acceptance criteria do not quietly diverge from the spec.
-
-5. **Decide the next move.**
-   - `/loom-plan` if sequencing still needs work.
-   - `/loom-work` if the ticket is now ready.
-   - `/loom-review` if the change was to an already-implemented behavior contract.
+1. anchor the spec
+2. read evidence and constraints
+3. write or refine behavior and acceptance
+4. reconcile downstream artifacts
+5. recommend the next owner
 
 ## Native tools to prefer
 

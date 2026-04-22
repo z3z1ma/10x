@@ -37,7 +37,14 @@ A good Loom skill:
 
 ## Read In This Order
 
-1. `references/principles.md`
-2. `references/structure.md`
-3. `references/anti-patterns.md`
-4. the template you need
+Read immediately for skill authoring:
+
+1. `references/principles.md` when deciding whether a skill should exist and
+   what it should own.
+2. `references/structure.md` when laying out files, references, and templates.
+
+Then read conditionally:
+
+3. `references/anti-patterns.md` when checking overlap, hidden runtime
+   dependency, or vague activation.
+4. The relevant template only when creating a new skill.

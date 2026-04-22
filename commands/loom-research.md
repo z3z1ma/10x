@@ -40,30 +40,18 @@ Hydrate only what you need from:
 - capture rejected options and null results so future agents inherit the dead ends
 - route the result to the correct downstream owner
 
-## Procedure
+## Canonical Procedure
 
-1. **Anchor the question.**
-   - Determine what decision, uncertainty, or tradeoff `$ARGUMENTS` refers to.
-   - Link the research to any relevant initiative, plan, spec, or ticket.
+Use `skills/loom-research/SKILL.md` and
+`skills/loom-research/references/research-shape.md` as the procedure.
 
-2. **Read what already exists.**
-   - Search prior research, accepted wiki pages, decision records, specs, ticket journals, and evidence records.
-   - Reuse prior investigation where it remains valid.
+In short:
 
-3. **Gather evidence.**
-   - Use repository evidence, experiments, or external sources as appropriate.
-   - If current outside facts matter and the harness can browse, gather and cite those sources.
-   - Keep raw evidence separate from conclusions.
-
-4. **Write the research record.**
-   - Cover question, why it matters, method, sources, evidence, rejected options, null results, conclusions, recommendations, and open questions.
-   - Make conclusions proportional to the evidence.
-
-5. **Route the result.**
-   - Behavior clarified → spec.
-   - Sequencing changed → plan.
-   - Accepted explanation → wiki.
-   - Durable direction changed → initiative or constitution, often via `/loom-decide`.
+1. anchor the question
+2. read prior evidence
+3. gather and separate evidence from inference
+4. write the research record
+5. route the result to its downstream owner
 
 ## Native tools to prefer
 

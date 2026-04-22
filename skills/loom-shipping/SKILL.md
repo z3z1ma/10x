@@ -67,7 +67,16 @@ Shipping may summarize and package. Acceptance owns closure.
 
 ## Read In This Order
 
-1. `skills/loom-records/SKILL.md`
-2. `skills/loom-tickets/SKILL.md`
-3. `skills/loom-critique/SKILL.md`
-4. `skills/loom-wiki/SKILL.md`
+Read immediately for shipping/package work:
+
+1. `skills/loom-tickets/SKILL.md` when reading ticket state, acceptance, and
+   live execution truth.
+2. `skills/loom-records/SKILL.md` when checking evidence, links, external refs,
+   or claim coverage.
+
+Then read conditionally:
+
+3. `skills/loom-critique/SKILL.md` when unresolved risk or review disposition
+   affects packaging.
+4. `skills/loom-wiki/SKILL.md` when accepted explanation or release notes need
+   wiki-backed wording.

@@ -70,9 +70,19 @@ Follow:
 
 ## Read In This Order
 
-1. `skills/loom-records/templates/evidence.md`
-2. `skills/loom-research/SKILL.md`
-3. `skills/loom-specs/SKILL.md`
-4. `skills/loom-tickets/SKILL.md`
-5. `skills/loom-ralph/SKILL.md`
-6. `skills/loom-critique/SKILL.md`
+Read immediately for debugging work:
+
+1. `skills/loom-records/templates/evidence.md` when preserving reproduction,
+   red/green output, logs, screenshots, or other proof.
+
+Then read conditionally:
+
+2. `skills/loom-research/SKILL.md` when root cause is unknown or rejected
+   hypotheses should remain citable.
+3. `skills/loom-specs/SKILL.md` when intended behavior is ambiguous.
+4. `skills/loom-tickets/SKILL.md` when creating or tightening the bounded fix
+   ticket.
+5. `skills/loom-ralph/SKILL.md` when the fix is ready for a packetized
+   implementation iteration.
+6. `skills/loom-critique/SKILL.md` when the fix or incident carries review
+   risk.

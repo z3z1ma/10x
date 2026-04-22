@@ -51,5 +51,9 @@ A strong spec answers:
 
 ## Read In This Order
 
-1. `references/spec-shape.md`
-2. `templates/spec.md`
+Read immediately for normal spec creation or review:
+
+1. `references/spec-shape.md` when deciding what belongs in requirements,
+   scenarios, constraints, and acceptance.
+2. `templates/spec.md` only when creating or substantially reshaping a spec
+   record.

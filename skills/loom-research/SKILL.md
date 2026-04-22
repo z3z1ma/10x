@@ -57,6 +57,11 @@ A strong research note answers:
 
 ## Read In This Order
 
-1. `references/research-shape.md`
-2. `references/source-handling.md`
-3. `templates/research.md`
+Read immediately for normal research creation or review:
+
+1. `references/research-shape.md` when structuring investigation, rejected
+   options, null results, conclusions, or recommendations.
+2. `references/source-handling.md` when external sources, current facts, or
+   source quality matter.
+3. `templates/research.md` only when creating or substantially reshaping a
+   research record.

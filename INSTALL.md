@@ -27,6 +27,9 @@ This repository does not currently ship aggregate `RULES.md` or `SKILLS.md`
 files. Harnesses may generate such aggregates locally, but the source of truth
 is the ordered `rules/` directory and the skill directories themselves.
 
+`optional-utilities/` is not part of the default protocol install. Those skills
+may be copied manually when a local workspace wants them.
+
 ### On demand
 
 When a task clearly belongs to one subsystem, hydrate:
@@ -151,8 +154,8 @@ make install harness=all
 make uninstall harness=opencode
 ```
 
-The Makefile copies only top-level `rules/`, `skills/`, and optional
-`commands/`.
+The Makefile copies only top-level `rules/`, protocol `skills/`, and optional
+`commands/`. It does not install `optional-utilities/`.
 
 It does not install dogfooding `.loom/` records or `.opencode/` consumption
 state.

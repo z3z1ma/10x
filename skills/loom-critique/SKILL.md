@@ -99,7 +99,18 @@ The reviewer should use the packet and the diff as the main review surface.
 
 ## Read In This Order
 
-1. `references/critique-lens.md`
-2. `references/finding-format.md`
-3. `templates/critique.md`
-4. `templates/critique-packet.md`
+Read immediately for any substantive critique:
+
+1. `references/critique-lens.md` when choosing review profiles or deciding what
+   evidence the target type needs.
+2. `references/review-pass-splitting.md` when the review may need multiple
+   passes or when deciding direct artifact critique vs packetized
+   implementation review.
+
+Then read conditionally:
+
+3. `references/finding-format.md` before writing durable findings or tracking
+   finding dispositions.
+4. `templates/critique.md` when creating a critique record.
+5. `templates/critique-packet.md` only for packetized implementation/code
+   review or high-risk fresh-context artifact review.

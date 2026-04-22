@@ -47,6 +47,8 @@ Everything a user receives lives here:
   wants to ship them
 - `examples/` -- protocol traces and eval fixtures; useful for review, but not
   a truth owner
+- `optional-utilities/` -- local utility skills excluded from the default
+  protocol install
 
 **Isolation rule**: content inside `rules/`, `skills/`, and any optional
 `commands/` files must stay self-contained, use generic `.loom/...` runtime
@@ -117,6 +119,8 @@ If a change touches multiple surfaces, verify:
 - Ralph is Loom's transaction protocol for bounded worker mutations
 - skills own behavior through `SKILL.md`, references, and templates rather than
   shipped scripts
+- commands are optional invocation adapters; deleting them must not remove a
+  Loom capability
 - tickets are the sole live execution ledger
 - packets are bounded execution contracts
 - wiki is the persistent explanation layer

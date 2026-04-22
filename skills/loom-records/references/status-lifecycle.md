@@ -52,3 +52,18 @@ body section.
 
 When setting `status: stale`, say what is stale and what evidence supports that
 claim.
+
+## Packet Transitions
+
+Use packet statuses as operational state, not as archival decoration:
+
+- `compiled -> consumed`: child output returned and parent merge notes were
+  written
+- `compiled -> superseded`: governing records, source fingerprint, scope, or
+  child write scope changed before launch
+- `compiled -> abandoned`: packet will not be launched and no successor is
+  intended
+- `consumed -> superseded`: a later packet or owner correction invalidated the
+  result
+
+After reconciliation, parent should update packet status away from `compiled`.

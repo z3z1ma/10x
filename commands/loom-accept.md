@@ -39,41 +39,17 @@ Hydrate only what you need from:
 - close only when the durable story is truthful
 - otherwise leave a precise and actionable non-closure state
 
-## Procedure
+## Canonical Procedure
 
-1. **Anchor the ticket.**
-   - Prefer a ticket ID.
-   - If `$ARGUMENTS` is broader prose, find the owning ticket or change target first.
+Use `skills/loom-tickets/references/acceptance-gate.md` as the procedure.
 
-2. **Read the acceptance chain.**
-   - Ticket
-   - linked spec, if any
-   - linked research or evidence, if any
-   - linked critique records
-   - linked wiki pages or wiki disposition
-   - any recent Ralph packet outcomes that matter
+In short:
 
-3. **Test the closure claim.**
-   - Are the acceptance criteria actually met?
-   - If the ticket names coverage IDs, does evidence support each relevant
-     `ACC-*` or `CLAIM-*` target?
-   - Is the evidence real and sufficient?
-   - Were required critique steps completed or truthfully deferred?
-   - Were required wiki or knowledge-promotion steps completed or truthfully deferred?
-   - Are there unresolved medium or high-severity critique findings?
-
-4. **Choose the honest outcome.**
-   - `closed` only when the durable story is complete and coherent.
-   - `complete_pending_acceptance` if the work is substantively done but the remaining acceptance step is real.
-   - `review_required` if critique is still the next governed move.
-   - `active` or `blocked` if the work is not actually done.
-   - Create follow-up tickets when residual work is substantial.
-   - If graph drift (broken references, owner-layer conflicts, dangling follow-up) is blocking an honest closure, route to `/loom-repair` before deciding.
-
-5. **Update the record.**
-   - Record the decision in the ticket journal.
-   - Update status and links truthfully.
-   - If closure changes a plan or wiki page materially, note the needed reconciliation.
+1. anchor the ticket
+2. read the acceptance chain
+3. test evidence, coverage, critique, and wiki disposition
+4. choose the honest ticket state
+5. record the decision in the ticket journal
 
 ## Native tools to prefer
 

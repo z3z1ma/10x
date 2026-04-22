@@ -28,7 +28,30 @@ List files, outputs, screenshots, logs, commands, or observations that matter.
 
 List stable claim or acceptance IDs this evidence supports.
 
-- ACC-000
+- spec:<slug>#ACC-000
+
+# Challenges Claims
+
+List stable claim or acceptance IDs this evidence weakens or falsifies.
+
+- spec:<slug>#ACC-000
+
+# Environment
+
+Commit:
+Branch:
+Runtime:
+OS:
+Relevant config:
+
+# Validity
+
+Valid for:
+Recheck when:
+
+# Limitations
+
+What this evidence does not prove.
 
 # Result
 

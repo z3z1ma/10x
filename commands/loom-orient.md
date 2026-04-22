@@ -30,51 +30,19 @@ Hydrate only what you need from:
 - recover the most relevant owner chain for `$ARGUMENTS`
 - decide whether the next move is outer-loop work, Ralph execution, critique, wiki work, or acceptance
 
-## Procedure
+## Canonical Procedure
 
-1. **Confirm the root.**
-   - Use the repository root if one exists.
-   - If `$ARGUMENTS` points at a path, resolve which repository owns that path.
-   - If ownership is ambiguous, stop and surface the ambiguity.
+Use `skills/loom-workspace/SKILL.md` and
+`skills/loom-workspace/references/routing.md` as the procedure.
 
-2. **Inspect Loom structure.**
-   - Check for `.loom/` and the canonical directories:
-     `constitution`, `initiatives`, `research`, `specs`, `plans`, `tickets`, `critique`, `wiki`, `packets`, `evidence`.
-   - If Loom is clearly absent, say so.
-   - If the operator's intent is to bootstrap Loom, propose or create the minimal tree and `constitution:main`.
-   - Otherwise do not invent a parallel workflow.
+In short:
 
-3. **Read the constitutional frame.**
-   - Read `constitution:main` first if it exists.
-   - Capture the project's durable identity, constraints, and any principles that affect the target.
-
-4. **Find the relevant chain.**
-   - Search filenames and record IDs related to `$ARGUMENTS`.
-   - Prefer the governing chain in this order:
-     `constitution -> initiative -> research/spec -> plan -> ticket -> critique/wiki`
-   - Read only as deep as needed to route correctly.
-
-5. **Assess current execution state.**
-   - Look for relevant tickets in `ready`, `active`, `blocked`, `review_required`, or `complete_pending_acceptance`.
-   - Notice if a critique, wiki page, or evidence record already exists for the target.
-
-6. **Route explicitly.**
-   - If the request is still exploratory, route to `/loom-brainstorm`.
-   - If the request is a bounded experiment, route to `/loom-spike`.
-   - If the request is UI/product variant exploration, route to `/loom-sketch`.
-   - If the request is bug or incident investigation, route to `/loom-debug`.
-   - If the request is codebase orientation, route to `/loom-map`.
-   - If scope is still fuzzy, route to `/loom-plan`.
-   - If evidence is missing, route to `/loom-research`.
-   - If behavior is missing, route to `/loom-spec`.
-   - If a citable choice should be recorded, route to `/loom-decide`.
-   - If a ready or active ticket already owns the work, route to `/loom-work`.
-   - If implementation needs adversarial review, route to `/loom-review`.
-   - If the main need is accepted explanation, route to `/loom-wiki`.
-   - If graph drift is blocking honest work, route to `/loom-repair`.
-   - If closure is the question, route to `/loom-accept`.
-   - If packaging for PR/release/handoff is the question, route to `/loom-ship`.
-   - If recent work should be assimilated into owner layers, route to `/loom-retrospective`.
+1. confirm root and scope
+2. inspect Loom structure
+3. read `constitution:main`
+4. find the relevant owner chain
+5. assess execution state
+6. route explicitly
 
 ## Native tools to prefer
 

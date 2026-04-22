@@ -28,12 +28,24 @@ Overall judgment.
 
 # Findings
 
-List concrete findings with severity and confidence.
+List concrete findings with stable finding IDs.
+
+## FIND-001: Short finding title
+
+Severity: low | medium | high
+Confidence: low | medium | high
+Disposition: open | resolved | accepted_risk | superseded
+
+Observation:
+
+Why it matters:
+
+Follow-up:
 
 For claim-specific findings, include:
 
 Challenges:
-- ACC-000
+- spec:<slug>#ACC-000
 
 # Evidence Reviewed
 

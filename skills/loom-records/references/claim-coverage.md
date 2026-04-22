@@ -17,6 +17,19 @@ Use local IDs inside a spec or closely related record:
 Keep IDs stable after downstream records refer to them. If a claim is split,
 mark the old ID as superseded in prose and introduce new IDs.
 
+## Cross-Record References
+
+Local IDs are not globally unique. When one record refers to a claim in another
+record, qualify the ID with the owning record ID:
+
+```text
+spec:acceptance-hardening#ACC-001
+research:packet-safety#CLAIM-002
+```
+
+Use unqualified IDs only inside the owning record or in a tightly local section
+where the owner is unmistakable.
+
 ## Spec Shape
 
 Specs should give important requirements and acceptance units IDs:
@@ -41,8 +54,8 @@ Tickets that implement or verify a spec should name covered acceptance IDs:
 # Coverage
 
 Covers:
-- ACC-001
-- ACC-002
+- spec:acceptance-hardening#ACC-001
+- spec:acceptance-hardening#ACC-002
 ```
 
 ## Packet Shape
@@ -52,7 +65,7 @@ Packets should declare the verification targets for the bounded iteration:
 ```md
 # Verification Targets
 
-- ACC-001
+- spec:acceptance-hardening#ACC-001
 ```
 
 ## Evidence Shape
@@ -62,8 +75,8 @@ Evidence should name claims it supports:
 ```md
 # Supports Claims
 
-- ACC-001
-- ACC-002
+- spec:acceptance-hardening#ACC-001
+- spec:acceptance-hardening#ACC-002
 ```
 
 ## Critique Shape
@@ -72,13 +85,13 @@ Critique findings should name claims they challenge when applicable:
 
 ```md
 Challenges:
-- ACC-002
+- spec:acceptance-hardening#ACC-002
 ```
 
 ## Useful Queries
 
 ```bash
-rg -n 'ACC-002' .loom
+rg -n 'spec:acceptance-hardening#ACC-002' .loom
 rg -n '^# Supports Claims|^Supports:' .loom/evidence
 rg -n '^Challenges:' .loom/critique
 rg -n '^# Coverage|^Covers:' .loom/tickets

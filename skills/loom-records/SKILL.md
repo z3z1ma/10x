@@ -30,6 +30,9 @@ It is the place to consult when you need to know:
 - evidence record shape
 - reference reconciliation discipline
 - cross-record validation recipes
+- repair and drift taxonomy
+- protocol conformance checklist
+- protocol versioning and migration guidance
 
 ## The Core Principle
 
@@ -83,10 +86,27 @@ Prefer records that are:
 
 ## Read In This Order
 
-1. `references/frontmatter.md`
-2. `references/status-lifecycle.md`
-3. `references/claim-coverage.md`
-4. `references/naming-and-ids.md`
-5. `references/query-and-linking.md`
-6. `references/validation.md`
-7. `templates/evidence.md` when proof artifacts are needed
+Read immediately for any non-trivial record creation or repair:
+
+1. `references/frontmatter.md` when creating or repairing record metadata.
+2. `references/naming-and-ids.md` when choosing IDs, filenames, or reference
+   shapes.
+
+Then read conditionally:
+
+3. `references/status-lifecycle.md` when setting or auditing non-ticket
+   statuses.
+4. `references/claim-coverage.md` when requirements, acceptance, evidence, or
+   critique need traceable claim IDs.
+5. `references/query-and-linking.md` when searching graph edges or reconciling
+   references.
+6. `references/validation.md` when checking structural record health.
+7. `references/repair-and-drift.md` when graph drift needs classification or
+   safe repair.
+8. `references/conformance.md` when judging whether a workspace or patch still
+   matches the protocol.
+9. `references/protocol-versioning.md` when changing grammar or migrating old
+   records.
+10. `references/retrospective.md` when assimilating durable learning into owner
+   layers.
+11. `templates/evidence.md` only when creating a proof artifact.

@@ -45,53 +45,19 @@ Hydrate only what you need from:
 - reconcile each iteration back into ticket truth
 - stop at the right status instead of forcing closure
 
-## Procedure
+## Canonical Procedure
 
-1. **Anchor to the ticket.**
-   - If `$ARGUMENTS` is a ticket ID, open that ticket.
-   - If `$ARGUMENTS` is prose, locate the owning ready or active ticket first.
-   - If no honest ticket exists, route to `/loom-ticket` or `/loom-plan` before implementation.
+Use `skills/loom-ralph/references/work-driver.md` and
+`skills/loom-ralph/SKILL.md` as the procedure.
 
-2. **Read the governing chain.**
-   - Read the linked plan, spec, research, and initiative only as much as needed.
-   - Confirm scope, non-goals, acceptance criteria, and evidence expectations.
+In short:
 
-3. **Check readiness.**
-   - If the ticket is not ready, do not force Ralph.
-   - Fix the ticket or route back outward if scope, evidence, or behavior is missing.
-
-4. **Set truthful execution state.**
-   - Move the ticket to `active` if work is genuinely starting.
-   - Add a concise journal note if that helps later reconciliation.
-
-5. **Compile the Ralph packet.**
-   - Create or update a packet under `.loom/packets/ralph/`.
-   - Include mission, bound context, source snapshot, task, stop conditions, and output contract.
-   - Keep write scope explicit.
-   - Default to `reference-first` unless there is a real reason not to.
-
-6. **Run the iteration.**
-   - Use a harness-native subagent, headless invocation, manual fresh-context handoff, or another documented transport.
-   - If the environment supports isolated worktrees or branches and that improves safety, use them.
-   - The transport is flexible; the packet contract is not.
-
-7. **Reconcile the child output.**
-   - Check scope discipline.
-   - Check write-boundary discipline.
-   - Record files changed, records changed, evidence gathered, blockers, and risks.
-   - Update the ticket journal and status truthfully.
-
-8. **Decide whether to continue.**
-   - Continue with another Ralph iteration only if the next step is still bounded and owned.
-   - Route outward if missing evidence or missing behavior contract emerged.
-   - Route to critique if implementation is ready for adversarial review.
-   - Route to wiki if the change already created accepted explanation that should persist.
-
-9. **Stop honestly.**
-   - `blocked` if a named blocker exists.
-   - `review_required` if critique is now the next governed move.
-   - `complete_pending_acceptance` if work and evidence are largely complete but formal acceptance remains.
-   - Do not mark `closed` from this command.
+1. anchor to one ticket
+2. confirm readiness
+3. compile a bounded Ralph packet
+4. run one bounded iteration
+5. reconcile as parent
+6. route to the next owner
 
 ## Native tools to prefer
 

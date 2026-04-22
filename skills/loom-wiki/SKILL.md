@@ -79,9 +79,19 @@ You can add more page types if the project genuinely needs them.
 
 ## Read In This Order
 
-1. `references/wiki-philosophy.md`
-2. `references/page-types.md`
-3. `references/maintenance.md`
-4. `templates/index.md`
-5. the page template you need
-6. `templates/wiki-packet.md` when a fresh synthesis pass is warranted
+Read immediately before creating or substantially changing wiki pages:
+
+1. `references/wiki-philosophy.md` when deciding whether understanding belongs
+   in wiki or another owner layer.
+2. `references/page-types.md` when choosing concept, workflow, reference, or
+   atlas shape.
+
+Then read conditionally:
+
+3. `references/maintenance.md` when updating, staling, or superseding existing
+   pages.
+4. `references/wiki-audit.md` when auditing pages for staleness, duplication,
+   broken sources, or misplaced authority.
+5. `templates/index.md` only when creating or refreshing a wiki index.
+6. The relevant page template only when writing that page type.
+7. `templates/wiki-packet.md` only when a fresh synthesis pass is warranted.

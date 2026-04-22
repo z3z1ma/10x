@@ -36,7 +36,7 @@ parallel or must be staged.
 Parallel work is allowed only when:
 
 - ticket `depends_on` relationships do not conflict
-- expected packet `write_scope` values do not overlap
+- expected packet `child_write_scope` values do not overlap
 - there is no shared generated file, migration, lockfile, or stateful resource
   contention
 

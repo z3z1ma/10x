@@ -17,6 +17,10 @@
 
 Use when the ticket is clear enough to begin.
 
+### `proposed`
+
+Use when the ticket exists but readiness has not been earned yet.
+
 ### `active`
 
 Use when the bounded execution is underway.
@@ -36,6 +40,10 @@ Use when the work and evidence are mostly complete but final acceptance or final
 ### `closed`
 
 Use only when the story is truthful and complete.
+
+### `cancelled`
+
+Use when the work should not proceed and the cancellation reason is recorded.
 
 ## Anti-pattern
 

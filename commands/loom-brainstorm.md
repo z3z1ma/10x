@@ -36,42 +36,18 @@ Hydrate only what you need from:
 - ask before proposing and capture ambiguity before drafting
 - exit to the correct next owner without creating initiatives, specs, plans, or tickets
 
-## Procedure
+## Canonical Procedure
 
-1. **Orient without committing.**
-   - Confirm the workspace root and `.loom/` structure if not already known.
-   - Read `constitution:main` and skim decisions and roadmap.
-   - Skim the wiki index and any prior research adjacent to `$ARGUMENTS`.
-   - Do not create records yet.
+Use `skills/loom-plans/references/problem-shaping.md` as the procedure.
 
-2. **Restate the request.**
-   - Write back what the operator is asking, in one or two sentences.
-   - Name what is not yet clear.
+In short:
 
-3. **Ask clarifying questions.**
-   - What outcome would make this feel clearly solved?
-   - Who is this for, and what do they currently do instead?
-   - What existing Loom work does this touch?
-   - What constraints or principles should bind the answer?
-   - What is explicitly out of scope?
-   - Prefer a small number of sharp questions over a long list.
-
-4. **Check precedent and conflict.**
-   - Does an existing decision record already address this?
-   - Does the constitution constrain it?
-   - Is there a wiki page that would reduce re-derivation?
-   - Is there prior research, including rejected options and null results, that the new work should inherit?
-   - Surface conflicts explicitly; do not silently route around them.
-
-5. **Surface assumptions.**
-   - List the assumptions the current understanding rests on.
-   - Mark each as accepted, to-be-confirmed, or contested.
-
-6. **Exit to the correct next owner.**
-   - `/loom-plan` when the problem is legible enough for planning.
-   - A deferred-questions research record (`status: deferred_questions`) when the request is still too fuzzy to plan but the questions should be preserved.
-   - Cited precedent (constitution, wiki, existing research) when the question is already answered and the right move is to cite it.
-   - `/loom-decide` when brainstorming produced a clear citable choice that should be recorded as an architectural decision before planning proceeds.
+1. orient without committing
+2. restate the request
+3. ask only the sharp clarifying questions needed
+4. check precedent and conflict
+5. surface assumptions
+6. route to the correct owner
 
 ## Native tools to prefer
 

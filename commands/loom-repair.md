@@ -39,18 +39,6 @@ Hydrate only what you need from:
 
 Narrow scans are preferred for routine hygiene. Whole-workspace scans are for periodic passes.
 
-## Drift classes
-
-1. **Broken references.** Typed IDs that no longer resolve to an existing record.
-2. **Stale supersessions.** Records marked superseded whose forward link is missing, or successors that do not acknowledge the predecessor.
-3. **Status-vs-journal mismatches.** `active` tickets with no recent journal activity; `blocked` tickets with no named blocker; `complete_pending_acceptance` without evidence or critique disposition.
-4. **Orphan packets.** Packets whose target ticket is closed or deleted, or packets in `compiled` state without a corresponding child output after a long gap.
-5. **Owner-layer conflicts.** A plan carrying live execution state. A wiki page carrying behavior-contract authority. Memory carrying canonical facts. A ticket redefining policy.
-6. **Structural record failures.** Missing frontmatter fields, filename-vs-ID mismatches, malformed typed IDs.
-7. **Dangling follow-up.** Critique findings that required follow-up with no corresponding ticket; tickets referencing deferred critique that never happened.
-8. **Lifecycle drift.** Non-ticket records using statuses outside the shared lifecycle grammar.
-9. **Coverage drift.** Tickets, packets, evidence, or critique records naming claim IDs that no longer resolve to the intended spec or claim.
-
 ## Goals
 
 - classify drift per class with inspectable evidence
@@ -58,38 +46,18 @@ Narrow scans are preferred for routine hygiene. Whole-workspace scans are for pe
 - route everything else to the right owner skill
 - leave the repair trail visible, not silent
 
-## Procedure
+## Canonical Procedure
 
-1. **Walk the scope.**
-   - `find .loom -type f -name '*.md' | sort`
-   - `rg -n '^(id|kind|status|links|target):' .loom --glob '*.md'`
-   - `rg -n 'REQ-[0-9]{3}|ACC-[0-9]{3}|CLAIM-[0-9]{3}' .loom --glob '*.md'`
+Use `skills/loom-records/references/repair-and-drift.md` as the procedure.
 
-2. **Collect findings per class.**
-   - Keep evidence with each finding: the file path, the line, and what made you classify it.
+In short:
 
-3. **Classify repair risk.**
-   - **Safe**: broken reference with an obvious rename target, superseded-link repair, filename-vs-ID typo, dead reference in a clearly retired record.
-   - **Route**: anything that changes owner-layer truth, reopens a closed ticket, amends constitution, rewrites a wiki page, or invalidates a critique verdict.
-
-4. **Apply safe repairs one batch at a time.**
-   - Write them out, verify with a second pass (`rg` the fixed refs, read the changed records).
-   - Do not bundle unrelated repairs into one opaque edit.
-
-5. **Route everything else.**
-   - Owner-layer conflicts → `/loom-spec`, `/loom-decide`, `/loom-wiki`, or `/loom-ticket`, usually disciplined by `/loom-plan`.
-   - Status-vs-journal mismatches → `/loom-ticket` or `/loom-accept`.
-   - Orphan packets → `/loom-work` to close out, or mark the packet superseded.
-   - Lifecycle drift → owner skill for that record kind, or `/loom-records`
-     when the status vocabulary itself is unclear.
-   - Coverage drift → `/loom-spec`, `/loom-ticket`, or `/loom-accept`
-     depending on which owner is wrong.
-   - Constitutional contradictions → `/loom-decide` to amend or supersede precedent explicitly.
-   - Dangling critique follow-up → `/loom-ticket` to create the follow-up.
-
-6. **Leave the repair trail.**
-   - Note what was fixed, what was routed, and what remains open.
-   - If a repair was non-trivial, consider `/loom-review` on the result.
+1. walk the requested scope
+2. classify drift with evidence
+3. separate safe repairs from owner-layer changes
+4. apply safe repairs in small verified batches
+5. route semantic repairs to the owning skill
+6. leave the repair trail visible
 
 ## Native tools to prefer
 
@@ -98,7 +66,7 @@ Narrow scans are preferred for routine hygiene. Whole-workspace scans are for pe
 - `rg -n '<kind>:<id>' .loom --glob '*.md'`
 - `rg -n '^status:' .loom/tickets --glob '*.md'`
 - `rg -n '^status:' .loom/{constitution,initiatives,research,specs,plans,critique,wiki,evidence,packets} --glob '*.md'`
-- `rg -n 'REQ-[0-9]{3}|ACC-[0-9]{3}|CLAIM-[0-9]{3}' .loom --glob '*.md'`
+- `rg -n '[a-z]+:[a-z0-9-]+#(REQ|ACC|CLAIM)-[0-9]{3}' .loom --glob '*.md'`
 - `git log --oneline -- .loom/ | head -20`
 - `git diff --stat`
 

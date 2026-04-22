@@ -2,6 +2,9 @@
 
 A ticket is ready when a fresh worker would not need chat history to start.
 
+New tickets should normally start as `proposed`. Promote to `ready` only after
+this checklist passes.
+
 ## Checklist
 
 - the problem is clearly named

@@ -3,7 +3,7 @@ id: constitution:main
 kind: constitution
 status: active
 created_at: 2026-03-31T12:00:00Z
-updated_at: 2026-04-22T06:39:03Z
+updated_at: 2026-04-22T08:50:46Z
 scope:
   kind: workspace
 links: {}
@@ -125,7 +125,7 @@ primitives sharper without making the system heavier in spirit:
 - debug, spike, sketch, ship, and retrospective prevention workflows should be
   routes through existing owners
 - execution waves should derive from `depends_on` and non-overlapping
-  `write_scope`
+  child write scopes
 - external reference provenance should let GitHub, Jira, Linear, and similar
   systems mirror Loom without owning Loom truth
 - golden examples should make the protocol evaluable across harnesses
@@ -143,6 +143,12 @@ only inferable from helper code, wrapper conventions, or external work systems.
 - prove the new lifecycle, claim coverage, packet freshness, execution wave,
   critique profile, external reference, map, debug, spike, sketch, ship, and
   retrospective-prevention guidance through real workflows
+- keep the protocol kernel distinct from workflow packs, harness adapters, and
+  optional utilities
+- keep command wrappers thin enough that deleting them does not remove a Loom
+  capability
+- harden transaction boundaries: child write scope, parent merge scope,
+  packet lifecycle, evidence validity, and critique finding disposition
 - deepen durable examples across initiatives, research, specs, plans, tickets,
   critique, wiki, packets, and evidence so the protocol is shown, not only
   stated
@@ -208,3 +214,7 @@ coherent operating manual.
   coverage, packet freshness, execution waves, critique profiles, external
   references, map/debug/spike/sketch/ship workflows, retrospective prevention,
   examples, and singular `.loom/memory`
+- 2026-04-22: hardened the protocol/kernel boundary by moving command-owned
+  procedures into skill references, quarantining optional utility skills, and
+  tightening ticket, claim, packet, critique, evidence, conformance, and
+  versioning guidance

@@ -24,6 +24,7 @@ If execution truth changed, the ticket should absorb it.
 - dependencies
 - evidence / critique / wiki disposition
 - journal updates
+- acceptance gate behavior
 
 ## Use This Skill When
 
@@ -82,8 +83,17 @@ Then replace the placeholders in the copied file.
 
 ## Read In This Order
 
-1. `references/state-machine.md`
-2. `references/dependencies.md`
-3. `references/readiness.md`
-4. `skills/loom-records/references/claim-coverage.md`
-5. `templates/ticket.md`
+Read immediately for ticket creation or status updates:
+
+1. `references/state-machine.md` when setting, auditing, or explaining ticket
+   status.
+2. `references/readiness.md` when deciding whether a ticket can become `ready`.
+
+Then read conditionally:
+
+3. `references/dependencies.md` when modeling hard prerequisites or softer
+   links.
+4. `skills/loom-records/references/claim-coverage.md` when tying the ticket to
+   spec acceptance or critique findings.
+5. `references/acceptance-gate.md` when deciding whether closure is honest.
+6. `templates/ticket.md` only when creating a ticket.

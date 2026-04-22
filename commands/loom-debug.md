@@ -44,17 +44,18 @@ Hydrate only what you need from:
 - prove the fix with evidence
 - route prevention into retrospective when warranted
 
-## Procedure
+## Canonical Procedure
 
-1. Capture reproduction steps or observed failure as evidence.
-2. Localize the likely cause with repository inspection and targeted checks.
-3. Create or update research if the cause is uncertain.
-4. Update or create a spec if intended behavior is ambiguous.
-5. Create or tighten one bounded fix ticket.
-6. Compile a Ralph packet, usually `test-first`.
-7. Preserve red and green evidence.
-8. Route to critique if risk warrants.
-9. Recommend retrospective when the bug reveals a repeatable pitfall.
+Use `skills/loom-debugging/SKILL.md` as the procedure.
+
+In short:
+
+1. reproduce
+2. localize
+3. explain root cause or preserve uncertainty
+4. create or tighten the fix ticket
+5. prove before and after behavior
+6. route to critique and retrospective when warranted
 
 ## Guardrails
 

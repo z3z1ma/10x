@@ -145,6 +145,14 @@ Any of these are acceptable if the packet contract is preserved:
 
 The protocol cares about the contract, not the transport.
 
+## Command Surface Canonicality
+
+Slash commands, prompt wrappers, and harness adapters are invocation
+conveniences.
+
+Deleting a command surface should not delete a Loom capability. Durable
+behavior belongs in rules, skills, references, templates, and canonical records.
+
 ## When Shell Gets Awkward
 
 Use inline Python for things like:

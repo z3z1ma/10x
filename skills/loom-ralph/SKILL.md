@@ -92,9 +92,21 @@ See `references/verification-posture.md` for details.
 
 ## Read In This Order
 
-1. `references/packet-contract.md`
-2. `references/packet-styles.md`
-3. `references/verification-posture.md`
-4. `references/parent-child-handshake.md`
-5. `references/harness-invocation.md`
-6. `templates/ralph-packet.md`
+Read immediately before compiling or launching a Ralph packet:
+
+1. `references/work-driver.md` when driving a ticket through execution and
+   parent reconciliation.
+2. `references/packet-contract.md` when compiling or reviewing the packet's
+   required fields and boundaries.
+
+Then read conditionally:
+
+3. `references/packet-styles.md` when choosing reference-first,
+   snapshot-first, or hermetic packet posture.
+4. `references/verification-posture.md` when deciding test-first,
+   observation-first, or verification-neutral execution.
+5. `references/parent-child-handshake.md` when launching or reconciling a child
+   worker, especially parallel Ralph.
+6. `references/harness-invocation.md` only when transport mechanics need to be
+   documented or chosen.
+7. `templates/ralph-packet.md` only when creating the packet.

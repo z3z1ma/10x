@@ -10,7 +10,7 @@ Most canonical Loom records should carry these fields:
 ---
 id: ticket:abcd1234
 kind: ticket
-status: ready
+status: proposed
 created_at: 2026-04-17T00:00:00Z
 updated_at: 2026-04-17T00:00:00Z
 scope:
@@ -36,8 +36,9 @@ links:
 Some kinds add more:
 
 - tickets add `depends_on`
-- packets add `target`, `mode`, `style`, `write_scope`, `sources`,
-  `source_fingerprint`, and `context_budget`
+- packets add `target`, `mode`, `style`, `child_write_scope`,
+  `parent_merge_scope`, `sources`, `source_fingerprint`,
+  `execution_context`, and `context_budget`
 - wiki pages may add `page_type`
 - critique records may add `review_target`
 

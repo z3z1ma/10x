@@ -80,8 +80,18 @@ Useful starting queries:
 
 ## Read In This Order
 
-1. `references/record-families.md`
-2. `references/writing-standard.md`
-3. `templates/constitution.md`
-4. `templates/decision.md`
-5. `templates/roadmap.md`
+Read immediately for constitutional changes:
+
+1. `references/record-families.md` when deciding whether the change belongs in
+   `constitution:main`, a decision record, or a roadmap.
+2. `references/writing-standard.md` before accepting durable policy language or
+   when the prose risks becoming vague philosophy.
+
+Then read conditionally:
+
+3. `templates/constitution.md` only when creating or reshaping
+   `constitution:main`.
+4. `templates/decision.md` only when recording a citable architectural or
+   policy choice with rejected alternatives.
+5. `templates/roadmap.md` only when durable strategic sequencing belongs above
+   plans.

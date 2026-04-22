@@ -12,15 +12,25 @@ scope:
   kind: repository
   repositories:
     - repo:root
-write_scope:
+child_write_scope:
   records:
     - wiki:<slug>
+  paths: []
+parent_merge_scope:
+  records:
+    - ticket:<token>
   paths: []
 source_fingerprint:
   git_commit: <sha or unknown>
   git_status_summary: <clean|dirty|unknown>
   compiled_from:
     - <record ref>
+execution_context:
+  branch: <name|unknown>
+  worktree: <path|none|unknown>
+  isolation: none
+  destructive_commands: forbidden
+  network: unknown
 context_budget:
   posture: normal
   max_source_files: 8

@@ -14,15 +14,25 @@ scope:
   kind: repository
   repositories:
     - repo:root
-write_scope:
+child_write_scope:
+  records: []
+  paths: []
+parent_merge_scope:
   records:
     - ticket:<token>
+    - evidence:<slug>
   paths: []
 source_fingerprint:
   git_commit: <sha or unknown>
   git_status_summary: <clean|dirty|unknown>
   compiled_from:
     - ticket:<token>
+execution_context:
+  branch: <name|unknown>
+  worktree: <path|none|unknown>
+  isolation: none
+  destructive_commands: forbidden
+  network: unknown
 context_budget:
   posture: normal
   max_source_files: 8
@@ -56,7 +66,7 @@ Curated excerpts, summaries, or directions to the important source records.
 
 Stable claim or acceptance IDs this iteration should satisfy or exercise.
 
-- ACC-000
+- spec:<slug>#ACC-000
 
 # Task For This Iteration
 
@@ -76,8 +86,8 @@ Expand here with specifics the child needs:
 
 When the child should stop, block, or escalate instead of widening scope.
 
-Stop if governing records or write-scope files appear materially newer than the
-source fingerprint.
+Stop if governing records or child-write-scope files appear materially newer
+than the source fingerprint.
 
 For `test-first`, stop conditions must include: a failing check exists before implementation, and the check is driven to green inside this iteration.
 
@@ -92,6 +102,7 @@ The child must return:
 - evidence gathered (including red-to-green transition for `test-first`, or before/after observations for `observation-first`)
 - blockers or risks
 - ticket recommendation
+  - The child recommends ticket changes; the parent commits ticket truth.
 
 # Working Notes
 

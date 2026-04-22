@@ -46,38 +46,20 @@ If the choice is a ticket-sized implementation preference with no durable conseq
 - state consequences and revisit conditions
 - reconcile downstream records that the decision affects
 
-## Procedure
+## Canonical Procedure
 
-1. **Check precedent.**
-   - Grep the constitution subsystem. If an existing decision record addresses this, cite it. If it partially addresses this, note what is new. If the new choice contradicts existing policy, amend or supersede explicitly instead of conflicting silently.
+Use `skills/loom-constitution/SKILL.md` and the decision template as the
+procedure.
 
-2. **Frame the choice.**
-   - State the question the decision answers in one or two sentences.
-   - If the question is still fuzzy, stop and route to `/loom-brainstorm`.
+In short:
 
-3. **Enumerate the options.**
-   - At least two. "Do nothing" is an option when the status quo is a real candidate.
-   - For each option: upside, downside, and the evidence that supports or rejects it.
-
-4. **Gather and cite evidence.**
-   - Link relevant research, prior critique, wiki pages, and tickets.
-   - If the evidence is thin, stop and route to `/loom-research` before committing.
-
-5. **Record rejected alternatives.**
-   - Each rejected option: one sentence naming what rejected it — an evidence gap, a constitutional constraint, a conflict with an accepted decision, a cost the project will not pay.
-   - A decision record that only documents the winner is half a record.
-
-6. **Write the decision record.**
-   - Use the decision template from `loom-constitution`.
-   - Store under `.loom/constitution/decisions/decision-<NNNN>-<slug>.md`.
-   - Number monotonically; `ls .loom/constitution/decisions/ | sort` reveals the next number.
-
-7. **State consequences and revisit conditions.**
-   - What downstream work does this bind?
-   - What would cause the project to revisit this decision?
-
-8. **Reconcile downstream records.**
-   - If plans, specs, wiki pages, or open tickets now contradict the decision, surface them and either update or explicitly defer.
+1. check constitutional precedent
+2. frame the choice
+3. enumerate options
+4. gather evidence
+5. record rejected alternatives
+6. write the decision record
+7. reconcile downstream records
 
 ## Native tools to prefer
 

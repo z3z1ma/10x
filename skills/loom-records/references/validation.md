@@ -52,7 +52,7 @@ Compare those values to `skills/loom-records/references/status-lifecycle.md`.
 ### Claim coverage spot check
 
 ```bash
-rg -n 'REQ-[0-9]{3}|ACC-[0-9]{3}|CLAIM-[0-9]{3}' .loom
+rg -n '[a-z]+:[a-z0-9-]+#(REQ|ACC|CLAIM)-[0-9]{3}' .loom
 ```
 
 For any important claim ID, search the ID directly and check that specs,

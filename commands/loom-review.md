@@ -41,6 +41,10 @@ Hydrate only what you need from:
 
 ## Choose packetized or direct review
 
+Use `skills/loom-critique/references/review-pass-splitting.md` and
+`skills/loom-critique/references/critique-lens.md` as the canonical procedure
+references.
+
 ### Direct artifact critique
 
 Use when the target is a Loom artifact being reviewed as an artifact: ticket

@@ -91,6 +91,7 @@ kind of truth.
 ├── Makefile
 ├── commands/         # optional harness-wrapper prompt files
 ├── examples/         # protocol traces, not truth owners
+├── optional-utilities/
 ├── rules/
 └── skills/
 ```
@@ -150,6 +151,19 @@ operator commands:
 
 Commands are convenience wrappers. They do not replace the rules, skills, or
 canonical records.
+
+## Product Tiers
+
+Loom is split by role:
+
+- **Protocol kernel**: rules, workspace, records, constitution, tickets, Ralph,
+  critique, wiki
+- **Dev pack**: initiatives, research, specs, plans, debugging, spikes,
+  codebase atlas, shipping
+- **Maintenance guidance**: status, repair, acceptance, validation, conformance
+- **Harness adapters**: optional command wrappers and installer translations
+- **Optional utilities**: local helper skills under `optional-utilities/`, not
+  installed as part of the default protocol surface
 
 ## Current Roadmap Direction
 

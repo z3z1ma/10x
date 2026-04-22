@@ -3,7 +3,7 @@ id: roadmap:bootstrap-the-markdown-first-protocol-corpus
 kind: roadmap
 status: active
 created_at: 2026-04-01T17:45:00Z
-updated_at: 2026-04-22T06:39:03Z
+updated_at: 2026-04-22T08:50:46Z
 scope:
   kind: workspace
 links:
@@ -47,12 +47,15 @@ Current shipped state at the time of this roadmap update:
   carrying references and templates
 - workflow skills now exist for codebase atlas, debugging, spikes/sketches, and
   shipping, all routed through existing owner layers
+- optional prose utilities are outside the default protocol skill set
 - no shipped `skills/*/scripts/*.py` files in the core Loom bundle
 - top-level docs now describe YAML frontmatter, template-first record creation,
   and a native-tool operating posture
 - shared record guidance now covers lifecycle statuses, claim coverage,
   external references, packet freshness, and context budgets
 - optional command wrappers cover map, debug, spike, sketch, and ship workflows
+- command-owned procedures are being promoted into skill references so commands
+  remain invocation adapters
 - optional harness-specific wrappers may still exist in-repo, but they are not
   part of the protocol core
 - examples now provide protocol traces for representative routes
@@ -157,6 +160,8 @@ The most important still-missing canonical depth is in:
   workflows
 - repair/status/accept command hardening against the new lifecycle and coverage
   grammar after real use
+- richer before/after fixture coverage across all examples
+- review and follow-up tickets from high-risk critique of the hardening pass
 
 # Status Summary
 
