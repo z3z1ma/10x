@@ -1,9 +1,9 @@
 ---
 id: ticket:lj6g3e1y
 kind: ticket
-status: proposed
+status: closed
 created_at: 2026-04-22T09:10:31Z
-updated_at: 2026-04-22T09:10:31Z
+updated_at: 2026-04-22T16:09:59Z
 scope:
   kind: repository
   repositories:
@@ -61,9 +61,9 @@ Required critique profiles:
 - operator-clarity
 
 Findings:
-- critique:protocol-hardening-review#FIND-001 — open
+- critique:protocol-hardening-review#FIND-001 — resolved
 
-Status: required
+Status: completed
 
 # Wiki Disposition
 
@@ -72,3 +72,5 @@ Not required unless the reconciliation changes operator-facing guidance.
 # Journal
 
 - 2026-04-22T09:10:31Z: Created from critique follow-up.
+- 2026-04-22T16:09:59Z: Confirmed legacy directories were empty and removed
+  them with `rmdir`. No record migration was needed.

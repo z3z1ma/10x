@@ -105,44 +105,21 @@ multiple fresh reviewers, launch the passes in parallel with a critique packet
 per pass. If not, run them sequentially as distinct fresh-context passes with
 narrow prompts. The transport is flexible; the pass boundaries are not.
 
-## Procedure
+## Canonical Procedure
 
-1. **Anchor the target.**
-   - Identify the code diff, branch, commit, ticket, spec, packet, wiki page, or other target being reviewed.
-   - If a ticket is the main owner, read it first.
+Use `skills/loom-critique/references/critique-lens.md`,
+`skills/loom-critique/references/review-pass-splitting.md`, and
+`skills/loom-critique/references/finding-format.md` as the procedure.
 
-2. **Classify the review shape.**
-   - Use direct artifact critique for Loom artifacts unless the review is broad, high risk, or needs fresh-context isolation.
-   - Use packetized implementation review for code or behavior changes.
+In short:
 
-3. **Gather the minimum governing context.**
-   - Read the linked plan, spec, evidence, and any recent packet outputs.
-   - Inspect the relevant changed files, tests, or artifact diffs.
-
-4. **Choose and compile packets when needed.**
-   - Decide the pass split.
-   - For packetized implementation review, compile one critique packet per pass under `.loom/packets/critique/`.
-   - For direct artifact critique, skip packets unless the review needs fresh-context isolation.
-
-5. **Review through the chosen lenses.**
-   - correctness and scope discipline
-   - code quality and maintainability for code targets
-   - evidence sufficiency
-   - hidden assumptions and failure modes
-   - maintenance burden
-   - the declared named profiles, such as `protocol-change`,
-     `code-change`, `test-coverage`, `api-contract`, `data-migration`,
-     `security`, `performance`, or `operator-clarity`
-
-6. **Write findings durably.**
-   - Each material finding: short title, severity, confidence, observation, why it matters, follow-up.
-   - For code findings, include file and line references when practical.
-   - Record a verdict and residual risks.
-
-7. **Reconcile review back into Loom.**
-   - Update the ticket status or journal if the critique changes what must happen next.
-   - Create follow-up tickets for substantial issues.
-   - Do not quietly "fix and forget" major findings.
+1. anchor the review target
+2. classify direct artifact critique vs packetized implementation review
+3. gather governing context and evidence
+4. choose pass split and profiles
+5. compile critique packets only when warranted
+6. write durable findings and verdict
+7. reconcile follow-up back into Loom
 
 ## Native tools to prefer
 

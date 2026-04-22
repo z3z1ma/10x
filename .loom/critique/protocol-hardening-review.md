@@ -3,7 +3,7 @@ id: critique:protocol-hardening-review
 kind: critique
 status: final
 created_at: 2026-04-22T09:10:31Z
-updated_at: 2026-04-22T09:10:31Z
+updated_at: 2026-04-22T16:09:59Z
 scope:
   kind: repository
   repositories:
@@ -38,7 +38,7 @@ split from this ticket's acceptance.
 
 Severity: medium
 Confidence: high
-Disposition: open
+Disposition: resolved
 
 Observation:
 
@@ -56,11 +56,16 @@ Follow-up:
 
 - ticket:lj6g3e1y
 
+Resolution:
+
+Removed the empty legacy directories from the working tree. No files required
+migration.
+
 ## FIND-002: Golden examples are only partially converted to fixtures
 
 Severity: low
 Confidence: high
-Disposition: open
+Disposition: resolved
 
 Observation:
 
@@ -75,6 +80,11 @@ broader protocol eval suite.
 Follow-up:
 
 - ticket:0od11m0z
+
+Resolution:
+
+Added fixture structure to all five examples: operator request, expected route,
+common wrong behavior, and before/after slices.
 
 # Evidence Reviewed
 
@@ -93,10 +103,9 @@ surfaces.
 
 # Required Follow-up
 
-- Reconcile legacy dogfood directories or explicitly retire/supersede them.
-- Expand golden examples into fixture form over time.
+None for this critique. Both findings are resolved.
 
 # Acceptance Recommendation
 
-Keep `ticket:vairivh8` in `review_required` until follow-up disposition is
-decided.
+Move `ticket:vairivh8` to `complete_pending_acceptance` if validation remains
+clean.

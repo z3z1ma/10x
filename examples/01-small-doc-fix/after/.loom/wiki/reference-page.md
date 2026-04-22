@@ -1,0 +1,19 @@
+---
+id: wiki:reference-page
+kind: wiki
+page_type: reference
+status: accepted
+created_at: 2026-04-22T00:00:00Z
+updated_at: 2026-04-22T00:00:00Z
+scope:
+  kind: repository
+  repositories:
+    - repo:root
+links:
+  wiki:
+    - wiki:workflow-reference
+---
+
+# Summary
+
+See `wiki:workflow-reference` for the current workflow.

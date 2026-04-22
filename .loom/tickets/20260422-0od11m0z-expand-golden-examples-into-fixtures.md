@@ -1,9 +1,9 @@
 ---
 id: ticket:0od11m0z
 kind: ticket
-status: proposed
+status: closed
 created_at: 2026-04-22T09:10:31Z
-updated_at: 2026-04-22T09:10:31Z
+updated_at: 2026-04-22T16:09:59Z
 scope:
   kind: repository
   repositories:
@@ -59,9 +59,9 @@ Required critique profiles:
 - operator-clarity
 
 Findings:
-- critique:protocol-hardening-review#FIND-002 — open
+- critique:protocol-hardening-review#FIND-002 — resolved
 
-Status: required
+Status: completed
 
 # Wiki Disposition
 
@@ -70,3 +70,6 @@ Not required.
 # Journal
 
 - 2026-04-22T09:10:31Z: Created from critique follow-up.
+- 2026-04-22T16:09:59Z: Added fixture structure for all five examples,
+  including operator request, expected route, common wrong behavior, and
+  before/after slices.

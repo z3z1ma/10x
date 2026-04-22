@@ -1,9 +1,9 @@
 ---
 id: ticket:vairivh8
 kind: ticket
-status: review_required
+status: complete_pending_acceptance
 created_at: 2026-04-22T07:07:00Z
-updated_at: 2026-04-22T08:42:44Z
+updated_at: 2026-04-22T16:09:59Z
 scope:
   kind: repository
   repositories:
@@ -130,10 +130,10 @@ Required critique profiles:
 - operator-clarity
 
 Findings:
-- critique:protocol-hardening-review#FIND-001 — open
-- critique:protocol-hardening-review#FIND-002 — open
+- critique:protocol-hardening-review#FIND-001 — resolved
+- critique:protocol-hardening-review#FIND-002 — resolved
 
-Status: required
+Status: completed
 
 # Wiki Disposition
 
@@ -170,3 +170,6 @@ None.
 - 2026-04-22T15:59:16Z: Reworked default skill `Read In This Order` sections
   to distinguish immediate baseline references from conditional references,
   preserving progressive disclosure with judgment instead of flat indexes.
+- 2026-04-22T16:09:59Z: Resolved both critique findings: removed empty legacy
+  dogfood directories and expanded every protocol example into fixture form.
+  Moved ticket to `complete_pending_acceptance` pending final human acceptance.
