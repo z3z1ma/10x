@@ -17,10 +17,10 @@ case "$action" in
 esac
 
 case "$harness" in
-  all|opencode|claude|codex|gemini) ;;
+  all|opencode|claude|codex|gemini|cursor) ;;
   *)
     printf 'Unsupported harness: %s\n' "$harness" >&2
-    printf 'Supported values: all, opencode, claude, codex, gemini\n' >&2
+    printf 'Supported values: all, opencode, claude, codex, gemini, cursor\n' >&2
     exit 1
     ;;
 esac
@@ -304,8 +304,128 @@ for path in sorted(src_dir.glob("*.md")):
             "",
         ])
         (dest_dir / f"{name}.toml").write_text(content)
+    elif mode == "cursor-command":
+        prompt = body.replace("`$ARGUMENTS`", "`<invocation request>`")
+        prompt = prompt.replace("$ARGUMENTS", "the invocation request")
+        content = "\n".join([
+            f"<!-- Loom-managed Cursor command generated from commands/{path.name}. -->",
+            "",
+            prompt.rstrip(),
+            "",
+        ])
+        (dest_dir / f"{name}.md").write_text(content)
     else:
         raise SystemExit(f"Unsupported adapter mode: {mode}")
+PY
+}
+
+cursor_user_rules_db_path() {
+  if [ -n "${CURSOR_STATE_DB:-}" ]; then
+    printf '%s\n' "$CURSOR_STATE_DB"
+    return 0
+  fi
+
+  case "$(uname -s)" in
+    Darwin)
+      printf '%s\n' "$home_dir/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
+      ;;
+    Linux)
+      printf '%s\n' "${XDG_CONFIG_HOME:-$home_dir/.config}/Cursor/User/globalStorage/state.vscdb"
+      ;;
+    *)
+      printf '%s\n' "$home_dir/.cursor/state.vscdb"
+      ;;
+  esac
+}
+
+write_cursor_user_rules_file() {
+  local rules_dir="$1"
+  local skills_dir="$2"
+  local commands_dir="$3"
+  local file_path="$4"
+  mkdir -p "$(dirname "$file_path")"
+  "$python_bin" - "$rules_dir" "$skills_dir" "$commands_dir" "$file_path" <<'PY'
+from pathlib import Path
+import sys
+
+rules_dir = Path(sys.argv[1]).expanduser()
+skills_dir = Path(sys.argv[2]).expanduser()
+commands_dir = Path(sys.argv[3]).expanduser()
+file_path = Path(sys.argv[4]).expanduser()
+
+begin = "<!-- BEGIN LOOM CURSOR USER RULES -->"
+end = "<!-- END LOOM CURSOR USER RULES -->"
+
+parts = [
+    begin,
+    "",
+    "## Loom Global Install (Cursor)",
+    "",
+    "This block is managed by the Loom bundle's `make install` target.",
+    "",
+    f"Rules directory: `{rules_dir}`.",
+    f"Skills directory: `{skills_dir}`.",
+    f"Command surface directory: `{commands_dir}`.",
+    "",
+    "Cursor loads this block from User Rules. Loom skills and commands remain in their native Cursor surfaces.",
+]
+
+for rule_path in sorted(rules_dir.glob("*.md")):
+    parts.extend(["", f"<!-- source: {rule_path.name} -->", "", rule_path.read_text().rstrip()])
+
+parts.extend(["", end, ""])
+file_path.write_text("\n".join(parts))
+PY
+}
+
+update_cursor_user_rules() {
+  local db_path="$1"
+  local rules_file="$2"
+  local mode="$3"
+  "$python_bin" - "$db_path" "$rules_file" "$mode" <<'PY'
+from pathlib import Path
+import re
+import shutil
+import sqlite3
+import sys
+import time
+
+db_path = Path(sys.argv[1]).expanduser()
+rules_file = Path(sys.argv[2]).expanduser()
+mode = sys.argv[3]
+
+key = "aicontext.personalContext"
+begin = "<!-- BEGIN LOOM CURSOR USER RULES -->"
+end = "<!-- END LOOM CURSOR USER RULES -->"
+pattern = re.compile(r"\n?" + re.escape(begin) + r".*?" + re.escape(end) + r"\n?", re.S)
+
+db_path.parent.mkdir(parents=True, exist_ok=True)
+if mode == "install" and db_path.exists():
+    backup = db_path.with_name(f"{db_path.name}.loom-backup-{int(time.time())}")
+    shutil.copy2(db_path, backup)
+
+with sqlite3.connect(db_path, timeout=10) as conn:
+    conn.execute("CREATE TABLE IF NOT EXISTS ItemTable (key TEXT UNIQUE ON CONFLICT REPLACE, value BLOB)")
+    row = conn.execute("SELECT value FROM ItemTable WHERE key = ?", (key,)).fetchone()
+    value = "" if row is None or row[0] is None else row[0]
+    if isinstance(value, bytes):
+        value = value.decode("utf-8", errors="replace")
+
+    if mode == "install":
+        block = rules_file.read_text().strip()
+        if pattern.search(value):
+            updated = pattern.sub("\n" + block + "\n", value, count=1).strip()
+        else:
+            updated = (value.rstrip() + "\n\n" + block).strip() if value.strip() else block
+        conn.execute("INSERT OR REPLACE INTO ItemTable(key, value) VALUES (?, ?)", (key, updated))
+    elif mode == "uninstall":
+        updated = pattern.sub("\n", value).strip()
+        if updated:
+            conn.execute("INSERT OR REPLACE INTO ItemTable(key, value) VALUES (?, ?)", (key, updated))
+        else:
+            conn.execute("DELETE FROM ItemTable WHERE key = ?", (key,))
+    else:
+        raise SystemExit(f"Unsupported Cursor User Rules mode: {mode}")
 PY
 }
 
@@ -490,15 +610,44 @@ handle_gemini() {
   fi
 }
 
+handle_cursor() {
+  local base="$home_dir/.cursor"
+  local rules_dir="$base/loom/rules"
+  local rules_file="$base/loom/cursor-user-rules.md"
+  local skills_dir="$base/skills"
+  local commands_dir="$base/commands"
+  local user_rules_db
+  user_rules_db="$(cursor_user_rules_db_path)"
+
+  if [ "$action" = "install" ]; then
+    copy_rules "$root/rules" "$rules_dir"
+    copy_skill_dirs "$root/skills" "$skills_dir"
+    adapt_commands "cursor-command" "$root/commands" "$commands_dir"
+    write_cursor_user_rules_file "$rules_dir" "$skills_dir" "$commands_dir" "$rules_file"
+    update_cursor_user_rules "$user_rules_db" "$rules_file" install
+    printf 'Installed Loom for Cursor in %s and Cursor User Rules in %s\n' "$base" "$user_rules_db"
+  else
+    update_cursor_user_rules "$user_rules_db" "$rules_file" uninstall
+    remove_command_markdown "$root/commands" "$commands_dir"
+    remove_skill_dirs "$root/skills" "$skills_dir"
+    rm -f "$rules_file"
+    remove_rules "$root/rules" "$rules_dir"
+    rmdir "$base/loom" 2>/dev/null || true
+    printf 'Uninstalled Loom from Cursor in %s\n' "$base"
+  fi
+}
+
 case "$harness" in
   all)
     handle_opencode
     handle_claude
     handle_codex
     handle_gemini
+    handle_cursor
     ;;
   opencode) handle_opencode ;;
   claude) handle_claude ;;
   codex) handle_codex ;;
   gemini) handle_gemini ;;
+  cursor) handle_cursor ;;
 esac

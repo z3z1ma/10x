@@ -149,6 +149,7 @@ make install harness=opencode
 make install harness=claude
 make install harness=codex
 make install harness=gemini
+make install harness=cursor
 make install harness=all
 
 make uninstall harness=opencode
@@ -174,9 +175,16 @@ needed:
   block inside `~/.codex/AGENTS.md`
 - Gemini CLI: copies skills, converts commands into `~/.gemini/commands/*.toml`,
   and mirrors Loom rules into a managed block inside `~/.gemini/GEMINI.md`
+- Cursor: copies skills into `~/.cursor/skills/`, converts commands into
+  `~/.cursor/commands/*.md`, copies rules into `~/.cursor/loom/rules/`, and
+  writes a managed block into Cursor User Rules so the rules are globally
+  always on. The managed source block is also written to
+  `~/.cursor/loom/cursor-user-rules.md` for inspection.
 
-Those generated blocks are bracketed with Loom markers so `make uninstall` can
-remove only Loom-managed content.
+Generated aggregate instruction blocks are bracketed with Loom markers so
+`make uninstall` can remove only Loom-managed content. Generated directories
+use Loom-owned names so uninstall can remove them without touching unrelated
+harness files.
 
 ## Adapter Fixture Expectations
 

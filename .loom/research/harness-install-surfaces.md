@@ -3,7 +3,7 @@ id: research:harness-install-surfaces
 kind: research
 status: active
 created_at: 2026-04-18T03:03:47Z
-updated_at: 2026-04-19T21:59:26Z
+updated_at: 2026-04-22T20:51:34Z
 scope:
   kind: repository
   repositories:
@@ -11,15 +11,18 @@ scope:
 links:
   ticket:
     - ticket:ffg8elkb
+    - ticket:rd48g1kg
   research:
     - research:codex-command-skill-installation
+  evidence:
+    - evidence:cursor-harness-install-validation
 ---
 
 # Question
 
-What user-level install surfaces do OpenCode, Claude Code, Codex, and Gemini CLI
-expect for always-on instructions, skills, and reusable commands, and what
-translation is required to install Loom's shipped `rules/`, `skills/`, and
+What user-level install surfaces do OpenCode, Claude Code, Codex, Gemini CLI,
+and Cursor expect for always-on instructions, skills, and reusable commands, and
+what translation is required to install Loom's shipped `rules/`, `skills/`, and
 `commands/` directories into those harnesses?
 
 # Why This Matters
@@ -35,8 +38,8 @@ format.
 
 - inspect only the canonical product surfaces: top-level `rules/`, `skills/`,
   and optional `commands/`
-- identify user-level install paths for OpenCode, Claude Code, Codex, and
-  Gemini CLI
+- identify user-level install paths for OpenCode, Claude Code, Codex, Gemini
+  CLI, and Cursor
 - note where a harness supports direct copies versus where translation is
   required
 - inspect local home-directory state only to confirm currently used config
@@ -64,8 +67,19 @@ Cross-check those findings against the local filesystem under
   `https://google-gemini.github.io/gemini-cli/docs/cli/custom-commands.html`
 - Gemini CLI command reference snippets documenting `~/.gemini/agents` and
   `~/.gemini/commands`
+- Cursor rules docs: `https://cursor.com/docs/rules`
+- Cursor commands docs: `https://cursor.com/docs/commands`
+- Cursor 2.4 changelog for Agent Skills:
+  `https://cursor.com/changelog/2-4`
+- Cursor agent best-practices note on rules vs skills:
+  `https://cursor.com/blog/agent-best-practices`
+- Cursor support guidance for global commands and user/project skills:
+  `https://forum.cursor.com/t/custom-commands-no-longer-function-at-all-in-cursor/138221`
+  and
+  `https://forum.cursor.com/t/cursor-doesnt-know-new-skills-arens-saved/158507`
 - local files: `~/.claude/settings.json`, `~/.codex/config.toml`,
-  `~/.gemini/settings.json`, `~/.config/opencode/`
+  `~/.gemini/settings.json`, `~/.config/opencode/`, and absence/presence checks
+  under `~/.cursor/`
 
 # Evidence
 
@@ -89,8 +103,17 @@ Cross-check those findings against the local filesystem under
 - Gemini CLI supports user-level subagents in `~/.gemini/agents/` and supports
   skill discovery with `.agents/skills` / `~/.agents/skills` as the generic
   cross-tool skill location.
+- Cursor project rules live in `.cursor/rules/*.mdc`, and Cursor user rules are
+  configured through Cursor settings rather than a documented Markdown file.
+- Cursor custom commands are Markdown files in `.cursor/commands/`; support
+  guidance also describes `~/.cursor/commands/` for global user commands.
+- Cursor Agent Skills are defined by `SKILL.md` files. Current support guidance
+  identifies `~/.cursor/skills/` for user-level skills and `.cursor/skills/`
+  for project-level skills, while `~/.cursor/skills-cursor/` is reserved for
+  Cursor-managed built-ins.
 - The local machine already has user config roots at `~/.claude/`, `~/.codex/`,
   `~/.gemini/`, and `~/.config/opencode/`, matching the documented locations.
+  No existing `~/.cursor/` user install tree was present during the inspection.
 
 # Conclusions
 
@@ -105,17 +128,23 @@ Cross-check those findings against the local filesystem under
   Markdown-to-TOML conversion.
 - `~/.agents/skills` is the most interoperable global skill destination for
   both Codex and Gemini CLI.
+- Cursor can take Loom skills directly under `~/.cursor/skills/` and command
+  Markdown under `~/.cursor/commands/`.
+- Cursor does not expose a documented global Markdown rules directory equivalent
+  to project `.cursor/rules/*.mdc`; the global install should write Loom's
+  rules into Cursor User Rules as a managed block.
 
 # Recommendations
 
 - Add a Makefile with `install` and `uninstall` targets driven by
   `harness=<name>`.
-- Support `opencode`, `claude`, `codex`, `gemini`, and `all` harness values.
+- Support `opencode`, `claude`, `codex`, `gemini`, `cursor`, and `all` harness
+  values.
 - Keep direct directory copies where the harness supports them.
 - Use small inline Python only for the format-translation cases:
   updating OpenCode `opencode.json`, aggregating Codex `AGENTS.md`, adapting
-  Codex command Markdown files into skills, and converting Gemini command
-  Markdown files to TOML.
+  Codex command Markdown files into skills, converting Gemini command Markdown
+  files to TOML, and updating Cursor User Rules with a managed Loom block.
 - Keep installs namespaced under a Loom-owned marker or header where a single
   file must be generated so uninstall can cleanly reverse only Loom-managed
   content.
