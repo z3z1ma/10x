@@ -2,7 +2,7 @@
 
 ## What This Repo Is
 
-This repository develops a distributable Markdown-first Loom bundle.
+This repository develops a distributable Markdown-native Loom bundle.
 
 The protocol core is the top-level `rules/` and `skills/` directories.
 Top-level `commands/` files may exist as optional harness-wrapper prompt
@@ -12,6 +12,11 @@ without them.
 There is no app runtime, build pipeline, or test suite. The durable asset is
 the protocol corpus itself: rules, skills, templates, references, and canonical
 examples.
+
+Loom should be treated as a control plane for AI knowledge work: a
+source-of-truth type system plus a transaction protocol for bounded
+fresh-context mutations. Do not reduce it to "docs for agents" or expand it
+into a required runtime.
 
 ## Agent Boundary
 
@@ -24,6 +29,10 @@ behaviors using Markdown guidance, templates, and ordinary file tools.
 Ad hoc local automation is acceptable when it is clearly helpful, but it stays
 derivative. It must not become the real source of Loom behavior or a hidden
 second ontology.
+
+Harnesses, external issue trackers, generated context files, dashboards, MCPs,
+and command wrappers may transport or mirror Loom work. They must not own Loom
+truth unless a future constitutional record explicitly changes that boundary.
 
 ## Repo Structure
 
@@ -80,6 +89,12 @@ the claim being made, such as:
   canonical `.loom/` examples that teach the same concept
 - do not add hidden runtimes, helper-dependent instructions, or monolithic CLI
   assumptions
+- express new workflows as routes through existing owner layers before adding
+  new artifact kinds
+- keep traceability grep-friendly with stable IDs, typed links, explicit
+  coverage, evidence, and critique references
+- path-local instruction files may point to Loom owner records, but they must
+  not define independent project truth
 
 ### Cross-surface review checklist
 
@@ -95,6 +110,8 @@ If a change touches multiple surfaces, verify:
 ## Key Architecture Facts
 
 - rules are always on
+- the layer model is Loom's source-of-truth type system
+- Ralph is Loom's transaction protocol for bounded worker mutations
 - skills own behavior through `SKILL.md`, references, and templates rather than
   shipped scripts
 - tickets are the sole live execution ledger
@@ -102,3 +119,21 @@ If a change touches multiple surfaces, verify:
 - wiki is the persistent explanation layer
 - evidence stores proof artifacts without becoming project-truth ownership
 - optional wrapper commands remain convenience surfaces, not protocol core
+
+## Current Product Direction
+
+The next phase is protocol sharpening rather than platform expansion. Prioritize:
+
+- product-surface consistency across README, install docs, architecture notes,
+  AGENTS guidance, rules, skills, templates, and optional commands
+- shared non-ticket status lifecycle grammar
+- claim-level coverage across specs, tickets, packets, evidence, and critique
+- packet freshness and context-budget guidance
+- named critique risk profiles
+- codebase atlas, debug, spike, sketch, execution-wave, external-reference,
+  ship, retrospective-prevention, and golden-example workflows as routes
+  through the existing owner graph
+
+Do not borrow external-system complexity as protocol core. A new workflow is a
+good Loom workflow when it makes ownership, evidence, review, and recovery more
+regular without creating a second ledger.
