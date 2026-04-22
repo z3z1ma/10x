@@ -8,7 +8,7 @@ scope:
   kind: repository
   repositories:
     - repo:root
-review_target: <record ref>
+review_target: <record ref | code change target>
 links: {}
 external_refs: {}
 ---
@@ -19,7 +19,8 @@ What this critique reviewed.
 
 # Review Target
 
-Name the specific target and why it was reviewed.
+Name the specific target and why it was reviewed. For code review, name the
+branch, commit, diff range, pull request, or changed file set.
 
 # Verdict
 
@@ -36,7 +37,7 @@ Challenges:
 
 # Evidence Reviewed
 
-What records, files, tests, outputs, or evidence were inspected.
+What records, files, diffs, tests, outputs, or evidence were inspected.
 
 # Residual Risks
 

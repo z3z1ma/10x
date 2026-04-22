@@ -60,6 +60,9 @@ explicit improves cold-agent recovery before deeper implementation work starts.
 - Ralph packets carry source fingerprint and context budget fields
 - plans can express execution waves
 - critique supports named risk profiles
+- critique guidance clearly covers code review as well as Loom artifact review
+- critique guidance distinguishes direct artifact critique from packetized
+  implementation review
 - map/debug/spike/sketch/ship workflows are discoverable through skills and
   commands
 - retrospective prevention routing is explicit
@@ -113,3 +116,9 @@ None.
 - 2026-04-22T07:07:00Z: Created after implementation to restore ticket-ledger
   truth for this broad protocol mutation. Status is `review_required` because
   high-risk protocol-surface changes need critique before acceptance.
+- 2026-04-22T07:32:15Z: Clarified critique surfaces so code changes, behavior
+  changes, and Loom artifacts are all explicit review targets. Kept always-on
+  rule wording concise and operational.
+- 2026-04-22T07:40:52Z: Clarified that critique packets are primarily for
+  implementation/code review anchored by a ticket, governing context, and git
+  diff. Direct critique of Loom artifacts does not require a packet by default.

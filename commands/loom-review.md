@@ -1,7 +1,7 @@
 ---
 name: loom-review
-description: "Run adversarial critique against a ticket, packet, spec, wiki page, or other review target. Orchestrate one disciplined pass, or split the review into complementary fresh-context passes, and leave durable critique records with prioritized follow-up."
-arguments: "<ticket id | record id | change target>"
+description: "Run adversarial critique against code changes, behavior changes, tickets, packets, specs, wiki pages, or other review targets. Leave durable critique records with prioritized follow-up."
+arguments: "<ticket id | record id | branch | commit | PR | diff target>"
 category: core
 suggested_skills:
   - loom-workspace
@@ -20,7 +20,7 @@ Review target:
 `$ARGUMENTS`
 
 This command is the explicit critique surface.
-It exists so review has the same durability and rigor as implementation, and so a review of meaningful risk can be split into complementary fresh-context passes instead of one overloaded reviewer.
+It handles both direct artifact critique and packetized implementation review.
 
 Hydrate only what you need from:
 - `loom-workspace`
@@ -33,10 +33,39 @@ Hydrate only what you need from:
 ## Goals
 
 - choose a pass split proportional to the target's risk
+- decide whether the review needs a packet
 - choose named critique profiles proportional to the target's risk
-- pressure-test claims against evidence
+- pressure-test code, behavior, and claims against evidence
 - leave behind durable critique records
 - reconcile review back into the ticket without hiding the trail
+
+## Choose packetized or direct review
+
+### Direct artifact critique
+
+Use when the target is a Loom artifact being reviewed as an artifact: ticket
+readiness, plan sequencing, spec acceptance, packet quality, wiki certainty,
+evidence strength, or external summary fidelity.
+
+Do not compile a packet by default. Read the artifact and enough owner context
+to judge it, then write durable findings when needed.
+
+### Packetized implementation review
+
+Use when reviewing code or behavior changes, especially after a Ralph
+iteration.
+
+Compile a critique packet with:
+
+- target ticket
+- parent plan or initiative
+- relevant spec, research, and evidence
+- prior Ralph packet output
+- acceptance or claim coverage targets
+- git diff or changed-file summary
+- required critique profiles
+
+The reviewer should use the packet and the diff as the main review surface.
 
 ## Choose the pass split
 
@@ -57,7 +86,7 @@ Use for medium or high risk targets, or whenever one reviewer would struggle to 
 
 Default split:
 
-1. **Correctness and scope.** Do the claims match the evidence? Did the change stay inside its declared scope and write boundary? Are acceptance criteria actually met?
+1. **Correctness and scope.** Does the code or artifact satisfy the ticket and spec? Did the change stay inside its declared scope and write boundary? Are acceptance criteria actually met?
 2. **Risk, security, and failure modes.** What breaks at the edges? What assumptions are load-bearing? What security or performance concerns did the implementation silently carry?
 3. **Operator clarity and follow-through.** Is the ticket truthful? Is the wiki disposition honest? Will the next agent be able to pick this up cold?
 
@@ -67,36 +96,46 @@ Use the named profiles from `skills/loom-critique/references/critique-lens.md`
 when the target declares them or when the risk class implies them. Profiles are
 lenses, not new owner layers.
 
-If the harness supports subagents or multiple fresh reviewers, launch the passes in parallel with a critique packet per pass. If not, run them sequentially as distinct fresh-context passes with narrow prompts. The transport is flexible; the pass boundaries are not.
+For packetized implementation review, if the harness supports subagents or
+multiple fresh reviewers, launch the passes in parallel with a critique packet
+per pass. If not, run them sequentially as distinct fresh-context passes with
+narrow prompts. The transport is flexible; the pass boundaries are not.
 
 ## Procedure
 
 1. **Anchor the target.**
-   - Identify the ticket, spec, packet, wiki page, or other record being reviewed.
+   - Identify the code diff, branch, commit, ticket, spec, packet, wiki page, or other target being reviewed.
    - If a ticket is the main owner, read it first.
 
-2. **Gather the minimum governing context.**
+2. **Classify the review shape.**
+   - Use direct artifact critique for Loom artifacts unless the review is broad, high risk, or needs fresh-context isolation.
+   - Use packetized implementation review for code or behavior changes.
+
+3. **Gather the minimum governing context.**
    - Read the linked plan, spec, evidence, and any recent packet outputs.
-   - Inspect the relevant changed files or artifact diffs.
+   - Inspect the relevant changed files, tests, or artifact diffs.
 
-3. **Choose and compile packets.**
+4. **Choose and compile packets when needed.**
    - Decide the pass split.
-   - Compile one critique packet per pass under `.loom/packets/critique/` when fresh-context review is warranted.
+   - For packetized implementation review, compile one critique packet per pass under `.loom/packets/critique/`.
+   - For direct artifact critique, skip packets unless the review needs fresh-context isolation.
 
-4. **Review through the chosen lenses.**
+5. **Review through the chosen lenses.**
    - correctness and scope discipline
+   - code quality and maintainability for code targets
    - evidence sufficiency
    - hidden assumptions and failure modes
    - maintenance burden
    - the declared named profiles, such as `protocol-change`,
-     `api-contract`, `data-migration`, `security`, `performance`, or
-     `operator-clarity`
+     `code-change`, `test-coverage`, `api-contract`, `data-migration`,
+     `security`, `performance`, or `operator-clarity`
 
-5. **Write findings durably.**
+6. **Write findings durably.**
    - Each material finding: short title, severity, confidence, observation, why it matters, follow-up.
+   - For code findings, include file and line references when practical.
    - Record a verdict and residual risks.
 
-6. **Reconcile review back into Loom.**
+7. **Reconcile review back into Loom.**
    - Update the ticket status or journal if the critique changes what must happen next.
    - Create follow-up tickets for substantial issues.
    - Do not quietly "fix and forget" major findings.
@@ -106,6 +145,8 @@ If the harness supports subagents or multiple fresh reviewers, launch the passes
 - `git status --short`
 - `git diff --stat`
 - `git diff`
+- `git diff --check`
+- `rg -n '<symbol | behavior | claim>' <relevant paths>`
 - `rg -n '^(id|status|review_target):' .loom/{tickets,critique,specs,wiki,evidence} --glob '*.md'`
 - `find .loom/packets/critique -type f -name '*.md' | sort | tail`
 
@@ -120,8 +161,10 @@ If the harness supports subagents or multiple fresh reviewers, launch the passes
 ## Required output
 
 - pass split chosen and why
+- direct or packetized review shape, and why
 - critique profiles used
 - critique record and packet paths or IDs
 - prioritized findings with severity and confidence
+- code file/line references when applicable
 - ticket or follow-up updates performed
 - recommended next command

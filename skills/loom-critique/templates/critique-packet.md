@@ -1,9 +1,12 @@
 ---
-id: packet:critique-<target>-<UTC compact timestamp>
+id: packet:critique-<ticket-or-change>-<UTC compact timestamp>
 kind: packet
 packet_kind: critique
 status: compiled
-target: <record ref>
+target: ticket:<token>
+review_target:
+  kind: code_change
+  diff: <branch | commit | PR | diff target>
 mode: review
 style: reference-first
 created_at: <UTC timestamp>
@@ -31,7 +34,13 @@ links: {}
 
 # Mission
 
-What should be reviewed and why.
+What code or behavior change should be reviewed and why.
+
+# Governing Context
+
+The ticket, parent plan or initiative, relevant spec/research/evidence, prior
+Ralph packet output, and acceptance or claim coverage targets that constrain
+the review.
 
 # Review Lens
 
@@ -42,7 +51,12 @@ Named critique profiles to apply:
 
 # Source Snapshot
 
-Curated records, evidence, or changed files that matter most.
+Curated records, evidence, diffs, tests, or changed files that matter most.
+
+# Diff Under Review
+
+Where the reviewer should find the git diff, changed-file list, branch, commit,
+or pull request.
 
 # Required Questions
 
@@ -58,6 +72,7 @@ Return:
 - verdict
 - findings with severity/confidence
 - evidence reviewed
+- file and line references for code findings when practical
 - residual risks
 - follow-up recommendation
 

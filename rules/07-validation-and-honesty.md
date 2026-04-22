@@ -88,6 +88,7 @@ They make future agents slower and less trustworthy.
 Use these defaults unless the project says otherwise:
 
 - meaningful workflow or behavior changes usually deserve critique
+- meaningful code changes usually deserve critique
 - accepted understanding that future agents will need should become wiki, not only ticket prose
 - if critique found unresolved medium or high-severity issues, do not pretend the work is fully accepted
 

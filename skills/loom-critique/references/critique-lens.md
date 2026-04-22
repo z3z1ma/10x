@@ -2,6 +2,7 @@
 
 A good critique asks questions like:
 
+- what could break in the changed code
 - what claim here is weaker than it sounds
 - what assumption is hidden
 - what evidence is missing
@@ -19,6 +20,30 @@ A good critique asks questions like:
 - failure modes
 - maintenance burden
 - trust-boundary integrity
+
+## Target Types
+
+Critique can target:
+
+- code diffs, branches, commits, or pull requests
+- behavior changes after a Ralph iteration
+- tickets, specs, plans, research, packets, evidence, and wiki pages
+- release or handoff packages
+- external summaries that mirror Loom work
+
+The target type changes the evidence reviewed. It does not change the owner
+model: critique owns findings and verdicts, while tickets own live execution
+state.
+
+## Packet Expectation
+
+Use a critique packet for implementation/code review when a fresh reviewer
+needs the ticket, parent plan or initiative, spec, research, evidence, prior
+packet output, and git diff in one bounded review contract.
+
+Do not compile a packet just to critique a Loom artifact by default. A ticket,
+plan, spec, or wiki page can be reviewed directly as an artifact. Use a packet
+only when the review is broad, high risk, or needs fresh-context isolation.
 
 ## Named Profiles
 
@@ -38,6 +63,23 @@ Profiles are lenses, not permanent agents or new layers.
 - error semantics
 - versioning
 - client impact
+
+### `code-change`
+
+- correctness against the ticket and spec
+- unintended side effects
+- error handling
+- edge cases
+- integration boundaries
+- maintainability of the changed code
+
+### `test-coverage`
+
+- missing regression coverage
+- weak assertions
+- untested edge cases
+- mismatch between acceptance criteria and tests
+- evidence gaps when automated tests are not practical
 
 ### `data-migration`
 

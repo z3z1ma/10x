@@ -3,13 +3,25 @@
 Critique and Wiki are not side quests.
 They are how Loom pressure-tests work and how Loom compounds understanding.
 
-## Critique Is A Ralph Variant
+## Critique As Review
 
-Critique uses the same packetized fresh-context model as Ralph, but the goal is different.
+Critique is Loom's adversarial review layer.
 
-Ralph asks:
+It has two common shapes:
 
-- can this bounded step be executed safely and usefully
+- direct artifact critique
+- packetized implementation critique
+
+Direct artifact critique reviews a Loom record or support artifact as itself:
+a plan, ticket, spec, packet, wiki page, evidence record, or external summary.
+This usually does not need a packet. Read the target, read enough owner context,
+and leave findings when the review should persist.
+
+Packetized implementation critique reviews a code or behavior change. It is
+the Ralph-like form. The parent compiles a critique packet from the ticket,
+parent plan or initiative, relevant spec/research/evidence, prior packet
+output, and the git diff. The reviewer consumes that packet plus the diff and
+returns findings, verdict, risks, and follow-up.
 
 Critique asks:
 
@@ -17,6 +29,9 @@ Critique asks:
 - are the claims supported
 - what residual risks remain
 - what follow-up work is required before acceptance
+
+Critique can target code changes, behavior changes, Loom records, packets,
+plans, specs, wiki pages, or any other reviewable work product.
 
 A critique pass should feel adversarial in the healthy sense.
 It should search for mismatches, hidden assumptions, weak evidence, brittle reasoning, and user-facing confusion.
@@ -40,6 +55,7 @@ Default: critique optional.
 Examples:
 
 - meaningful workflow changes
+- non-trivial code changes
 - important packet changes
 - behavior clarifications that could mislead operators
 
@@ -52,6 +68,7 @@ Examples:
 - scope model changes
 - authority model changes
 - changes to how completion is judged
+- security-sensitive, data-sensitive, or user-impacting code changes
 - architecture changes with broad downstream impact
 
 Default: critique mandatory.
