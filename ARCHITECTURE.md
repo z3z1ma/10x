@@ -6,18 +6,29 @@ This package is a reconstruction of Loom around its strongest ideas.
 
 Loom is not best understood as a toolchain.
 
-It is an **AI operating methodology** with these defining properties:
+It is a **Markdown-native control plane for AI knowledge work** with these
+defining properties:
 
 - project truth lives in visible files
 - the artifact graph is layered on purpose
+- the layer model acts as a source-of-truth type system
 - the outer loop shapes the work before execution starts
-- the inner loop advances one bounded step at a time through fresh context
+- the inner loop advances one bounded mutation at a time through fresh context
+- Ralph acts as a transaction protocol for fallible worker contexts
 - critique is first-class, not optional polish
 - explanation should compound into durable knowledge, not vanish into chat
 - the filesystem is already a graph database if you design the records properly
 
 The older repository already contained those ideas.
 What it still carried was a helper-script worldview that made the protocol feel more implementation-bound than it needed to be.
+
+The key distinction is that Loom does not try to make each agent context
+smarter by stuffing more context into it. Loom makes the work recoverable,
+bounded, reviewable, and composable when individual contexts are disposable.
+
+The deepest architectural invariant is ownership-preserving mutation: every
+claim, behavior, proof, risk, and explanation should land in the artifact layer
+that owns that kind of truth.
 
 ## The Main Architectural Moves In This Rewrite
 
@@ -81,7 +92,27 @@ Packets are now plainly authored Markdown artifacts with sections for:
 A packet is no longer just "what a script emits".
 It is a first-class protocol object.
 
-### 5. Docs evolves into Wiki
+### 5. Truth ownership becomes explicit type discipline
+
+Loom's layer model is not just folder organization.
+It is the source-of-truth type system:
+
+- constitution owns durable identity and constraints
+- initiatives own strategic outcomes
+- research owns investigated evidence and options
+- specs own intended behavior and acceptance
+- plans own sequencing
+- tickets own live execution state
+- packets own bounded child-worker contracts
+- evidence owns proof artifacts
+- critique owns adversarial findings
+- wiki owns accepted explanation
+- memory owns support context only
+
+When records disagree, the owning layer wins for that kind of truth. Newer
+files do not automatically outrank older owner records.
+
+### 6. Docs evolves into Wiki
 
 The old docs layer was close to a wiki but framed too narrowly.
 
@@ -90,12 +121,23 @@ The new wiki layer is for **persistent, interlinked accepted understanding**.
 A good answer, workflow explanation, architecture note, comparison, or troubleshooting guide should not die in chat if future agents will need it again.
 It should be promoted into `.loom/wiki/`.
 
-### 6. Evidence becomes explicit
+### 7. Evidence becomes explicit
 
 Structural verification and observed outputs still matter, but the more general and useful concept is evidence.
 
 Evidence records are durable proof artifacts.
 They justify progress, critique, and wiki pages without pretending to own project truth themselves.
+
+### 8. Workflows stay routes, not new ontologies
+
+Loom can express codebase maps, debugging, spikes, sketches, execution waves,
+shipping, external reference provenance, and retrospective prevention without
+adding new canonical layers.
+
+The design rule is that a new workflow should route through the owner graph:
+research for investigation, specs for intended behavior, plans for sequencing,
+tickets for live execution, packets for bounded work, evidence for proof,
+critique for adversarial review, and wiki for accepted explanation.
 
 ## Design Philosophy
 
@@ -106,6 +148,7 @@ This rewrite optimizes for:
 - durability of process knowledge
 - freedom of implementation
 - explicit truth ownership
+- grep-friendly traceability
 - small-scope iteration
 - strong adversarial review
 - knowledge compounding
@@ -116,6 +159,8 @@ It deliberately de-optimizes for:
 - magical runtime behavior
 - opaque helper scripts as a second ontology
 - one-command "project management"
+- external systems that become competing ledgers
+- generated context files that define project truth independently of Loom
 
 ## The Intended User Experience
 

@@ -3,7 +3,7 @@ id: constitution:main
 kind: constitution
 status: active
 created_at: 2026-03-31T12:00:00Z
-updated_at: 2026-04-17T23:48:34Z
+updated_at: 2026-04-22T05:54:46Z
 scope:
   kind: workspace
 links: {}
@@ -11,21 +11,39 @@ links: {}
 
 # Vision
 
-Make Loom a harness-agnostic Markdown-defined operating protocol for durable
-AI work.
+Make Loom a Markdown-native control plane for durable AI knowledge work.
 
-In this repository, that means `rules/`, `skills/`, their templates and
-references, and canonical `.loom/` records together form the visible source
-bundle for Loom's operating model. Optional harness wrappers may exist, but
-they do not define Loom's core protocol.
+Loom is not a runtime, daemon, model router, dashboard, MCP bundle, or product
+CLI. It is a protocol that turns work into a typed artifact graph, then teaches
+agents how to mutate that graph honestly with ordinary files.
+
+The protocol core in this repository is `rules/`, `skills/`, their templates
+and references, and the canonical examples that demonstrate them. Optional
+harness wrappers may exist, but they do not define Loom's ontology.
+
+Loom should not try to make agents smarter by stuffing more context into each
+context window. It should make the work recoverable, bounded, reviewable, and
+composable even when every individual agent context is disposable.
 
 Another agent should be able to enter this repository cold, read the corpus,
 and continue work without reconstructing hidden norms from chat history,
 private memory, or a hidden runtime.
 
+The deepest primitive is ownership-preserving mutation: every durable claim,
+behavior, proof, risk, and explanation should land in the artifact layer that
+owns that kind of truth.
+
 # Principles
 
 - Markdown canonical records are the source of truth.
+- Loom is a source-of-truth type system plus a transaction protocol for AI
+  work.
+- The layer model is the type system: each layer owns one kind of truth, and
+  ownership wins over recency.
+- Ralph is the transaction protocol: a parent frames the next bounded mutation,
+  a packet declares read/write/stop/output contracts, a fresh worker executes
+  one slice, and the parent reconciles truth back into the ticket and related
+  owners.
 - Rules remain always on.
 - `constitution:main` must be read before starting work so local decisions stay
   aligned with durable project policy.
@@ -45,6 +63,13 @@ private memory, or a hidden runtime.
 - Parent workflow judgment and child bounded execution should remain explicitly
   separate.
 - Scope and write authority must fail closed rather than being guessed.
+- New workflows should first be expressed as disciplined routes through
+  existing owner layers, not as new canonical layers.
+- Harnesses, adapters, command wrappers, external issue trackers, and generated
+  context files may make Loom easier to execute. They must not become Loom's
+  ontology or live ledger.
+- Traceability should stay grep-friendly: stable IDs, typed links, explicit
+  coverage, evidence, and critique references are preferred over hidden indexes.
 - Important instructions should be stated positively and operationally before
   narrow prohibitions are added.
 - The repository should teach another agent what to do next, not merely warn
@@ -55,12 +80,18 @@ private memory, or a hidden runtime.
 - no monolithic `loom` CLI
 - no long-running orchestration service or canonical database at the center of
   the system
+- no required dashboard, model-routing layer, MCP server, background daemon, or
+  telemetry channel as the primary state surface
 - no shipped Python scripts as a required part of the core Loom bundle
 - no hidden shadow ontology in helpers, wrappers, or runtimes
 - no requirement that a harness-specific `commands/` surface exist for Loom to
   make sense
 - no implicit widening of scope or write authority
 - no canonical truth outside designated canonical `.loom/` subtrees
+- no external system, PR description, issue tracker, chat transcript, or
+  path-local instruction file that silently outranks Loom records
+- no generated `AGENTS.md` or equivalent context adapter that defines
+  independent project truth instead of pointing to Loom owner records
 - no helper-optimized JSON-frontmatter requirement in canonical record grammar
 - strict structural validation with soft prose validation
 - local automation should stay thin, inspectable, and subordinate to published
@@ -73,36 +104,54 @@ enough.
 
 # Strategic Direction
 
-Keep building Loom as a visible protocol corpus rather than as a hidden engine.
+Keep building Loom as a visible protocol corpus and control plane rather than
+as a hidden engine.
 
-The rewrite now pushes Loom further toward visible protocol behavior: no shipped
-Python helpers, templates and native Unix recipes in place of scaffolding CLIs,
-YAML frontmatter instead of helper-oriented JSON frontmatter, and `wiki`,
-`packets`, and `evidence` as the durable vocabulary for explanation, bounded
-work, and proof.
+The rewrite established the anti-runtime posture: no shipped Python helpers,
+templates and native Unix recipes in place of scaffolding CLIs, YAML
+frontmatter instead of helper-oriented JSON frontmatter, and `wiki`, `packets`,
+and `evidence` as the durable vocabulary for explanation, bounded work, and
+proof.
 
-The next durable direction is to finish reconciling the constitutional layer,
-dogfooded canonical examples, and remaining repository guidance to that rewrite
-so a future agent sees one coherent model instead of a mix of legacy and new
-shapes.
+The next durable direction is regularity. Loom should cut the existing
+primitives sharper without making the system heavier in spirit:
+
+- status lifecycles should be explicit across record kinds
+- claim and acceptance coverage should connect specs, tickets, packets,
+  evidence, and critique
+- packet freshness and context budget should be inspectable
+- critique should support named risk profiles
+- codebase atlases should live in wiki/research/evidence, not in a new layer
+- debug, spike, sketch, ship, and retrospective prevention workflows should be
+  routes through existing owners
+- execution waves should derive from `depends_on` and non-overlapping
+  `write_scope`
+- external reference provenance should let GitHub, Jira, Linear, and similar
+  systems mirror Loom without owning Loom truth
+- golden examples should make the protocol evaluable across harnesses
 
 Future work should keep rules, skills, templates, packet contracts, validation
 behavior, and acceptance gates visible in prose and ordinary files rather than
-only inferable from helper code or wrapper conventions.
+only inferable from helper code, wrapper conventions, or external work systems.
 
 # Current Focus
 
-- reconcile remaining constitutional and canonical examples that still describe
-  scripts, `docs`, `runs`, `verification`, or helper-oriented frontmatter
+- fix product-surface inconsistencies so public docs match the files that
+  actually ship
+- reconcile remaining canonical examples that still describe scripts, `docs`,
+  `runs`, `verification`, `.loom/memories`, or helper-oriented frontmatter
+- add shared status lifecycle grammar for non-ticket records
+- add claim-level coverage conventions across specs, tickets, packets,
+  evidence, and critique
+- add packet freshness and context-budget conventions for Ralph contracts
+- add codebase atlas, debug, spike, execution-wave, external-reference, ship,
+  retrospective-prevention, and golden-example guidance as disciplined routes
+  through existing layers
 - deepen durable examples across initiatives, research, specs, plans, tickets,
-  critique, wiki, and evidence so the rewritten protocol is shown, not only
+  critique, wiki, packets, and evidence so the protocol is shown, not only
   stated
-- exercise real Ralph, critique, and wiki packet flows using templates and
-  native Unix recipes rather than bundled helpers
 - keep optional harness wrappers clearly secondary to rules, skills, and
   canonical records
-- tighten validation, query guidance, and workspace diagnostics only where they
-  mechanize already-published rules
 
 The immediate quality bar is no longer just that the files exist. The most
 important rules, skills, appendices, and canonical records should read like one
@@ -110,7 +159,14 @@ coherent operating manual.
 
 # Open Constitutional Questions
 
-- when critique becomes mandatory by risk class
+- the exact allowed status sets for each non-ticket record kind
+- how formal claim coverage IDs should become before they feel like ceremony
+- which packet freshness fields are required versus optional in normal Ralph
+  work
+- when critique becomes mandatory by risk class, and which named profiles
+  should exist first
+- how codebase atlas pages should age and be re-verified without becoming
+  behavior owners
 - how much optional harness sugar should exist outside the core package without
   becoming a second protocol surface
 - how prescriptive Loom's shared query recipes should become while preserving
@@ -125,6 +181,8 @@ coherent operating manual.
   support as the record graph grows
 - how much packet freshness and acceptance logic should stay in prose versus
   move into more standardized reusable checks
+- how much path-scoped context adapter generation is useful without creating
+  shadow truth
 
 # Change History
 
@@ -147,3 +205,6 @@ coherent operating manual.
 - 2026-04-17: updated the constitutional layer for the rewrite to
   template-first, native-tool Loom with YAML frontmatter and
   `wiki`/`packets`/`evidence` vocabulary
+- 2026-04-22: promoted the Markdown-native control-plane, typed ownership, and
+  transaction-protocol framing into the constitutional direction and identified
+  the next regularization priorities

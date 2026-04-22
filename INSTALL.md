@@ -14,15 +14,18 @@ Examples include agents that read `AGENTS.md`, `CLAUDE.md`, `OPENCODE.md`, or an
 
 Load these in order:
 
-1. `RULES.md`
-2. `rules/01-core-identity.md`
-3. `rules/02-truth-and-authority.md`
-4. `rules/03-outer-loop.md`
-5. `rules/04-ralph-inner-loop.md`
-6. `rules/05-critique-and-wiki.md`
-7. `rules/06-filesystem-and-tooling.md`
-8. `rules/07-validation-and-honesty.md`
-9. `SKILLS.md` or the frontmatter name/description from each skill
+1. `rules/01-core-identity.md`
+2. `rules/02-truth-and-authority.md`
+3. `rules/03-outer-loop.md`
+4. `rules/04-ralph-inner-loop.md`
+5. `rules/05-critique-and-wiki.md`
+6. `rules/06-filesystem-and-tooling.md`
+7. `rules/07-validation-and-honesty.md`
+8. the frontmatter `name` and `description` from each `skills/*/SKILL.md`
+
+This repository does not currently ship aggregate `RULES.md` or `SKILLS.md`
+files. Harnesses may generate such aggregates locally, but the source of truth
+is the ordered `rules/` directory and the skill directories themselves.
 
 ### On demand
 
@@ -40,6 +43,7 @@ A practical wrapper file usually says some version of:
 - skill names/descriptions are always visible
 - full skill content is loaded only when relevant
 - the agent must use the Loom owner layer instead of improvising parallel records
+- optional commands are convenience routes, not a second source of truth
 
 ## Recommended Tool Baseline
 
@@ -121,6 +125,14 @@ or expose it via a root instruction file that points to the copied package.
 
 Loom itself is agnostic.
 The only important thing is that the rules are always on and the skills are discoverable.
+
+## Optional Command Surface
+
+The top-level `commands/` directory contains optional wrapper prompts for
+harnesses that support slash-command style entry points.
+
+Those wrappers should route the agent into the same rules and skills. They do
+not own behavior independently and they should not become the protocol core.
 
 ## Makefile Installers
 
