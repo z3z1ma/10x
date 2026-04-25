@@ -18,8 +18,9 @@ Loom is built from seven primitives:
 - Promotion
 
 These primitives are enough to express planning, implementation, debugging,
-review, release packaging, retrospectives, codebase mapping, and wiki
-synthesis without adding new truth-owner layers for each workflow.
+review, release packaging, retrospectives, codebase mapping, Git-backed
+isolation, and wiki synthesis without adding new truth-owner layers for each
+workflow.
 
 ## Transaction Shape
 
@@ -71,6 +72,7 @@ spike
 sketch
 map
 work
+git isolation
 review
 accept
 ship

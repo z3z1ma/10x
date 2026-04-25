@@ -176,10 +176,10 @@ The core protocol is the persisted owner graph:
 - memory
 - workspace support records
 
-Workflows such as brainstorm, debug, spike, sketch, map, review, accept, ship,
-retrospective, repair, and wiki write/audit are compositions through those
-layers. They should not create new truth owners unless a genuinely new kind of
-truth exists.
+Workflows such as brainstorm, debug, spike, sketch, map, Git-backed isolation,
+review, accept, ship, retrospective, repair, and wiki write/audit are
+compositions through those layers. They should not create new truth owners
+unless a genuinely new kind of truth exists.
 
 Harness adapters install, translate, or wrap the protocol. They do not own
 semantics. Optional utilities stay under `optional-utilities/` and are not part
@@ -196,6 +196,7 @@ The package now includes first-pass surfaces for:
 - change classes that guide evidence, critique, and verification posture
 - packet freshness and context-budget guidance
 - workspace scope aliases for multi-repo or multi-worktree resolution
+- Git branch and worktree discipline for Ralph-backed implementation isolation
 - named critique risk profiles
 - codebase atlas, debug, spike, sketch, execution-wave, external-reference, ship, and retrospective-prevention workflows as routes through existing layers
 - golden examples and fixture slices that make the protocol evaluable across harnesses

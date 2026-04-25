@@ -25,13 +25,18 @@ parent_merge_scope:
   paths: []
 source_fingerprint:
   git_commit: <sha or unknown>
+  integration_remote: <remote name|none|unknown>
+  integration_ref: <ref, tag, commit, or unknown>
+  integration_commit: <sha or unknown>
   git_status_summary: <clean|dirty|unknown>
   compiled_from:
     - ticket:<token>
 execution_context:
   branch: <name|unknown>
+  push_remote: <remote name|same_as_integration|none|unknown>
   worktree: <path|none|unknown>
   isolation: none
+  git_shared_metadata_mutations: forbidden
   destructive_commands: forbidden
   network: unknown
 context_budget:
@@ -61,6 +66,12 @@ What larger chain constrains the work.
 
 Name intended behavior separately from current implementation reality when this
 packet touches code.
+
+For Git-backed work, name the branch/worktree/integration-baseline posture here
+when the frontmatter is not enough, especially for multi-repo packets.
+
+For fork/upstream or review-system workflows, distinguish integration remote,
+push remote, and review target instead of collapsing them into one remote name.
 
 # Source Snapshot
 
@@ -97,6 +108,12 @@ When the child should stop, block, or escalate instead of widening scope.
 
 Stop if governing records or child-write-scope files appear materially newer
 than the source fingerprint.
+
+For Git-backed work, stop if the resolved integration ref or worktree state no
+longer matches the declared execution context closely enough to trust the packet.
+
+Do not run `git fetch`, `git fetch --prune`, remote edits, Git config edits, or
+other shared Git metadata mutations unless this packet explicitly allows them.
 
 For `test-first`, stop conditions must include: a failing check exists before implementation, and the check is driven to green inside this iteration.
 

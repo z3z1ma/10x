@@ -18,6 +18,7 @@ This skill is for the parent agent that is preparing, launching, and reconciling
 - packet style selection
 - source fingerprint and freshness checks
 - context budget declaration
+- Git execution context binding for packetized implementation work
 - parent/child handshake
 - iteration outcome vocabulary
 - ticket reconciliation after return
@@ -44,13 +45,15 @@ This skill is for the parent agent that is preparing, launching, and reconciling
 3. choose packet style
 4. choose verification posture (`test-first`, `observation-first`, or `none`)
 5. decide write scope
-6. declare source fingerprint and context budget
-7. compile the packet from the template
-8. read it once as if you were the child
-9. check whether sources or write-scope files changed materially before launch
-10. launch the fresh worker through the available harness transport
-11. inspect and reconcile the result back into the ticket
-12. route to Ralph again, critique, wiki, or outer-loop refinement
+6. for Git-backed file changes, use `loom-git` to choose branch/worktree
+   isolation and refresh the integration baseline
+7. declare source fingerprint, execution context, and context budget
+8. compile the packet from the template
+9. read it once as if you were the child
+10. check whether sources or write-scope files changed materially before launch
+11. launch the fresh worker through the available harness transport
+12. inspect and reconcile the result back into the ticket
+13. route to Ralph again, critique, wiki, or outer-loop refinement
 
 ## Strong Ralph Discipline
 
@@ -61,6 +64,8 @@ A strong packet should make all of these explicit:
 - sources that matter
 - write scope
 - source fingerprint
+- Git integration ref, branch, worktree, and isolation mode when repository
+  files will change
 - context budget
 - verification targets when claim coverage exists
 - verification posture and what counts as proof for this iteration
@@ -104,8 +109,10 @@ Then read conditionally:
    snapshot-first, or hermetic packet posture.
 4. `references/verification-posture.md` when deciding test-first,
    observation-first, or verification-neutral execution.
-5. `references/parent-child-handshake.md` when launching or reconciling a child
+5. `skills/loom-git/SKILL.md` when the iteration mutates repository files,
+   needs branch/worktree isolation, or participates in parallel Ralph.
+6. `references/parent-child-handshake.md` when launching or reconciling a child
    worker, especially parallel Ralph.
-6. `references/harness-invocation.md` only when transport mechanics need to be
+7. `references/harness-invocation.md` only when transport mechanics need to be
    documented or chosen.
-7. `templates/ralph-packet.md` only when creating the packet.
+8. `templates/ralph-packet.md` only when creating the packet.

@@ -8,6 +8,7 @@ suggested_skills:
   - loom-records
   - loom-tickets
   - loom-ralph
+  - loom-git
   - loom-specs
   - loom-research
   - loom-plans
@@ -31,6 +32,7 @@ Hydrate only what you need from:
 - `loom-records`
 - `loom-tickets`
 - `loom-ralph`
+- `loom-git`
 - `loom-specs`
 - `loom-research`
 - `loom-plans`
@@ -40,6 +42,7 @@ Hydrate only what you need from:
 ## Goals
 
 - ensure the work is owned by a ticket
+- prepare Git branch/worktree isolation when repository files will change
 - compile a bounded Ralph packet
 - execute through one or more fresh-context iterations
 - reconcile each iteration back into ticket truth
@@ -48,21 +51,27 @@ Hydrate only what you need from:
 ## Canonical Procedure
 
 Use `skills/loom-ralph/references/work-driver.md` and
-`skills/loom-ralph/SKILL.md` as the procedure.
+`skills/loom-ralph/SKILL.md` as the procedure. Use
+`skills/loom-git/SKILL.md` when repository files will change or Git isolation
+matters.
 
 In short:
 
 1. anchor to one ticket
 2. confirm readiness
-3. compile a bounded Ralph packet
-4. run one bounded iteration
-5. reconcile as parent
-6. route to the next owner
+3. use `loom-git` for branch/worktree setup when Git isolation matters
+4. compile a bounded Ralph packet
+5. run one bounded iteration
+6. reconcile as parent
+7. route to the next owner
 
 ## Native tools to prefer
 
 - `rg -n 'ticket:[a-z0-9]+' .loom --glob '*.md'`
 - `git status --short`
+- `git remote -v`
+- `git fetch --prune <remote>` when the resolved baseline is remote-backed
+- `git worktree list`
 - `git diff --stat`
 - `git diff`
 - `find .loom/packets/ralph -type f -name '*.md' | sort | tail`

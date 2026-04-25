@@ -136,8 +136,8 @@ They justify progress, critique, and wiki pages without pretending to own projec
 ### 8. Workflows stay routes, not new ontologies
 
 Loom can express codebase maps, debugging, spikes, sketches, execution waves,
-shipping, external reference provenance, and retrospective prevention without
-adding new canonical layers.
+Git-backed isolation, shipping, external reference provenance, and retrospective
+prevention without adding new canonical layers.
 
 The design rule is that a new workflow should route through the owner graph:
 research for investigation, specs for intended behavior, plans for sequencing,
@@ -171,8 +171,9 @@ workspace support records are core Loom surfaces because they own durable truth
 or support durable operation.
 
 Workflows are routes through those surfaces. Brainstorming, debugging, spikes,
-sketches, mapping, shipping, acceptance, retrospective, repair, and wiki work
-compose the owner graph; they do not become new owner layers by default.
+sketches, mapping, Git-backed isolation, shipping, acceptance, retrospective,
+repair, and wiki work compose the owner graph; they do not become new owner
+layers by default.
 
 Harness adapters transport the protocol into particular tools. Optional
 utilities stay outside the default protocol surface.

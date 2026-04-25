@@ -19,17 +19,20 @@ It is not "just code." It is ticket-owned execution.
 2. Read the smallest governing chain needed.
 3. Check ticket readiness.
 4. Move the ticket to `active` only when work is genuinely starting.
-5. Compile a Ralph packet with child write scope, parent merge scope, source
-   fingerprint, execution context, context budget, verification posture, stop
-   conditions, and output contract.
-6. Launch the bounded iteration through the available harness transport.
-7. Reconcile the child output as parent:
+5. For Git-backed file changes, use `skills/loom-git/SKILL.md` to resolve the
+   integration baseline and choose branch/worktree isolation before launch.
+6. Compile a Ralph packet with child write scope, parent merge scope, source
+   fingerprint, Git execution context when relevant, context budget,
+   verification posture, stop conditions, and output contract.
+7. Launch the bounded iteration through the available harness transport.
+8. Reconcile the child output as parent:
    - check scope discipline
    - check child write boundary
+   - check Git diff against the declared write scope when files changed
    - record evidence
    - update ticket journal and status
    - update packet status away from `compiled`
-8. Decide the next owner:
+9. Decide the next owner:
    - another Ralph iteration
    - critique
    - wiki
@@ -47,5 +50,6 @@ It is not "just code." It is ticket-owned execution.
 
 - Do not execute without a ticket owning live state.
 - Do not let a packet outrank the ticket or owner records.
+- Do not let a branch, worktree, commit, or PR replace ticket truth.
 - Do not widen scope because a nearby fix looks easy.
 - The child may recommend ticket updates; the parent commits ticket truth.

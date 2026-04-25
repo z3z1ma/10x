@@ -53,15 +53,18 @@ Recommended frontmatter:
 ```yaml
 source_fingerprint:
   git_commit: <sha or unknown>
+  integration_remote: <remote name|none|unknown>
+  integration_ref: <ref, tag, commit, or unknown>
+  integration_commit: <sha or unknown>
   git_status_summary: <clean|dirty|unknown>
   compiled_from:
     - ticket:<id>
     - spec:<id>
 ```
 
-Before launch, the parent checks whether governing records or write-scope files
-changed materially since the packet was compiled. If yes, supersede the packet
-and compile a fresh one.
+Before launch, the parent checks whether governing records, resolved integration
+refs, or write-scope files changed materially since the packet was compiled. If
+yes, supersede the packet and compile a fresh one.
 
 ## Write And Merge Scope
 
@@ -116,14 +119,21 @@ Recommended frontmatter:
 ```yaml
 execution_context:
   branch: <name|unknown>
+  push_remote: <remote name|same_as_integration|none|unknown>
   worktree: <path|none|unknown>
   isolation: none | branch | worktree | sandbox
+  git_shared_metadata_mutations: forbidden | allowed | unknown
   destructive_commands: forbidden
   network: allowed | forbidden | unknown
 ```
 
 This helps a future parent understand where the child worked and what tool
 permissions were expected.
+
+Use `skills/loom-git/SKILL.md` when choosing these values for Git-backed work.
+For fork/upstream, stacked-diff, and multi-repo packets, name the primary
+checkout in frontmatter and put per-repository integration remote, integration
+ref, push/review remote, branch, and worktree details in the packet body.
 
 ## Packet Lifecycle
 

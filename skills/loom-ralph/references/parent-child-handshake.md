@@ -52,6 +52,8 @@ For parallel Ralph, parent must verify:
   contention
 - each child gets its own packet
 - each packet has its own source fingerprint
+- each Git-backed child gets a distinct branch and, for concurrent mutation, a
+  distinct worktree
 - parent reconciles each result separately before merging wave truth
 
 If any check is ambiguous, run the work sequentially or return to plan/ticket
