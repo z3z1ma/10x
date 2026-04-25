@@ -79,6 +79,8 @@ Engage Loom more fully when:
 - the work needs adversarial review
 - the work needs a persistent explanation page
 - the work should advance through a fresh bounded worker
+- the change affects protocol authority, ownership, completion, acceptance,
+  routing, or operator behavior
 
 ## The Backbone Hierarchy
 
@@ -113,6 +115,8 @@ It advances one bounded slice through a persisted packet and one fresh worker.
 ## The Non-Negotiables
 
 - tickets are the sole live execution ledger
+- ticket acceptance owns closure; commands, commits, PRs, and packets do not
+  close work by themselves
 - critique is a first-class review layer, not a side comment
 - wiki is the persistent explanation layer
 - packets are bounded contracts, not transcript dumps

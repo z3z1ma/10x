@@ -4,8 +4,9 @@
 
 - Purpose
 - Strategy
-- Progress
+- Strategy Snapshot
 - Workstreams
+- Milestones
 - Sequencing
 - Execution Waves
 - Risks
@@ -15,9 +16,13 @@
 
 ## Notes
 
-`Progress` in a plan is not the same as ticket execution truth.
+`Strategy Snapshot` in a plan is not the same as ticket execution truth.
 
-Use it for strategic progress and high-level state, not line-by-line implementation journal entries.
+Use it for the current strategic picture, not line-by-line implementation
+journal entries.
+
+Plan milestones are execution-sequencing checkpoints. They are not roadmap
+commitments, initiative outcome metrics, or ticket progress state.
 
 ## Good linking
 

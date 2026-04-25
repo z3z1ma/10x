@@ -4,9 +4,16 @@
 
 A skill should own one coherent subsystem.
 
+Owner-layer skills should name the layer they own. Workflow, control-plane,
+inner-loop, authoring, support, and shared-grammar skills should say what they
+coordinate without pretending to be new truth layers.
+
 ## 2. Strong description
 
 The description should make activation discoverable without loading the whole skill first.
+
+Descriptions should include the clearest "use when" trigger and, when relevant,
+the owner boundary that prevents the skill from becoming a shadow ledger.
 
 ## 3. Operational clarity
 

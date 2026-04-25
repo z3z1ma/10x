@@ -1,14 +1,15 @@
 ---
 name: loom-wiki
-description: "Maintain the persistent, interlinked explanation layer for accepted truth. Use when an answer, architecture concept, workflow, troubleshooting pattern, or operator reference should compound into durable knowledge rather than disappear into chat. This replaces the older docs layer with a stronger wiki model."
+description: "Maintain the persistent, interlinked explanation layer for accepted understanding. Use when an answer, architecture concept, workflow, troubleshooting pattern, or operator reference should compound into durable knowledge rather than disappear into chat."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: wiki
+  skill_kind: owner-layer
+  owns_layer: wiki
 ---
 
 # loom-wiki
 
-Wiki is Loom's accepted-knowledge layer.
+Wiki is Loom's accepted-explanation layer.
 
 Use it when understanding should persist and compound.
 
@@ -19,7 +20,10 @@ Use it when understanding should persist and compound.
 - reference pages
 - inter-page linking
 - wiki packets for synthesis passes
-- page maintenance when accepted truth changes
+- page maintenance when accepted owner truth changes
+
+Wiki explains settled understanding. It does not own policy, intended behavior,
+live execution state, proof, or review verdicts.
 
 ## What Makes Wiki Valuable
 
@@ -41,6 +45,8 @@ Wiki is where you promote:
 - a workflow changed materially
 - the accepted architecture deserves a clear page
 - critique or research produced durable understanding that should become easier to reuse
+- a retrospective found accepted explanation that future agents should not have
+  to re-derive
 
 ## Do Not Use This Skill When
 
@@ -65,7 +71,7 @@ You can add more page types if the project genuinely needs them.
 1. choose the page family
 2. gather the accepted source records and evidence
 3. decide whether the work merits a wiki packet
-4. write or update the page from accepted truth
+4. write or update the page from accepted owner truth
 5. add sources and related pages
 6. link the page back into relevant tickets, critiques, or plans when useful
 
@@ -88,7 +94,7 @@ Read immediately before creating or substantially changing wiki pages:
 Then read conditionally:
 
 3. `references/wiki-write.md` when creating or substantially rewriting a wiki
-   page from accepted truth.
+   page from accepted owner truth.
 4. `references/maintenance.md` when updating, staling, or superseding existing
    pages.
 5. `references/wiki-audit.md` when auditing pages for staleness, duplication,

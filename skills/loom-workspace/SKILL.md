@@ -1,9 +1,9 @@
 ---
 name: loom-workspace
-description: "Enter a Loom workspace safely: discover structure, bootstrap the tree, resolve ownership, read constitution first, and route to the correct subsystem before downstream work. Use when the next owner layer is unclear, the workspace may be uninitialized, scope looks ambiguous, or you need to decide whether the next move is outer-loop framing, Ralph execution, critique, or wiki."
+description: "Enter a Loom workspace safely: discover structure, bootstrap the tree, resolve ownership, read constitution first, and route to the correct subsystem before downstream work. Use when the next owner layer is unclear, the workspace may be uninitialized, scope looks ambiguous, or you need to decide whether the next move is outer-loop framing, evidence, Ralph execution, critique, wiki, retrospective, or another workflow coordinator."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: control-plane
+  skill_kind: control-plane
 ---
 
 # loom-workspace
@@ -38,7 +38,9 @@ Do not start deep work before the workspace is structurally trustworthy enough t
 
 - `.loom/` is missing, partial, or suspicious
 - the target path may belong to one of several repositories
-- you do not yet know whether the task belongs to constitution, research, spec, plan, ticket, Ralph, critique, or wiki
+- you do not yet know whether the task belongs to constitution, initiative,
+  research, spec, plan, ticket, evidence, Ralph, critique, wiki,
+  retrospective, or a workflow coordinator
 - the user asked to set up Loom in a repository
 - the workspace needs a health pass before packet work
 
@@ -55,7 +57,7 @@ Do not start deep work before the workspace is structurally trustworthy enough t
 4. verify the canonical subdirectories exist
 5. resolve repository ownership of the target path
 6. read the governing artifact chain
-7. route into the next owner skill
+7. route into the next owner skill or workflow coordinator
 
 ## Signals That You Should Halt Or Escalate
 
@@ -79,7 +81,7 @@ Prefer direct inspection before inventing a helper abstraction:
 
 - the workspace root is explicit
 - structural trust is explicit
-- the next owner skill is explicit
+- the next owner skill or workflow coordinator is explicit
 - you are not guessing about scope or routing
 
 ## Read In This Order
@@ -88,8 +90,8 @@ Read immediately for normal workspace entry:
 
 1. `references/workspace-tree.md` when checking or bootstrapping the `.loom`
    directory shape.
-2. `references/routing.md` when deciding which owner skill or command should
-   handle the request.
+2. `references/routing.md` when deciding which owner layer or workflow
+   coordinator should handle the request.
 
 Then read conditionally:
 

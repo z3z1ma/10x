@@ -3,12 +3,20 @@ name: loom-skill-authoring
 description: "Create or refine Loom-compatible skills that are scoped, durable, discoverable, and template-backed. Use when adding a new subsystem skill, tightening a skill description, extending references/templates, or auditing a skill for overlap, ambiguity, or anti-patterns."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: authoring
+  skill_kind: authoring
 ---
 
 # loom-skill-authoring
 
 Use this skill to author skills in the same style this package uses.
+
+## What This Skill Owns
+
+- skill activation descriptions
+- skill boundaries and overlap review
+- skill directory structure
+- reference/template placement
+- anti-pattern review for hidden runtimes or vague ownership
 
 ## What Good Loom Skills Do
 
@@ -33,6 +41,13 @@ A good Loom skill:
 - the work really belongs to a canonical project record
 - the "new skill" is just a one-off task
 - you are trying to hide core rules inside a skill that should really be always-on doctrine
+
+## Done Means
+
+- the skill has a clear activation description
+- the skill states what it owns and what it does not own
+- references and templates are placed only where they serve the skill boundary
+- the skill does not duplicate another owner or create a hidden runtime
 
 ## Read In This Order
 

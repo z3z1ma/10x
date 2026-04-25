@@ -6,6 +6,7 @@ category: core
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-ship
   - loom-tickets
   - loom-critique
@@ -20,11 +21,13 @@ Ship target:
 `$ARGUMENTS`
 
 This command packages work for an external handoff.
-It does not close tickets. `/loom-accept` owns closure.
+It does not close tickets. The ticket acceptance gate owns closure; optional
+commands may invoke that workflow but do not own it.
 
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-ship`
 - `loom-tickets`
 - `loom-critique`
@@ -64,4 +67,4 @@ In short:
 - risk summary
 - follow-up list
 - release note draft, if useful
-- recommended next command
+- recommended next owner or command

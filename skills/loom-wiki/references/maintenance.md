@@ -4,7 +4,7 @@
 
 Update a page when:
 
-- accepted truth changed materially
+- accepted owner truth changed materially
 - the page answered a recurring question in chat and deserves promotion
 - critique found the explanation misleading
 - research or evidence materially changed the accepted understanding
@@ -12,7 +12,7 @@ Update a page when:
 ## Status guidance
 
 - `draft` while still being authored or validated
-- `accepted` when aligned with accepted truth
+- `accepted` when aligned with accepted owner truth
 - `stale` when still useful but out of date
 - `superseded` when replaced by a better page
 

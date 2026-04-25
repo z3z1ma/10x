@@ -99,7 +99,8 @@ It is the source-of-truth type system:
 
 - constitution owns durable identity and constraints
 - initiatives own strategic outcomes
-- research owns investigated evidence and options
+- research owns evidence synthesis, investigations, options, rejected paths, and
+  null results
 - specs own intended behavior and acceptance
 - plans own sequencing
 - tickets own live execution state
@@ -165,10 +166,11 @@ semantics.
 
 ### 11. Core layers and workflows keep growth disciplined
 
-The protocol core is the persisted owner graph. Constitution, initiative,
-research, spec, plan, ticket, packet, evidence, critique, wiki, memory, and
-workspace support records are core Loom surfaces because they own durable truth
-or support durable operation.
+The protocol core is the persisted owner/support graph. Constitution,
+initiative, research, spec, plan, ticket, evidence, critique, and wiki are
+canonical owner layers because they own durable project truth. Packets, memory,
+and workspace support records support durable operation without becoming primary
+truth owners.
 
 Workflows are routes through those surfaces. Brainstorming, debugging, spikes,
 sketches, mapping, Git-backed isolation, shipping, acceptance, retrospective,

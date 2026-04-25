@@ -52,6 +52,7 @@ The child owns one iteration.
 Prefer Ralph when:
 
 - the next step is implementation-sized
+- the ticket names one bounded implementation iteration
 - the task benefits from fresh context
 - the write boundary should be explicit
 - a packet would reduce ambiguity
@@ -59,6 +60,20 @@ Prefer Ralph when:
 
 You do not need Ralph for every small local note edit.
 You do need Ralph whenever "just continue in the same transcript" would make the work sloppier or less auditable.
+
+## Packetized Sibling Work
+
+Critique and wiki work may use packet discipline, but the domain skill activates
+first.
+
+- critique packets are owned by the critique workflow
+- wiki packets are owned by the wiki workflow
+- Ralph owns packetized implementation and the parent/child execution discipline
+  those workflows may reuse
+
+Do not route a review or synthesis pass to Ralph just because it uses a packet.
+Route by the truth being changed, then choose packetization if fresh context or a
+bounded handoff would improve the work.
 
 ## Packet Anatomy
 
@@ -129,12 +144,20 @@ The child must produce observed, inspectable evidence of current behavior before
 
 ### `none`
 
-No explicit verification beyond the normal output contract. Use when the iteration is genuinely verification-neutral — record hygiene, reference reconciliation, a documentation edit, a packet compile.
+No explicit verification beyond the normal output contract. Use only when the iteration is genuinely verification-neutral: non-semantic record hygiene, reference reconciliation, packet compilation, or another change whose correctness is structural rather than behavioral.
+
+Do not use `none` merely because a change is written in Markdown. Protocol,
+workflow, operator guidance, acceptance, or behavior-contract edits can change
+how Loom behaves and usually need structural evidence, observation-first proof,
+or critique.
 
 ### Choosing posture
 
 - if the spec or ticket names behavioral acceptance, default to `test-first`
 - if behavior is observable but not yet testable, default to `observation-first`
+- if the change affects protocol authority, completion, routing, or operator
+  behavior, default to structural evidence plus critique unless a stricter
+  posture is named
 - if the iteration does not change behavior, `none` is honest
 
 The posture is declared in the packet frontmatter so the child cannot quietly skip it and the parent cannot retroactively pretend it was demanded. Verification discipline is a property of the contract, not a property of the prose.

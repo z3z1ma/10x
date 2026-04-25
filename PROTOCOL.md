@@ -44,9 +44,9 @@ explanation. Retrospective promotes lessons into their owner layers.
 
 ## Core Protocol And Workflows
 
-The core protocol is the persisted owner graph.
+The core protocol is the persisted owner/support graph.
 
-Core protocol layers are the persisted surfaces that own truth:
+Canonical owner layers are the persisted surfaces that own project truth:
 
 ```text
 constitution
@@ -55,10 +55,16 @@ research
 spec
 plan
 ticket
-packet
 evidence
 critique
 wiki
+```
+
+Durable support surfaces help execution and recovery without becoming project
+truth owners:
+
+```text
+packet
 memory
 workspace support records
 ```

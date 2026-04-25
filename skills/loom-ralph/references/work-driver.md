@@ -17,7 +17,8 @@ It is not "just code." It is ticket-owned execution.
 
 1. Anchor to one ticket.
 2. Read the smallest governing chain needed.
-3. Check ticket readiness.
+3. Check Ralph-readiness: one bounded implementation iteration, write boundary,
+   likely verification posture, and output contract are explicit.
 4. Move the ticket to `active` only when work is genuinely starting.
 5. For Git-backed file changes, use `skills/loom-git/SKILL.md` to resolve the
    integration baseline and choose branch/worktree isolation before launch.
@@ -49,6 +50,8 @@ It is not "just code." It is ticket-owned execution.
 ## Guardrails
 
 - Do not execute without a ticket owning live state.
+- Do not force Ralph from a merely proposed or generally ready ticket; route back
+  to ticket/spec/plan refinement when Ralph-readiness is missing.
 - Do not let a packet outrank the ticket or owner records.
 - Do not let a branch, worktree, commit, or PR replace ticket truth.
 - Do not widen scope because a nearby fix looks easy.

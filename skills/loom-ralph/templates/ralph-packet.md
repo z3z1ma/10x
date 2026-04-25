@@ -102,6 +102,12 @@ Expand here with specifics the child needs:
 - for `observation-first`: what must be observed before and after, and how the before/after evidence is captured
 - for `none`: a one-line justification of why this iteration is verification-neutral
 
+Use `none` only for verification-neutral work such as non-semantic record
+hygiene, reference reconciliation, packet compilation, or a pure refactor riding
+on an already-green suite. Do not use `none` for protocol authority, routing,
+acceptance, behavior-contract, or operator-guidance changes merely because they
+are written in Markdown.
+
 # Stop Conditions
 
 When the child should stop, block, or escalate instead of widening scope.

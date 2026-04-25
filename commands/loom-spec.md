@@ -6,6 +6,7 @@ category: support
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-specs
   - loom-research
   - loom-plans
@@ -26,6 +27,7 @@ Use it when the project needs one stable statement of intended behavior before e
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-specs`
 - `loom-research`
 - `loom-plans`

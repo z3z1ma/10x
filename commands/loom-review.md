@@ -6,6 +6,7 @@ category: core
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-critique
   - loom-tickets
   - loom-specs
@@ -25,6 +26,7 @@ It handles both direct artifact critique and packetized implementation review.
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-critique`
 - `loom-tickets`
 - `loom-specs`

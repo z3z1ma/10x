@@ -7,6 +7,7 @@ Loom is only useful if its records are truthful and its completion claims mean s
 Work is done only when all relevant conditions are true:
 
 - the owning ticket tells the truth
+- the ticket-owned acceptance decision, when needed, tells the truth
 - acceptance criteria are satisfied or explicitly revised
 - required evidence exists
 - required critique has happened or is explicitly deferred
@@ -100,6 +101,9 @@ Use these defaults unless the project says otherwise:
 - meaningful code changes usually deserve critique
 - accepted understanding that future agents will need should become wiki, not only ticket prose
 - if critique found unresolved medium or high-severity issues, do not pretend the work is fully accepted
+- recommended critique needs a recorded ticket disposition before closure
+- mandatory critique blocks closure until resolved, accepted as risk, or turned
+  into linked follow-up work
 
 ## Honesty Rules
 

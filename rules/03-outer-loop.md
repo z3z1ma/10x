@@ -6,7 +6,7 @@ Its job is to make the work small enough, clear enough, and honest enough that t
 
 ## The Outer Loop Questions
 
-Before you compile a packet or start coding, answer these questions:
+Before you compile a packet, start coding, or choose a downstream owner, answer these questions:
 
 1. what durable problem or opportunity exists
 2. what layer currently owns it
@@ -16,7 +16,7 @@ Before you compile a packet or start coding, answer these questions:
 6. what sequence makes sense
 7. what is the next bounded ticket-sized step
 
-If you cannot answer those, you are not ready for Ralph yet.
+If you cannot answer those, you are not ready for the inner loop yet.
 
 ## Backbone Progression
 
@@ -38,7 +38,11 @@ But every non-trivial task should be explainable against this model.
 
 ## Ticket Readiness Standard
 
-A ticket is ready for Ralph only when it makes the next iteration obvious enough that a fresh worker does not need transcript context to begin.
+A ticket is ready only when it makes the next governed move obvious enough that a fresh worker or reviewer does not need transcript context to begin.
+
+Ralph-ready is a stricter subset of ticket-ready: the ticket must also name one
+bounded implementation iteration, write boundary, likely verification posture,
+and expected output contract.
 
 A ready ticket should make all of these legible:
 
@@ -48,6 +52,8 @@ A ready ticket should make all of these legible:
 - what acceptance means
 - what artifacts constrain the work
 - what evidence the parent will expect
+- which owner should act next: local edit, Ralph, critique, wiki, evidence,
+  research/spec/plan refinement, or acceptance review
 
 If the ticket cannot do that, keep working in the outer loop.
 

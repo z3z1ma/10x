@@ -1,11 +1,12 @@
 ---
 name: loom-accept
-description: "Make a fail-closed acceptance decision for a ticket or change target: verify evidence and follow-through, then close honestly or reopen with concrete gaps."
+description: "Invoke the ticket-owned acceptance gate for a ticket or change target: verify evidence and follow-through, then record the honest ticket state or concrete gaps."
 arguments: "<ticket id | change target>"
 category: core
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-tickets
   - loom-critique
   - loom-wiki
@@ -20,12 +21,14 @@ You are running **Loom Accept**.
 Acceptance target:
 `$ARGUMENTS`
 
-This command exists because `closed` is not a vibe.
-It is a governed decision.
+This command is an invocation adapter over the ticket acceptance gate.
+It exists because `closed` is not a vibe; the governed decision belongs in the
+ticket.
 
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-tickets`
 - `loom-critique`
 - `loom-wiki`
@@ -36,7 +39,7 @@ Hydrate only what you need from:
 
 - compare the claimed outcome against the actual acceptance contract
 - verify evidence, critique disposition, and wiki disposition
-- close only when the durable story is truthful
+- record `closed` only when the ticket acceptance gate says the durable story is truthful
 - otherwise leave a precise and actionable non-closure state
 
 ## Canonical Procedure
@@ -71,4 +74,4 @@ In short:
 - ticket status after the decision
 - evidence and critique basis for that decision
 - follow-up tickets or gaps if not closed
-- recommended next command
+- recommended next owner or command

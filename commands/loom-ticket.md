@@ -33,7 +33,7 @@ Hydrate only what you need from:
 ## Goals
 
 - ensure the work has one truthful ticket owner
-- keep the ticket bounded and ready for Ralph
+- keep the ticket bounded and ready for the next owner
 - correct links, dependencies, acceptance criteria, and status
 - stop before implementation
 

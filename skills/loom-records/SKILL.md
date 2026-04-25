@@ -1,9 +1,9 @@
 ---
 name: loom-records
-description: "Shared Loom record grammar: frontmatter, IDs, filenames, typed links, evidence records, template use, and native validation patterns. Use when creating or reshaping any Loom artifact, reconciling references, deciding how to name a file, or replacing old helper-script behavior with direct record work."
+description: "Shared Loom record grammar: frontmatter, IDs, filenames, typed links, status lifecycles, claim coverage syntax, template use, and native validation patterns. Use when creating or reshaping any Loom artifact, reconciling references, deciding how to name a file, or replacing old helper-script behavior with direct record work."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: shared-grammar
+  skill_kind: shared-grammar
 ---
 
 # loom-records
@@ -15,7 +15,8 @@ It is the place to consult when you need to know:
 - how a Loom record should look
 - how IDs and filenames should be shaped
 - how typed links should work
-- how to create an evidence record
+- how evidence, critique, coverage, and external references should link without
+  changing owner-layer authority
 - how to validate and reconcile a set of records without a bundled script
 
 ## What This Skill Owns
@@ -29,7 +30,6 @@ It is the place to consult when you need to know:
 - external reference provenance
 - implementation reality boundaries for software work
 - change class taxonomy for routing evidence and critique
-- evidence record shape
 - reference reconciliation discipline
 - cross-record validation recipes
 - repair and drift taxonomy
@@ -48,13 +48,21 @@ That means:
 - the body headings matter
 - the links field matters
 
-## When To Use This Skill
+## Use This Skill When
 
 - you are creating a new record of any kind
 - you are unsure about IDs or filenames
 - you are updating links or reconciling references
-- you need to create an evidence artifact
+- you need shared grammar for claim coverage, status, links, or validation
 - you are replacing helper-script behavior with native operations
+
+## Do Not Use This Skill When
+
+- the next truth change belongs to a specific owner skill such as ticket,
+  evidence, critique, wiki, spec, plan, research, initiative, or constitution
+- you are trying to use grammar guidance as a substitute for owner-layer review
+- you need a proof artifact; use `loom-evidence` for the evidence record and
+  return here only for shared naming, linking, or validation grammar
 
 ## Default Record Posture
 
@@ -112,4 +120,4 @@ Then read conditionally:
    safe repair.
 11. `references/retrospective.md` when assimilating durable learning into owner
    layers.
-12. `templates/evidence.md` only when creating a proof artifact.
+12. `skills/loom-evidence/SKILL.md` when creating or validating proof artifacts.

@@ -3,7 +3,8 @@ name: loom-initiatives
 description: "Maintain strategic outcome containers above plans and tickets. Use when the work spans multiple downstream artifacts, needs durable success metrics or milestones, or should have one long-lived strategic owner instead of a loose pile of tickets."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: initiative
+  skill_kind: owner-layer
+  owns_layer: initiative
 ---
 
 # loom-initiatives
@@ -19,6 +20,14 @@ They are the place where the project says, "this cross-cutting result matters en
 - milestone framing
 - success metrics
 - explicit downstream execution graph
+
+## Milestone Boundary
+
+Initiative milestones are outcome checkpoints for a strategic result.
+
+They are not constitutional roadmap commitments, plan sequencing details, or
+ticket progress logs. Use them to show whether the broader outcome is advancing,
+then let plans own execution order and tickets own live state.
 
 ## Use This Skill When
 

@@ -6,6 +6,7 @@ category: support
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-codemap
   - loom-wiki
   - loom-research
@@ -24,6 +25,7 @@ It does not create a new canonical layer.
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-codemap`
 - `loom-wiki`
 - `loom-research`

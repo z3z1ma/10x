@@ -6,6 +6,7 @@ category: support
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-research
   - loom-initiatives
   - loom-plans
@@ -26,6 +27,7 @@ Use it when the project needs evidence before committing to a behavior, strategy
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-research`
 - `loom-initiatives`
 - `loom-plans`

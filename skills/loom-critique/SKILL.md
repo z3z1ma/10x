@@ -3,7 +3,8 @@ name: loom-critique
 description: "Run adversarial review as a first-class Loom layer. Use when code changes, behavior changes, Loom records, or other work products need pressure-testing against evidence before acceptance."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: critique
+  skill_kind: owner-layer
+  owns_layer: critique
 ---
 
 # loom-critique
@@ -24,6 +25,9 @@ This skill exists so review has the same durability and rigor as execution.
 - named critique profiles
 - review severity and disposition
 - follow-up pressure on tickets, specs, plans, and wiki pages
+
+Critique owns findings and verdicts. Tickets own live execution state,
+acceptance disposition, accepted risk, and closure.
 
 ## Use This Skill When
 
@@ -110,6 +114,8 @@ Then read conditionally:
 
 3. `references/finding-format.md` before writing durable findings or tracking
    finding dispositions.
-4. `templates/critique.md` when creating a critique record.
-5. `templates/critique-packet.md` only for packetized implementation/code
+4. `skills/loom-evidence/SKILL.md` when evidence strength, proof artifacts, or
+   claim support/challenge need direct inspection.
+5. `templates/critique.md` when creating a critique record.
+6. `templates/critique-packet.md` only for packetized implementation/code
    review or high-risk fresh-context artifact review.

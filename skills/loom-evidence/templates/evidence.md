@@ -14,7 +14,7 @@ external_refs: {}
 
 # Summary
 
-What this evidence proves and why it exists.
+What was observed, why it exists, and which claims it supports or challenges.
 
 # Procedure
 
@@ -59,7 +59,8 @@ What the evidence actually showed.
 
 # Interpretation
 
-What conclusion is justified, and what conclusion is **not** justified.
+What limited interpretation is justified, and what conclusion is **not**
+justified by this evidence alone.
 
 # Related Records
 

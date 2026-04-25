@@ -18,7 +18,7 @@
 3. promote accepted explanation into wiki
 4. preserve rejected options or null results in research
 5. choose exactly one prevention artifact for each repeated mistake
-6. run `/loom-accept` only after records tell the truth
+6. run the ticket acceptance gate only after records tell the truth
 
 ## Expected Artifacts
 

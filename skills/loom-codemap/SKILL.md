@@ -3,7 +3,7 @@ name: loom-codemap
 description: "Map a repository or module into Loom wiki, research, and evidence without creating a new truth layer. Use when orientation cost is high, packet compilation keeps rediscovering structure, or path-local context adapters need safe source records."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: workflow
+  skill_kind: workflow
 ---
 
 # loom-codemap
@@ -13,7 +13,7 @@ Codebase atlas work makes repository structure easier to recover.
 It does not create a new canonical layer. Accepted structure belongs in wiki,
 investigation belongs in research, and scan proof belongs in evidence.
 
-## What This Skill Owns
+## What This Workflow Coordinates
 
 - codebase map workflow
 - module atlas workflow
@@ -97,7 +97,7 @@ Then read conditionally:
 
 2. `skills/loom-research/SKILL.md` when scan results include uncertainty,
    rejected interpretations, or null results.
-3. `skills/loom-records/templates/evidence.md` when scan commands or observed
-   structure should be preserved as proof.
+3. `skills/loom-evidence/SKILL.md` when scan commands or observed structure
+   should be preserved as proof.
 4. `skills/loom-wiki/SKILL.md` when accepted structure should become a
    reusable atlas or module page.

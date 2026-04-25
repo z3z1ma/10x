@@ -6,4 +6,4 @@
 4. Read evidence and critique disposition.
 5. Confirm wiki disposition.
 6. Produce PR body as an external package.
-7. Leave closure to `/loom-accept`.
+7. Leave closure to the ticket acceptance gate, optionally invoked through `/loom-accept`.

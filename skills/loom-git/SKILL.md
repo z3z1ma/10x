@@ -3,7 +3,7 @@ name: loom-git
 description: "Use Git as Loom's implementation isolation and history surface without letting it become a truth ledger. Use when discovering a repository's integration baseline, preparing branches or worktrees, coordinating parallel Ralph work, reviewing diffs, staging commits, merging, or recording Git provenance in packets and evidence."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: workflow
+  skill_kind: workflow
 ---
 
 # loom-git
@@ -22,7 +22,7 @@ a fork upstream, a patch-stack parent, a tag, or a specific commit. If Loom
 cannot identify it from records, repository policy, remote metadata, or operator
 input, scope fails closed.
 
-## What This Skill Owns
+## What This Workflow Coordinates
 
 - repository state inspection before work begins
 - integration baseline discovery and freshness checks
@@ -33,7 +33,7 @@ input, scope fails closed.
 - parallel Ralph isolation across branches, worktrees, and repositories
 - diff, staging, commit, merge, and PR hygiene as they relate to Loom truth
 
-## What This Skill Does Not Own
+## What Git Does Not Own
 
 - intended behavior, which belongs in specs and tickets
 - live execution state, which belongs in tickets
@@ -42,6 +42,7 @@ input, scope fails closed.
 - review verdicts, which belong in critique
 - accepted explanation, which belongs in wiki
 - external shipping summaries, which belong in `loom-ship`
+- acceptance or closure, which belongs in the ticket acceptance gate
 
 ## Use This Skill When
 

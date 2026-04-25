@@ -6,6 +6,7 @@ category: core
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-tickets
   - loom-ralph
   - loom-git
@@ -30,6 +31,7 @@ Its job is to move one truthful ticket forward through bounded Ralph iterations 
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-tickets`
 - `loom-ralph`
 - `loom-git`
@@ -58,7 +60,7 @@ matters.
 In short:
 
 1. anchor to one ticket
-2. confirm readiness
+2. confirm Ralph-readiness
 3. use `loom-git` for branch/worktree setup when Git isolation matters
 4. compile a bounded Ralph packet
 5. run one bounded iteration
@@ -80,6 +82,9 @@ In short:
 ## Guardrails
 
 - Do not work without a ticket owning live state.
+- Do not compile a Ralph packet unless the ticket names one bounded
+  implementation iteration, write boundary, likely verification posture, and
+  output contract.
 - Do not let the packet outrank the ticket or other canonical records.
 - Do not widen scope because another nearby fix looks easy.
 - Do not close the ticket on vibes.

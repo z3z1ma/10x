@@ -6,6 +6,7 @@ category: support
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-debugging
   - loom-research
   - loom-specs
@@ -28,6 +29,7 @@ Debugging follows:
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-debugging`
 - `loom-research`
 - `loom-specs`

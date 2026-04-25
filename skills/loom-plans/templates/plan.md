@@ -19,13 +19,19 @@ Why this plan exists.
 
 The overall route or approach.
 
-# Progress
+# Strategy Snapshot
 
-High-level progress only.
+Current strategic picture only. Do not use this as a progress log; live state
+belongs in tickets.
 
 # Workstreams
 
-Major streams or phases of work.
+Major streams or phases of execution strategy.
+
+# Milestones
+
+Execution-sequencing checkpoints. Do not use these as initiative outcome
+metrics, roadmap commitments, or ticket progress state.
 
 # Sequencing
 

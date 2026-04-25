@@ -3,7 +3,8 @@ name: loom-constitution
 description: "Maintain durable project identity, principles, constraints, strategic direction, decision records, and roadmap records. Use when the work changes what the project is, what it values, what it refuses, or what long-lived direction it is committing to beyond current execution."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: constitution
+  skill_kind: owner-layer
+  owns_layer: constitution
 ---
 
 # loom-constitution
@@ -20,6 +21,14 @@ Use it when the project needs to remember what it is and how it should judge fut
 - durable principles and constraints
 
 Decision records and roadmap records are first-class constitutional artifacts, not subtypes tucked under the main constitution file. Decision records are Loom's ADR layer: they capture durable architectural and policy choices and their rejected alternatives, so future agents inherit precedent instead of re-deriving it. Roadmap records live in the same subsystem because a roadmap is strategic direction made durable — sequencing at the policy layer, not sequencing at the execution layer.
+
+## Roadmap Boundary
+
+Roadmaps express durable strategic direction and policy-level milestones.
+
+They do not replace initiative success metrics, plan sequencing milestones, or
+ticket execution state. If a roadmap starts tracking day-to-day progress, route
+that detail down into initiatives, plans, or tickets.
 
 ## Use This Skill When
 

@@ -1,9 +1,9 @@
 ---
 name: loom-ralph
-description: "Run the inner implementation loop through bounded fresh-context packets. Use when one exact ticket is ready for one explicit iteration, when the write boundary and output contract should be declared up front, or when critique/wiki should be launched as packetized sibling variants."
+description: "Run the inner implementation loop through bounded fresh-context packets. Use when one exact ticket is Ralph-ready for one explicit implementation iteration and the write boundary, verification posture, source fingerprint, and output contract should be declared up front. For critique or wiki packets, activate the domain skill first and reuse packet discipline there."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: inner-loop
+  skill_kind: inner-loop
 ---
 
 # loom-ralph
@@ -23,19 +23,23 @@ This skill is for the parent agent that is preparing, launching, and reconciling
 - iteration outcome vocabulary
 - ticket reconciliation after return
 
+Ralph owns packetized implementation. Critique and wiki may reuse packet
+discipline, but their domain skills own critique packets and wiki packets.
+
 ## Use This Skill When
 
-- one exact ticket is ready for one bounded iteration
+- one exact ticket is Ralph-ready for one bounded implementation iteration
+- the ticket is Ralph-ready, not merely proposed or generally ready
 - the work would benefit from fresh context
 - the write boundary should be explicit
 - the parent wants a durable packet contract
-- critique or wiki passes need to be launched in the same packetized style
 
 ## Do Not Use This Skill When
 
 - the work is still under-scoped
 - the ticket is too vague
 - the next move is obviously research, spec, plan, or ticket refinement
+- the next move is critique or wiki; use that domain skill first
 - the task is a tiny local edit that does not need a packet
 
 ## Parent Procedure
@@ -81,11 +85,15 @@ Postures:
 
 - `test-first` — the child must produce a failing check before any implementation change and drive it to green inside this iteration. This is Loom's native TDD shape.
 - `observation-first` — the child must capture inspectable evidence of current behavior, change it, and capture inspectable evidence of the new behavior.
-- `none` — no explicit verification beyond the normal output contract. Honest only for iterations that do not change behavior (record hygiene, reference reconciliation, documentation edits).
+- `none` — no explicit verification beyond the normal output contract. Honest only for verification-neutral iterations such as non-semantic record hygiene, reference reconciliation, or packet compilation.
 
 Choose per packet, not per ticket. A test-first ticket can still have a refactor-only iteration that is `none`.
 
 See `references/verification-posture.md` for details.
+
+Do not choose `none` just because the file is Markdown. Protocol authority,
+operator guidance, acceptance, or behavior-contract edits can change how Loom
+behaves and usually need structural evidence plus critique.
 
 ## Done Means
 
@@ -113,6 +121,8 @@ Then read conditionally:
    needs branch/worktree isolation, or participates in parallel Ralph.
 6. `references/parent-child-handshake.md` when launching or reconciling a child
    worker, especially parallel Ralph.
-7. `references/harness-invocation.md` only when transport mechanics need to be
+7. `skills/loom-critique/SKILL.md` or `skills/loom-wiki/SKILL.md` when the next
+   packetized pass is review or synthesis rather than implementation.
+8. `references/harness-invocation.md` only when transport mechanics need to be
    documented or chosen.
-8. `templates/ralph-packet.md` only when creating the packet.
+9. `templates/ralph-packet.md` only when creating the packet.

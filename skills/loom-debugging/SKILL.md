@@ -3,7 +3,7 @@ name: loom-debugging
 description: "Run a reproduce-first debug or incident workflow through existing Loom layers. Use when behavior fails, root cause is unknown, or a fix needs reproduction evidence, root-cause preservation, and regression proof."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: workflow
+  skill_kind: workflow
 ---
 
 # loom-debugging
@@ -12,7 +12,7 @@ Debugging is a workflow over existing Loom layers.
 
 It does not create a new canonical layer.
 
-## What This Skill Owns
+## What This Workflow Coordinates
 
 - reproduce-first bug workflow
 - root-cause routing
@@ -56,7 +56,8 @@ Follow:
 | intended behavior clarification | spec |
 | fix execution | ticket and Ralph |
 | regression proof | evidence |
-| recurring lesson | wiki, research, spec, or constitution via retrospective |
+| recurring proof gap | ticket follow-up or test expectation via retrospective |
+| recurring lesson | wiki, research, spec, plan, initiative, constitution, evidence, or memory via retrospective |
 
 ## Done Means
 
@@ -71,8 +72,8 @@ Follow:
 
 Read immediately for debugging work:
 
-1. `skills/loom-records/templates/evidence.md` when preserving reproduction,
-   red/green output, logs, screenshots, or other proof.
+1. `skills/loom-evidence/SKILL.md` when preserving reproduction, red/green
+   output, logs, screenshots, or other proof.
 
 Then read conditionally:
 

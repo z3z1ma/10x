@@ -1,9 +1,10 @@
 ---
 name: loom-tickets
-description: "Maintain the sole live execution ledger. Use when new work needs a bounded owner, when execution status changes, when blockers or evidence change, or when Ralph, critique, or wiki passes must reconcile their consequences back into durable execution truth."
+description: "Maintain the sole live execution ledger and ticket-owned acceptance gate. Use when new work needs a bounded owner, when execution status, blockers, evidence, critique, wiki, or retrospective disposition changes, or when Ralph and other workflow passes must reconcile their consequences back into durable execution truth."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: ticket
+  skill_kind: owner-layer
+  owns_layer: ticket
 ---
 
 # loom-tickets
@@ -25,6 +26,7 @@ If execution truth changed, the ticket should absorb it.
 - evidence / critique / wiki disposition
 - journal updates
 - acceptance gate behavior
+- acceptance and closure decisions
 
 ## Use This Skill When
 
@@ -35,6 +37,7 @@ If execution truth changed, the ticket should absorb it.
 - critique changed what the ticket should say
 - wiki follow-through happened or was deferred
 - a Ralph run needs to be reconciled
+- acceptance or closure needs to be decided through the ticket-owned gate
 
 ## Do Not Use This Skill When
 
@@ -55,12 +58,22 @@ A good ticket should let a fresh agent answer:
 - what evidence exists
 - what the blockers are
 - what the next move is
+- which acceptance IDs are in scope, without redefining the spec contract
 
 ## Dependency Model
 
 Use `depends_on` for hard upstream ticket prerequisites.
 
 Use `links:` for softer relationships such as critique, wiki, or related work.
+
+## Acceptance Boundary
+
+Tickets own the live acceptance dossier: scoped acceptance IDs, evidence
+disposition, critique disposition, wiki disposition, accepted risk, blockers,
+and closure state.
+
+Optional commands, commits, PRs, packets, evidence, critique, and wiki pages may
+feed that dossier. They do not close work by themselves.
 
 ## Native Creation Pattern
 
@@ -80,6 +93,7 @@ Then replace the placeholders in the copied file.
 - status matches reality
 - the next move is legible
 - evidence and follow-through are linked or explicitly absent for a reason
+- closure, when claimed, is backed by the ticket-owned acceptance gate
 
 ## Read In This Order
 
@@ -93,9 +107,11 @@ Then read conditionally:
 
 3. `references/dependencies.md` when modeling hard prerequisites or softer
    links.
-4. `skills/loom-records/references/change-class.md` when selecting evidence,
+4. `skills/loom-evidence/SKILL.md` when proof artifacts need to be created,
+   checked, or linked into the acceptance dossier.
+5. `skills/loom-records/references/change-class.md` when selecting evidence,
    critique profiles, or verification posture from the kind of mutation.
-5. `skills/loom-records/references/claim-coverage.md` when tying the ticket to
+6. `skills/loom-records/references/claim-coverage.md` when tying the ticket to
    spec acceptance or critique findings.
-6. `references/acceptance-gate.md` when deciding whether closure is honest.
-7. `templates/ticket.md` only when creating a ticket.
+7. `references/acceptance-gate.md` when deciding whether closure is honest.
+8. `templates/ticket.md` only when creating a ticket.

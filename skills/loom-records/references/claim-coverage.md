@@ -37,13 +37,13 @@ Specs should give important requirements and acceptance units IDs:
 ```md
 # Requirements
 
-- REQ-001: The command refuses to close a ticket with unresolved high-severity critique.
-- REQ-002: The command reports missing evidence before changing ticket status.
+- REQ-001: The ticket acceptance gate refuses to close a ticket with unresolved high-severity critique.
+- REQ-002: The ticket acceptance gate reports missing evidence before changing ticket status.
 
 # Acceptance
 
-- ACC-001: Given unresolved high-severity critique, `/loom-accept` leaves the ticket open.
-- ACC-002: Given missing evidence, `/loom-accept` reports the gap and leaves a concrete next step.
+- ACC-001: Given unresolved high-severity critique, the ticket acceptance gate leaves the ticket open.
+- ACC-002: Given missing evidence, the ticket acceptance gate reports the gap and leaves a concrete next step.
 ```
 
 ## Ticket Shape

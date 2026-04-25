@@ -3,12 +3,14 @@ name: my-skill
 description: "What it does, when to use it, and when not to."
 compatibility: Markdown-native Loom.
 metadata:
-  loom_layer: custom
+  skill_kind: custom
 ---
 
 # my-skill
 
 ## What This Skill Owns
+
+## What This Skill Does Not Own
 
 ## Use This Skill When
 

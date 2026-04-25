@@ -61,6 +61,10 @@ What evidence exists or is expected.
 
 Risk class: low | medium | high
 
+Critique policy: optional | recommended | mandatory
+
+Policy rationale:
+
 Required critique profiles:
 - operator-clarity
 
@@ -69,9 +73,11 @@ Findings:
 
 Status: required | completed | deferred | not_required
 
+Deferral / not-required rationale:
+
 # Wiki Disposition
 
-Whether accepted knowledge should be promoted into the wiki.
+Whether accepted explanation should be promoted into the wiki.
 
 # Acceptance Decision
 

@@ -3,16 +3,17 @@ name: loom-ship
 description: "Package already-truthful Loom work for merge, release, or handoff without closing tickets. Use when ticket, evidence, critique, and wiki disposition should become a PR summary, release note draft, risk summary, or follow-up list."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: workflow
+  skill_kind: workflow
 ---
 
 # loom-ship
 
 Shipping packages work for an external handoff.
 
-It does not own closure. `/loom-accept` owns ticket closure.
+It does not own closure. The ticket acceptance gate owns closure; optional
+commands may invoke that workflow but do not own it.
 
-## What This Skill Owns
+## What This Workflow Coordinates
 
 - PR or merge summary drafting
 - release note drafting
@@ -55,14 +56,14 @@ It does not own closure. `/loom-accept` owns ticket closure.
 
 ## Guardrail
 
-Shipping may summarize and package. Acceptance owns closure.
+Shipping may summarize and package. Ticket acceptance owns closure.
 
 ## Done Means
 
 - the package cites Loom records rather than transcript memory
 - risks and unresolved follow-ups are visible
 - external summaries do not become a competing execution ledger
-- the next command is explicit, usually `/loom-accept` or `/loom-review`
+- the next owner is explicit, usually ticket acceptance or critique
 
 ## Read In This Order
 
@@ -70,12 +71,14 @@ Read immediately for shipping/package work:
 
 1. `skills/loom-tickets/SKILL.md` when reading ticket state, acceptance, and
    live execution truth.
-2. `skills/loom-records/SKILL.md` when checking evidence, links, external refs,
-   or claim coverage.
+2. `skills/loom-evidence/SKILL.md` when checking proof artifacts or evidence
+   summaries.
+3. `skills/loom-records/SKILL.md` when checking links, external refs, or claim
+   coverage grammar.
 
 Then read conditionally:
 
-3. `skills/loom-critique/SKILL.md` when unresolved risk or review disposition
+4. `skills/loom-critique/SKILL.md` when unresolved risk or review disposition
    affects packaging.
-4. `skills/loom-wiki/SKILL.md` when accepted explanation or release notes need
+5. `skills/loom-wiki/SKILL.md` when accepted explanation or release notes need
    wiki-backed wording.

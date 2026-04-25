@@ -4,7 +4,7 @@
 
 - `initiative:operator-workflows`
 - no accepted spec for the requested behavior
-- proposed ticket exists but is not ready for Ralph until the spec and route are
+- proposed ticket exists but is not Ralph-ready until the spec and route are
   clear
 
 ## Operator Request

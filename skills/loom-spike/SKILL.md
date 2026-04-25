@@ -3,7 +3,7 @@ name: loom-spike
 description: "Run bounded spike and sketch investigations as research variants. Use when an experiment, prototype, or UI/product sketch should produce evidence, conclusions, null results, and a downstream route without becoming a new layer."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: workflow
+  skill_kind: workflow
 ---
 
 # loom-spike
@@ -12,7 +12,7 @@ Spikes and sketches are research-shaped workflows.
 
 They are useful when the project needs bounded discovery before commitment.
 
-## What This Skill Owns
+## What This Workflow Coordinates
 
 - spike experiment framing
 - sketch variant framing
@@ -75,8 +75,8 @@ Read immediately for spike or sketch work:
 
 1. `skills/loom-research/SKILL.md` when recording experiment method,
    conclusions, rejected options, or null results.
-2. `skills/loom-records/templates/evidence.md` when preserving screenshots,
-   logs, artifacts, or observed outputs.
+2. `skills/loom-evidence/SKILL.md` when preserving screenshots, logs,
+   artifacts, or observed outputs.
 
 Then read conditionally:
 

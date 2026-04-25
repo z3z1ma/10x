@@ -1,11 +1,13 @@
 ---
 name: loom-retrospective
-description: "Run the Loom retrospective pass: assimilate what was learned during a ticket, initiative, or recent work slice into the proper owner layers — wiki, research, spec, plan, initiative, constitution, and memory."
+description: "Run the Loom retrospective pass: assimilate what was learned during a ticket, initiative, or recent work slice into existing owner layers without creating a new ledger."
 arguments: "<ticket id | topic | initiative | recent work slice>"
 category: core
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-retrospective
+  - loom-evidence
   - loom-wiki
   - loom-memory
   - loom-research
@@ -26,7 +28,7 @@ Retrospective target:
 
 A retrospective is how Loom compounds. It is the named pass that takes what was actually learned during recent work and promotes it into the owner layers that will carry it forward.
 
-Retrospective is not a new record kind. It produces no `.loom/retrospectives/` directory. It is a workflow over the existing canonical layers: wiki, research, spec, plan, initiative, constitution, and sparingly memory.
+Retrospective is not a new record kind. It produces no `.loom/retrospectives/` directory. It is a workflow over the existing owner layers: wiki, research, spec, plan, initiative, constitution, evidence, and sparingly memory.
 
 The loop is:
 
@@ -35,6 +37,8 @@ The loop is:
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-retrospective`
+- `loom-evidence`
 - `loom-wiki`
 - `loom-memory`
 - `loom-research`
@@ -85,6 +89,8 @@ Ask what kind of learning actually emerged, and which owner layer carries that k
 - changed sequencing or rollout logic → **plan**
 - changed strategic outcome framing → **initiative**
 - changed durable project policy or principles → **constitution** (including a new decision record if the change is a citable choice)
+- observed proof artifact, challenged observation, or validation artifact → **evidence**
+- missing proof that still needs work → **ticket follow-up or test expectation**
 - support-only continuity or reminders → **memory**
 
 ### 3. Promote
@@ -105,7 +111,7 @@ For each repeated mistake, choose exactly one prevention artifact:
 | Repeated mistake | Prevention artifact |
 | --- | --- |
 | behavior ambiguity | spec |
-| missed test case or proof gap | evidence or test expectation |
+| missed test case or proof gap | evidence when observed, or ticket/test expectation when future work |
 | bad architectural choice | constitution decision |
 | recurring operator confusion | wiki workflow or reference page |
 | repeated implementation pitfall | research null result or wiki troubleshooting |
@@ -116,7 +122,7 @@ If no repeated mistake exists, say so and avoid creating filler artifacts.
 
 ## Canonical Procedure
 
-Use `skills/loom-records/references/retrospective.md` as the procedure.
+Use `skills/loom-retrospective/SKILL.md` as the procedure.
 
 In short:
 

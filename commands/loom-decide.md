@@ -6,6 +6,7 @@ category: core
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-constitution
   - loom-research
   - loom-wiki
@@ -24,6 +25,7 @@ Use it when a choice should outlive the current ticket or plan, when future agen
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-constitution`
 - `loom-research`
 - `loom-wiki`

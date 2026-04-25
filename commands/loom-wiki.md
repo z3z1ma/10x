@@ -1,11 +1,12 @@
 ---
 name: loom-wiki
-description: "Write or audit the Loom Wiki. Write mode promotes accepted truth into a durable page. Audit mode walks the wiki for staleness, broken sources, duplication, and misplaced authority."
+description: "Write or audit the Loom Wiki. Write mode promotes accepted owner truth into durable explanation. Audit mode walks the wiki for staleness, broken sources, duplication, and misplaced authority."
 arguments: "[audit] <topic | page slug | ticket | workflow | concept>"
 category: support
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-wiki
   - loom-critique
   - loom-research
@@ -27,6 +28,7 @@ This command has two modes.
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-wiki`
 - `loom-critique`
 - `loom-research`
@@ -39,7 +41,7 @@ Hydrate only what you need from:
 
 ## Write mode
 
-Produce or update one targeted wiki page from accepted truth.
+Produce or update one targeted wiki page from accepted owner truth.
 
 Use `skills/loom-wiki/references/wiki-write.md` as the canonical write
 procedure.

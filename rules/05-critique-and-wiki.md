@@ -81,6 +81,21 @@ Change classes can tighten these defaults. Code behavior, protocol authority,
 data migration, and security-sensitive changes usually need named critique
 profiles even when the diff looks small.
 
+### Closure effects
+
+Critique policy affects ticket closure through the ticket's acceptance gate:
+
+- mandatory critique blocks `closed` until the required review exists and its
+  medium/high findings are resolved, explicitly accepted as risk, or converted
+  into linked follow-up work
+- recommended critique requires a recorded ticket disposition before closure:
+  completed, explicitly deferred, or intentionally not needed with rationale
+- optional critique does not block closure unless a ticket, spec, plan, or human
+  gate made it required for that work
+
+Critique itself does not close work. It produces findings and verdicts; the
+ticket owns the live state and acceptance decision.
+
 ## What Good Critique Produces
 
 A good critique record makes these explicit:
@@ -97,11 +112,15 @@ A good critique record makes these explicit:
 A good critique does not merely say "looks good".
 It leaves a durable review surface another agent can inspect later.
 
-## Wiki Is Also A Ralph Variant
+## Wiki Can Use Packet Discipline
 
-Wiki work is a packetized knowledge-compilation pass.
+Wiki work can be a packetized knowledge-compilation pass.
 
 It happens after enough truth is accepted that the understanding should persist as a page instead of a chat answer.
+
+The wiki workflow owns wiki packets. Ralph's packet discipline may be reused,
+but a wiki pass is routed by the explanation truth it changes, not by the fact
+that it uses a bounded handoff.
 
 Wiki is where Loom stores:
 
@@ -120,7 +139,7 @@ Wiki is:
 
 - interlinked
 - maintained over time
-- grounded in accepted truth
+- grounded in accepted owner truth
 - designed for future retrieval and reuse
 - allowed to grow page by page as understanding compounds
 
@@ -191,12 +210,14 @@ A retrospective is a named workflow — not a new record kind and not a new dire
 - changed sequencing → plan
 - changed strategic framing → initiative
 - changed principles, constraints, or citable decisions → constitution (including decision records)
+- observed proof artifacts, challenged observations, or validation artifacts → evidence
 - support-only continuity → memory
 
 Every repeated mistake should be promoted into exactly one prevention artifact:
 
 - behavior ambiguity → spec
-- missed test case or proof gap → evidence or a test expectation
+- missed test case or proof gap → evidence when an observed artifact exists, or
+  a ticket/test expectation when the gap is future work
 - bad architectural choice → constitution decision
 - recurring operator confusion → wiki workflow or reference page
 - repeated implementation pitfall → research null result or wiki troubleshooting page
@@ -209,6 +230,9 @@ Run a retrospective when:
 - an initiative is closing
 - a critique surfaced stable lessons
 - the same question has been answered from transcript context more than once
+
+Use the retrospective workflow when available. It is a coordinator over existing
+owner layers, not a new record kind and not a second execution ledger.
 
 A retrospective that produces no promotions is honest if there was nothing durable to promote. Do not manufacture artifacts to look productive, and do not let retrospective become a second ledger.
 

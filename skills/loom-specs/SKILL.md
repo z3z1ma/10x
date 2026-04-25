@@ -3,7 +3,8 @@ name: loom-specs
 description: "Maintain behavior contracts, requirements, scenarios, constraints, and acceptance criteria. Use when intended behavior is still fuzzy, when downstream implementation needs one canonical contract, or when critique and wiki will need a stable statement of what the system is supposed to do."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: spec
+  skill_kind: owner-layer
+  owns_layer: spec
 ---
 
 # loom-specs
@@ -19,6 +20,15 @@ They turn ambiguity into a durable contract.
 - scenarios
 - acceptance criteria
 - explicit constraints that shape implementation
+
+## Acceptance Boundary
+
+Specs own acceptance IDs, intended behavior, scenarios, and requirements.
+
+Tickets decide which acceptance IDs are in scope for live work and whether the
+evidence/critique dossier is sufficient for closure. Packets, evidence,
+critique, and wiki pages may cite spec acceptance IDs; they must not redefine
+them.
 
 ## Use This Skill When
 

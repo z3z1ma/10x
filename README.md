@@ -38,11 +38,11 @@ The layer model is the type system:
 | --- | --- |
 | constitution | durable identity, principles, hard constraints, precedent |
 | initiative | strategic outcome |
-| research | investigated evidence, options, rejected paths, null results |
+| research | evidence synthesis, investigations, options, rejected paths, null results |
 | spec | intended behavior and acceptance contract |
 | plan | sequencing and rollout strategy |
 | ticket | live execution state |
-| packet | bounded child-worker contract |
+| packet | bounded child-worker contract, not project truth |
 | evidence | proof artifacts |
 | critique | adversarial findings and verdicts |
 | wiki | accepted explanation |
@@ -80,7 +80,8 @@ pass.
 
 A parent agent compiles a packet, launches or delegates one fresh-context execution step, receives a bounded outcome, merges truth back into the ticket, and either continues, stops, escalates, or routes into critique/wiki.
 
-Critique and Wiki are Ralph variants with different output contracts.
+Critique and Wiki may reuse packet discipline, but their domain workflows own
+review and synthesis. They are not Ralph-owned execution variants.
 
 The deeper invariant is ownership-preserving mutation: every durable claim,
 behavior, proof, risk, and explanation lands in the artifact that owns that
@@ -157,11 +158,14 @@ operator commands:
 | Maintain | `/loom-repair` |
 
 Commands are convenience wrappers. They do not replace the rules, skills, or
-canonical records.
+canonical records, and they do not own closure or review truth.
 
 ## Protocol Core And Workflows
 
-The core protocol is the persisted owner graph:
+The core protocol is the visible graph of canonical owner layers plus durable
+support surfaces.
+
+Canonical owner layers:
 
 - constitution
 - initiative
@@ -169,10 +173,13 @@ The core protocol is the persisted owner graph:
 - spec
 - plan
 - ticket
-- packet
 - evidence
 - critique
 - wiki
+
+Durable support surfaces:
+
+- packet
 - memory
 - workspace support records
 

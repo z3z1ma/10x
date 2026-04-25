@@ -13,6 +13,7 @@ implementation.
 - ticket claim matrix when present
 - evidence
 - critique records and finding dispositions
+- critique policy: `optional`, `recommended`, or `mandatory`, plus rationale
 - wiki disposition
 - recent Ralph packet outcomes
 - relevant plan or initiative context
@@ -28,6 +29,7 @@ Acceptance Dossier =
   + Coverage
   + Claim Matrix
   + Evidence
+  + Critique Policy
   + Critique Disposition
   + Wiki Disposition
   + Journal
@@ -42,9 +44,15 @@ Acceptance Dossier =
 - Does evidence support each covered claim reference?
 - Does the claim matrix accurately summarize support, challenge, and open
   claims?
-- Are required critique profiles complete?
-- Are medium and high severity findings resolved, explicitly accepted, or
-  converted into follow-up tickets?
+- Is critique policy explicit enough for this change class and risk class?
+- When critique policy requires profiles, are those profiles complete?
+- If critique is mandatory, does required critique exist and are medium/high
+  findings resolved, explicitly accepted as risk, or converted into linked
+  follow-up tickets?
+- If critique is recommended but not performed, does the ticket record why it
+  was deferred or intentionally not needed before closure?
+- For any existing critique, are medium and high severity findings resolved,
+  explicitly accepted, or converted into follow-up tickets?
 - Are finding references qualified, for example `critique:<slug>#FIND-001`?
 - Is wiki or retrospective follow-through complete or truthfully deferred?
 - If human signoff or accepted-risk provenance is required, does
@@ -66,6 +74,8 @@ Acceptance Dossier =
 - Fail closed.
 - Do not close because the code feels done.
 - Do not close over unresolved required critique.
+- Do not close over missing mandatory critique.
+- Do not close over recommended critique without a ticket-owned disposition.
 - Do not let acceptance live only in chat.
 - Create follow-up tickets for substantial residual work.
 

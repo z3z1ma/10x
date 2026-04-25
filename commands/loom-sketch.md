@@ -6,6 +6,7 @@ category: support
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-spike
   - loom-research
   - loom-critique
@@ -27,6 +28,7 @@ Sketch is a product or UI research variant:
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-spike`
 - `loom-research`
 - `loom-critique`

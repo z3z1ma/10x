@@ -5,7 +5,7 @@ compatibility: Optional local writing utility; not part of the Loom protocol ker
 metadata:
   author: agent-loom
   version: "0.1"
-  loom_layer: utilities
+  skill_kind: utility
 ---
 
 ## Domain

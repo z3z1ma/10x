@@ -1,6 +1,6 @@
 # Wiki Audit
 
-Wiki audit checks whether accepted explanation still matches accepted truth.
+Wiki audit checks whether accepted explanation still matches accepted owner truth.
 
 It surfaces maintenance debt. It should not silently rewrite substantive pages.
 
@@ -15,8 +15,8 @@ It surfaces maintenance debt. It should not silently rewrite substantive pages.
 ## Classifications
 
 - `current`: page is accurate and grounded
-- `needs-update`: frame is still correct, but accepted truth or sources moved
-- `stale`: page no longer matches accepted truth
+- `needs-update`: frame is still correct, but accepted owner truth or sources moved
+- `stale`: page no longer matches accepted owner truth
 - `duplicate`: page overlaps another page and should be merged
 - `misplaced-authority`: page carries truth owned by constitution, spec, plan,
   ticket, or critique

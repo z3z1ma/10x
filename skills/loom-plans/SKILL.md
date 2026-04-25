@@ -3,7 +3,8 @@ name: loom-plans
 description: "Maintain execution strategy, decomposition, sequencing, rollout, and milestone coordination. Use when the work needs more than one ticket, when order matters, or when the project needs an explicit route from strategy to bounded execution without letting the plan become the execution ledger."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: plan
+  skill_kind: owner-layer
+  owns_layer: plan
 ---
 
 # loom-plans
@@ -19,6 +20,14 @@ They explain how the work should be sequenced without trying to replace ticket t
 - sequencing
 - milestones at the execution-strategy layer
 - explicit route from initiative/spec to ticket work
+
+## Milestone Boundary
+
+Plan milestones are execution-sequencing checkpoints.
+
+They are not constitutional roadmap direction, initiative outcome metrics, or
+ticket progress state. If a plan starts recording what happened today, move that
+truth into the ticket journal or evidence.
 
 ## Use This Skill When
 

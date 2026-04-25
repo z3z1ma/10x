@@ -1,0 +1,86 @@
+---
+name: loom-evidence
+description: "Maintain proof artifacts and observed outputs without turning evidence into project-truth ownership. Use when validation output, reproduction steps, test results, screenshots, logs, scan results, red/green proof, or other observations need durable preservation with claim-level support or challenge links."
+compatibility: Markdown-native, script-free Loom protocol.
+metadata:
+  skill_kind: owner-layer
+  owns_layer: evidence
+---
+
+# loom-evidence
+
+Evidence owns proof artifacts.
+
+It records what was observed, how it was observed, what claims the observation
+supports or challenges, and what the evidence does not prove.
+
+## What This Skill Owns
+
+- evidence records
+- reproduction, red/green, validation, scan, screenshot, log, and observation proof
+- procedure, artifact, environment, validity, and limitation sections
+- claim support and challenge links
+- proof provenance for external artifacts
+
+Evidence does not own intended behavior, live execution state, review verdicts,
+accepted explanation, or durable policy.
+
+## Use This Skill When
+
+- validation output should be preserved beyond the current transcript
+- a reproduction, failing check, green check, scan result, screenshot, or log
+  supports or challenges a claim
+- ticket acceptance needs durable proof rather than a summary assertion
+- critique needs inspectable evidence to evaluate a claim
+- a wiki or research conclusion needs sources that future agents can recheck
+
+## Do Not Use This Skill When
+
+- the fact is intended behavior; use `loom-specs`
+- the fact is live execution state, acceptance disposition, or closure; use `loom-tickets`
+- the fact is an adversarial finding or verdict; use `loom-critique`
+- the fact is accepted explanation; use `loom-wiki`
+- the fact is only support recall; use `loom-memory`
+
+## Evidence Posture
+
+Good evidence is:
+
+- observed, not inferred
+- specific about procedure and environment
+- explicit about what it supports and what it does not prove
+- linked to tickets, specs, packets, critiques, or wiki pages when useful
+- recheckable enough that a future agent can judge its current value
+
+## Default Procedure
+
+1. identify the claim, acceptance ID, ticket, packet, or critique question the
+   evidence bears on
+2. record the exact procedure or source of observation
+3. record artifacts, outputs, screenshots, logs, commands, files, or observations
+4. list supported claims and challenged claims separately
+5. state environment, validity, recheck trigger, and limitations
+6. link the evidence back into the ticket or other owner record that needs it
+
+## Done Means
+
+- the evidence record says what was observed and how
+- support and challenge links are explicit when claims are involved
+- limitations prevent overclaiming
+- the owning ticket, critique, research, spec, or wiki page can cite the proof
+  without treating evidence as the owner of project truth
+
+## Read In This Order
+
+Read immediately for evidence work:
+
+1. `templates/evidence.md` when creating a proof artifact.
+2. `skills/loom-records/references/claim-coverage.md` when evidence supports or
+   challenges spec acceptance IDs, ticket claims, or critique findings.
+
+Then read conditionally:
+
+3. `skills/loom-records/references/implementation-reality.md` when code, tests,
+   specs, and observed outputs need their truth boundaries separated.
+4. `skills/loom-records/references/query-and-linking.md` when linking evidence
+   back to tickets, specs, critiques, packets, or wiki pages.

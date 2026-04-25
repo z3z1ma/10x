@@ -51,8 +51,9 @@ No explicit verification beyond the normal output contract.
 
 Honest choices for `none`:
 
-- record hygiene and reference reconciliation
-- documentation edits that do not change behavior
+- non-semantic record hygiene and reference reconciliation
+- documentation/explanation edits that do not change behavior, operator
+  guidance, acceptance, routing, or protocol authority
 - a packet compile or a template move
 - a pure refactor that rides on an already-green test suite (in which case the output should cite the suite that stayed green)
 
@@ -66,6 +67,9 @@ Dishonest uses of `none`:
 
 - if the spec or ticket acceptance names a behavioral outcome, default to `test-first`
 - if the behavior is real but not yet testable, default to `observation-first`
+- if a Markdown change affects protocol authority, completion, routing,
+  acceptance, or operator behavior, require structural evidence and normally
+  critique instead of `none`
 - if the iteration genuinely does not change behavior, `none` is the honest choice
 
 Use `skills/loom-records/references/change-class.md` to confirm the default.

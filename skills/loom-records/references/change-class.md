@@ -9,7 +9,8 @@ guessing from vibes.
 ## Values
 
 - `record-hygiene` — links, statuses, filenames, frontmatter, or narrow record cleanup
-- `documentation-explanation` — explanatory prose or wiki pages without behavior change
+- `documentation-explanation` — explanatory prose or wiki pages without behavior,
+  routing, acceptance, or protocol-authority change
 - `behavior-contract` — specs, acceptance criteria, or user-visible intended behavior
 - `code-behavior` — source changes that affect runtime behavior
 - `protocol-authority` — rules, ownership, acceptance, critique, packet, or truth-boundary changes
@@ -25,7 +26,7 @@ guessing from vibes.
 | `documentation-explanation` | source comparison | `operator-clarity` when meaningful |
 | `behavior-contract` | spec diff and acceptance review | `operator-clarity` |
 | `code-behavior` | test-first or observation-first proof | `code-change`, `test-coverage` |
-| `protocol-authority` | structural checks and examples | `protocol-change`, `operator-clarity` |
+| `protocol-authority` | structural checks, examples, and reference reconciliation | `protocol-change`, `operator-clarity` |
 | `data-migration` | before/after and rollback or idempotency proof | `data-migration` |
 | `security-sensitive` | threat-focused evidence | `security` |
 | `release-packaging` | package output compared to owner records | `operator-clarity` |
@@ -48,3 +49,7 @@ Do not use change class as a substitute for risk judgment.
 A `record-hygiene` change can still be high risk if it changes a protocol
 owner boundary. A `code-behavior` change can be low risk if it is small,
 well-tested, and isolated.
+
+Do not classify a Markdown edit as `documentation-explanation` merely because it
+is prose. Rules, skills, templates, acceptance gates, routing guidance, and
+operator instructions can be `protocol-authority` or `behavior-contract` changes.

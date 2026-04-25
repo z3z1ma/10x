@@ -3,7 +3,8 @@ name: loom-memory
 description: "Maintain optional support memory without letting it become shadow truth. Use for hot memory, observations, entities, action items, and memory housekeeping when those support continuity, but keep canonical project truth in the main Loom layers."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
-  loom_layer: memory
+  skill_kind: support-layer
+  owns_layer: memory
 ---
 
 # loom-memory

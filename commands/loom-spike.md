@@ -6,6 +6,7 @@ category: support
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-spike
   - loom-research
   - loom-wiki
@@ -26,6 +27,7 @@ The spike route is:
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-spike`
 - `loom-research`
 - `loom-wiki`

@@ -153,6 +153,10 @@ conveniences.
 Deleting a command surface should not delete a Loom capability. Durable
 behavior belongs in rules, skills, references, templates, and canonical records.
 
+Commands may invoke acceptance, review, shipping, retrospective, or Ralph
+workflows. They do not own those workflows' truth, and they never own ticket
+closure, critique verdicts, evidence sufficiency, or accepted wiki explanation.
+
 ## When Shell Gets Awkward
 
 Use inline Python for things like:

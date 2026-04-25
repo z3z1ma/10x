@@ -33,7 +33,8 @@ How success should be judged.
 
 # Milestones
 
-Major checkpoints or phases.
+Outcome-level checkpoints for the strategic result. Do not use these as roadmap
+policy commitments, plan sequencing details, or ticket progress logs.
 
 # Dependencies
 

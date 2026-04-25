@@ -30,6 +30,7 @@ Route learning by owner:
 - changed sequencing -> plan
 - changed strategic framing -> initiative
 - changed durable policy or principle -> constitution
+- observed proof artifact, challenged observation, or validation artifact -> evidence
 - support-only continuity -> memory
 
 ## Promote
@@ -42,7 +43,8 @@ critique, specs, plans, research, or wiki pages when helpful.
 Every repeated mistake should be promoted into exactly one prevention artifact:
 
 - behavior ambiguity -> spec
-- missed test case or proof gap -> evidence or test expectation
+- missed test case or proof gap -> evidence when an observed artifact exists, or
+  ticket/test expectation when the gap is future work
 - bad architectural choice -> constitution decision
 - recurring operator confusion -> wiki workflow or reference page
 - repeated implementation pitfall -> research null result or wiki troubleshooting

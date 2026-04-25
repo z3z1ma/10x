@@ -6,6 +6,7 @@ category: core
 suggested_skills:
   - loom-workspace
   - loom-records
+  - loom-evidence
   - loom-tickets
   - loom-constitution
   - loom-specs
@@ -26,6 +27,7 @@ Use it when `/loom-status` has surfaced drift that nothing has fixed, when a sca
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
+- `loom-evidence`
 - `loom-tickets`
 - `loom-constitution`
 - `loom-specs`
