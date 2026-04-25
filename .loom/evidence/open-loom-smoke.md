@@ -3,7 +3,7 @@ id: evidence:open-loom-smoke
 kind: evidence
 status: recorded
 created_at: 2026-04-25T20:01:52Z
-updated_at: 2026-04-25T20:29:14Z
+updated_at: 2026-04-25T21:31:21Z
 scope:
   kind: repository
   repositories:
@@ -17,55 +17,80 @@ links:
     - research:loom-install-distribution-methods
 external_refs:
   opencode_source:
-    - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/plugin/src/index.ts
-    - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/opencode/src/plugin/shared.ts
-    - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/opencode/test/plugin/trigger.test.ts
+    - https://github.com/anomalyco/opencode/tree/v1.14.22
+    - https://opencode.ai/docs/plugins/
+    - https://opencode.ai/docs/config/
+    - https://opencode.ai/docs/skills/
+    - https://opencode.ai/docs/commands/
 ---
 
 # Summary
 
-Structural smoke evidence for `open-loom`, the OpenCode Loom plugin.
+Validation evidence for `open-loom`, the OpenCode plugin.
 
-The evidence shows that `open-loom` can read the repository's ordered top-level
-Loom rule files, expose an OpenCode-shaped server plugin object, and mutate an
-`output.system` array through `experimental.chat.system.transform` in a local
-Node check. A temporary-home OpenCode CLI install check also detected
-`open-loom` as a server target and wrote the expected local `file://` plugin config.
-It also records that skills and commands are inspectable but not proven as
-first-class OpenCode plugin registrations.
+The current implementation uses OpenCode's server plugin `config(config)` hook to
+mutate the resolved OpenCode config. It registers Loom's bundled surfaces as:
+
+- ordered rule files -> `config.instructions`
+- bundled skill root -> `config.skills.paths`
+- bundled command wrappers -> `config.command`
 
 # Procedure
 
-1. Inspected the pre-existing OpenCode fallback implementation in
-   `scripts/install-loom.sh` and the prior direct adapter note in
-   `examples/adapters/opencode-rule-install/README.md`.
-2. Ran `node open-loom.mjs --smoke` from the repository root.
-3. Fetched OpenCode source references for the plugin hook and loader shape:
-   `packages/plugin/src/index.ts`, `packages/opencode/src/plugin/shared.ts`, and
-   `packages/opencode/test/plugin/trigger.test.ts`.
-4. Corrected the plugin to default-export an object with `id` and `server()`
-   and to mutate `output.system: string[]` instead of returning a string.
-5. Ran an import-based Node check:
+1. Inspected OpenCode `v1.14.22` source from
+   `https://github.com/anomalyco/opencode/tree/v1.14.22`.
+2. Confirmed plugin module shape in `packages/opencode/src/plugin/shared.ts` and
+   `packages/opencode/src/plugin/index.ts`: path plugins need `id`, server
+   plugins default-export an object with `server()`, and loaded hooks receive a
+   `config(config)` callback after plugin loading.
+3. Confirmed OpenCode config/skills/commands integration points:
+   `config.instructions`, `config.skills.paths`, and `config.command`.
+4. Replaced the earlier chat-transform-only plugin shape with `config(config)`
+   registration.
+5. Ran `node open-loom.mjs --smoke`.
+6. Ran an import-based config-hook check:
 
    ```bash
-   node --input-type=module -e 'import plugin, { server, readOrderedRuleFiles, inspectLoomBundle } from "./open-loom.mjs"; const hooks = await server({}, {}); const out = { system: ["existing"] }; await hooks["experimental.chat.system.transform"]({ model: { providerID: "test", modelID: "test" } }, out); if (plugin.id !== "open-loom" || typeof plugin.server !== "function") throw new Error("default plugin object invalid"); if (out.system.length !== 2 || !out.system[0].includes("rules/01-core-identity.md") || out.system[1] !== "existing") throw new Error("transform did not prepend Loom block"); const rules = readOrderedRuleFiles(); const bundle = inspectLoomBundle(); console.log(JSON.stringify({defaultId: plugin.id, ruleCount: rules.length, firstRule: rules[0].path, lastRule: rules.at(-1).path, skillCount: bundle.skills.items.length, commandCount: bundle.commands.items.length, systemEntries: out.system.length}, null, 2));'
+   node --input-type=module -e 'import plugin, { server, configureOpenCode, inspectLoomBundle } from "./open-loom.mjs"; if (plugin.id !== "open-loom" || typeof plugin.server !== "function") throw new Error("default plugin object invalid"); const hooks = await server({}, {}); const config = {}; hooks.config(config); const before = config.instructions.length; hooks.config(config); if (config.instructions.length !== before) throw new Error("instructions not deduped"); if (!config.instructions[0].endsWith("rules/01-core-identity.md")) throw new Error("first rule order wrong"); if (!config.instructions.at(-1).endsWith("rules/07-validation-and-honesty.md")) throw new Error("last rule order wrong"); if (!config.skills?.paths?.[0]?.endsWith("/skills")) throw new Error("skills path missing"); if (!config.command?.["loom-plan"]?.template?.includes("# /loom-plan")) throw new Error("loom-plan command missing"); const bundle = inspectLoomBundle(); console.log(JSON.stringify({defaultId: plugin.id, instructionCount: config.instructions.length, firstInstruction: config.instructions[0], lastInstruction: config.instructions.at(-1), skillCount: bundle.skills.items.length, commandCount: bundle.commands.items.length, hasLoomPlan: Boolean(config.command["loom-plan"])}, null, 2));'
    ```
 
-6. Ran a temporary-home OpenCode install check:
+7. Ran an optional-surface check showing missing `commands/` does not break
+   registration.
+8. Ran OpenCode runtime config validation in an isolated temporary project and
+   temporary `HOME`:
 
    ```bash
-   tmp="$(mktemp -d)"; HOME="$tmp" XDG_CONFIG_HOME="$tmp/.config" opencode plugin "file://$PWD/open-loom.mjs" --global --print-logs --log-level DEBUG
+   HOME="/var/folders/1b/6mg4g2fs2zx99h46b9j5r7mh0000gp/T/tmp.Vkb5kq4VtY/home" XDG_CONFIG_HOME="/var/folders/1b/6mg4g2fs2zx99h46b9j5r7mh0000gp/T/tmp.Vkb5kq4VtY/home/.config" OPENCODE_CONFIG_CONTENT='{"plugin":["file:///Users/alexanderbutler/code_projects/personal/agent-loom/open-loom.mjs"]}' opencode debug config
    ```
 
-7. Read the generated temporary OpenCode config at
-   `/var/folders/1b/6mg4g2fs2zx99h46b9j5r7mh0000gp/T/tmp.u08fQQMjgn/.config/opencode/opencode.json`.
-8. Ran a missing-commands tolerance check for helper discovery:
+9. Ran OpenCode skill discovery validation in the same isolated environment:
 
    ```bash
-   node --input-type=module -e 'import { inspectLoomBundle } from "./open-loom.mjs"; import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs"; import { join } from "node:path"; import { tmpdir } from "node:os"; const root = mkdtempSync(join(tmpdir(), "open-loom-missing-commands-")); mkdirSync(join(root, "skills", "demo"), { recursive: true }); writeFileSync(join(root, "skills", "demo", "SKILL.md"), "---\nname: demo\ndescription: demo skill\n---\n"); const out = inspectLoomBundle({ rootDir: root }); if (out.skills.items.length !== 1) throw new Error("skill discovery failed"); if (out.commands.items.length !== 0) throw new Error("missing commands should produce empty list"); console.log(JSON.stringify({skillCount: out.skills.items.length, commandCount: out.commands.items.length}, null, 2));'
+   HOME="$tmp/home" XDG_CONFIG_HOME="$tmp/home/.config" OPENCODE_CONFIG_CONTENT='{"plugin":["file:///Users/alexanderbutler/code_projects/personal/agent-loom/open-loom.mjs"]}' opencode debug skill --print-logs --log-level INFO >/dev/null
    ```
 
-9. Ran `git diff --check`.
+10. Ran OpenCode package-root plugin validation with the local repository root as
+    the plugin entry:
+
+    ```bash
+    OPENCODE_CONFIG_CONTENT='{"plugin":["file:///Users/alexanderbutler/code_projects/personal/agent-loom"]}' opencode debug config
+    ```
+
+11. Ran package validation after adding `engines.opencode`, `license`, and
+    `examples/` to the package file list:
+
+    ```bash
+    npm run pack:check
+    git diff --check
+    ```
+
+12. Ran final non-publishing npm checks:
+
+    ```bash
+    npm whoami
+    npm publish --dry-run --access public
+    npm view open-loom name version --json
+    ```
 
 # Artifacts
 
@@ -74,99 +99,149 @@ first-class OpenCode plugin registrations.
 ```json
 {
   "ok": true,
+  "pluginId": "open-loom",
   "ruleCount": 7,
-  "ruleFiles": [
-    "rules/01-core-identity.md",
-    "rules/02-truth-and-authority.md",
-    "rules/03-outer-loop.md",
-    "rules/04-ralph-inner-loop.md",
-    "rules/05-critique-and-wiki.md",
-    "rules/06-filesystem-and-tooling.md",
-    "rules/07-validation-and-honesty.md"
-  ],
   "firstRule": "rules/01-core-identity.md",
   "lastRule": "rules/07-validation-and-honesty.md",
-  "blockHasMarkers": true,
-  "transformPrependsBlock": true,
+  "instructionCount": 7,
+  "instructionsAreDeduped": true,
+  "firstInstruction": "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/01-core-identity.md",
+  "lastInstruction": "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/07-validation-and-honesty.md",
   "skillCount": 20,
+  "skillPath": "/Users/alexanderbutler/code_projects/personal/agent-loom/skills",
   "commandCount": 19,
-  "skillsResult": "discoverable only; direct-copy fallback still required for OpenCode skill surfaces",
-  "commandsResult": "discoverable only; direct-copy fallback still required for OpenCode command surfaces"
+  "hasLoomPlanCommand": true,
+  "rulesResult": "registered through config.instructions",
+  "skillsResult": "registered through config.skills.paths",
+  "commandsResult": "registered through config.command"
 }
 ```
 
-Import-based hook/default-object validation output:
+Import-based config-hook validation output:
 
 ```json
 {
   "defaultId": "open-loom",
-  "ruleCount": 7,
-  "firstRule": "rules/01-core-identity.md",
-  "lastRule": "rules/07-validation-and-honesty.md",
+  "instructionCount": 7,
+  "firstInstruction": "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/01-core-identity.md",
+  "lastInstruction": "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/07-validation-and-honesty.md",
   "skillCount": 20,
   "commandCount": 19,
-  "systemEntries": 2
+  "hasLoomPlan": true
 }
 ```
 
-`git diff --check` output: no output.
+Optional missing-commands validation output:
 
-OpenCode CLI install output excerpt:
-
-```text
-◇  Plugin package ready
-◇  Detected server target
-◇  Plugin config updated
-●  Added to /var/folders/1b/6mg4g2fs2zx99h46b9j5r7mh0000gp/T/tmp.u08fQQMjgn/.config/opencode/opencode.json
-◆  Installed file:///Users/alexanderbutler/code_projects/personal/agent-loom/open-loom.mjs
-●  Scope: global (/var/folders/1b/6mg4g2fs2zx99h46b9j5r7mh0000gp/T/tmp.u08fQQMjgn/.config/opencode)
+```json
+{
+  "instructions": 1,
+  "skills": 1,
+  "commands": 0
+}
 ```
 
-Generated temporary `opencode.json`:
+OpenCode `debug config` validation excerpt:
 
 ```json
 {
   "plugin": [
     "file:///Users/alexanderbutler/code_projects/personal/agent-loom/open-loom.mjs"
-  ]
+  ],
+  "command": {
+    "loom-plan": {
+      "template": "# /loom-plan\n\nYou are running **Loom Plan**...",
+      "description": "Turn a raw request into governed Loom work by creating or updating the minimal correct outer-loop chain: initiative, research/spec when needed, plan, and ready tickets."
+    }
+  },
+  "instructions": [
+    "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/01-core-identity.md",
+    "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/02-truth-and-authority.md",
+    "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/03-outer-loop.md",
+    "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/04-ralph-inner-loop.md",
+    "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/05-critique-and-wiki.md",
+    "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/06-filesystem-and-tooling.md",
+    "/Users/alexanderbutler/code_projects/personal/agent-loom/rules/07-validation-and-honesty.md"
+  ],
+  "skills": {
+    "paths": [
+      "/Users/alexanderbutler/code_projects/personal/agent-loom/skills"
+    ]
+  }
 }
 ```
 
-Missing-commands tolerance output:
+OpenCode package-root `debug config` validation output:
 
 ```json
 {
-  "skillCount": 1,
-  "commandCount": 0
+  "ok": true,
+  "plugin": [
+    "file:///Users/alexanderbutler/code_projects/personal/agent-loom"
+  ],
+  "instructionCount": 7,
+  "skillPath": "/Users/alexanderbutler/code_projects/personal/agent-loom/skills",
+  "commandCount": 19,
+  "hasLoomPlan": true
 }
 ```
 
-Changed files inspected:
+OpenCode `debug skill --print-logs` validation excerpt from a clean temporary
+project:
 
-- `package.json`
-- `open-loom.mjs`
-- `examples/adapters/open-loom-install/README.md`
-- `INSTALL.md`
+```text
+INFO service=plugin path=file:///Users/alexanderbutler/code_projects/personal/agent-loom/open-loom.mjs loading plugin
+INFO service=skill count=20 init
+```
+
+`npm run pack:check` result after package metadata fixes:
+
+```text
+open-loom@0.1.0 smoke:open-loom -> ok
+npm pack --dry-run -> open-loom-0.1.0.tgz
+tarball total files: 214
+tarball includes examples/adapters/open-loom-install/README.md
+```
+
+`git diff --check`: no output.
+
+Final npm pre-publish checks:
+
+```text
+npm whoami -> z3z1ma
+npm publish --dry-run --access public -> + open-loom@0.1.0
+npm view open-loom name version --json -> E404 Not Found
+```
 
 # Supports Claims
 
-- `ticket:6uy1rx20` bundled file-read acceptance: `open-loom` read 7 ordered
-  top-level rule files from `rules/` through module-relative reads.
-- `ticket:6uy1rx20` ordered-rule plugin injection acceptance, structurally: the
-  local hook check prepended a Loom block to an existing `output.system` array.
-- `ticket:6uy1rx20` npm/local path documentation acceptance: `INSTALL.md` and the
-  fixture document npm package placeholder and local `file://` clone entry shapes.
-- `ticket:6uy1rx20` local file/path runtime installation acceptance, partially:
-  OpenCode CLI `1.14.22` detected the local `file://` plugin as a server target
-  and wrote it to temporary global config.
-- `ticket:6uy1rx20` skill and command fallback acceptance: `open-loom` reports
-  skill and command metadata as discoverable only and records direct fallback as
-  still required.
+- `ticket:6uy1rx20` bundled file-read acceptance: `open-loom` reads ordered rule
+  files from the package/clone layout.
+- `ticket:6uy1rx20` ordered rule acceptance: `open-loom` registers each ordered
+  rule file as an absolute `config.instructions` entry.
+- `ticket:6uy1rx20` skill exposure acceptance: `open-loom` registers the bundled
+  `skills/` root through `config.skills.paths`, and `opencode debug skill` finds
+  Loom skills from that path.
+- `ticket:6uy1rx20` command exposure acceptance: `open-loom` converts bundled
+  command Markdown wrappers into `config.command` entries; `opencode debug config`
+  shows `loom-plan` and other command entries.
+- `ticket:6uy1rx20` local file/path plugin acceptance: the plugin can be loaded
+  through a local `file://.../open-loom.mjs` entry.
+- `ticket:6uy1rx20` package-root local plugin acceptance: OpenCode resolves the
+  local package root through `package.json` and applies the same instructions,
+  skill path, and command config.
+- `ticket:6uy1rx20` package-readiness acceptance: `package.json` now declares
+  `engines.opencode: >=1.14.22 <2`, `license: UNLICENSED`, and includes
+  `examples/` in the npm file list; `npm run pack:check` succeeds.
+- `ticket:6uy1rx20` npm pre-publish acceptance: npm authentication is present as
+  user `z3z1ma`, `npm publish --dry-run --access public` succeeds, and
+  `open-loom` remains unpublished immediately before real publication.
 
 # Challenges Claims
 
-None - no stable claim IDs are directly challenged. The evidence limits any claim
-that `open-loom` is fully accepted in real OpenCode runtime loading.
+- Challenges the earlier assumption that `experimental.chat.system.transform` is
+  the best OpenCode route for Loom rules. `config.instructions` is the supported
+  OpenCode config surface for instruction files and now carries the rule files.
 
 # Environment
 
@@ -178,44 +253,28 @@ Runtime: Node `v22.22.1`; OpenCode CLI `1.14.22`
 
 OS: macOS / Darwin
 
-Relevant config: current checkout, dirty with install-experience Loom record and
-`open-loom` changes.
-
 # Validity
 
-Valid for: structural package/clone layout validation of local `open-loom`.
+Valid for: OpenCode `1.14.22` plugin config-hook behavior, package/clone layout,
+local package-root plugin resolution, resolved config, command registration
+through `config.command`, and skill discovery through `config.skills.paths`.
 
-Recheck when: OpenCode plugin APIs change, package publication naming changes,
-the repository package layout changes, or `open-loom` is promoted from validation
-surface to recommended install path.
+Recheck when: OpenCode plugin APIs change, package publication changes the bundle
+layout, Loom command frontmatter changes, or `open-loom` is updated.
 
 # Limitations
 
-This evidence establishes that `opencode plugin` can detect and install the local
-file plugin into a temporary global config. It does not establish that a real
-OpenCode chat/TUI session invokes the hook or that a model request includes the
-injected rules.
+This evidence does not make a paid model request or open an interactive TUI
+session. It validates OpenCode's resolved config and skill discovery paths using
+OpenCode debug commands, plus source inspection for how those config surfaces are
+consumed.
 
-This evidence does not establish first-class OpenCode registration for Loom
-skills or optional commands.
-
-This evidence does not establish that a future npm-published package name,
-versioning, or package-manager install path is ready.
+This evidence does not validate npm registry installation after publication.
 
 # Result
 
-`open-loom` structurally reads ordered Loom rules, exposes the hook shape expected
-by current OpenCode source, and is detected by the OpenCode CLI as a server
-plugin from a local `file://` entry. It keeps skills and commands as inspectable
-metadata only, with direct fallback still required.
-
-# Interpretation
-
-The ticket can treat plugin-first rule injection as structurally promising and
-the local file/path plugin entry as partially runtime-validated for installation
-and server-target detection. It should not claim a complete plugin-first OpenCode
-install until real chat/TUI hook invocation is validated and skill/command
-fallback or upstream API decisions are accepted.
+`open-loom` now uses the correct OpenCode integration path for all three Loom
+surfaces that OpenCode exposes through config: instructions, skills, and commands.
 
 # Related Records
 

@@ -1,11 +1,11 @@
 ---
 id: ticket:6uy1rx20
 kind: ticket
-status: active
+status: complete_pending_acceptance
 change_class: release-packaging
 risk_class: medium
 created_at: 2026-04-25T18:46:08Z
-updated_at: 2026-04-25T20:29:14Z
+updated_at: 2026-04-25T21:36:57Z
 scope:
   kind: repository
   repositories:
@@ -27,6 +27,7 @@ links:
     - evidence:open-loom-smoke
   critique:
     - critique:open-loom-review
+    - critique:open-loom-config-hook-review
 external_refs:
   opencode_docs:
     - https://opencode.ai/docs/config/
@@ -74,10 +75,11 @@ Deeper evidence now says this is plausible enough to validate, but not proven:
   installs in practice
 - normal-user distribution should therefore be an npm package; local/manual users
   can clone the repo and reference the plugin through a file or local path entry
-- the plugin `Hooks` interface includes `experimental.chat.system.transform`,
-  and tests show hooks can mutate system prompt strings
-- the plugin `Hooks` interface does not currently show first-class `skill` or
-  `command` registration fields in the inspected source
+- the plugin `Hooks` interface includes `config(config)`, and runtime validation
+  shows it can mutate `instructions`, `skills.paths`, and `command` in the
+  resolved OpenCode config before skill and command discovery
+- the plugin `Hooks` interface does not currently show separate first-class
+  `skill` or `command` registration fields in the inspected source
 - `command.execute.before` runs only after an existing command is resolved, so it
   does not by itself prove slash-command menu registration
 
@@ -101,12 +103,12 @@ documenting OpenCode as the intentional direct-install outlier.
   ideally through normal JavaScript module-relative file reads
 - prefer consuming or exposing Loom's existing Markdown files from the package or
   cloned repository rather than generating a second plugin-owned copy
-- test whether ordered Loom rules can be injected through a stable or acceptable
-  plugin API such as `experimental.chat.system.transform`
-- test whether bundled Loom skills can be exposed through a first-class plugin
-  API; if not, document the fallback requirement
-- test whether optional Loom commands can be registered or exposed through a
-  first-class plugin API; if not, document the fallback requirement
+- test whether ordered Loom rules can be registered through the plugin API and
+  OpenCode's supported instruction config surface
+- test whether bundled Loom skills can be exposed through the plugin API and
+  OpenCode's supported skill config surface
+- test whether optional Loom commands can be registered through the plugin API and
+  OpenCode's supported command config surface
 - compare plugin-first install against current direct config install
 - update `INSTALL.md`, adapter fixtures, and shell fallback only after the plugin
   API limits are evidenced
@@ -156,24 +158,38 @@ Covers:
 
 # Claim Matrix
 
-- Bundled file reads: supported structurally by
-  `evidence:open-loom-smoke`; `node open-loom.mjs --smoke`
-  read 7 ordered top-level rule files from the package/clone layout.
-- Ordered rules: supported structurally by
-  `evidence:open-loom-smoke`; the plugin exposes
-  `experimental.chat.system.transform` and prepends a Loom block to
-  `output.system` in a local hook check.
-- Skills: partial/fallback. `open-loom` can inspect bundled skill metadata, but
-  no first-class OpenCode plugin skill registration API was proven.
-- Commands: partial/fallback. `open-loom` can inspect bundled command metadata,
-  but no first-class OpenCode slash-command registration API was proven.
-- Npm/local distribution: documented as placeholder npm package entry plus
-  explicit local `file://` plugin entry for cloned repos.
+- Bundled file reads: supported by `evidence:open-loom-smoke`; `node
+  open-loom.mjs --smoke` read 7 ordered top-level rule files from the
+  package/clone layout.
+- Ordered rules: supported by `evidence:open-loom-smoke`; `open-loom` registers
+  each ordered rule file as an absolute `config.instructions` entry through
+  OpenCode's plugin `config(config)` hook, and `opencode debug config` shows the
+  resolved ordered instruction paths.
+- Skills: supported by `evidence:open-loom-smoke`; `open-loom` registers the
+  bundled `skills/` root through `config.skills.paths`, and `opencode debug skill`
+  discovers Loom skills from that path.
+- Commands: supported by `evidence:open-loom-smoke`; `open-loom` converts bundled
+  command Markdown wrappers into `config.command` entries, and `opencode debug
+  config` shows the resolved command config.
+- Npm/local distribution: documented as package entry plus explicit local
+  `file://` plugin entry for cloned repos. Local package-root validation now
+  proves OpenCode can resolve the repository root through `package.json`.
+- Npm package readiness: `package.json` now uses name `open-loom`, version
+  `0.1.0`, author `z3z1ma`, repository metadata, `engines.opencode:
+  >=1.14.22 <2`, `license: UNLICENSED`, `examples/` in the npm file list, and
+  local release helper scripts. `npm view` showed both `open-loom` and
+  `@z3z1ma/open-loom` were unpublished at check time. `npm run pack:check`
+  succeeds after the metadata fixes.
+- Npm pre-publish readiness: `npm whoami` returns `z3z1ma`; `npm publish
+  --dry-run --access public` succeeds; `npm view open-loom name version --json`
+  returns `E404`, confirming the package name remains available immediately
+  before real publication.
 - Git URL specs: recorded as unsupported for current OpenCode practice and not a
   recommended install path.
-- Runtime OpenCode loading: partially validated for local `file://` plugin
-  install/server-target detection with OpenCode CLI `1.14.22`; chat/TUI hook
-  invocation remains unvalidated.
+- Runtime OpenCode loading: validated for local `file://` plugin loading through
+  `OPENCODE_CONFIG_CONTENT`, resolved config mutation, and skill discovery with
+  OpenCode CLI `1.14.22`. A paid model request or interactive TUI session has not
+  been run.
 
 # Execution Notes
 
@@ -190,36 +206,38 @@ OpenCode facts to preserve from research:
 - source-level tests cover Git URL parsing, but operator validation found current
   OpenCode does not support Git URL plugin installs in practice
 - viable distribution paths are npm publication and local file/path plugin entries
-- `experimental.chat.system.transform` can mutate system prompt strings and may
-  be a route for ordered Loom rules
+- `experimental.chat.system.transform` can mutate system prompt strings, but the
+  corrected `open-loom` route uses the documented `instructions` config surface
+  through the plugin `config(config)` hook instead
 - no first-class plugin `skill` or `command` registration field was found in the
-  inspected `Hooks` interface
+  inspected `Hooks` interface; `open-loom` uses `config.skills.paths` and
+  `config.command` instead
 
 Open validation questions:
 
 - Can a plugin package ship `rules/`, `skills/`, and `commands/` directories and
   read them relative to `import.meta.url`?
-- Is `experimental.chat.system.transform` acceptable for always-on Loom rules, or
-  is it too experimental compared with `instructions`?
 - Can `Hooks.config` mutate in-memory `instructions`, `command`, or skill-related
   config in a supported way, and is that hook actually invoked in the right phase?
+  Answer from current evidence: yes for OpenCode `1.14.22`.
 - Is there any OpenCode API for plugin-bundled skills, or is upstream feature work
-  required?
+  required? Current route: `config.skills.paths`.
 - Is there any OpenCode API for plugin-bundled commands, or must commands remain
-  config/file based?
+  config/file based? Current route: `config.command`.
 - What npm package layout keeps Loom's Markdown files bundled and readable without
   making package-generated files the canonical source?
 - What exact local-path plugin entry should a user use after cloning this repo?
 
 # Blockers
 
-None.
+None for implementation. Real npm publish should wait for final operator
+approval.
 
 # Next Move / Next Route
 
-Narrow runtime-validation packet if feasible. If real OpenCode chat/TUI hook
-validation is not feasible, soften `INSTALL.md` and fixture wording so OpenCode
-`instructions` remains the supported rules fallback before ticket acceptance.
+Publication is paused by operator choice. If the operator later approves, publish
+`open-loom@0.1.0`, then verify with `npm view open-loom name version --json` and
+record the publish evidence.
 
 # Ralph Readiness
 
@@ -253,21 +271,25 @@ Expected evidence:
 - source-backed API summary for plugin `Hooks` and plugin spec parsing
 - structural inspection of any plugin fixture/package
 - runtime or structural validation that bundled files are readable
-- runtime or structural validation for `experimental.chat.system.transform`
+- runtime or structural validation for OpenCode plugin `config(config)` mutation
 - explicit result for skill exposure: first-class API, fallback, or upstream gap
 - explicit result for command exposure: first-class API, fallback, or upstream gap
 - explicit npm package layout and local file/path plugin entry recommendation
 - explicit note that Git URL plugin specs are unsupported for current OpenCode
 - `git diff --check`
-- OpenCode runtime limitation if validation cannot exercise the real CLI/TUI
+- OpenCode runtime limitation if validation cannot exercise a real model request
 
 Observed evidence:
 
-- `evidence:open-loom-smoke` records the child and parent
-  structural smoke checks. The evidence supports module-relative rule reads,
-  local hook mutation shape, npm/local path documentation, local `file://` plugin
-  install/server-target detection, and fallback disposition for skills and
-  commands. It does not establish actual OpenCode chat/TUI hook invocation.
+- `evidence:open-loom-smoke` records OpenCode `v1.14.22` source inspection,
+  local smoke checks, import-based config-hook validation, isolated `opencode
+  debug config`, isolated `opencode debug skill`, package-root plugin validation,
+  `npm run pack:check`, `git diff --check`, `npm whoami`, `npm publish --dry-run`,
+  and `npm view open-loom`. The evidence supports
+  module-relative reads, ordered `config.instructions`, `config.skills.paths`,
+  `config.command`, local `file://` plugin loading, local package-root plugin
+  loading, package dry-run contents, npm auth as `z3z1ma`, and the package name
+  still being unpublished before real publication.
 
 # Critique Disposition
 
@@ -289,10 +311,7 @@ Findings:
 
 Open findings:
 
-- `critique:open-loom-review#FIND-001` - Runtime rule-injection
-  evidence is still acceptance-blocking. Real OpenCode chat/TUI/model execution
-  has not proven that `experimental.chat.system.transform` is invoked and that
-  Loom rules reach the actual system prompt.
+None.
 
 Resolved findings:
 
@@ -300,8 +319,19 @@ Resolved findings:
   was treated as present by helper discovery. Resolved by making bundle
   inspection tolerate missing `commands/` and `skills/` directories and validating
   a temporary no-commands bundle returns `commandCount: 0`.
+- `critique:open-loom-config-hook-review#FIND-001` - OpenCode compatibility range
+  was missing. Resolved with `engines.opencode: >=1.14.22 <2` and docs updates.
+- `critique:open-loom-config-hook-review#FIND-002` - Package-root validation was
+  missing from evidence. Resolved by recording local package-root `opencode debug
+  config` validation.
+- `critique:open-loom-config-hook-review#FIND-003` - Published docs pointed at
+  omitted examples. Resolved by adding `examples/` to the npm package file list.
+- `critique:open-loom-config-hook-review#FIND-004` - Install docs still said
+  package metadata was private. Resolved by replacing that wording.
+- `critique:open-loom-config-hook-review#FIND-005` - License metadata was absent.
+  Resolved conservatively with `license: UNLICENSED`.
 
-Disposition status: active follow-up required
+Disposition status: prior findings resolved; complete pending acceptance
 
 Deferral / not-required rationale:
 
@@ -360,3 +390,29 @@ this work.
   `open-loom`; entrypoint is now `open-loom.mjs`, package/plugin id is
   `open-loom`, fixture docs moved to `examples/adapters/open-loom-install/`, and
   evidence/critique references were reconciled to the new names.
+- 2026-04-25: prepared `open-loom@0.1.0` package metadata for npm publication
+  under author `z3z1ma`, added local release helper scripts, ignored project-local
+  `.npmrc`, verified `open-loom` and `@z3z1ma/open-loom` were unpublished, and ran
+  `npm run pack:check`. Publishing remains blocked until local `npm login`
+  succeeds; the pasted token was treated as exposed and was not persisted.
+- 2026-04-25: after operator review found the chat-transform-only implementation
+  was not acceptable, inspected OpenCode `v1.14.22` source and docs, replaced
+  `open-loom` with a `config(config)` implementation that registers rules through
+  `config.instructions`, skills through `config.skills.paths`, and commands
+  through `config.command`, and recorded updated validation in
+  `evidence:open-loom-smoke`.
+- 2026-04-25: completed focused config-hook/package readiness review in
+  `critique:open-loom-config-hook-review`. Resolved findings by adding
+  `engines.opencode: >=1.14.22 <2`, documenting the minimum OpenCode range,
+  adding `examples/` to the npm file list, replacing stale private-package
+  wording, adding `license: UNLICENSED`, recording package-root OpenCode
+  validation, and rerunning `node open-loom.mjs --smoke`, package-root
+  `opencode debug config`, clean-project `opencode debug skill`,
+  `npm run pack:check`, and `git diff --check`.
+- 2026-04-25: ran final non-publishing npm checks: `npm whoami` returned
+  `z3z1ma`, `npm publish --dry-run --access public` succeeded, and `npm view
+  open-loom name version --json` returned `E404` because the package is still
+  unpublished. Real publication is pending explicit operator approval.
+- 2026-04-25: operator chose not to publish yet. Ticket moved to
+  `complete_pending_acceptance`: implementation, evidence, critique, and
+  pre-publish checks are complete; real npm publication remains paused.

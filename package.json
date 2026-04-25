@@ -1,24 +1,50 @@
 {
   "name": "open-loom",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "description": "OpenCode plugin for the Loom Markdown-native AI work protocol.",
   "type": "module",
   "main": "./open-loom.mjs",
   "exports": {
     ".": "./open-loom.mjs",
     "./open-loom": "./open-loom.mjs"
   },
+  "engines": {
+    "opencode": ">=1.14.22 <2"
+  },
   "files": [
     "open-loom.mjs",
     "rules/",
     "skills/",
     "commands/",
+    "examples/",
     "INSTALL.md",
     "README.md",
     "PROTOCOL.md",
     "ARCHITECTURE.md"
   ],
+  "keywords": [
+    "opencode",
+    "loom",
+    "ai-agents",
+    "agent-skills",
+    "markdown"
+  ],
+  "author": "z3z1ma",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/z3z1ma/agent-loom.git"
+  },
+  "bugs": {
+    "url": "https://github.com/z3z1ma/agent-loom/issues"
+  },
+  "homepage": "https://github.com/z3z1ma/agent-loom#readme",
   "scripts": {
-    "smoke:open-loom": "node open-loom.mjs --smoke"
+    "smoke:open-loom": "node open-loom.mjs --smoke",
+    "pack:check": "npm run smoke:open-loom && npm pack --dry-run",
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:major": "npm version major --no-git-tag-version",
+    "publish:npm": "npm run pack:check && npm publish --access public"
   }
 }

@@ -3,7 +3,7 @@ id: critique:open-loom-review
 kind: critique
 status: final
 created_at: 2026-04-25T20:15:06Z
-updated_at: 2026-04-25T20:29:14Z
+updated_at: 2026-04-25T21:29:31Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,8 @@ links:
     - packet:critique-ticket-6uy1rx20-open-loom-20260425T201112Z
   evidence:
     - evidence:open-loom-smoke
+  follow_up_critique:
+    - critique:open-loom-config-hook-review
 external_refs:
   opencode_source:
     - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/plugin/src/index.ts
@@ -29,9 +31,9 @@ external_refs:
 Reviewed the `open-loom` OpenCode plugin, package metadata, install docs, fixture
 notes, ticket reconciliation, and evidence for `ticket:6uy1rx20`.
 
-`open-loom` is acceptable as a structural plugin validation surface, but not
-ready for final OpenCode plugin-first install acceptance because real chat/TUI
-hook invocation is still unvalidated.
+This critique reviewed the earlier chat-transform implementation. That
+implementation has been superseded by the current `config(config)` implementation
+recorded in `evidence:open-loom-smoke`.
 
 # Review Target
 
@@ -52,9 +54,9 @@ The critique used profiles `operator-clarity`, `code-change`, and
 
 `pass_with_findings`.
 
-`open-loom` may remain, and the record graph honestly distinguishes structural
-evidence from full runtime acceptance. The ticket needs active follow-up before
-closure or final supported-install recommendation.
+The original review findings are resolved or superseded. The corrected
+`config(config)` implementation should receive focused review before npm
+publication.
 
 # Findings
 
@@ -64,15 +66,24 @@ Severity: medium
 
 Confidence: high
 
-Disposition: open
+Disposition: resolved by implementation replacement
 
 Observation:
 
-`open-loom` structurally matches current OpenCode source, the local hook check
-works, and `opencode plugin file://... --global` detects a server target under a
-temporary `HOME`. No real OpenCode chat/TUI/model request has proven that
-`experimental.chat.system.transform` is invoked and that Loom rules reach the
-actual system prompt.
+The reviewed implementation structurally matched current OpenCode source, the
+local hook check worked, and `opencode plugin file://... --global` detected a
+server target under a temporary `HOME`. No real OpenCode chat/TUI/model request
+had proven that `experimental.chat.system.transform` was invoked and that Loom
+rules reached the actual system prompt.
+
+Disposition update:
+
+The current `open-loom` implementation no longer uses
+`experimental.chat.system.transform` for Loom rules. It uses OpenCode's
+`config(config)` hook to register ordered rule files through `config.instructions`,
+which is OpenCode's documented instruction-file surface. `evidence:open-loom-smoke`
+records `opencode debug config` and `opencode debug skill` validation for this
+route.
 
 References:
 
@@ -90,16 +101,14 @@ proven.
 
 Follow-up:
 
-Run one narrow runtime validation packet against OpenCode chat/TUI if feasible.
-If that is not feasible, soften install wording and explicitly keep OpenCode
-`instructions` as the supported rules fallback, not only the skills/commands
-fallback.
+Resolved by replacing the route with `config.instructions`. A fresh focused review
+should inspect the corrected `config(config)` implementation before npm
+publication.
 
 Challenges:
 
-Challenges any interpretation of `ticket:6uy1rx20` ordered-rule injection as
-fully runtime-accepted. The current ticket and evidence correctly limit the
-claim as structural/partial.
+No longer challenges the current `config.instructions` claim. The finding applies
+to the superseded chat-transform implementation.
 
 ## FIND-002: Optional command surface was treated as present by helper discovery
 
@@ -156,25 +165,23 @@ None - no current claim was false; this was a plugin robustness issue.
 
 # Residual Risks
 
-- OpenCode hook is experimental and may change.
-- No real OpenCode chat/TUI/model request has validated system-prompt inclusion.
+- OpenCode plugin APIs may change.
+- No real model request has validated downstream provider payload inclusion, but
+  `config.instructions` is the documented config surface OpenCode uses for
+  instruction files.
 - Npm publication and package-manager installation are not validated.
-- Skills and commands remain fallback-only.
+- Skills and commands now route through `config.skills.paths` and
+  `config.command`; package publication remains unvalidated.
 - External source references use moving OpenCode `dev` branch URLs.
 
 # Required Follow-up
 
-Before acceptance or closure, either:
-
-- run a narrow runtime validation packet that proves OpenCode invokes the hook in
-  an actual chat/TUI path, or
-- explicitly accept only the structural plugin validation and create linked follow-up
-  work for runtime validation before recommending plugin-first OpenCode install
-  as supported.
+Before npm publication, run a focused review of the corrected `config(config)`
+implementation and re-run package checks.
 
 # Acceptance Recommendation
 
-`active follow-up required`.
+`superseded by follow-up review`.
 
-Move `ticket:6uy1rx20` back to `active` for runtime validation or wording
-softening. Do not close the ticket yet.
+The original findings are resolved or superseded. The corrected `config(config)`
+implementation was reviewed in `critique:open-loom-config-hook-review`.

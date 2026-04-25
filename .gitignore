@@ -1,3 +1,4 @@
 /.loom/memory/user
 /.venv/
 /uv.lock
+/.npmrc

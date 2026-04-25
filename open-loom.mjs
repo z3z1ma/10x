@@ -1,10 +1,9 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const PACKAGE_ROOT = dirname(fileURLToPath(import.meta.url));
-const LOOM_BLOCK_BEGIN = "<!-- BEGIN LOOM RULES: open-loom -->";
-const LOOM_BLOCK_END = "<!-- END LOOM RULES: open-loom -->";
+const PLUGIN_ID = "open-loom";
 
 function posixPath(path) {
   return path.split("\\").join("/");
@@ -14,144 +13,199 @@ function directoryExists(directory) {
   return statSync(directory, { throwIfNoEntry: false })?.isDirectory() === true;
 }
 
-function markdownFilesIn(directory) {
+function fileExists(file) {
+  return statSync(file, { throwIfNoEntry: false })?.isFile() === true;
+}
+
+function markdownFilesIn(directory, { recursive = false } = {}) {
   if (!directoryExists(directory)) return [];
-  return readdirSync(directory)
-    .filter((name) => name.endsWith(".md"))
-    .map((name) => join(directory, name))
-    .filter((path) => statSync(path).isFile())
-    .sort((a, b) => a.localeCompare(b));
+
+  const result = [];
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory() && recursive) {
+      result.push(...markdownFilesIn(path, { recursive }));
+      continue;
+    }
+    if (entry.isFile() && entry.name.endsWith(".md")) result.push(path);
+  }
+
+  return result.sort((a, b) => a.localeCompare(b));
 }
 
-function readScalarFrontmatter(text, key) {
-  const match = text.match(/^---\n([\s\S]*?)\n---\n/);
-  if (!match) return undefined;
-  const line = match[1]
-    .split("\n")
-    .find((candidate) => candidate.startsWith(`${key}:`));
-  if (!line) return undefined;
-  return line.slice(key.length + 1).trim().replace(/^['\"]|['\"]$/g, "");
+function readMarkdownDocument(file) {
+  const text = readFileSync(file, "utf8").trimEnd();
+  const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  if (!match) return { data: {}, content: text };
+
+  const data = {};
+  for (const line of match[1].split(/\r?\n/)) {
+    const scalar = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!scalar) continue;
+    const value = scalar[2].trim().replace(/^['"]|['"]$/g, "");
+    data[scalar[1]] = value;
+  }
+
+  return {
+    data,
+    content: text.slice(match[0].length).trim(),
+  };
 }
 
-export function readOrderedRuleFiles({ rootDir = PACKAGE_ROOT } = {}) {
+function pushUnique(array, value) {
+  if (!array.includes(value)) array.push(value);
+}
+
+function surfaceOptions(options = {}) {
+  return {
+    rootDir: resolve(String(options.rootDir || PACKAGE_ROOT)),
+    rules: options.rules !== false,
+    skills: options.skills !== false,
+    commands: options.commands !== false,
+  };
+}
+
+export function readOrderedRuleFiles(options = {}) {
+  const { rootDir } = surfaceOptions(options);
   const rulesDir = join(rootDir, "rules");
   return markdownFilesIn(rulesDir).map((path) => ({
     path: posixPath(relative(rootDir, path)),
+    absolutePath: path,
     text: readFileSync(path, "utf8").trimEnd(),
   }));
 }
 
-export function buildLoomRuleBlock(options = {}) {
-  const rules = readOrderedRuleFiles(options);
-  const sections = rules.flatMap((rule) => [
-    `<!-- source: ${rule.path} -->`,
-    rule.text,
-  ]);
-
-  return [
-    LOOM_BLOCK_BEGIN,
-    "# Loom Protocol Rules",
-    "",
-    "The following Markdown rules are bundled with the Loom package and are mandatory whenever Loom is present in the workspace.",
-    "They are injected by the open-loom OpenCode plugin from ordered top-level `rules/*.md` files.",
-    "",
-    ...sections,
-    LOOM_BLOCK_END,
-  ].join("\n");
-}
-
-export function injectLoomRules(systemPrompt = "", options = {}) {
-  const prompt = String(systemPrompt || "").trimEnd();
-  const block = buildLoomRuleBlock(options);
-  return prompt ? `${prompt}\n\n${block}` : block;
-}
-
-export function prependLoomRules(systemOutput, options = {}) {
-  if (!systemOutput || !Array.isArray(systemOutput.system)) {
-    throw new TypeError("Expected OpenCode system output with a system string array");
-  }
-  systemOutput.system.unshift(buildLoomRuleBlock(options));
-}
-
-export function inspectLoomBundle({ rootDir = PACKAGE_ROOT } = {}) {
+export function readSkillFiles(options = {}) {
+  const { rootDir } = surfaceOptions(options);
   const skillRoot = join(rootDir, "skills");
-  const commandRoot = join(rootDir, "commands");
-  const skills = directoryExists(skillRoot)
-    ? readdirSync(skillRoot)
-        .map((name) => ({ name, path: join(skillRoot, name, "SKILL.md") }))
-        .filter((entry) => statSync(entry.path, { throwIfNoEntry: false })?.isFile())
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map((entry) => {
-          const text = readFileSync(entry.path, "utf8");
-          return {
-            directory: entry.name,
-            path: posixPath(relative(rootDir, entry.path)),
-            name: readScalarFrontmatter(text, "name") || entry.name,
-            description: readScalarFrontmatter(text, "description") || "",
-          };
-        })
-    : [];
+  if (!directoryExists(skillRoot)) return [];
 
-  const commands = markdownFilesIn(commandRoot).map((path) => ({
-    path: posixPath(relative(rootDir, path)),
-    name: readScalarFrontmatter(readFileSync(path, "utf8"), "name") || relative(commandRoot, path).replace(/\.md$/, ""),
-  }));
+  return readdirSync(skillRoot)
+    .map((name) => ({ name, path: join(skillRoot, name, "SKILL.md") }))
+    .filter((entry) => fileExists(entry.path))
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((entry) => {
+      const md = readMarkdownDocument(entry.path);
+      return {
+        directory: entry.name,
+        path: posixPath(relative(rootDir, entry.path)),
+        name: md.data.name || entry.name,
+        description: md.data.description || "",
+      };
+    });
+}
+
+export function readCommandFiles(options = {}) {
+  const { rootDir } = surfaceOptions(options);
+  const commandRoot = join(rootDir, "commands");
+
+  return markdownFilesIn(commandRoot, { recursive: true }).map((path) => {
+    const md = readMarkdownDocument(path);
+    const relativePath = posixPath(relative(commandRoot, path));
+    const fallbackName = relativePath.replace(/\.md$/, "");
+    return {
+      path: posixPath(relative(rootDir, path)),
+      name: md.data.name || fallbackName || basename(path, ".md"),
+      description: md.data.description || undefined,
+      template: md.content,
+    };
+  });
+}
+
+export function configureOpenCode(config, options = {}) {
+  const surfaces = surfaceOptions(options);
+
+  if (surfaces.rules) {
+    const rules = readOrderedRuleFiles(surfaces);
+    if (rules.length > 0) {
+      config.instructions ??= [];
+      for (const rule of rules) pushUnique(config.instructions, rule.absolutePath);
+    }
+  }
+
+  if (surfaces.skills) {
+    const skillRoot = join(surfaces.rootDir, "skills");
+    if (readSkillFiles(surfaces).length > 0) {
+      config.skills ??= {};
+      config.skills.paths ??= [];
+      pushUnique(config.skills.paths, skillRoot);
+    }
+  }
+
+  if (surfaces.commands) {
+    const commands = readCommandFiles(surfaces);
+    if (commands.length > 0) {
+      config.command ??= {};
+      for (const command of commands) {
+        config.command[command.name] ??= {
+          template: command.template,
+          ...(command.description ? { description: command.description } : {}),
+        };
+      }
+    }
+  }
+
+  return config;
+}
+
+export function inspectLoomBundle(options = {}) {
+  const surfaces = surfaceOptions(options);
+  const rules = readOrderedRuleFiles(surfaces);
+  const skills = readSkillFiles(surfaces);
+  const commands = readCommandFiles(surfaces);
 
   return {
     rules: {
-      result: "plugin-first via experimental.chat.system.transform",
-      files: readOrderedRuleFiles({ rootDir }).map((rule) => rule.path),
+      result: "registered through config.instructions",
+      files: rules.map((rule) => rule.path),
     },
     skills: {
-      result: "discoverable only; direct-copy fallback still required for OpenCode skill surfaces",
-      reason: "No first-class OpenCode plugin skill registration hook is proven by open-loom validation yet.",
+      result: "registered through config.skills.paths",
+      path: directoryExists(join(surfaces.rootDir, "skills")) ? join(surfaces.rootDir, "skills") : undefined,
       items: skills,
     },
     commands: {
-      result: "discoverable only; direct-copy fallback still required for OpenCode command surfaces",
-      reason: "OpenCode command hooks run after command resolution and do not prove slash-command registration.",
-      items: commands,
+      result: "registered through config.command",
+      items: commands.map(({ template: _template, ...command }) => command),
     },
-  };
-}
-
-function createTransform(options = {}) {
-  return async (_input, output) => {
-    prependLoomRules(output, options);
-  };
-}
-
-export function createOpenLoomPlugin(options = {}) {
-  return {
-    "experimental.chat.system.transform": createTransform(options),
   };
 }
 
 export async function server(_input = {}, options = {}) {
-  return createOpenLoomPlugin(options || {});
+  return {
+    config(config) {
+      configureOpenCode(config, options || {});
+    },
+  };
 }
 
 export default {
-  id: "open-loom",
+  id: PLUGIN_ID,
   server,
 };
 
 if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes("--smoke")) {
   const inspection = inspectLoomBundle();
-  const block = buildLoomRuleBlock();
-  const hooks = await server({}, {});
-  const output = { system: ["existing"] };
-  await hooks["experimental.chat.system.transform"]({}, output);
+  const config = configureOpenCode({});
+  const beforeInstructionCount = config.instructions.length;
+  configureOpenCode(config);
+
   console.log(JSON.stringify({
     ok: true,
+    pluginId: PLUGIN_ID,
     ruleCount: inspection.rules.files.length,
     ruleFiles: inspection.rules.files,
     firstRule: inspection.rules.files[0],
     lastRule: inspection.rules.files.at(-1),
-    blockHasMarkers: block.includes(LOOM_BLOCK_BEGIN) && block.includes(LOOM_BLOCK_END),
-    transformPrependsBlock: output.system.length === 2 && output.system[0].includes(LOOM_BLOCK_BEGIN) && output.system[1] === "existing",
+    instructionCount: config.instructions.length,
+    instructionsAreDeduped: config.instructions.length === beforeInstructionCount,
+    firstInstruction: config.instructions[0],
+    lastInstruction: config.instructions.at(-1),
     skillCount: inspection.skills.items.length,
+    skillPath: config.skills?.paths?.[0],
     commandCount: inspection.commands.items.length,
+    hasLoomPlanCommand: Boolean(config.command?.["loom-plan"]),
+    rulesResult: inspection.rules.result,
     skillsResult: inspection.skills.result,
     commandsResult: inspection.commands.result,
   }, null, 2));
