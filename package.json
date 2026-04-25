@@ -1,0 +1,24 @@
+{
+  "name": "open-loom",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./open-loom.mjs",
+  "exports": {
+    ".": "./open-loom.mjs",
+    "./open-loom": "./open-loom.mjs"
+  },
+  "files": [
+    "open-loom.mjs",
+    "rules/",
+    "skills/",
+    "commands/",
+    "INSTALL.md",
+    "README.md",
+    "PROTOCOL.md",
+    "ARCHITECTURE.md"
+  ],
+  "scripts": {
+    "smoke:open-loom": "node open-loom.mjs --smoke"
+  }
+}

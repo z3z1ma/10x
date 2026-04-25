@@ -3,7 +3,7 @@ id: initiative:loom-install-experience
 kind: initiative
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-04-25T18:46:08Z
+updated_at: 2026-04-25T20:29:14Z
 scope:
   kind: repository
   repositories:
@@ -156,7 +156,7 @@ how to keep the protocol source of truth independent from adapter convenience.
 - Research: `research:loom-install-distribution-methods`
 - Prior research: `research:harness-install-surfaces`
 - Prior research: `research:codex-command-skill-installation`
-- Harness ticket: `ticket:6uy1rx20` - finalize OpenCode direct install path
+- Harness ticket: `ticket:6uy1rx20` - validate `open-loom` OpenCode plugin-first install
 - Harness ticket: `ticket:q7h1d05q` - prototype Claude Code hybrid install
 - Harness ticket: `ticket:lx9nnztk` - prototype Codex hybrid plugin install
 - Harness ticket: `ticket:7ex8w32y` - prototype Gemini CLI extension install
@@ -169,10 +169,11 @@ how to keep the protocol source of truth independent from adapter convenience.
 # Status Summary
 
 This initiative is active. The repository has a working proof installer and a
-new execution plan for harness-specific install work. The next execution route
-is the planned harness ticket wave: prototype Cursor and Gemini first-class
-packages, then use those findings to refine Claude, Codex, and OpenCode install
-paths without making any adapter output the owner of Loom semantics.
+new execution plan for harness-specific install work. The OpenCode slice has
+been reframed as a plugin-first investigation because the ideal user experience
+is a single `plugin` array entry in `opencode.json`; the ticket must prove which
+OpenCode plugin APIs can actually register or inject Loom rules, skills, and
+commands before changing installer behavior.
 
 # Completion Basis
 

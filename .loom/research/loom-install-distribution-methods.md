@@ -3,7 +3,7 @@ id: research:loom-install-distribution-methods
 kind: research
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-04-25T18:46:08Z
+updated_at: 2026-04-25T20:29:14Z
 scope:
   kind: repository
   repositories:
@@ -43,6 +43,13 @@ external_refs:
     - https://opencode.ai/docs/plugins/
     - https://opencode.ai/docs/skills/
     - https://opencode.ai/docs/commands/
+  opencode_source:
+    - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/plugin/src/index.ts
+    - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/opencode/src/plugin/shared.ts
+    - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/opencode/src/plugin/loader.ts
+    - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/opencode/src/config/plugin.ts
+    - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/opencode/test/plugin/shared.test.ts
+    - https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/opencode/test/plugin/trigger.test.ts
   gemini_cli:
     - https://geminicli.com/docs/extensions/
     - https://geminicli.com/docs/extensions/reference/
@@ -389,22 +396,67 @@ Doc-backed install surfaces:
 - The fetched OpenCode plugin docs describe hooks, events, custom tools,
   environment injection, and TUI behavior, but do not state that plugins package
   rules, skills, or commands as static resources.
+- Official plugin docs show `plugin` array examples with npm package names only;
+  they do not document GitHub repository shorthands as supported plugin specs.
+- Source-level config handling accepts `plugin` entries as a string or
+  `[string, options]`, with arbitrary options records.
+- Source-level path handling treats specs starting with `file://`, `.`, or an
+  absolute path as file plugins; other specs are treated as npm-style specs and
+  passed to `Npm.add` after bare package names are normalized to `@latest`.
+- Source-level `parsePluginSpecifier` tests cover bare npm packages, scoped
+  packages, `npm:` protocol specs, aliases, and Git URLs such as
+  `git+https://github.com/opencode/acme.git` and
+  `git+ssh://git@github.com/opencode/acme.git`.
+- The operator checked current OpenCode plugin loading and reported that Git URL
+  plugin installs are not supported in practice. Treat npm publication and local
+  file/path plugins as the viable distribution paths unless future runtime
+  evidence contradicts this.
+- The deeper source inspection did not find first-class `skill` or `command`
+  registration fields on the plugin `Hooks` interface.
+- The plugin `Hooks` interface does include `experimental.chat.system.transform`,
+  which can mutate the system prompt array, and tests show sync and async hooks
+  can prepend system prompt strings.
+- The plugin `Hooks` interface includes `command.execute.before`, but source
+  inspection shows that hook runs only after an existing command is resolved; it
+  does not prove slash-command registration.
+- `evidence:open-loom-smoke` structurally validated `open-loom`, which reads
+  ordered top-level `rules/*.md`, default-exports an OpenCode-shaped object with
+  `id: "open-loom"` and `server()`, and prepends a Loom block to `output.system`
+  through `experimental.chat.system.transform`. OpenCode CLI `1.14.22` detected
+  the same local `file://` plugin as a server target and wrote it to temporary
+  global config, but real chat/TUI hook invocation remains unvalidated.
 
 Always-on rule fit:
 
 - OpenCode has a direct, clean always-on route: put installed Loom rules in a
   stable directory and add a glob to `opencode.json` `instructions`.
+- OpenCode may also be able to inject always-on Loom rules from a plugin through
+  `experimental.chat.system.transform`, but this is source-level and experimental
+  evidence rather than a stable documented install surface.
 
 Assessment:
 
-- OpenCode does not need a plugin package to install Loom.
-- OpenCode's JS/TS plugin system is the wrong primary abstraction for Loom
-  because it is runtime/hook-oriented while Loom is static Markdown protocol.
-- The current direct config install is conceptually correct, though the
-  implementation should remain small, reversible, and not become semantic truth.
-- OpenCode could probably consume generic `~/.agents/skills` for shared skills,
-  reducing duplication, while retaining native `opencode.json` for always-on
-  rules and native command files for commands.
+- The ideal OpenCode user experience is a plugin-first install: the user adds one
+  entry to the `plugin` array in `opencode.json`, and the plugin exposes bundled
+  Loom rules, skills, and commands.
+- That ideal is plausible enough to validate, but not yet proven by official
+  docs. The currently documented plugin API is strongest for tools, hooks,
+  system/prompt mutation, and integrations.
+- A plugin can read its own bundled files using normal JavaScript module
+  techniques such as `import.meta.url` in the repository/package-root `open-loom`,
+  but OpenCode's documented plugin context does not pass an explicit
+  plugin-install directory and real chat/TUI hook invocation remains unvalidated.
+- First-class plugin registration for skills and slash commands remains an open
+  implementation question. If no API exists, the plugin may need to fall back to
+  config mutation, generated files, custom tools, or upstream OpenCode feature
+  work.
+- GitHub-based plugin installation should not be recommended for OpenCode. The
+  viable plugin distribution paths are an npm package for normal users and a
+  cloned repo plus file/local path plugin entry for users who want to consume the
+  repository directly.
+- The preferred plugin design should consume or expose Loom's existing Markdown
+  files from the package or cloned repository where practical, rather than
+  generating a second plugin-owned Markdown corpus.
 
 ## Gemini CLI
 
@@ -510,14 +562,17 @@ Assessment:
 | --- | --- | --- | --- | --- | --- |
 | Claude Code | `.claude-plugin/plugin.json` plugins | Not cleanly in fetched docs; use `CLAUDE.md` or user rules outside plugin. | Yes. | Yes, but plugin skills are recommended for new plugins. | Hybrid or direct install. |
 | Codex | `.codex-plugin/plugin.json` plugins and marketplaces | Not in fetched plugin docs; use `~/.codex/AGENTS.md`. | Yes. | Not as native command docs here; adapter skills are viable. | Hybrid. |
-| OpenCode | JS/TS plugins via local files or npm | No static rule package support in fetched plugin docs; use `instructions`. | Not via plugin docs; native skills/direct paths exist. | Not via plugin docs; native commands/direct paths exist. | Direct config install. |
+| OpenCode | JS/TS plugins via npm package or local file/path specs | Possibly through `experimental.chat.system.transform`; direct `instructions` remains fallback. | Not proven by docs/source Hooks; native skills/direct paths exist. | Not proven by docs/source Hooks; command hook intercepts existing commands only. | `open-loom` validation with npm/local distribution. |
 | Gemini CLI | `gemini-extension.json` extensions | Yes, via extension context file / `GEMINI.md` in fetched docs. | Yes. | Yes, as TOML command files. | Strong plugin/extension candidate. |
 | Cursor | `.cursor-plugin/plugin.json` plugins | Yes, plugin rules. | Yes. | Yes. | Strong plugin candidate. |
 
-The strongest first-class package candidates are Gemini CLI extensions and Cursor
-plugins. Claude Code and Codex plugins are useful but incomplete unless paired
-with explicit always-on instruction installation. OpenCode's plugin system is
-runtime/hook-oriented and should not be Loom's primary distribution path.
+The strongest already-documented full package candidates are Gemini CLI
+extensions and Cursor plugins. Claude Code and Codex plugins are useful but
+incomplete unless paired with explicit always-on instruction installation.
+OpenCode's plugin system is attractive for UX but needs targeted validation:
+source-level hooks may cover rules, while skill/command registration remains
+unproven. Distribution should assume `open-loom` npm publication for normal users
+and a local file/path plugin entry for cloned-repo use, not Git URL plugin specs.
 
 ## Existing Install Surfaces Compared
 
@@ -639,8 +694,8 @@ Rejected because plugin coverage is uneven.
   fetched docs.
 - Codex plugins package skills/apps/MCP/assets but not always-on instructions in
   the fetched docs.
-- OpenCode plugins are JS/TS runtime hook modules, not static bundles of rules,
-  skills, and commands.
+- OpenCode plugins are not yet proven as full static bundles of rules, skills,
+  and commands. They should be prototyped rather than universally assumed.
 - Gemini and Cursor have much stronger package fit, but making the lowest-common
   plugin model the universal strategy would either underuse them or overclaim
   support in other harnesses.
@@ -718,9 +773,13 @@ in top-level `rules/`, `skills/`, optional `commands/`, templates, and reference
    always-on rule mechanism. They likely need a hybrid with `CLAUDE.md` / user
    rules or `AGENTS.md` for rules.
 
-5. OpenCode's first-class plugin system is not the right primary install surface
-   for Loom because it is a JS/TS hook/tool runtime. OpenCode already has clean
-   direct config surfaces for instructions, skills, and commands.
+5. OpenCode should continue through `open-loom` plugin-first validation. The
+   ideal UX is a single `plugin` array entry in `opencode.json`, but current
+   evidence only proves local file plugin installation, experimental system
+   prompt mutation shape, and command interception after command resolution.
+   Operator validation indicates Git URL plugin specs are not supported, so npm
+   publication and local file/path entries are the viable distribution paths. The
+   evidence does not yet prove first-class bundled skill or command registration.
 
 6. Portable Agent Skills are a strong common denominator for the `skills/` part
    of Loom, especially across Codex, Gemini CLI, Cursor, and OpenCode, but they
@@ -762,7 +821,7 @@ Adopt a hybrid install strategy:
 
 | Harness | Recommended next strategy | Rationale |
 | --- | --- | --- |
-| OpenCode | Keep direct config install; consider generic `~/.agents/skills` for skills. | Native `instructions`, skills, and Markdown commands already fit; plugin system is runtime JS/TS. |
+| OpenCode | Prototype a plugin-first install before hardening direct config fallback. | Ideal UX is one `plugin` entry; use npm package distribution for normal users and local file/path plugin entries for cloned-repo installs. Validate bundled-rule injection, skill/command exposure, and bundled-file reads. |
 | Claude Code | Keep direct or hybrid install; evaluate plugin for skills/commands only if rules are installed separately through `CLAUDE.md` or user rules. | Plugins are first-class but not a complete always-on rules surface in fetched docs. |
 | Codex | Keep hybrid install; evaluate Codex plugin for canonical skills and generated explicit-only command adapter skills, paired with managed `AGENTS.md` rules. | Plugins package skills, but rules still need AGENTS. |
 | Gemini CLI | Prototype a Gemini extension adapter. | Extension docs support context file, skills, and commands. |
@@ -778,9 +837,12 @@ Adopt a hybrid install strategy:
    surfaces and has explicit extension install/link/update commands.
 4. Re-evaluate Claude and Codex hybrid shapes after Cursor/Gemini prove the
    generated-adapter discipline.
-5. Decide whether shared `~/.agents/skills` should become the default skill
-   destination for Codex/Gemini/Cursor/OpenCode global installs.
-6. Update `INSTALL.md` only after the preferred path is implemented or at least
+5. Prototype OpenCode plugin-first behavior rather than assuming direct config is
+   final.
+6. Decide whether shared `~/.agents/skills` should become the default skill
+   destination for Codex/Gemini/Cursor/OpenCode global installs only after plugin
+   skill exposure limits are known.
+7. Update `INSTALL.md` only after the preferred path is implemented or at least
    captured in a ready ticket.
 
 ## Validation Recommendation
@@ -824,6 +886,11 @@ Split future install docs into three conceptual modes:
   behavior in real sessions?
 - Should generated adapter packages live in the repository as committed fixtures,
   be generated only during release, or remain examples under `examples/`?
+- Can OpenCode plugins expose bundled skills and slash commands through a stable
+  API, or do they only support tools, hooks, and prompt/system mutation today?
+- What npm package layout should Loom use for OpenCode so the plugin can consume
+  or expose the repository's Markdown rules, skills, and commands without copying
+  them into a second canonical surface?
 - How should versioning work for adapter packages if Loom itself is source-only
   Markdown?
 - Should install docs recommend marketplace installs for users and direct clone
@@ -837,7 +904,7 @@ Split future install docs into three conceptual modes:
 
 - Initiative: `initiative:loom-install-experience`
 - Plan: `plan:install-experience-harness-adapters`
-- Harness ticket: `ticket:6uy1rx20` - OpenCode direct config install path
+- Harness ticket: `ticket:6uy1rx20` - OpenCode plugin-first install path
 - Harness ticket: `ticket:q7h1d05q` - Claude Code hybrid install path
 - Harness ticket: `ticket:lx9nnztk` - Codex hybrid plugin install path
 - Harness ticket: `ticket:7ex8w32y` - Gemini CLI extension install path

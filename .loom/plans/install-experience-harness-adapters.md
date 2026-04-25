@@ -3,7 +3,7 @@ id: plan:install-experience-harness-adapters
 kind: plan
 status: active
 created_at: 2026-04-25T18:46:08Z
-updated_at: 2026-04-25T18:46:08Z
+updated_at: 2026-04-25T20:29:14Z
 scope:
   kind: repository
   repositories:
@@ -49,8 +49,9 @@ Use the research recommendation as the route:
 3. Apply that adapter-package discipline to hybrid harnesses: Claude Code and
    Codex, where plugins are useful but always-on Loom rules still need a separate
    instruction surface.
-4. Finalize OpenCode as a direct-config path instead of forcing it through a
-   runtime plugin abstraction.
+4. Re-open OpenCode as a plugin-first investigation: the ideal user experience is
+   a single `plugin` array entry, but the ticket must prove which plugin APIs can
+   actually inject or register Loom rules, skills, and commands.
 5. Reconcile `INSTALL.md`, adapter fixtures, and shell fallback behavior after
    the per-harness decisions are proven.
 
@@ -66,8 +67,10 @@ Current strategic picture:
   skills, and commands.
 - Claude Code and Codex are likely hybrid installs because their plugin systems
   do not cleanly own always-on Loom rules in the fetched docs.
-- OpenCode should remain direct-config because its plugin system is runtime and
-  hook oriented while its config already has an `instructions` surface.
+- OpenCode is no longer assumed to be direct-config only. Official docs still
+  document npm/local plugins mostly as runtime hooks and tools, but source-level
+  evidence shows plugin spec handling and experimental system-prompt hooks worth
+  prototyping.
 - Generic Agent Skills may reduce duplicated skill installs for OpenCode, Codex,
   Gemini CLI, and Cursor, but they cannot replace ordered always-on rules.
 - Adapter outputs must remain derivative from canonical `rules/`, `skills/`, and
@@ -85,11 +88,10 @@ Hybrid package prototypes:
 - `ticket:q7h1d05q` - prototype Claude Code hybrid install path
 - `ticket:lx9nnztk` - prototype Codex hybrid plugin install path
 
-Direct config hardening:
+OpenCode plugin-first investigation:
 
-- `ticket:6uy1rx20` - finalize OpenCode direct install path and decide whether
-  shared `~/.agents/skills` should replace or supplement OpenCode-native skill
-  copies
+- `ticket:6uy1rx20` - validate the `open-loom` OpenCode plugin install path and
+  decide whether any fallback direct config copy remains necessary
 
 Shared follow-through inside the harness tickets:
 
@@ -106,8 +108,10 @@ Shared follow-through inside the harness tickets:
    mutation.
 2. Claude and Codex hybrid tickets decide how plugin packaging combines with
    always-on rule installation and explicit command adapters.
-3. OpenCode direct-config ticket decides whether shared Agent Skills should be
-   used and hardens the direct install story without inventing an OpenCode plugin.
+3. OpenCode plugin-first ticket proves or rejects the ideal plugin-array install
+   shape, using npm publication for normal users and local file/path plugins for
+   cloned-repo installs, while documenting any missing skill/command registration
+   APIs.
 4. The public install docs distinguish user-global install, project-local
    adoption, and adapter-package development.
 5. The current shell installer is either simplified into a fallback/prototype
@@ -124,9 +128,10 @@ Claude and Codex come next because they need the same packaging discipline but
 with an explicit split between plugin-delivered skills/commands and separately
 installed always-on rules.
 
-OpenCode comes after the package prototypes because it should inherit the shared
-skill-location decision while remaining a direct config install. It should not be
-forced into a JS/TS plugin path just for symmetry.
+OpenCode can proceed as soon as the plugin-first investigation is useful. It may
+need narrower validation before the shared skill-location decision, because the
+ideal outcome is not a copied skill directory but a plugin that registers or
+exposes bundled Loom surfaces through OpenCode APIs.
 
 This order is recommended, not a hidden hard dependency. If a harness changes
 docs or a user need makes one ticket urgent, the ticket can move independently as
@@ -157,9 +162,11 @@ Wave 2:
 
 Wave 3:
 
-- `ticket:6uy1rx20` - OpenCode direct install hardening. Expected child write
-  scope: OpenCode-specific installer/docs/fixture surfaces and any shared skill
-  destination decision that the prior tickets made safe to apply.
+- `ticket:6uy1rx20` - `open-loom` OpenCode plugin-first install validation.
+  Expected child write scope: OpenCode plugin fixture/package files,
+  OpenCode-specific docs, source-backed research updates, and this
+  ticket/evidence records. Fallback direct installer changes should wait until
+  the plugin API limits are proven.
 
 # Risks
 
@@ -175,6 +182,12 @@ Wave 3:
   aggregate rule file less reliable than direct ordered file references.
 - Marketplace package work could expand into release engineering before local
   package fixtures prove the adapter shape.
+- OpenCode's plugin API may be able to inject system instructions but still lack
+  first-class skill or command registration, creating a partial plugin that needs
+  a fallback install step.
+- OpenCode does not currently support Git URL plugin installs, so the user-facing
+  plugin distribution path must be an npm package; local clone users can point
+  `plugin` at a file or local path.
 
 # Evidence Strategy
 
@@ -199,6 +212,9 @@ Additional evidence for plugin or extension tickets:
 - command adapters remain explicit invocation surfaces
 - local link/install/disable commands are run when the harness CLI is available,
   or explicitly marked unvalidated when unavailable
+- for OpenCode specifically, validate the npm package path and local file/path
+  plugin path; record Git URL plugin specs as unsupported unless new upstream
+  behavior appears
 
 # Exit Criteria
 

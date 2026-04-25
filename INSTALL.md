@@ -137,6 +137,49 @@ harnesses that support slash-command style entry points.
 Those wrappers should route the agent into the same rules and skills. They do
 not own behavior independently and they should not become the protocol core.
 
+## OpenCode Plugin
+
+This repository includes the `open-loom` OpenCode plugin at `open-loom.mjs`. The
+package metadata is intentionally private until publication is approved. After
+`open-loom` is published, normal users should configure OpenCode with a package
+plugin entry:
+
+```json
+{
+  "plugin": ["open-loom"]
+}
+```
+
+Users working from a cloned repository should point OpenCode at the local plugin
+file instead:
+
+```json
+{
+  "plugin": ["file:///absolute/path/to/agent-loom/open-loom.mjs"]
+}
+```
+
+Git URL plugin specs are not recommended for OpenCode. Current validation found
+them unsupported in practice, so use npm package distribution or a local
+file/path entry.
+
+`open-loom` reads ordered top-level `rules/*.md` via module-relative file reads
+and prepends them to OpenCode's `output.system` array through
+`experimental.chat.system.transform`. Skills and optional commands are
+inspectable through the plugin's helper exports, but current validation does not
+prove first-class OpenCode plugin registration APIs for those surfaces. Until
+those APIs are proven, the direct OpenCode fallback remains the supported way to
+expose skills and commands.
+
+For a local structural check that does not require the OpenCode TUI/runtime, run:
+
+```bash
+node open-loom.mjs --smoke
+```
+
+See `examples/adapters/open-loom-install/` for the fixture notes and surface
+disposition.
+
 ## Makefile Installers
 
 This repository also ships a top-level `Makefile` for global user-level installs
