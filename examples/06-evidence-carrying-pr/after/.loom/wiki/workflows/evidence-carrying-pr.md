@@ -1,5 +1,5 @@
 ---
-id: wiki:proof-carrying-pr
+id: wiki:evidence-carrying-pr
 kind: wiki
 page_type: workflow
 status: accepted
@@ -13,15 +13,15 @@ links:
   ticket:
     - ticket:pr000001
   evidence:
-    - evidence:proof-carrying-pr-package
+    - evidence:evidence-carrying-pr-package
 ---
 
 # Summary
 
-A proof-carrying PR is an external package projected from Loom records.
+An evidence-carrying PR is an external package projected from Loom records.
 
 # Sources
 
 - ticket:pr000001
-- evidence:proof-carrying-pr-package
-- critique:proof-carrying-pr-review
+- evidence:evidence-carrying-pr-package
+- critique:evidence-carrying-pr-review

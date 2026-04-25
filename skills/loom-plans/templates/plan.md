@@ -42,10 +42,14 @@ Why the order looks the way it does.
 Use when multiple tickets can be sequenced or run independently from the plan.
 
 Wave 1:
-- ticket:<id> — reason it can run independently — expected child write scope
+
+List real ticket IDs, why they can run independently, and expected child write
+scope. If no wave applies, write `None - reason`.
 
 Wave 2:
-- ticket:<id> — depends on Wave 1 result
+
+List real ticket IDs and dependencies on prior wave results. If no wave applies,
+write `None - reason`.
 
 # Risks
 
@@ -53,7 +57,7 @@ What could break or distort the plan.
 
 # Evidence Strategy
 
-How the work under this plan should generally be proved.
+How the work under this plan should generally be evidenced or validated.
 
 # Exit Criteria
 

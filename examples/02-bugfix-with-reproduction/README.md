@@ -2,8 +2,7 @@
 
 ## Starting `.loom` Slice
 
-- `spec:ticket-acceptance`
-- `plan:acceptance-hardening`
+- `spec:acceptance-hardening`
 - `ticket:<token>` in `ready`
 - no evidence yet for the failing behavior
 

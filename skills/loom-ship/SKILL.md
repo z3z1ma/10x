@@ -56,14 +56,14 @@ commands may invoke that workflow but do not own it.
 
 ## Guardrail
 
-Shipping may summarize and package. Ticket acceptance owns closure.
+Shipping may summarize and package. Ticket-owned acceptance disposition owns closure.
 
 ## Done Means
 
 - the package cites Loom records rather than transcript memory
 - risks and unresolved follow-ups are visible
 - external summaries do not become a competing execution ledger
-- the next owner is explicit, usually ticket acceptance or critique
+- the next route is explicit, usually ticket acceptance review or critique
 
 ## Read In This Order
 
@@ -71,7 +71,7 @@ Read immediately for shipping/package work:
 
 1. `skills/loom-tickets/SKILL.md` when reading ticket state, acceptance, and
    live execution truth.
-2. `skills/loom-evidence/SKILL.md` when checking proof artifacts or evidence
+2. `skills/loom-evidence/SKILL.md` when checking evidence artifacts or evidence
    summaries.
 3. `skills/loom-records/SKILL.md` when checking links, external refs, or claim
    coverage grammar.

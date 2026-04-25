@@ -50,7 +50,7 @@ Narrow scans are preferred for routine hygiene. Whole-workspace scans are for pe
 
 ## Canonical Procedure
 
-Use `skills/loom-records/references/repair-and-drift.md` as the procedure.
+Hydrate `loom-records` and use its `repair-and-drift` reference as the procedure.
 
 In short:
 
@@ -84,6 +84,6 @@ In short:
 
 - drift findings table (class, record, evidence, proposed action, risk)
 - safe repairs applied, with paths and one-line summaries
-- routed findings with the recommended next command per finding
+- routed findings with the recommended next route, owner layer, or optional command per finding
 - residual drift that cannot be fixed from here and why
-- recommended next command
+- recommended next route, owner layer, or optional command

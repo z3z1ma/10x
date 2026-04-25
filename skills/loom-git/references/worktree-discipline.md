@@ -9,7 +9,7 @@ truth, or replace packet write boundaries.
 Linked worktrees isolate working directories and indexes, but they can still
 share repository metadata such as refs, config, hooks, and object storage. Treat
 fetching, pruning, remote edits, config edits, and garbage collection as shared
-operations unless the repository proves otherwise.
+operations unless repository inspection shows otherwise.
 
 ## When To Use A Worktree
 
@@ -133,7 +133,7 @@ git worktree remove <worktree>
 
 Use `git worktree prune` only after checking `git worktree list` and confirming
 the missing paths are stale administrative records. Pruning is maintenance, not
-proof that ticket work is safe to discard.
+evidence that ticket work is safe to discard.
 
 ## Dirty Worktrees
 
@@ -149,7 +149,7 @@ When dirty state exists:
 ## Abandoning Experimental Work
 
 For spikes or failed attempts, prefer preserving conclusions in research and
-proof in evidence before cleanup.
+evidence before cleanup.
 
 Only delete the branch or worktree after the owner records say what was learned,
 what was rejected, and whether any follow-up remains.

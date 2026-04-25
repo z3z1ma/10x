@@ -18,7 +18,7 @@ suggested_skills:
 
 You are running **Loom Accept**.
 
-Acceptance target:
+Acceptance review target:
 `$ARGUMENTS`
 
 This command is an invocation adapter over the ticket acceptance gate.
@@ -44,7 +44,7 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-tickets/references/acceptance-gate.md` as the procedure.
+Hydrate `loom-tickets` and use its `acceptance-gate` reference as the procedure.
 
 In short:
 
@@ -74,4 +74,4 @@ In short:
 - ticket status after the decision
 - evidence and critique basis for that decision
 - follow-up tickets or gaps if not closed
-- recommended next owner or command
+- recommended next route, owner layer, or optional command

@@ -23,7 +23,7 @@ Use it when understanding should persist and compound.
 - page maintenance when accepted owner truth changes
 
 Wiki explains settled understanding. It does not own policy, intended behavior,
-live execution state, proof, or review verdicts.
+live execution state, observed artifacts, or review verdicts.
 
 ## What Makes Wiki Valuable
 
@@ -62,6 +62,7 @@ This package ships templates for:
 - concept pages
 - workflow pages
 - reference pages
+- atlas pages
 
 Those are enough to start.
 You can add more page types if the project genuinely needs them.

@@ -39,14 +39,14 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-codemap/SKILL.md` as the procedure.
+Hydrate `loom-codemap` and use its procedure.
 
 In short:
 
 1. confirm repository root and map scope
 2. inspect existing atlas/wiki/research/evidence
 3. scan structure with native tools
-4. route uncertainty to research and proof to evidence
+4. route uncertainty to research and observed artifacts to evidence
 5. update wiki for accepted structure
 6. keep path-local adapters as pointers to owner records
 
@@ -64,4 +64,4 @@ In short:
 - research and evidence records created or updated, if any
 - source records and last-verified date
 - boundaries or risky areas discovered
-- recommended next command
+- recommended next route, owner layer, or optional command

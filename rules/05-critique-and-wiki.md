@@ -155,6 +155,10 @@ Promote something into the wiki when one or more of these are true:
 - the project now has a concept or pattern worth naming explicitly
 - another agent would benefit from reading the page before touching nearby work
 
+Retrospective is the default promotion gate for non-trivial completed work.
+Direct wiki work is allowed when the ticket is explicitly a wiki/explanation
+task or when the parent records why retrospective is unnecessary.
+
 ## Wiki Source Rule
 
 A wiki page should be grounded in:
@@ -210,13 +214,13 @@ A retrospective is a named workflow — not a new record kind and not a new dire
 - changed sequencing → plan
 - changed strategic framing → initiative
 - changed principles, constraints, or citable decisions → constitution (including decision records)
-- observed proof artifacts, challenged observations, or validation artifacts → evidence
+- observed artifacts, challenged observations, or validation artifacts → evidence
 - support-only continuity → memory
 
 Every repeated mistake should be promoted into exactly one prevention artifact:
 
 - behavior ambiguity → spec
-- missed test case or proof gap → evidence when an observed artifact exists, or
+- missed test case or evidence gap → evidence when an observed artifact exists, or
   a ticket/test expectation when the gap is future work
 - bad architectural choice → constitution decision
 - recurring operator confusion → wiki workflow or reference page

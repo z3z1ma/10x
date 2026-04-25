@@ -29,10 +29,15 @@ Covers:
 
 Risk class: high
 
+Critique policy: mandatory
+
+Policy rationale: Acceptance-gate behavior can close work incorrectly when
+high-severity findings remain unresolved.
+
 Required critique profiles:
 - code-change
 - operator-clarity
 
 Findings: []
 
-Status: required
+Disposition status: pending

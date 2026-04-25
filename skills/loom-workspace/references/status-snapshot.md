@@ -20,7 +20,7 @@ acceptance, suspicious, or ready for the next bounded move.
    `complete_pending_acceptance`.
 4. For the target slice, note linked owners and support records.
 5. Surface contradictions and drift.
-6. Recommend the next command or owner skill.
+6. Recommend the next owner layer, workflow, or optional command.
 
 ## Drift Signals
 
@@ -47,4 +47,4 @@ git status --short
 - status snapshot
 - active, blocked, review, and acceptance queues
 - contradictions or stale state
-- best next command and why
+- best next owner layer, workflow, or optional command and why

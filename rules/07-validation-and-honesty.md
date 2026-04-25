@@ -42,9 +42,25 @@ A record is structurally credible when:
 - links point at valid targets or are explicitly marked stale/superseded
 - filenames and IDs agree with the naming convention
 
+Ticket states are live execution states. Non-ticket `status` fields are lifecycle
+states; use `skills/loom-records/references/status-lifecycle.md` for their shared
+grammar and layer-specific transitions.
+
 ## Ticket Closure Discipline
 
 Use ticket states deliberately.
+
+Normal transitions are:
+
+```text
+proposed -> ready | cancelled
+ready -> active | blocked | cancelled
+active -> blocked | review_required | complete_pending_acceptance | cancelled
+blocked -> ready | active | cancelled
+review_required -> active | complete_pending_acceptance | cancelled
+complete_pending_acceptance -> closed | active | review_required | cancelled
+closed/cancelled -> terminal unless explicitly reopened by ticket update
+```
 
 ### `proposed`
 

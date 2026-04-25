@@ -32,8 +32,7 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-workspace/SKILL.md` and
-`skills/loom-workspace/references/routing.md` as the procedure.
+Hydrate `loom-workspace` and use its `routing` reference as the procedure.
 
 In short:
 
@@ -65,5 +64,5 @@ In short:
 - workspace root and structural-trust assessment
 - most relevant records found
 - current owner layer and execution state
-- the recommended next command, with reasoning
+- the recommended next route, owner layer, or optional command, with reasoning
 - any blockers or missing Loom structure

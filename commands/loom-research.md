@@ -44,8 +44,7 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-research/SKILL.md` and
-`skills/loom-research/references/research-shape.md` as the procedure.
+Hydrate `loom-research` and use its `research-shape` reference as the procedure.
 
 In short:
 
@@ -75,4 +74,4 @@ In short:
 - key conclusions and confidence
 - rejected options or null results captured, if any
 - downstream implications
-- recommended next command
+- recommended next route, owner layer, or optional command

@@ -52,10 +52,8 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-ralph/references/work-driver.md` and
-`skills/loom-ralph/SKILL.md` as the procedure. Use
-`skills/loom-git/SKILL.md` when repository files will change or Git isolation
-matters.
+Hydrate `loom-ralph` and use its `work-driver` reference as the procedure.
+Hydrate `loom-git` when repository files will change or Git isolation matters.
 
 In short:
 
@@ -65,7 +63,7 @@ In short:
 4. compile a bounded Ralph packet
 5. run one bounded iteration
 6. reconcile as parent
-7. route to the next owner
+7. route to the next governed step
 
 ## Native tools to prefer
 
@@ -96,4 +94,4 @@ In short:
 - iteration outcomes and why they stopped
 - evidence gathered
 - ticket status after reconciliation
-- recommended next command
+- recommended next route, owner layer, or optional command

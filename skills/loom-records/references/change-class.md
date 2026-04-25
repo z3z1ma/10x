@@ -1,7 +1,7 @@
 # Change Class
 
-`risk_class` says how dangerous a change is.
 `change_class` says what kind of mutation it is.
+`risk_class` says how dangerous the scoped ticket or packet is.
 
 Use change class to choose evidence, critique, and verification posture without
 guessing from vibes.
@@ -25,9 +25,9 @@ guessing from vibes.
 | `record-hygiene` | structural check | optional |
 | `documentation-explanation` | source comparison | `operator-clarity` when meaningful |
 | `behavior-contract` | spec diff and acceptance review | `operator-clarity` |
-| `code-behavior` | test-first or observation-first proof | `code-change`, `test-coverage` |
+| `code-behavior` | test-first or observation-first evidence | `code-change`, `test-coverage` |
 | `protocol-authority` | structural checks, examples, and reference reconciliation | `protocol-change`, `operator-clarity` |
-| `data-migration` | before/after and rollback or idempotency proof | `data-migration` |
+| `data-migration` | before/after and rollback or idempotency evidence | `data-migration` |
 | `security-sensitive` | threat-focused evidence | `security` |
 | `release-packaging` | package output compared to owner records | `operator-clarity` |
 
@@ -37,10 +37,15 @@ Tickets and packets may declare change class:
 
 ```yaml
 change_class: code-behavior
+risk_class: medium
 ```
 
 When a ticket has several classes, name the primary class in frontmatter and
 list secondary classes in the body.
+
+Prefer `risk_class` in ticket frontmatter when risk affects critique,
+verification, or acceptance. Packets may repeat or narrow the ticket risk for one
+iteration, but the ticket owns the final risk and critique disposition.
 
 ## Discipline
 

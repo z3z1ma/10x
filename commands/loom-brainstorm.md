@@ -34,11 +34,11 @@ Hydrate only what you need from:
 - surface assumptions, constraints, and precedent the operator may not have stated
 - catch situations where the request conflicts with existing constitution, wiki, or prior research
 - ask before proposing and capture ambiguity before drafting
-- exit to the correct next owner without creating initiatives, specs, plans, or tickets
+- exit to the correct next route or owner layer without creating initiatives, specs, plans, or tickets
 
 ## Canonical Procedure
 
-Use `skills/loom-workspace/references/problem-shaping.md` as the procedure.
+Hydrate `loom-workspace` and use its `problem-shaping` reference as the procedure.
 
 In short:
 
@@ -71,4 +71,4 @@ In short:
 - precedent found and how it constrains the work
 - surfaced assumptions, marked accepted / to-be-confirmed / contested
 - conflicts, if any
-- recommended next command
+- recommended next route, owner layer, or optional command

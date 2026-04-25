@@ -54,6 +54,7 @@ copy_skill_dirs() {
   local dir name
   for dir in "$src_dir"/*; do
     [ -d "$dir" ] || continue
+    [ -f "$dir/SKILL.md" ] || continue
     name="${dir##*/}"
     rm -rf "$dest_dir/$name"
     cp -R "$dir" "$dest_dir/$name"

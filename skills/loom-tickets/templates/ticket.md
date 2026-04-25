@@ -3,6 +3,7 @@ id: ticket:<token>
 kind: ticket
 status: proposed
 change_class: <record-hygiene|documentation-explanation|behavior-contract|code-behavior|protocol-authority|data-migration|security-sensitive|release-packaging>
+risk_class: <low|medium|high>
 created_at: <UTC timestamp>
 updated_at: <UTC timestamp>
 scope:
@@ -41,17 +42,39 @@ What must be true for this ticket to be accepted.
 # Coverage
 
 Covers:
-- spec:<slug>#ACC-000
+
+List qualified claim or acceptance IDs. If none apply, write `None - reason`.
 
 # Claim Matrix
 
+Use only real claim, evidence, and critique references. Remove this table or
+write `None - reason` when no claim matrix applies yet.
+
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| spec:<slug>#ACC-000 | evidence:<slug> | critique:<slug>#FIND-000 | open \| supported \| supported_pending_review \| challenged \| accepted_risk \| superseded |
 
 # Execution Notes
 
 Useful implementation notes, but not a transcript dump.
+
+# Blockers
+
+Named blockers only. If none exist, write `None`.
+
+# Next Move / Next Route
+
+The next governed route: local edit, Ralph implementation packet, direct
+critique, wiki/retrospective pass, evidence recording, research/spec/plan
+refinement, or ticket acceptance review.
+
+# Ralph Readiness
+
+Fill only when the next route is Ralph.
+
+Bounded iteration:
+Write boundary:
+Likely verification posture:
+Expected output contract:
 
 # Evidence
 
@@ -66,12 +89,14 @@ Critique policy: optional | recommended | mandatory
 Policy rationale:
 
 Required critique profiles:
-- operator-clarity
+
+List profile names, or write `None - reason`.
 
 Findings:
-- critique:<slug>#FIND-001 — open | resolved | accepted_risk | superseded
 
-Status: required | completed | deferred | not_required
+List real finding references, or write `None - no critique yet`.
+
+Disposition status: pending | completed | deferred | not_required
 
 Deferral / not-required rationale:
 

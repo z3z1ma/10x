@@ -28,10 +28,12 @@ Use `links:` for durable adjacency a future agent should navigate:
 ```yaml
 links:
   spec:
-    - spec:shipping-workflow
+    - spec:<slug>
   evidence:
-    - evidence:shipping-workflow-smoke
+    - evidence:<slug>
 ```
+
+Replace placeholder refs with real record IDs before saving a real record.
 
 Do not force relationship verbs into frontmatter unless the project has a
 stable need. Plain typed adjacency plus specialized sections is enough for most

@@ -34,6 +34,14 @@ Use these sets unless the owning skill records a narrower one:
 - critique: `draft | final | superseded`
 - workspace support records: `active | superseded | retired`
 
+## Layer-Specific Meanings
+
+- `concluded` — research has reached evidence-bounded conclusions or recommendations.
+- `deferred_questions` — research is intentionally preserving open questions without claiming conclusions.
+- `recorded` — evidence has captured an observation and can be cited with its stated limitations.
+- `invalidated` — evidence should no longer be used because its procedure, environment, or artifact is known to be false or obsolete.
+- `final` — critique has completed its review surface and can be consumed by ticket disposition.
+
 ## Transition Guidance
 
 Prefer explicit transitions:
@@ -46,6 +54,12 @@ Prefer explicit transitions:
 - `active|accepted|completed|stale -> superseded` when a successor is named
 - `active|accepted|completed|stale -> retired` when the record should no
   longer be used
+- `active -> concluded|deferred_questions` when research has either answered
+  the question or intentionally preserved unanswered questions
+- `recorded -> invalidated` when later observation shows the evidence should no
+  longer support its claims
+- `draft -> final` when critique findings, verdict, evidence reviewed, residual
+  risks, and acceptance recommendation are complete
 
 Do not use status as a progress log. Use the body, ticket journal, critique, or
 evidence for the details that justify the status.

@@ -117,7 +117,7 @@ If a change touches multiple surfaces, verify:
 
 - rules are always on
 - the layer model is Loom's source-of-truth type system
-- Ralph is Loom's transaction protocol for bounded worker mutations
+- Ralph is Loom's bounded implementation handoff loop
 - skills own behavior through `SKILL.md`, references, and templates rather than
   shipped scripts
 - commands are optional invocation adapters; deleting them must not remove a
@@ -125,7 +125,7 @@ If a change touches multiple surfaces, verify:
 - tickets are the sole live execution ledger
 - packets are bounded execution contracts
 - wiki is the persistent explanation layer
-- evidence stores proof artifacts without becoming project-truth ownership
+- evidence stores observed artifacts without becoming project-truth ownership
 - optional wrapper commands remain convenience surfaces, not protocol core
 
 ## Current Product Direction
@@ -134,7 +134,7 @@ The next phase is protocol sharpening rather than platform expansion. Prioritize
 
 - product-surface consistency across README, install docs, architecture notes,
   AGENTS guidance, rules, skills, templates, and optional commands
-- shared non-ticket status lifecycle grammar
+- shared non-ticket status lifecycle grammar in `skills/loom-records/references/status-lifecycle.md`
 - claim-level coverage across specs, tickets, packets, evidence, and critique
 - packet freshness and context-budget guidance
 - named critique risk profiles

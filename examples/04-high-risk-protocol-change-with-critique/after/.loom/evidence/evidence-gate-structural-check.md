@@ -53,9 +53,9 @@ Recheck when: validation rules or critique policy changes.
 
 # Limitations
 
-This evidence proves structural routing in the fixture. It does not prove the
-new evidence wording is sufficient for acceptance; critique still challenges
-that.
+This evidence records structural routing in the fixture. It does not establish
+that the new evidence wording is sufficient for acceptance; critique still
+challenges that.
 
 # Result
 

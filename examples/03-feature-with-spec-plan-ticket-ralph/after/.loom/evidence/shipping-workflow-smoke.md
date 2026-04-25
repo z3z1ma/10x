@@ -21,14 +21,16 @@ closure state.
 
 # Procedure
 
-1. Inspect the shipping workflow output fields.
-2. Confirm it summarizes ticket, evidence, critique, risks, and follow-ups.
-3. Confirm it does not set ticket status to `closed`.
+1. Inspect the before slice and confirm no shipping command or skill surface is present.
+2. Inspect the after-slice shipping workflow output fields.
+3. Confirm it summarizes ticket, evidence, critique, risks, and follow-ups.
+4. Confirm it does not set ticket status to `closed`.
 
 # Artifacts
 
 - `commands/loom-ship.md`
 - `skills/loom-ship/SKILL.md`
+- absence of those paths in the before slice
 - ticket:abcd1234
 
 # Supports Claims
@@ -55,7 +57,7 @@ Recheck when: shipping workflow outputs or acceptance semantics change.
 
 # Limitations
 
-This evidence does not prove every harness adapter renders the command.
+This evidence does not cover every harness adapter rendering path.
 
 # Result
 
@@ -64,7 +66,7 @@ The workflow produced summary fields and left ticket closure to acceptance.
 # Interpretation
 
 This supports the two shipping acceptance claims for the fixture. It does not
-prove release-note wording quality.
+validate release-note wording quality.
 
 # Related Records
 

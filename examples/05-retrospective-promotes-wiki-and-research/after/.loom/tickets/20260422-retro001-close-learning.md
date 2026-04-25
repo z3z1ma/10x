@@ -44,6 +44,25 @@ Finish a workflow change and preserve the repeated lesson.
 
 - evidence:retrospective-promotion-check
 
+# Critique Disposition
+
+Risk class: low
+
+Critique policy: optional
+
+Policy rationale: This fixture records a low-risk retrospective promotion with
+no code or protocol-authority mutation.
+
+Required critique profiles:
+
+None - optional critique not required for this fixture.
+
+Findings:
+
+None - no critique required.
+
+Disposition status: not_required
+
 # Wiki Disposition
 
 Promoted to `wiki:review-before-acceptance`.

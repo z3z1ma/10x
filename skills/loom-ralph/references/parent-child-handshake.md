@@ -40,7 +40,7 @@ The parent's job is to decide what that means for durable truth.
 
 ## Parallel Ralph
 
-Parallel Ralph is allowed only when the parent can prove static independence
+Parallel Ralph is allowed only when the parent can establish static independence
 from Loom records before launch.
 
 For parallel Ralph, parent must verify:

@@ -6,7 +6,7 @@ Its job is to make the work small enough, clear enough, and honest enough that t
 
 ## The Outer Loop Questions
 
-Before you compile a packet, start coding, or choose a downstream owner, answer these questions:
+Before you compile a packet, start coding, or choose a downstream route, answer these questions:
 
 1. what durable problem or opportunity exists
 2. what layer currently owns it
@@ -52,8 +52,9 @@ A ready ticket should make all of these legible:
 - what acceptance means
 - what artifacts constrain the work
 - what evidence the parent will expect
-- which owner should act next: local edit, Ralph, critique, wiki, evidence,
-  research/spec/plan refinement, or acceptance review
+- which next route applies: local edit, Ralph implementation packet, direct
+  critique, wiki/retrospective pass, evidence recording, research/spec/plan
+  refinement, or ticket acceptance review
 
 If the ticket cannot do that, keep working in the outer loop.
 

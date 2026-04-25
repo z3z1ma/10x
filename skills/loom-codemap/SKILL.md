@@ -11,7 +11,7 @@ metadata:
 Codebase atlas work makes repository structure easier to recover.
 
 It does not create a new canonical layer. Accepted structure belongs in wiki,
-investigation belongs in research, and scan proof belongs in evidence.
+investigation belongs in research, and scan observations belong in evidence.
 
 ## What This Workflow Coordinates
 
@@ -81,7 +81,7 @@ Read:
 ## Done Means
 
 - accepted structure is in wiki
-- scan or inspection proof is in evidence when it matters
+- scan or inspection artifacts are in evidence when they matter
 - uncertain interpretation is in research, not hidden in wiki
 - generated path-local guidance points to owner records
 - live execution state remains in tickets
@@ -98,6 +98,6 @@ Then read conditionally:
 2. `skills/loom-research/SKILL.md` when scan results include uncertainty,
    rejected interpretations, or null results.
 3. `skills/loom-evidence/SKILL.md` when scan commands or observed structure
-   should be preserved as proof.
+   should be preserved as evidence.
 4. `skills/loom-wiki/SKILL.md` when accepted structure should become a
    reusable atlas or module page.

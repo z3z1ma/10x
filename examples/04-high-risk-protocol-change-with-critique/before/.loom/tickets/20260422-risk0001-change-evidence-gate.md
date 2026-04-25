@@ -22,10 +22,15 @@ Change evidence requirements before closure.
 
 Risk class: high
 
+Critique policy: mandatory
+
+Policy rationale: Protocol-authority changes can alter closure semantics for
+future agents.
+
 Required critique profiles:
 - protocol-change
 - operator-clarity
 
 Findings: []
 
-Status: required
+Disposition status: pending

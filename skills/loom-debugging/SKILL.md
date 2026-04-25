@@ -1,6 +1,6 @@
 ---
 name: loom-debugging
-description: "Run a reproduce-first debug or incident workflow through existing Loom layers. Use when behavior fails, root cause is unknown, or a fix needs reproduction evidence, root-cause preservation, and regression proof."
+description: "Run a reproduce-first debug or incident workflow through existing Loom layers. Use when behavior fails, root cause is unknown, or a fix needs reproduction evidence, root-cause preservation, and regression evidence."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow
@@ -16,7 +16,7 @@ It does not create a new canonical layer.
 
 - reproduce-first bug workflow
 - root-cause routing
-- fix proof expectations
+- fix evidence expectations
 - prevention handoff into retrospective
 
 ## Use This Skill When
@@ -36,7 +36,7 @@ It does not create a new canonical layer.
 
 Follow:
 
-`reproduce -> localize -> explain -> fix -> prove -> prevent`
+`reproduce -> localize -> explain -> fix -> evidence -> prevent`
 
 1. capture reproduction steps or current failing behavior as evidence
 2. create or update research if the root cause is not known
@@ -55,8 +55,8 @@ Follow:
 | root cause investigation | research |
 | intended behavior clarification | spec |
 | fix execution | ticket and Ralph |
-| regression proof | evidence |
-| recurring proof gap | ticket follow-up or test expectation via retrospective |
+| regression evidence | evidence |
+| recurring evidence gap | ticket follow-up or test expectation via retrospective |
 | recurring lesson | wiki, research, spec, plan, initiative, constitution, evidence, or memory via retrospective |
 
 ## Done Means
@@ -65,7 +65,7 @@ Follow:
 - root cause is evidence-backed or still marked unknown
 - intended behavior is owned by a spec when needed
 - the fix is owned by a ticket and packet
-- proof exists for before and after behavior
+- evidence exists for before and after behavior
 - prevention follow-through is explicit
 
 ## Read In This Order
@@ -73,7 +73,7 @@ Follow:
 Read immediately for debugging work:
 
 1. `skills/loom-evidence/SKILL.md` when preserving reproduction, red/green
-   output, logs, screenshots, or other proof.
+   output, logs, screenshots, or other evidence.
 
 Then read conditionally:
 

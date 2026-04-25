@@ -13,7 +13,7 @@ rg -n '^id:' .loom
 ### Find every reference to one record
 
 ```bash
-rg -n 'ticket:abcd1234' .loom
+rg -n 'ticket:<token>' .loom
 ```
 
 ### List open tickets
@@ -31,7 +31,7 @@ rg -l '^status: stale$' .loom/wiki
 ### Trace one acceptance claim
 
 ```bash
-rg -n 'spec:acceptance-hardening#ACC-002' .loom
+rg -n 'spec:<slug>#ACC-002' .loom
 ```
 
 ### Find evidence support declarations
@@ -70,8 +70,8 @@ mirrors; they do not replace typed Loom links.
 When you rename, split, or delete something:
 
 ```bash
-rg -n 'ticket:abcd1234' .loom
-rg -n '20260417-abcd1234-tighten-packet-scope.md' .loom
+rg -n 'ticket:<token>' .loom
+rg -n '<YYYYMMDD>-<token>-<short-slug>.md' .loom
 ```
 
 Update references before removing or moving the file.

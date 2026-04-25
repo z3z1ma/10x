@@ -25,7 +25,7 @@ It is not a new record kind and not a second execution ledger.
 - initiative updates for changed strategic framing
 - constitution updates for changed principles, constraints, decisions, or roadmap
   direction
-- evidence preservation for observed proof artifacts, challenged observations, or
+- evidence preservation for observed artifacts, challenged observations, or
   validation artifacts
 - memory updates for support-only continuity
 
@@ -54,8 +54,8 @@ It is not a new record kind and not a second execution ledger.
 - changed sequencing -> `loom-plans`
 - changed strategic framing -> `loom-initiatives`
 - changed principles, constraints, decisions, or roadmap direction -> `loom-constitution`
-- observed proof artifacts, challenged observations, or validation artifacts -> `loom-evidence`
-- missing proof that still needs work -> ticket follow-up or test expectation
+- observed artifacts, challenged observations, or validation artifacts -> `loom-evidence`
+- missing evidence that still needs work -> ticket follow-up or test expectation
 - support-only recall -> `loom-memory`
 
 ## Default Procedure
@@ -93,5 +93,5 @@ Then read conditionally:
 5. `skills/loom-specs/SKILL.md`, `skills/loom-plans/SKILL.md`,
    `skills/loom-initiatives/SKILL.md`, or `skills/loom-constitution/SKILL.md`
    when the lesson changes the owner truth those layers maintain.
-6. `skills/loom-evidence/SKILL.md` when observed proof artifacts, challenged
+6. `skills/loom-evidence/SKILL.md` when observed artifacts, challenged
    observations, or validation artifacts need preservation.

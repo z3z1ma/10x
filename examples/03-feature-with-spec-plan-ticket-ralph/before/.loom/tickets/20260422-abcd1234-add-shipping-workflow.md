@@ -34,10 +34,15 @@ Covers:
 
 Risk class: medium
 
+Critique policy: mandatory
+
+Policy rationale: The shipping workflow affects external summaries and must not
+teach operators that packaging closes tickets.
+
 Required critique profiles:
 - code-change
 - operator-clarity
 
 Findings: []
 
-Status: required
+Disposition status: pending

@@ -238,4 +238,4 @@ git submodule update --init --recursive
 ```
 
 These commands can materially change the working context. Record them as
-evidence when they affect proof, release packaging, or reproduction.
+evidence when they affect validation, release packaging, or reproduction.

@@ -20,7 +20,7 @@ creating initiatives, specs, plans, or tickets.
 4. Ask a small number of sharp clarifying questions.
 5. Check constitution, decisions, wiki, and prior research for precedent.
 6. Surface assumptions as accepted, to-be-confirmed, or contested.
-7. Route to the next owner.
+7. Route to the next owner layer or workflow.
 
 ## Routes
 

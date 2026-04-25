@@ -57,7 +57,7 @@ Do not start deep work before the workspace is structurally trustworthy enough t
 4. verify the canonical subdirectories exist
 5. resolve repository ownership of the target path
 6. read the governing artifact chain
-7. route into the next owner skill or workflow coordinator
+7. route into the next owner layer, skill, or workflow coordinator
 
 ## Signals That You Should Halt Or Escalate
 
@@ -81,7 +81,7 @@ Prefer direct inspection before inventing a helper abstraction:
 
 - the workspace root is explicit
 - structural trust is explicit
-- the next owner skill or workflow coordinator is explicit
+- the next owner layer, skill, or workflow coordinator is explicit
 - you are not guessing about scope or routing
 
 ## Read In This Order

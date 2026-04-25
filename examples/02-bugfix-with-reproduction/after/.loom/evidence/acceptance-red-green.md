@@ -16,7 +16,7 @@ external_refs: {}
 
 # Summary
 
-Red/green proof for high-severity critique blocking acceptance.
+Red/green evidence for high-severity critique blocking acceptance.
 
 # Procedure
 
@@ -62,7 +62,7 @@ After: ticket remained open and reported the blocking finding.
 # Interpretation
 
 This supports the claim that the acceptance gate now fails closed for the
-demonstrated case. It does not prove every acceptance path.
+demonstrated case. It does not cover every acceptance path.
 
 # Related Records
 

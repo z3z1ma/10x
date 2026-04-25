@@ -1,210 +1,158 @@
 # Architecture Notes
 
-This package is a reconstruction of Loom around its strongest ideas.
+Loom is a Markdown-native control plane for AI knowledge work.
 
-## What Loom Is Today
+It is not a toolchain, runtime, daemon, model router, MCP, dashboard, or product
+CLI. Loom is a visible protocol corpus: always-on rules, subsystem skills,
+templates, references, canonical examples, and ordinary filesystem operations.
 
-Loom is not best understood as a toolchain.
+## Architectural Kernel
 
-It is a **Markdown-native control plane for AI knowledge work** with these
-defining properties:
+Loom has one central invariant: ownership-preserving mutation.
 
-- project truth lives in visible files
-- the artifact graph is layered on purpose
-- the layer model acts as a source-of-truth type system
-- the outer loop shapes the work before execution starts
-- the inner loop advances one bounded mutation at a time through fresh context
-- Ralph acts as a transaction protocol for fallible worker contexts
-- critique is first-class, not optional polish
-- explanation should compound into durable knowledge, not vanish into chat
-- the filesystem is already a graph database if you design the records properly
+Every durable claim, behavior, observation, risk, decision, and explanation must
+land in the artifact layer that owns that kind of truth. Newer files do not win
+by recency. More detailed files do not win by confidence. The owner layer wins
+for the truth it owns.
 
-The older repository already contained those ideas.
-What it still carried was a helper-script worldview that made the protocol feel more implementation-bound than it needed to be.
+The transaction spine is:
 
-The key distinction is that Loom does not try to make each agent context
-smarter by stuffing more context into it. Loom makes the work recoverable,
-bounded, reviewable, and composable when individual contexts are disposable.
+```text
+route -> shape -> ready -> execute -> reconcile -> verify -> accept -> promote -> close
+```
 
-The deepest architectural invariant is ownership-preserving mutation: every
-claim, behavior, proof, risk, and explanation should land in the artifact layer
-that owns that kind of truth.
+This spine is the product architecture. Rules, skills, packets, evidence,
+critique, wiki, and commands exist to make those transitions explicit and
+recoverable.
 
-## The Main Architectural Moves In This Rewrite
+## Owner Graph
 
-### 1. Rules become stronger and fewer
+Canonical owner layers own project truth:
 
-The always-on rules are not generic etiquette.
-They are the model's operating doctrine.
+- constitution owns durable identity, principles, constraints, precedent, and decisions
+- initiative owns strategic outcomes and success framing
+- research owns investigations, tradeoffs, conclusions, rejected paths, and null results
+- spec owns intended behavior, scenarios, requirements, and acceptance contracts
+- plan owns sequencing, rollout strategy, milestones, and execution waves
+- ticket owns live execution state, scoped coverage, blockers, acceptance disposition, and closure
+- evidence owns observed artifacts and validation outputs
+- critique owns adversarial findings, severities, verdicts, and residual risks
+- wiki owns accepted explanation and reusable understanding
 
-They teach:
+Durable support surfaces help operation without owning project truth:
 
-- what Loom is
-- which loop to use
-- who owns what
-- when a packet is required
-- how critique and wiki fit
-- which safety and honesty constraints are non-negotiable
+- packets own bounded child-worker contracts
+- memory owns optional support context only
+- workspace and harness records own scope or transport support only
 
-### 2. Skills become full subsystem playbooks
+## Loops
 
-Each skill now contains:
+The outer loop makes work legible before execution. It chooses the owner layer,
+adds research or specs when evidence or behavior is fuzzy, sequences work through
+plans when order matters, and creates or tightens the ticket that will own live
+execution.
 
-- a strong activation description
-- operational posture
-- stepwise execution guidance
-- references for shape and review
-- templates for the artifacts it owns
+The inner loop is Ralph. Ralph advances one bounded implementation slice through
+one packet, one fresh worker, one output contract, and one parent reconciliation.
 
-This is what replaces the old scaffolding scripts.
-The model no longer calls a thin helper because it needs permission to think.
-It reads the subsystem playbook and uses ordinary tools.
+Critique and wiki may reuse packet discipline, but they are sibling routes, not
+Ralph-governed execution.
+They are sibling routes governed by their own domain skills.
 
-### 3. Templates replace record-creation CLIs
+## Packets
 
-Every record kind that previously benefited from deterministic scaffolding now has a Markdown template.
-
-That gives the agent three portable creation paths:
-
-- copy the template and edit it
-- render a here-doc directly
-- generate the file with a short inline script if that is clearer
-
-The protocol no longer depends on one helper implementation.
-
-### 4. Packets become explicit Markdown contracts
-
-The old repo already knew this in spirit.
-This rewrite makes it unavoidable in form.
-
-Packets are now plainly authored Markdown artifacts with sections for:
+Packets are explicit Markdown contracts. They declare:
 
 - mission
-- bound context
-- source snapshot
-- task
+- governing context
+- source fingerprint
+- change class and risk posture
+- child read and write boundaries
+- verification posture
 - stop conditions
 - output contract
-- working notes
 - child output
 - parent merge notes
 
-A packet is no longer just "what a script emits".
-It is a first-class protocol object.
+A packet is not project truth and not a transcript dump. It is a bounded handoff
+that lets a disposable worker mutate a narrow slice without guessing.
 
-### 5. Truth ownership becomes explicit type discipline
+## Evidence, Critique, Acceptance
 
-Loom's layer model is not just folder organization.
-It is the source-of-truth type system:
+Evidence stores observations. It can support or challenge claims, but it does not
+own policy, behavior, sequencing, live execution state, or explanation.
 
-- constitution owns durable identity and constraints
-- initiatives own strategic outcomes
-- research owns evidence synthesis, investigations, options, rejected paths, and
-  null results
-- specs own intended behavior and acceptance
-- plans own sequencing
-- tickets own live execution state
-- packets own bounded child-worker contracts
-- evidence owns proof artifacts
-- critique owns adversarial findings
-- wiki owns accepted explanation
-- memory owns support context only
+Critique pressure-tests claims, implementation shape, and evidence sufficiency.
+It produces findings and verdicts; it does not close work.
 
-When records disagree, the owning layer wins for that kind of truth. Newer
-files do not automatically outrank older owner records.
+Acceptance disposition belongs to the ticket. Commands, commits, packets, PRs,
+critique records, and child workers may inform acceptance, but the ticket owns
+whether scoped work may close.
 
-For software projects, source code owns current implementation reality but not
-intended behavior. Specs and tickets say what should happen; tests and
-observations expose what happens; evidence records the result; critique judges
-whether the proof is sufficient.
+## Promotion
 
-### 6. Docs evolves into Wiki
+Retrospective is the default promotion gate for non-trivial completed work. It
+assimilates durable learning into the owner layer that can maintain it:
 
-The old docs layer was close to a wiki but framed too narrowly.
+- accepted explanation -> wiki
+- investigation results -> research
+- intended behavior clarifications -> spec
+- sequencing changes -> plan
+- strategic framing -> initiative
+- principles or decisions -> constitution
+- observed validation artifacts -> evidence
+- support-only recall -> memory
 
-The new wiki layer is for **persistent, interlinked accepted understanding**.
+Retrospective is a workflow, not a record kind and not a second ledger.
 
-A good answer, workflow explanation, architecture note, comparison, or troubleshooting guide should not die in chat if future agents will need it again.
-It should be promoted into `.loom/wiki/`.
+## Skills And Templates
 
-### 7. Evidence becomes explicit
+Skills are flat sibling subsystem playbooks. Each skill must be understandable
+from its own `SKILL.md`, references, and templates. Hidden inheritance, shipped
+helper scripts, and assembly-time behavior must not become the source of truth.
 
-Structural verification and observed outputs still matter, but the more general and useful concept is evidence.
+Templates are executable prompts for future agents. A good template should force
+real IDs, explicit scope, owner boundaries, evidence expectations, and next
+routes instead of inviting placeholder graph edges or vague completion claims.
 
-Evidence records are durable proof artifacts.
-They justify progress, critique, and wiki pages without pretending to own project truth themselves.
+## Commands And Adapters
 
-### 8. Workflows stay routes, not new ontologies
+Commands are invocation adapters. They may point the operator toward a skill or
+workflow, but they do not own protocol semantics. If deleting `commands/` removes
+a Loom capability, that capability belongs in rules, skills, references, or
+templates.
 
-Loom can express codebase maps, debugging, spikes, sketches, execution waves,
-Git-backed isolation, shipping, external reference provenance, and retrospective
-prevention without adding new canonical layers.
+Harness adapters transport Loom into particular tools. They may install,
+translate, or wrap Loom surfaces, but they must not define Loom truth.
 
-The design rule is that a new workflow should route through the owner graph:
-research for investigation, specs for intended behavior, plans for sequencing,
-tickets for live execution, packets for bounded work, evidence for proof,
-critique for adversarial review, and wiki for accepted explanation.
+## Examples
 
-### 9. Examples make the protocol reviewable
+Examples are teaching fixtures, not canonical project truth. They should remain
+minimal, internally consistent, and replayable by a cold reader. A good example
+shows the starting `.loom` slice, operator request, expected route, expected
+artifacts, final state, and common wrong behavior.
 
-The `examples/` tree contains golden protocol fixtures and traces. They are not
-automated tests and not canonical project truth.
+## Design Biases
 
-Each example should show a starting `.loom` slice, operator request, expected
-route, expected artifacts, final state, common wrong behavior, and when useful
-before/after fixture slices. That gives contributors a way to review whether a
-protocol change preserves Loom's intended shape across harnesses.
+Loom optimizes for:
 
-### 10. Commands and utilities stay outside the kernel
-
-Commands are invocation adapters. If deleting `commands/` removes a Loom
-capability, the behavior belongs in a skill or reference.
-
-Local writing or style utilities belong under `optional-utilities/`, not in the
-default protocol skill set. They may be useful, but they are not Loom protocol
-semantics.
-
-### 11. Core layers and workflows keep growth disciplined
-
-The protocol core is the persisted owner/support graph. Constitution,
-initiative, research, spec, plan, ticket, evidence, critique, and wiki are
-canonical owner layers because they own durable project truth. Packets, memory,
-and workspace support records support durable operation without becoming primary
-truth owners.
-
-Workflows are routes through those surfaces. Brainstorming, debugging, spikes,
-sketches, mapping, Git-backed isolation, shipping, acceptance, retrospective,
-repair, and wiki work compose the owner graph; they do not become new owner
-layers by default.
-
-Harness adapters transport the protocol into particular tools. Optional
-utilities stay outside the default protocol surface.
-
-## Design Philosophy
-
-This rewrite optimizes for:
-
-- portability across harnesses
 - legibility to a fresh agent
-- durability of process knowledge
-- freedom of implementation
 - explicit truth ownership
+- bounded execution
 - grep-friendly traceability
-- small-scope iteration
-- strong adversarial review
+- adversarial review
+- evidence-backed completion
 - knowledge compounding
+- portability across harnesses
 
-It deliberately de-optimizes for:
+Loom rejects:
 
-- convenience wrappers that hide the method
-- magical runtime behavior
-- opaque helper scripts as a second ontology
-- one-command "project management"
-- external systems that become competing ledgers
-- generated context files that define project truth independently of Loom
+- hidden runtimes as the real protocol
+- helper scripts as a second ontology
+- one-command project management
+- external systems as competing ledgers
+- generated context files as independent project truth
+- transcript memory as the execution record
 
-## The Intended User Experience
-
-A future engineer should be able to install this package, load the rules, expose the skills, and have the agent operate with a disciplined methodology rather than a pile of prompts.
-
-That is the point of Loom.
+A future agent should be able to install the package, load the rules, expose the
+skills, read the graph, and operate the protocol without hidden runtime magic.

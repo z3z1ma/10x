@@ -8,16 +8,16 @@ Use both.
 
 - `constitution:main`
 - `decision:0001`
-- `roadmap:bootstrap-packets`
-- `initiative:prove-core-loop`
-- `research:scope-audit`
-- `spec:packet-discipline`
-- `plan:bootstrap-core`
-- `ticket:abcd1234`
-- `critique:packet-discipline-review`
-- `wiki:ralph`
-- `evidence:packet-smoke-test`
-- `packet:ralph-ticket-abcd1234-20260417T190500Z`
+- `roadmap:<slug>`
+- `initiative:<slug>`
+- `research:<slug>`
+- `spec:<slug>`
+- `plan:<slug>`
+- `ticket:<token>`
+- `critique:<slug>`
+- `wiki:<slug>`
+- `evidence:<slug>`
+- `packet:ralph-ticket-<token>-<UTC compact timestamp>`
 - `workspace:main`
 
 ## Filename Guidance
@@ -26,25 +26,25 @@ Use both.
 
 Use a semantic slug:
 
-- `.loom/specs/packet-discipline.md`
-- `.loom/plans/bootstrap-core.md`
-- `.loom/wiki/workflows/ralph-loop.md`
+- `.loom/specs/<slug>.md`
+- `.loom/plans/<slug>.md`
+- `.loom/wiki/workflows/<slug>.md`
 
 ### Tickets
 
 Use date + token + slug:
 
-- `.loom/tickets/20260417-abcd1234-tighten-packet-scope.md`
+- `.loom/tickets/<YYYYMMDD>-<token>-<short-slug>.md`
 
 The ticket's canonical ID should be only the token:
 
-- `ticket:abcd1234`
+- `ticket:<token>`
 
 ### Packets
 
 Use timestamp + subsystem + target:
 
-- `.loom/packets/ralph/20260417T190500Z-ticket-abcd1234-iter-01.md`
+- `.loom/packets/ralph/<UTC compact timestamp>-ticket-<token>-iter-01.md`
 
 ### Decisions
 

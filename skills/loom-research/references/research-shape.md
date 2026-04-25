@@ -31,7 +31,7 @@ Both variants should still preserve:
 - conclusions
 - downstream route
 
-Use a spike or sketch command when the workflow needs more structure, but keep
+Use the spike or sketch workflow when discovery needs more structure, but keep
 the canonical truth in research, evidence, specs, tickets, critique, and wiki.
 
 ## Writing standard

@@ -32,8 +32,8 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| spec:shipping-workflow#ACC-001 | evidence:shipping-workflow-smoke | pending required critique | supported_pending_review |
-| spec:shipping-workflow#ACC-002 | evidence:shipping-workflow-smoke | pending required critique | supported_pending_review |
+| spec:shipping-workflow#ACC-001 | evidence:shipping-workflow-smoke | mandatory critique pending | supported_pending_review |
+| spec:shipping-workflow#ACC-002 | evidence:shipping-workflow-smoke | mandatory critique pending | supported_pending_review |
 
 # Evidence
 
@@ -43,13 +43,18 @@ Covers:
 
 Risk class: medium
 
+Critique policy: mandatory
+
+Policy rationale: The shipping workflow affects external summaries and must not
+teach operators that packaging closes tickets.
+
 Required critique profiles:
 - code-change
 - operator-clarity
 
 Findings: []
 
-Status: required
+Disposition status: pending
 
 # Journal
 

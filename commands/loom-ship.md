@@ -42,7 +42,7 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-ship/SKILL.md` as the procedure.
+Hydrate `loom-ship` and use its procedure.
 
 In short:
 
@@ -67,4 +67,4 @@ In short:
 - risk summary
 - follow-up list
 - release note draft, if useful
-- recommended next owner or command
+- recommended next route, owner layer, or optional command

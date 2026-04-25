@@ -17,7 +17,7 @@ Core workflow examples:
 - `03-feature-with-spec-plan-ticket-ralph`
 - `04-high-risk-protocol-change-with-critique`
 - `05-retrospective-promotes-wiki-and-research`
-- `06-proof-carrying-pr`
+- `06-evidence-carrying-pr`
 
 Each example names:
 
@@ -38,9 +38,9 @@ after/
 common-wrong-behavior.md
 ```
 
-Examples are outside the core product source. They may demonstrate the product,
-but they do not define Loom truth. Keep them minimal and internally consistent because
-agents learn protocol shape from examples.
+Examples are outside the protocol core and do not define Loom truth. They ship as
+teaching fixtures, so keep them minimal and internally consistent because agents
+learn protocol shape from examples.
 
 ## Adapter Fixtures
 

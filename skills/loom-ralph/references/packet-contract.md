@@ -58,8 +58,8 @@ source_fingerprint:
   integration_commit: <sha or unknown>
   git_status_summary: <clean|dirty|unknown>
   compiled_from:
-    - ticket:<id>
-    - spec:<id>
+    - ticket:<token>
+    - spec:<slug>
 ```
 
 Before launch, the parent checks whether governing records, resolved integration
@@ -80,8 +80,7 @@ child_write_scope:
     - tests/example/**
 parent_merge_scope:
   records:
-    - ticket:<id>
-    - evidence:<slug>
+    - ticket:<token>
   paths: []
 ```
 

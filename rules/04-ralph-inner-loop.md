@@ -49,7 +49,13 @@ The child owns one iteration.
 
 ## When Ralph Is Required
 
-Prefer Ralph when:
+Ralph is required when:
+
+- a ticket delegates a bounded implementation mutation to a fresh worker
+- the write boundary must be explicit for safety, auditability, or parallel work
+- parent and child authority need a replayable contract
+
+Ralph is recommended when:
 
 - the next step is implementation-sized
 - the ticket names one bounded implementation iteration
@@ -57,6 +63,9 @@ Prefer Ralph when:
 - the write boundary should be explicit
 - a packet would reduce ambiguity
 - the parent wants a replayable contract
+
+Do not call critique or wiki work Ralph merely because it uses packet discipline;
+those are critique/wiki routes.
 
 You do not need Ralph for every small local note edit.
 You do need Ralph whenever "just continue in the same transcript" would make the work sloppier or less auditable.
@@ -128,7 +137,7 @@ Use when replayability, portability, or stricter trust boundaries matter more th
 
 ## Verification Posture
 
-Packet style governs how much context is carried. Verification posture is a separate axis that governs how the child proves the iteration worked. The parent chooses posture per packet, not per ticket — a test-first ticket can still have a refactor-only iteration that does not demand a new failing check.
+Packet style governs how much context is carried. Verification posture is a separate axis that governs how the child evidences the iteration. The parent chooses posture per packet, not per ticket — a test-first ticket can still have a refactor-only iteration that does not demand a new failing check.
 
 Default postures:
 
@@ -140,7 +149,7 @@ Use when the spec or acceptance criteria name a behavioral outcome that can be e
 
 ### `observation-first`
 
-The child must produce observed, inspectable evidence of current behavior before changing it, and produce observed evidence of the new behavior after. Use when automated checks are impractical or premature but the iteration still needs to prove something concrete: a logged output, a captured artifact, a diffed behavior.
+The child must produce observed, inspectable evidence of current behavior before changing it, and produce observed evidence of the new behavior after. Use when automated checks are impractical or premature but the iteration still needs something concrete: a logged output, a captured artifact, a diffed behavior.
 
 ### `none`
 
@@ -148,7 +157,7 @@ No explicit verification beyond the normal output contract. Use only when the it
 
 Do not use `none` merely because a change is written in Markdown. Protocol,
 workflow, operator guidance, acceptance, or behavior-contract edits can change
-how Loom behaves and usually need structural evidence, observation-first proof,
+how Loom behaves and usually need structural evidence, observation-first evidence,
 or critique.
 
 ### Choosing posture
@@ -167,7 +176,7 @@ The posture is declared in the packet frontmatter so the child cannot quietly sk
 The child should return one of:
 
 - `continue` — meaningful progress happened and another Ralph iteration is likely next
-- `stop` — this bounded iteration is finished and Ralph may not be the next owner
+- `stop` — this bounded iteration is finished and Ralph may not be the next route
 - `blocked` — a concrete blocker prevented progress
 - `escalate` — the right next step is higher-order reframing, review, or policy work
 
@@ -241,6 +250,6 @@ A Ralph run is not complete because the child said "done".
 
 It is complete only when the ticket and supporting evidence tell the truth about what actually happened.
 
-If the child surfaced a durable claim, behavior change, proof artifact, risk,
-or explanation, the parent must route it to the layer that owns that kind of
-truth instead of leaving it only in the packet or transcript.
+If the child surfaced a durable claim, behavior change, evidence artifact, risk,
+or explanation, the parent must route it to the layer that owns that kind of truth
+instead of leaving it only in the packet or transcript.

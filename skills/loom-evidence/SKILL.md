@@ -1,6 +1,6 @@
 ---
 name: loom-evidence
-description: "Maintain proof artifacts and observed outputs without turning evidence into project-truth ownership. Use when validation output, reproduction steps, test results, screenshots, logs, scan results, red/green proof, or other observations need durable preservation with claim-level support or challenge links."
+description: "Maintain observed artifacts and outputs without turning evidence into project-truth ownership. Use when validation output, reproduction steps, test results, screenshots, logs, scan results, red/green output, or other observations need durable preservation with claim-level support or challenge links."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -9,18 +9,18 @@ metadata:
 
 # loom-evidence
 
-Evidence owns proof artifacts.
+Evidence owns observed artifacts.
 
 It records what was observed, how it was observed, what claims the observation
-supports or challenges, and what the evidence does not prove.
+supports or challenges, and what the evidence does not establish.
 
 ## What This Skill Owns
 
 - evidence records
-- reproduction, red/green, validation, scan, screenshot, log, and observation proof
+- reproduction, red/green, validation, scan, screenshot, log, and observation artifacts
 - procedure, artifact, environment, validity, and limitation sections
 - claim support and challenge links
-- proof provenance for external artifacts
+- provenance for external artifacts
 
 Evidence does not own intended behavior, live execution state, review verdicts,
 accepted explanation, or durable policy.
@@ -30,7 +30,7 @@ accepted explanation, or durable policy.
 - validation output should be preserved beyond the current transcript
 - a reproduction, failing check, green check, scan result, screenshot, or log
   supports or challenges a claim
-- ticket acceptance needs durable proof rather than a summary assertion
+- ticket acceptance needs durable evidence rather than a summary assertion
 - critique needs inspectable evidence to evaluate a claim
 - a wiki or research conclusion needs sources that future agents can recheck
 
@@ -48,7 +48,7 @@ Good evidence is:
 
 - observed, not inferred
 - specific about procedure and environment
-- explicit about what it supports and what it does not prove
+- explicit about what it supports and what it does not establish
 - linked to tickets, specs, packets, critiques, or wiki pages when useful
 - recheckable enough that a future agent can judge its current value
 
@@ -67,14 +67,14 @@ Good evidence is:
 - the evidence record says what was observed and how
 - support and challenge links are explicit when claims are involved
 - limitations prevent overclaiming
-- the owning ticket, critique, research, spec, or wiki page can cite the proof
+- the owning ticket, critique, research, spec, or wiki page can cite the evidence
   without treating evidence as the owner of project truth
 
 ## Read In This Order
 
 Read immediately for evidence work:
 
-1. `templates/evidence.md` when creating a proof artifact.
+1. `templates/evidence.md` when creating an evidence record.
 2. `skills/loom-records/references/claim-coverage.md` when evidence supports or
    challenges spec acceptance IDs, ticket claims, or critique findings.
 

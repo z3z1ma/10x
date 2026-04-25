@@ -89,8 +89,8 @@ Ask what kind of learning actually emerged, and which owner layer carries that k
 - changed sequencing or rollout logic → **plan**
 - changed strategic outcome framing → **initiative**
 - changed durable project policy or principles → **constitution** (including a new decision record if the change is a citable choice)
-- observed proof artifact, challenged observation, or validation artifact → **evidence**
-- missing proof that still needs work → **ticket follow-up or test expectation**
+- observed artifact, challenged observation, or validation artifact → **evidence**
+- missing evidence that still needs work → **ticket follow-up or test expectation**
 - support-only continuity or reminders → **memory**
 
 ### 3. Promote
@@ -111,7 +111,7 @@ For each repeated mistake, choose exactly one prevention artifact:
 | Repeated mistake | Prevention artifact |
 | --- | --- |
 | behavior ambiguity | spec |
-| missed test case or proof gap | evidence when observed, or ticket/test expectation when future work |
+| missed test case or evidence gap | evidence when observed, or ticket/test expectation when future work |
 | bad architectural choice | constitution decision |
 | recurring operator confusion | wiki workflow or reference page |
 | repeated implementation pitfall | research null result or wiki troubleshooting |
@@ -122,7 +122,7 @@ If no repeated mistake exists, say so and avoid creating filler artifacts.
 
 ## Canonical Procedure
 
-Use `skills/loom-retrospective/SKILL.md` as the procedure.
+Hydrate `loom-retrospective` and use its procedure.
 
 In short:
 
@@ -130,7 +130,7 @@ In short:
 2. distill durable learning
 3. promote into the right owners
 4. choose exactly one prevention artifact per repeated mistake
-5. recommend the next owner
+5. recommend the next route or owner layer
 
 ## Native tools to prefer
 
@@ -154,4 +154,4 @@ In short:
 - what learning was promoted, and into which layer
 - memory changes, if any
 - residual gaps or questions not yet ready to promote
-- recommended next command
+- recommended next route, owner layer, or optional command

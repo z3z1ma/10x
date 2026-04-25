@@ -50,8 +50,7 @@ If the choice is a ticket-sized implementation preference with no durable conseq
 
 ## Canonical Procedure
 
-Use `skills/loom-constitution/SKILL.md` and the decision template as the
-procedure.
+Hydrate `loom-constitution` and use its decision template as the procedure.
 
 In short:
 
@@ -86,4 +85,4 @@ In short:
 - evidence and precedent cited
 - consequences and revisit conditions
 - downstream records that now need reconciliation
-- recommended next command
+- recommended next route, owner layer, or optional command

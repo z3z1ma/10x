@@ -31,7 +31,7 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| spec:acceptance-hardening#ACC-001 | evidence:acceptance-red-green | pending required critique | supported_pending_review |
+| spec:acceptance-hardening#ACC-001 | evidence:acceptance-red-green | mandatory critique pending | supported_pending_review |
 
 # Evidence
 
@@ -41,13 +41,18 @@ Covers:
 
 Risk class: high
 
+Critique policy: mandatory
+
+Policy rationale: Acceptance-gate behavior can close work incorrectly when
+high-severity findings remain unresolved.
+
 Required critique profiles:
 - code-change
 - operator-clarity
 
 Findings: []
 
-Status: required
+Disposition status: pending
 
 # Journal
 

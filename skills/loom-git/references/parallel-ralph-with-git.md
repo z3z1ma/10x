@@ -38,7 +38,7 @@ Recommended columns:
 
 | Child | Ticket | Repo | Integration remote | Integration ref | Integration commit | Push/review remote | Branch | Worktree | Child write scope |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | ticket:abcd1234 | repo:web | `<remote-or-none>` | `<integration-ref>` | `<sha>` | `<remote-or-none>` | loom/abcd1234/web-ui | ../web-abcd1234-ui | apps/web/** |
+| 1 | ticket:<token> | repo:web | `<remote-or-none>` | `<integration-ref>` | `<sha>` | `<remote-or-none>` | loom/<token>/web-ui | ../web-<token>-ui | apps/web/** |
 
 This table is not a new ledger. It is a launch checklist that makes collisions
 visible before they happen.
@@ -58,7 +58,7 @@ For multi-repo tickets:
 If one child must coordinate changes across multiple repositories, the packet
 should name all affected repo aliases and write scopes. If several children
 mutate several repositories in parallel, each child still needs a non-overlap
-proof per repository.
+evidence per repository.
 
 ## Packet Requirements
 

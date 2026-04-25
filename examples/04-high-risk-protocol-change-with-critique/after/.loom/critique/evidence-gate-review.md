@@ -27,6 +27,8 @@ ticket:risk0001 and the changed validation rule fixture.
 
 # Verdict
 
+changes_required
+
 Do not close until follow-up text clarifies evidence minimums.
 
 # Findings
@@ -43,7 +45,7 @@ The rule requires evidence but does not say what kind of evidence is sufficient.
 
 Why it matters:
 
-Agents may close work with weak proof.
+Agents may close work with weak evidence.
 
 Follow-up:
 
@@ -60,12 +62,15 @@ Challenges:
 
 # Residual Risks
 
-The evidence rule could still be read as allowing weak proof if the follow-up
+The evidence rule could still be read as allowing weak evidence if the follow-up
 does not define sufficiency.
 
 # Required Follow-up
 
 Clarify evidence minimums before closure.
+
+Do not record an accepted constitutional decision for this policy until this
+finding is resolved or explicitly accepted as risk.
 
 # Acceptance Recommendation
 

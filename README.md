@@ -3,8 +3,9 @@
 Loom is a harness-agnostic protocol for long-horizon AI knowledge work.
 
 It treats the filesystem as the interface, Markdown as the durable medium, and
-fresh-context packet execution as the default way to do bounded implementation,
-review, and knowledge-compilation work.
+fresh-context packets as the default way to delegate bounded implementation.
+Critique and wiki work may reuse packet discipline, but their domain workflows
+own review and synthesis.
 
 This package is intentionally **not** a runtime, service, daemon, MCP, or product CLI.
 
@@ -21,18 +22,22 @@ Read `PROTOCOL.md` for the stable protocol summary.
 Loom is best understood as a source-of-truth type system plus a transaction
 protocol for fallible AI workers. The workers are disposable. The graph is
 durable. The parent is the transaction coordinator. Tickets are the execution
-ledger. Evidence is the proof store. Critique is the verifier. Wiki is the
-accepted explanation layer.
+ledger. Evidence stores observed artifacts. Critique pressure-tests claims.
+Wiki is the accepted explanation layer.
 
 ## The Core Shape
 
-Loom has three primitives:
+Loom has three operating axes:
 
 - **layers**: typed owners for different kinds of truth
 - **loops**: outer-loop shaping and inner-loop execution
 - **packets**: bounded contracts for fresh-context work
 
-The layer model is the type system:
+A Loom transaction uses the kernel roles defined in `PROTOCOL.md`: owners,
+claims, packets, evidence, critique, acceptance disposition, and promotion.
+
+The layer model is the type system. Canonical owner layers own project truth;
+support surfaces help recovery and handoff without becoming truth owners.
 
 | Layer | Owns |
 | --- | --- |
@@ -42,18 +47,20 @@ The layer model is the type system:
 | spec | intended behavior and acceptance contract |
 | plan | sequencing and rollout strategy |
 | ticket | live execution state |
-| packet | bounded child-worker contract, not project truth |
-| evidence | proof artifacts |
+| evidence | observed artifacts |
 | critique | adversarial findings and verdicts |
 | wiki | accepted explanation |
+| packet | bounded child-worker contract, not project truth |
 | memory | optional support context only |
 
 The rule that keeps the graph coherent is simple: truth ownership is by layer,
 not by recency.
 
-For software work, the codebase owns current implementation reality while specs
-and tickets own intended behavior. Evidence bridges the two, and critique
-judges whether the bridge is strong enough.
+For software work, the codebase owns current implementation reality. Specs own
+reusable intended behavior and acceptance contracts. Tickets own scoped execution,
+ticket-local criteria when no spec exists, and acceptance disposition. Evidence
+bridges implementation to claims, and critique judges whether the bridge is
+strong enough.
 
 ## The Two Loops
 
@@ -61,15 +68,14 @@ judges whether the bridge is strong enough.
 
 The outer loop scopes and re-scopes the work.
 
-Its normal progression is:
-
-`constitution -> initiative -> research/spec -> plan -> ticket`
-
-The four most important binding layers are:
+Its backbone progression is:
 
 `constitution -> initiative -> plan -> ticket`
 
-Research and specs are optional amplifiers. They tighten evidence and behavior when the work needs them, but they do not replace the backbone.
+Use conditional gates before plan or ticket:
+
+- route to research when evidence synthesis, tradeoffs, or conclusions are missing
+- route to spec when intended behavior or acceptance criteria are fuzzy
 
 ### Inner loop
 
@@ -81,11 +87,20 @@ pass.
 A parent agent compiles a packet, launches or delegates one fresh-context execution step, receives a bounded outcome, merges truth back into the ticket, and either continues, stops, escalates, or routes into critique/wiki.
 
 Critique and Wiki may reuse packet discipline, but their domain workflows own
-review and synthesis. They are not Ralph-owned execution variants.
+review and synthesis. They are sibling routes, not Ralph-governed execution.
 
 The deeper invariant is ownership-preserving mutation: every durable claim,
-behavior, proof, risk, and explanation lands in the artifact that owns that
+behavior, evidence artifact, risk, and explanation lands in the artifact that owns that
 kind of truth.
+
+### Transaction spine
+
+Every non-trivial Loom transaction follows the same spine:
+
+`route -> shape -> ready -> execute -> reconcile -> verify -> accept -> promote -> close`
+
+If a step cannot be completed honestly, route backward to the owner that can fix
+the gap instead of advancing on vibes.
 
 ## Repository Layout
 
@@ -121,13 +136,13 @@ Inside a Loom-enabled project, the canonical runtime tree is expected to look ro
 ├── specs/
 ├── plans/
 ├── tickets/
+├── evidence/
 ├── critique/
 ├── wiki/
 ├── packets/
 │   ├── ralph/
 │   ├── critique/
 │   └── wiki/
-├── evidence/
 └── memory/        # optional
 ```
 
@@ -205,7 +220,7 @@ The package now includes first-pass surfaces for:
 - workspace scope aliases for multi-repo or multi-worktree resolution
 - Git branch and worktree discipline for Ralph-backed implementation isolation
 - named critique risk profiles
-- codebase atlas, debug, spike, sketch, execution-wave, external-reference, ship, and retrospective-prevention workflows as routes through existing layers
+- guidance for codebase atlas, debug, spike, sketch, execution-wave, external-reference, ship, golden-example, and retrospective-prevention workflows as routes through existing layers
 - golden examples and fixture slices that make the protocol evaluable across harnesses
 
 The next proving step is to exercise those surfaces in real Loom work and

@@ -58,7 +58,7 @@ Recheck when: retrospective routing or wiki/research templates change.
 
 # Limitations
 
-This evidence does not prove every retrospective should create both wiki and
+This evidence does not imply every retrospective should create both wiki and
 research records.
 
 # Result

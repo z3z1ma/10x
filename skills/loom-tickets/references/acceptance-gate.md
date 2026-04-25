@@ -13,7 +13,8 @@ implementation.
 - ticket claim matrix when present
 - evidence
 - critique records and finding dispositions
-- critique policy: `optional`, `recommended`, or `mandatory`, plus rationale
+- critique policy: `optional`, `recommended`, or `mandatory`, plus rationale and
+  disposition status `pending`, `completed`, `deferred`, or `not_required`
 - wiki disposition
 - recent Ralph packet outcomes
 - relevant plan or initiative context

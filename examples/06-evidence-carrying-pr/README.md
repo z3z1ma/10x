@@ -1,36 +1,37 @@
-# 06 - Proof-Carrying PR
+# 06 - Evidence-Carrying PR
 
 ## Starting `.loom` Slice
 
 - `constitution:main`
 - accepted spec with acceptance IDs
-- ticket in `complete_pending_acceptance`
-- evidence and critique are required before packaging
+- release-packaging ticket in `ready`
+- package evidence and critique are required before acceptance
 
 ## Operator Request
 
-"Prepare the PR body for this complete-pending-acceptance ticket using Loom records."
+"Prepare the PR body for this release-packaging ticket using Loom records."
 
 ## Expected Route
 
-1. read constitution and the ticket acceptance dossier
+1. read constitution and the ticket's scoped claims
 2. inspect covered spec acceptance IDs
-3. inspect evidence and critique findings
-4. confirm wiki disposition
-5. package the PR summary from Loom records
-6. leave ticket closure to acceptance
+3. package the PR summary from Loom records
+4. record package evidence
+5. run critique on the package
+6. promote wiki explanation only if the packaging route is reusable
+7. leave ticket closure to acceptance
 
 ## Expected Artifacts
 
 - PR body or handoff package
-- evidence summary
+- package evidence record
 - critique/finding disposition summary
 - residual risks and follow-ups
 - no new truth owner
 
 ## Expected Final State
 
-- PR text is a projection of Loom truth
+- PR text is a projection of Loom truth and package evidence
 - ticket remains the execution ledger
 - external package does not close the ticket
 

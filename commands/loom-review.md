@@ -43,9 +43,8 @@ Hydrate only what you need from:
 
 ## Choose packetized or direct review
 
-Use `skills/loom-critique/references/review-pass-splitting.md` and
-`skills/loom-critique/references/critique-lens.md` as the canonical procedure
-references.
+Hydrate `loom-critique` and use its `review-pass-splitting` and
+`critique-lens` references as the canonical procedure references.
 
 ### Direct artifact critique
 
@@ -98,20 +97,17 @@ Default split:
 
 Each pass produces its own critique record, or one consolidated record with clearly separated pass sections. Severity and confidence stay explicit per finding.
 
-Use the named profiles from `skills/loom-critique/references/critique-lens.md`
+Use the named profiles from the `loom-critique` `critique-lens` reference
 when the target declares them or when the risk class implies them. Profiles are
 lenses, not new owner layers.
 
-For packetized implementation review, if the harness supports subagents or
-multiple fresh reviewers, launch the passes in parallel with a critique packet
-per pass. If not, run them sequentially as distinct fresh-context passes with
-narrow prompts. The transport is flexible; the pass boundaries are not.
+For packetized implementation review, use the pass-boundary transport guidance
+from the `loom-critique` `review-pass-splitting` reference.
 
 ## Canonical Procedure
 
-Use `skills/loom-critique/references/critique-lens.md`,
-`skills/loom-critique/references/review-pass-splitting.md`, and
-`skills/loom-critique/references/finding-format.md` as the procedure.
+Use the `loom-critique` `critique-lens`, `review-pass-splitting`, and
+`finding-format` references as the procedure.
 
 In short:
 
@@ -150,4 +146,4 @@ In short:
 - prioritized findings with severity and confidence
 - code file/line references when applicable
 - ticket or follow-up updates performed
-- recommended next command
+- recommended next route, owner layer, or optional command

@@ -2,7 +2,7 @@
 
 ## Starting `.loom` Slice
 
-- `initiative:operator-workflows`
+- `constitution:main`
 - no accepted spec for the requested behavior
 - proposed ticket exists but is not Ralph-ready until the spec and route are
   clear
@@ -29,7 +29,7 @@
 - ticket with `# Coverage`
 - Ralph packet with source fingerprint and context budget
 - evidence for observed behavior
-- critique record
+- critique disposition showing mandatory review is next
 - wiki page only if the accepted workflow needs durable explanation
 
 ## Expected Final State

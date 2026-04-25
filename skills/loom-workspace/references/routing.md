@@ -10,7 +10,7 @@ Use these questions to decide the next owner layer or workflow coordinator.
 - intended behavior or acceptance contract -> `loom-specs`
 - sequencing or rollout strategy -> `loom-plans`
 - live execution status or next bounded work item -> `loom-tickets`
-- observed proof, validation output, screenshots, logs, reproduction, red/green
+- observed artifacts, validation output, screenshots, logs, reproduction, red/green
   results, or scan artifacts -> `loom-evidence`
 - adversarial review -> `loom-critique`
 - persistent explanation / interlinked knowledge -> `loom-wiki`
@@ -27,6 +27,9 @@ Use these questions to decide the next owner layer or workflow coordinator.
 - codebase/module atlas work -> `loom-codemap`
 - merge, release, PR, or handoff packaging -> `loom-ship`
 - accepted learning assimilation before closure -> `loom-retrospective`
+- ticket acceptance review or closure disposition -> `loom-tickets`
+- graph repair, broken links, naming, or drift -> `loom-records`
+- wiki write or audit mechanics -> `loom-wiki`
 
 ## The Constitution First Rule
 

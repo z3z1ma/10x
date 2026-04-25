@@ -39,7 +39,7 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-workspace/references/status-snapshot.md` as the procedure.
+Hydrate `loom-workspace` and use its `status-snapshot` reference as the procedure.
 
 In short:
 

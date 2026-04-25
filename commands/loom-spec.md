@@ -43,8 +43,7 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-specs/SKILL.md` and
-`skills/loom-specs/references/spec-shape.md` as the procedure.
+Hydrate `loom-specs` and use its `spec-shape` reference as the procedure.
 
 In short:
 
@@ -52,7 +51,7 @@ In short:
 2. read evidence and constraints
 3. write or refine behavior and acceptance
 4. reconcile downstream artifacts
-5. recommend the next owner
+5. recommend the next route or owner layer
 
 ## Native tools to prefer
 
@@ -72,4 +71,4 @@ In short:
 - spec record path and ID
 - key behaviors, constraints, and acceptance expectations
 - downstream artifacts updated or needing reconciliation
-- recommended next command
+- recommended next route, owner layer, or optional command

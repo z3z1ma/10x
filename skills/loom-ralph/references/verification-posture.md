@@ -1,6 +1,6 @@
 # Verification Posture
 
-Packet style governs how much context the packet carries. Verification posture governs how the child proves the iteration actually did what it claimed.
+Packet style governs how much context the packet carries. Verification posture governs how the child evidences that the iteration did what it claimed.
 
 These are two axes, not one. A `reference-first` packet can be `test-first`. A `hermetic` packet can be `none`. Choose each axis deliberately.
 
@@ -89,10 +89,13 @@ The packet's Verification Posture section should concretely state:
 
 ## Relationship to acceptance and critique
 
-Posture is not a substitute for acceptance criteria on the ticket, and it is not a substitute for critique.
+Posture is not a substitute for the acceptance contract, scoped ticket criteria,
+or critique.
 
-- the ticket owns what "acceptance" means across iterations
-- the packet owns what "this iteration proved it worked" means
+- specs own reusable acceptance contracts
+- tickets own scoped coverage, ticket-local criteria when no spec exists, and
+  acceptance disposition across iterations
+- the packet owns what evidence this bounded iteration must return
 - critique pressure-tests whether the evidence actually supports the claim
 
 Source code shows current implementation reality. Specs and tickets state

@@ -44,7 +44,7 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-spike/SKILL.md` as the procedure. Sketch is the design
+Hydrate `loom-spike` and use its procedure. Sketch is the design
 variant of the spike workflow.
 
 In short:

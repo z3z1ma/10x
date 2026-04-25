@@ -1,6 +1,6 @@
 # Ticket Readiness
 
-A ticket is ready when the next governed owner can act without chat history.
+A ticket is ready when the next governed route can proceed without chat history.
 
 Ralph-ready is stricter: the ticket must also make one bounded implementation
 iteration, write boundary, likely verification posture, and expected output
@@ -22,8 +22,9 @@ this checklist passes.
 - the likely evidence path is visible
 - critique risk class and required profiles are explicit when review is
   expected
-- the next owner is explicit: local edit, Ralph, critique, wiki, evidence,
-  research/spec/plan refinement, or acceptance review
+- the next route is explicit: local edit, Ralph implementation packet, direct
+  critique, wiki/retrospective pass, evidence recording, research/spec/plan
+  refinement, or ticket acceptance review
 - the ticket is small enough to fit one bounded iteration or a short sequence of
   clearly staged iterations
 

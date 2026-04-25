@@ -19,7 +19,7 @@ If execution truth changed, the ticket should absorb it.
 - ticket creation
 - ticket status transitions
 - execution notes
-- acceptance criteria
+- ticket-local acceptance criteria when no separate spec owns the contract
 - change class and its evidence / critique implications
 - claim coverage
 - dependencies
@@ -72,6 +72,10 @@ Tickets own the live acceptance dossier: scoped acceptance IDs, evidence
 disposition, critique disposition, wiki disposition, accepted risk, blockers,
 and closure state.
 
+Specs own reusable acceptance contracts. Tickets may own ticket-local acceptance
+criteria only when no separate spec exists and the criteria are scoped to that
+ticket.
+
 Optional commands, commits, PRs, packets, evidence, critique, and wiki pages may
 feed that dossier. They do not close work by themselves.
 
@@ -107,7 +111,7 @@ Then read conditionally:
 
 3. `references/dependencies.md` when modeling hard prerequisites or softer
    links.
-4. `skills/loom-evidence/SKILL.md` when proof artifacts need to be created,
+4. `skills/loom-evidence/SKILL.md` when evidence artifacts need to be created,
    checked, or linked into the acceptance dossier.
 5. `skills/loom-records/references/change-class.md` when selecting evidence,
    critique profiles, or verification posture from the kind of mutation.

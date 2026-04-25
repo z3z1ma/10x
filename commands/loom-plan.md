@@ -46,8 +46,8 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-plans/SKILL.md`, `skills/loom-plans/references/plan-shape.md`,
-and `skills/loom-tickets/references/readiness.md` as the procedure.
+Hydrate `loom-plans` and use its `plan-shape` reference. Hydrate `loom-tickets`
+and use its `readiness` reference when slicing ticket work.
 
 In short:
 
@@ -56,7 +56,7 @@ In short:
 3. write or refine owner records
 4. slice into bounded tickets
 5. check readiness
-6. recommend the next owner
+6. recommend the next route or owner layer
 
 ## Native tools to prefer
 
@@ -80,4 +80,4 @@ In short:
 - records created or updated, with paths and IDs
 - ticket list with status and dependencies
 - unresolved questions, risks, or assumptions
-- recommended next command
+- recommended next route, owner layer, or optional command

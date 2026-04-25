@@ -8,20 +8,22 @@ Most canonical Loom records should carry these fields:
 
 ```yaml
 ---
-id: ticket:abcd1234
+id: ticket:<token>
 kind: ticket
 status: proposed
-created_at: 2026-04-17T00:00:00Z
-updated_at: 2026-04-17T00:00:00Z
+created_at: <UTC timestamp>
+updated_at: <UTC timestamp>
 scope:
   kind: repository
   repositories:
     - repo:root
 links:
   plan:
-    - plan:bootstrap-core
+    - plan:<slug>
 ---
 ```
+
+Replace every placeholder before saving a real record.
 
 ## Required Common Fields
 
@@ -82,9 +84,9 @@ Good:
 ```yaml
 links:
   initiative:
-    - initiative:prove-core-loop
+    - initiative:<slug>
   plan:
-    - plan:bootstrap-core
+    - plan:<slug>
 ```
 
 Acceptable empty form:
@@ -106,13 +108,13 @@ Example:
 ```yaml
 external_refs:
   github_issue:
-    - owner/repo#123
+    - <owner>/<repo>#<issue-number>
   github_pr:
-    - owner/repo#456
+    - <owner>/<repo>#<pr-number>
   linear:
-    - ENG-123
+    - <project-key>-<number>
   jira:
-    - ENG-123
+    - <project-key>-<number>
 ```
 
 Keep external IDs exact enough that a future agent can find the outside record.

@@ -33,7 +33,7 @@ It is not "just code." It is ticket-owned execution.
    - record evidence
    - update ticket journal and status
    - update packet status away from `compiled`
-9. Decide the next owner:
+9. Decide the next route:
    - another Ralph iteration
    - critique
    - wiki

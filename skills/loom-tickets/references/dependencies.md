@@ -8,8 +8,10 @@ Example:
 
 ```yaml
 depends_on:
-  - ticket:abcd1234
+  - ticket:<token>
 ```
+
+Replace the placeholder with a real ticket ID before saving a real ticket.
 
 Use it when a ticket should not proceed until another ticket lands or reaches a defined state.
 

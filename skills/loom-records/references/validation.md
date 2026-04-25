@@ -67,7 +67,7 @@ Sometimes prose mention is enough.
 
 ```bash
 git diff -- .loom
-rg -n 'ticket:abcd1234|spec:packet-discipline|wiki:ralph' .loom
+rg -n 'ticket:<token>|spec:<slug>|wiki:<slug>' .loom
 ```
 
 ## Evidence Records

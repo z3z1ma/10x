@@ -1,5 +1,5 @@
 ---
-id: critique:proof-carrying-pr-review
+id: critique:evidence-carrying-pr-review
 kind: critique
 status: final
 created_at: 2026-04-22T00:00:00Z
@@ -13,19 +13,21 @@ links:
   ticket:
     - ticket:pr000001
   evidence:
-    - evidence:proof-carrying-pr-package
+    - evidence:evidence-carrying-pr-package
 external_refs: {}
 ---
 
 # Summary
 
-Reviewed the proof-carrying PR package for operator clarity.
+Reviewed the evidence-carrying PR package for operator clarity.
 
 # Review Target
 
 ticket:pr000001 and `pr-body.md`.
 
 # Verdict
+
+pass
 
 Acceptable as a package; closure remains with acceptance.
 
@@ -35,10 +37,10 @@ No blocking findings.
 
 # Evidence Reviewed
 
-- evidence:proof-carrying-pr-package
+- evidence:evidence-carrying-pr-package
 - `pr-body.md`
 - ticket:pr000001
-- spec:proof-carrying-pr
+- spec:evidence-carrying-pr
 
 # Residual Risks
 

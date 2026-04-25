@@ -27,6 +27,11 @@ What other paths were considered and why they were not chosen.
 
 What downstream records, workflows, or constraints this choice creates.
 
+# Revisit Conditions
+
+What new evidence, policy change, roadmap shift, or implementation discovery
+should cause this decision to be reopened, superseded, or retired.
+
 # Supersession
 
 What this replaces, narrows, or leaves open.

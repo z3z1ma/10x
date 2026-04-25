@@ -61,7 +61,7 @@ That means:
 - the next truth change belongs to a specific owner skill such as ticket,
   evidence, critique, wiki, spec, plan, research, initiative, or constitution
 - you are trying to use grammar guidance as a substitute for owner-layer review
-- you need a proof artifact; use `loom-evidence` for the evidence record and
+- you need an observed evidence artifact; use `loom-evidence` for the evidence record and
   return here only for shared naming, linking, or validation grammar
 
 ## Default Record Posture
@@ -120,4 +120,4 @@ Then read conditionally:
    safe repair.
 11. `references/retrospective.md` when assimilating durable learning into owner
    layers.
-12. `skills/loom-evidence/SKILL.md` when creating or validating proof artifacts.
+12. `skills/loom-evidence/SKILL.md` when creating or validating evidence artifacts.

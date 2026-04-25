@@ -3,8 +3,8 @@
 ## Starting `.loom` Slice
 
 - ticket in `complete_pending_acceptance`
-- evidence records for implementation
-- critique found a repeated operator confusion
+- ticket says accepted workflow explanation should be promoted
+- repeated lesson is still only in the ticket journal
 - no wiki page yet for the accepted workflow
 
 ## Operator Request

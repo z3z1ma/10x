@@ -42,7 +42,7 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-spike/SKILL.md` as the procedure.
+Hydrate `loom-spike` and use its procedure.
 
 In short:
 

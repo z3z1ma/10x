@@ -37,6 +37,11 @@ They are useful when the project needs bounded discovery before commitment.
 
 `question -> experiment matrix -> bounded throwaway child write scope -> evidence -> conclusions/null results -> downstream route`
 
+If the spike only reads, compares, sketches, or records observations, research
+and evidence may be enough. If the spike writes throwaway code or mutates the
+repository, create or tighten a ticket and use a Ralph packet with explicit
+cleanup expectations.
+
 Record:
 
 - question
@@ -64,7 +69,7 @@ Record:
 ## Done Means
 
 - research owns conclusions and null results
-- evidence owns proof artifacts
+- evidence owns observed artifacts
 - any accepted behavior is routed to spec
 - any accepted explanation is routed to wiki
 - throwaway code is removed or explicitly contained
@@ -80,7 +85,9 @@ Read immediately for spike or sketch work:
 
 Then read conditionally:
 
-3. `skills/loom-critique/SKILL.md` when variants or experiment conclusions need
+3. `skills/loom-tickets/SKILL.md` and `skills/loom-ralph/SKILL.md` when the
+   spike or sketch writes throwaway code or mutates repository files.
+4. `skills/loom-critique/SKILL.md` when variants or experiment conclusions need
    adversarial review.
-4. `skills/loom-specs/SKILL.md` when accepted behavior should become a contract.
-5. `skills/loom-wiki/SKILL.md` when accepted explanation should become reusable.
+5. `skills/loom-specs/SKILL.md` when accepted behavior should become a contract.
+6. `skills/loom-wiki/SKILL.md` when accepted explanation should become reusable.

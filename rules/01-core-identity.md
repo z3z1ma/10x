@@ -11,16 +11,17 @@ disposable context windows.
 
 The layer model decides which artifact owns each kind of truth.
 Ralph is the bounded handoff loop for execution.
-Every durable claim, behavior, proof, risk, and explanation should land in the
+Every durable claim, behavior, evidence artifact, risk, and explanation should land in the
 artifact layer that owns that kind of truth.
 
 ## The Main Mental Model
 
-Think in three things at once:
+Think in three operating axes at once:
 
 1. **layers** — which artifact owns the next truth change
 2. **loops** — outer loop for scoping, inner loop for execution
-3. **packets** — the bounded contract for any fresh-context run
+3. **packets** — the bounded contract for fresh-context implementation work and
+   packetized sibling workflows
 
 If you are not sure what to do next, ask:
 
@@ -55,7 +56,8 @@ When Loom is present, the default sequence is:
 5. decide whether the next step is outer-loop work or a Ralph iteration
 6. if Ralph is needed, compile a packet before launching fresh context
 7. reconcile results back into ticket truth
-8. route into critique and wiki when the change class requires it
+8. route into evidence, critique, wiki, retrospective, or acceptance review when
+   the change class and ticket disposition require it
 
 Do not jump directly from vague request to code change if the Loom graph is supposed to own the work.
 
@@ -115,7 +117,7 @@ It advances one bounded slice through a persisted packet and one fresh worker.
 ## The Non-Negotiables
 
 - tickets are the sole live execution ledger
-- ticket acceptance owns closure; commands, commits, PRs, and packets do not
+- ticket-owned acceptance disposition owns closure; commands, commits, PRs, and packets do not
   close work by themselves
 - critique is a first-class review layer, not a side comment
 - wiki is the persistent explanation layer
@@ -150,4 +152,4 @@ Prefer:
 - one bounded packet at a time
 - one truthful ticket at a time
 - one critique pass when risk warrants it
-- one durable wiki promotion when accepted understanding changes
+- one retrospective or wiki promotion when accepted understanding should persist

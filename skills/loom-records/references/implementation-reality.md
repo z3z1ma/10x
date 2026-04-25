@@ -11,16 +11,16 @@ tree is the observable system that may or may not match the records.
 - spec owns intended behavior
 - source code owns current implementation reality
 - tests are executable instruments for expectations
-- evidence records observed proof
+- evidence records observed artifacts
 - tickets own live execution state
 - critique owns adversarial judgment about sufficiency and risk
 - wiki owns accepted explanation
 
 ## Common Mistakes
 
-Do not treat a spec as proof that the code works.
+Do not treat a spec as evidence that the code works.
 
-Do not treat the current code as proof that the project intended that behavior.
+Do not treat the current code as evidence that the project intended that behavior.
 
 Do not treat a green test as a complete acceptance decision when required
 critique, evidence, or wiki follow-through remains open.

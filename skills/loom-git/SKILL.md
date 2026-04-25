@@ -38,7 +38,7 @@ input, scope fails closed.
 - intended behavior, which belongs in specs and tickets
 - live execution state, which belongs in tickets
 - bounded child authority, which belongs in packets
-- proof claims, which belong in evidence
+- observed evidence claims, which belong in evidence
 - review verdicts, which belong in critique
 - accepted explanation, which belongs in wiki
 - external shipping summaries, which belong in `loom-ship`

@@ -36,7 +36,7 @@ A Loom workspace is designed so that these operations are meaningful:
 
 ```bash
 rg -n '^id:' .loom
-rg -n 'ticket:abcd1234' .loom
+rg -n 'ticket:<token>' .loom
 find .loom/tickets -name '*.md'
 git log --oneline .loom/wiki
 ```
@@ -52,19 +52,19 @@ When you need to create a record, prefer one of these:
 ### Copy a template
 
 ```bash
-cp skills/loom-tickets/templates/ticket.md .loom/tickets/20260417-abcd1234-my-ticket.md
+cp skills/loom-tickets/templates/ticket.md ".loom/tickets/<YYYYMMDD>-<token>-<short-slug>.md"
 ```
 
 ### Emit a here-doc
 
 ```bash
-cat > .loom/research/option-analysis.md <<'EOF'
+cat > .loom/research/<slug>.md <<'EOF'
 ---
-id: research:option-analysis
+id: research:<slug>
 kind: research
 status: active
-created_at: 2026-04-17T00:00:00Z
-updated_at: 2026-04-17T00:00:00Z
+created_at: <UTC timestamp>
+updated_at: <UTC timestamp>
 scope:
   kind: repository
   repositories:
@@ -114,9 +114,9 @@ The standard way to answer "what points at this?" is text search.
 Examples:
 
 ```bash
-rg -n 'spec:packet-discipline' .loom
-rg -n 'wiki:ralph' .loom
-rg -n 'evidence:packet-smoke-test' .loom
+rg -n 'spec:<slug>' .loom
+rg -n 'wiki:<slug>' .loom
+rg -n 'evidence:<slug>' .loom
 ```
 
 Typed references are intentionally plain text so ordinary search is enough.

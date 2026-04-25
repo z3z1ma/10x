@@ -33,15 +33,15 @@ Hydrate only what you need from:
 ## Goals
 
 - ensure the work has one truthful ticket owner
-- keep the ticket bounded and ready for the next owner
+- keep the ticket bounded and ready for the next governed route
 - correct links, dependencies, acceptance criteria, and status
 - stop before implementation
 
 ## Canonical Procedure
 
-Use `skills/loom-tickets/SKILL.md`,
-`skills/loom-tickets/references/readiness.md`, and
-`skills/loom-records/references/claim-coverage.md` as the procedure.
+Hydrate `loom-tickets` and use its `readiness` reference. Hydrate
+`loom-records` and use its `claim-coverage` reference when claim coverage is in
+scope.
 
 In short:
 
@@ -49,7 +49,7 @@ In short:
 2. read the governing chain
 3. tighten, split, or relink
 4. set truthful status
-5. recommend the next owner
+5. recommend the next route or owner layer
 
 ## Native tools to prefer
 
@@ -69,4 +69,4 @@ In short:
 - ticket(s) created or updated, with paths and IDs
 - readiness assessment
 - dependencies and links added or changed
-- recommended next command
+- recommended next route, owner layer, or optional command

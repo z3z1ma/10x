@@ -29,7 +29,6 @@ discipline, but their domain skills own critique packets and wiki packets.
 ## Use This Skill When
 
 - one exact ticket is Ralph-ready for one bounded implementation iteration
-- the ticket is Ralph-ready, not merely proposed or generally ready
 - the work would benefit from fresh context
 - the write boundary should be explicit
 - the parent wants a durable packet contract
@@ -72,14 +71,14 @@ A strong packet should make all of these explicit:
   files will change
 - context budget
 - verification targets when claim coverage exists
-- verification posture and what counts as proof for this iteration
+- verification posture and what counts as evidence for this iteration
 - stop conditions
 - output contract
 - what the parent will do after the child returns
 
 ## Verification Posture
 
-Packet style governs how much context is carried. Verification posture governs how the child proves this iteration worked. The two are independent axes and both belong in the packet frontmatter.
+Packet style governs how much context is carried. Verification posture governs how the child evidences this iteration. The two are independent axes and both belong in the packet frontmatter.
 
 Postures:
 
@@ -97,10 +96,12 @@ behaves and usually need structural evidence plus critique.
 
 ## Done Means
 
-- one packet exists as a durable contract
+- a packet exists as a durable contract when the work is only packet compilation
+- launched work has returned child output when an iteration was run
 - the worker's outcome is classified honestly
+- packet status moved away from `compiled` after reconciliation
 - the ticket tells the truth afterward
-- the next owner is explicit
+- the next route is explicit
 
 ## Read In This Order
 

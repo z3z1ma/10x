@@ -17,8 +17,7 @@ child_write_scope:
     - wiki:<slug>
   paths: []
 parent_merge_scope:
-  records:
-    - ticket:<token>
+  records: []
   paths: []
 source_fingerprint:
   git_commit: <sha or unknown>
@@ -44,6 +43,9 @@ links: {}
 
 What understanding should be promoted or updated in the wiki.
 
+Name the originating ticket, critique, research, initiative, or other owner ref
+in `parent_merge_scope.records` when parent reconciliation is expected.
+
 # Accepted Truth Sources
 
 Which canonical records and evidence this packet should trust.
@@ -55,6 +57,17 @@ Which wiki pages should be created or updated.
 # Gaps To Fill
 
 What the current wiki does not yet explain well.
+
+# Stop Conditions
+
+Stop or return `blocked` if:
+
+- the truth is unsettled or contradicted by owner records
+- source records are stale, missing, or outside the declared scope
+- the requested page would define policy, intended behavior, live execution state,
+  observed artifacts, or critique verdicts instead of explaining accepted understanding
+- a substantive rewrite needs critique, ticket disposition, or retrospective
+  routing before promotion
 
 # Output Contract
 

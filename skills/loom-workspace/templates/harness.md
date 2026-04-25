@@ -1,3 +1,14 @@
+---
+id: workspace:harness
+kind: workspace-support
+status: active
+created_at: <UTC timestamp>
+updated_at: <UTC timestamp>
+scope:
+  kind: workspace
+links: {}
+---
+
 # Loom Harness Profiles
 
 Use this file to document how fresh-context packet work should be launched in this repository.

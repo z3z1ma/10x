@@ -42,6 +42,11 @@ Change evidence requirements before closure.
 
 Risk class: high
 
+Critique policy: mandatory
+
+Policy rationale: Protocol-authority changes can alter closure semantics for
+future agents.
+
 Required critique profiles:
 - protocol-change
 - operator-clarity
@@ -49,4 +54,10 @@ Required critique profiles:
 Findings:
 - critique:evidence-gate-review#FIND-001 — open
 
-Status: required
+Disposition status: pending
+
+# Constitutional Decision Disposition
+
+The constitutional decision is deferred. The rule fixture is not accepted as
+durable policy until critique:evidence-gate-review#FIND-001 is resolved or
+explicitly accepted as risk.

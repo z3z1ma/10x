@@ -6,8 +6,8 @@ status: compiled
 target: ticket:<token>
 mode: execution
 change_class: <record-hygiene|documentation-explanation|behavior-contract|code-behavior|protocol-authority|data-migration|security-sensitive|release-packaging>
-style: reference-first
-verification_posture: test-first
+style: <reference-first|snapshot-first|hermetic>
+verification_posture: <test-first|observation-first|none>
 iteration: 1
 created_at: <UTC timestamp>
 updated_at: <UTC timestamp>
@@ -21,7 +21,6 @@ child_write_scope:
 parent_merge_scope:
   records:
     - ticket:<token>
-    - evidence:<slug>
   paths: []
 source_fingerprint:
   git_commit: <sha or unknown>
@@ -86,7 +85,7 @@ critique, and verification posture for this iteration.
 
 Stable claim or acceptance IDs this iteration should satisfy or exercise.
 
-- spec:<slug>#ACC-000
+List real qualified IDs, or write `None - reason`.
 
 # Task For This Iteration
 

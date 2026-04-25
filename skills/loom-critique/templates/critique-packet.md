@@ -20,9 +20,7 @@ child_write_scope:
   records: []
   paths: []
 parent_merge_scope:
-  records:
-    - critique:<slug>
-    - ticket:<token>
+  records: []
   paths: []
 source_fingerprint:
   git_commit: <sha or unknown>
@@ -92,6 +90,9 @@ Return:
 - file and line references for code findings when practical
 - residual risks
 - follow-up recommendation
+
+The parent creates or updates real critique and ticket records during
+reconciliation; do not leave placeholder IDs in `parent_merge_scope`.
 
 # Working Notes
 

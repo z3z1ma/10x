@@ -11,6 +11,18 @@
 - `closed`
 - `cancelled`
 
+## Normal Transitions
+
+```text
+proposed -> ready | cancelled
+ready -> active | blocked | cancelled
+active -> blocked | review_required | complete_pending_acceptance | cancelled
+blocked -> ready | active | cancelled
+review_required -> active | complete_pending_acceptance | cancelled
+complete_pending_acceptance -> closed | active | review_required | cancelled
+closed/cancelled -> terminal unless explicitly reopened by ticket update
+```
+
 ## Heuristics
 
 ### `ready`

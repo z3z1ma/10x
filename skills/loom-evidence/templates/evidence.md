@@ -28,13 +28,13 @@ List files, outputs, screenshots, logs, commands, or observations that matter.
 
 List stable claim or acceptance IDs this evidence supports.
 
-- spec:<slug>#ACC-000
+If none apply, write `None - reason`.
 
 # Challenges Claims
 
 List stable claim or acceptance IDs this evidence weakens or falsifies.
 
-- spec:<slug>#ACC-000
+If none apply, write `None - reason`.
 
 # Environment
 
@@ -51,7 +51,7 @@ Recheck when:
 
 # Limitations
 
-What this evidence does not prove.
+What this evidence does not establish.
 
 # Result
 

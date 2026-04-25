@@ -35,6 +35,11 @@ record with clearly separated pass sections.
 For packetized implementation review, compile one critique packet per pass when
 fresh-context review is warranted.
 
+If the harness supports subagents or multiple fresh reviewers, the parent may
+launch independent passes in parallel with one critique packet per pass. If not,
+run them sequentially as distinct fresh-context passes with narrow prompts. The
+transport is flexible; the pass boundaries are not.
+
 For direct artifact critique, do not compile packets by default. Use a packet
 only when the review is broad, high risk, or needs fresh-context isolation.
 

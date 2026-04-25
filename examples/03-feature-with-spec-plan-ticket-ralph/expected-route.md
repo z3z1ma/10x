@@ -7,6 +7,6 @@
    budget, child write scope, parent merge scope, and verification targets.
 5. Execute one bounded implementation slice.
 6. Reconcile the child output back into ticket truth.
-7. Run packetized implementation critique against the ticket context and git
+7. Route to packetized implementation critique against the ticket context and git
    diff.
-8. Update wiki only if accepted explanation should persist.
+8. Update wiki only after accepted explanation should persist.

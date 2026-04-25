@@ -24,13 +24,22 @@ branch, commit, diff range, pull request, or changed file set.
 
 # Verdict
 
-Overall judgment.
+Use one verdict value and explain it:
+
+- `pass`
+- `pass_with_findings`
+- `changes_required`
+- `inconclusive`
+
+Set `status: final` only when evidence reviewed, findings, residual risks, and
+acceptance recommendation are complete enough for the ticket to consume.
 
 # Findings
 
-List concrete findings with stable finding IDs.
+List concrete findings with stable finding IDs. Remove the example finding or
+write `None - no findings` when no finding applies.
 
-## FIND-001: Short finding title
+## FIND-<nnn>: Short finding title
 
 Severity: low | medium | high
 Confidence: low | medium | high
@@ -45,7 +54,8 @@ Follow-up:
 For claim-specific findings, include:
 
 Challenges:
-- spec:<slug>#ACC-000
+
+List real qualified claim IDs, or write `None - not claim-specific`.
 
 # Evidence Reviewed
 
@@ -61,4 +71,5 @@ What should happen before acceptance or closure.
 
 # Acceptance Recommendation
 
-What the parent should do next.
+Use a concrete recommendation: close-ready, complete pending acceptance,
+review required, active follow-up required, blocked, or accepted risk needed.

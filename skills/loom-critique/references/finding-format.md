@@ -22,7 +22,7 @@ A critique record should help someone act, not merely worry.
 When another record refers to a finding, qualify it:
 
 ```text
-critique:packet-review#FIND-001
+critique:<slug>#FIND-001
 ```
 
 Tickets should use those references when tracking critique disposition.

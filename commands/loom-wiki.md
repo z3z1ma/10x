@@ -43,14 +43,14 @@ Hydrate only what you need from:
 
 Produce or update one targeted wiki page from accepted owner truth.
 
-Use `skills/loom-wiki/references/wiki-write.md` as the canonical write
+Hydrate `loom-wiki` and use its `wiki-write` reference as the canonical write
 procedure.
 
 ## Audit mode
 
 Walk the wiki (or the named scope) and surface maintenance debt without silently rewriting it.
 
-Use `skills/loom-wiki/references/wiki-audit.md` as the canonical audit
+Hydrate `loom-wiki` and use its `wiki-audit` reference as the canonical audit
 procedure.
 
 In short:
@@ -66,7 +66,7 @@ In short:
 - pages scanned
 - findings table (page → classification → evidence → proposed action)
 - low-risk mechanical fixes applied, if any
-- recommended next command per finding
+- recommended next route, owner layer, or optional command per finding
 
 ## Native tools to prefer
 
@@ -81,5 +81,6 @@ In short:
 - Do not promote unsettled claims into the wiki.
 - Do not let the wiki quietly become the spec or the constitution.
 - Avoid transcript residue; write durable explanation instead.
-- In audit mode, do not rewrite pages — propose, then let write mode do the work.
+- In audit mode, do not perform substantive rewrites. Apply only obvious
+  mechanical link or stale-marker fixes; route substantive changes to write mode.
 - In audit mode, do not silently delete pages; mark stale or superseded with forward links.

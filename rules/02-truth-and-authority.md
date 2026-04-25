@@ -38,7 +38,7 @@ This prevents claims from drifting into artifacts that cannot safely own them.
 - **packet** owns a bounded child-worker contract, not project truth
 - **critique** owns adversarial findings and review verdicts
 - **wiki** owns accepted explanation and interlinked understanding
-- **evidence** owns proof artifacts, not primary project truth
+- **evidence** owns observed artifacts, not primary project truth
 - **memory** owns support context only
 
 If two artifacts disagree, do not average them together.
@@ -57,7 +57,7 @@ Use this routing before relying on recency, habit, or command names:
 - intended behavior, requirements, scenarios, or acceptance criteria -> spec
 - execution sequencing, rollout strategy, or dependency order -> plan
 - live execution state, blockers, next move, acceptance disposition, or closure -> ticket
-- observed proof, raw outputs, red/green output, reproduction logs, screenshots,
+- observed artifacts, raw outputs, red/green output, reproduction logs, screenshots,
   scan results, or validation artifacts -> evidence
 - adversarial findings, verdicts, severities, and required follow-up -> critique
 - accepted explanation, workflow knowledge, troubleshooting, or reusable synthesis -> wiki
@@ -123,7 +123,9 @@ They are the only place where live execution state is supposed to become durable
 
 That means:
 
-- status lives in tickets
+- live execution state lives in tickets
+- other records may have lifecycle status fields, but those statuses describe
+  only that record and never own what is happening now
 - blockers live in tickets
 - progress lives in tickets
 - execution notes and next steps live in tickets
@@ -137,16 +139,21 @@ Claim and acceptance coverage is shared grammar, not shared authority.
 
 Use this split:
 
-- specs own acceptance IDs, intended behavior, scenarios, and requirements
+- specs own reusable acceptance IDs, intended behavior, scenarios, and requirements
+- tickets may own ticket-local acceptance criteria only when no separate spec
+  exists and the criteria are scoped to that ticket
 - tickets own which claims are in scope, current coverage state, evidence
   disposition, critique disposition, and closure decisions
 - packets cite the claims this bounded iteration is expected to advance
-- evidence records support or challenge claims with observed proof
+- evidence records support or challenge claims with observed artifacts
 - critique records challenge claims, evidence sufficiency, and implementation shape
 - wiki pages explain accepted understanding after the owning layers settle it
 
 Do not let packets, evidence, critique, or wiki redefine the acceptance contract.
-If the contract is wrong, update the spec or ticket that owns it.
+If a reusable or cross-ticket contract is wrong, update the spec. If the criteria
+are purely ticket-local and no spec exists, update the ticket. If ticket-local
+criteria become reusable, disputed, or behavior-defining for future work, promote
+them into a spec before downstream work relies on them.
 
 ## Suspicious Content Rule
 

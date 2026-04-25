@@ -3,7 +3,6 @@
 ## Starting `.loom` Slice
 
 - `constitution:main`
-- active roadmap
 - source rules and skills that define ownership boundaries
 
 ## Operator Request
@@ -18,15 +17,17 @@
 4. create a bounded ticket
 5. use Ralph for implementation if the surface is broad
 6. run critique with `protocol-change` and `operator-clarity` profiles
-7. update wiki if accepted understanding changed
-8. leave the ticket pending acceptance until review implications are reconciled
+7. record the constitutional decision or explicitly defer it while critique blocks acceptance
+8. update wiki if accepted understanding changed
+9. leave the ticket pending acceptance until review implications are reconciled
 
 ## Expected Artifacts
 
-- decision record if durable policy changed
+- decision record if durable policy changed, or explicit decision deferral if
+  critique blocks acceptance
 - spec or rule changes
 - ticket with high risk critique disposition
-- critique packet and critique record
+- direct critique record
 - evidence from structural checks
 - wiki update if future agents need the explanation
 
