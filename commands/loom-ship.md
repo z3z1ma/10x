@@ -6,7 +6,7 @@ category: core
 suggested_skills:
   - loom-workspace
   - loom-records
-  - loom-shipping
+  - loom-ship
   - loom-tickets
   - loom-critique
   - loom-wiki
@@ -25,7 +25,7 @@ It does not close tickets. `/loom-accept` owns closure.
 Hydrate only what you need from:
 - `loom-workspace`
 - `loom-records`
-- `loom-shipping`
+- `loom-ship`
 - `loom-tickets`
 - `loom-critique`
 - `loom-wiki`
@@ -39,7 +39,7 @@ Hydrate only what you need from:
 
 ## Canonical Procedure
 
-Use `skills/loom-shipping/SKILL.md` as the procedure.
+Use `skills/loom-ship/SKILL.md` as the procedure.
 
 In short:
 

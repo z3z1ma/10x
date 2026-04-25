@@ -28,7 +28,7 @@ closure state.
 # Artifacts
 
 - `commands/loom-ship.md`
-- `skills/loom-shipping/SKILL.md`
+- `skills/loom-ship/SKILL.md`
 - ticket:abcd1234
 
 # Supports Claims

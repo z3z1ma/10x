@@ -1,12 +1,12 @@
 ---
-name: loom-shipping
+name: loom-ship
 description: "Package already-truthful Loom work for merge, release, or handoff without closing tickets. Use when ticket, evidence, critique, and wiki disposition should become a PR summary, release note draft, risk summary, or follow-up list."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   loom_layer: workflow
 ---
 
-# loom-shipping
+# loom-ship
 
 Shipping packages work for an external handoff.
 
