@@ -3,7 +3,7 @@ id: constitution:main
 kind: constitution
 status: active
 created_at: 2026-03-31T12:00:00Z
-updated_at: 2026-04-22T08:50:46Z
+updated_at: 2026-04-26T07:23:57Z
 scope:
   kind: workspace
 links: {}
@@ -17,9 +17,10 @@ Loom is not a runtime, daemon, model router, dashboard, MCP bundle, or product
 CLI. It is a protocol that turns work into a typed artifact graph, then teaches
 agents how to mutate that graph honestly with ordinary files.
 
-The protocol core in this repository is `rules/`, `skills/`, their templates
-and references, and the canonical examples that demonstrate them. Optional
-harness wrappers may exist, but they do not define Loom's ontology.
+The protocol core in this repository is `skills/`, including the mandatory
+`loom-bootstrap` doctrine references, plus templates, references, and the
+canonical examples that demonstrate them. Optional harness wrappers may exist,
+but they do not define Loom's ontology.
 
 Loom should not try to make agents smarter by stuffing more context into each
 context window. It should make the work recoverable, bounded, reviewable, and
@@ -44,7 +45,8 @@ owns that kind of truth.
   a packet declares read/write/stop/output contracts, a fresh worker executes
   one slice, and the parent reconciles truth back into the ticket and related
   owners.
-- Rules remain always on.
+- Loom bootstrap doctrine must be loaded before work, either by using
+  `loom-bootstrap` first or by an adapter preloading the same ordered references.
 - `constitution:main` must be read before starting work so local decisions stay
   aligned with durable project policy.
 - Skills stay flat, self-contained, and subsystem-scoped through Markdown,
@@ -65,9 +67,9 @@ owns that kind of truth.
 - Scope and write authority must fail closed rather than being guessed.
 - New workflows should first be expressed as disciplined routes through
   existing owner layers, not as new canonical layers.
-- Harnesses, adapters, command wrappers, external issue trackers, and generated
-  context files may make Loom easier to execute. They must not become Loom's
-  ontology or live ledger.
+- Harnesses, adapters, external issue trackers, and generated context files may
+  make Loom easier to execute. They must not become Loom's ontology or live
+  ledger.
 - Traceability should stay grep-friendly: stable IDs, typed links, explicit
   coverage, evidence, and critique references are preferred over hidden indexes.
 - Important instructions should be stated positively and operationally before
@@ -84,8 +86,8 @@ owns that kind of truth.
   telemetry channel as the primary state surface
 - no shipped Python scripts as a required part of the core Loom bundle
 - no hidden shadow ontology in helpers, wrappers, or runtimes
-- no requirement that a harness-specific `commands/` surface exist for Loom to
-  make sense
+- no supported cross-harness Makefile or shell installer as product surface
+- no top-level command-wrapper surface as product surface
 - no implicit widening of scope or write authority
 - no canonical truth outside designated canonical `.loom/` subtrees
 - no external system, PR description, issue tracker, chat transcript, or
@@ -97,10 +99,10 @@ owns that kind of truth.
 - local automation should stay thin, inspectable, and subordinate to published
   doctrine
 
-This repository is a Markdown-first protocol bundle built from rules, skills,
-templates, references, and canonical records rather than from a conventional
-application stack. Structural completeness without instructional clarity is not
-enough.
+This repository is a Markdown-first protocol bundle built from skills,
+bootstrap doctrine references, templates, references, and canonical records
+rather than from a conventional application stack. Structural completeness
+without instructional clarity is not enough.
 
 # Strategic Direction
 
@@ -130,14 +132,15 @@ primitives sharper without making the system heavier in spirit:
   systems mirror Loom without owning Loom truth
 - golden examples should make the protocol evaluable across harnesses
 
-Future work should keep rules, skills, templates, packet contracts, validation
-behavior, and acceptance gates visible in prose and ordinary files rather than
-only inferable from helper code, wrapper conventions, or external work systems.
+Future work should keep bootstrap doctrine, skills, templates, packet contracts,
+validation behavior, and acceptance gates visible in prose and ordinary files
+rather than only inferable from helper code, wrapper conventions, or external work
+systems.
 
 # Current Focus
 
-- keep public docs, always-on rules, skills, templates, optional commands, and
-  examples aligned as one protocol corpus
+- keep public docs, bootstrap doctrine, skills, templates, and examples aligned as
+  one protocol corpus
 - reconcile remaining canonical examples that still describe scripts, `docs`,
   `runs`, `verification`, or helper-oriented frontmatter
 - prove the new lifecycle, claim coverage, packet freshness, execution wave,
@@ -145,15 +148,13 @@ only inferable from helper code, wrapper conventions, or external work systems.
   retrospective-prevention guidance through real workflows
 - keep the protocol kernel distinct from workflow packs, harness adapters, and
   optional utilities
-- keep command wrappers thin enough that deleting them does not remove a Loom
-  capability
 - harden transaction boundaries: child write scope, parent merge scope,
   packet lifecycle, evidence validity, and critique finding disposition
 - deepen durable examples across initiatives, research, specs, plans, tickets,
   critique, wiki, packets, and evidence so the protocol is shown, not only
   stated
-- keep optional harness wrappers and external systems clearly secondary to
-  rules, skills, and canonical records
+- keep native harness adapters and external systems clearly secondary to
+  bootstrap doctrine, skills, and canonical records
 
 The immediate quality bar is no longer just that the files exist. The most
 important rules, skills, appendices, and canonical records should read like one
@@ -218,3 +219,10 @@ coherent operating manual.
   procedures into skill references, quarantining optional utility skills, and
   tightening ticket, claim, packet, critique, evidence, structural checks, and
   versioning guidance
+- 2026-04-26: accepted `decision:0005`, moving the mandatory bootstrap doctrine
+  from top-level `rules/` into `skills/loom-bootstrap/references/` so Loom can be
+  distributed primarily as a skills package while preserving optional always-on
+  adapter preload.
+- 2026-04-26: accepted `decision:0006`, making `skills/` the only product surface
+  and removing fallback Makefile, shell installer, and top-level command-wrapper
+  distribution paths.

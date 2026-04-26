@@ -4,14 +4,12 @@
 
 This repository develops a distributable Markdown-native Loom bundle.
 
-The protocol core is the top-level `rules/` and `skills/` directories.
-Top-level `commands/` files may exist as optional harness-wrapper prompt
-surfaces, but they are not part of Loom core and the protocol must make sense
-without them.
+The protocol core is the top-level `skills/` directory, especially the mandatory
+`skills/loom-bootstrap` entry skill and its ordered references.
 
-There is no app runtime, build pipeline, or test suite. The durable asset is
-the protocol corpus itself: rules, skills, templates, references, and canonical
-examples.
+There is no app runtime, build pipeline, or test suite. The durable asset is the
+protocol corpus itself: skills, bootstrap doctrine references, templates,
+references, and canonical examples.
 
 Loom should be treated as a control plane for AI knowledge work: a
 source-of-truth type system plus a transaction protocol for bounded
@@ -30,9 +28,9 @@ Ad hoc local automation is acceptable when it is clearly helpful, but it stays
 derivative. It must not become the real source of Loom behavior or a hidden
 second ontology.
 
-Harnesses, external issue trackers, generated context files, dashboards, MCPs,
-and command wrappers may transport or mirror Loom work. They must not own Loom
-truth unless a future constitutional record explicitly changes that boundary.
+Harnesses, external issue trackers, generated context files, dashboards, and MCPs
+may transport or mirror Loom work. They must not own Loom truth unless a future
+constitutional record explicitly changes that boundary.
 
 ## Repo Structure
 
@@ -40,19 +38,17 @@ truth unless a future constitutional record explicitly changes that boundary.
 
 Everything a user receives lives here:
 
-- `rules/` -- always-on doctrine files
+- `skills/loom-bootstrap/` -- mandatory first-use bootstrap doctrine and ordered
+  references
 - `skills/` -- self-contained skill directories with `SKILL.md`, references,
   and templates
-- `commands/` -- optional harness-wrapper prompt files when this repository
-  wants to ship them
 - `examples/` -- golden protocol fixtures and traces; useful for review, but
   not a truth owner
 - `optional-utilities/` -- local utility skills excluded from the default
   protocol install
 
-**Isolation rule**: content inside `rules/`, `skills/`, and any optional
-`commands/` files must stay self-contained, use generic `.loom/...` runtime
-paths, and avoid source-repo-only assumptions.
+**Isolation rule**: content inside `skills/` must stay self-contained, use generic
+`.loom/...` runtime paths, and avoid source-repo-only assumptions.
 
 ### Dogfooding artifacts
 
@@ -61,8 +57,7 @@ bundle. `.loom/` contains Loom records created while using the product on this
 repo.
 
 Neither `.opencode/` nor `.loom/` is the source of truth for how the product is
-designed. Use `rules/`, `skills/`, and optional top-level wrapper prompts for
-that.
+designed. Use `skills/`, especially `skills/loom-bootstrap`, for that.
 
 ## Verification
 
@@ -82,15 +77,15 @@ the claim being made, such as:
 - required sections, statuses, and naming guidance live in the owning skill's
   templates and references
 - `SKILL.md` frontmatter must include `name` and `description`
-- optional command-wrapper files are pure Markdown prompt definitions, not code
+- this repository does not ship a top-level command-wrapper product surface
 
 ## Editing Guidance
 
 - prefer the smallest correct change
-- keep `rules/`, `skills/`, and optional `commands/` aligned when a change
-  crosses their boundaries
-- when changing a rule or skill, check related templates, references, and any
-  canonical `.loom/` examples that teach the same concept
+- keep bootstrap doctrine and `skills/` aligned when a change crosses their
+  boundaries
+- when changing bootstrap references or a skill, check related templates,
+  references, and any canonical `.loom/` examples that teach the same concept
 - do not add hidden runtimes, helper-dependent instructions, or monolithic CLI
   assumptions
 - express new workflows as routes through existing owner layers before adding
@@ -104,36 +99,35 @@ the claim being made, such as:
 
 If a change touches multiple surfaces, verify:
 
-- `rules/` doctrine wording
+- `skills/loom-bootstrap/references/` doctrine wording
 - `PROTOCOL.md`, `README.md`, and `ARCHITECTURE.md` when package framing changes
 - `skills/*/SKILL.md` instructions
 - `skills/*/references/` docs
 - `skills/*/templates/` artifacts
-- optional `commands/` wrappers when they cover the same workflow
 - `examples/` fixtures when behavior or workflow routing changes
 - canonical `.loom/` examples when they are meant to teach the product
 
 ## Key Architecture Facts
 
-- rules are always on
+- bootstrap doctrine is mandatory before work, either through `loom-bootstrap` or
+  an adapter preloading the same ordered references
 - the layer model is Loom's source-of-truth type system
 - Ralph is Loom's bounded implementation handoff loop
 - skills own behavior through `SKILL.md`, references, and templates rather than
-  shipped scripts
-- commands are optional invocation adapters; deleting them must not remove a
-  Loom capability
+  shipped scripts or command wrappers
 - tickets are the sole live execution ledger
 - packets are bounded execution contracts
 - wiki is the persistent explanation layer
 - evidence stores observed artifacts without becoming project-truth ownership
-- optional wrapper commands remain convenience surfaces, not protocol core
+- native harness adapters may preload bootstrap references, but `skills/` remains
+  the product surface
 
 ## Current Product Direction
 
 The next phase is protocol sharpening rather than platform expansion. Prioritize:
 
 - product-surface consistency across README, install docs, architecture notes,
-  AGENTS guidance, rules, skills, templates, and optional commands
+  AGENTS guidance, bootstrap doctrine, skills, and templates
 - shared non-ticket status lifecycle grammar in `skills/loom-records/references/status-lifecycle.md`
 - claim-level coverage across specs, tickets, packets, evidence, and critique
 - packet freshness and context-budget guidance

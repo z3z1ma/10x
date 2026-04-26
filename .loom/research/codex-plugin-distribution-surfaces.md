@@ -3,7 +3,7 @@ id: research:codex-plugin-distribution-surfaces
 kind: research
 status: active
 created_at: 2026-04-26T01:43:51Z
-updated_at: 2026-04-26T01:43:51Z
+updated_at: 2026-04-26T07:23:57Z
 scope:
   kind: repository
   repositories:
@@ -19,10 +19,18 @@ links:
   ticket:
     - ticket:lx9nnztk
     - ticket:p9m4x2qt
+  evidence:
+    - evidence:codex-sessionstart-stdout-context
+  critique:
+    - critique:codex-plugin-hook-config-review
+  decision:
+    - decision:0005
+    - decision:0006
 external_refs:
   codex_docs:
     - https://developers.openai.com/codex/plugins
     - https://developers.openai.com/codex/plugins/build
+    - https://developers.openai.com/codex/hooks
     - https://developers.openai.com/codex/skills
     - https://developers.openai.com/codex/guides/agents-md
     - https://developers.openai.com/codex/concepts/customization
@@ -39,9 +47,9 @@ external_refs:
 
 # Question
 
-How should Loom use Codex's plugin system as a first-class distribution surface
-without pretending that a Codex plugin can own Loom's ordered always-on rule
-surface?
+Can Loom deliver a complete remote Codex install where normal users add the Loom
+plugin and get `loom-bootstrap` plus canonical subsystem skills, without
+pretending Codex plugins own more than current docs and source prove?
 
 # Why This Matters
 
@@ -50,29 +58,39 @@ thinly documented. Codex now has stronger plugin and marketplace docs, a CLI
 marketplace command surface, and curated plugin examples. The ticket needs a
 fresh source-backed next move before implementation so Loom does not either
 underuse a native Codex package surface or overclaim plugin coverage for
-always-on rules.
+always-on context preload.
 
-The decision also affects how Loom handles optional command wrappers in Codex.
-Prior `research:codex-command-skill-installation` correctly moved Codex command
-wrappers into explicit-only `loom-command-*` skills. A Codex plugin package could
-be the distribution unit for those adapters, but only if the package layout does
-not make generated adapter files the semantic owner of Loom commands.
+The product goal is remote install for normal Codex users, not a cloned-repository
+or project-local proof. `decision:0005` changes the completeness bar: a remote
+plugin can be complete when it exposes the mandatory `loom-bootstrap` skill and
+the harness/user instruction tells agents to use it first. A repository-local
+`.codex/hooks.json` remains useful as an optional preload proof, not the release
+boundary.
+
+2026-04-26 update: `decision:0006` also removes fallback installers and top-level
+command wrappers from the product surface. Codex command-adapter conclusions below
+are historical unless promoted into canonical skills by later work.
+
+The decision also supersedes optional command-wrapper distribution in Codex. Prior
+`research:codex-command-skill-installation` remains historical evidence, but Codex
+release work should package canonical Loom skills unless later work promotes a
+workflow into a real `skills/` owner.
 
 # Scope
 
 Covered:
 
-- official Codex plugin, skill, `AGENTS.md`, customization, config, CLI, and
-  changelog docs available on 2026-04-26
+- official Codex plugin, hook, skill, `AGENTS.md`, customization, config, CLI,
+  and changelog docs available on 2026-04-26
 - OpenAI Codex source files that parse plugin manifests, load plugin components,
   and derive plugin namespaces for skills
 - OpenAI's public plugin examples repository and built-in plugin-creator spec
-- local Codex CLI command help for the installed `codex-cli 0.123.0`
+- local Codex CLI command help for the installed `codex-cli 0.125.0`
 - implications for `ticket:lx9nnztk`
 
 Excluded:
 
-- implementing a Codex plugin fixture
+- broad release packaging of a Codex plugin fixture
 - installing or enabling a local Codex plugin in the user's real Codex config
 - publishing a Codex marketplace package
 - changing the existing direct Codex installer
@@ -81,14 +99,18 @@ Excluded:
 
 - Read the existing Loom install initiative, plan, broad install research,
   Codex command-skill research, and Codex tickets.
-- Fetched official Codex docs for plugins, plugin building, skills,
+- Fetched official Codex docs for plugins, plugin building, hooks, skills,
   `AGENTS.md`, customization, advanced config, CLI reference, and changelog.
 - Inspected OpenAI Codex source for manifest parsing, plugin component loading,
   and plugin skill namespace derivation.
 - Inspected OpenAI's public `openai/plugins` examples repository and the bundled
   `plugin-creator` spec.
 - Ran local command help for `codex --version`, `codex plugin --help`,
-  `codex plugin marketplace --help`, and `codex plugin marketplace add --help`.
+  `codex plugin marketplace --help`, `codex plugin marketplace add --help`, and
+  `codex features list`.
+- Ran runtime `codex exec` probes showing `SessionStart` stdout visible as
+  same-session context when hooks are loaded from CLI override or trusted project
+  `.codex/hooks.json` config.
 - Measured the top-level Loom `rules/*.md` corpus at 45,588 bytes to evaluate
   the risk of stuffing ordered rules into project instruction surfaces.
 
@@ -102,20 +124,37 @@ Repository sources:
 - `research:codex-command-skill-installation`
 - `ticket:lx9nnztk`
 - `ticket:p9m4x2qt`
-- `scripts/install-loom.sh`
+- superseded installer history
 - `INSTALL.md`
-- `rules/*.md`, `skills/*/SKILL.md`, and `commands/*.md`
+- `skills/loom-bootstrap/references/*.md` and `skills/*/SKILL.md`
 
 External sources are listed in frontmatter under `external_refs`.
 
 Local observations:
 
-- `codex --version` returned `codex-cli 0.123.0`.
+- `codex --version` returned `codex-cli 0.125.0` during the hook follow-up.
 - `codex plugin --help` exposes only the `marketplace` subcommand under
   `plugin` in the installed CLI.
 - `codex plugin marketplace add --help` accepts GitHub shorthand, HTTP(S) Git
   URLs, SSH URLs, and local marketplace root directories.
-- `wc -c rules/*.md` reported 45,588 bytes across the seven Loom rule files.
+- `codex features list` reported `codex_hooks stable true` and
+  `plugins stable true`.
+- A `SessionStart` hook probe returned hidden value `718293` from plain hook
+  stdout in model-visible context.
+- A repository `.codex/hooks.json` startup probe saw all seven `LOOM_RULE_FILE`
+  rule markers and quoted `A child assertion is not enough.` from
+  `07-validation-and-honesty.md`.
+- A temp `CODEX_HOME` `codex plugin marketplace add` run registered the local
+  `agent-loom` marketplace from the repository root.
+- Source inspection found Codex local marketplace paths reject `./` as empty;
+  repository-root plugins should use the documented Git-backed `source: "url"`
+  shape.
+- Source inspection found installed plugin config persists only
+  `[plugins.<marketplace/plugin>.enabled]`; plugin loading reads skills, MCP, and
+  apps from the installed cache copy, while hook discovery reads active config
+  layers and managed hook requirements, not installed plugin manifests.
+- The former top-level rule corpus is now the seven ordered
+  `loom-bootstrap` references.
 
 # Evidence
 
@@ -215,6 +254,12 @@ For a local repo marketplace, docs show plugin entries like:
 }
 ```
 
+Local marketplace plugin paths must point at a non-empty plugin directory under
+the marketplace root, such as `./plugins/my-plugin`. Source inspection confirms
+that `source.path: "./"` is invalid because the path is empty after the required
+`./` prefix is stripped. When a plugin lives at the repository root, Codex docs
+use the Git-backed `source: "url"` shape instead.
+
 Codex installs plugin artifacts into
 `~/.codex/plugins/cache/$MARKETPLACE_NAME/$PLUGIN_NAME/$VERSION/`. For local
 plugins, Codex loads the installed cache copy rather than the marketplace source
@@ -233,7 +278,7 @@ codex plugin marketplace remove <marketplace-name>
 
 Supported marketplace sources include GitHub shorthand, HTTP(S) Git URLs, SSH
 URLs, and local marketplace root directories. The installed local CLI version
-`codex-cli 0.123.0` exposes the same marketplace add shape, but plugin
+`codex-cli 0.125.0` exposes the same marketplace add shape, but plugin
 install/enable still appears to be driven through the interactive `/plugins`
 browser or app-server/plugin APIs, not a simple documented `codex plugin install`
 CLI command.
@@ -279,20 +324,31 @@ global instruction layer. Official `AGENTS.md` docs describe the discovery chain
   `AGENTS.md`, then configured fallback filenames
 - project docs stop at `project_doc_max_bytes`, documented as 32 KiB by default
 
-The plugin docs and source inspected here do not show a plugin manifest field
-that installs or injects global/project `AGENTS.md` instructions. They also do
-not show plugins as an always-on instruction source equivalent to `AGENTS.md`.
+Official Codex hooks docs prove a better optional preload route for Loom bootstrap
+references than mirroring the full corpus into `AGENTS.md`: Codex discovers hooks from
+`hooks.json` files or inline `[hooks]` tables next to active config layers, and
+plain `SessionStart` stdout is added as extra developer context. The current
+runtime values documented for `SessionStart` matching are `startup`, `resume`,
+and `clear`.
 
-This preserves the current hybrid conclusion: Codex plugin packaging can own the
-installable workflow surfaces, but ordered always-on Loom rules still need a
-Codex instruction surface such as `~/.codex/AGENTS.md`, `AGENTS.override.md`, or
-a project `AGENTS.md` strategy.
+The plugin docs and source inspected here still do not show a plugin manifest
+field that installs or injects global/project `AGENTS.md` instructions, and the
+current source manifest parser models `skills`, `mcpServers`, `apps`, and
+`interface`, not plugin-owned hooks. Source inspection also shows plugin install
+persisting only an enabled flag under user plugin config. Hook discovery walks
+config layers and managed hook requirements, not installed plugin cache roots.
 
-The current Loom rule corpus is 45,588 bytes. A project-local plugin strategy
-that blindly mirrors all rules into project `AGENTS.md` risks colliding with the
-documented 32 KiB default project-doc budget. A global `~/.codex/AGENTS.md`
-managed block may still work differently, but the implementation ticket should
-observe rather than assume full rule loading.
+That makes the current hook shape a useful optional context-preload proof, not the
+remote product boundary. A remote `loom` plugin can package `loom-bootstrap`; the
+mandatory first-use instruction should point agents there when hooks are not
+preloading context.
+
+The former Loom rule corpus measured 45,588 bytes before moving into
+`loom-bootstrap` references. A project-local strategy that blindly mirrors all
+bootstrap references into project `AGENTS.md` risks colliding with the documented
+32 KiB default project-doc budget. A global `~/.codex/AGENTS.md` managed block may
+still work differently, but implementation work should observe rather than assume
+full bootstrap loading.
 
 ## Hooks, Commands, And Agents
 
@@ -307,107 +363,112 @@ The plugin surface has inconsistencies that matter for Loom:
   `mcpServers`, `apps`, and `interface`, but not `hooks`, `commands`, `agents`,
   or `AGENTS.md`
 
-This means Loom should not depend on plugin hooks, plugin commands, or plugin
-agents for the Codex first-class install path until the target Codex CLI/runtime
-version proves those fields are loaded and supported. For now, Loom command
-wrappers remain safest as explicit-only generated skill adapters.
+This means Loom should not depend on plugin-owned hooks, plugin commands, or
+plugin agents for the Codex first-class install path until the target Codex
+CLI/runtime version proves those fields are loaded and supported. Codex hooks are
+still viable for optional bootstrap preload when installed as user, managed, or
+trusted project config-layer hooks. Command wrappers are not part of the current
+product surface.
 
 # Rejected Options
 
-## Pure Codex Plugin Install
+## Pure Remote Codex Plugin Install Under Top-Level Rules
 
-Rejected for this ticket because official docs and inspected source do not show
-plugins owning Codex's always-on `AGENTS.md` instruction chain. Loom needs
-ordered always-on rules, so a pure plugin install would be an attractive but
-incomplete product story.
+Rejected under the pre-`decision:0005` model because official docs and inspected
+source do not show plugins owning Codex's always-on instruction or hook loading
+chain. `decision:0005` supersedes this rejection by moving mandatory doctrine
+into `loom-bootstrap`, making installed skill discovery the key question instead
+of plugin-owned hooks.
 
-## Plugin Hooks As Rule Sync
+## Plugin-Owned Hooks As Rule Context
 
-Rejected for the next iteration. Codex hooks are documented as config-layer
-hooks under `~/.codex` and trusted project `.codex/` layers. Plugin-level hook
-support is not consistently documented or source-verified through the inspected
-manifest loader, so using hooks to mutate `AGENTS.md` would copy the riskiest
-part of the Claude hybrid before Codex proves it supports that model.
+Rejected as a release claim for the next iteration. Codex hooks are documented as
+config-layer hooks under `~/.codex` and trusted project `.codex/` layers.
+Plugin-level hook support is not consistently documented or source-verified
+through the inspected manifest loader. The evidenced path is direct
+`SessionStart` hook stdout from Codex config, not a plugin manifest claiming hook
+ownership.
 
 ## Plugin Commands As Loom Command Wrappers
 
-Rejected for the next iteration. Codex's stable workflow command story in the
-inspected docs is skills, not plugin command files. Prior research already
-established explicit-only `loom-command-*` adapter skills as the safe command
-wrapper translation.
+Rejected. Codex's stable workflow command story in the inspected docs is skills,
+not plugin command files. After `decision:0006`, command-wrapper distribution is
+not part of the product surface.
 
 ## Unchanged Direct Skill Copy As The Final Product Path
 
-Rejected as the strategic endpoint. Direct copying into `$HOME/.agents/skills`
-still works and should remain a fallback, but Codex now positions plugins as the
-distribution unit for reusable skills. Loom should test that path before
-continuing to treat generated user skill directories as the preferred product
-experience.
+Rejected. Direct copying into `$HOME/.agents/skills` may have worked as a local
+prototype, but `decision:0006` rejects fallback copy installers as supported
+product shape. Codex work should validate plugin skill discovery instead.
 
 # Null Results
 
 - No documented `codex plugin validate` command was found in official docs or in
-  the installed local `codex-cli 0.123.0` help surface.
+  the installed local `codex-cli 0.125.0` help surface.
 - No official or inspected source path showed `.codex-plugin/plugin.json` as an
   `AGENTS.md` or always-on instruction installer.
-- No current repository Codex plugin fixture exists under `.codex-plugin/`,
-  `.agents/plugins/`, or `examples/adapters/`.
+- No source-proven installed-plugin hook loader was found in the current Codex
+  plugin manifest parser or plugin loading path.
+- No source-proven path was found where installing a plugin writes user-level
+  hook config, project hook config, or global `AGENTS.md` instructions.
 
 # Conclusions
 
 Codex has a real first-class plugin distribution surface for Loom's reusable
-workflow skills. It is now strong enough to deserve a package-layout prototype,
-not just direct skill generation.
+workflow skills and a real `SessionStart` hook surface for optional bootstrap
+preload. Together they are strong enough for a Codex native-plugin proof, not a
+fallback copy installer.
 
-Codex plugins are still not a complete Loom install by themselves. The
+After `decision:0005`, Codex plugins can be a complete Loom package if installed
+plugin skill discovery exposes `loom-bootstrap` and the other Loom skills. The
 evidence-backed split is:
 
-- plugin package: canonical Loom skills, generated explicit-only command adapter
-  skills, optional future MCP/app metadata if a later ticket needs it
-- Codex instruction surface: ordered always-on Loom rules through managed
-  `AGENTS.md`, `AGENTS.override.md`, or a project instruction strategy
-- fallback installer: direct skill generation and managed `~/.codex/AGENTS.md`
-  until plugin install behavior is validated against a target Codex CLI version
+- plugin package: `loom-bootstrap` plus canonical Loom subsystem skills through a
+  repository-root plugin manifest and a Git-backed marketplace entry, optional
+  future MCP/app metadata if a later ticket needs it
+- Codex hook config: optional ordered preload of `loom-bootstrap` references
+  through trusted project or user-level `SessionStart` hooks when explicitly
+  configured outside the product package
 
-The next implementation should not jump straight to release packaging. It should
-run a bounded package-layout spike that compares the smallest viable plugin root
-shape against the need to include generated command adapter skills without
-polluting canonical `skills/`.
+The current implementation should stay scoped as a prototype/proof fixture until
+installed Git-backed plugin skill discovery proves `loom-bootstrap` is available
+and operator guidance makes it mandatory first-use.
 
 # Recommendations
 
-1. Refine `ticket:lx9nnztk` so the next route is an observation-first Codex
-   package-layout spike.
-2. Prototype a repo-scoped local marketplace fixture before touching broad
-   install docs or the current direct installer.
-3. Compare at least two layout options in the ticket or evidence:
-   repo-root plugin using canonical `skills/` only, and a derivative plugin
-   fixture containing canonical skill copies plus generated `loom-command-*`
-   adapter skills.
-4. Keep ordered Loom rules outside the plugin for now and validate Codex rule
-   loading through `AGENTS.md` separately.
-5. Treat plugin hooks, commands, and agents as experimental or unverified for
-   Loom until a target Codex runtime proves them.
-6. Record the tested Codex CLI version because official docs are ahead of the
-   local `codex-cli 0.123.0` installed in this workspace.
-7. Require the implementation packet to produce structural evidence for
-   manifest paths, marketplace paths, generated command adapter policy, skill
-   collision behavior, and any CLI validation that could or could not be run.
+1. Keep the repository-root Codex plugin shape as a remote skills package spike:
+   `.codex-plugin/plugin.json` points at canonical `skills/` and
+   `.agents/plugins/marketplace.json` exposes an `agent-loom` marketplace with a
+   Git-backed repository-root plugin entry.
+2. Do not treat `.codex/hooks.json` as product packaging. Keep it only as a
+   trusted project-local proof of optional bootstrap-reference preload.
+3. Validate installed Git-backed plugin discovery for `loom-bootstrap` before
+   accepting Codex remote packaging.
+4. Do not put generated command adapter skills into canonical top-level `skills/`;
+   revisit command folding separately.
+5. Treat plugin-owned hooks, commands, and agents as experimental or unverified
+   for Loom until a target Codex runtime proves them.
+6. Record `codex-cli 0.125.0` as the runtime used for hook context validation.
+7. Require critique before accepting broad release packaging because operator
+   clarity depends on not overstating what plugin installation alone does.
 
 # Open Questions
 
-- Should Loom's first Codex plugin prototype use the repository root as the
-  plugin root, or a derivative fixture under `examples/adapters/` or `plugins/`?
-- If the repository root is the plugin root, where can generated command adapter
-  skills live without turning top-level `skills/` into a mixed canonical and
-  generated surface?
+- Does installed Git-backed plugin discovery expose `loom-bootstrap` in the target
+  Codex runtime, and what explicit invocation or selector shape should docs teach?
+- Should the Codex plugin include a minimal user-facing default prompt that points
+  at `loom-bootstrap` before other Loom work?
+- Should a future release artifact copy the repository-root Codex plugin shape
+  directly, or publish a narrower derivative package that excludes dogfooding
+  records and unsupported surfaces?
+- If a workflow needs a Codex-specific entry point later, should it become a real
+  Loom skill or remain outside the product surface?
 - Does the target Codex runtime expose plugin skills as `loom:<skill-name>` in
   explicit `$` invocation syntax, `@` plugin syntax, or both?
-- Does installed-plugin skill discovery preserve `agents/openai.yaml` policy for
-  generated command adapters exactly as direct `$HOME/.agents/skills` install
-  does?
-- What minimum Codex CLI version should Loom document once the package path is
-  validated?
+- Does installed-plugin skill discovery preserve any per-skill policy metadata
+  needed by canonical Loom skills?
+- What minimum Codex CLI version should Loom document once installed marketplace
+  skill invocation and hook configuration are validated beyond this repository?
 - Can global `~/.codex/AGENTS.md` safely exceed 32 KiB while project docs remain
   capped, or should Loom generate a shorter Codex-specific always-on summary?
 

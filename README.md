@@ -11,9 +11,9 @@ This package is intentionally **not** a runtime, service, daemon, MCP, or produc
 
 It ships:
 
-- always-on `rules/` that teach the model how Loom thinks and how Loom must be used
+- a mandatory `loom-bootstrap` skill with ordered doctrine references that teach
+  the model how Loom thinks and how Loom must be used
 - on-demand `skills/` that teach the model how to operate each subsystem in detail
-- optional `commands/` wrappers for harnesses that support slash-command style prompts
 - Markdown templates and query recipes instead of bundled Python helpers
 - a cohesive explanation layer: **Loom Wiki**
 
@@ -111,17 +111,15 @@ the gap instead of advancing on vibes.
 ├── INSTALL.md
 ├── ARCHITECTURE.md
 ├── AGENTS.md
-├── Makefile
-├── commands/         # optional harness-wrapper prompt files
 ├── examples/         # golden protocol fixtures and traces, not truth owners
 ├── optional-utilities/
-├── rules/
 └── skills/
 ```
 
-Load `rules/*.md` in order as always-on doctrine. Expose the frontmatter
-`name` and `description` from each `skills/*/SKILL.md`, then hydrate the full
-skill only when relevant.
+Expose the frontmatter `name` and `description` from each `skills/*/SKILL.md`.
+Agents must use `skills/loom-bootstrap` first unless its ordered bootstrap
+references are already loaded in the current context by a harness adapter. Then
+hydrate the task-specific skill when relevant.
 
 Inside a Loom-enabled project, the canonical runtime tree is expected to look roughly like this:
 
@@ -150,30 +148,14 @@ Inside a Loom-enabled project, the canonical runtime tree is expected to look ro
 
 The intended installation pattern is simple:
 
-1. load `rules/*.md` as always-on context, in numeric order
-2. keep skill names/descriptions from `skills/*/SKILL.md` always visible
-3. hydrate the full `skills/<name>/SKILL.md` only when that skill is relevant
-4. let the model read templates and references from that skill as needed
+1. install or expose `skills/` as the Loom package
+2. keep skill names/descriptions from `skills/*/SKILL.md` visible
+3. use `skills/loom-bootstrap` first unless the same ordered doctrine is already
+   loaded by the adapter
+4. hydrate the full `skills/<name>/SKILL.md` only when that skill is relevant
+5. let the model read templates and references from that skill as needed
 
 Read `INSTALL.md` for the recommended adoption path.
-
-## Command Map
-
-The optional `commands/` surface groups the same protocol routes into familiar
-operator commands:
-
-| Phase | Commands |
-| --- | --- |
-| Orient | `/loom-orient`, `/loom-status` |
-| Shape | `/loom-brainstorm`, `/loom-research`, `/loom-spike`, `/loom-sketch`, `/loom-spec`, `/loom-decide`, `/loom-plan`, `/loom-ticket`, `/loom-map` |
-| Execute | `/loom-work`, `/loom-debug` |
-| Verify | `/loom-review`, `/loom-accept` |
-| Assimilate | `/loom-wiki`, `/loom-retrospective` |
-| Package | `/loom-ship` |
-| Maintain | `/loom-repair` |
-
-Commands are convenience wrappers. They do not replace the rules, skills, or
-canonical records, and they do not own closure or review truth.
 
 ## Protocol Core And Workflows
 
@@ -203,9 +185,10 @@ review, accept, ship, retrospective, repair, and wiki write/audit are
 compositions through those layers. They should not create new truth owners
 unless a genuinely new kind of truth exists.
 
-Harness adapters install, translate, or wrap the protocol. They do not own
-semantics. Optional utilities stay under `optional-utilities/` and are not part
-of the default protocol install.
+Harness adapters expose the skill package through each harness's native skill or
+plugin system. They may preload `loom-bootstrap` references where the harness
+supports it cleanly, but they do not own semantics. Optional utilities stay under
+`optional-utilities/` and are not part of the default protocol install.
 
 ## Current Roadmap Direction
 

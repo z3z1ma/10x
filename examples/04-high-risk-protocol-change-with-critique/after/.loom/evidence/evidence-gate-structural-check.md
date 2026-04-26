@@ -20,13 +20,13 @@ Structural evidence for the high-risk evidence-gate protocol change fixture.
 
 # Procedure
 
-1. Inspect the changed validation rule.
+1. Inspect the changed validation bootstrap reference.
 2. Confirm the ticket records high risk and required critique profiles.
 3. Confirm critique remains open before acceptance.
 
 # Artifacts
 
-- `after/rules/07-validation-and-honesty.md`
+- `after/skills/loom-bootstrap/references/07-validation-and-honesty.md`
 - ticket:risk0001
 - critique:evidence-gate-review
 
@@ -59,7 +59,7 @@ challenges that.
 
 # Result
 
-The high-risk ticket, changed rule, and critique record are present and linked.
+The high-risk ticket, changed bootstrap reference, and critique record are present and linked.
 
 # Interpretation
 

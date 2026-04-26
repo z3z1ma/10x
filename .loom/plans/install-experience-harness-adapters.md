@@ -3,7 +3,7 @@ id: plan:install-experience-harness-adapters
 kind: plan
 status: active
 created_at: 2026-04-25T18:46:08Z
-updated_at: 2026-04-26T05:15:49Z
+updated_at: 2026-04-26T07:23:57Z
 scope:
   kind: repository
   repositories:
@@ -25,6 +25,11 @@ links:
     - ticket:7ex8w32y
     - ticket:q7h1d05q
     - ticket:cldrel01
+    - ticket:jt2vy25y
+  decision:
+    - decision:0005
+    - decision:0006
+  related:
     - ticket:lx9nnztk
     - ticket:6uy1rx20
     - ticket:us1brnsv
@@ -33,37 +38,36 @@ links:
     - evidence:cursor-harness-install-validation
     - evidence:claude-plugin-hybrid
     - evidence:claude-sessionstart-stdout-context
+    - evidence:codex-sessionstart-stdout-context
+  critique:
+    - critique:codex-plugin-hook-config-review
 ---
 
 # Purpose
 
 Sequence the install-experience initiative into one bounded ticket per supported
-harness so Loom can move from a working proof installer toward harness-native,
-first-class, reversible install paths.
+harness so Loom uses harness-native skill or plugin package paths instead of a
+cross-harness installer.
 
-This plan exists because the research outcome is explicitly not "keep making the
-shell script longer." The current `Makefile` and `scripts/install-loom.sh` remain
-useful proof and fallback surfaces, but the next work should test the best native
-install class for each harness and record why each adapter shape is accepted or
-rejected.
+After `decision:0006`, this plan no longer preserves fallback installers. The
+target is native exposure of the canonical `skills/` package, with optional
+`loom-bootstrap` preload where a harness supports it cleanly.
 
 # Strategy
 
 Use the research recommendation as the route:
 
-1. Start with the two harnesses whose plugin or extension systems appear to cover
-   all Loom surfaces: Cursor and Gemini CLI.
-2. Use those prototypes to establish adapter-package conventions: generated rule
-   files, generated command files, source markers, fixture layout, validation
-   evidence, and uninstall or disable expectations.
-3. Apply that adapter-package discipline to hybrid harnesses: Claude Code and
-   Codex, where plugins are useful but always-on Loom rules still need a separate
-   instruction surface.
-4. Re-open OpenCode as a plugin-first investigation: the ideal user experience is
-   a single `plugin` array entry, but the ticket must prove which plugin APIs can
-   actually inject or register Loom rules, skills, and commands.
-5. Reconcile `INSTALL.md`, adapter fixtures, and shell fallback behavior after
-   the per-harness decisions are proven.
+1. Treat `skills/` as the primary package surface, with `loom-bootstrap` as the
+   mandatory entry skill.
+2. Use harness prototypes to establish adapter-package conventions: bootstrap
+   reference preloading when supported, source markers, fixture layout, validation
+   evidence, and disable expectations.
+3. Apply that adapter-package discipline to Claude Code, Codex, OpenCode, Gemini,
+   and Cursor without making always-on adapter preload the only completeness path.
+4. Keep optional always-on hooks or instruction files as boosts over the same
+   `loom-bootstrap` references, not separate doctrine.
+5. Reconcile `INSTALL.md` and adapter fixtures after the per-harness decisions are
+   proven.
 
 The plan should not swallow live execution truth. Each ticket owns its own
 implementation state, evidence, critique disposition, and acceptance decision.
@@ -72,31 +76,28 @@ implementation state, evidence, critique disposition, and acceptance decision.
 
 Current strategic picture:
 
-- Cursor plugins and Gemini CLI extensions are the strongest first-class package
-  candidates because their docs show package support for rules or context,
-  skills, and commands.
-- Claude Code has an accepted automated hybrid adapter: `.claude-plugin/plugin.json`
-  exposes canonical `skills/` and optional `commands/`, `.claude-plugin/marketplace.json`
-  exposes marketplace `agent-loom`, and `hooks/hooks.json` emits canonical rules as
-  same-session, source-marked per-rule `SessionStart` stdout. Remaining Claude
-  release risks are installed marketplace behavior, package/cache
-  contents, Windows shell behavior, `clear|compact` runtime events, and installed
-  skill/command invocation.
-- Codex remains a hybrid install, but current plugin docs and source make it a
-  stronger first-class package candidate than earlier research implied. Plugins
-  should package canonical skills and generated explicit-only command adapter
-  skills; ordered rules still need `AGENTS.md` or another documented instruction
-  surface. The next Codex move is a package-layout spike under `ticket:lx9nnztk`,
-  not broad release packaging.
-- OpenCode is the first accepted adapter-package result. `open-loom@0.1.0` is
-  published and uses the plugin `config(config)` hook to register rules through
-  `config.instructions`, skills through `config.skills.paths`, and commands
-  through `config.command`. The cold-cache npm-plugin first-run caveat is tracked
-  separately by `ticket:us1brnsv`.
-- Generic Agent Skills may reduce duplicated skill installs for OpenCode, Codex,
-  Gemini CLI, and Cursor, but they cannot replace ordered always-on rules.
-- Adapter outputs must remain derivative from canonical `rules/`, `skills/`, and
-  optional `commands/`.
+- `decision:0005` and `decision:0006` define the install strategy: Loom is a
+  skills package with `loom-bootstrap` as the mandatory first skill, and `skills/`
+  is the only product surface.
+- Claude Code has an accepted automated boost adapter: `.claude-plugin/plugin.json`
+  exposes canonical `skills/`, `.claude-plugin/marketplace.json`
+  exposes marketplace `agent-loom`, and `hooks/hooks.json` emits `loom-bootstrap`
+  references as same-session, source-marked `SessionStart` stdout. Remaining
+  Claude release risks are installed marketplace behavior, package/cache contents,
+  Windows shell behavior, `clear|compact` runtime events, and installed skill
+  invocation.
+- Codex can now use the same skills-package story: `.codex-plugin/plugin.json`
+  exposes `loom-bootstrap` and the subsystem skills, while `.codex/hooks.json`
+  remains an optional trusted-project preload proof. The next Codex evidence need
+  is installed plugin skill discovery, not plugin-owned hook support.
+- OpenCode is the first accepted adapter-package result. `open-loom@0.1.0` uses
+  the plugin `config(config)` hook to register bootstrap references through
+  `config.instructions` and skills through `config.skills.paths`. The cold-cache
+  npm-plugin first-run caveat is tracked separately by `ticket:us1brnsv`.
+- Generic Agent Skills are now the main cross-harness package shape where a
+  harness supports them.
+- Adapter outputs must remain derivative from canonical `skills/`, especially
+  `loom-bootstrap`.
 
 # Workstreams
 
@@ -108,11 +109,10 @@ Complete package prototypes:
 Hybrid package prototypes:
 
 - `ticket:q7h1d05q` - prototype Claude Code hybrid install path: plugin for
-  skills/commands plus automatic generated-rule synchronization for always-on
-  instructions
+  skills plus hook-delivered bootstrap context
 - `ticket:cldrel01` - proposed release-packaging hardening for Claude marketplace
   distribution beyond the accepted local/prototype integration
-- `ticket:lx9nnztk` - prototype Codex hybrid plugin install path
+- `ticket:lx9nnztk` - blocked Codex remote plugin install investigation
 
 Accepted OpenCode plugin-first package:
 
@@ -123,7 +123,7 @@ Accepted OpenCode plugin-first package:
 
 Shared follow-through inside the harness tickets:
 
-- document why the chosen harness mechanism is first-class or fallback
+- document why the chosen harness mechanism is native
 - preserve source markers in generated adapter outputs
 - validate install or package structure under a temporary home or fixture root
 - keep uninstall, disable, or cleanup behavior explicit
@@ -132,31 +132,27 @@ Shared follow-through inside the harness tickets:
 # Milestones
 
 1. Cursor plugin and Gemini extension prototypes produce a concrete adapter
-   package shape that preserves Loom's three surfaces without direct user-rule
-   mutation.
-2. Claude and Codex hybrid tickets decide how plugin packaging combines with
-   always-on rule installation and explicit command adapters. For Codex, the
-   immediate decision is package layout: repository-root plugin, derivative
-   fixture, or fallback-only.
+   package shape that exposes `skills/` without direct user-rule mutation.
+2. Claude and Codex tickets decide how plugin packaging exposes `loom-bootstrap`
+   and whether optional hook preload should remain part of the adapter evidence.
 3. OpenCode plugin-first ticket proves the ideal plugin-array install shape, using
    npm publication for normal users and local file/path plugins for cloned-repo
    installs, while documenting the cold-cache npm-plugin first-run caveat as
    follow-up work.
 4. The public install docs distinguish user-global install, project-local
    adoption, and adapter-package development.
-5. The current shell installer is either simplified into a fallback/prototype
-   helper or left clearly documented as a local adapter rather than the semantic
-   center.
+5. Removed fallback installer and command-wrapper assumptions stay removed from
+   package docs and examples.
 
 # Sequencing
 
 Cursor and Gemini come first because their first-class package systems appear to
-cover rules/context, skills, and commands. They are the best proving ground for
-generated adapter package discipline.
+cover skills and optional context preload. They are the best proving ground for
+native adapter package discipline.
 
-Claude and Codex come next because they need the same packaging discipline but
-with an explicit split between plugin-delivered skills/commands and separately
-installed always-on rules.
+Claude and Codex come next because they need the same packaging discipline with an
+explicit split between plugin-delivered skills and optional hook- or
+instruction-delivered bootstrap preload.
 
 OpenCode can proceed as soon as the plugin-first investigation is useful. It may
 need narrower validation before the shared skill-location decision, because the
@@ -172,9 +168,9 @@ long as its own scope and evidence remain truthful.
 Wave 1:
 
 - `ticket:3t93tsci` - Cursor plugin install prototype. Expected child write
-  scope: Cursor adapter package or fixture files, Cursor-related installer/docs
+  scope: Cursor adapter package or fixture files, Cursor-related docs
   updates, and linked Loom ticket/evidence updates. It should not edit canonical
-  `rules/`, `skills/`, or `commands/` except to record a source bug in a follow-up.
+  `skills/` except to record a source bug in a follow-up.
 - `ticket:7ex8w32y` - Gemini CLI extension install prototype. Expected child
   write scope: Gemini extension package or fixture files, Gemini-related
   installer/docs updates, and linked Loom ticket/evidence updates. It should not
@@ -184,32 +180,32 @@ Wave 2:
 
 - `ticket:q7h1d05q` - Claude Code hybrid install prototype. Expected child write
   scope: Claude adapter package or fixture files, Claude-specific install docs,
-  shell fallback changes only if needed, and linked Loom ticket/evidence updates.
-- `ticket:lx9nnztk` - Codex hybrid plugin install prototype. Expected child write
-  scope: Codex plugin or marketplace fixture files, generated command-adapter
-  skill logic if needed, Codex-specific install docs, and linked Loom
-  ticket/evidence updates.
+  and linked Loom ticket/evidence updates.
+- `ticket:lx9nnztk` - Codex remote plugin install investigation. Expected child
+  write scope: Codex plugin or marketplace fixture files, Codex hook config proof
+  files, Codex-specific install docs, and linked Loom ticket/evidence updates. Do
+  not present project-local hooks as the normal remote product path.
 
 Wave 3:
 
 - `ticket:6uy1rx20` - `open-loom` OpenCode plugin-first install validation.
   Expected child write scope: OpenCode plugin fixture/package files,
   OpenCode-specific docs, source-backed research updates, and this
-  ticket/evidence records. Fallback direct installer changes should wait until
-  the plugin API limits are proven.
+  ticket/evidence records.
 
 # Risks
 
-- Plugin-first enthusiasm could hide the fact that a harness plugin does not load
-  ordered always-on Loom rules.
-- Generated adapter outputs could become stale copies of canonical rules, skills,
-  or commands.
+- Plugin-first enthusiasm could hide the fact that agents still need to use
+  `loom-bootstrap` first.
+- Generated adapter outputs could become stale copies of canonical bootstrap
+  references or skills.
 - A shared `~/.agents/skills` destination could reduce duplication but create
   surprising precedence behavior in harnesses that also have native skill roots.
 - Cursor and Claude both have hook/plugin features that could tempt overpowered
   runtime behavior instead of simple static instruction install.
 - Codex and Gemini instruction-size or context-loading limits could make a naive
-  aggregate rule file less reliable than direct ordered file references.
+  aggregate rule file less reliable than source-marked per-rule hook output or
+  direct ordered file references.
 - Marketplace package work could expand into release engineering before local
   package fixtures prove the adapter shape.
 - OpenCode's npm-plugin install cache can log a first-run `NpmInstallFailedError`
@@ -226,10 +222,8 @@ Each harness ticket should produce evidence appropriate to its install class.
 Minimum evidence for all tickets:
 
 - structural diff review for changed adapter files and docs
-- source-marker spot-checks showing generated files point back to canonical Loom
+- source-marker spot-checks showing adapter files point back to canonical Loom
   source surfaces
-- a temporary `HOME` install/uninstall check when `scripts/install-loom.sh` or
-  direct user config mutation changes
 - a package or fixture structure check when a plugin/extension package is added
 - `git diff --check`
 - explicit note of any harness CLI or UI validation that could not be run
@@ -237,9 +231,8 @@ Minimum evidence for all tickets:
 Additional evidence for plugin or extension tickets:
 
 - manifest fields match the official harness reference
-- rule/context files preserve ordered always-on Loom rule loading
+- bootstrap/context files preserve ordered Loom bootstrap loading when preloaded
 - skills remain directories with `SKILL.md` and supporting files intact
-- command adapters remain explicit invocation surfaces
 - local link/install/disable commands are run when the harness CLI is available,
   or explicitly marked unvalidated when unavailable
 - for OpenCode specifically, validate the npm package path and local file/path
@@ -252,10 +245,9 @@ This plan can complete when:
 
 - each supported harness has a linked ticket with accepted implementation or an
   explicit accepted decision not to implement a first-class package path
-- `INSTALL.md` explains the chosen per-harness path without making the shell
-  script the only source of install truth
+- `INSTALL.md` explains the chosen per-harness native path without fallback
+  installer instructions
 - adapter fixtures or package outputs exist where they are the chosen path
-- direct fallback behavior remains reversible and clearly marked as Loom-managed
 - ticket evidence records or ticket evidence sections support the claims made for
   each harness
 - recommended critique has been completed, deferred with rationale, or marked not
@@ -274,7 +266,7 @@ This plan can complete when:
 
 # Completion Basis
 
-When this plan is completed, record which harness tickets closed, which install
-paths were accepted, which package or fallback surfaces remain, and where any
-deferred validation or marketplace publishing work moved. Live progress and final
-acceptance remain in the linked tickets, not in this plan.
+When this plan is completed, record which harness tickets closed, which native
+install paths were accepted, and where any deferred validation or marketplace
+publishing work moved. Live progress and final acceptance remain in the linked
+tickets, not in this plan.

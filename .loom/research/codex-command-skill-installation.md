@@ -1,9 +1,9 @@
 ---
 id: research:codex-command-skill-installation
 kind: research
-status: active
+status: superseded
 created_at: 2026-04-19T21:59:26Z
-updated_at: 2026-04-26T01:43:51Z
+updated_at: 2026-04-26T07:23:57Z
 scope:
   kind: repository
   repositories:
@@ -14,13 +14,22 @@ links:
   related:
     - research:harness-install-surfaces
     - research:codex-plugin-distribution-surfaces
+  decision:
+    - decision:0006
 ---
+
+# Supersession Note
+
+This research is historical. `decision:0006` removes top-level command wrappers
+and fallback installers from the product surface. Codex work should now validate
+native plugin skill discovery for canonical `skills/`, especially
+`loom-bootstrap`, rather than generating `loom-command-*` adapter skills from a
+top-level `commands/` directory.
 
 # Question
 
-How should the Codex installer adapt Loom's top-level `commands/*.md` files now
-that Codex workflows should be installed as skills rather than legacy prompt
-files?
+Historical question: how did the old Codex direct installer adapt Loom's former
+top-level command wrappers before the product surface was narrowed to `skills/`?
 
 # Why This Matters
 
@@ -84,15 +93,12 @@ because the command layer is meant to be invoked intentionally.
 
 # Recommendations
 
-- Keep copying the canonical lower-level Loom skills into `$HOME/.agents/skills`.
-- Generate one additional Codex command adapter skill for each top-level command
-  file, using `loom-command-*` names to avoid collisions.
-- Add `agents/openai.yaml` to each generated command adapter with
-  `allow_implicit_invocation: false`.
-- Replace `$ARGUMENTS` in generated skill bodies with a clear invocation-request
-  placeholder.
-- Remove old Loom-managed prompt files during both install and uninstall so
-  previous installs do not leave deprecated Codex prompt entries behind.
+Superseded by `decision:0006`.
+
+Do not generate command adapter skills from top-level command wrappers as part of
+the product. If a future Codex-specific entry point is needed, promote that
+behavior into a canonical Loom skill or record it as an explicitly non-product
+harness adapter.
 
 # Open Questions
 

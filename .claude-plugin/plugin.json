@@ -1,7 +1,7 @@
 {
   "name": "loom",
   "version": "0.1.0",
-  "description": "Loom Markdown-native AI work protocol surfaces for Claude Code.",
+  "description": "Loom Markdown-native AI work protocol skills for Claude Code.",
   "author": {
     "name": "z3z1ma"
   },
@@ -13,6 +13,5 @@
     "agent-skills",
     "markdown"
   ],
-  "skills": "./skills/",
-  "commands": "./commands/"
+  "skills": "./skills/"
 }

@@ -16,6 +16,14 @@ Loom is easiest to operate through three axes:
 Those axes are not the ontology. They are the operator's first handle on the
 protocol.
 
+## Bootstrap
+
+Loom's mandatory operating doctrine is packaged in `skills/loom-bootstrap`.
+Agents must use `loom-bootstrap` before work unless an adapter has already loaded
+the same ordered references into the current context. Harness adapters may preload
+those references as always-on context, but that preload is an optimization over the
+same doctrine, not a separate protocol surface.
+
 ## Kernel Roles
 
 A Loom transaction uses seven kernel roles:
@@ -38,7 +46,7 @@ Use these terms precisely:
 
 - **acceptance contract**: spec-owned criteria, requirements, scenarios, and claim IDs
 - **acceptance disposition**: ticket-owned decision about scoped claims, evidence, critique, wiki follow-through, accepted risk, and closure
-- **acceptance review**: workflow or command route that helps produce the ticket disposition
+- **acceptance review**: workflow route that helps produce the ticket disposition
 
 Specs own reusable acceptance contracts and intended behavior. Tickets may own
 ticket-local acceptance criteria only when no separate spec exists and the
@@ -46,7 +54,8 @@ criteria are scoped to that ticket. If ticket-local criteria become reusable,
 contradict a spec, or define behavior future work will depend on, create or
 update the spec instead of letting the ticket become the behavior owner.
 
-Commands may invoke acceptance review. They do not own acceptance disposition.
+Harness transports may invoke acceptance review. They do not own acceptance
+disposition.
 
 ## Transaction State Machine
 
@@ -95,7 +104,7 @@ The shared non-ticket lifecycle grammar is defined in
 with layer-specific statuses such as packet `compiled|consumed|superseded|abandoned`,
 evidence `recorded|superseded|invalidated`, and critique `draft|final|superseded`.
 
-Do not let a packet, plan, wiki page, branch, PR, evidence record, or command
+Do not let a packet, plan, wiki page, branch, PR, evidence record, or external
 summary become the live ledger. Tickets own what is happening now.
 
 ## Owner, Route, Transport
@@ -201,12 +210,12 @@ wiki write/audit
 A workflow can be useful without becoming a new ontology. It should route into
 the owner graph and leave truth in the layer that owns it.
 
-Harness adapters may install, translate, wrap, or invoke Loom. They must not
+Harness adapters may expose or preload the Loom skill package. They must not
 define Loom truth.
 
 ## Check Principle
 
 Markdown protocol first. Optional validators second.
 
-A validator or installer can project Loom state, but it must not become the
+A validator or native adapter can project Loom state, but it must not become the
 authority for Loom semantics.

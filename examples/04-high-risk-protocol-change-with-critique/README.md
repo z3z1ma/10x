@@ -3,7 +3,7 @@
 ## Starting `.loom` Slice
 
 - `constitution:main`
-- source rules and skills that define ownership boundaries
+- source skills and bootstrap references that define ownership boundaries
 
 ## Operator Request
 
@@ -11,9 +11,9 @@
 
 ## Expected Route
 
-1. read constitution and relevant rules
+1. read constitution and relevant bootstrap references
 2. create or update research if tradeoffs are not settled
-3. update spec or rule text only after owner is clear
+3. update spec or bootstrap reference text only after owner is clear
 4. create a bounded ticket
 5. use Ralph for implementation if the surface is broad
 6. run critique with `protocol-change` and `operator-clarity` profiles
@@ -25,7 +25,7 @@
 
 - decision record if durable policy changed, or explicit decision deferral if
   critique blocks acceptance
-- spec or rule changes
+- spec or bootstrap reference changes
 - ticket with high risk critique disposition
 - direct critique record
 - evidence from structural checks
@@ -35,11 +35,11 @@
 
 - authority model remains coherent
 - critique findings are resolved or explicitly carried forward
-- no lower layer silently overrides constitution or rules
+- no lower layer silently overrides constitution or bootstrap doctrine
 
 ## Common Wrong Behavior
 
-- editing rules from a chat thesis without operationalizing them
-- copying long product analysis into always-on rules
+- editing bootstrap doctrine from a chat thesis without operationalizing it
+- copying long product analysis into bootstrap doctrine
 - treating critique as optional for authority changes
 - closing on confidence instead of evidence

@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { basename, dirname, join, relative, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const PACKAGE_ROOT = dirname(fileURLToPath(import.meta.url));
@@ -59,16 +59,15 @@ function pushUnique(array, value) {
 function surfaceOptions(options = {}) {
   return {
     rootDir: resolve(String(options.rootDir || PACKAGE_ROOT)),
-    rules: options.rules !== false,
+    bootstrap: options.bootstrap !== false,
     skills: options.skills !== false,
-    commands: options.commands !== false,
   };
 }
 
-export function readOrderedRuleFiles(options = {}) {
+export function readOrderedBootstrapFiles(options = {}) {
   const { rootDir } = surfaceOptions(options);
-  const rulesDir = join(rootDir, "rules");
-  return markdownFilesIn(rulesDir).map((path) => ({
+  const referencesDir = join(rootDir, "skills", "loom-bootstrap", "references");
+  return markdownFilesIn(referencesDir).map((path) => ({
     path: posixPath(relative(rootDir, path)),
     absolutePath: path,
     text: readFileSync(path, "utf8").trimEnd(),
@@ -95,31 +94,14 @@ export function readSkillFiles(options = {}) {
     });
 }
 
-export function readCommandFiles(options = {}) {
-  const { rootDir } = surfaceOptions(options);
-  const commandRoot = join(rootDir, "commands");
-
-  return markdownFilesIn(commandRoot, { recursive: true }).map((path) => {
-    const md = readMarkdownDocument(path);
-    const relativePath = posixPath(relative(commandRoot, path));
-    const fallbackName = relativePath.replace(/\.md$/, "");
-    return {
-      path: posixPath(relative(rootDir, path)),
-      name: md.data.name || fallbackName || basename(path, ".md"),
-      description: md.data.description || undefined,
-      template: md.content,
-    };
-  });
-}
-
 export function configureOpenCode(config, options = {}) {
   const surfaces = surfaceOptions(options);
 
-  if (surfaces.rules) {
-    const rules = readOrderedRuleFiles(surfaces);
-    if (rules.length > 0) {
+  if (surfaces.bootstrap) {
+    const bootstrapReferences = readOrderedBootstrapFiles(surfaces);
+    if (bootstrapReferences.length > 0) {
       config.instructions ??= [];
-      for (const rule of rules) pushUnique(config.instructions, rule.absolutePath);
+      for (const reference of bootstrapReferences) pushUnique(config.instructions, reference.absolutePath);
     }
   }
 
@@ -132,41 +114,23 @@ export function configureOpenCode(config, options = {}) {
     }
   }
 
-  if (surfaces.commands) {
-    const commands = readCommandFiles(surfaces);
-    if (commands.length > 0) {
-      config.command ??= {};
-      for (const command of commands) {
-        config.command[command.name] ??= {
-          template: command.template,
-          ...(command.description ? { description: command.description } : {}),
-        };
-      }
-    }
-  }
-
   return config;
 }
 
 export function inspectLoomBundle(options = {}) {
   const surfaces = surfaceOptions(options);
-  const rules = readOrderedRuleFiles(surfaces);
+  const bootstrapReferences = readOrderedBootstrapFiles(surfaces);
   const skills = readSkillFiles(surfaces);
-  const commands = readCommandFiles(surfaces);
 
   return {
-    rules: {
-      result: "registered through config.instructions",
-      files: rules.map((rule) => rule.path),
+    bootstrap: {
+      result: "registered through config.instructions as ordered bootstrap references",
+      files: bootstrapReferences.map((reference) => reference.path),
     },
     skills: {
       result: "registered through config.skills.paths",
       path: directoryExists(join(surfaces.rootDir, "skills")) ? join(surfaces.rootDir, "skills") : undefined,
       items: skills,
-    },
-    commands: {
-      result: "registered through config.command",
-      items: commands.map(({ template: _template, ...command }) => command),
     },
   };
 }
@@ -193,20 +157,17 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes(
   console.log(JSON.stringify({
     ok: true,
     pluginId: PLUGIN_ID,
-    ruleCount: inspection.rules.files.length,
-    ruleFiles: inspection.rules.files,
-    firstRule: inspection.rules.files[0],
-    lastRule: inspection.rules.files.at(-1),
+    bootstrapReferenceCount: inspection.bootstrap.files.length,
+    bootstrapReferenceFiles: inspection.bootstrap.files,
+    firstBootstrapReference: inspection.bootstrap.files[0],
+    lastBootstrapReference: inspection.bootstrap.files.at(-1),
     instructionCount: config.instructions.length,
     instructionsAreDeduped: config.instructions.length === beforeInstructionCount,
     firstInstruction: config.instructions[0],
     lastInstruction: config.instructions.at(-1),
     skillCount: inspection.skills.items.length,
     skillPath: config.skills?.paths?.[0],
-    commandCount: inspection.commands.items.length,
-    hasLoomPlanCommand: Boolean(config.command?.["loom-plan"]),
-    rulesResult: inspection.rules.result,
+    bootstrapResult: inspection.bootstrap.result,
     skillsResult: inspection.skills.result,
-    commandsResult: inspection.commands.result,
   }, null, 2));
 }

@@ -1,6 +1,6 @@
 # Common Wrong Behavior
 
-- copying product analysis into always-on rules
+- copying product analysis into bootstrap doctrine
 - treating critique as optional for authority changes
-- editing rules without updating templates or examples
+- editing bootstrap references without updating templates or examples
 - closing on confidence instead of evidence

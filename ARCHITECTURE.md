@@ -3,8 +3,9 @@
 Loom is a Markdown-native control plane for AI knowledge work.
 
 It is not a toolchain, runtime, daemon, model router, MCP, dashboard, or product
-CLI. Loom is a visible protocol corpus: always-on rules, subsystem skills,
-templates, references, canonical examples, and ordinary filesystem operations.
+CLI. Loom is a visible protocol corpus: the mandatory `loom-bootstrap` skill,
+subsystem skills, templates, references, canonical examples, and ordinary
+filesystem operations.
 
 ## Architectural Kernel
 
@@ -21,8 +22,8 @@ The transaction spine is:
 route -> shape -> ready -> execute -> reconcile -> verify -> accept -> promote -> close
 ```
 
-This spine is the product architecture. Rules, skills, packets, evidence,
-critique, wiki, and commands exist to make those transitions explicit and
+This spine is the product architecture. Bootstrap doctrine, skills, packets,
+evidence, critique, and wiki exist to make those transitions explicit and
 recoverable.
 
 ## Owner Graph
@@ -111,19 +112,23 @@ Skills are flat sibling subsystem playbooks. Each skill must be understandable
 from its own `SKILL.md`, references, and templates. Hidden inheritance, shipped
 helper scripts, and assembly-time behavior must not become the source of truth.
 
+`loom-bootstrap` is the mandatory package entry skill. It carries Loom's ordered
+operating doctrine as references. Harness adapters may preload those references as
+always-on context, but that preload is an optimization over the same skill package,
+not a separate doctrine surface.
+
 Templates are executable prompts for future agents. A good template should force
 real IDs, explicit scope, owner boundaries, evidence expectations, and next
 routes instead of inviting placeholder graph edges or vague completion claims.
 
-## Commands And Adapters
+## Native Adapters
 
-Commands are invocation adapters. They may point the operator toward a skill or
-workflow, but they do not own protocol semantics. If deleting `commands/` removes
-a Loom capability, that capability belongs in rules, skills, references, or
-templates.
+Loom does not ship a command-wrapper surface or a cross-harness installer as the
+product. The product surface is `skills/`.
 
-Harness adapters transport Loom into particular tools. They may install,
-translate, or wrap Loom surfaces, but they must not define Loom truth.
+Harness adapters transport Loom into particular tools through native plugin,
+extension, or skill-package systems. They may preload `loom-bootstrap` references
+when the harness supports it cleanly, but they must not define Loom truth.
 
 ## Examples
 
@@ -150,9 +155,10 @@ Loom rejects:
 - hidden runtimes as the real protocol
 - helper scripts as a second ontology
 - one-command project management
+- fallback install scripts as product architecture
 - external systems as competing ledgers
 - generated context files as independent project truth
 - transcript memory as the execution record
 
-A future agent should be able to install the package, load the rules, expose the
-skills, read the graph, and operate the protocol without hidden runtime magic.
+A future agent should be able to install the skill package, use `loom-bootstrap`,
+read the graph, and operate the protocol without hidden runtime magic.

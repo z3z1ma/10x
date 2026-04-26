@@ -1,11 +1,11 @@
 ---
 id: ticket:lx9nnztk
 kind: ticket
-status: ready
+status: active
 change_class: release-packaging
 risk_class: medium
 created_at: 2026-04-25T18:46:08Z
-updated_at: 2026-04-26T01:43:51Z
+updated_at: 2026-04-26T07:23:57Z
 scope:
   kind: repository
   repositories:
@@ -20,6 +20,13 @@ links:
     - research:harness-install-surfaces
     - research:codex-command-skill-installation
     - research:codex-plugin-distribution-surfaces
+  evidence:
+    - evidence:codex-sessionstart-stdout-context
+  critique:
+    - critique:codex-plugin-hook-config-review
+  decision:
+    - decision:0005
+    - decision:0006
   related:
     - ticket:ffg8elkb
     - ticket:p9m4x2qt
@@ -29,6 +36,7 @@ external_refs:
     - https://developers.openai.com/codex/guides/agents-md
     - https://developers.openai.com/codex/plugins
     - https://developers.openai.com/codex/plugins/build
+    - https://developers.openai.com/codex/hooks
     - https://developers.openai.com/codex/cli/reference#codex-plugin-marketplace
     - https://developers.openai.com/codex/concepts/customization
     - https://developers.openai.com/codex/config-advanced
@@ -43,83 +51,90 @@ depends_on: []
 
 # Summary
 
-Prototype and decide a Codex hybrid Loom install path that uses Codex plugins or
-skills for reusable workflows while keeping ordered always-on Loom rules in
-Codex's actual `AGENTS.md` instruction surface.
+Prototype and decide the Codex remote plugin install shape now that Loom's
+mandatory doctrine is packaged as the `loom-bootstrap` skill.
 
 # Context
 
 Prior `research:codex-command-skill-installation` moved Codex command wrappers
-from legacy prompt files into explicit-only `loom-command-*` adapter skills.
+from legacy prompt files into explicit-only `loom-command-*` adapter skills, but
+`decision:0006` supersedes command-wrapper distribution as product surface.
 Focused `research:codex-plugin-distribution-surfaces` now shows that Codex
 plugins are the first-class installable distribution unit for reusable skills,
 apps, and MCP servers, with repo/user marketplace files and a `codex plugin
 marketplace` CLI surface.
 
-That same research does not find evidence that plugins own Codex's always-on
-`AGENTS.md` instruction chain. The current installer copies skills into
-`$HOME/.agents/skills`, generates explicit-only command adapter skills, and
-mirrors ordered Loom rules into a managed block in `~/.codex/AGENTS.md`. This
-ticket now tests the package-layout question: how to use a Codex plugin for
-skills and generated command adapters while keeping ordered Loom rules in an
-actual Codex instruction surface.
+Follow-up source inspection and runtime probing found a useful optional preload
+surface: Codex config-layer `SessionStart` hooks accept plain stdout as additional
+developer context. That proves a hook mechanism, but `decision:0005` means the
+remote install no longer depends on plugin-owned hooks. The remote package should
+install `loom-bootstrap` and the other Loom skills; hooks are an optional
+trusted-project boost.
 
 # Why Now
 
-Codex already has the most sophisticated generated command adapter path in the
-current installer. A plugin prototype can decide whether that adapter family
-should become a packaged Codex distribution unit instead of only being generated
-into the user's global skill directory by the shell script.
+Codex users should not need to clone Loom or trust a project-local fixture to get
+Loom. The intended product shape is a remote marketplace/plugin path that can be
+added easily across many machines. A plugin prototype is useful only if it either
+meets that bar or makes the platform gap explicit.
 
 # Scope
 
 - design a Codex plugin or marketplace fixture that packages canonical Loom
-  skills and generated explicit-only command adapter skills
-- preserve `agents/openai.yaml` metadata for generated command adapters,
-  including `policy.allow_implicit_invocation: false`
-- keep ordered Loom rules in `~/.codex/AGENTS.md` or another documented Codex
-  instruction surface, not in `~/.codex/rules/`
-- compare whether the plugin root should be the repository root, a derivative
-  `plugins/loom` package, or an `examples/adapters/` fixture before committing
-  to a release package layout
+  skills from top-level `skills/`
+- evaluate whether a remote Codex plugin install exposes `loom-bootstrap` and the
+  other Loom skills well enough for normal users
+- add a Codex `SessionStart` hook fixture that emits `loom-bootstrap` references
+  as source-marked stdout, one reference per command, as an optional preload proof
+- keep Loom bootstrap references out of `~/.codex/rules/`, which is a shell
+  execution policy surface rather than a Markdown instruction surface
+- document that current Codex evidence supports hook config loading from active
+  config layers, not installed-plugin manifest hook loading
+- keep command-wrapper folding out of this ticket unless later work promotes a
+  workflow into a canonical Loom skill
+- compare whether the plugin root should be the repository root or a derivative
+  package before broad release packaging
 - evaluate whether plugin packaging improves update, enable/disable, or
   marketplace behavior enough to justify changing the current direct skill copy
   path
 - verify command adapter names avoid collisions with canonical Loom skill names
 - record the tested Codex CLI version because docs and local runtime support are
   moving quickly
-- update Codex install docs and shell fallback only after the hybrid path is
-  evidenced
+- update Codex install docs only after the native plugin path is evidenced
 
 # Non-goals
 
 - do not reinstall Loom commands as legacy Codex prompts
-- do not use `~/.codex/rules/` for Loom Markdown rules
+- do not use `~/.codex/rules/` for Loom Markdown bootstrap references
 - do not make generated command adapter skills implicit triggers
 - do not publish a Codex marketplace package
+- do not call a remote plugin complete unless `loom-bootstrap` is discoverable and
+  documented as the mandatory first skill
+- do not treat repository `.codex/hooks.json` as the normal remote-user install
+  path
 - do not change canonical Loom command names just to fit generated adapter names
 - do not treat plugin cache files as canonical Loom source
-- do not rely on plugin hooks, plugin commands, plugin agents, or plugin-managed
-  `AGENTS.md` unless the target Codex runtime proves that support
+- do not claim installed-plugin hooks load from `.codex-plugin/plugin.json` unless
+  the target Codex runtime proves that support
+- do not fold commands into skills as part of this ticket
 - do not add generated command adapter skills to top-level `skills/` as if they
   were canonical Loom skills
 
 # Acceptance Criteria
 
-- the ticket records a clear Codex recommendation: keep direct skill generation,
-  add a Codex plugin/marketplace package, or defer plugin packaging with rationale
-- the prototype compares the viable plugin package layouts and identifies the
-  preferred next implementation shape
-- ordered Loom rules remain in a documented Codex instruction surface such as
-  `AGENTS.md`
+- the ticket records a clear Codex recommendation for remote plugin packaging
+- the prototype identifies the preferred next implementation shape and records
+  what current Codex evidence does and does not prove
+- `loom-bootstrap` and its ordered references are available through the remote
+  plugin path
 - canonical Loom skills remain valid `SKILL.md` directories
-- generated command adapter skills remain explicit-only and non-colliding
+- no top-level command-wrapper or fallback installer path is introduced
 - plugin manifest or marketplace fixture matches Codex docs if package fixtures
   are added
 - the package layout does not turn generated command adapter skills into
   canonical top-level Loom skills
-- validation shows generated adapters include expected `agents/openai.yaml`
-  policy and metadata
+- validation shows bootstrap hook stdout reaches same-session context for the proof
+  fixture, without overstating that this proves remote plugin install
 - install/uninstall or package-link validation is run if available, or limitations
   are recorded honestly
 - `INSTALL.md` reflects the chosen Codex path only after the prototype is
@@ -140,9 +155,10 @@ Covers:
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
 | Codex plugins are first-class distribution units for reusable skills, apps, and MCP servers. | `research:codex-plugin-distribution-surfaces` | None | supported |
-| Codex plugins do not currently own Loom's always-on rule surface. | `research:codex-plugin-distribution-surfaces` | None | supported pending runtime validation |
-| Codex command wrappers should remain explicit-only `loom-command-*` adapter skills. | `research:codex-command-skill-installation`, `ticket:p9m4x2qt` | None | supported |
-| The best next move is a package-layout spike, not broad release packaging. | `research:codex-plugin-distribution-surfaces` | None | supported |
+| Codex plugins do not currently own Loom's always-on hook surface. | `research:codex-plugin-distribution-surfaces`, `evidence:codex-sessionstart-stdout-context` | `critique:codex-plugin-hook-config-review#FIND-002` | supported but no longer blocking after `decision:0005` |
+| Codex `SessionStart` hook stdout can carry Loom bootstrap context from an active config layer. | `evidence:codex-sessionstart-stdout-context` | None | supported |
+| Packaging mandatory doctrine as `loom-bootstrap` changes the Codex blocker from plugin-owned hooks to installed skill discovery. | `decision:0005` | Pending | open |
+| Codex command wrappers are no longer a product install surface after `decision:0006`. | `decision:0006` | None | supported |
 
 # Execution Notes
 
@@ -159,68 +175,66 @@ Codex facts to preserve from research:
   skills, apps/connectors, MCP servers, and assets
 - `codex plugin marketplace add` accepts local marketplace roots, GitHub
   shorthand, HTTP(S) Git URLs, and SSH URLs
-- installed local `codex-cli 0.123.0` exposes marketplace add/upgrade/remove but
+- installed local `codex-cli 0.125.0` exposes marketplace add/upgrade/remove but
   not a simple documented non-interactive `codex plugin install` command
 - plugin docs and inspected source package skills, MCP, apps/connectors, and
   assets, not always-on instructions
 - inspected manifest source models `skills`, `mcpServers`, `apps`, and
-  `interface`, but not `hooks`, `commands`, `agents`, or `AGENTS.md`
+  `interface`, but not source-proven plugin-owned `hooks`, `commands`, `agents`,
+  or `AGENTS.md`
+- source inspection shows Codex plugin install persists only
+  `[plugins.<marketplace/plugin>.enabled]`; installed plugin loading contributes
+  skills, MCP servers, and apps, not hooks
+- Codex hooks docs and source prove `hooks.json` and inline `[hooks]` config-layer
+  hook loading; `SessionStart` plain stdout becomes extra developer context
 - OpenAI plugin examples and plugin-creator docs mention hooks or extra plugin
-  surfaces inconsistently; do not rely on them for Loom until runtime-proven
+  surfaces inconsistently; do not rely on plugin-owned hooks for Loom until
+  runtime-proven
 - plugin skills appear to be namespaced by plugin manifest name, so a `loom`
   plugin should reduce collision risk, but explicit invocation shape still needs
   runtime validation
-- Loom's current top-level rule corpus is about 45.6 KiB, so project-local
-  `AGENTS.md` mirroring may collide with Codex's documented 32 KiB default
-  project-doc budget
+- the former top-level rule corpus now lives in `loom-bootstrap` references, so
+  Codex plugin install can package the doctrine as a skill rather than needing
+  plugin-owned hooks
 
 Candidate package layouts to compare:
 
 - repository-root plugin: add `.codex-plugin/plugin.json` at repo root and use
-  canonical `skills/`; this is smallest but does not solve packaging generated
-  command adapter skills unless a second skill path or generated fixture is added
+  canonical `skills/`; this is smallest and matches the current command-folding
+  discussion because generated command adapters are not part of this ticket
 - derivative plugin fixture: create a plugin root such as `plugins/loom` or an
-  `examples/adapters/codex-plugin-install` fixture with copied/generated skills;
-  this can package command adapters but must stay clearly derivative from
-  canonical `skills/` and `commands/`
-- direct fallback only: keep `$HOME/.agents/skills` generation and managed
-  `~/.codex/AGENTS.md`; this remains valid fallback but underuses Codex's native
-  plugin UX
+  `examples/adapters/codex-plugin-install` fixture with copied skills; this must
+  stay clearly derivative from canonical `skills/`
 
 Likely implementation choices after the spike:
 
-- keep the managed `AGENTS.md` rule block as the rule path
-- use a Codex plugin or marketplace fixture for canonical skills plus generated
-  explicit-only command adapter skills if layout and runtime validation are good
-- preserve direct generation as fallback until plugin behavior is validated on
-  the chosen minimum Codex CLI version
+- use repository-root Codex plugin metadata as the remote skills-package shape
+- keep trusted project `.codex/hooks.json` as an optional preload proof fixture
+- do not preserve direct generation or managed `AGENTS.md` as supported fallback;
+  use native plugin skill discovery and optional hook preload only
 
 # Blockers
 
-None.
+None after `decision:0005`; plugin-owned hooks are no longer required for the
+remote install model. Installed plugin skill discovery still needs validation.
 
 # Next Move / Next Route
 
-Ralph implementation packet for an observation-first Codex package-layout spike.
-The packet should not attempt broad release packaging. It should create or
-compare the smallest plugin/marketplace fixture that proves the right layout for
-canonical skills, generated explicit-only command adapters, and separate
-`AGENTS.md` rules.
+Validate installed Git-backed plugin skill discovery for `loom-bootstrap` and
+update the critique disposition to reflect the new skill-packaged bootstrap model.
 
 # Ralph Readiness
 
 Bounded iteration:
-Prototype or structurally compare Codex plugin/marketplace layouts for Loom
-skills and generated command adapters, then record the recommended Codex hybrid
-path. Install guidance should change only if the prototype produces enough
-evidence.
+Prototype Codex plugin and hook config surfaces for Loom skills and rule context,
+then record whether they satisfy remote install. Broad install guidance should
+change only where evidence supports it.
 
 Write boundary:
-Codex adapter package or fixture paths, generated command-adapter logic if needed,
-`INSTALL.md` only if the path is evidenced, `examples/adapters/` or `plugins/`
-if used for fixtures, `scripts/install-loom.sh` only for a small proven fallback
-adjustment, and this ticket/evidence records. Read-only source inputs are
-`rules/`, `skills/`, and `commands/`.
+Codex adapter package or fixture paths, `INSTALL.md` only if the path is
+evidenced, `examples/adapters/` if used for fixtures, and this ticket/evidence
+records. Read-only source inputs are `skills/loom-bootstrap/references/` and
+`skills/`.
 
 Likely verification posture:
 Observation-first structural validation. Include temporary `CODEX_HOME` or
@@ -228,23 +242,47 @@ Observation-first structural validation. Include temporary `CODEX_HOME` or
 behavior or can safely add a local marketplace without touching real user state.
 
 Expected output contract:
-Chosen Codex package-layout recommendation, changed files, generated adapter
-summary, Codex CLI version tested, validation commands and results, limitations,
-and ticket state recommendation.
+Codex remote-install recommendation or blocker, changed files, Codex CLI version
+tested, validation commands and results, limitations, and ticket state
+recommendation.
 
 # Evidence
 
-Expected evidence:
+Recorded evidence:
 
-- structural inspection of Codex plugin or marketplace fixture if created
+- `evidence:codex-sessionstart-stdout-context`
+- `.codex-plugin/plugin.json`
+- `.agents/plugins/marketplace.json`
+- `.codex/config.toml`
+- `.codex/hooks.json`
+- `examples/adapters/codex-plugin-install/README.md`
+- `codex exec` startup probe saw all seven `LOOM_RULE_FILE` markers and quoted
+  `A child assertion is not enough.` from `07-validation-and-honesty.md`
+- `CODEX_HOME=/tmp/... codex plugin marketplace add` registered the local
+  `agent-loom` marketplace without touching the real Codex home
+- `critique:codex-plugin-hook-config-review` found that local `source.path: "./"`
+  is invalid for a repository-root plugin; the marketplace now uses Codex's
+  documented Git-backed root-plugin `source: "url"` shape
+- `critique:codex-plugin-hook-config-review#FIND-002` found a release blocker
+  under the prior model: project-local hook proof did not make plugin install
+  deliver always-on rules. `decision:0005` resolves that as a model blocker by
+  making `loom-bootstrap` the mandatory plugin-packaged entry skill.
+
+Remaining expected evidence before broad release packaging:
+
+- installed Git-backed plugin skill discovery for `loom-bootstrap`
+- a Codex startup probe after the hook path update to
+  `skills/loom-bootstrap/references/`
+- structural inspection of Codex plugin or marketplace fixture if changed
 - package-layout comparison covering repository-root plugin versus derivative
   plugin fixture, unless one option is explicitly rejected before implementation
-- generated adapter skill inspection, including `agents/openai.yaml`
+- generated adapter skill inspection, including `agents/openai.yaml`, only if a
+  future release package includes command adapter skills
 - collision check between canonical skill names and generated `loom-command-*`
-  adapter names
+  adapter names, only if a future release package includes command adapter skills
 - plugin skill namespace or selector behavior inspection when runtime validation
   is available
-- `AGENTS.md` managed-block or instruction-surface inspection if changed
+- `SessionStart` hook stdout context inspection if changed
 - `git diff --check`
 - optional Codex plugin install/enable validation if available
 
@@ -255,9 +293,9 @@ Risk class: medium
 Critique policy: recommended
 
 Policy rationale:
-Codex command adapters affect invocation behavior and can create confusing skill
-collisions if generated incorrectly. Review should focus on operator clarity and
-adapter fidelity.
+Codex plugin-plus-hook-config packaging affects operator installation behavior
+and can mislead users if docs imply installed plugins own always-on hooks. Review
+should focus on operator clarity, evidence fidelity, and adapter boundaries.
 
 Required critique profiles:
 
@@ -265,18 +303,26 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:codex-plugin-hook-config-review#FIND-001` found one high-severity
+marketplace source issue. It is resolved by changing `.agents/plugins/marketplace.json`
+to a Git-backed root-plugin source.
+
+`critique:codex-plugin-hook-config-review#FIND-002` found one high-severity
+remote-install blocker under the prior top-level-rules model. `decision:0005`
+changes the product model so installed plugin skills can carry the mandatory
+bootstrap doctrine. Follow-up critique must verify the new model.
 
 Disposition status: pending
 
 Deferral / not-required rationale:
 
-None.
+Installed plugin skill invocation and `loom-bootstrap` discovery remain required
+before Codex remote packaging can be accepted.
 
 # Wiki Disposition
 
-Wiki promotion is optional. Promote only if the Codex explicit command-adapter
-pattern becomes a reusable adapter design beyond Codex.
+Wiki promotion is deferred until the skill-packaged bootstrap model is critiqued
+and accepted.
 
 # Acceptance Decision
 
@@ -288,15 +334,37 @@ Residual risks:
 # Dependencies
 
 Uses `research:loom-install-distribution-methods`,
-`research:codex-command-skill-installation`, prior direct install work from
+`research:codex-command-skill-installation`,
+`research:codex-plugin-distribution-surfaces`,
+`evidence:codex-sessionstart-stdout-context`, prior direct install work from
 `ticket:ffg8elkb`, and generated adapter work from `ticket:p9m4x2qt`. No hard
-ticket prerequisite blocks starting this prototype.
+ticket prerequisite blocks acceptance review.
 
 # Journal
 
 - 2026-04-25: created as the Codex harness ticket under
   `plan:install-experience-harness-adapters`.
-- 2026-04-26: expanded with focused Codex plugin research. The next move is now
-  a package-layout spike that treats Codex plugins as first-class for skills and
-  generated explicit-only command adapters while keeping ordered rules in
-  `AGENTS.md`.
+- 2026-04-26: expanded with focused Codex plugin research. Initial research
+  routed toward a package-layout spike with rules in `AGENTS.md`; later hook
+  research superseded that route with plugin-plus-hook-config evidence.
+- 2026-04-26: implemented repository-root Codex plugin metadata, local
+  marketplace metadata, project `.codex/config.toml`, and per-rule
+  `.codex/hooks.json`. Runtime `codex-cli 0.125.0` startup probe saw all seven
+  Loom rule files through `SessionStart` hook stdout. The ticket is now in
+  `review_required` pending operator-clarity critique.
+- 2026-04-26: critique found local marketplace `source.path: "./"` invalid for a
+  repository-root plugin. Fixed the marketplace to use Codex's documented
+  Git-backed `source: "url"` shape for root plugins and revalidated marketplace
+  registration in a temporary `CODEX_HOME`.
+- 2026-04-26: clarified the product goal as remote plugin install for normal Codex
+  users, not repository-local proof. Source inspection found installed plugins do
+  not own always-on hook/instruction loading in current Codex, so the ticket moved
+  to `blocked` until remote rule delivery is possible or a separate installer is
+  explicitly accepted.
+- 2026-04-26: `decision:0005` repackaged mandatory doctrine as
+  `loom-bootstrap`, resolving the plugin-owned-hook requirement as a product-model
+  blocker. Ticket returned to `active`; next evidence is installed plugin skill
+  discovery and updated hook-path validation.
+- 2026-04-26: `decision:0006` removed fallback installers and command-wrapper
+  product surfaces. Codex work now targets native plugin skill discovery only,
+  with `.codex/hooks.json` as optional trusted-project preload proof.

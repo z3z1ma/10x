@@ -1,9 +1,9 @@
 ---
 id: research:harness-install-surfaces
 kind: research
-status: active
+status: superseded
 created_at: 2026-04-18T03:03:47Z
-updated_at: 2026-04-22T20:51:34Z
+updated_at: 2026-04-26T07:23:57Z
 scope:
   kind: repository
   repositories:
@@ -16,14 +16,23 @@ links:
     - research:codex-command-skill-installation
   evidence:
     - evidence:cursor-harness-install-validation
+  decision:
+    - decision:0006
 ---
+
+# Supersession Note
+
+This research is historical. `decision:0006` supersedes its recommendations by
+removing fallback installers, top-level `rules/`, and top-level `commands/` as
+supported product surfaces. Current install work should use native harness plugin,
+extension, or skill-package systems that expose canonical `skills/`, with
+`loom-bootstrap` as the mandatory entry skill.
 
 # Question
 
-What user-level install surfaces do OpenCode, Claude Code, Codex, Gemini CLI,
-and Cursor expect for always-on instructions, skills, and reusable commands, and
-what translation is required to install Loom's shipped `rules/`, `skills/`, and
-`commands/` directories into those harnesses?
+Historical question: what user-level install surfaces did OpenCode, Claude Code,
+Codex, Gemini CLI, and Cursor expose for direct copy installs before Loom adopted
+the native skills-package strategy?
 
 # Why This Matters
 
@@ -136,18 +145,12 @@ Cross-check those findings against the local filesystem under
 
 # Recommendations
 
-- Add a Makefile with `install` and `uninstall` targets driven by
-  `harness=<name>`.
-- Support `opencode`, `claude`, `codex`, `gemini`, `cursor`, and `all` harness
-  values.
-- Keep direct directory copies where the harness supports them.
-- Use small inline Python only for the format-translation cases:
-  updating OpenCode `opencode.json`, aggregating Codex `AGENTS.md`, adapting
-  Codex command Markdown files into skills, converting Gemini command Markdown
-  files to TOML, and updating Cursor User Rules with a managed Loom block.
-- Keep installs namespaced under a Loom-owned marker or header where a single
-  file must be generated so uninstall can cleanly reverse only Loom-managed
-  content.
+Superseded by `decision:0006`.
+
+Do not add or restore a Makefile, shell installer, direct copy installer, or
+top-level command-wrapper distribution. Native harness adapters should expose
+canonical `skills/`; optional preload should read from
+`skills/loom-bootstrap/references/` when a harness supports it cleanly.
 
 # Open Questions
 

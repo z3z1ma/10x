@@ -2,24 +2,22 @@
 
 ## Transport Surface
 
-- protocol skills are copied into `~/.cursor/skills/`
-- optional command wrappers are generated as plain Markdown files in
-  `~/.cursor/commands/`
-- rule files are copied into `~/.cursor/loom/rules/`
-- a managed block is written into Cursor User Rules for global always-on
-  instruction loading
+- protocol skills are distributed through Cursor's native plugin or skill package
+  surface
+- `loom-bootstrap` is the required first skill; adapters may preload its
+  references only through a Cursor-native rule surface when that remains a native
+  package feature
 
 ## Expected Properties
 
-- Cursor project rules are not confused with global User Rules
-- Loom rules are installed into Cursor's native always-on User Rules surface
-- command wrappers remain invocation adapters
+- Cursor project rules are not treated as the product surface
+- Loom bootstrap references remain part of the `loom-bootstrap` skill, even when
+  a native adapter preloads them
 - protocol skills remain the subsystem behavior source
-- uninstall removes Loom-managed files without touching project `.loom/`
-  records
+- disable/uninstall follows Cursor's native plugin or skill package UX
 
 ## Common Wrong Behavior
 
 - assuming project `.cursor/rules/` is a global install surface
 - placing optional utilities into the default protocol skill set
-- making generated command files more canonical than source skills
+- making generated files more canonical than source skills

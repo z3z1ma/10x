@@ -1,0 +1,33 @@
+{
+  "name": "loom",
+  "version": "0.1.0",
+  "description": "Loom Markdown-native AI work protocol skills for Codex.",
+  "author": {
+    "name": "z3z1ma"
+  },
+  "repository": "https://github.com/z3z1ma/agent-loom",
+  "license": "UNLICENSED",
+  "keywords": [
+    "loom",
+    "ai-agents",
+    "agent-skills",
+    "markdown"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Loom",
+    "shortDescription": "Markdown-native protocol skills for Codex.",
+    "longDescription": "Loom provides Markdown-native bootstrap and subsystem skills for recoverable AI knowledge work.",
+    "developerName": "z3z1ma",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use loom-bootstrap before any Loom work.",
+      "Use Loom to create a bounded ticket.",
+      "Use Loom to run an evidence-backed review."
+    ]
+  }
+}

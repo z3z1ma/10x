@@ -13,10 +13,7 @@
   },
   "files": [
     "open-loom.mjs",
-    "rules/",
     "skills/",
-    "commands/",
-    "examples/",
     "INSTALL.md",
     "README.md",
     "PROTOCOL.md",

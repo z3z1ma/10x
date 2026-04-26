@@ -1,147 +1,125 @@
 # Installing Loom
 
-Loom is designed for harnesses that support:
+Loom installs as a skills package.
 
-- always-on context files
-- conditional skill hydration
-- filesystem access
+The product surface is `skills/`. Native harness adapters may add metadata,
+manifests, or preload hooks around that directory, but they do not add a second
+Loom ontology and they do not replace the skills.
 
-Examples include agents that read `AGENTS.md`, `CLAUDE.md`, `OPENCODE.md`, or an equivalent instruction surface.
+## Required Loading Model
 
-## Recommended Loading Model
+Expose the frontmatter `name` and `description` from each `skills/*/SKILL.md`.
 
-### Always on
+The `loom-bootstrap` skill is mandatory. Agents should use it before starting any
+work unless the same ordered bootstrap doctrine is already loaded in the current
+context by a native adapter.
 
-Load these in order:
+`loom-bootstrap` reads these references in order:
 
-1. `rules/01-core-identity.md`
-2. `rules/02-truth-and-authority.md`
-3. `rules/03-outer-loop.md`
-4. `rules/04-ralph-inner-loop.md`
-5. `rules/05-critique-and-wiki.md`
-6. `rules/06-filesystem-and-tooling.md`
-7. `rules/07-validation-and-honesty.md`
-8. the frontmatter `name` and `description` from each `skills/*/SKILL.md`
+1. `skills/loom-bootstrap/references/01-core-identity.md`
+2. `skills/loom-bootstrap/references/02-truth-and-authority.md`
+3. `skills/loom-bootstrap/references/03-outer-loop.md`
+4. `skills/loom-bootstrap/references/04-ralph-inner-loop.md`
+5. `skills/loom-bootstrap/references/05-critique-and-wiki.md`
+6. `skills/loom-bootstrap/references/06-filesystem-and-tooling.md`
+7. `skills/loom-bootstrap/references/07-validation-and-honesty.md`
 
-This repository does not currently ship aggregate `RULES.md` or `SKILLS.md`
-files. Harnesses may generate such aggregates locally, but the source of truth
-is the ordered `rules/` directory and the skill directories themselves.
+Harnesses may preload those references as always-on context. That is an adapter
+optimization over the same skill package, not a separate doctrine source.
 
-`optional-utilities/` is not part of the default protocol install. Those skills
-may be copied manually when a local workspace wants them.
+## Native Harness Installs
 
-### On demand
+Use the native package system for each harness.
 
-When a task clearly belongs to one subsystem, hydrate:
+| Harness | Native path | Loom surface |
+| --- | --- | --- |
+| Claude Code | Claude plugin manifest and marketplace metadata | `skills/`, plus optional `SessionStart` preload from `loom-bootstrap` references |
+| Codex | Codex plugin manifest and marketplace metadata | `skills/` with `loom-bootstrap` as the required entry skill |
+| OpenCode | `open-loom` plugin | `skills/`, plus OpenCode `instructions` preload from `loom-bootstrap` references |
+| Cursor | Cursor plugin/skill package | `skills/` with `loom-bootstrap` as the required entry skill |
+| Gemini CLI | Gemini extension/skill package | `skills/` with `loom-bootstrap` as the required entry skill |
 
-- `skills/<skill-name>/SKILL.md`
-- the skill's `references/` files as needed
-- the relevant template from the skill's `templates/` directory when you need to create or reshape an artifact
+There is no supported Makefile, shell installer, or cross-harness fallback copy
+script. Older generated installs should be treated as legacy local state and
+cleaned up manually if they are still present.
 
-## Minimal Harness Wrapper Pattern
+## Minimal Harness Instruction
 
-A practical wrapper file usually says some version of:
+When a harness has an `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, user rules, or a
+similar instruction surface, point it at the skill rather than copying doctrine:
 
-- Loom rules are mandatory when Loom is present in the workspace
-- skill names/descriptions are always visible
-- full skill content is loaded only when relevant
-- the agent must use the Loom owner layer instead of improvising parallel records
-- optional commands are convenience routes, not a second source of truth
+```md
+Loom is active in this workspace. Before any work, use the `loom-bootstrap` skill
+unless Loom's ordered bootstrap doctrine is already loaded in the current context.
+After bootstrap, route work through the Loom skill that owns the next truth
+change.
+```
 
-## Recommended Tool Baseline
+That instruction is a pointer, not a new source of truth.
 
-Loom does not require any dependency beyond a shell, a text editor, and the agent itself.
+## Claude Code
 
-Still, these tools make life materially better:
+This repository includes a Claude Code plugin manifest at
+`.claude-plugin/plugin.json` and a local marketplace catalog at
+`.claude-plugin/marketplace.json`.
 
-- `rg` / `ripgrep`
-- `find` or `fd`
-- `git`
-- `awk`, `sed`, `sort`, `uniq`, `xargs`
-- `jq` and `yq` when available
-- inline Python for bulk parsing or one-off transformations that are clearer in Python than in shell
+The plugin exposes canonical `skills/` directly from the repository root. Claude
+also auto-loads the standard plugin `hooks/hooks.json` path. Loom uses that hook
+surface to emit the ordered `loom-bootstrap` references as same-session
+`SessionStart` hook stdout.
 
-Use them opportunistically.
-Do not make Loom depend on them to exist before the protocol makes sense.
-
-## Bootstrapping A Workspace
-
-The fastest manual bootstrap path is:
+Local development:
 
 ```bash
-mkdir -p \
-  .loom/constitution/decisions \
-  .loom/constitution/roadmap \
-  .loom/initiatives \
-  .loom/research \
-  .loom/specs \
-  .loom/plans \
-  .loom/tickets \
-  .loom/critique \
-  .loom/wiki \
-  .loom/packets/ralph \
-  .loom/packets/critique \
-  .loom/packets/wiki \
-  .loom/evidence \
-  .loom/memory/system \
-  .loom/memory/user
+claude --plugin-dir /absolute/path/to/agent-loom
 ```
 
-Then:
+Local marketplace testing:
 
-1. create `constitution:main` from `skills/loom-constitution/templates/constitution.md`
-2. optionally create `.loom/harness.md` from `skills/loom-workspace/templates/harness.md`
-3. create the first initiative, plan, and ticket as the work requires
-
-## How Skills Replace Scripts
-
-Older Loom shipped Python CLIs to do things like:
-
-- scaffold records
-- compile packets
-- resolve scope
-- validate basic structure
-- mutate link fields
-
-This Loom package replaces those helpers with:
-
-- Markdown templates
-- explicit record grammar
-- native query recipes
-- validation checklists
-- packet contracts written in ordinary Markdown
-- permission for the agent to use inline shell or inline Python when useful
-
-That trade is deliberate.
-It keeps the protocol portable and makes the durable asset the methodology itself.
-
-## Recommended Consumer Layout
-
-In a real project, many teams place Loom under a harness-specific directory such as:
-
-```text
-.opencode/rules/
-.opencode/skills/
+```bash
+claude plugin marketplace add /absolute/path/to/agent-loom
+claude plugin install loom@agent-loom --scope project
 ```
 
-or expose it via a root instruction file that points to the copied package.
+Validate the local plugin structure with:
 
-Loom itself is agnostic.
-The only important thing is that the rules are always on and the skills are discoverable.
+```bash
+claude plugin validate /absolute/path/to/agent-loom
+```
 
-## Optional Command Surface
+The hook preload is a bonus. The canonical surface remains `skills/`, especially
+`skills/loom-bootstrap`.
 
-The top-level `commands/` directory contains optional wrapper prompts for
-harnesses that support slash-command style entry points.
+## Codex
 
-Those wrappers should route the agent into the same rules and skills. They do
-not own behavior independently and they should not become the protocol core.
+This repository includes a Codex plugin manifest at `.codex-plugin/plugin.json`
+and a marketplace catalog at `.agents/plugins/marketplace.json`. The plugin
+exposes canonical `skills/` directly from the repository root and is shaped for a
+Git-backed remote marketplace entry.
 
-## OpenCode Plugin
+The target native remote path is Codex marketplace registration with the
+repository URL:
+
+```bash
+codex plugin marketplace add https://github.com/z3z1ma/agent-loom.git
+```
+
+Once installed plugin skill discovery is validated, users should be able to open
+Codex's `/plugins` browser and install or enable `loom` from the `agent-loom`
+marketplace.
+
+Current evidence still needs installed plugin skill-discovery validation for
+`loom-bootstrap`, so this is not yet a broadly accepted Codex release path. The
+repository `.codex/` hook fixture proves optional trusted project preload of
+bootstrap references; it is not the product install path.
+
+## OpenCode
 
 This repository includes the `open-loom` OpenCode plugin at `open-loom.mjs`.
-`open-loom` requires OpenCode `>=1.14.22 <2`. After `open-loom` is published,
-normal users should configure OpenCode with a package plugin entry:
+`open-loom` requires OpenCode `>=1.14.22 <2`.
+
+After `open-loom` is published, normal users should configure OpenCode with a
+package plugin entry:
 
 ```json
 {
@@ -158,20 +136,8 @@ file instead:
 }
 ```
 
-Git URL plugin specs are not recommended for OpenCode. Current validation found
-them unsupported in practice, so use npm package distribution or a local
-file/path entry.
-
-With OpenCode `1.14.22`, a cold-cache first run of an npm plugin may log
-`NpmInstallFailedError` while still installing the package into OpenCode's cache.
-If that happens, run OpenCode again; the second run should resolve the cached
-package.
-
-`open-loom` reads the bundled top-level `rules/`, `skills/`, and optional
-`commands/` surfaces via module-relative file reads. Its server plugin uses
-OpenCode's `config(config)` hook to add ordered rule files to
-`config.instructions`, add the bundled skill root to `config.skills.paths`, and
-register bundled command wrappers through `config.command`.
+`open-loom` registers the bundled skill root with `config.skills.paths` and adds
+ordered `loom-bootstrap` references to `config.instructions`.
 
 For a local structural check that does not require a model request, run:
 
@@ -179,128 +145,28 @@ For a local structural check that does not require a model request, run:
 node open-loom.mjs --smoke
 ```
 
-See `examples/adapters/open-loom-install/` for the fixture notes and surface
-disposition.
+## Workspace Bootstrap
 
-## Claude Code Plugin Prototype
+Loom does not create a runtime database. In a project that uses Loom, the agent
+creates and edits `.loom/` records directly using the relevant skills and
+templates.
 
-This repository includes a Claude Code plugin manifest at
-`.claude-plugin/plugin.json` and a local marketplace catalog at
-`.claude-plugin/marketplace.json`. The plugin exposes canonical `skills/` and
-optional `commands` directly from the repository root. Claude auto-loads the
-standard plugin `hooks/hooks.json` path. Loom uses that hook surface to emit the
-canonical top-level rule files as same-session `SessionStart` hook stdout:
+The common workspace tree is:
 
-```bash
-claude --plugin-dir /absolute/path/to/agent-loom
+```text
+.loom/
+├── constitution/
+├── initiatives/
+├── research/
+├── specs/
+├── plans/
+├── tickets/
+├── evidence/
+├── critique/
+├── wiki/
+├── packets/
+└── memory/
 ```
 
-Local marketplace testing uses the repository root as the marketplace and installs
-the `loom` plugin from the `agent-loom` marketplace:
-
-```bash
-claude plugin marketplace add /absolute/path/to/agent-loom
-claude plugin install loom@agent-loom --scope project
-```
-
-Validate the local plugin structure with:
-
-```bash
-claude plugin validate /absolute/path/to/agent-loom
-```
-
-Claude does not currently document an install-time plugin script hook or a plugin
-manifest field for arbitrary always-on rules. The plugin therefore uses the
-smallest validated automatic mechanism: one `SessionStart` hook group with matcher
-`startup|clear|compact` and one command per canonical top-level rule file. Each
-command prints a source marker such as `===== LOOM_RULE_FILE
-01-core-identity.md =====`, then cats exactly one file from
-`${CLAUDE_PLUGIN_ROOT}/rules/<filename>`.
-
-The commands include small increasing `sleep` delays so numeric rule order is
-likely in practice and `01-core-identity.md` is likely to emit first. Claude hook
-execution order is not guaranteed, so the source markers are part of the contract:
-operators and probes should rely on source-marked visibility, not strict ordering.
-Current rule files are each below Claude's documented 10,000-character hook-output
-context cap.
-
-Disabling or uninstalling the plugin follows Claude's plugin manager UX. Loom's
-Claude adapter delivers rule context from bundled plugin files at session start,
-so normal plugin removal removes the active delivery path.
-
-Do not use a plugin custom agent as a substitute for the Loom rule corpus. The
-existing Makefile Claude installer remains a fallback/proof path for users who
-prefer static copied Claude rules over plugin hook context.
-
-Runtime validation in this repository has observed all seven canonical rule files
-visible in same-session Claude startup context through local `--plugin-dir` with
-project-only settings, no tools, and an empty temporary project. Validation has
-not yet proven installed marketplace behavior, Windows shell behavior, or
-headless `clear`/`compact` event delivery. Runtime invocation of bundled skills
-and command wrappers is also outside the rule-loading probe.
-
-See `examples/adapters/claude-plugin-install/` for the fixture notes and current
-limitations.
-
-## Makefile Installers
-
-This repository also ships a top-level `Makefile` for global user-level installs
-from the canonical product surface in the current working tree.
-
-Use:
-
-```bash
-make install harness=opencode
-make install harness=claude
-make install harness=codex
-make install harness=gemini
-make install harness=cursor
-make install harness=all
-
-make uninstall harness=opencode
-```
-
-The Makefile copies only top-level `rules/`, protocol `skills/`, and optional
-`commands/`. It does not install `optional-utilities/`.
-
-It does not install dogfooding `.loom/` records or `.opencode/` consumption
-state.
-
-Because harnesses do not expose identical file formats, the installer keeps
-direct copies where possible and uses the smallest honest translation where
-needed:
-
-- OpenCode: copies skills and commands, copies rules into a Loom-owned
-  directory, and updates `~/.config/opencode/opencode.json` so those rules load
-  through `instructions`
-- Claude Code: copies rules, skills, and commands into `~/.claude/`
-- Codex: copies skills, converts commands into explicit-only command adapter
-  skills under `~/.agents/skills/loom-command-*`, removes Loom-managed legacy
-  prompt files from `~/.codex/prompts/`, and mirrors Loom rules into a managed
-  block inside `~/.codex/AGENTS.md`
-- Gemini CLI: copies skills, converts commands into `~/.gemini/commands/*.toml`,
-  and mirrors Loom rules into a managed block inside `~/.gemini/GEMINI.md`
-- Cursor: copies skills into `~/.cursor/skills/`, converts commands into
-  `~/.cursor/commands/*.md`, copies rules into `~/.cursor/loom/rules/`, and
-  writes a managed block into Cursor User Rules so the rules are globally
-  always on. The managed source block is also written to
-  `~/.cursor/loom/cursor-user-rules.md` for inspection.
-
-Generated aggregate instruction blocks are bracketed with Loom markers so
-`make uninstall` can remove only Loom-managed content. Generated directories
-use Loom-owned names so uninstall can remove them without touching unrelated
-harness files.
-
-## Adapter Fixture Expectations
-
-Adapter checks verify transport fidelity. They do not define Loom semantics.
-
-Useful adapter smoke checks:
-
-- rules are installed or mirrored where the harness actually reads always-on instructions
-- skill descriptions are discoverable before full skill hydration
-- optional command wrappers remain explicit invocation surfaces
-- generated command adapters are marked as Loom-managed when the harness needs generated files
-- uninstall removes Loom-managed adapter surfaces without touching project `.loom/` truth
-
-See `examples/adapters/` for non-normative adapter fixture expectations.
+Use `skills/loom-workspace`, `skills/loom-constitution`, and
+`skills/loom-tickets` for the first records.

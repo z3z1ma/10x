@@ -3,10 +3,9 @@
 ## Transport Surface
 
 - `open-loom.mjs` is the OpenCode plugin entrypoint at the package root.
-- The plugin reads top-level `rules/*.md` from the package or cloned repository using module-relative file reads.
-- It uses OpenCode's `config(config)` plugin hook to add ordered rule files to `config.instructions`.
+- The plugin reads `skills/loom-bootstrap/references/*.md` from the package or cloned repository using module-relative file reads.
+- It uses OpenCode's `config(config)` plugin hook to add ordered bootstrap references to `config.instructions`.
 - It adds the bundled skill root to `config.skills.paths`.
-- It registers bundled command wrappers through `config.command`.
 
 ## Expected Plugin Entries
 
@@ -36,9 +35,8 @@ OpenCode `1.14.22` cold-cache npm plugin loading can log `NpmInstallFailedError`
 
 ## Surface Disposition
 
-- Rules: registered through `config.instructions` with one absolute path per ordered rule file.
+- Bootstrap: registered through `config.instructions` with one absolute path per ordered `loom-bootstrap` reference.
 - Skills: registered through `config.skills.paths` using the bundled `skills/` root.
-- Commands: registered through `config.command` using the bundled Markdown wrappers as templates.
 
 ## Structural Smoke Check
 
@@ -48,7 +46,7 @@ Run from the repository root:
 node open-loom.mjs --smoke
 ```
 
-The smoke output should list ordered rule files from `rules/`, confirm the resolved instruction paths, and report skill/command registration counts. `opencode debug config` and `opencode debug skill` can validate OpenCode's resolved config and skill discovery without making a model request.
+The smoke output should list ordered bootstrap references from `skills/loom-bootstrap/references/`, confirm the resolved instruction paths, and report skill registration counts. `opencode debug config` and `opencode debug skill` can validate OpenCode's resolved config and skill discovery without making a model request.
 
 ## Common Wrong Behavior
 

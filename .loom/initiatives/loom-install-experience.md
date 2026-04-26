@@ -3,7 +3,7 @@ id: initiative:loom-install-experience
 kind: initiative
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-04-26T05:15:49Z
+updated_at: 2026-04-26T07:23:57Z
 scope:
   kind: repository
   repositories:
@@ -36,6 +36,12 @@ links:
     - evidence:cursor-harness-install-validation
     - evidence:claude-plugin-hybrid
     - evidence:claude-sessionstart-stdout-context
+    - evidence:codex-sessionstart-stdout-context
+  decision:
+    - decision:0005
+    - decision:0006
+  critique:
+    - critique:codex-plugin-hook-config-review
 ---
 
 # Objective
@@ -44,30 +50,20 @@ Make Loom installation feel first-class in every supported harness while keeping
 the product itself a Markdown-native protocol bundle rather than a runtime,
 daemon, MCP, dashboard, or monolithic product CLI.
 
-The outcome is not merely a nicer shell script. The desired result is a clear,
-maintainable install strategy that maps Loom's canonical `rules/`, `skills/`,
-and optional `commands/` surfaces into each harness through the most honest
-native mechanism available.
+The outcome is not a shell script. The desired result is a clear, maintainable
+install strategy that maps Loom's canonical `skills/` package into each harness
+through the most honest native mechanism available.
 
 # Why Now
 
-The current `Makefile` and `scripts/install-loom.sh` proved that a user-level
-global install is possible across OpenCode, Claude Code, Codex, Gemini CLI, and
-Cursor. That proof is valuable, but it is also visibly a means-to-an-end:
-
-- it encodes harness knowledge in one long shell script
-- it mutates several single-file instruction surfaces with generated managed
-  blocks
-- it has to generate command adapters where harness command formats differ
-- it relies on implementation details such as Cursor User Rules storage
-- it does not distinguish first-class plugin or extension systems from direct
-  config-copy fallbacks
+The earlier `Makefile` and `scripts/install-loom.sh` proved that user-level global
+copy installs were possible, but `decision:0006` rejects that as product shape.
+The work now moves to native plugin, extension, or skill-package installs only.
 
 Meanwhile, several harnesses now expose richer first-class distribution systems:
 Claude Code plugins, Codex plugins, Gemini CLI extensions, Cursor plugins, and
-portable Agent Skills. Loom needs to decide which of those should become the
-preferred install surface, where direct managed config remains necessary, and
-how to keep the protocol source of truth independent from adapter convenience.
+portable Agent Skills. Loom needs to use those native surfaces while keeping
+`skills/` as the product source of truth.
 
 # In Scope
 
@@ -75,15 +71,13 @@ how to keep the protocol source of truth independent from adapter convenience.
   Gemini CLI, and Cursor
 - evaluate first-class plugin, extension, marketplace, and Agent Skills surfaces
   where they exist
-- evaluate direct user-level config installs, project-local installs, and generic
-  `~/.agents/skills` installs
+- evaluate native skill/plugin installs and generic Agent Skills installs
 - compare popular installer precedents such as package managers, standalone
   shell installers, project scaffolders, extension marketplaces, and manual Git
   clone/link workflows
 - define the qualities of a better Loom install experience without committing to
   an implementation prematurely
-- keep current installer behavior available as prior evidence and a fallback
-  adapter, not as the strategic endpoint
+- keep removed installer behavior only as prior evidence, not as a supported path
 
 # Out Of Scope
 
@@ -91,7 +85,7 @@ how to keep the protocol source of truth independent from adapter convenience.
 - adding a daemon, service, model router, MCP server, dashboard, or hidden
   installer runtime as protocol core
 - changing Loom's canonical shipped product surfaces to fit one harness better
-- making optional commands part of Loom core
+- making command wrappers part of Loom product surface
 - treating plugin manifests, generated adapter files, or package-manager recipes
   as owners of Loom semantics
 - installing dogfooding `.loom/` records or `.opencode/` consumption state into
@@ -99,22 +93,19 @@ how to keep the protocol source of truth independent from adapter convenience.
 
 # Success Metrics
 
-- a future maintainer can explain the recommended install path for each supported
-  harness without rereading `scripts/install-loom.sh`
-- each supported harness has a documented preferred install mechanism and a
-  fallback mechanism when the preferred mechanism cannot express all Loom
-  surfaces
-- first-class plugin or extension systems are used where they cleanly cover Loom
-  rules, skills, and command wrappers, and explicitly rejected where they do not
-- always-on Loom rules remain always-on after install and preserve numeric rule
-  order
+- a future maintainer can explain the recommended native install path for each
+  supported harness from `INSTALL.md`
+- each supported harness has a documented native install mechanism or an explicit
+  accepted decision not to support that harness yet
+- first-class plugin, extension, or skill-package systems are used to cover Loom
+  skills, and explicitly rejected where they do not
+- `loom-bootstrap` is discoverable after install, and adapters preload its ordered
+  references only where that is supported cleanly
 - skill discovery preserves portable Agent Skills semantics and keeps full skill
   content on-demand
-- optional command wrappers remain explicit adapter surfaces rather than a second
-  protocol owner
-- install and uninstall mutate only Loom-managed files or marked blocks
+- disable/uninstall follows native harness package behavior
 - adapter outputs are easy to inspect with ordinary filesystem tools
-- no install strategy makes the shell script, a generated file, or a marketplace
+- no install strategy makes a generated file, fallback script, or marketplace
   package the authority for Loom behavior
 
 # Milestones
@@ -126,10 +117,9 @@ how to keep the protocol source of truth independent from adapter convenience.
    hybrid.
 3. Define adapter fixture expectations for each chosen path so install behavior
    can be reviewed without relying on transcript context.
-4. Refactor or replace the current Makefile/script only after the preferred
-   per-harness strategy is explicit.
-5. Update `INSTALL.md`, adapter examples, and any wrapper guidance to reflect the
-   chosen strategy.
+4. Remove fallback installer and command-wrapper product surfaces.
+5. Update `INSTALL.md` and adapter examples to reflect native skill-package
+   strategy.
 
 # Dependencies
 
@@ -153,12 +143,12 @@ how to keep the protocol source of truth independent from adapter convenience.
   violates Loom's constitutional boundary
 - choosing plugin packaging because it feels more first-class even when it does
   not provide a clean always-on instruction surface
-- letting generated adapter packages drift from canonical `rules/`, `skills/`,
-  and `commands/`
+- letting generated adapter packages drift from canonical `skills/` and
+  `loom-bootstrap` references
 - losing uninstall safety when a harness stores user rules in a non-file config
   database or managed settings surface
-- treating generic Agent Skills as sufficient for Loom install even though Loom
-  also requires ordered always-on rules
+- treating generic Agent Skills as sufficient while forgetting that
+  `loom-bootstrap` must be used first unless an adapter has already loaded it
 - expanding install support faster than the project can maintain evidence for
   each harness
 
@@ -178,7 +168,9 @@ how to keep the protocol source of truth independent from adapter convenience.
 - Follow-up ticket: `ticket:cldrel01` - harden Claude release packaging before
   broad marketplace distribution
 - Claude evidence: `evidence:claude-plugin-hybrid`
-- Harness ticket: `ticket:lx9nnztk` - prototype Codex hybrid plugin install
+- Codex evidence: `evidence:codex-sessionstart-stdout-context`
+- Harness ticket: `ticket:lx9nnztk` - blocked Codex remote plugin install
+  investigation
 - Harness ticket: `ticket:7ex8w32y` - prototype Gemini CLI extension install
 - Harness ticket: `ticket:3t93tsci` - prototype Cursor plugin install
 - Prior ticket: `ticket:ffg8elkb` - add global harness install Makefile
@@ -188,26 +180,34 @@ how to keep the protocol source of truth independent from adapter convenience.
 
 # Status Summary
 
-This initiative is active. The repository has a working proof installer and a
-new execution plan for harness-specific install work. The OpenCode slice has
-landed the first accepted package-adapter result: `open-loom@0.1.0` is published
-and validates a plugin-array install for OpenCode `>=1.14.22 <2`. The remaining
-OpenCode cold-cache first-run installer caveat is tracked by `ticket:us1brnsv`.
+This initiative is active. After `decision:0006`, the execution plan targets
+harness-native skill or plugin package paths only. The removed Makefile, shell
+installer, and top-level command wrappers are historical evidence, not supported
+surfaces.
+
+The OpenCode slice has landed the first accepted package-adapter result:
+`open-loom@0.1.0` validates a plugin-array install for OpenCode `>=1.14.22 <2`,
+exposes `skills/`, and preloads bootstrap references through OpenCode
+`instructions`. The remaining OpenCode cold-cache first-run package caveat is
+tracked by `ticket:us1brnsv`.
+
 The Claude slice has closed its local/prototype ticket and advanced the release
-path through `ticket:cldrel01`: marketplace and plugin for skills/commands, plus
-same-session, source-marked per-rule `SessionStart` stdout for the always-on rule
-corpus. Remaining Claude release risks are installed marketplace behavior,
-package/cache contents, Windows shell behavior, `clear|compact` runtime events,
-and installed skill/command invocation.
-The Codex slice has been re-researched against current plugin docs and source:
-Codex plugins are now strong enough to prototype as the first-class package for
-skills and generated explicit command adapters, but they still do not own
-always-on `AGENTS.md` rules. `ticket:lx9nnztk` now routes next to a bounded
-package-layout spike.
+path through `ticket:cldrel01`: marketplace and plugin for `skills/`, plus
+same-session, source-marked per-reference `SessionStart` stdout for optional
+bootstrap preload. Remaining Claude release risks are installed marketplace
+behavior, package/cache contents, Windows shell behavior, `clear|compact` runtime
+events, and installed skill invocation.
+
+The Codex slice has been re-researched against current plugin and hook docs plus
+open-source Codex source: Codex plugins are the intended native path for canonical
+skills, and Codex config-layer `SessionStart` hooks can emit source-marked
+bootstrap references as optional same-session context. Current evidence does not
+prove installed Git-backed plugin skill discovery for `loom-bootstrap`, so
+`ticket:lx9nnztk` remains active for the intended remote plugin install goal.
 
 # Completion Basis
 
 When this initiative is completed, the graph should show a researched,
-per-harness install strategy and any resulting implementation tickets should
-have evidence that install and uninstall are reversible, harness-appropriate,
+per-harness native install strategy and any resulting implementation tickets
+should have evidence that package enable/disable behavior is harness-appropriate
 and still subordinate to Loom's Markdown protocol corpus.

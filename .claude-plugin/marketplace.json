@@ -11,7 +11,7 @@
     {
       "name": "loom",
       "source": "./",
-      "description": "Loom Markdown-native AI work protocol surfaces for Claude Code.",
+      "description": "Loom Markdown-native AI work protocol skills for Claude Code.",
       "version": "0.1.0",
       "author": {
         "name": "z3z1ma"

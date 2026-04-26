@@ -1,0 +1,20 @@
+{
+  "name": "agent-loom",
+  "interface": {
+    "displayName": "Agent Loom"
+  },
+  "plugins": [
+    {
+      "name": "loom",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/z3z1ma/agent-loom.git"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

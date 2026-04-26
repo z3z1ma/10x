@@ -2,23 +2,23 @@
 
 These fixtures describe expected adapter surfaces for common harnesses.
 
-They are not runtime tests and not protocol truth. They exist to make installer
-and adapter drift easier to review.
+They are not runtime tests and not protocol truth. They exist to make native
+adapter drift easier to review.
 
 Adapter fixtures should check:
 
-- rules are visible where the harness reads always-on instructions
+- `loom-bootstrap` is discoverable, and its references are visible where the
+  harness reads always-on instructions when the adapter preloads context
 - skills are discoverable without making every skill always-on
-- command wrappers remain explicit invocation surfaces
-- generated files are marked as Loom-managed when appropriate
-- uninstall can remove generated surfaces without touching project `.loom/`
-  records
+- generated native adapter files remain thin pointers to `skills/`
+- disable or uninstall follows the harness-native plugin or skill-package UX
 
-Protocol semantics still live in `rules/`, `skills/`, templates, and owner
-records.
+Protocol semantics still live in `skills/`, `loom-bootstrap` references,
+templates, and owner records.
 
 Current fixtures:
 
-- `claude-plugin-install/` - Claude plugin plus automatic user-rule sync direction
-- `claude-command-install/` - older direct Claude command install expectations
-- `open-loom-install/` - accepted OpenCode npm/local plugin package behavior
+- `claude-plugin-install/` - Claude native plugin with optional bootstrap preload
+- `codex-plugin-install/` - Codex native plugin / marketplace shape
+- `open-loom-install/` - OpenCode npm/local plugin package behavior
+- `cursor-install/` - Cursor native skill-package target notes
