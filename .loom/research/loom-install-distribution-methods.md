@@ -3,7 +3,7 @@ id: research:loom-install-distribution-methods
 kind: research
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-04-25T22:14:57Z
+updated_at: 2026-04-26T00:36:35Z
 scope:
   kind: repository
   repositories:
@@ -33,13 +33,16 @@ links:
   evidence:
     - evidence:open-loom-smoke
     - evidence:cursor-harness-install-validation
+    - evidence:claude-plugin-hybrid
 external_refs:
   claude_code:
     - https://code.claude.com/docs/en/plugins
+    - https://code.claude.com/docs/en/plugins-reference
     - https://code.claude.com/docs/en/settings
     - https://code.claude.com/docs/en/hooks
     - https://code.claude.com/docs/en/skills
     - https://code.claude.com/docs/en/memory
+    - https://code.claude.com/docs/en/plugin-marketplaces
   codex:
     - https://developers.openai.com/codex/skills
     - https://developers.openai.com/codex/guides/agents-md
@@ -300,35 +303,73 @@ Doc-backed install surfaces:
 - Claude Code plugins are directories with `.claude-plugin/plugin.json` and may
   include `skills/`, `commands/`, `agents/`, `hooks/hooks.json`, MCP/LSP config,
   monitors, `bin/`, and limited default settings.
+- Claude plugin manifests can point component paths at existing plugin-root
+  directories such as `./skills/` and `./commands/`; custom component paths replace
+  defaults unless the defaults are included explicitly.
+- Claude plugin hooks can run command hooks on `SessionStart` and
+  `UserPromptSubmit`; plugin docs show hooks may use `${CLAUDE_PLUGIN_ROOT}` and
+  `${CLAUDE_PLUGIN_DATA}`. `UserPromptSubmit` can block prompt processing with a
+  user-visible reason.
+- `${CLAUDE_PLUGIN_ROOT}` is the plugin installation directory, not the user or
+  project `.claude` settings directory. For marketplace installs, docs say
+  plugins are copied into `~/.claude/plugins/cache`; local `claude plugin list
+  --json` showed project-scoped plugins with `installPath` under that cache and a
+  separate `projectPath`.
 - Claude plugin `settings.json` supports only `agent` and `subagentStatusLine` in
   the fetched docs; unknown keys are ignored.
 - Claude plugins can be installed from marketplaces and tested locally with
   `claude --plugin-dir`.
+- Claude marketplaces use `.claude-plugin/marketplace.json`; relative plugin
+  sources such as `./` resolve from the marketplace root, not from
+  `.claude-plugin/`.
 
 Always-on rule fit:
 
 - Claude's clean always-on instruction surfaces are `CLAUDE.md` and
   `.claude/rules/*.md` / `~/.claude/rules/*.md`.
-- The fetched plugin docs do not state that installing a plugin can add arbitrary
-  always-on rules or append to `CLAUDE.md`.
+- Claude docs state user-level rules load at launch, but the fetched docs do not
+  specify a deterministic filename ordering contract for multiple rule files.
+- The fetched plugin docs do not state that the `claude plugin install` command
+  runs arbitrary setup code, adds always-on rules, or appends to `CLAUDE.md`.
 - A plugin can include a custom agent and set it as the main thread through
   plugin settings, but that is not equivalent to installing Loom's always-on
   rule corpus as reusable harness-agnostic instructions. It changes the agent
   selection/system prompt rather than exposing a simple ordered rule bundle.
 - Hook docs explicitly say static context should use `CLAUDE.md` rather than
-  `SessionStart` hooks, and `InstructionsLoaded` can observe but not modify
-  instruction loading.
+  `SessionStart` hook output, and `InstructionsLoaded` can observe but not modify
+  instruction loading. A `SessionStart` hook can still perform file side effects,
+  so using it to synchronize files into `~/.claude/rules/loom/` is a distinct
+  prototype from using hook stdout as the rule loader.
 
 Assessment:
 
 - Claude plugins are attractive for packaging Loom skills and possibly commands,
   namespacing, versioning, and marketplace distribution.
-- Claude plugins do not currently appear to be a complete standalone Loom install
-  surface because Loom rules must be always-on and ordered.
+- Claude plugins do not currently appear to be a complete manifest-only Loom
+  install surface because Loom rules must be always-on and ordered.
+- The accepted prototype direction for `ticket:q7h1d05q` is automated hybrid: a
+  Claude plugin exposes canonical `skills` and optional `commands`, and a plugin
+  `SessionStart` hook generates one managed `loom.md` from canonical
+  `${CLAUDE_PLUGIN_ROOT}/rules/*.md` into a Claude-loaded rule directory.
+  Project/local installs should target
+  `${CLAUDE_PROJECT_DIR}/.claude/rules/loom/` when project settings explicitly
+  enable the plugin; otherwise the script should verify or synchronize
+  `~/.claude/rules/loom/` and avoid treating `.claude/` directory existence alone
+  as a project install signal.
 - The current direct copy to `~/.claude/rules/loom`, `~/.claude/skills`, and
-  `~/.claude/commands` is closer to Loom's needs than a plugin-only install.
-- A hybrid could be viable: plugin for skills/commands plus a small managed
-  `~/.claude/CLAUDE.md` import or user-rule install for always-on rules.
+  `~/.claude/commands` remains a fallback/proof path until plugin runtime timing
+  and uninstall/disable behavior are proven.
+- Runtime probes showed project rules synchronized by a plugin `SessionStart` hook
+  are not available in that same first headless session, but are loaded on the
+  next session from `.claude/rules/loom/loom.md`.
+- Therefore the current prototype adds a `UserPromptSubmit` restart guard: if rule
+  synchronization changed files for the current session, the first prompt is
+  blocked with a restart/new-session message instead of letting Claude operate
+  without Loom loaded.
+- The generated single `loom.md` file avoids relying on undocumented Claude load
+  ordering across multiple rule files.
+- Explicit cleanup uses `scripts/claude-clean-rules.sh`; Claude docs do not
+  describe a plugin uninstall hook.
 - Avoid a hook-based rule loader. It would be clever but contrary to Claude's own
   static-context guidance and Loom's desire for visible, simple file surfaces.
 
@@ -575,7 +616,7 @@ Assessment:
 
 | Harness | First-class package surface | Covers rules? | Covers skills? | Covers commands? | Current fit |
 | --- | --- | --- | --- | --- | --- |
-| Claude Code | `.claude-plugin/plugin.json` plugins | Not cleanly in fetched docs; use `CLAUDE.md` or user rules outside plugin. | Yes. | Yes, but plugin skills are recommended for new plugins. | Hybrid or direct install. |
+| Claude Code | `.claude-plugin/plugin.json` plugins plus `.claude-plugin/marketplace.json` | Not manifest-only; prototype uses a plugin `SessionStart` hook to generate `loom.md` into user or project `.claude/rules/loom/`. | Yes. | Yes, but plugin skills are recommended for new plugins. | Automated hybrid plugin. |
 | Codex | `.codex-plugin/plugin.json` plugins and marketplaces | Not in fetched plugin docs; use `~/.codex/AGENTS.md`. | Yes. | Not as native command docs here; adapter skills are viable. | Hybrid. |
 | OpenCode | JS/TS plugins via npm package or local file/path specs | Yes, via plugin `config(config)` adding ordered files to `config.instructions`. | Yes, via `config.skills.paths`. | Yes, via `config.command`. | `open-loom` npm/local distribution. |
 | Gemini CLI | `gemini-extension.json` extensions | Yes, via extension context file / `GEMINI.md` in fetched docs. | Yes. | Yes, as TOML command files. | Strong plugin/extension candidate. |
@@ -727,6 +768,10 @@ Rejected unless future docs explicitly bless it. Claude hook docs say static
 context should use `CLAUDE.md` rather than `SessionStart` hooks, and the
 `InstructionsLoaded` hook is for observability rather than modifying loaded
 instructions.
+
+This rejection targets hook-delivered context. It does not reject using a plugin
+hook as an installer that writes files into Claude's documented static user-rule
+surface, provided evidence records the first-session timing and cleanup limits.
 
 ## Codex `~/.codex/rules/` For Loom Markdown Rules
 
@@ -891,9 +936,9 @@ Split future install docs into three conceptual modes:
   fixture runner?
 - Should generic `~/.agents/skills` become the default global skill target for
   Codex, Gemini CLI, Cursor, and OpenCode to avoid four separate skill copies?
-- What is the cleanest Claude hybrid: direct `~/.claude/rules/loom` copy, a
-  managed `~/.claude/CLAUDE.md` import, or a plugin plus a separate instruction
-  installer?
+- Should the Claude marketplace continue using source `./` for local/Git testing,
+  or should a narrower release-packaged Claude plugin artifact be introduced
+  before broad distribution?
 - Can Cursor plugin rules set `alwaysApply: true` and preserve numeric rule order
   well enough to replace User Rules mutation?
 - Does Gemini extension context loading preserve the mandatory ordered Loom rule
@@ -922,6 +967,7 @@ Split future install docs into three conceptual modes:
 - Spec: `spec:opencode-plugin-install-contract`
 - Wiki: `wiki:harness-adapter-package-pattern`
 - Harness ticket: `ticket:q7h1d05q` - Claude Code hybrid install path
+- Claude hybrid evidence: `evidence:claude-plugin-hybrid`
 - Harness ticket: `ticket:lx9nnztk` - Codex hybrid plugin install path
 - Harness ticket: `ticket:7ex8w32y` - Gemini CLI extension install path
 - Harness ticket: `ticket:3t93tsci` - Cursor plugin install path

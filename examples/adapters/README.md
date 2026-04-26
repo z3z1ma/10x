@@ -16,3 +16,9 @@ Adapter fixtures should check:
 
 Protocol semantics still live in `rules/`, `skills/`, templates, and owner
 records.
+
+Current fixtures:
+
+- `claude-plugin-install/` - Claude plugin plus automatic user-rule sync direction
+- `claude-command-install/` - older direct Claude command install expectations
+- `open-loom-install/` - accepted OpenCode npm/local plugin package behavior

@@ -3,7 +3,7 @@ id: plan:install-experience-harness-adapters
 kind: plan
 status: active
 created_at: 2026-04-25T18:46:08Z
-updated_at: 2026-04-25T22:14:57Z
+updated_at: 2026-04-26T00:36:35Z
 scope:
   kind: repository
   repositories:
@@ -29,6 +29,7 @@ links:
   evidence:
     - evidence:open-loom-smoke
     - evidence:cursor-harness-install-validation
+    - evidence:claude-plugin-hybrid
 ---
 
 # Purpose
@@ -71,8 +72,15 @@ Current strategic picture:
 - Cursor plugins and Gemini CLI extensions are the strongest first-class package
   candidates because their docs show package support for rules or context,
   skills, and commands.
-- Claude Code and Codex are likely hybrid installs because their plugin systems
-  do not cleanly own always-on Loom rules in the fetched docs.
+- Claude Code is fixed on an automated hybrid prototype: `.claude-plugin/plugin.json`
+  exposes canonical `skills/` and optional `commands/`, `.claude-plugin/marketplace.json`
+  exposes marketplace `agent-loom`, and a plugin `SessionStart` hook generates
+  `loom.md` from `${CLAUDE_PLUGIN_ROOT}/rules/*.md` into user or project
+  `.claude/rules/loom/`. Runtime evidence shows project rules are installed in the
+  first plugin-enabled session but loaded on the next session, so the prototype
+  includes a `UserPromptSubmit` restart guard for bootstrap sessions.
+- Codex is likely a hybrid install because its plugin system does not cleanly own
+  always-on Loom rules in the fetched docs.
 - OpenCode is the first accepted adapter-package result. `open-loom@0.1.0` is
   published and uses the plugin `config(config)` hook to register rules through
   `config.instructions`, skills through `config.skills.paths`, and commands
@@ -92,7 +100,9 @@ Complete package prototypes:
 
 Hybrid package prototypes:
 
-- `ticket:q7h1d05q` - prototype Claude Code hybrid install path
+- `ticket:q7h1d05q` - prototype Claude Code hybrid install path: plugin for
+  skills/commands plus automatic generated-rule synchronization for always-on
+  instructions
 - `ticket:lx9nnztk` - prototype Codex hybrid plugin install path
 
 Accepted OpenCode plugin-first package:
