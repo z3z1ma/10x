@@ -3,7 +3,7 @@ id: research:loom-install-distribution-methods
 kind: research
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-04-26T00:36:35Z
+updated_at: 2026-04-26T01:04:44Z
 scope:
   kind: repository
   repositories:
@@ -24,6 +24,7 @@ links:
     - ticket:6uy1rx20
     - ticket:us1brnsv
     - ticket:q7h1d05q
+    - ticket:cldrel01
     - ticket:lx9nnztk
     - ticket:7ex8w32y
     - ticket:3t93tsci
@@ -306,6 +307,10 @@ Doc-backed install surfaces:
 - Claude plugin manifests can point component paths at existing plugin-root
   directories such as `./skills/` and `./commands/`; custom component paths replace
   defaults unless the defaults are included explicitly.
+- Claude auto-loads the standard plugin `hooks/hooks.json` path. Local marketplace
+  install showed a plugin manifest should not also declare `"hooks":
+  "./hooks/hooks.json"`, because that duplicate declaration produces a hook-load
+  error after install even though schema validation passes.
 - Claude plugin hooks can run command hooks on `SessionStart` and
   `UserPromptSubmit`; plugin docs show hooks may use `${CLAUDE_PLUGIN_ROOT}` and
   `${CLAUDE_PLUGIN_DATA}`. `UserPromptSubmit` can block prompt processing with a
@@ -370,6 +375,9 @@ Assessment:
   ordering across multiple rule files.
 - Explicit cleanup uses `scripts/claude-clean-rules.sh`; Claude docs do not
   describe a plugin uninstall hook.
+- Local marketplace install validates `loom@agent-loom` can install without
+  hook-load errors after relying on standard hook auto-loading instead of a
+  duplicate manifest `hooks` field.
 - Avoid a hook-based rule loader. It would be clever but contrary to Claude's own
   static-context guidance and Loom's desire for visible, simple file surfaces.
 

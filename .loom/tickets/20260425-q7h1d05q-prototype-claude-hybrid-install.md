@@ -1,11 +1,11 @@
 ---
 id: ticket:q7h1d05q
 kind: ticket
-status: complete_pending_acceptance
+status: closed
 change_class: release-packaging
 risk_class: medium
 created_at: 2026-04-25T18:46:08Z
-updated_at: 2026-04-26T00:59:31Z
+updated_at: 2026-04-26T01:04:44Z
 scope:
   kind: repository
   repositories:
@@ -22,6 +22,8 @@ links:
     - evidence:claude-plugin-hybrid
   critique:
     - critique:claude-plugin-integration-review
+  wiki:
+    - wiki:harness-adapter-package-pattern
   related:
     - ticket:ffg8elkb
 external_refs:
@@ -176,10 +178,9 @@ None.
 
 # Next Move / Next Route
 
-Acceptance review. Runtime validation now covers first-session restart blocking,
-second-session Loom loading, fail-closed sync errors, explicit cleanup mechanics,
-and local marketplace add/install without hook-load errors. The final oracle pass
-found no local/prototype blockers.
+Closed. Future work should route to a new release-packaging ticket if the Claude
+plugin moves from local/prototype acceptance toward broad marketplace
+distribution.
 
 # Ralph Readiness
 
@@ -262,17 +263,20 @@ None.
 
 # Wiki Disposition
 
-Wiki promotion is optional. Promote only if the Claude hybrid decision becomes a
-reusable pattern for other incomplete plugin systems.
+Promoted. `wiki:harness-adapter-package-pattern` now records the accepted Claude
+hybrid adapter pattern and prevention guidance for incomplete plugin systems.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis: Pending owner acceptance. Local/prototype implementation is evidenced by
-  Claude plugin validation, local marketplace add/install, script-level sync and
-  cleanup probes, runtime first-prompt blocking, second-session Loom loading, and
-  oracle critique with no remaining local/prototype blockers.
+Accepted by: operator via `/loom-accept`
+Accepted at: 2026-04-26T01:03:03Z
+Basis: Local/prototype implementation is evidenced by Claude plugin validation,
+  local marketplace add/install, script-level sync and cleanup probes, runtime
+  first-prompt blocking, second-session Loom loading, and oracle critique with no
+  remaining local/prototype blockers. Ticket-local acceptance criteria are covered
+  by `evidence:claude-plugin-hybrid`; critique disposition is completed in
+  `critique:claude-plugin-integration-review`; wiki promotion was optional for
+  closure and has since been completed by retrospective follow-through.
 Residual risks: Broad marketplace `source: "./"` still needs narrowed packaging or
   cache-content audit before broad release; cleanup is explicit rather than
   automatic; runtime skill/command invocation from installed marketplace plugin is
@@ -341,3 +345,11 @@ prototype.
 - 2026-04-26: final oracle pass after marketplace-install validation found no
   local/prototype blockers. Moved ticket to `complete_pending_acceptance` with
   release-packaging risks explicit.
+- 2026-04-26: accepted local/prototype Claude plugin integration via
+  `/loom-accept` and closed the ticket. Release-packaging residuals are accepted
+  as out-of-scope for this prototype and should become new work before broad
+  marketplace distribution.
+- 2026-04-26: retrospective promoted the accepted Claude hybrid adapter pattern
+  into `wiki:harness-adapter-package-pattern` and created proposed follow-up
+  `ticket:cldrel01` for release-packaging hardening before broad marketplace
+  distribution.

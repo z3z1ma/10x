@@ -3,7 +3,7 @@ id: initiative:loom-install-experience
 kind: initiative
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-04-26T00:36:35Z
+updated_at: 2026-04-26T01:04:44Z
 scope:
   kind: repository
   repositories:
@@ -23,6 +23,7 @@ links:
     - ticket:6uy1rx20
     - ticket:us1brnsv
     - ticket:q7h1d05q
+    - ticket:cldrel01
     - ticket:lx9nnztk
     - ticket:7ex8w32y
     - ticket:3t93tsci
@@ -169,6 +170,8 @@ how to keep the protocol source of truth independent from adapter convenience.
 - Spec: `spec:opencode-plugin-install-contract`
 - Wiki: `wiki:harness-adapter-package-pattern`
 - Harness ticket: `ticket:q7h1d05q` - prototype Claude Code hybrid install
+- Follow-up ticket: `ticket:cldrel01` - harden Claude release packaging before
+  broad marketplace distribution
 - Claude evidence: `evidence:claude-plugin-hybrid`
 - Harness ticket: `ticket:lx9nnztk` - prototype Codex hybrid plugin install
 - Harness ticket: `ticket:7ex8w32y` - prototype Gemini CLI extension install
@@ -185,12 +188,13 @@ new execution plan for harness-specific install work. The OpenCode slice has
 landed the first accepted package-adapter result: `open-loom@0.1.0` is published
 and validates a plugin-array install for OpenCode `>=1.14.22 <2`. The remaining
 OpenCode cold-cache first-run installer caveat is tracked by `ticket:us1brnsv`.
-The Claude slice has started as an automated hybrid prototype: marketplace and
-plugin for skills/commands, plus a plugin session hook that generates one
-always-on `loom.md` into Claude's user or project rule surface. Runtime evidence
-currently shows a two-session behavior for project installs: first session writes
-rules, second session loads them. A prompt guard blocks the first unsafe prompt
-after a bootstrap sync and tells the user to restart.
+The Claude slice has closed its local/prototype ticket as an accepted automated
+hybrid: marketplace and plugin for skills/commands, plus a plugin session hook
+that generates one always-on `loom.md` into Claude's user or project rule
+surface. Runtime evidence shows a two-session behavior for project installs:
+first session writes rules, second session loads them. A prompt guard blocks the
+first unsafe prompt after a bootstrap sync and tells the user to restart. Broad
+marketplace distribution remains proposed follow-up work in `ticket:cldrel01`.
 
 # Completion Basis
 

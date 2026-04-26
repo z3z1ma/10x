@@ -3,7 +3,7 @@ id: plan:install-experience-harness-adapters
 kind: plan
 status: active
 created_at: 2026-04-25T18:46:08Z
-updated_at: 2026-04-26T00:36:35Z
+updated_at: 2026-04-26T01:04:44Z
 scope:
   kind: repository
   repositories:
@@ -23,6 +23,7 @@ links:
     - ticket:3t93tsci
     - ticket:7ex8w32y
     - ticket:q7h1d05q
+    - ticket:cldrel01
     - ticket:lx9nnztk
     - ticket:6uy1rx20
     - ticket:us1brnsv
@@ -72,13 +73,14 @@ Current strategic picture:
 - Cursor plugins and Gemini CLI extensions are the strongest first-class package
   candidates because their docs show package support for rules or context,
   skills, and commands.
-- Claude Code is fixed on an automated hybrid prototype: `.claude-plugin/plugin.json`
+- Claude Code has an accepted automated hybrid prototype: `.claude-plugin/plugin.json`
   exposes canonical `skills/` and optional `commands/`, `.claude-plugin/marketplace.json`
   exposes marketplace `agent-loom`, and a plugin `SessionStart` hook generates
   `loom.md` from `${CLAUDE_PLUGIN_ROOT}/rules/*.md` into user or project
   `.claude/rules/loom/`. Runtime evidence shows project rules are installed in the
   first plugin-enabled session but loaded on the next session, so the prototype
-  includes a `UserPromptSubmit` restart guard for bootstrap sessions.
+  includes a `UserPromptSubmit` restart guard for bootstrap sessions. Broad Claude
+  marketplace distribution is separated into proposed follow-up `ticket:cldrel01`.
 - Codex is likely a hybrid install because its plugin system does not cleanly own
   always-on Loom rules in the fetched docs.
 - OpenCode is the first accepted adapter-package result. `open-loom@0.1.0` is
@@ -103,6 +105,8 @@ Hybrid package prototypes:
 - `ticket:q7h1d05q` - prototype Claude Code hybrid install path: plugin for
   skills/commands plus automatic generated-rule synchronization for always-on
   instructions
+- `ticket:cldrel01` - proposed release-packaging hardening for Claude marketplace
+  distribution beyond the accepted local/prototype integration
 - `ticket:lx9nnztk` - prototype Codex hybrid plugin install path
 
 Accepted OpenCode plugin-first package:
