@@ -14,6 +14,8 @@ It treats the filesystem as the interface, Markdown as the durable medium, and f
 
 The worker is disposable. The graph is durable.
 
+Jump to the [quickstart](#quick-install).
+
 ## The claim
 
 The individual pieces in Loom are familiar.
