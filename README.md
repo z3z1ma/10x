@@ -2,6 +2,8 @@
 
 Loom is Markdown-native project state for AI agents.
 
+![Loom banner](assets/banner.png)
+
 It exists because long-running AI work needs a better home than chat.
 
 The code changes. The transcript knows why. Then the session ends, the context fills up, the conversation compacts, or a new worker starts cold. The project has the diff, but it does not have the investigation, the rejected paths, the evidence, the critique, the acceptance state, or the next move.
