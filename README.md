@@ -475,20 +475,43 @@ That instruction is a pointer, not a new source of truth.
 > [!TIP]
 > Loom is just a `skills/` directory with zero runtime dependencies. You should be able to use it in almost any coding harness by cloning or downloading this repo and putting `skills/` wherever that harness expects skills. The table below provides first-class install paths per harness as a convenience.
 
-| Harness | Command |
-| --- | --- |
-| Claude Code | `claude plugin marketplace add z3z1ma/agent-loom && claude plugin install loom@agent-loom --scope user` |
-| OpenCode | `opencode plugin open-loom --global` |
-| Codex | `codex plugin marketplace add z3z1ma/agent-loom` |
-| Cursor | `mkdir -p ~/.cursor/plugins/local && git clone https://github.com/z3z1ma/agent-loom.git ~/.cursor/plugins/local/agent-loom` |
-| Gemini CLI | `gemini extensions install https://github.com/z3z1ma/agent-loom` |
+### Claude Code
+
+```bash
+claude plugin marketplace add z3z1ma/agent-loom && claude plugin install loom@agent-loom --scope user
+```
+
+### OpenCode
+
+```bash
+opencode plugin open-loom --global
+```
+
+### Codex
+
+```bash
+codex plugin marketplace add z3z1ma/agent-loom
+```
 
 Codex currently requires opening `/plugins` after marketplace registration to install or enable `loom`.
+
+### Cursor
+
+```bash
+mkdir -p ~/.cursor/plugins/local
+git clone https://github.com/z3z1ma/agent-loom.git ~/.cursor/plugins/local/agent-loom
+```
 
 Cursor uses the local plugin directory until `agent-loom` is listed in Cursor Marketplace. After listing, the Cursor Agent chat command should be:
 
 ```text
 /add-plugin agent-loom
+```
+
+### Gemini CLI
+
+```bash
+gemini extensions install https://github.com/z3z1ma/agent-loom
 ```
 
 ## Harness notes
