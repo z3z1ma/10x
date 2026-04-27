@@ -295,13 +295,19 @@ You route through the owner graph.
 
 ## Nearby systems
 
-Loom is influenced by Superpowers, GSD, and Ralph, but it is not just an adapter for them.
+Loom is influenced by Superpowers, GSD, Speckit, Beads, Ralph, ECC and many more projects, but it is not just an adaptation of them.
 
 Superpowers showed how much better coding agents get when they have explicit development skills.
 
 GSD showed how much context engineering matters when work gets large.
 
+Speckit showed that well defined specifications can act as executables and directly generate working, coherent implementations.
+
+Beads showed that local tickets/issues are a great way to externalize context, manage long horizon work, and leverage a more action-oriented form of memory. It also showed that tools designed to be used exclusively by AI work well when the generalization latent in data AI is trained on maps to the tool surface and vernacular.
+
 Ralph showed the value of clean context windows, bounded tasks, disk-backed state, commits, and restart loops.
+
+ECC (everything-claude-code) put a lot of thought into continuous learning and compound engineering.
 
 Loom moves one level down.
 
