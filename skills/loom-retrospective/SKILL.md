@@ -27,7 +27,8 @@ It promotes learning into the records that already own that kind of knowledge.
   direction
 - evidence preservation for observed artifacts, challenged observations, or
   validation artifacts
-- memory updates for support-only continuity
+- memory updates for support-only continuity, retrieval cues, preferences, or
+  reminders
 
 ## Use This Skill When
 
@@ -56,7 +57,7 @@ It promotes learning into the records that already own that kind of knowledge.
 - changed principles, constraints, decisions, or roadmap direction -> `loom-constitution`
 - observed artifacts, challenged observations, or validation artifacts -> `loom-evidence`
 - missing evidence that still needs work -> ticket follow-up or test expectation
-- support-only recall -> `loom-memory`
+- support-only recall, retrieval cues, preferences, or reminders -> `loom-memory`
 
 ## Default Procedure
 

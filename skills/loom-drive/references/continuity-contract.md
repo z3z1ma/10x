@@ -23,7 +23,7 @@ Use this map before launching tickets or child work.
 | observed support or challenge artifacts | evidence |
 | adversarial findings, severity, verdict, residual risk | critique |
 | accepted reusable explanation | wiki |
-| support-only recall that does not own project truth | memory |
+| support-only recall, retrieval cues, preferences, reminders, or hot context that does not own project truth | memory |
 
 If no existing record owns a drive fact, either create the correct owner record or
 stop and ask the user. Do not invent a hidden state surface.

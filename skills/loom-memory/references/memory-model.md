@@ -1,17 +1,125 @@
 # Memory Model
 
-## Common files
+Memory is a support layer for continuity, not a canonical owner layer.
 
-- `hot-memory.md` — small, current, high-signal context
-- `observations.md` — append-only notable facts
-- `entities.md` — compact registry of people, systems, or recurring topics
-- `action-items.md` — support tasks, not canonical ticket work
+It stores lightweight recall that is useful to an agent but too local,
+subjective, provisional, or decaying to belong in constitution, initiatives,
+research, specs, plans, tickets, evidence, critique, or wiki.
 
-## Ownership rule
+## Optionality
 
-If the fact has become canonical project truth, move it into the correct Loom record and let memory point at it.
+Optional does not mean worthless.
 
-## Size rule
+Optional means Loom must remain correct if memory is missing, stale, or deleted.
+The canonical graph owns project truth. Memory reduces rediscovery cost and helps
+operators find the right owner record faster.
+
+## The Memory Fit Test
+
+Use memory only when all of these are true:
+
+- the fact helps future orientation, retrieval, or collaboration
+- the fact does not define intended behavior, strategy, live work, evidence,
+  accepted explanation, or policy
+- the fact can safely decay, be pruned, or be replaced by a pointer
+- if the fact becomes important, there is an obvious owner layer to promote it to
+
+If deleting the item would make the durable project story false, incomplete, or
+unsafe, it is not memory.
+
+## Useful Memory Content
+
+- retrieval cues: which records, directories, aliases, or recurring terms help a
+  future operator start in the right place
+- hot context: small current pointers or cautions that should age quickly
+- preferences: user or operator collaboration preferences that influence how to
+  communicate but do not define project policy
+- entities: compact descriptions of people, systems, packages, services, or
+  recurring topics that help search and orientation
+- support observations: dated notes that may be useful later but are not evidence
+  for acceptance, critique, or claims
+- support reminders: small reminders that are not yet scoped Loom work
+
+## What Belongs Elsewhere
+
+| Fact type | Owner |
+| --- | --- |
+| durable identity, principles, hard constraints, accepted decisions | constitution |
+| strategic outcome, success metric, delegated objective | initiative |
+| investigation result, tradeoff, rejected option, evidence synthesis | research |
+| intended behavior, requirement, acceptance criterion | spec |
+| sequencing, rollout strategy, dependency order | plan |
+| live state, blocker, next move, acceptance disposition, closure | ticket |
+| observed artifact, validation output, reproduction, screenshot, log | evidence |
+| adversarial finding, verdict, severity, required follow-up | critique |
+| accepted explanation, workflow knowledge, troubleshooting pattern | wiki |
+| bounded child read/write/stop/output contract | packet |
+
+Memory may link to any of these, but the owner record wins when there is a
+disagreement.
+
+## Common Files
+
+- `hot-memory.md` — small, current, high-signal context and pointers
+- `observations.md` — dated support observations, not evidence
+- `entities.md` — compact registry of people, systems, aliases, or recurring topics
+- `action-items.md` — support reminders, not canonical ticket work
+
+Projects may add a small domain-specific file when it has a real retrieval job,
+but avoid creating a taxonomy that future agents must maintain before memory is
+useful.
+
+## Domains
+
+The default domains are:
+
+- `system/` for project or agent-operation context that is not canonical truth
+- `user/` for collaborator preferences or recurring user-specific context that is
+  appropriate to store in the repository
+
+Do not put private, sensitive, or credential-like data in memory. It is a normal
+workspace file surface.
+
+## Promotion And Demotion
+
+Promote memory when it stops being support-only:
+
+- repeated explanation -> wiki
+- scoped work, blocker, next route, or acceptance state -> ticket
+- observed output supporting or challenging a claim -> evidence
+- intended behavior or acceptance rule -> spec
+- investigation conclusion or rejected path -> research
+- sequencing or dependency strategy -> plan
+- strategic objective or success metric -> initiative
+- durable principle, hard constraint, or accepted decision -> constitution
+
+Demote or prune when:
+
+- canonical truth now exists and memory only duplicates it
+- hot context is no longer hot
+- an observation is too stale to help retrieval
+- an action-item reminder became ticket work or no longer matters
+
+## Examples
+
+Good memory:
+
+- "When touching install docs, start with `initiative:loom-install-experience`."
+- "The maintainer prefers concise final summaries unless the work is complex."
+- "`Ralph` is often discussed as the bounded implementation handoff loop; see
+  bootstrap references for authority."
+
+Not memory:
+
+- "Ticket X is blocked" -> ticket
+- "Memory must be canonical" -> constitution or spec, and probably a policy debate
+- "Test output proves ACC-001" -> evidence
+- "The workflow now means X" -> spec or wiki, depending on whether it is behavior
+  or accepted explanation
+
+## Size Rule
 
 Keep hot memory small.
-If it grows large, it stops being hot memory.
+
+If it grows large, it stops being hot memory and should be split, promoted, or
+pruned.

@@ -43,7 +43,8 @@ Canonical owner layers own project truth:
 Durable support surfaces help operation without owning project truth:
 
 - packets own bounded child-worker contracts
-- memory owns optional support context only
+- memory owns optional support recall, retrieval cues, preferences, entities,
+  reminders, and hot context without owning project truth
 - workspace and harness records own scope or transport support only
 
 ## Loops
@@ -102,7 +103,7 @@ assimilates durable learning into the owner layer that can maintain it:
 - strategic framing -> initiative
 - principles or decisions -> constitution
 - observed validation artifacts -> evidence
-- support-only recall -> memory
+- support-only recall, preferences, and retrieval cues -> memory
 
 Retrospective is a workflow, not a record kind and not a second ledger.
 

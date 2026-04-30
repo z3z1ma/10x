@@ -31,7 +31,7 @@ Route learning by owner:
 - changed strategic framing -> initiative
 - changed durable policy or principle -> constitution
 - observed artifact, challenged observation, or validation artifact -> evidence
-- support-only continuity -> memory
+- support-only continuity, retrieval cues, preferences, or reminders -> memory
 
 ## Promote
 

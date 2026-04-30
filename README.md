@@ -70,7 +70,7 @@ Loom separates project state into canonical layers.
 | `critique` | Adversarial findings, review verdicts, residual risk |
 | `wiki` | Accepted explanation, architecture concepts, reusable workflow knowledge |
 | `packet` | Bounded child-worker contracts, not project state |
-| `memory` | Optional support recall only |
+| `memory` | Optional support recall: retrieval cues, preferences, entities, reminders, and hot context |
 
 The rule that keeps the graph coherent:
 
@@ -82,7 +82,9 @@ The newest message does not win. The longest summary does not win. The right rec
 
 For software work, the source tree is current implementation reality. Git records file history. Specs describe intended behavior. Tickets track live execution and acceptance. Evidence bridges implementation to claims. Critique judges whether the bridge is strong enough. Wiki holds explanation that has become safe to reuse.
 
-Memory can help an agent recover context. It does not become project state.
+Memory can help an agent recover context by pointing at useful cues and owner
+records. It does not become project state, and the project must remain truthful
+if memory is absent or stale.
 
 ## How agents use the vocabulary
 
@@ -98,7 +100,7 @@ The agent starts by asking where the work belongs.
 | Concern, review pressure, residual risk | `critique` |
 | Stable understanding | `wiki` |
 | Bounded implementation | `packet` |
-| Support recall | `memory`, until it deserves promotion |
+| Support recall, preferences, retrieval cues | `memory`, until it deserves promotion |
 
 A vague bug report becomes reproduction evidence, root-cause research, a tightened spec if behavior is ambiguous, a ticket for the fix, a packet for the implementation pass, green evidence, critique when risk warrants, and wiki promotion if the lesson should survive.
 
@@ -356,7 +358,7 @@ The product surface is the skill package. The skills are the protocol in operati
 | `loom-evidence` | Observed artifacts and claim support or challenge |
 | `loom-critique` | Adversarial review, findings, verdicts, residual risk |
 | `loom-wiki` | Accepted explanation and reusable understanding |
-| `loom-memory` | Optional support recall without shadow truth |
+| `loom-memory` | Support recall, retrieval cues, preferences, and reminders without shadow truth |
 | `loom-ralph` | Bounded fresh-context implementation loop |
 | `loom-git` | Implementation isolation, baseline, branch/worktree provenance |
 | `loom-debugging` | Reproduce-first debug workflow through existing layers |

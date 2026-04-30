@@ -92,7 +92,8 @@ launch, the checkpoint must already be current; "can update later" is not enough
 ## What This Skill Does Not Own
 
 - project truth that belongs in initiative, research, spec, plan, ticket,
-  evidence, critique, wiki, constitution, or memory records
+  evidence, critique, wiki, or constitution records
+- support recall that belongs in memory records
 - live execution state; use tickets for execution status, blockers, and closure
 - bounded child contracts; Ralph packets own implementation handoff contracts
 - critique verdicts or wiki explanation truth

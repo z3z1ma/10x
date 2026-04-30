@@ -95,7 +95,7 @@ critique can then cite those IDs when judging whether the drive should continue.
 - observed artifacts and validation output -> evidence
 - adversarial verdicts and required follow-up -> critique
 - accepted explanation or reusable workflow knowledge -> wiki
-- support-only recall -> memory
+- support-only recall, retrieval cues, preferences, reminders, or hot context -> memory
 
 Do not let the plan become the ledger. Do not let a packet, subagent response, or
 wiki page redefine acceptance. Move truth into the owning layer before relying on

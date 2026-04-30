@@ -114,7 +114,7 @@ Keep these categories separate:
 | Category | Examples | What It Owns |
 | --- | --- | --- |
 | owner layer | constitution, initiative, research, spec, plan, ticket, evidence, critique, wiki | project truth by type |
-| support surface | packet, memory, workspace/harness records | recovery, recall, bounded handoff, or scope support |
+| support surface | packet, memory, workspace/harness records | recovery, recall, retrieval cues, bounded handoff, or scope support without owning project truth |
 | execution route | local edit, Ralph, critique pass, wiki pass, retrospective, acceptance review | a way to move work through owner layers |
 | transport | slash command, subagent, headless CLI, manual handoff, harness adapter | invocation mechanics only |
 

@@ -186,10 +186,16 @@ The relationship is:
 
 ## Relationship To Memory
 
-Memory is optional support context.
+Memory is optional support recall.
 Wiki is canonical explanation.
 
-If a concept matters to the project as a whole, it belongs in the wiki rather than only in memory.
+Memory is useful for retrieval cues, preferences, entities, reminders, and hot
+context that may decay or be pruned. Wiki is where accepted explanation becomes
+safe for future operators to rely on.
+
+If a concept matters to the project as a whole, it belongs in the wiki rather
+than only in memory. Memory may keep a short pointer to the wiki page when that
+helps retrieval.
 
 ## Maintenance Rule
 

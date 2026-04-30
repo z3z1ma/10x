@@ -41,7 +41,8 @@ This prevents claims from drifting into artifacts that cannot safely own them.
 - **critique** owns adversarial findings and review verdicts
 - **wiki** owns accepted explanation and interlinked understanding
 - **evidence** owns observed artifacts, not primary project truth
-- **memory** owns support context only
+- **memory** owns support recall, retrieval cues, preferences, entities,
+  reminders, and hot context only
 
 If two artifacts disagree, do not average them together.
 Find which layer is supposed to own that fact, then reconcile the non-owner.
@@ -63,7 +64,8 @@ Use this routing before relying on recency, habit, or command names:
   scan results, or validation artifacts -> evidence
 - adversarial findings, verdicts, severities, and required follow-up -> critique
 - accepted explanation, workflow knowledge, troubleshooting, or reusable synthesis -> wiki
-- support-only recall, observations, entities, or hot context -> memory
+- support-only recall, retrieval cues, preferences, observations, entities,
+  reminders, or hot context -> memory
 
 Workflow skills coordinate work across those owners. They do not create new truth
 layers. Workspace entry, record grammar, Ralph, Git, debugging, spikes, code maps,
@@ -114,7 +116,8 @@ context files, and path-local instruction files are also support surfaces unless
 the constitution explicitly says otherwise.
 
 Packets help bounded work.
-Memory helps recall and continuity.
+Memory helps recall and continuity by pointing operators toward useful context;
+it does not make that context authoritative.
 External systems help mirror or transport work.
 None of them outrank the canonical record owners.
 

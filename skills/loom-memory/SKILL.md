@@ -1,6 +1,6 @@
 ---
 name: loom-memory
-description: "Maintain optional support memory without letting it become shadow truth. Use for hot memory, observations, entities, action items, and memory housekeeping when those support continuity, but keep canonical project truth in the main Loom layers."
+description: "Maintain Loom's support recall layer: hot context, retrieval cues, preferences, entities, observations, action-item reminders, and housekeeping that improve continuity without owning project truth."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: support-layer
@@ -9,29 +9,48 @@ metadata:
 
 # loom-memory
 
-Memory is optional support context.
+Memory is Loom's support recall layer.
 
-It exists to preserve useful continuity without letting the support layer become a second project ledger.
+It is optional in the correctness sense: the canonical Loom graph must remain
+truthful and resumable when memory is absent, stale, or pruned. It is still
+useful because it preserves small continuity cues that help the next operator
+orient faster without cluttering tickets, wiki, evidence, research, or specs.
+
+Use memory as an index card, not as authority. If deleting a memory item would
+make the project story false or incomplete, the item belongs in a canonical owner
+layer instead.
 
 ## What This Skill Owns
 
 - hot memory
+- retrieval cues and backlinks
+- support-only user or operator preferences
+- recurring entities and aliases
 - observations
-- entities
-- action items
+- support-only action-item reminders
 - memory housekeeping and retrieval discipline
 
 ## The Boundary
 
-Memory helps the agent remember.
-Memory does not outrank canonical Loom records.
+Memory helps the agent remember where to look, what context may matter, and what
+small support facts are useful to carry forward.
 
-If a fact is really project truth, put it in the right Loom owner layer.
+Memory does not prove claims, define intended behavior, track live execution,
+own accepted explanation, or set project policy. It may point at canonical
+records, but it cannot override them.
+
+If a fact is really project truth, put it in the right Loom owner layer and let
+memory keep only a short pointer if that pointer still helps retrieval.
 
 ## Use This Skill When
 
-- the project benefits from small support-context files
-- an entity or observation should be remembered outside the canonical execution graph
+- a small support fact would help future orientation but would overstate itself
+  in a canonical layer
+- the fact is personal, local, decaying, preference-shaped, or only a retrieval cue
+- an entity, alias, or observation should be remembered outside the canonical
+  execution graph
+- memory should point to owner records that are easy to forget but must remain
+  authoritative elsewhere
 - hot memory needs pruning
 - memory retrieval and linking need maintenance
 
@@ -40,6 +59,10 @@ If a fact is really project truth, put it in the right Loom owner layer.
 - the fact belongs in constitution, research, spec, plan, ticket, critique, wiki, or evidence
 - memory is starting to act like a secret source of truth
 - you are trying to avoid updating the real owner record
+- an action item is real scoped Loom work; create or update a ticket instead
+- an observation must support acceptance, critique, or a claim; create evidence
+  instead
+- a reusable explanation would help future operators; promote it to wiki instead
 
 ## Memory Domains
 
@@ -56,10 +79,17 @@ Every active memory file should start with a one-line `<!-- L0: ... -->` header.
 
 That allows cheap scanning before deep reading.
 
+## Promotion Rule
+
+Memory is allowed to be provisional. When a memory item becomes durable project
+truth, repeated operator knowledge, live execution state, or evidence for a
+claim, promote it to the owning layer and simplify or remove the memory copy.
+
 ## Done Means
 
 - the memory fact is stored in the right memory file
 - canonical truth still lives in the canonical Loom layer
+- any promoted fact has a canonical owner and memory only points at it if useful
 - memory remains small, linked, and pruned
 
 ## Read In This Order
