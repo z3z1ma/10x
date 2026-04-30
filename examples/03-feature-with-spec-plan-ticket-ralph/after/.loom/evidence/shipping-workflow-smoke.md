@@ -21,16 +21,15 @@ closure state.
 
 # Procedure
 
-1. Inspect the before slice and confirm no shipping command or skill surface is present.
+1. Inspect the before slice and confirm no shipping skill surface is present.
 2. Inspect the after-slice shipping workflow output fields.
 3. Confirm it summarizes ticket, evidence, critique, risks, and follow-ups.
 4. Confirm it does not set ticket status to `closed`.
 
 # Artifacts
 
-- `commands/loom-ship.md`
 - `skills/loom-ship/SKILL.md`
-- absence of those paths in the before slice
+- absence of that skill path in the before slice
 - ticket:abcd1234
 
 # Supports Claims

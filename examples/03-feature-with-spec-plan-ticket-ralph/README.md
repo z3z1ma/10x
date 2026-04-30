@@ -40,7 +40,7 @@
 
 ## Common Wrong Behavior
 
-- adding a command without a spec or ticket when behavior is unclear
+- adding a command wrapper as the product surface when behavior belongs in a skill
 - making PR text the execution ledger
 - skipping packet freshness checks
 - adding a new canonical layer for shipping

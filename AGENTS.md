@@ -7,9 +7,9 @@ This repository develops a distributable Markdown-native Loom bundle.
 The protocol core is the top-level `skills/` directory, especially the mandatory
 `skills/loom-bootstrap` entry skill and its ordered references.
 
-There is no app runtime, build pipeline, or test suite. The durable asset is the
-protocol corpus itself: skills, bootstrap doctrine references, templates,
-references, and canonical examples.
+There is no app runtime, build pipeline, or test suite. The durable product asset
+is the skills corpus itself: skills, bootstrap doctrine references, templates,
+and references.
 
 Loom should be treated as a control plane for AI knowledge work: a
 source-of-truth type system plus a transaction protocol for bounded
@@ -34,21 +34,25 @@ constitutional record explicitly changes that boundary.
 
 ## Repo Structure
 
-### Product source
+### Product surface
 
-Everything a user receives lives here:
+The product surface is `skills/` only:
 
 - `skills/loom-bootstrap/` -- mandatory first-use bootstrap doctrine and ordered
   references
 - `skills/` -- self-contained skill directories with `SKILL.md`, references,
   and templates
-- `examples/` -- golden protocol fixtures and traces; useful for review, but
-  not a truth owner
-- `optional-utilities/` -- local utility skills excluded from the default
-  protocol install
 
 **Isolation rule**: content inside `skills/` must stay self-contained, use generic
 `.loom/...` runtime paths, and avoid source-repo-only assumptions.
+
+### Internal Review Fixtures
+
+- `examples/` -- internal golden protocol fixtures and traces used to visualize
+  workflow routes and review drift. They are not loaded into normal installed
+  agent context, not a product surface, and not a truth owner.
+- `optional-utilities/` -- local utility skills excluded from the default
+  protocol install.
 
 ### Dogfooding artifacts
 
@@ -84,8 +88,8 @@ the claim being made, such as:
 - prefer the smallest correct change
 - keep bootstrap doctrine and `skills/` aligned when a change crosses their
   boundaries
-- when changing bootstrap references or a skill, check related templates,
-  references, and any canonical `.loom/` examples that teach the same concept
+- when changing bootstrap references or a skill, check related templates and
+  references; check `examples/` only for internal fixture consistency
 - do not add hidden runtimes, helper-dependent instructions, or monolithic CLI
   assumptions
 - express new workflows as routes through existing owner layers before adding
@@ -104,8 +108,10 @@ If a change touches multiple surfaces, verify:
 - `skills/*/SKILL.md` instructions
 - `skills/*/references/` docs
 - `skills/*/templates/` artifacts
-- `examples/` fixtures when behavior or workflow routing changes
-- canonical `.loom/` examples when they are meant to teach the product
+- `examples/` fixtures when behavior or workflow routing changes, for internal
+  review consistency only
+- dogfood `.loom/` records when they are relevant project truth for this repo,
+  not as product-surface teaching fixtures
 
 ## Key Architecture Facts
 
@@ -133,7 +139,7 @@ The next phase is protocol sharpening rather than platform expansion. Prioritize
 - packet freshness and context-budget guidance
 - named critique risk profiles
 - codebase atlas, debug, spike, sketch, execution-wave, external-reference,
-  ship, retrospective-prevention, and golden-example workflows as routes
+  ship, retrospective-prevention, and internal golden-example workflows as routes
   through the existing owner graph
 
 Do not borrow external-system complexity as protocol core. A new workflow is a

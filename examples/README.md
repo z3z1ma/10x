@@ -45,5 +45,6 @@ learn protocol shape from examples.
 ## Adapter Fixtures
 
 `examples/adapters/` contains non-normative adapter fixture expectations.
-Those examples verify transport fidelity: where rules, skills, commands, and
-managed blocks should land for a harness. They do not define Loom semantics.
+Those examples verify transport fidelity: where bootstrap preload, skills, and
+managed adapter blocks should land for a harness. They do not define Loom
+semantics or command-wrapper product surfaces.

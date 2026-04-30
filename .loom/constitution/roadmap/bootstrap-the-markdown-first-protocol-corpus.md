@@ -3,7 +3,7 @@ id: roadmap:bootstrap-the-markdown-first-protocol-corpus
 kind: roadmap
 status: active
 created_at: 2026-04-01T17:45:00Z
-updated_at: 2026-04-22T08:50:46Z
+updated_at: 2026-04-30T17:17:21Z
 scope:
   kind: workspace
 links:
@@ -81,8 +81,8 @@ Current shipped state at the time of this roadmap update:
 - express codebase atlas, debug, spike, sketch, ship, retrospective prevention,
   execution waves, and external reference provenance as routes through existing
   owner layers
-- deepen canonical examples and golden traces so the protocol can be evaluated
-  across harnesses without a runtime
+- deepen internal examples and golden traces so maintainers can evaluate protocol
+  shape across harnesses without a runtime
 
 # Milestones
 
@@ -91,9 +91,9 @@ Current shipped state at the time of this roadmap update:
    files that actually ship and with the control-plane framing.
 
 2. Dogfooded record reconciliation
-   Reconcile canonical `.loom/` examples and support records that still use old
-   vocabulary or outdated frontmatter shape so the repository stops teaching
-   two competing models.
+   Reconcile dogfood `.loom/` records and support records that still use old
+   vocabulary or outdated frontmatter shape so the repository stops carrying two
+   competing models.
 
 3. Lifecycle grammar
    Add shared status lifecycle guidance for non-ticket records and reflect it

@@ -3,8 +3,8 @@
 Loom is a Markdown-native control plane for AI knowledge work.
 
 It is not a toolchain, runtime, daemon, model router, MCP, dashboard, or product
-CLI. Loom is a visible protocol corpus: the mandatory `loom-bootstrap` skill,
-subsystem skills, templates, references, canonical examples, and ordinary
+CLI. Loom's product surface is the visible skills corpus: the mandatory
+`loom-bootstrap` skill, subsystem skills, templates, references, and ordinary
 filesystem operations.
 
 ## Architectural Kernel
@@ -133,8 +133,9 @@ when the harness supports it cleanly, but they must not define Loom truth.
 
 ## Examples
 
-Examples are teaching fixtures, not canonical project truth. They should remain
-minimal, internally consistent, and replayable by a cold reader. A good example
+Examples are internal teaching fixtures, not product-surface guidance and not
+canonical project truth. They should remain minimal, internally consistent, and
+replayable by a cold reader. A good example
 shows the starting `.loom` slice, operator request, expected route, expected
 artifacts, final state, and common wrong behavior.
 

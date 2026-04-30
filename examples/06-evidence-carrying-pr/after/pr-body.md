@@ -31,5 +31,4 @@ The PR body must be regenerated if the acceptance dossier changes before merge.
 
 # Follow-ups
 
-- Run the ticket acceptance gate, for example via `/loom-accept ticket:pr000001`,
-  for closure.
+- Run ticket acceptance review for closure.

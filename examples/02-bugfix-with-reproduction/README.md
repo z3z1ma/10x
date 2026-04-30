@@ -8,7 +8,7 @@
 
 ## Operator Request
 
-"Investigate why `/loom-accept` closes tickets with unresolved high-severity
+"Investigate why ticket acceptance closes tickets with unresolved high-severity
 critique and fix it."
 
 ## Expected Route

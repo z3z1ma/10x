@@ -338,7 +338,7 @@ Included:
 * harness manifests and adapters where useful
 * `PROTOCOL.md`, the stable protocol summary
 * `ARCHITECTURE.md`, the implementation and package architecture notes
-* examples and fixtures for protocol behavior
+* internal examples and fixtures for maintainer review, not product-surface guidance
 
 The product surface is the skill package. The skills are the protocol in operational form.
 
@@ -377,7 +377,7 @@ The product surface is the skill package. The skills are the protocol in operati
 ├── PROTOCOL.md
 ├── ARCHITECTURE.md
 ├── AGENTS.md
-├── examples/             # golden protocol fixtures and traces, not project records
+├── examples/             # internal fixtures and traces, not product surface or project records
 ├── optional-utilities/   # helpers that do not define semantics
 └── skills/               # canonical Loom skill package
 ```

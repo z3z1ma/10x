@@ -9,4 +9,4 @@
 7. Finalize the PR body with evidence and critique references plus evidence
    limitations.
 8. Promote wiki explanation only if the route is reusable.
-9. Leave closure to the ticket acceptance gate, optionally invoked through `/loom-accept`.
+9. Leave closure to ticket acceptance review.

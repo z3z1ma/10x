@@ -3,7 +3,7 @@ id: constitution:main
 kind: constitution
 status: active
 created_at: 2026-03-31T12:00:00Z
-updated_at: 2026-04-26T07:23:57Z
+updated_at: 2026-04-30T17:17:21Z
 scope:
   kind: workspace
 links: {}
@@ -17,10 +17,10 @@ Loom is not a runtime, daemon, model router, dashboard, MCP bundle, or product
 CLI. It is a protocol that turns work into a typed artifact graph, then teaches
 agents how to mutate that graph honestly with ordinary files.
 
-The protocol core in this repository is `skills/`, including the mandatory
-`loom-bootstrap` doctrine references, plus templates, references, and the
-canonical examples that demonstrate them. Optional harness wrappers may exist,
-but they do not define Loom's ontology.
+The product surface in this repository is `skills/`, including the mandatory
+`loom-bootstrap` doctrine references, plus skill-local templates and references.
+Internal examples may visualize routes for maintainers, but they are not loaded
+product context and do not define Loom's ontology.
 
 Loom should not try to make agents smarter by stuffing more context into each
 context window. It should make the work recoverable, bounded, reviewable, and
@@ -76,6 +76,11 @@ owns that kind of truth.
   narrow prohibitions are added.
 - The repository should teach another agent what to do next, not merely warn
   about what to avoid.
+- Product-facing skills should teach positive structure, owner boundaries,
+  default routes, and done conditions rather than exhaustive counterexample
+  calibration.
+- Human operators and frontend models compose Loom from user verbs and owner
+  boundaries; the product surface should not become a giant decision tree.
 
 # Constraints
 
@@ -94,6 +99,8 @@ owns that kind of truth.
   path-local instruction file that silently outranks Loom records
 - no generated `AGENTS.md` or equivalent context adapter that defines
   independent project truth instead of pointing to Loom owner records
+- no internal example fixture treated as installed product context or normative
+  product-surface guidance
 - no helper-optimized JSON-frontmatter requirement in canonical record grammar
 - strict structural validation with soft prose validation
 - local automation should stay thin, inspectable, and subordinate to published
@@ -130,7 +137,8 @@ primitives sharper without making the system heavier in spirit:
   child write scopes
 - external reference provenance should let GitHub, Jira, Linear, and similar
   systems mirror Loom without owning Loom truth
-- golden examples should make the protocol evaluable across harnesses
+- internal examples should make the protocol evaluable across harnesses without
+  becoming product guidance
 
 Future work should keep bootstrap doctrine, skills, templates, packet contracts,
 validation behavior, and acceptance gates visible in prose and ordinary files
@@ -139,9 +147,11 @@ systems.
 
 # Current Focus
 
-- keep public docs, bootstrap doctrine, skills, templates, and examples aligned as
-  one protocol corpus
-- reconcile remaining canonical examples that still describe scripts, `docs`,
+- keep public docs, bootstrap doctrine, skills, and templates aligned as the
+  product-facing protocol corpus
+- keep internal examples consistent with that corpus without treating them as
+  product context
+- reconcile remaining internal examples that still describe scripts, `docs`,
   `runs`, `verification`, or helper-oriented frontmatter
 - prove the new lifecycle, claim coverage, packet freshness, execution wave,
   critique profile, external reference, map, debug, spike, sketch, ship, and
@@ -150,9 +160,9 @@ systems.
   optional utilities
 - harden transaction boundaries: child write scope, parent merge scope,
   packet lifecycle, evidence validity, and critique finding disposition
-- deepen durable examples across initiatives, research, specs, plans, tickets,
-  critique, wiki, packets, and evidence so the protocol is shown, not only
-  stated
+- deepen internal examples across initiatives, research, specs, plans, tickets,
+  critique, wiki, packets, and evidence so maintainers can review protocol shape
+  without expanding the product surface
 - keep native harness adapters and external systems clearly secondary to
   bootstrap doctrine, skills, and canonical records
 
@@ -226,3 +236,6 @@ coherent operating manual.
 - 2026-04-26: accepted `decision:0006`, making `skills/` the only product surface
   and removing fallback Makefile, shell installer, and top-level command-wrapper
   distribution paths.
+- 2026-04-30: accepted `decision:0007`, clarifying that product-facing skills
+  should favor positive composable structure over exhaustive counterexample
+  calibration and that internal examples are not loaded product context.
