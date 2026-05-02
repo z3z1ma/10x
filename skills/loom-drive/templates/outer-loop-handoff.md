@@ -1,7 +1,17 @@
 ---
+id: support:drive-handoff-<UTC compact timestamp>-<slug>
+kind: support-artifact
+support_kind: drive-outer-loop-handoff
 handoff_kind: outer-loop-synthesis
 parent_objective: <initiative/spec/plan/ticket id; unrecorded objective only during intake>
 status: draft
+created_at: <UTC timestamp>
+updated_at: <UTC timestamp>
+scope:
+  kind: repository
+  repositories:
+    - repo:root
+links: {}
 source_snapshot:
   compiled_at: <UTC timestamp>
   compiled_from:
@@ -22,16 +32,26 @@ context while shaping an objective, tranche, or next route. It collects a
 proposal for parent review; accepted results still land in the owning Loom
 records.
 
-This is a bounded transient/support handoff proposal. It is not a packet family,
-does not use `packet_kind`, and does not own canonical truth or live execution
-state. Its `write_scope` describes any proposal-time mutation permission the
-parent grants for this handoff; it is separate from Ralph packet
+This handoff is prompt-only by default. Save it only when the parent wants a
+durable support artifact for reviewability, context recovery, or handoff audit.
+If saved, place it under
+`.loom/support/drive-handoffs/<UTC compact timestamp>-<slug>.md` and keep the
+support-local `id`, `kind`, `support_kind`, and `handoff_kind` fields above.
+
+This is a bounded support handoff proposal. It is not a packet family, does not
+use `packet_kind`, and does not own objective state, live ticket state,
+acceptance, evidence sufficiency, critique verdicts, wiki truth, canonical truth,
+or packet lifecycle. Its `write_scope` describes any proposal-time mutation
+permission the parent grants for this handoff; it is separate from Ralph packet
 `child_write_scope` and from legacy packet `write_scope` compatibility.
 
-The frontmatter `status` is support-local proposal status for this handoff only.
-`draft` means the proposal is not yet reconciled by the parent. It is not
-canonical record truth, ticket execution state, or shared packet lifecycle status,
-and it does not participate in packet transitions such as `compiled -> consumed`.
+The frontmatter `status` is support-local proposal status for this handoff only:
+`draft` means not yet reconciled, `reconciled` means the parent reviewed it and
+moved any accepted truth into owner records, `abandoned` means it will not be
+used, and `superseded` means a later support handoff replaced it. These statuses
+are not canonical record truth, ticket execution state, or shared packet
+lifecycle status, and they do not participate in packet transitions such as
+`compiled -> consumed`.
 
 ## Parent Instructions
 

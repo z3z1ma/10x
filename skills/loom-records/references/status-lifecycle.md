@@ -59,15 +59,19 @@ Use these sets unless the owning skill records a narrower one:
 - packet: `compiled | consumed | superseded | abandoned`
 - evidence: `recorded | superseded | invalidated`
 - critique: `draft | final | superseded`
-- workspace support records: `active | superseded | retired`
+- workspace support records with `kind: workspace-support`:
+  `active | superseded | retired`
+- saved drive outer-loop handoff support artifacts:
+  `draft | reconciled | abandoned | superseded`
 - memory support files: lightweight local status is optional; when used, prefer
   retrieval-oriented values such as `active`, `stale`, `superseded`, or
   `retired`, and do not let memory status own canonical project truth, live
   execution state, evidence sufficiency, or accepted explanation. Validators
   should not require memory files to have a `status` field.
-- support handoff templates: any `status` field is template-local unless the
-  owning skill says otherwise; it does not create canonical truth, ticket state,
-  or packet lifecycle status
+- support artifacts and handoff templates: any `status` field is support-local
+  unless the owning skill says otherwise; it does not own objective state, live
+  ticket state, acceptance, evidence sufficiency, critique verdicts, wiki truth,
+  canonical truth, or packet lifecycle status
 
 ## Layer-Specific Meanings
 
@@ -76,6 +80,12 @@ Use these sets unless the owning skill records a narrower one:
 - `recorded` — evidence has captured an observation and can be cited with its stated limitations.
 - `invalidated` — evidence should no longer be used because its procedure, environment, or artifact is known to be false or obsolete.
 - `final` — critique has completed its review surface and can be consumed by ticket disposition.
+- `reconciled` — a support handoff has been reviewed by the parent and any
+  accepted content has been moved into the owner records that actually own the
+  truth.
+- `abandoned` — a support handoff or packet will not be used and no successor is
+  intended. For support artifacts, this is support-local only and does not affect
+  packet lifecycle.
 
 ## Transition Guidance
 
@@ -95,6 +105,9 @@ Prefer explicit transitions:
   longer support its claims
 - `draft -> final` when critique findings, verdict, evidence reviewed, residual
   risks, and acceptance recommendation are complete
+- support-local drive handoffs: `draft -> reconciled` after parent merge,
+  `draft -> abandoned` when not used, or `draft|reconciled -> superseded` when a
+  later handoff replaces the support artifact
 
 Do not use status as a progress log. Use the body, ticket journal, critique, or
 evidence for the details that justify the status.

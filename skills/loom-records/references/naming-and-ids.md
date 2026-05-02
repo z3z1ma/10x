@@ -4,7 +4,12 @@ Loom uses canonical IDs for reference integrity and filenames for discovery.
 
 Use both.
 
-## Canonical ID Families
+## Canonical Owner-Record ID Families
+
+These ID families belong to canonical owner records: records in owner layers that
+can own the kind of truth named by Loom's layer model. Packet IDs and
+support-local IDs may be stable enough to cite for routing, transport, recall, or
+workspace metadata, but they are not canonical truth-owner IDs.
 
 - `constitution:main`
 - `decision:0001`
@@ -17,41 +22,76 @@ Use both.
 - `critique:<slug>`
 - `wiki:<slug>`
 - `evidence:<slug>`
+
+## Stable Support And Packet ID Families
+
+These ID families may be durable and citeable, but they remain non-owner support
+grammar. They do not own objective state, live ticket state, acceptance, evidence
+sufficiency, critique verdicts, wiki truth, canonical truth, or packet lifecycle.
+
 - `packet:ralph-<target>-<UTC compact timestamp>`
 - `packet:critique-<ticket-or-change>-<UTC compact timestamp>`
 - `packet:wiki-<target>-<UTC compact timestamp>`
 - `workspace:main`
+- support-local `workspace:<slug>` such as `workspace:harness`
+- support-local `support:<domain>-<slug>`
 
 ## Current Supported Kinds, IDs, And Paths
 
-This table describes the record kinds currently supported by this corpus. It is
-not a closed global vocabulary: project-local skills may add kinds when their
-owner layer and path conventions are explicit.
+This table describes the record and support kinds currently supported by this
+corpus. It is not a closed global vocabulary: project-local skills may add kinds
+when their owner boundary and path conventions are explicit.
 
-| `kind:` | Canonical ID shape | Typical path |
-| --- | --- | --- |
-| `constitution` | `constitution:main` | `.loom/constitution/constitution.md` |
-| `decision` | `decision:0001` | `.loom/constitution/decisions/decision-0001-<slug>.md` |
-| `roadmap` | `roadmap:<slug>` | `.loom/constitution/roadmap/<slug>.md` |
-| `initiative` | `initiative:<slug>` | `.loom/initiatives/<slug>.md` |
-| `research` | `research:<slug>` | `.loom/research/<slug>.md` |
-| `spec` | `spec:<slug>` | `.loom/specs/<slug>.md` |
-| `plan` | `plan:<slug>` | `.loom/plans/<slug>.md` |
-| `ticket` | `ticket:<token>` | `.loom/tickets/<YYYYMMDD>-<token>-<short-slug>.md` |
-| `packet` with `packet_kind: ralph` | `packet:ralph-<target>-<UTC compact timestamp>` | `.loom/packets/ralph/<UTC compact timestamp>-ticket-<token>-iter-01.md` |
-| `packet` with `packet_kind: critique` | `packet:critique-<ticket-or-change>-<UTC compact timestamp>` | `.loom/packets/critique/<UTC compact timestamp>-<target>.md` |
-| `packet` with `packet_kind: wiki` | `packet:wiki-<target>-<UTC compact timestamp>` | `.loom/packets/wiki/<UTC compact timestamp>-<target>.md` |
-| `critique` | `critique:<slug>` | `.loom/critique/<slug>.md` |
-| `wiki` | `wiki:<slug>` | `.loom/wiki/<category>/<slug>.md` |
-| `evidence` | `evidence:<slug>` | `.loom/evidence/<slug>.md` |
-| `workspace` | `workspace:main` | `.loom/workspace.md` or project-local workspace support path |
-| optional `memory` support metadata | usually no canonical ID | `.loom/memory/<domain>/<memory-file>.md` |
+| `kind:` | ID shape | Authority boundary | Typical path |
+| --- | --- | --- | --- |
+| `constitution` | `constitution:main` | canonical owner record | `.loom/constitution/constitution.md` |
+| `decision` | `decision:0001` | canonical owner record | `.loom/constitution/decisions/decision-0001-<slug>.md` |
+| `roadmap` | `roadmap:<slug>` | canonical owner record | `.loom/constitution/roadmap/<slug>.md` |
+| `initiative` | `initiative:<slug>` | canonical owner record | `.loom/initiatives/<slug>.md` |
+| `research` | `research:<slug>` | canonical owner record | `.loom/research/<slug>.md` |
+| `spec` | `spec:<slug>` | canonical owner record | `.loom/specs/<slug>.md` |
+| `plan` | `plan:<slug>` | canonical owner record | `.loom/plans/<slug>.md` |
+| `ticket` | `ticket:<token>` | canonical live execution ledger | `.loom/tickets/<YYYYMMDD>-<token>-<short-slug>.md` |
+| `packet` with `packet_kind: ralph` | `packet:ralph-<target>-<UTC compact timestamp>` | non-canonical bounded contract | `.loom/packets/ralph/<UTC compact timestamp>-ticket-<token>-iter-01.md` |
+| `packet` with `packet_kind: critique` | `packet:critique-<ticket-or-change>-<UTC compact timestamp>` | non-canonical bounded contract | `.loom/packets/critique/<UTC compact timestamp>-<target>.md` |
+| `packet` with `packet_kind: wiki` | `packet:wiki-<target>-<UTC compact timestamp>` | non-canonical bounded contract | `.loom/packets/wiki/<UTC compact timestamp>-<target>.md` |
+| `critique` | `critique:<slug>` | canonical owner record | `.loom/critique/<slug>.md` |
+| `wiki` | `wiki:<slug>` | canonical owner record | `.loom/wiki/<category>/<slug>.md` |
+| `evidence` | `evidence:<slug>` | canonical owner record | `.loom/evidence/<slug>.md` |
+| `workspace` | `workspace:main` | stable workspace metadata, not canonical project truth | `.loom/workspace.md` |
+| `workspace-support` | support-local `workspace:<slug>` such as `workspace:harness` | support-local transport metadata | project-local workspace support path such as `.loom/harness.md` |
+| `support-artifact` | optional support-local `support:<domain>-<slug>` | support-local workflow metadata | `.loom/support/<domain>/<slug>.md` |
+| optional `memory` support metadata | usually no canonical ID | support-only recall metadata | `.loom/memory/<domain>/<memory-file>.md` |
 
 Memory support files are intentionally listed as support files rather than
 canonical records. They usually have no YAML frontmatter. When optional memory
 frontmatter exists, validators may see `kind: memory`, but that remains
 support-layer metadata rather than a canonical truth owner. See `frontmatter.md`
 for the memory frontmatter exception.
+
+## Support Artifact IDs And Paths
+
+Support artifacts may carry frontmatter so agents can route and reconcile them,
+but their IDs are support-local handles, not canonical owner-record IDs. A
+support artifact must not own objective state, live ticket state, acceptance,
+evidence sufficiency, critique verdicts, wiki truth, canonical truth, or packet
+lifecycle.
+
+Use the smallest explicit shape needed by the owning skill:
+
+- workspace harness profiles use `id: workspace:harness` and
+  `kind: workspace-support` in a project-local support path such as
+  `.loom/harness.md`; this documents transport mechanics only.
+- saved drive outer-loop handoffs use
+  `id: support:drive-handoff-<UTC compact timestamp>-<slug>`,
+  `kind: support-artifact`, `support_kind: drive-outer-loop-handoff`, and
+  `handoff_kind: outer-loop-synthesis` under
+  `.loom/support/drive-handoffs/<UTC compact timestamp>-<slug>.md`.
+
+Drive outer-loop handoffs are prompt-only by default. Save one only when the
+parent wants a durable support artifact for reviewability, context recovery, or
+handoff audit. Saving a handoff does not make it a packet family and does not
+give it canonical truth ownership.
 
 ## Packet Families And Route Ownership
 

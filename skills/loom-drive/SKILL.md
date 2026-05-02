@@ -62,8 +62,9 @@ contract across existing layers:
 - plan owns tranche strategy, sequencing, dependencies, and execution waves
 - tickets own live execution state, next route, blockers, scoped coverage,
   evidence disposition, critique disposition, and acceptance decisions
-- packets or handoffs own bounded child context, source snapshot, read/write
-  scope, stop conditions, and output contract
+- packets own bounded child contracts; saved drive handoffs are support artifacts
+  that may carry child context, source snapshot, proposal-time write scope, stop
+  conditions, and output contract without owning canonical truth
 - evidence, critique, and wiki own observed support, adversarial verdicts, and
   accepted explanation
 
@@ -210,8 +211,18 @@ This is transport only:
 - canonical records retain truth ownership
 - tickets retain live execution ownership
 - parent reconciliation remains mandatory before dependent work launches
-- the outer-loop handoff template is a bounded transient/support proposal, not a
-  packet family and not a truth owner
+- the outer-loop handoff template is prompt-only by default; save it only when a
+  durable support artifact is useful for reviewability, context recovery, or
+  handoff audit
+- saved outer-loop handoffs live under
+  `.loom/support/drive-handoffs/<UTC compact timestamp>-<slug>.md` with
+  `kind: support-artifact`, `support_kind: drive-outer-loop-handoff`, and
+  `handoff_kind: outer-loop-synthesis`
+- saved handoff status is support-local: `draft`, `reconciled`, `abandoned`, or
+  `superseded`; it does not own objective state, live ticket state, acceptance,
+  evidence sufficiency, critique verdicts, wiki truth, canonical truth, or packet
+  lifecycle
+- the outer-loop handoff template is not a packet family and not a truth owner
 - any handoff `write_scope` is proposal-time permission for that support
   handoff, not Ralph `child_write_scope`
 

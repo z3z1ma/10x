@@ -60,6 +60,56 @@ Ralph-governed.
 Most canonical records may also carry optional `external_refs` when outside
 systems request, mirror, package, or help navigate the work.
 
+## Support Artifact Frontmatter
+
+Support artifacts may use YAML frontmatter for routing, provenance, and parent
+reconciliation, but that metadata is support-local. It does not create a new
+canonical owner layer and must not own objective state, live ticket state,
+acceptance, evidence sufficiency, critique verdicts, wiki truth, canonical truth,
+or packet lifecycle.
+
+When a support template includes frontmatter, keep these fields explicit enough
+for ordinary search tools:
+
+```yaml
+---
+id: support:<domain>-<slug>
+kind: support-artifact
+support_kind: <skill-local support kind>
+status: draft
+created_at: <UTC timestamp>
+updated_at: <UTC timestamp>
+scope:
+  kind: repository
+  repositories:
+    - repo:root
+links: {}
+---
+```
+
+`id` is a support-local handle for support artifacts. Do not treat a support ID
+as canonical merely because the current supported-kinds table in
+`naming-and-ids.md` includes support rows; canonical owner-record ID families are
+listed separately from packet and support-local ID families there. The `kind:
+support-artifact` field is generic support metadata; use a narrower field such
+as `support_kind` or `handoff_kind` for the skill-local route.
+
+Saved drive outer-loop handoffs use this support frontmatter under
+`.loom/support/drive-handoffs/` and set:
+
+```yaml
+support_kind: drive-outer-loop-handoff
+```
+
+They are prompt-only by default and durable support artifacts only when
+intentionally saved for reviewability or context recovery.
+
+Workspace harness profiles use `id: workspace:harness` and
+`kind: workspace-support`. That record documents fresh-context invocation
+mechanics only; it does not own objective state, live ticket state, acceptance,
+evidence sufficiency, critique verdicts, wiki truth, canonical truth, packet
+contents, or packet lifecycle.
+
 ## Support-Layer Memory Exception
 
 Memory is a support recall layer, not canonical project truth. Default memory
