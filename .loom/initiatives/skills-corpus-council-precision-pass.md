@@ -1,9 +1,9 @@
 ---
 id: initiative:skills-corpus-council-precision-pass
 kind: initiative
-status: active
+status: completed
 created_at: 2026-05-02T18:58:43Z
-updated_at: 2026-05-02T18:58:43Z
+updated_at: 2026-05-02T21:44:45Z
 scope:
   kind: repository
   repositories:
@@ -24,6 +24,10 @@ links:
     - ticket:dwhand10
     - ticket:planwv11
     - ticket:cmdroute
+  evidence:
+    - evidence:skills-corpus-precision-completion
+  critique:
+    - critique:skills-corpus-precision-completion-review
 external_refs: {}
 ---
 
@@ -135,13 +139,39 @@ that could still train fresh agents to guess.
 
 # Status Summary
 
-Active. The council review has been decomposed into 12 Ralph-sized tickets. The
-agent is delegated to execute sequentially, using Ralph with fixer subagents,
-oracle critique, retrospective disposition, semantic commits, and pushes for each
-ticket before moving to the next.
+Completed. The council review was decomposed into 12 Ralph-sized tickets and each
+ticket closed with evidence, oracle critique, retrospective or promotion
+disposition, a semantic commit, and a push before the next ticket proceeded.
 
 # Completion Basis
 
-When `status: completed`, cite child tickets, evidence, oracle critique records,
-retrospective dispositions, semantic commits, pushes, accepted residual risks, and
-any follow-up tickets.
+Completed at: 2026-05-02T21:44:45Z
+
+Accepted by: OpenCode parent agent
+
+Basis:
+
+- Success metrics `OBJ-001` through `OBJ-012` are supported by the corresponding
+  closed child tickets and their linked evidence / critique records.
+- `OBJ-013` is supported by the closed child-ticket set, ticket dispositions,
+  semantic commit chain, and pushed `origin/main` state recorded in
+  `evidence:skills-corpus-precision-completion`.
+- Final oracle critique
+  `critique:skills-corpus-precision-completion-review` found no blocking issues.
+- Child-ticket commits are pushed through
+  `fe499361ac2dc93920429228ac2fbb843ad2fcd0`.
+
+Residual risks:
+
+- At closure-recording time, the parent closure bundle still needed the semantic
+  closure commit and push required by
+  `critique:skills-corpus-precision-completion-review#PRECISION-CLOSE-001`; that
+  operational finding is satisfied only when the commit carrying this record
+  reaches `origin/main`.
+- Future corpus drift remains possible because Loom intentionally uses
+  Markdown-native structural validation rather than a runtime enforcement layer.
+
+Follow-up:
+
+- Start the next council pass over `skills/` and `README.md` after this closure
+  bundle is committed and pushed.

@@ -1,9 +1,9 @@
 ---
 id: plan:skills-corpus-council-precision-pass
 kind: plan
-status: active
+status: completed
 created_at: 2026-05-02T18:58:43Z
-updated_at: 2026-05-02T18:58:43Z
+updated_at: 2026-05-02T21:44:45Z
 scope:
   kind: repository
   repositories:
@@ -24,6 +24,10 @@ links:
     - ticket:dwhand10
     - ticket:planwv11
     - ticket:cmdroute
+  evidence:
+    - evidence:skills-corpus-precision-completion
+  critique:
+    - critique:skills-corpus-precision-completion-review
 external_refs: {}
 ---
 
@@ -239,6 +243,32 @@ Stop / loopback conditions:
 
 # Completion Basis
 
-When `status: completed`, cite child tickets, evidence records, critique records,
-semantic commits, pushes, retrospective dispositions, and any follow-up tickets or
-accepted risks.
+Completed at: 2026-05-02T21:44:45Z
+
+Accepted by: OpenCode parent agent
+
+Basis:
+
+- All 12 child tickets are closed: `ticket:rtvocab1`, `ticket:supp0x2a`,
+  `ticket:retrod3p`, `ticket:authst4p`, `ticket:pktgram5`, `ticket:pktlife6`,
+  `ticket:revtgt7x`, `ticket:tmplph8x`, `ticket:evshape9`, `ticket:dwhand10`,
+  `ticket:planwv11`, and `ticket:cmdroute`.
+- Completion evidence is recorded in
+  `evidence:skills-corpus-precision-completion`.
+- Final completion critique is recorded in
+  `critique:skills-corpus-precision-completion-review`; its only finding is the
+  low packaging requirement to commit and push this parent closure bundle.
+- Child-ticket commits are pushed through
+  `fe499361ac2dc93920429228ac2fbb843ad2fcd0`.
+- Ticket retrospective / promotion disposition is complete, either in the
+  standardized section or legacy disposition prose for the earliest tickets.
+
+Residual risks:
+
+- At closure-recording time, the parent closure bundle still needed the semantic
+  closure commit and push required by
+  `critique:skills-corpus-precision-completion-review#PRECISION-CLOSE-001`; that
+  operational finding is satisfied only when the commit carrying this record
+  reaches `origin/main`.
+- Validation is structural/manual by repository design and does not prevent future
+  wording drift.
