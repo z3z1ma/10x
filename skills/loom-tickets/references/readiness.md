@@ -2,9 +2,9 @@
 
 A ticket is ready when the next governed route can proceed without chat history.
 
-Readiness is route-neutral. A ready ticket might route to a local edit, a Ralph
-implementation packet, direct critique, wiki/retrospective work, evidence
-recording, research/spec/plan refinement, or ticket acceptance review.
+Readiness is route-neutral. A ready ticket might route to `local_edit`, `ralph`,
+`critique`, `wiki`, `retrospective`, `evidence`, `research`, `spec`, `plan`, or
+`acceptance_review`.
 
 Ralph-ready is stricter: the ticket must also make one bounded implementation
 iteration, write boundary, likely verification posture, and expected output
@@ -35,9 +35,10 @@ this checklist passes.
 - the likely evidence path is visible
 - critique risk class matches frontmatter `risk_class`; required profiles are
   explicit when review is expected
-- the next route is explicit: local edit, Ralph implementation packet, direct
-  critique, wiki/retrospective pass, evidence recording, research/spec/plan
-  refinement, or ticket acceptance review
+- the next route is explicit using the shared route vocabulary: `local_edit`,
+  `ralph`, `critique`, `wiki`, `retrospective`, `evidence`, `research`, `spec`,
+  `plan`, `ticket`, `acceptance_review`, `ask_user`, `workspace_status`,
+  `records_repair`, `continue`, or `stop`
 - the ticket is small enough to fit one bounded iteration or a short sequence of
   clearly staged iterations
 
@@ -49,7 +50,11 @@ Refine the ticket first.
 Use `# Route Readiness` or equivalent prose to make the next governed route
 specific without implying that every handoff is Ralph.
 
-- For a local edit, name the bounded edit and write boundary.
+Use `skills/loom-records/references/route-vocabulary.md` for route-token grammar;
+do not use ticket lifecycle statuses such as `ready`, `active`,
+`review_required`, or `complete_pending_acceptance` as next-route values.
+
+- For `local_edit`, name the bounded edit and write boundary.
 - For Ralph, keep the stricter Ralph-ready fields: bounded iteration, write
   boundary, likely verification posture, and expected output contract.
 - For direct critique, name the review target, required profiles, and evidence to
@@ -57,5 +62,5 @@ specific without implying that every handoff is Ralph.
 - For wiki or retrospective work, name the explanation or lesson to promote and
   the owner records it should source.
 - For evidence recording, name the claim references and observation procedure.
-- For ticket acceptance review, name the evidence, critique disposition, and
+- For `acceptance_review`, name the evidence, critique disposition, and
   residual risks that the gate must evaluate.

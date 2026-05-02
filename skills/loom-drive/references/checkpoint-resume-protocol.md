@@ -32,7 +32,7 @@ hard gates: <clear | blocked, with blocker links>
 last route result: <route, output link, reconciliation target>
 last child output: <packet/handoff/evidence/critique link if applicable>
 pending operator question: <exact question or none>
-next route: <ask_user | research | spec | plan | ticket | Ralph | evidence | critique | wiki | retrospective | acceptance | stop>
+next route: <ask_user | workspace_status | records_repair | research | spec | plan | ticket | local_edit | ralph | evidence | critique | wiki | retrospective | acceptance_review | continue | stop>
 next route owner: <which owner skill/layer changes next>
 resume instruction: <one sentence a fresh parent can follow>
 updated_at: <timestamp>
@@ -60,18 +60,18 @@ rg -n 'loom-drive|objective-driven|OBJ-[0-9]{3}' .loom
 4. Read linked research/spec/plan/evidence/critique only as needed to recover the
    next route.
 5. If no checkpoint or anchor can be found, do not invent one from memory. Ask
-   the user or route to workspace/status diagnosis.
+   the user or route to `workspace_status` diagnosis.
 
 ## Hard Preflight Gates
 
-These gates run before local execution, Ralph, acceptance, dependent continuation,
+These gates run before `local_edit`, `ralph`, `acceptance_review`, dependent continuation,
 or route federation.
 
 There are two outcomes:
 
 - **repair route required**: the failed gate routes to the owner layer that can
   repair it, such as research, spec, plan, ticket refinement, evidence, critique,
-  records repair, or a user question
+  `records_repair`, or `ask_user`
 - **execution blocked**: implementation, acceptance, and dependent continuation
   must not proceed until the gate is repaired or the user explicitly accepts the
   risk in the owning ticket
@@ -92,7 +92,7 @@ repair already happened.
   unresolved medium/high findings block acceptance and dependent implementation
   that would rely on the challenged claim.
 - Write-boundary gate: child write scopes are explicit and non-overlapping unless
-  intentionally sequenced; otherwise route to plan/ticket/Ralph packet repair.
+  intentionally sequenced; otherwise route to plan/ticket/`ralph` packet repair.
 - Budget/safety gate: time, cost, privacy, security, and risk limits are not
   exceeded; otherwise ask the user or stop.
 - Resume gate: checkpoint fields are current before child launch, route handoff,
@@ -104,7 +104,7 @@ the repair route for the failed gate.
 ## Route Federation Contract
 
 Route federation means the parent may launch or sequence multiple domain routes
-under one drive, such as research, spec, plan, Ralph, critique, and wiki. It is
+under one drive, such as `research`, `spec`, `plan`, `ralph`, `critique`, and `wiki`. It is
 not parallelism by default. Repair routes may be federated only when their inputs
 and write scopes are independent.
 

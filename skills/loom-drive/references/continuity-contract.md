@@ -73,7 +73,7 @@ current tranche: <plan milestone / wave / purpose>
 active tickets: <ticket IDs and states>
 evidence state: <claim IDs with evidence links or gaps>
 critique state: <required | pending | blocking | completed | deferred | not_required, citing ticket truth>
-next route: continue | ask_user | critique | wiki | research | spec | plan | ticket | stop
+next route: ask_user | workspace_status | records_repair | research | spec | plan | ticket | local_edit | ralph | evidence | critique | wiki | retrospective | acceptance_review | continue | stop
 next route owner: <which layer must change next>
 reason: <why this follows from current owner truth>
 ```
@@ -108,7 +108,7 @@ criteria supported: <claims and evidence links>
 criteria still open: <claims or gaps>
 ticket critique disposition status: pending | blocking | completed | deferred | not_required
 finding dispositions: <qualified finding refs with resolved | accepted_risk | superseded | converted_to_follow_up, or none>
-next route: continue | ask_user | critique | wiki | research | spec | plan | ticket | stop
+next route: ask_user | workspace_status | records_repair | research | spec | plan | ticket | local_edit | ralph | evidence | critique | wiki | retrospective | acceptance_review | continue | stop
 next tranche: <ticket IDs or plan update, if known>
 reason: <why this next route follows from the records>
 ```
@@ -121,6 +121,10 @@ belong in the plan. Drive snapshots cite those owners; they do not own acceptanc
 If the next route is `continue`, the plan or ticket chain should name the next
 tranche. If the next route is `ask_user`, record the exact question and why the
 agent cannot safely infer the answer.
+
+Use `skills/loom-records/references/route-vocabulary.md` for the canonical route
+token grammar. Do not use ticket lifecycle statuses such as `review_required` or
+`complete_pending_acceptance` as `next route:` values.
 
 ## Checkpoint Before Child Work
 

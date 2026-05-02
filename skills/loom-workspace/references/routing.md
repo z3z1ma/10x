@@ -2,6 +2,9 @@
 
 Use these questions to decide the next owner layer or workflow coordinator.
 
+When recording a route field such as `next route:` or `Route:`, use the shared
+route-token grammar in `skills/loom-records/references/route-vocabulary.md`.
+
 ## Which layer owns the next truth change?
 
 - project identity, principles, constraints -> `loom-constitution`
@@ -31,7 +34,7 @@ Use these questions to decide the next owner layer or workflow coordinator.
 - codebase/module atlas work -> `loom-codemap`
 - merge, release, PR, or handoff packaging -> `loom-ship`
 - accepted learning assimilation before closure -> `loom-retrospective`
-- ticket acceptance review or closure disposition -> `loom-tickets`
+- `acceptance_review` or closure disposition -> `loom-tickets`
 - graph repair, broken links, naming, or drift -> `loom-records`
 - wiki write or audit mechanics -> `loom-wiki`
 

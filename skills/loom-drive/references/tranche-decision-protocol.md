@@ -43,7 +43,7 @@ or next-route sentence. When needed, the parent should state:
 - evidence expected from each ticket or child route
 - critique policy and required profiles
 - reassessment point after the tranche
-- stop or ask-user conditions for the tranche
+- `stop` or `ask_user` conditions for the tranche
 
 Prefer one to three tickets for a normal tranche. More is allowed only when the
 plan proves the tickets are independent and the parent can still reconcile the
@@ -57,18 +57,20 @@ ticket or operator explicitly records a different rationale.
 
 | Condition | Next route |
 | --- | --- |
-| Product direction, autonomy, risk, budget, or success meaning is materially unclear | ask user |
-| The workspace or owner chain is untrustworthy | workspace/records repair |
-| Evidence is missing for a decision or option | research |
-| Intended behavior or acceptance is ambiguous | spec |
-| Sequencing, dependency order, or tranche boundary is ambiguous | plan |
-| No bounded live execution owner exists for the next mutation | ticket |
-| A ticket is ready and work is tiny, local, and safe | local edit |
-| A ticket is Ralph-ready or needs fresh bounded context | Ralph |
-| Observed support or challenge needs durable preservation | evidence |
-| Risk, protocol authority, code behavior, or acceptance sufficiency needs review | critique |
-| Accepted explanation should persist for future agents | wiki or retrospective |
-| Objective criteria are satisfied and required evidence/critique/wiki disposition is complete | acceptance / stop |
+| Product direction, autonomy, risk, budget, or success meaning is materially unclear | `ask_user` |
+| The workspace is untrustworthy | `workspace_status` |
+| The owner chain has broken, stale, or contradictory records | `records_repair` |
+| Evidence is missing for a decision or option | `research` |
+| Intended behavior or acceptance is ambiguous | `spec` |
+| Sequencing, dependency order, or tranche boundary is ambiguous | `plan` |
+| No bounded live execution owner exists for the next mutation | `ticket` |
+| A ticket is ready and work is tiny, local, and safe | `local_edit` |
+| A ticket is Ralph-ready or needs fresh bounded context | `ralph` |
+| Observed support or challenge needs durable preservation | `evidence` |
+| Risk, protocol authority, code behavior, or acceptance sufficiency needs review | `critique` |
+| Accepted explanation should persist for future agents | `wiki` or `retrospective` |
+| Ticket-owned closure readiness needs evaluation | `acceptance_review` |
+| Objective criteria are satisfied and no owner work remains | `stop` |
 
 This table prevents implementation from becoming the default answer. Shaping and
 review routes are first-class continuation outcomes.
@@ -89,6 +91,8 @@ review routes are first-class continuation outcomes.
 
 Every route result must name the owner records that changed and the next route or
 stop condition.
+
+Use `skills/loom-records/references/route-vocabulary.md` for route-token grammar.
 
 ## Reconciliation Targets
 

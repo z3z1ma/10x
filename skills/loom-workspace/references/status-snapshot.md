@@ -20,7 +20,9 @@ acceptance, suspicious, or ready for the next bounded move.
    `complete_pending_acceptance`.
 4. For the target slice, note linked owners and support records.
 5. Surface contradictions and drift.
-6. Recommend the next owner layer, workflow, or optional command.
+6. Recommend the next owner layer, workflow, or optional command. When naming a
+   route value, use the shared tokens from
+   `skills/loom-records/references/route-vocabulary.md`.
 
 ## Cold-Start And Post-Compaction Resume Route
 
@@ -107,6 +109,8 @@ work. They still do not replace the owner update needed for a truthful resume.
 - plan is tracking live execution state
 - wiki or memory is carrying owner truth
 - packet remains `compiled` after the child output has returned
+- next-route fields use ticket lifecycle statuses such as `review_required` or
+  command/adapter names instead of route tokens
 
 ## Native Queries
 

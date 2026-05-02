@@ -164,7 +164,7 @@ boundaries.
    objective clarity, and workspace trust exist to drive rather than merely plan
    or ask questions.
 1. **Shape the objective** — decide whether the request needs an initiative,
-   research, spec, plan, ticket, or a smaller local route.
+   `research`, `spec`, `plan`, `ticket`, or `local_edit` route.
 2. **Record owner truth** — create or refine the initiative for outcome and
    metrics; add research, spec, or plan records only when those layers own missing
    evidence, behavior, or sequencing truth.
@@ -180,10 +180,10 @@ boundaries.
    next move, critique disposition, acceptance decisions, evidence disposition,
    and closure.
 6. **Run preflight gates** — distinguish repair/shaping routes from execution
-   routes. Failed gates route to their owner repair path; they block local edits,
-   Ralph, acceptance, and dependent continuation until repaired.
-7. **Execute bounded work** — use local edits for tiny safe changes, Ralph for
-   fresh-context implementation, and domain skills for critique/wiki/research
+   routes. Failed gates route to their owner repair path; they block `local_edit`,
+   `ralph`, `acceptance_review`, and dependent continuation until repaired.
+7. **Execute bounded work** — use `local_edit` for tiny safe changes, `ralph` for
+   fresh-context implementation, and domain skills for `critique`/`wiki`/`research`
    packetization. Declare read/write scope and stop conditions before child work.
 8. **Reconcile results** — inspect child output, update ticket truth, route
    observations into evidence, findings into critique, accepted explanation into
@@ -265,21 +265,23 @@ Read immediately when activating `loom-drive`:
    summaries, optional tranche detail, route priority, and reconciliation targets.
 4. `references/checkpoint-resume-protocol.md` for hard safety gates, route
    federation, checkpoint updates, and deterministic resume.
-5. `skills/loom-workspace/references/routing.md` if the next owner layer or
+5. `skills/loom-records/references/route-vocabulary.md` when writing checkpoint,
+   resume, handoff, or route-readiness route fields.
+6. `skills/loom-workspace/references/routing.md` if the next owner layer or
    workflow coordinator is still unclear.
 
 Then read conditionally:
 
-6. `skills/loom-initiatives/SKILL.md` when creating or refining the objective and
+7. `skills/loom-initiatives/SKILL.md` when creating or refining the objective and
     success metrics.
-7. `skills/loom-research/SKILL.md`, `skills/loom-specs/SKILL.md`, or
+8. `skills/loom-research/SKILL.md`, `skills/loom-specs/SKILL.md`, or
     `skills/loom-plans/SKILL.md` when evidence, intended behavior, or sequencing
     is missing.
-8. `skills/loom-tickets/SKILL.md` before creating, advancing, or accepting
+9. `skills/loom-tickets/SKILL.md` before creating, advancing, or accepting
     bounded execution work.
-9. `skills/loom-ralph/SKILL.md` before packetized implementation execution.
-10. `skills/loom-evidence/SKILL.md`, `skills/loom-critique/SKILL.md`,
+10. `skills/loom-ralph/SKILL.md` before packetized implementation execution.
+11. `skills/loom-evidence/SKILL.md`, `skills/loom-critique/SKILL.md`,
     `skills/loom-wiki/SKILL.md`, or `skills/loom-retrospective/SKILL.md` when
     observations, review, accepted explanation, or learning assimilation is next.
-11. `templates/outer-loop-handoff.md` only when launching an optional bounded
+12. `templates/outer-loop-handoff.md` only when launching an optional bounded
     outer-loop synthesis subagent.

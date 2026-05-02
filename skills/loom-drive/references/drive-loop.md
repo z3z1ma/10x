@@ -22,7 +22,7 @@ bounded routes.
 The parent should know which state it is in before acting:
 
 ```text
-intake -> objective-contract -> owner-shaping -> tranche-planning -> ticket-execution -> reconciliation -> reassessment -> continuation | ask-user | stop
+intake -> objective-contract -> owner-shaping -> tranche-planning -> ticket-execution -> reconciliation -> reassessment -> continuation | ask_user | stop
 ```
 
 - `intake`: decide whether the request is actually drive-shaped.
@@ -30,13 +30,13 @@ intake -> objective-contract -> owner-shaping -> tranche-planning -> ticket-exec
   stop conditions.
 - `owner-shaping`: create or refine initiative/research/spec/plan truth.
 - `tranche-planning`: slice only the next useful bounded work set.
-- `ticket-execution`: advance tickets through local edit, Ralph, critique,
-  evidence, wiki, or acceptance routes.
+- `ticket-execution`: advance tickets through `local_edit`, `ralph`, `critique`,
+  `evidence`, `wiki`, or `acceptance_review` routes.
 - `reconciliation`: update ticket truth and any owner records affected by the
   result.
 - `reassessment`: compare current state against the objective contract.
 - `continuation`: create the next tranche or choose the next route.
-- `ask-user`: pause for a focused decision the agent cannot safely infer.
+- `ask_user`: pause for a focused decision the agent cannot safely infer.
 - `stop`: objective satisfied, blocked, unsafe, over budget, or outside authority.
 
 Before `ticket-execution`, run the hard preflight gates in
@@ -55,7 +55,7 @@ Ask what the user actually requested:
   criteria, then drive through this loop.
 - **Existing initiative continuation**: read the initiative/plan/ticket chain,
   identify the next unmet objective gap, and create or advance the next tranche.
-- **Single bounded task**: route directly to ticket/local edit/Ralph instead of
+- **Single bounded task**: route directly to `ticket`, `local_edit`, or `ralph` instead of
   using the full drive loop.
 - **Unknown evidence or behavior**: route to research or spec shaping before
   creating execution tickets.
@@ -147,6 +147,10 @@ before launching dependent work.
 When several routes are possible, apply the route decision priority from
 `tranche-decision-protocol.md` instead of selecting the most implementation-like
 route by habit.
+
+Use canonical route tokens from
+`skills/loom-records/references/route-vocabulary.md` when recording route fields;
+ordinary prose may still use workflow names such as Ralph.
 
 When several child routes can run independently, treat that as route federation:
 each child gets a bounded route contract, non-overlapping write scope, output

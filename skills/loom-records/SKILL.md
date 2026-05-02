@@ -29,6 +29,7 @@ It is the place to consult when you need to know:
 - typed link conventions
 - semantic link usage and relationship routing
 - external reference provenance
+- route vocabulary for checkpoint, resume, handoff, and route-readiness fields
 - implementation reality boundaries for software work
 - change class taxonomy for routing evidence and critique
 - reference reconciliation discipline
@@ -121,6 +122,8 @@ Then read conditionally:
 10. `references/validation.md` when checking structural record health.
 11. `references/repair-and-drift.md` when graph drift needs classification or
     safe repair.
-12. `references/retrospective.md` when assimilating durable learning into owner
+12. `references/route-vocabulary.md` when checkpoint, resume, handoff, or
+    route-readiness examples need shared route tokens.
+13. `references/retrospective.md` when assimilating durable learning into owner
     layers.
-13. `skills/loom-evidence/SKILL.md` when creating or validating evidence artifacts.
+14. `skills/loom-evidence/SKILL.md` when creating or validating evidence artifacts.

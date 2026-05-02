@@ -1,11 +1,11 @@
 ---
 id: ticket:rtvocab1
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T18:58:43Z
-updated_at: 2026-05-02T18:58:43Z
+updated_at: 2026-05-02T19:15:17Z
 scope:
   kind: repository
   repositories:
@@ -15,6 +15,12 @@ links:
     - initiative:skills-corpus-council-precision-pass
   plan:
     - plan:skills-corpus-council-precision-pass
+  packet:
+    - packet:ralph-ticket-rtvocab1-20260502T190248Z
+  evidence:
+    - evidence:route-vocabulary-validation
+  critique:
+    - critique:route-vocabulary-review
 external_refs: {}
 depends_on: []
 ---
@@ -70,8 +76,12 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-council-precision-pass#OBJ-001` | pending | pending | open |
-| `ticket:rtvocab1#ACC-001` through `ticket:rtvocab1#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-council-precision-pass#OBJ-001` | `evidence:route-vocabulary-validation` | `critique:route-vocabulary-review` with finding resolved and re-check passed | supported |
+| `ticket:rtvocab1#ACC-001` | `evidence:route-vocabulary-validation` | `critique:route-vocabulary-review` | supported |
+| `ticket:rtvocab1#ACC-002` | `evidence:route-vocabulary-validation` | `critique:route-vocabulary-review` | supported |
+| `ticket:rtvocab1#ACC-003` | `evidence:route-vocabulary-validation` | `critique:route-vocabulary-review` | supported |
+| `ticket:rtvocab1#ACC-004` | `evidence:route-vocabulary-validation` | `critique:route-vocabulary-review` | supported |
+| `ticket:rtvocab1#ACC-005` | `critique:route-vocabulary-review` | `critique:route-vocabulary-review#RTVOCAB1-FIND-001` resolved and oracle re-check passed with no findings | supported |
 
 # Execution Notes
 
@@ -84,27 +94,28 @@ None.
 
 # Next Move / Next Route
 
-Ralph implementation packet.
+Closed. Commit and push this ticket before continuing to `ticket:supp0x2a`.
 
 # Route Readiness
 
-Route: Ralph implementation packet
+Route: acceptance_review
 
-Ralph readiness, required only when the next route is Ralph:
+Ralph readiness: N/A - implementation iteration completed.
 
-Bounded iteration: normalize shared route vocabulary and update direct downstream
-uses.
-Write boundary: `skills/loom-records/**`, `skills/loom-drive/**`,
-`skills/loom-tickets/**`, `skills/loom-workspace/**`, this ticket, one evidence
-record, one critique record, and one Ralph packet.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, before/after route-token searches,
-evidence, ticket update, and critique recommendation.
+Direct critique readiness:
+N/A - mandatory oracle critique and re-check passed.
+
+Acceptance review readiness:
+Evidence and critique disposition: `evidence:route-vocabulary-validation` and
+`critique:route-vocabulary-review` support acceptance with no remaining findings.
+Residual risks: future route-bearing edits outside this scope should cite or
+extend `skills/loom-records/references/route-vocabulary.md`.
 
 # Evidence
 
-Expected: targeted route-token searches, manual comparison of shared route grammar
-against downstream examples, and `git diff --check`.
+Recorded: `evidence:route-vocabulary-validation` with targeted before/after
+route-token searches, manual comparison of shared route grammar against
+downstream examples, and `git diff --check`.
 
 # Critique Disposition
 
@@ -123,24 +134,35 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+Recorded in `critique:route-vocabulary-review`:
 
-Disposition status: pending
+- `critique:route-vocabulary-review#RTVOCAB1-FIND-001` - resolved by packet
+  lifecycle reconciliation.
+
+Disposition status: completed
 
 Deferral / not-required rationale:
 
-Not deferred.
+Not deferred. Oracle critique and re-check passed with no remaining findings.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+Retrospective / promotion disposition complete. Durable route-vocabulary learning
+was promoted directly into `skills/loom-records/references/route-vocabulary.md`
+and linked from downstream drive, ticket, and workspace owner surfaces. No
+separate wiki page, research record, spec, constitution decision, or memory entry
+is needed for this ticket.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-02T19:15:17Z
+Basis: Ralph packet `packet:ralph-ticket-rtvocab1-20260502T190248Z`; evidence
+`evidence:route-vocabulary-validation`; oracle critique
+`critique:route-vocabulary-review` with `RTVOCAB1-FIND-001` resolved and final
+re-check passing with no findings.
+Residual risks: route-bearing edits outside this ticket's scoped surfaces should
+cite or extend the shared route vocabulary rather than inventing local tokens.
 
 # Dependencies
 
@@ -149,3 +171,16 @@ None.
 # Journal
 
 - 2026-05-02T18:58:43Z: Created from council finding `CR-001`.
+- 2026-05-02T19:02:48Z: Started Ralph iteration
+  `packet:ralph-ticket-rtvocab1-20260502T190248Z` from baseline
+  `86b74e39009eb4eeec4722bec9799f4bbc12705b`.
+- 2026-05-02T19:05:00Z: Ralph child normalized route vocabulary, recorded
+  `evidence:route-vocabulary-validation`, and moved ticket to `review_required`
+  for mandatory oracle critique. Do not close until `ticket:rtvocab1#ACC-005`
+  is satisfied and critique findings are dispositioned.
+- 2026-05-02T19:13:21Z: Oracle critique found packet lifecycle reconciliation
+  issue `RTVOCAB1-FIND-001`. Parent marked packet
+  `packet:ralph-ticket-rtvocab1-20260502T190248Z` consumed and recorded critique;
+  final oracle re-check remains next.
+- 2026-05-02T19:15:17Z: Oracle re-check passed with no findings. Recorded
+  acceptance and retrospective disposition; closed ticket.

@@ -78,24 +78,25 @@ Named blockers only. If none exist, write `None`.
 
 # Next Move / Next Route
 
-The next governed route: local edit, Ralph implementation packet, direct
-critique, wiki/retrospective pass, evidence recording, research/spec/plan
-refinement, or ticket acceptance review.
+The next governed route token, using `skills/loom-records/references/route-vocabulary.md`:
+`ask_user`, `workspace_status`, `records_repair`, `research`, `spec`, `plan`,
+`ticket`, `local_edit`, `ralph`, `evidence`, `critique`, `wiki`,
+`retrospective`, `acceptance_review`, `continue`, or `stop`.
 
 # Route Readiness
 
 Name the next governed route and the information needed for that route. Use only
 the route sections that apply; remove or mark unrelated sections `N/A`.
 
-Route: local edit | Ralph implementation packet | direct critique |
-wiki/retrospective pass | evidence recording | research/spec/plan refinement |
-ticket acceptance review
+Route: ask_user | workspace_status | records_repair | research | spec | plan |
+ticket | local_edit | ralph | evidence | critique | wiki | retrospective |
+acceptance_review | continue | stop
 
 Local edit readiness:
 Bounded edit:
 Write boundary:
 
-Ralph readiness, required only when the next route is Ralph:
+Ralph readiness, required only when the next route is `ralph`:
 
 Bounded iteration:
 Write boundary:
