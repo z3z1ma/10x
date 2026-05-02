@@ -5,7 +5,7 @@ status: ready
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T09:28:53Z
 scope:
   kind: repository
   repositories:
@@ -84,14 +84,14 @@ Loom truth, and how to avoid clobbering another actor's changes.
 
 Covers:
 
-- `initiative:skills-corpus-protocol-sharpening` OBJ-003
+- `initiative:skills-corpus-protocol-sharpening#OBJ-003`
 - `research:skills-corpus-council-review#CLAIM-007`
 
 # Claim Matrix
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-003 | implementation evidence pending | critique recommended | open |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-003` | implementation evidence pending | critique recommended | open |
 | `research:skills-corpus-council-review#CLAIM-007` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | critique recommended | supported_pending_review |
 
 # Execution Notes

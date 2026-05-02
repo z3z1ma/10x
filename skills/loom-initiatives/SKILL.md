@@ -17,8 +17,9 @@ They are the place where the project says, "this cross-cutting result matters en
 
 - initiative records
 - strategic objectives
+- stable `OBJ-*` objective criteria under success metrics
 - milestone framing
-- success metrics
+- success metrics and objective ownership
 - explicit downstream execution graph
 
 ## Milestone Boundary
@@ -49,6 +50,7 @@ A strong initiative answers:
 - what outcome is being pursued
 - why now
 - how success will be recognized
+- which stable `OBJ-*` criteria downstream work may cite
 - what milestones matter
 - which plans, specs, research, and tickets execute it
 

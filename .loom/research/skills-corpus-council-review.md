@@ -3,7 +3,7 @@ id: research:skills-corpus-council-review
 kind: research
 status: concluded
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T09:34:11Z
 scope:
   kind: repository
   repositories:
@@ -171,15 +171,14 @@ tickets should produce higher-quality changes and cleaner acceptance dossiers.
 - Preserve any stable findings from critique as follow-up tickets or accepted
   risks instead of burying them in prose.
 
-# Open Questions
+# Open Questions And Resolutions
 
-- Should `OBJ-*` coverage use `initiative:skills-corpus-protocol-sharpening#OBJ-001`
-  syntax, the existing prose style `initiative:skills-corpus-protocol-sharpening`
-  `OBJ-001`, or both during a transition?
+- Resolved by `ticket:4e8ebe92`: `OBJ-*` coverage uses qualified
+  `initiative:<slug>#OBJ-001` references.
 - Should `loom-drive/templates/outer-loop-handoff.md` become a frontmatter-bearing
   support artifact, a packet family, or remain a transient handoff template?
-- Which `kind:` values should be treated as closed vocabulary versus examples of
-  current corpus usage?
+- Resolved by `ticket:4e8ebe92`: `kind:` values in `loom-records` are current
+  supported corpus usage, not a closed global vocabulary.
 - Should ticket `change_class` and `risk_class` become mandatory for every new
   ticket, or only for tickets where evidence/critique posture depends on them?
 - Should cold-start resume be taught only in `loom-workspace`, or also summarized

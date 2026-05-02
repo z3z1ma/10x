@@ -5,7 +5,7 @@ status: cancelled
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T09:34:11Z
 scope:
   kind: repository
   repositories:
@@ -135,10 +135,8 @@ let become a second ledger.
 
 - Update `skills/loom-records/references/claim-coverage.md` to teach `OBJ-*`
   objective coverage if the corpus continues using initiative objective IDs.
-- Decide and document whether cross-record objective references should be written
-  as `initiative:skills-corpus-protocol-sharpening#OBJ-001`, as
-  `initiative:skills-corpus-protocol-sharpening` `OBJ-001`, or both during a
-  transition.
+- Decide and document cross-record objective references. Resolved by successor
+  ticket `ticket:4e8ebe92` as `initiative:<slug>#OBJ-001`.
 - Update `skills/loom-initiatives/**` as needed so initiative objective criteria
   are explicitly owned there while tickets own in-scope coverage and closure
   disposition.
@@ -368,11 +366,11 @@ let become a second ledger.
 
 Covers:
 
-- `initiative:skills-corpus-protocol-sharpening` OBJ-001
-- `initiative:skills-corpus-protocol-sharpening` OBJ-002
-- `initiative:skills-corpus-protocol-sharpening` OBJ-003
-- `initiative:skills-corpus-protocol-sharpening` OBJ-004
-- `initiative:skills-corpus-protocol-sharpening` OBJ-005
+- `initiative:skills-corpus-protocol-sharpening#OBJ-001`
+- `initiative:skills-corpus-protocol-sharpening#OBJ-002`
+- `initiative:skills-corpus-protocol-sharpening#OBJ-003`
+- `initiative:skills-corpus-protocol-sharpening#OBJ-004`
+- `initiative:skills-corpus-protocol-sharpening#OBJ-005`
 - `research:skills-corpus-council-review#CLAIM-001`
 - `research:skills-corpus-council-review#CLAIM-002`
 - `research:skills-corpus-council-review#CLAIM-003`
@@ -387,11 +385,11 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-001 | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | open |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-002 | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | open |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-003 | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | open |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-004 | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | open |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-005 | `evidence:skills-corpus-council-review` supports critique requirement; implementation evidence pending | mandatory critique pending | open |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-001` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | open |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-002` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | open |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-003` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | open |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-004` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | open |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-005` | `evidence:skills-corpus-council-review` supports critique requirement; implementation evidence pending | mandatory critique pending | open |
 | `research:skills-corpus-council-review#CLAIM-001` | `evidence:skills-corpus-council-review` | mandatory critique pending | supported_pending_review |
 | `research:skills-corpus-council-review#CLAIM-002` | `evidence:skills-corpus-council-review` | mandatory critique pending | supported_pending_review |
 | `research:skills-corpus-council-review#CLAIM-003` | `evidence:skills-corpus-council-review` | mandatory critique pending | supported_pending_review |

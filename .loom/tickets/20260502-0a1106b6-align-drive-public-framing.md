@@ -5,7 +5,7 @@ status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T09:13:27Z
+updated_at: 2026-05-02T09:28:53Z
 scope:
   kind: repository
   repositories:
@@ -95,7 +95,7 @@ surface and does not mis-teach the basic Loom route.
 
 Covers:
 
-- `initiative:skills-corpus-protocol-sharpening` OBJ-001
+- `initiative:skills-corpus-protocol-sharpening#OBJ-001`
 - `research:skills-corpus-council-review#CLAIM-002`
 - `research:skills-corpus-council-review#CLAIM-003`
 
@@ -103,7 +103,7 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-001 | `evidence:public-drive-framing-validation` | `critique:public-drive-framing-review` | supported |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-001` | `evidence:public-drive-framing-validation` | `critique:public-drive-framing-review` | supported |
 | `research:skills-corpus-council-review#CLAIM-002` | `evidence:skills-corpus-council-review`; `evidence:public-drive-framing-validation` | `critique:public-drive-framing-review` | supported |
 | `research:skills-corpus-council-review#CLAIM-003` | `evidence:skills-corpus-council-review`; `evidence:public-drive-framing-validation` | `critique:public-drive-framing-review` | supported |
 

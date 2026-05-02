@@ -29,7 +29,10 @@ What does not belong here.
 
 # Success Metrics
 
-How success should be judged.
+How success should be judged. Use stable `OBJ-*` IDs when downstream work needs
+to cite objective criteria.
+
+- OBJ-001: Replace with one durable objective criterion.
 
 # Milestones
 
@@ -46,7 +49,9 @@ What could prevent success or distort the effort.
 
 # Linked Work
 
-Which research, specs, plans, and tickets carry this initiative forward.
+Which research, specs, plans, and tickets carry this initiative forward. Tickets
+may cite `initiative:<slug>#OBJ-001` for scoped coverage, but ticket acceptance
+and closure stay ticket-owned.
 
 # Status Summary
 

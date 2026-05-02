@@ -3,7 +3,7 @@ id: evidence:memory-support-layer-validation
 kind: evidence
 status: recorded
 created_at: 2026-04-30T08:26:34Z
-updated_at: 2026-04-30T08:32:59Z
+updated_at: 2026-05-02T09:34:11Z
 scope:
   kind: repository
   repositories:
@@ -61,10 +61,10 @@ Inspected the changed memory product surface and ran targeted structural checks:
 - `spec:memory-support-layer-contract#ACC-004`
 - `spec:memory-support-layer-contract#ACC-005`
 - `spec:memory-support-layer-contract#ACC-006`
-- `initiative:sharpen-memory-support-layer` OBJ-001
-- `initiative:sharpen-memory-support-layer` OBJ-002
-- `initiative:sharpen-memory-support-layer` OBJ-003
-- `initiative:sharpen-memory-support-layer` OBJ-004
+- `initiative:sharpen-memory-support-layer#OBJ-001`
+- `initiative:sharpen-memory-support-layer#OBJ-002`
+- `initiative:sharpen-memory-support-layer#OBJ-003`
+- `initiative:sharpen-memory-support-layer#OBJ-004`
 
 # Challenges Claims
 

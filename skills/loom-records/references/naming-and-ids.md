@@ -17,8 +17,41 @@ Use both.
 - `critique:<slug>`
 - `wiki:<slug>`
 - `evidence:<slug>`
-- `packet:ralph-ticket-<token>-<UTC compact timestamp>`
+- `packet:ralph-<target>-<UTC compact timestamp>`
+- `packet:critique-<ticket-or-change>-<UTC compact timestamp>`
+- `packet:wiki-<target>-<UTC compact timestamp>`
 - `workspace:main`
+
+## Current Supported Kinds, IDs, And Paths
+
+This table describes the record kinds currently supported by this corpus. It is
+not a closed global vocabulary: project-local skills may add kinds when their
+owner layer and path conventions are explicit.
+
+| `kind:` | Canonical ID shape | Typical path |
+| --- | --- | --- |
+| `constitution` | `constitution:main` | `.loom/constitution/constitution.md` |
+| `decision` | `decision:0001` | `.loom/constitution/decisions/decision-0001-<slug>.md` |
+| `roadmap` | `roadmap:<slug>` | `.loom/constitution/roadmap/<slug>.md` |
+| `initiative` | `initiative:<slug>` | `.loom/initiatives/<slug>.md` |
+| `research` | `research:<slug>` | `.loom/research/<slug>.md` |
+| `spec` | `spec:<slug>` | `.loom/specs/<slug>.md` |
+| `plan` | `plan:<slug>` | `.loom/plans/<slug>.md` |
+| `ticket` | `ticket:<token>` | `.loom/tickets/<YYYYMMDD>-<token>-<short-slug>.md` |
+| `packet` with `packet_kind: ralph` | `packet:ralph-<target>-<UTC compact timestamp>` | `.loom/packets/ralph/<UTC compact timestamp>-ticket-<token>-iter-01.md` |
+| `packet` with `packet_kind: critique` | `packet:critique-<ticket-or-change>-<UTC compact timestamp>` | `.loom/packets/critique/<UTC compact timestamp>-<target>.md` |
+| `packet` with `packet_kind: wiki` | `packet:wiki-<target>-<UTC compact timestamp>` | `.loom/packets/wiki/<UTC compact timestamp>-<target>.md` |
+| `critique` | `critique:<slug>` | `.loom/critique/<slug>.md` |
+| `wiki` | `wiki:<slug>` | `.loom/wiki/<category>/<slug>.md` |
+| `evidence` | `evidence:<slug>` | `.loom/evidence/<slug>.md` |
+| `workspace` | `workspace:main` | `.loom/workspace.md` or project-local workspace support path |
+| optional `memory` support metadata | usually no canonical ID | `.loom/memory/<domain>/<memory-file>.md` |
+
+Memory support files are intentionally listed as support files rather than
+canonical records. They usually have no YAML frontmatter. When optional memory
+frontmatter exists, validators may see `kind: memory`, but that remains
+support-layer metadata rather than a canonical truth owner. See `frontmatter.md`
+for the memory frontmatter exception.
 
 ## Filename Guidance
 
@@ -45,6 +78,8 @@ The ticket's canonical ID should be only the token:
 Use timestamp + subsystem + target:
 
 - `.loom/packets/ralph/<UTC compact timestamp>-ticket-<token>-iter-01.md`
+- `.loom/packets/critique/<UTC compact timestamp>-<target>.md`
+- `.loom/packets/wiki/<UTC compact timestamp>-<target>.md`
 
 ### Decisions
 

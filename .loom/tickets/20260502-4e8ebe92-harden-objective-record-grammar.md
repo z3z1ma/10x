@@ -1,11 +1,11 @@
 ---
 id: ticket:4e8ebe92
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T09:39:09Z
 scope:
   kind: repository
   repositories:
@@ -19,6 +19,11 @@ links:
     - research:skills-corpus-council-review
   evidence:
     - evidence:skills-corpus-council-review
+    - evidence:shared-record-grammar-validation
+  critique:
+    - critique:shared-record-grammar-review
+  packet:
+    - packet:ralph-ticket-4e8ebe92-20260502T091549Z
   plan:
     - plan:skills-corpus-protocol-sharpening
   supersedes:
@@ -92,7 +97,7 @@ consolidation slices a stable record-grammar owner to cite.
 
 Covers:
 
-- `initiative:skills-corpus-protocol-sharpening` OBJ-002
+- `initiative:skills-corpus-protocol-sharpening#OBJ-002`
 - `research:skills-corpus-council-review#CLAIM-005`
 - `research:skills-corpus-council-review#CLAIM-007`
 
@@ -100,9 +105,9 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-002 | implementation evidence pending | mandatory critique pending | open |
-| `research:skills-corpus-council-review#CLAIM-005` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | supported_pending_review |
-| `research:skills-corpus-council-review#CLAIM-007` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | supported_pending_review |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-002` | `evidence:shared-record-grammar-validation` | `critique:shared-record-grammar-review` | supported |
+| `research:skills-corpus-council-review#CLAIM-005` | `evidence:skills-corpus-council-review`; `evidence:shared-record-grammar-validation` | `critique:shared-record-grammar-review` | supported |
+| `research:skills-corpus-council-review#CLAIM-007` | `evidence:skills-corpus-council-review`; `evidence:shared-record-grammar-validation` | `critique:shared-record-grammar-review` | supported |
 
 # Execution Notes
 
@@ -145,12 +150,14 @@ Expected output contract:
 
 # Evidence
 
-Expected:
+Recorded:
 
-- `git diff --check`
-- coverage-ID grep checks for records and initiatives
-- kind/ID/path, external reference, and semantic-link grep checks
-- manual comparison against this ticket's acceptance criteria
+- `evidence:shared-record-grammar-validation`
+- `git diff --check` passed with no output.
+- Targeted searches confirmed `OBJ-*` grammar, current supported kind/ID/path
+  guidance, memory frontmatter/status exceptions, semantic link and external ref
+  guidance, and ordinary query recipes.
+- Legacy split objective-reference grep returned no files after reconciliation.
 
 # Critique Disposition
 
@@ -171,29 +178,36 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+All findings resolved in `critique:shared-record-grammar-review`.
 
-Disposition status: pending
+Disposition status: complete
 
 Deferral / not-required rationale:
 
-None. Critique is mandatory.
+Not deferred. Mandatory critique is recorded in
+`critique:shared-record-grammar-review`.
 
 # Wiki Disposition
 
-Pending. If the selected objective coverage grammar becomes a durable operator
-concept beyond the reference text, consider wiki promotion during final
-retrospective.
+Deferred intentionally. Retrospective promoted the settled grammar into the owning
+product references and reconciled the research question; no separate wiki page is
+needed for this ticket. Final integration review may still choose broader wiki
+promotion if the full sharpening pass creates reusable explanation beyond the
+skills corpus.
 
 # Acceptance Decision
 
-Accepted by:
+Accepted by: OpenCode parent agent
 
-Accepted at:
+Accepted at: 2026-05-02T09:39:09Z
 
-Basis:
+Basis: Ralph packet `packet:ralph-ticket-4e8ebe92-20260502T091549Z`, validation
+evidence `evidence:shared-record-grammar-validation`, and final oracle critique
+`critique:shared-record-grammar-review` with all findings resolved.
 
-Residual risks:
+Residual risks: `kind:` table is current supported corpus usage, not a closed
+global vocabulary. Packet family details may be further sharpened by
+`ticket:0cd38381` if packet-specific grammar work needs more precision.
 
 # Dependencies
 
@@ -203,3 +217,10 @@ Residual risks:
 
 - 2026-05-02T08:46:28Z: Split from cancelled broad ticket `ticket:3uv5l5fh` as
   the shared record-grammar slice.
+- 2026-05-02T09:15:49Z: Started Ralph iteration
+  `packet:ralph-ticket-4e8ebe92-20260502T091549Z` for shared record and objective
+  grammar.
+- 2026-05-02T09:39:09Z: Accepted and closed after Ralph implementation,
+  structural validation, oracle critique, resolved grammar findings, objective
+  reference reconciliation, and retrospective disposition. No ticket-scoped
+  follow-up remains.

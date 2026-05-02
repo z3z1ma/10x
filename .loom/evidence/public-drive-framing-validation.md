@@ -3,7 +3,7 @@ id: evidence:public-drive-framing-validation
 kind: evidence
 status: recorded
 created_at: 2026-05-02T09:13:27Z
-updated_at: 2026-05-02T09:13:27Z
+updated_at: 2026-05-02T09:28:53Z
 scope:
   kind: repository
   repositories:
@@ -91,7 +91,7 @@ Grep bootstrap routing reference
 - `ticket:0a1106b6` ACC-003
 - `ticket:0a1106b6` ACC-004
 - `ticket:0a1106b6` ACC-005
-- `initiative:skills-corpus-protocol-sharpening` OBJ-001
+- `initiative:skills-corpus-protocol-sharpening#OBJ-001`
 - `research:skills-corpus-council-review#CLAIM-002`
 - `research:skills-corpus-council-review#CLAIM-003`
 

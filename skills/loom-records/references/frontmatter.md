@@ -47,6 +47,22 @@ Some kinds add more:
 Most canonical records may also carry optional `external_refs` when outside
 systems request, mirror, or package the work.
 
+## Support-Layer Memory Exception
+
+Memory is a support recall layer, not canonical project truth. Default memory
+files may use the lightweight `<!-- L0: ... -->` header from `loom-memory`
+templates instead of YAML frontmatter, and they do not need canonical `id`,
+`kind`, `scope`, or `links` fields merely to exist.
+
+If a project chooses to wrap a memory support file in YAML, validators should
+accept support-only metadata such as `kind: memory`, a local retrieval-oriented
+`status`, timestamps, and links back to canonical owners. Memory files still
+usually have no canonical `id`, and `kind: memory` does not make them canonical
+records. Do not treat that metadata as creating a new canonical truth owner. If
+the content must satisfy acceptance, define behavior, track live state, prove a
+claim, or preserve accepted explanation, promote it to the owning canonical layer
+instead.
+
 ## Scope Shape
 
 Use this general shape:
@@ -120,3 +136,7 @@ external_refs:
 Keep external IDs exact enough that a future agent can find the outside record.
 Do not duplicate live execution state from those systems into Loom unless a
 Loom owner record needs to preserve it.
+
+External references are support surfaces. They may prove provenance or help a
+future operator find a mirrored request, issue, pull request, package, document,
+or board card, but they do not outrank canonical Loom records.

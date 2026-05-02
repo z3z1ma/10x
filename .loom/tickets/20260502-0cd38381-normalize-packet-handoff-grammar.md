@@ -5,7 +5,7 @@ status: ready
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T09:28:53Z
 scope:
   kind: repository
   repositories:
@@ -87,8 +87,8 @@ reconciliation of rejected or overscoped child output.
 
 Covers:
 
-- `initiative:skills-corpus-protocol-sharpening` OBJ-002
-- `initiative:skills-corpus-protocol-sharpening` OBJ-004
+- `initiative:skills-corpus-protocol-sharpening#OBJ-002`
+- `initiative:skills-corpus-protocol-sharpening#OBJ-004`
 - `research:skills-corpus-council-review#CLAIM-005`
 - `research:skills-corpus-council-review#CLAIM-008`
 
@@ -96,8 +96,8 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-002 | implementation evidence pending | mandatory critique pending | open |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-004 | implementation evidence pending | mandatory critique pending | open |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-002` | implementation evidence pending | mandatory critique pending | open |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-004` | implementation evidence pending | mandatory critique pending | open |
 | `research:skills-corpus-council-review#CLAIM-005` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | supported_pending_review |
 | `research:skills-corpus-council-review#CLAIM-008` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | supported_pending_review |
 

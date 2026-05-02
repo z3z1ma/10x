@@ -5,7 +5,7 @@ status: ready
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T09:28:53Z
 scope:
   kind: repository
   repositories:
@@ -101,14 +101,14 @@ corpus is sharper.
 
 Covers:
 
-- `initiative:skills-corpus-protocol-sharpening` OBJ-005
+- `initiative:skills-corpus-protocol-sharpening#OBJ-005`
 - `research:skills-corpus-council-review#CLAIM-009`
 
 # Claim Matrix
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-005 | validation evidence pending | mandatory critique pending | open |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-005` | validation evidence pending | mandatory critique pending | open |
 | `research:skills-corpus-council-review#CLAIM-009` | `evidence:skills-corpus-council-review` supports need; validation evidence pending | mandatory critique pending | supported_pending_review |
 
 # Execution Notes

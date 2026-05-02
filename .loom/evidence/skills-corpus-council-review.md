@@ -3,7 +3,7 @@ id: evidence:skills-corpus-council-review
 kind: evidence
 status: recorded
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T09:28:53Z
 scope:
   kind: repository
   repositories:
@@ -101,11 +101,11 @@ improvements for downstream work.
 - `research:skills-corpus-council-review#CLAIM-007`
 - `research:skills-corpus-council-review#CLAIM-008`
 - `research:skills-corpus-council-review#CLAIM-009`
-- `initiative:skills-corpus-protocol-sharpening` OBJ-001
-- `initiative:skills-corpus-protocol-sharpening` OBJ-002
-- `initiative:skills-corpus-protocol-sharpening` OBJ-003
-- `initiative:skills-corpus-protocol-sharpening` OBJ-004
-- `initiative:skills-corpus-protocol-sharpening` OBJ-005
+- `initiative:skills-corpus-protocol-sharpening#OBJ-001`
+- `initiative:skills-corpus-protocol-sharpening#OBJ-002`
+- `initiative:skills-corpus-protocol-sharpening#OBJ-003`
+- `initiative:skills-corpus-protocol-sharpening#OBJ-004`
+- `initiative:skills-corpus-protocol-sharpening#OBJ-005`
 
 # Challenges Claims
 

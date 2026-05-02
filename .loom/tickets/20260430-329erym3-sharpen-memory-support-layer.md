@@ -5,7 +5,7 @@ status: complete_pending_acceptance
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-04-30T08:22:13Z
-updated_at: 2026-04-30T08:31:09Z
+updated_at: 2026-05-02T09:34:11Z
 scope:
   kind: repository
   repositories:
@@ -80,10 +80,10 @@ Covers:
 - `spec:memory-support-layer-contract#ACC-004`
 - `spec:memory-support-layer-contract#ACC-005`
 - `spec:memory-support-layer-contract#ACC-006`
-- `initiative:sharpen-memory-support-layer` OBJ-001
-- `initiative:sharpen-memory-support-layer` OBJ-002
-- `initiative:sharpen-memory-support-layer` OBJ-003
-- `initiative:sharpen-memory-support-layer` OBJ-004
+- `initiative:sharpen-memory-support-layer#OBJ-001`
+- `initiative:sharpen-memory-support-layer#OBJ-002`
+- `initiative:sharpen-memory-support-layer#OBJ-003`
+- `initiative:sharpen-memory-support-layer#OBJ-004`
 
 # Claim Matrix
 

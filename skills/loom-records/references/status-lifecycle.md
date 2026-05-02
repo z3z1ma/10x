@@ -33,6 +33,9 @@ Use these sets unless the owning skill records a narrower one:
 - evidence: `recorded | superseded | invalidated`
 - critique: `draft | final | superseded`
 - workspace support records: `active | superseded | retired`
+- memory support files: lightweight local status is optional; when used, prefer
+  retrieval-oriented values such as `active`, `stale`, `superseded`, or
+  `retired`, and do not let memory status own canonical project truth
 
 ## Layer-Specific Meanings
 
