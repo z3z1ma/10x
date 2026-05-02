@@ -84,6 +84,19 @@ Do not duplicate this full block everywhere. Put each fact in the owner record
 that owns it, and link across records so the snapshot is recoverable by ordinary
 search.
 
+### Saved outer-loop handoff metadata
+
+When a parent intentionally saves an outer-loop synthesis handoff, the handoff
+may carry support-local `source_snapshot`, `drive_checkpoint`, nested
+`drive_checkpoint.gate_status`, and `handoff_write_scope` fields for recovery.
+These fields summarize the owner graph at compilation time and any proposal-time
+write permission; they do not own objective state, ticket execution state,
+acceptance, evidence sufficiency, critique verdicts, wiki truth, canonical truth,
+or packet lifecycle.
+
+Use `templates/outer-loop-handoff.md` for the field-level grammar, and reconcile
+any accepted handoff output back into the owner records before depending on it.
+
 ## Stable Objective Criterion IDs
 
 Use initiative-owned IDs when high-level success criteria need downstream

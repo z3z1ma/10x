@@ -1,11 +1,11 @@
 ---
 id: ticket:drvgram3
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-02T22:03:13Z
-updated_at: 2026-05-02T22:03:13Z
+updated_at: 2026-05-02T22:39:44Z
 scope:
   kind: repository
   repositories:
@@ -15,6 +15,12 @@ links:
     - initiative:skills-corpus-template-grammar-safety-pass
   plan:
     - plan:skills-corpus-template-grammar-safety-pass
+  packet:
+    - packet:ralph-ticket-drvgram3-20260502T223317Z
+  evidence:
+    - evidence:drive-handoff-grammar-validation
+  critique:
+    - critique:drive-handoff-grammar-review
 external_refs: {}
 depends_on:
   - ticket:pktsupp1
@@ -66,8 +72,12 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-template-grammar-safety-pass#OBJ-003` | pending | pending | open |
-| `ticket:drvgram3#ACC-001` through `ticket:drvgram3#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-template-grammar-safety-pass#OBJ-003` | `evidence:drive-handoff-grammar-validation` | `critique:drive-handoff-grammar-review` | supported |
+| `ticket:drvgram3#ACC-001` | `evidence:drive-handoff-grammar-validation` | `critique:drive-handoff-grammar-review` | supported |
+| `ticket:drvgram3#ACC-002` | `evidence:drive-handoff-grammar-validation` | `critique:drive-handoff-grammar-review` | supported |
+| `ticket:drvgram3#ACC-003` | `evidence:drive-handoff-grammar-validation` | `critique:drive-handoff-grammar-review` | supported |
+| `ticket:drvgram3#ACC-004` | `evidence:drive-handoff-grammar-validation` | `critique:drive-handoff-grammar-review` | supported |
+| `ticket:drvgram3#ACC-005` | `critique:drive-handoff-grammar-review` | oracle critique passed with no findings | supported |
 
 # Execution Notes
 
@@ -77,27 +87,27 @@ Likely touched surfaces include `skills/loom-drive/templates/outer-loop-handoff.
 
 # Blockers
 
-Depends on `ticket:pktsupp1`.
+None currently. Dependency `ticket:pktsupp1` was closed before this Ralph packet
+was compiled.
 
 # Next Move / Next Route
 
-Ralph implementation packet after dependencies close.
+Closed. Commit and push this ticket before continuing to `ticket:pktprov4`.
 
 # Route Readiness
 
-Route: ralph
+Route: acceptance_review
 
-Bounded iteration: drive handoff metadata grammar cleanup.
-Write boundary: targeted drive template/reference wording, this ticket, one
-evidence record, one critique record, and one Ralph packet.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, evidence, ticket update, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:drive-handoff-grammar-validation` and oracle critique
+`critique:drive-handoff-grammar-review` support closure with no findings.
 
 # Evidence
 
-Expected: before/after searches for `source_snapshot`, `drive_checkpoint`,
-`gate_status`, and `git diff --check`.
+Recorded: `evidence:drive-handoff-grammar-validation` with before/after searches
+for `source_snapshot`, `drive_checkpoint`, `gate_status`,
+`handoff_write_scope`, `outer-loop handoff`, and `packet_kind`, plus
+`git diff --check`.
 
 # Critique Disposition
 
@@ -115,9 +125,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:drive-handoff-grammar-review` - no findings; mandatory oracle critique
+passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -125,18 +136,33 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Saved drive handoff metadata semantics were promoted directly into
+  `skills/loom-drive/templates/outer-loop-handoff.md` and
+  `skills/loom-drive/references/continuity-contract.md`.
+
+Deferred / not-required rationale:
+
+No separate wiki page, research record, spec, constitution decision, or memory
+entry is needed. The durable lesson is the drive skill product wording itself.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+touched drive guidance.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-02T22:39:44Z
+Basis: Ralph packet `packet:ralph-ticket-drvgram3-20260502T223317Z`; evidence
+`evidence:drive-handoff-grammar-validation`; oracle critique
+`critique:drive-handoff-grammar-review` with no findings.
+Residual risks: validation is structural/prose-based; no automated grammar
+validator exists or is expected for this Markdown protocol corpus.
 
 # Dependencies
 
@@ -145,3 +171,16 @@ Residual risks:
 # Journal
 
 - 2026-05-02T22:03:13Z: Created from council finding `NC-003`.
+- 2026-05-02T22:33:17Z: Compiled Ralph packet
+  `packet:ralph-ticket-drvgram3-20260502T223317Z` and moved ticket to `active`.
+- 2026-05-02T22:35:01Z: Ralph iteration documented support-local handoff field
+  semantics in the drive template/reference, recorded
+  `evidence:drive-handoff-grammar-validation`, and moved the ticket to
+  `review_required` for mandatory oracle critique.
+- 2026-05-02T22:36:53Z: Parent reconciled Ralph output, normalized claim matrix
+  statuses to canonical claim-coverage vocabulary, clarified the nested
+  `drive_checkpoint.gate_status` reference wording, and marked the Ralph packet
+  consumed.
+- 2026-05-02T22:39:44Z: Mandatory oracle critique
+  `critique:drive-handoff-grammar-review` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.

@@ -56,6 +56,30 @@ are not canonical record truth, ticket execution state, or shared packet
 lifecycle status, and they do not participate in packet transitions such as
 `compiled -> consumed`.
 
+## Saved Handoff Metadata Fields
+
+Use the frontmatter fields as support-local recovery notes for this saved
+handoff only:
+
+- `source_snapshot` records when the handoff prompt was compiled and which owner
+  records or source artifacts were read. It is a freshness cue, not evidence
+  sufficiency, acceptance, or owner-truth status.
+- `drive_checkpoint` points a fresh parent back to the current drive anchor,
+  active tranche, and gate state that existed when the handoff was saved. It
+  summarizes owner records; it does not own objective status, ticket state, or
+  next-route truth.
+- `gate_status` is the checkpoint's compact hard-gate observation for this saved
+  handoff: use `clear` when no known gate blocks the proposed route, or `blocked`
+  with blocker context in the body when a gate prevents safe continuation. It is
+  not a ticket lifecycle status, critique disposition, or acceptance decision.
+- `handoff_write_scope` names any proposal-time records or paths the parent lets
+  this handoff mutate. Use `None - no writes` when the handoff is read-only. This
+  field is not Ralph `child_write_scope`, not legacy packet `write_scope`, and
+  not permission to reconcile canonical truth without parent review.
+
+If any metadata claim becomes durable project truth, move it into the owner layer
+that owns that truth and leave the handoff as a support artifact.
+
 ## Parent Instructions
 
 - Read the linked objective chain and only the source files named below.
