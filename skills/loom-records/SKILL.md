@@ -22,6 +22,7 @@ It is the place to consult when you need to know:
 ## What This Skill Owns
 
 - common YAML frontmatter conventions
+- shared packet frontmatter conventions
 - shared status lifecycle conventions
 - claim and acceptance coverage conventions
 - naming and ID conventions
@@ -97,27 +98,29 @@ Prefer records that are:
 Read immediately for any non-trivial record creation or repair:
 
 1. `references/frontmatter.md` when creating or repairing record metadata.
-2. `references/naming-and-ids.md` when choosing IDs, filenames, or reference
+2. `references/packet-frontmatter.md` when creating or repairing packet
+   frontmatter for Ralph, critique, or wiki packet support artifacts.
+3. `references/naming-and-ids.md` when choosing IDs, filenames, or reference
    shapes.
 
 Then read conditionally:
 
-3. `references/status-lifecycle.md` when setting or auditing non-ticket
+4. `references/status-lifecycle.md` when setting or auditing non-ticket
    statuses.
-4. `references/claim-coverage.md` when requirements, acceptance, evidence, or
+5. `references/claim-coverage.md` when requirements, acceptance, evidence, or
    critique need traceable claim IDs.
-5. `references/query-and-linking.md` when searching graph edges or reconciling
+6. `references/query-and-linking.md` when searching graph edges or reconciling
    references.
-6. `references/semantic-link-usage.md` when deciding whether a relationship
+7. `references/semantic-link-usage.md` when deciding whether a relationship
    belongs in `links:`, `depends_on`, coverage, evidence, critique, or
    external refs.
-7. `references/implementation-reality.md` when code, tests, specs, and
+8. `references/implementation-reality.md` when code, tests, specs, and
    evidence need their truth boundaries separated.
-8. `references/change-class.md` when tickets or packets need evidence,
+9. `references/change-class.md` when tickets or packets need evidence,
    critique, or verification defaults.
-9. `references/validation.md` when checking structural record health.
-10. `references/repair-and-drift.md` when graph drift needs classification or
-   safe repair.
-11. `references/retrospective.md` when assimilating durable learning into owner
-   layers.
-12. `skills/loom-evidence/SKILL.md` when creating or validating evidence artifacts.
+10. `references/validation.md` when checking structural record health.
+11. `references/repair-and-drift.md` when graph drift needs classification or
+    safe repair.
+12. `references/retrospective.md` when assimilating durable learning into owner
+    layers.
+13. `skills/loom-evidence/SKILL.md` when creating or validating evidence artifacts.

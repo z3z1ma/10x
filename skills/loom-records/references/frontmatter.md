@@ -38,9 +38,11 @@ Replace every placeholder before saving a real record.
 Some kinds add more:
 
 - tickets add `depends_on`
-- packets add `packet_kind`, `target`, `mode`, `style`, `child_write_scope`,
-  `parent_merge_scope`, `sources`, `source_fingerprint`,
-  `execution_context`, and `context_budget`
+- packets add packet-family fields such as `packet_kind`, `target`, `mode`,
+  `style`, `child_write_scope`, `parent_merge_scope`, `source_fingerprint`,
+  `execution_context`, `context_budget`, and `sources`; use
+  `references/packet-frontmatter.md` for the shared packet grammar and valid
+  values
 - wiki pages may add `page_type`
 - critique records may add `review_target`
 
@@ -50,6 +52,10 @@ legacy packet compatibility unless the packet explicitly says otherwise. A
 support handoff outside `.loom/packets/`, such as a drive outer-loop handoff
 proposal, may use its own `write_scope` without becoming a packet family or a
 canonical truth owner.
+
+Packet frontmatter is support-artifact grammar. It does not make packets
+canonical truth owners, and it does not make critique or wiki packets
+Ralph-governed.
 
 Most canonical records may also carry optional `external_refs` when outside
 systems request, mirror, package, or help navigate the work.

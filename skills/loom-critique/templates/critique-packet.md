@@ -24,13 +24,18 @@ parent_merge_scope:
   paths: []
 source_fingerprint:
   git_commit: <sha or unknown>
+  integration_remote: <remote name|none|unknown>
+  integration_ref: <ref, tag, commit, or unknown>
+  integration_commit: <sha or unknown>
   git_status_summary: <clean|dirty|unknown>
   compiled_from:
     - <record ref>
 execution_context:
   branch: <name|unknown>
+  push_remote: <remote name|same_as_integration|none|unknown>
   worktree: <path|none|unknown>
   isolation: none
+  git_shared_metadata_mutations: forbidden
   destructive_commands: forbidden
   network: unknown
 context_budget:
@@ -51,6 +56,10 @@ What code or behavior change should be reviewed and why.
 The ticket, parent plan or initiative, relevant spec/research/evidence, prior
 Ralph packet output, and acceptance or claim coverage targets that constrain
 the review.
+
+Frontmatter follows `skills/loom-records/references/packet-frontmatter.md`.
+Critique owns this review packet's workflow; using packet grammar does not make
+the review Ralph-governed.
 
 # Review Lens
 

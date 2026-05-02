@@ -1,11 +1,11 @@
 ---
 id: ticket:4ilnwsnl
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T15:25:50Z
-updated_at: 2026-05-02T15:25:50Z
+updated_at: 2026-05-02T16:14:35Z
 scope:
   kind: repository
   repositories:
@@ -15,6 +15,12 @@ links:
     - initiative:skills-corpus-perfection-council-followup
   plan:
     - plan:skills-corpus-perfection-council-followup
+  packet:
+    - packet:ralph-ticket-4ilnwsnl-20260502T155908Z
+  evidence:
+    - evidence:packet-frontmatter-grammar-validation
+  critique:
+    - critique:packet-frontmatter-grammar-review
 external_refs: {}
 depends_on:
   - ticket:3twzep5n
@@ -72,7 +78,7 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-perfection-council-followup#OBJ-002` | pending | pending | open |
+| `initiative:skills-corpus-perfection-council-followup#OBJ-002` | `evidence:packet-frontmatter-grammar-validation` | `critique:packet-frontmatter-grammar-review` with finding resolved | supported |
 
 # Execution Notes
 
@@ -84,11 +90,11 @@ Council affected surfaces include `skills/loom-records/references/frontmatter.md
 
 # Blockers
 
-Depends on `ticket:3twzep5n` so disposition vocabulary is stable first.
+None. Dependency `ticket:3twzep5n` is closed.
 
 # Next Move / Next Route
 
-Ralph implementation packet after dependency closes.
+Closed. Continue to `ticket:lqiw3hvp`.
 
 # Ralph Readiness
 
@@ -106,11 +112,9 @@ recommendation, and retrospective disposition.
 
 # Evidence
 
-Expected:
+Recorded:
 
-- `git diff --check`
-- targeted searches for packet frontmatter fields and packet templates
-- manual comparison of templates against shared grammar
+- `evidence:packet-frontmatter-grammar-validation`
 
 # Critique Disposition
 
@@ -130,24 +134,34 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+Recorded in `critique:packet-frontmatter-grammar-review`:
 
-Disposition status: pending
+- `critique:packet-frontmatter-grammar-review#ORACLE-4ILNWSNL-001` - resolved.
+
+Disposition status: completed
 
 Deferral / not-required rationale:
 
-None. Critique is mandatory.
+Not deferred. Mandatory oracle critique passed with no remaining findings.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+Retrospective disposition complete. Durable lessons were promoted directly into
+the owner product surfaces: shared packet frontmatter grammar, packet contract
+guidance, and Ralph/critique/wiki packet templates. No separate wiki page,
+research record, spec, constitution decision, or memory entry is needed for this
+ticket.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-02T16:14:35Z
+Basis: Ralph packet `packet:ralph-ticket-4ilnwsnl-20260502T155908Z`, evidence
+`evidence:packet-frontmatter-grammar-validation`, and final oracle critique
+`critique:packet-frontmatter-grammar-review` with no remaining findings.
+Residual risks: Markdown-only protocol grammar is not mechanically enforced;
+historical packets were not normalized because this ticket only aligns shared
+references and templates.
 
 # Dependencies
 
@@ -156,3 +170,13 @@ Residual risks:
 # Journal
 
 - 2026-05-02T15:25:50Z: Created from council finding `COUNCIL-FIND-002`.
+- 2026-05-02T15:59:08Z: Dependency `ticket:3twzep5n` closed. Moved to active
+  and compiled Ralph packet `packet:ralph-ticket-4ilnwsnl-20260502T155908Z` from
+  commit `330a7b2d59c284e55b2fdbbd1e4649026cb253cf`.
+- 2026-05-02T16:00:07Z: Ralph child implementation added shared packet
+  frontmatter grammar, aligned Ralph/critique/wiki packet templates and
+  references, recorded structural evidence, and moved ticket to
+  `review_required` for mandatory oracle critique.
+- 2026-05-02T16:14:35Z: Oracle critique found one ticket claim-matrix status
+  issue; parent corrected it, oracle re-check passed with no remaining findings,
+  and ticket closed after retrospective disposition was recorded.

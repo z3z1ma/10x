@@ -63,6 +63,9 @@ What this iteration is meant to achieve.
 
 What larger chain constrains the work.
 
+Frontmatter follows `skills/loom-records/references/packet-frontmatter.md`;
+Ralph-specific body obligations follow `skills/loom-ralph/references/packet-contract.md`.
+
 Name intended behavior separately from current implementation reality when this
 packet touches code.
 

@@ -2,6 +2,11 @@
 
 A Ralph packet is a contract, not a reminder note.
 
+Use `skills/loom-records/references/packet-frontmatter.md` for shared packet
+frontmatter fields and valid values. This reference owns Ralph-specific contract
+guidance: how an implementation packet frames a child iteration, stop
+conditions, evidence obligations, and parent reconciliation.
+
 ## Minimum packet contents
 
 - exact target
@@ -46,7 +51,8 @@ the code currently does.
 
 ## Source Fingerprint
 
-Every packet should make the compilation baseline inspectable.
+Every Ralph packet should make the compilation baseline inspectable using the
+shared packet-frontmatter shape.
 
 Recommended frontmatter:
 
@@ -70,7 +76,8 @@ yes, supersede the packet and compile a fresh one.
 
 Separate child mutation authority from parent reconciliation authority.
 
-Recommended frontmatter:
+Ralph uses the shared `child_write_scope` and `parent_merge_scope` fields to
+separate child mutation authority from parent reconciliation authority:
 
 ```yaml
 child_write_scope:
@@ -100,7 +107,8 @@ canonical truth ownership.
 
 ## Context Budget
 
-Every packet should declare the expected source-reading posture.
+Every Ralph packet should declare the expected source-reading posture using the
+shared `context_budget` field.
 
 Recommended frontmatter:
 
@@ -118,7 +126,8 @@ say so in its output.
 
 ## Execution Context
 
-For code work, declare the execution environment.
+For Git-backed Ralph work, declare the execution environment using the shared
+`execution_context` field.
 
 Recommended frontmatter:
 
