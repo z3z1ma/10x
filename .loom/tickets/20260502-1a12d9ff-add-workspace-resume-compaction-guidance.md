@@ -1,11 +1,11 @@
 ---
 id: ticket:1a12d9ff
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T09:28:53Z
+updated_at: 2026-05-02T10:27:05Z
 scope:
   kind: repository
   repositories:
@@ -19,6 +19,11 @@ links:
     - research:skills-corpus-council-review
   evidence:
     - evidence:skills-corpus-council-review
+    - evidence:workspace-resume-compaction-validation
+  critique:
+    - critique:workspace-resume-compaction-review
+  packet:
+    - packet:ralph-ticket-1a12d9ff-20260502T101425Z
   plan:
     - plan:skills-corpus-protocol-sharpening
   supersedes:
@@ -97,9 +102,9 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening#OBJ-003` | implementation evidence pending | mandatory critique pending | open |
-| `research:skills-corpus-council-review#CLAIM-004` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | supported_pending_review |
-| `research:skills-corpus-council-review#CLAIM-007` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | supported_pending_review |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-003` | `evidence:workspace-resume-compaction-validation` | `critique:workspace-resume-compaction-review` | supported |
+| `research:skills-corpus-council-review#CLAIM-004` | `evidence:skills-corpus-council-review`; `evidence:workspace-resume-compaction-validation` | `critique:workspace-resume-compaction-review` | supported |
+| `research:skills-corpus-council-review#CLAIM-007` | `evidence:skills-corpus-council-review`; `evidence:workspace-resume-compaction-validation` | `critique:workspace-resume-compaction-review` | supported |
 
 # Execution Notes
 
@@ -108,12 +113,11 @@ making a decision tree that competes with layer ownership.
 
 # Blockers
 
-Do not start until `ticket:0a1106b6` lands or is intentionally deferred, because
-public framing may affect where resume is summarized.
+None. Dependency `ticket:0a1106b6` is closed.
 
 # Next Move / Next Route
 
-Ralph implementation packet for workspace resume and compaction guidance.
+Closed. Continue with the next sequenced plan ticket, `ticket:233cfdeb`.
 
 # Ralph Readiness
 
@@ -144,12 +148,15 @@ Expected output contract:
 
 # Evidence
 
-Expected:
+Recorded:
 
-- `git diff --check`
-- targeted grep checks for cold-start, post-compaction, resume, active tickets,
-  `constitution:main`, chat memory, and transcript wording
-- manual route walkthrough from a hypothetical cold session
+- `evidence:workspace-resume-compaction-validation`
+- `git diff --check` passed with no output.
+- Targeted searches confirmed cold-start, post-compaction, and pre-compaction
+  guidance; bootstrap and `constitution:main` ordering; active-ticket discovery;
+  chat/transcript/generated-context shadow-truth rejection; pre-compaction owner
+  updates; and `loom-drive` as high-level coordinator rather than the only resume
+  route.
 
 # Critique Disposition
 
@@ -170,28 +177,36 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+All findings resolved in `critique:workspace-resume-compaction-review`.
 
-Disposition status: pending
+Disposition status: complete
 
 Deferral / not-required rationale:
 
-None. Critique is mandatory.
+Not deferred. Mandatory critique is recorded in
+`critique:workspace-resume-compaction-review`.
 
 # Wiki Disposition
 
-Pending. Cold-start recovery may deserve a wiki page if the accepted route needs
-to be reused outside the skill text.
+Deferred intentionally. The accepted recovery route now lives in the
+`loom-workspace` product surface. No separate wiki page is needed for this ticket;
+the final corpus-wide validation ticket may still choose broader wiki promotion.
 
 # Acceptance Decision
 
-Accepted by:
+Accepted by: OpenCode parent agent
 
-Accepted at:
+Accepted at: 2026-05-02T10:27:05Z
 
-Basis:
+Basis: Ralph packet `packet:ralph-ticket-1a12d9ff-20260502T101425Z`, validation
+evidence `evidence:workspace-resume-compaction-validation`, and final oracle
+critique `critique:workspace-resume-compaction-review` with all findings resolved.
 
-Residual risks:
+Residual risks: Validation is structural/manual rather than a real cold-session
+trial. The `loom-workspace` frontmatter description still summarizes "read
+constitution first" while the body route correctly requires bootstrap doctrine
+before `constitution:main`; final corpus-wide validation may choose to polish that
+summary.
 
 # Dependencies
 
@@ -201,3 +216,11 @@ Residual risks:
 
 - 2026-05-02T08:46:28Z: Split from cancelled broad ticket `ticket:3uv5l5fh` as
   the workspace resume and compaction guidance slice.
+- 2026-05-02T10:14:25Z: Started Ralph iteration
+  `packet:ralph-ticket-1a12d9ff-20260502T101425Z` for workspace resume and
+  compaction guidance.
+- 2026-05-02T10:22:55Z: Moved to review after Ralph implementation and structural
+  validation. Initial oracle critique found parent-side record reconciliation and
+  stale evidence issues; product guidance had no blocking text findings.
+- 2026-05-02T10:27:05Z: Accepted and closed after record reconciliation, refreshed
+  structural evidence, final oracle critique pass, and retrospective disposition.

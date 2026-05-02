@@ -8,7 +8,9 @@ metadata:
 
 # loom-workspace
 
-Use this skill first when you are entering a Loom repository cold or when the next owner layer is not yet obvious.
+Use this skill first when you are entering a Loom repository cold, resuming after
+context compaction, preparing for compaction, or when the next owner layer is not
+yet obvious.
 
 This skill replaces the old "doctor", "status", and "scope helper" mindset with a more agent-native posture:
 inspect the workspace directly, make structural trust explicit, then route to the owning layer.
@@ -22,17 +24,26 @@ inspect the workspace directly, make structural trust explicit, then route to th
 - first-read order
 - subsystem routing
 - status snapshot synthesis
+- cold-start and post-compaction recovery routing
+- pre-compaction owner update checks
 
 ## First Read Order
 
 When Loom is present and the repo looks structurally plausible:
 
-1. inspect `.loom/`
-2. read `constitution:main`
-3. read the obvious owner chain for the current task
-4. choose the next skill
+1. load `loom-bootstrap` doctrine, or confirm the harness preloaded the ordered
+   bootstrap references
+2. inspect `.loom/`
+3. read `constitution:main`
+4. for cold-start or post-compaction recovery, discover active tickets and other
+   live status queues with `references/status-snapshot.md`
+5. read the obvious owner chain for the current task
+6. choose the next skill
 
 Do not start deep work before the workspace is structurally trustworthy enough to trust its records.
+Do not treat chat history, transcript memory, generated context files, or memory
+records as canonical resume truth; continue from the owner records that own the
+current fact.
 
 ## Use This Skill When
 
@@ -43,6 +54,10 @@ Do not start deep work before the workspace is structurally trustworthy enough t
   retrospective, or a workflow coordinator
 - the user asked to set up Loom in a repository
 - the workspace needs a health pass before packet work
+- you are recovering after a cold start or context compaction and need to find
+  the current active ticket or live queue from files
+- you are about to stop or compact and need to make the next route recoverable in
+  the existing owner layers
 
 ## Do Not Use This Skill When
 
@@ -56,8 +71,9 @@ Do not start deep work before the workspace is structurally trustworthy enough t
 3. verify `constitution:main` exists or create it if the user is bootstrapping Loom
 4. verify the canonical subdirectories exist
 5. resolve repository ownership of the target path
-6. read the governing artifact chain
-7. route into the next owner layer, skill, or workflow coordinator
+6. if resuming, list active, blocked, review, and acceptance queues from tickets
+7. read the governing artifact chain
+8. route into the next owner layer, skill, or workflow coordinator
 
 ## Signals That You Should Halt Or Escalate
 
@@ -95,10 +111,11 @@ Read immediately for normal workspace entry:
 
 Then read conditionally:
 
-3. `references/problem-shaping.md` when the operator request is too fuzzy to
-   route directly into an owner record.
-4. `references/status-snapshot.md` when summarizing current queues, blockers,
+3. `references/status-snapshot.md` when recovering after cold start or context
+   compaction, preparing for compaction, or summarizing current queues, blockers,
    review debt, or acceptance debt.
+4. `references/problem-shaping.md` when the operator request is too fuzzy to
+   route directly into an owner record.
 5. `references/doctor.md` when structural trust is questionable.
 6. `references/scope-registry.md` when repository aliases or multi-worktree
    scope need to be made explicit.

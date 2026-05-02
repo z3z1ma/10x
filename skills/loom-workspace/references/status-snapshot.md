@@ -22,6 +22,60 @@ acceptance, suspicious, or ready for the next bounded move.
 5. Surface contradictions and drift.
 6. Recommend the next owner layer, workflow, or optional command.
 
+## Cold-Start And Post-Compaction Resume Route
+
+Use this route when entering a Loom workspace without reliable transcript
+context, after context compaction, or when asked to recover current work from
+files.
+
+1. Load `loom-bootstrap` doctrine, or confirm the harness already preloaded the
+   ordered bootstrap references.
+2. Confirm the workspace root and `.loom/` tree, then read `constitution:main`.
+3. Discover the active ticket queue and other live states from ticket records:
+
+   ```bash
+   rg -n '^status: (active|blocked|review_required|complete_pending_acceptance)\b' .loom/tickets --glob '*.md'
+   ```
+
+   Add `ready` when the operator asks for available next work rather than work
+   already in flight.
+4. For each relevant ticket, read its upstream owner chain: initiative, research,
+   spec, plan, and any cited packet or support records needed to understand the
+   next route.
+5. Inspect evidence and critique only as needed to evaluate the ticket's current
+   acceptance, review, blocker, or next-route disposition.
+6. Continue from the owning records. If chat history, transcript memory, memory
+   files, generated context, or an external tracker disagrees with the owner
+   records, treat the owner records as canonical and route the mismatch to the
+   layer that owns the fact.
+
+Normal workspace entry can resume a bounded ticket or status queue without
+invoking the full `loom-drive` loop. Use `loom-drive` when the work is a
+high-level objective continuation that needs an anchor, tranche coordination, or
+checkpoint fields across multiple routes.
+
+## Pre-Compaction Owner Update Check
+
+Before ending a session, compacting context, or handing off after meaningful
+work, update the existing owners that make recovery truthful:
+
+- ticket: live status, blocker, progress, scoped acceptance disposition, critique
+  disposition, evidence disposition, wiki/retrospective disposition, and the next
+  route
+- evidence: observed outputs, validation artifacts, reproduction logs, or other
+  artifacts that support or challenge claims
+- critique: adversarial findings, verdicts, severities, residual risks, and
+  required follow-up
+- wiki: accepted explanation or workflow knowledge that should persist after the
+  owning layers settle it
+- memory: optional support-only recall or pointers to owner records; never live
+  state, acceptance truth, required resume context, or a replacement for ticket,
+  evidence, critique, or wiki updates
+
+Do not create a separate resume ledger, hidden scratchpad, generated context file
+requirement, or canonical memory dependency. If a future agent would need the
+fact for correctness, put it in the layer that owns that fact before compaction.
+
 ## Drift Signals
 
 - ticket says `review_required` but no critique path exists
@@ -36,6 +90,7 @@ acceptance, suspicious, or ready for the next bounded move.
 
 ```bash
 rg -n '^status:' .loom/tickets --glob '*.md'
+rg -n '^status: (active|blocked|review_required|complete_pending_acceptance)\b' .loom/tickets --glob '*.md'
 rg -n '^status:' .loom/{constitution,initiatives,research,specs,plans,critique,wiki,evidence,packets} --glob '*.md'
 rg -n 'REQ-[0-9]{3}|ACC-[0-9]{3}|CLAIM-[0-9]{3}' .loom --glob '*.md'
 find .loom/{tickets,critique,wiki,evidence} -type f -name '*.md' | sort
