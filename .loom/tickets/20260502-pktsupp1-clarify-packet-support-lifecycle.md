@@ -1,11 +1,11 @@
 ---
 id: ticket:pktsupp1
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T22:03:13Z
-updated_at: 2026-05-02T22:03:13Z
+updated_at: 2026-05-02T22:13:36Z
 scope:
   kind: repository
   repositories:
@@ -15,6 +15,12 @@ links:
     - initiative:skills-corpus-template-grammar-safety-pass
   plan:
     - plan:skills-corpus-template-grammar-safety-pass
+  packet:
+    - packet:ralph-ticket-pktsupp1-20260502T220731Z
+  evidence:
+    - evidence:packet-support-lifecycle-validation
+  critique:
+    - critique:packet-support-lifecycle-review
 external_refs: {}
 depends_on: []
 ---
@@ -69,8 +75,12 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-template-grammar-safety-pass#OBJ-001` | pending | pending | open |
-| `ticket:pktsupp1#ACC-001` through `ticket:pktsupp1#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-template-grammar-safety-pass#OBJ-001` | `evidence:packet-support-lifecycle-validation` | `critique:packet-support-lifecycle-review` | supported |
+| `ticket:pktsupp1#ACC-001` | `evidence:packet-support-lifecycle-validation` | `critique:packet-support-lifecycle-review` | supported |
+| `ticket:pktsupp1#ACC-002` | `evidence:packet-support-lifecycle-validation` | `critique:packet-support-lifecycle-review` | supported |
+| `ticket:pktsupp1#ACC-003` | `evidence:packet-support-lifecycle-validation` | `critique:packet-support-lifecycle-review` | supported |
+| `ticket:pktsupp1#ACC-004` | `evidence:packet-support-lifecycle-validation` | `critique:packet-support-lifecycle-review` | supported |
+| `ticket:pktsupp1#ACC-005` | `critique:packet-support-lifecycle-review` | oracle critique passed with no findings | supported |
 
 # Execution Notes
 
@@ -84,23 +94,20 @@ None.
 
 # Next Move / Next Route
 
-Ralph implementation packet.
+Closed. Commit and push this ticket before continuing to `ticket:critgate2`.
 
 # Route Readiness
 
-Route: ralph
+Route: acceptance_review
 
-Bounded iteration: packet support lifecycle wording repair.
-Write boundary: targeted `skills/**` wording, this ticket, one evidence record,
-one critique record, and one Ralph packet.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, evidence, ticket update, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:packet-support-lifecycle-validation` and oracle critique
+`critique:packet-support-lifecycle-review` support closure with no findings.
 
 # Evidence
 
-Expected: before/after searches for packet lifecycle / support truth wording and
-`git diff --check`.
+Recorded: `evidence:packet-support-lifecycle-validation` captures before/after
+searches for packet lifecycle / support truth wording and `git diff --check`.
 
 # Critique Disposition
 
@@ -119,28 +126,45 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:packet-support-lifecycle-review` - no findings; mandatory oracle
+critique passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
-Not deferred.
+Not deferred. Mandatory oracle critique passed with no findings.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Packet lifecycle ownership wording was promoted directly into
+  `skills/loom-records/references/naming-and-ids.md`,
+  `skills/loom-workspace/references/workspace-tree.md`, and
+  `skills/loom-records/references/status-lifecycle.md`.
+
+Deferred / not-required rationale:
+
+No separate wiki page, research record, spec, constitution decision, or memory
+entry is needed. The durable lesson is the product-surface wording itself.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+touched product guidance.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-02T22:13:36Z
+Basis: Ralph packet `packet:ralph-ticket-pktsupp1-20260502T220731Z`; evidence
+`evidence:packet-support-lifecycle-validation`; oracle critique
+`critique:packet-support-lifecycle-review` with no findings.
+Residual risks: validation is structural and broader support-boundary wording
+outside the targeted surfaces may need future review if later ambiguity appears.
 
 # Dependencies
 
@@ -149,3 +173,14 @@ None.
 # Journal
 
 - 2026-05-02T22:03:13Z: Created from council finding `NC-001`.
+- 2026-05-02T22:07:31Z: Compiled Ralph packet
+  `packet:ralph-ticket-pktsupp1-20260502T220731Z` and moved ticket to `active`.
+- 2026-05-02T22:08:54Z: Ralph child updated targeted packet/support lifecycle
+  wording, recorded `evidence:packet-support-lifecycle-validation`, and moved
+  ticket to `review_required` for mandatory critique.
+- 2026-05-02T22:10:56Z: Parent reconciled the Ralph packet, normalized claim
+  matrix statuses to claim-coverage vocabulary, and expanded evidence structure
+  before oracle critique.
+- 2026-05-02T22:13:36Z: Mandatory oracle critique
+  `critique:packet-support-lifecycle-review` passed with no findings. Recorded
+  retrospective / promotion disposition and accepted closure.

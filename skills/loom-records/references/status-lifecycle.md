@@ -73,6 +73,11 @@ Use these sets unless the owning skill records a narrower one:
   ticket state, acceptance, evidence sufficiency, critique verdicts, wiki truth,
   canonical truth, or packet lifecycle status
 
+Packet records are the support-surface exception: their `status` field owns only
+their own packet lifecycle state. Ralph, critique, and wiki packets share the
+packet status values below, while `packet_kind` and the owning workflow keep body
+shape, route ownership, and merge responsibilities separate.
+
 Support artifacts saved under optional `.loom/support/` paths are
 lazy-materialized support files. Their statuses are local to the artifact and do
 not make `.loom/support/` a canonical owner layer or packet lifecycle surface.
@@ -135,8 +140,9 @@ claim.
 ## Packet Transitions
 
 Use packet statuses as operational state, not as archival decoration. This
-packet lifecycle applies to current Ralph, critique, and wiki packet families;
-`packet_kind` still decides which workflow owns the packet body and route.
+packet lifecycle is packet-record-owned support state and applies to current
+Ralph, critique, and wiki packet families; `packet_kind` still decides which
+workflow owns the packet body and route.
 
 Packet terminal statuses are `consumed`, `superseded`, and `abandoned`.
 `compiled` is non-terminal and means the packet is ready for launch or pending

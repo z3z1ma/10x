@@ -26,8 +26,11 @@ workspace metadata, but they are not canonical truth-owner IDs.
 ## Stable Support And Packet ID Families
 
 These ID families may be durable and citeable, but they remain non-owner support
-grammar. They do not own objective state, live ticket state, acceptance, evidence
-sufficiency, critique verdicts, wiki truth, canonical truth, or packet lifecycle.
+grammar. Packet IDs identify packet records whose `status` field owns only that
+packet's lifecycle status: `compiled`, `consumed`, `superseded`, or `abandoned`.
+Neither packet IDs nor support-local IDs own objective state, live ticket state,
+acceptance, evidence sufficiency, critique verdicts, wiki truth, or canonical
+truth. Support-local IDs also do not own packet lifecycle surfaces.
 
 - `packet:ralph-<encoded-target>-<UTC compact timestamp>`
 - `packet:critique-<encoded-target-or-change-slug>-<UTC compact timestamp>`
@@ -110,8 +113,11 @@ Packet records share `kind: packet` and are separated by `packet_kind` plus path
 
 This naming grammar does not make critique or wiki work Ralph-governed. Choose
 the route by the truth being changed: implementation goes through Ralph, review
-through critique, and accepted explanation through wiki. Packets remain bounded
-contracts for child work; they do not own project truth or live execution state.
+through critique, and accepted explanation through wiki. Packet records share the
+packet lifecycle values from `status-lifecycle.md`, but each workflow owns its own
+packet body shape and route semantics. Packets remain bounded contracts for child
+work; their status owns only that packet's support lifecycle, not project truth or
+live execution state.
 
 Encode packet targets by turning a typed record reference into filename-safe text:
 replace the colon with a hyphen and keep the slug or token lowercase. For

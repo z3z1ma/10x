@@ -38,7 +38,9 @@ The canonical owner paths are `constitution`, `initiatives`, `research`,
 `memory`, and optional `.loom/support/` paths are support surfaces. They help
 execution, recall, reviewability, or handoff audit, but they do not own objective
 state, live ticket state, acceptance, evidence sufficiency, critique verdicts,
-wiki truth, canonical truth, or packet lifecycle.
+wiki truth, or canonical truth. Packet records under `.loom/packets/` own only
+their own packet lifecycle status; memory files and optional `.loom/support/`
+artifacts do not own packet lifecycle surfaces.
 
 Create `.loom/support/` only when a support artifact is intentionally saved, such
 as a drive handoff under `.loom/support/drive-handoffs/`. Do not create it merely
