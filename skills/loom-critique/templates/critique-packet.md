@@ -3,7 +3,7 @@ id: packet:critique-<encoded-target-or-change-slug>-<UTC compact timestamp>
 kind: packet
 packet_kind: critique
 status: compiled
-target: ticket:<token>
+target: "<TBD: ticket:<token>, record ref, review target slug, diff handle, or external summary ID>"
 review_target:
   kind: "<TBD: choose record, code_change, pull_request, branch, commit, diff, external_summary, release_package, or handoff_package>"
   summary: <one-line human-readable review target>
@@ -29,11 +29,11 @@ child_write_scope:
     - "<TBD: critique child write paths, or None - reviewer returns output only>"
 parent_merge_scope:
   records:
-    - ticket:<token>
     - critique:<slug>
-    # or: None - <rationale for no parent record reconciliation>
+    - "<TBD: ticket:<token> when a ticket owns execution, owner record ref, or None - no parent record reconciliation needed>"
+    # or: None - <rationale for no additional parent record reconciliation>
   paths:
-    - .loom/critique/<slug>.md
+    - "<TBD: .loom/critique/<slug>.md, other owner path, or None - no parent path reconciliation needed>"
     # or: None - <rationale for no parent path reconciliation>
 source_fingerprint:
   git_commit: <sha or unknown>
@@ -68,9 +68,9 @@ What code or behavior change should be reviewed and why.
 
 # Governing Context
 
-The ticket, parent plan or initiative, relevant spec/research/evidence, prior
-Ralph packet output, and acceptance or claim coverage targets that constrain
-the review.
+The ticket when one owns execution, parent plan or initiative, relevant
+spec/research/evidence, prior packet output, and acceptance or claim coverage
+targets that constrain the review.
 
 Frontmatter follows `skills/loom-records/references/packet-frontmatter.md`.
 This template describes new critique packet authoring; older consumed critique
@@ -84,10 +84,16 @@ Use `source_fingerprint.compiled_from` for packet compilation provenance and
 packet output, or changed files. The lists may overlap, but critique packets do
 not need duplicate source inventories to satisfy shared packet grammar.
 
-`parent_merge_scope` must name the ticket, critique record, evidence record, or
-other owner-layer targets the parent expects to reconcile, or explicitly say
-`None - <rationale>` when no parent merge target exists. Do not leave it empty or
-as placeholder-only `records: []` / `paths: []`.
+`target` may name `ticket:<token>` when the ticket itself is the review target,
+but critique packets may also target a record, diff, path set, external summary,
+or handoff package without a ticket anchor. Encode path-set reviews with existing
+`review_target` fields: choose the closest existing `kind`, such as `record`,
+`code_change`, or `diff`; set unavailable scalar fields such as `ref` or `diff`
+to `none`; and list the reviewed paths under `review_target.paths`.
+`parent_merge_scope` must name the ticket when a ticket owns execution, the
+critique record, evidence record, or other owner-layer targets the parent expects
+to reconcile, or explicitly say `None - <rationale>` when no parent merge target
+exists. Do not leave it empty or as placeholder-only `records: []` / `paths: []`.
 
 Encode the packet `target` in packet IDs and filenames using
 `skills/loom-records/references/naming-and-ids.md`; for example,

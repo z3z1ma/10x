@@ -3,7 +3,7 @@ id: packet:wiki-<encoded-target>-<UTC compact timestamp>
 kind: packet
 packet_kind: wiki
 status: compiled
-target: <record ref or page slug>
+target: "<TBD: wiki:<slug>, source record ref, ticket:<token>, or synthesis target slug>"
 mode: synthesis
 style: reference-first
 created_at: <UTC timestamp>
@@ -20,10 +20,10 @@ child_write_scope:
 parent_merge_scope:
   records:
     - wiki:<slug>
-    - ticket:<token>
+    - "<TBD: ticket:<token> when a ticket owns follow-through, originating owner ref, or None - no additional parent record reconciliation needed>"
     # or: None - <rationale for no parent record reconciliation>
   paths:
-    - .loom/wiki/<slug>.md
+    - "<TBD: .loom/wiki/<slug>.md, other owner path, or None - no parent path reconciliation needed>"
     # or: None - <rationale for no parent path reconciliation>
 source_fingerprint:
   git_commit: <sha or unknown>
@@ -56,11 +56,12 @@ links: {}
 
 What understanding should be promoted or updated in the wiki.
 
-Name the originating ticket, critique, research, initiative, or other owner ref
-in `parent_merge_scope.records` when parent reconciliation is expected.
-`parent_merge_scope` must name parent reconciliation targets or explicitly say
-`None - <rationale>` when no parent merge target exists. Do not leave it empty or
-as placeholder-only `records: []` / `paths: []`.
+Name the originating ticket only when a ticket owns follow-through. Otherwise
+name the critique, research, initiative, wiki page, source record, or other owner
+ref in `target` and `parent_merge_scope.records` when parent reconciliation is
+expected. `parent_merge_scope` must name parent reconciliation targets or
+explicitly say `None - <rationale>` when no parent merge target exists. Do not
+leave it empty or as placeholder-only `records: []` / `paths: []`.
 
 # Accepted Truth Sources
 
