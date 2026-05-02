@@ -1,9 +1,9 @@
 ---
 id: initiative:skills-corpus-protocol-sharpening
 kind: initiative
-status: active
+status: completed
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T11:20:32Z
 scope:
   kind: repository
   repositories:
@@ -15,6 +15,9 @@ links:
     - research:skills-corpus-council-review
   evidence:
     - evidence:skills-corpus-council-review
+    - evidence:skills-corpus-protocol-sharpening-validation
+  critique:
+    - critique:skills-corpus-protocol-sharpening-review
   plan:
     - plan:skills-corpus-protocol-sharpening
   ticket:
@@ -153,7 +156,9 @@ outcome container so downstream plan and ticket work does not live only in chat.
 # Linked Work
 
 - Research: `research:skills-corpus-council-review`
-- Evidence: `evidence:skills-corpus-council-review`
+- Evidence: `evidence:skills-corpus-council-review` and
+  `evidence:skills-corpus-protocol-sharpening-validation`
+- Critique: `critique:skills-corpus-protocol-sharpening-review`
 - Plan: `plan:skills-corpus-protocol-sharpening`
 - Superseded broad ticket: `ticket:3uv5l5fh`
 - Execution tickets: `ticket:0a1106b6`, `ticket:4e8ebe92`, `ticket:0cd38381`,
@@ -163,15 +168,27 @@ outcome container so downstream plan and ticket work does not live only in chat.
 
 # Status Summary
 
-Council findings have been promoted out of chat into research and evidence. The
-initial broad ticket `ticket:3uv5l5fh` has been cancelled before implementation
-and replaced by smaller Ralph-sized tickets under
-`plan:skills-corpus-protocol-sharpening`. The first live execution owner is
-`ticket:0a1106b6`; later tickets are sequenced through plan dependencies.
-Implementation has not started under this initiative.
+Completed. Council findings were promoted out of chat into research and evidence,
+the initial broad ticket `ticket:3uv5l5fh` was cancelled before implementation,
+and smaller child tickets under `plan:skills-corpus-protocol-sharpening` landed
+the scoped sharpening pass.
+
+The pass aligned public framing, hardened shared record grammar, normalized
+packet and ticket acceptance grammar, strengthened workspace/operator guidance,
+clarified memory boundaries, consolidated owner-surface doctrine, and reconciled
+final critique findings without adding a runtime, command layer, database, or new
+canonical owner layer.
 
 # Completion Basis
 
-When `status: completed`, cite the final ticket disposition, structural evidence,
-mandatory critique verdict, any follow-up tickets created for accepted residual
-work, and any wiki or retrospective promotion decision.
+Completed at 2026-05-02T11:20:32Z.
+
+Success metrics `OBJ-001` through `OBJ-005` are supported by the closed child
+tickets, final structural validation
+`evidence:skills-corpus-protocol-sharpening-validation`, and mandatory critique
+`critique:skills-corpus-protocol-sharpening-review`.
+
+The final critique verdict is `pass` after two medium findings were resolved. No
+follow-up tickets or accepted risks were required. No separate wiki promotion was
+needed because durable lessons were promoted directly into the product surfaces
+that own them and into this initiative / plan completion basis.

@@ -29,7 +29,7 @@ same doctrine, not a separate protocol surface.
 A Loom transaction uses seven kernel roles:
 
 - **owners**: layers that own specific kinds of project truth
-- **claims**: stable requirements, acceptance IDs, or local assertions that need coverage
+- **claims**: stable objective, requirement, acceptance, or local assertion IDs that need coverage
 - **packets**: bounded contracts for fresh-context work
 - **evidence**: observed artifacts that support or challenge claims
 - **critique**: adversarial findings and verdicts
@@ -53,6 +53,10 @@ ticket-local acceptance criteria only when no separate spec exists and the
 criteria are scoped to that ticket. If ticket-local criteria become reusable,
 contradict a spec, or define behavior future work will depend on, create or
 update the spec instead of letting the ticket become the behavior owner.
+
+Initiatives may own strategic `OBJ-*` success criteria. Downstream tickets,
+packets, evidence, and critique may cite those objective criteria, but tickets
+own only their scoped coverage state and acceptance disposition.
 
 Harness transports may invoke acceptance review. They do not own acceptance
 disposition.
@@ -127,7 +131,8 @@ Claim coverage follows authority:
 
 | Stage | Owner |
 | --- | --- |
-| define reusable claim IDs and acceptance criteria | spec |
+| define strategic objective criteria | initiative |
+| define reusable requirement and acceptance criteria | spec |
 | define ticket-local acceptance criteria when no spec exists | ticket |
 | declare scoped coverage and current coverage state | ticket |
 | name claims this bounded iteration should advance | packet |

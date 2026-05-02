@@ -88,8 +88,8 @@ profiles even when the diff looks small.
 Critique policy affects ticket closure through the ticket's acceptance gate:
 
 - mandatory critique blocks `closed` until the required review exists and its
-  medium/high findings are resolved, explicitly accepted as risk, or converted
-  into linked follow-up work
+  medium/high findings are resolved, explicitly accepted as risk, superseded by
+  evidence, or converted into linked follow-up work
 - recommended critique requires a recorded ticket disposition before closure:
   completed, explicitly deferred, or intentionally not needed with rationale
 - optional critique does not block closure unless a ticket, spec, plan, or human

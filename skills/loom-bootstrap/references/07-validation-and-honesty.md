@@ -125,8 +125,8 @@ Use these defaults unless the project says otherwise:
 - accepted understanding that future agents will need should become wiki, not only ticket prose
 - if critique found unresolved medium or high-severity issues, do not pretend the work is fully accepted
 - recommended critique needs a recorded ticket disposition before closure
-- mandatory critique blocks closure until resolved, accepted as risk, or turned
-  into linked follow-up work
+- mandatory critique blocks closure until medium/high findings are resolved,
+  accepted as risk, superseded by evidence, or turned into linked follow-up work
 
 ## Honesty Rules
 

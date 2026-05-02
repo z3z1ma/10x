@@ -1,9 +1,9 @@
 ---
 id: plan:skills-corpus-protocol-sharpening
 kind: plan
-status: active
+status: completed
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T11:20:32Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,9 @@ links:
     - research:skills-corpus-council-review
   evidence:
     - evidence:skills-corpus-council-review
+    - evidence:skills-corpus-protocol-sharpening-validation
+  critique:
+    - critique:skills-corpus-protocol-sharpening-review
   ticket:
     - ticket:0a1106b6
     - ticket:4e8ebe92
@@ -305,12 +308,24 @@ Stop / loopback conditions:
   explicitly spawned follow-up tickets for residual work.
 - The linked evidence records fresh structural validation from the final diff.
 - Mandatory critique exists and all medium/high findings are resolved, accepted as
-  risk, or converted into linked follow-up tickets.
+  risk, superseded by evidence, or converted into linked follow-up tickets.
 - The initiative success metrics have a truthful status summary.
 - Any wiki or retrospective promotion decision is recorded in the relevant ticket.
 
 # Completion Basis
 
-When `status: completed`, cite the child tickets, implementation evidence,
-mandatory critique, and any follow-up tickets or accepted risks that explain why
-the plan can stop.
+Completed at 2026-05-02T11:20:32Z.
+
+All child tickets are closed: `ticket:0a1106b6`, `ticket:4e8ebe92`,
+`ticket:0cd38381`, `ticket:50ded996`, `ticket:1a12d9ff`, `ticket:233cfdeb`,
+`ticket:795fa0f4`, `ticket:53cf2989`, and `ticket:cdf664af`.
+
+Final validation is recorded in
+`evidence:skills-corpus-protocol-sharpening-validation`. Mandatory critique is
+recorded in `critique:skills-corpus-protocol-sharpening-review`; its two medium
+findings were resolved by targeted product-surface fixes and the final oracle
+re-check passed.
+
+No follow-up tickets or accepted risks were required for this plan. The plan can
+stop because the scoped protocol-sharpening route landed through child tickets,
+structural validation, mandatory critique, and ticket-owned acceptance.

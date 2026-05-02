@@ -1,11 +1,11 @@
 ---
 id: ticket:cdf664af
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T09:28:53Z
+updated_at: 2026-05-02T11:20:32Z
 scope:
   kind: repository
   repositories:
@@ -19,6 +19,11 @@ links:
     - research:skills-corpus-council-review
   evidence:
     - evidence:skills-corpus-council-review
+    - evidence:skills-corpus-protocol-sharpening-validation
+  packet:
+    - packet:ralph-ticket-cdf664af-20260502T110831Z
+  critique:
+    - critique:skills-corpus-protocol-sharpening-review
   plan:
     - plan:skills-corpus-protocol-sharpening
   supersedes:
@@ -90,7 +95,8 @@ corpus is sharper.
   against protocol-change, operator-clarity, records-grammar, and routing-safety
   risks.
 - ACC-004: All medium/high critique findings are resolved, accepted as risk in a
-  ticket-owned decision, or converted into linked follow-up tickets.
+  ticket-owned decision, superseded by evidence, or converted into linked
+  follow-up tickets.
 - ACC-005: Each child ticket's evidence and critique disposition is updated or has
   a truthful deferral rationale.
 - ACC-006: The plan and initiative status summaries truthfully describe what
@@ -108,8 +114,8 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening#OBJ-005` | validation evidence pending | mandatory critique pending | open |
-| `research:skills-corpus-council-review#CLAIM-009` | `evidence:skills-corpus-council-review` supports need; validation evidence pending | mandatory critique pending | supported_pending_review |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-005` | `evidence:skills-corpus-protocol-sharpening-validation` | `critique:skills-corpus-protocol-sharpening-review` with findings resolved | supported |
+| `research:skills-corpus-council-review#CLAIM-009` | `evidence:skills-corpus-council-review`; `evidence:skills-corpus-protocol-sharpening-validation` | `critique:skills-corpus-protocol-sharpening-review` with findings resolved | supported |
 
 # Execution Notes
 
@@ -118,12 +124,12 @@ implementation child tickets have either been accepted or explicitly deferred.
 
 # Blockers
 
-All implementation child tickets in `depends_on` must be accepted, cancelled with
-rationale, or explicitly deferred before this ticket can move to active.
+None. All implementation child tickets in `depends_on` are closed.
 
 # Next Move / Next Route
 
-Wait for implementation child tickets, then record evidence and run critique.
+Closed. The sharpening plan and initiative are completed with final evidence and
+mandatory critique recorded.
 
 # Ralph Readiness
 
@@ -163,6 +169,24 @@ Expected:
 - packet grammar, frontmatter/status, metadata, and risk/change class grep checks
 - empty skill-directory and source-repo leakage checks
 
+Recorded:
+
+- `evidence:skills-corpus-protocol-sharpening-validation`
+- `git diff --check` passed with no output.
+- Initial product-surface cleanliness checks for `README.md`, `PROTOCOL.md`,
+  `ARCHITECTURE.md`, and `skills` produced no staged or unstaged diff output
+  before mandatory critique.
+- Targeted searches and parser checks covered `loom-drive` visibility, coverage
+  IDs, packet grammar, frontmatter/status values, skill metadata, risk/change
+  class usage, empty skill directories, source-repo leakage patterns, and child
+  ticket dispositions.
+- No likely medium/high product-surface issue was discovered by structural
+  validation. Mandatory critique later found two medium issues, both resolved and
+  re-checked by oracle.
+- Final product-surface changes were limited to critique fixes in `PROTOCOL.md`
+  and `skills/loom-bootstrap/references/05-critique-and-wiki.md` /
+  `skills/loom-bootstrap/references/07-validation-and-honesty.md`.
+
 # Critique Disposition
 
 Risk class: high
@@ -183,29 +207,41 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+Recorded in `critique:skills-corpus-protocol-sharpening-review`:
 
-Disposition status: pending
+- `critique:skills-corpus-protocol-sharpening-review#FIND-001` - resolved;
+  bootstrap closure grammar now includes findings superseded by evidence.
+- `critique:skills-corpus-protocol-sharpening-review#FIND-002` - resolved;
+  `PROTOCOL.md` now includes initiative-owned `OBJ-*` objective coverage.
+
+Disposition status: complete
 
 Deferral / not-required rationale:
 
-None. Critique is mandatory.
+Not deferred. Mandatory critique passed after findings were resolved.
 
 # Wiki Disposition
 
-Pending. Decide after critique whether durable understanding should be promoted to
-wiki, research, spec, plan, initiative, constitution, evidence, memory, or no
-additional layer.
+Retrospective disposition complete. Durable lessons from critique were promoted
+directly into the owner product surfaces: bootstrap closure grammar and public
+protocol claim coverage. The plan and initiative completion basis were updated.
+No separate wiki page, research record, spec, constitution decision, or memory
+entry is needed for this ticket.
 
 # Acceptance Decision
 
-Accepted by:
+Accepted by: OpenCode parent agent
 
-Accepted at:
+Accepted at: 2026-05-02T11:20:32Z
 
-Basis:
+Basis: validation packet `packet:ralph-ticket-cdf664af-20260502T110831Z`, final
+evidence `evidence:skills-corpus-protocol-sharpening-validation`, mandatory
+critique `critique:skills-corpus-protocol-sharpening-review`, resolved oracle
+findings, and completed plan/initiative summaries.
 
-Residual risks:
+Residual risks: validation and critique were structural/manual because this is a
+Markdown protocol corpus; internal `examples/` fixtures were not deeply reviewed
+because they are outside the ticket's product-surface target.
 
 # Dependencies
 
@@ -222,3 +258,15 @@ Residual risks:
 
 - 2026-05-02T08:46:28Z: Split from cancelled broad ticket `ticket:3uv5l5fh` as
   the final validation, critique, and reconciliation slice.
+- 2026-05-02T11:08:31Z: Moved to active after all dependent implementation
+  tickets closed; compiled validation packet
+  `packet:ralph-ticket-cdf664af-20260502T110831Z` from source commit
+  `19f98ef0a483f8e307d493bc94159b0e894642a5`.
+- 2026-05-02T11:11:17Z: Validation packet recorded
+  `evidence:skills-corpus-protocol-sharpening-validation`; moved ticket to
+  `review_required` because structural validation found no likely medium/high
+  product-surface issue and mandatory critique is now the next gate.
+- 2026-05-02T11:20:32Z: Mandatory oracle critique found two medium issues;
+  parent resolved both with targeted edits to bootstrap closure grammar and
+  `PROTOCOL.md` claim coverage, final oracle re-check passed, and ticket closed
+  after plan/initiative and retrospective disposition were reconciled.
