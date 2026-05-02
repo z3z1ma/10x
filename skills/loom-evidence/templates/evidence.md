@@ -15,14 +15,18 @@ external_refs: {}
 # Summary
 
 What was observed, why it exists, and which claims it supports or challenges.
+Do not claim acceptance, closure, critique verdicts, or intended behavior here.
 
 # Procedure
 
-Exactly what was run, checked, or inspected.
+Exactly what was run, checked, or inspected. Include commands, manual inspection
+steps, timestamps when relevant, and enough context for a future agent to judge
+freshness.
 
 # Artifacts
 
 List files, outputs, screenshots, logs, commands, or observations that matter.
+Keep observed artifacts separate from later inference.
 
 # Supports Claims
 
@@ -47,7 +51,10 @@ Relevant config:
 # Validity
 
 Valid for:
+Fresh enough for:
 Recheck when:
+Invalidated by:
+Supersedes / superseded by:
 
 # Limitations
 
@@ -55,12 +62,13 @@ What this evidence does not establish.
 
 # Result
 
-What the evidence actually showed.
+What the evidence actually showed. This should be an observed result, not an
+acceptance decision.
 
 # Interpretation
 
-What limited interpretation is justified, and what conclusion is **not**
-justified by this evidence alone.
+What limited inference is justified, and what conclusion is **not** justified by
+this evidence alone.
 
 # Related Records
 

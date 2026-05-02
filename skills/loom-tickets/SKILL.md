@@ -104,7 +104,11 @@ Then replace the placeholders in the copied file.
 - the ticket tells the truth about live execution
 - status matches reality
 - the next move is legible
-- evidence and follow-through are linked or explicitly absent for a reason
+- evidence is linked, fresh enough for the acceptance claim, and explicit about
+  observed support, observed challenge, and limitations; missing evidence is
+  explicitly absent for a reason
+- critique and retrospective / promotion follow-through are linked or explicitly
+  pending, deferred, completed, or not required
 - closure, when claimed, is backed by the ticket-owned acceptance gate
 
 ## Read In This Order

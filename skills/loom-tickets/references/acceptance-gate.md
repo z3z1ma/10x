@@ -87,6 +87,32 @@ Acceptance Dossier =
   residual risks?
 - Are links and status fields coherent?
 
+## Evidence Sufficiency
+
+Evidence sufficiency is a ticket-owned acceptance question, not an evidence-owned
+closure decision.
+
+When acceptance depends on evidence, the ticket should be able to answer:
+
+- Which evidence records support each covered claim or acceptance ID?
+- Which evidence records challenge a claim, weaken support, or expose a gap?
+- Is each observation fresh enough for the current source, record, dependency,
+  and environment state?
+- Do limitations make the evidence too narrow for the claim being accepted?
+- Has any evidence been invalidated or superseded by newer observations,
+  critiques, source changes, or scope changes?
+- Is the evidence strength proportional to the change class and risk class?
+
+Low-risk record hygiene may need only a structural search or diff review. Medium
+or high-risk protocol-authority, security-sensitive, data-sensitive, migration,
+or user-facing behavior changes usually need stronger observed artifacts and the
+critique profiles required by policy.
+
+Do not copy raw logs into the ticket when an evidence record owns the observed
+artifact. Do summarize the ticket-owned disposition: whether evidence is
+sufficient, insufficient, challenged, stale, superseded, or pending. The closure
+decision remains in the ticket acceptance gate.
+
 ## Ticket-Owned Finding Disposition
 
 Tickets consume critique findings; critique records do not close tickets. For

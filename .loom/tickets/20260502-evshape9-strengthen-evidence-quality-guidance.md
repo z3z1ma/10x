@@ -1,11 +1,11 @@
 ---
 id: ticket:evshape9
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-02T18:58:43Z
-updated_at: 2026-05-02T18:58:43Z
+updated_at: 2026-05-02T20:54:00Z
 scope:
   kind: repository
   repositories:
@@ -15,6 +15,12 @@ links:
     - initiative:skills-corpus-council-precision-pass
   plan:
     - plan:skills-corpus-council-precision-pass
+  packet:
+    - packet:ralph-ticket-evshape9-20260502T204732Z
+  evidence:
+    - evidence:evidence-quality-guidance-validation
+  critique:
+    - critique:evidence-quality-guidance-review
 external_refs: {}
 depends_on:
   - ticket:retrod3p
@@ -70,39 +76,43 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-council-precision-pass#OBJ-009` | pending | pending | open |
-| `ticket:evshape9#ACC-001` through `ticket:evshape9#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-council-precision-pass#OBJ-009` | `evidence:evidence-quality-guidance-validation` supports structural guidance update | `critique:evidence-quality-guidance-review` | supported |
+| `ticket:evshape9#ACC-001` | `evidence:evidence-quality-guidance-validation` supports dedicated evidence-quality guidance | `critique:evidence-quality-guidance-review` | supported |
+| `ticket:evshape9#ACC-002` | `evidence:evidence-quality-guidance-validation` supports ticket evidence sufficiency teaching | `critique:evidence-quality-guidance-review` | supported |
+| `ticket:evshape9#ACC-003` | `evidence:evidence-quality-guidance-validation` supports observed/inference, limitations, freshness, invalidation, and supersession coverage | `critique:evidence-quality-guidance-review` | supported |
+| `ticket:evshape9#ACC-004` | `evidence:evidence-quality-guidance-validation` records before/after searches and `git diff --check` | `critique:evidence-quality-guidance-review` | supported |
+| `ticket:evshape9#ACC-005` | `critique:evidence-quality-guidance-review` | oracle critique passed with no findings | supported |
 
 # Execution Notes
 
-Likely touched surfaces include `skills/loom-evidence/SKILL.md`, possibly a new
-`skills/loom-evidence/references/evidence-shape.md`, ticket evidence sections, and
-acceptance gate references.
+Touched surfaces include `skills/loom-evidence/SKILL.md`,
+`skills/loom-evidence/references/evidence-quality.md`, the evidence template,
+ticket evidence teaching, and acceptance gate references.
+
+Ralph iteration `packet:ralph-ticket-evshape9-20260502T204732Z` is scoped to add
+evidence quality guidance and ticket evidence sufficiency teaching.
 
 # Blockers
 
-Depends on `ticket:retrod3p`.
+None - `ticket:retrod3p` is closed.
 
 # Next Move / Next Route
 
-Ralph implementation packet after dependency closes.
+Closed. Commit and push this ticket before continuing to `ticket:dwhand10`.
 
 # Route Readiness
 
-Route: Ralph implementation packet
+Route: acceptance_review
 
-Bounded iteration: add evidence quality guidance and align ticket evidence
-teaching.
-Write boundary: `skills/loom-evidence/**`, targeted `skills/loom-tickets/**`,
-this ticket, one evidence record, one critique record, and one Ralph packet.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, evidence, ticket update, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:evidence-quality-guidance-validation` and oracle critique
+`critique:evidence-quality-guidance-review` support closure with no findings.
 
 # Evidence
 
-Expected: searches for evidence freshness, limitations, invalidation/supersession,
-support/challenge, and `git diff --check`.
+Observed: `evidence:evidence-quality-guidance-validation` records before/after
+searches for evidence freshness, limitations, observed/inference,
+support/challenge, invalidation/supersession, and `git diff --check`.
 
 # Critique Disposition
 
@@ -121,24 +131,52 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+Recorded in `critique:evidence-quality-guidance-review`:
 
-Disposition status: pending
+- None - no findings.
+
+Disposition status: completed
 
 Deferral / not-required rationale:
 
-Not deferred.
+Not deferred. Mandatory oracle critique passed with no findings.
+
+# Retrospective / Promotion Disposition
+
+Disposition status: completed
+
+Promoted:
+
+- Dedicated evidence quality guidance was promoted into
+  `skills/loom-evidence/references/evidence-quality.md` and linked from
+  `skills/loom-evidence/SKILL.md`.
+- Evidence record prompts for freshness, invalidation, supersession, observed
+  result, and bounded inference were promoted into
+  `skills/loom-evidence/templates/evidence.md`.
+- Ticket evidence sufficiency teaching was promoted into
+  `skills/loom-tickets/SKILL.md`, `skills/loom-tickets/templates/ticket.md`, and
+  `skills/loom-tickets/references/acceptance-gate.md`.
+
+Deferred / not-required rationale:
+
+Not deferred. The durable lesson was promoted directly into the owner product
+surfaces listed above; no separate wiki page, research record, spec,
+constitution decision, or memory entry is needed.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation now lives in the
+evidence and ticket owner surfaces.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-02T20:54:00Z
+Basis: Ralph packet `packet:ralph-ticket-evshape9-20260502T204732Z`; evidence
+`evidence:evidence-quality-guidance-validation`; oracle critique
+`critique:evidence-quality-guidance-review` with no findings.
+Residual risks: validation is structural and prose-based; future operator
+adoption is not mechanically enforceable, by design.
 
 # Dependencies
 
@@ -147,3 +185,11 @@ Residual risks:
 # Journal
 
 - 2026-05-02T18:58:43Z: Created from council finding `CR-009`.
+- 2026-05-02T20:47:32Z: Started Ralph iteration
+  `packet:ralph-ticket-evshape9-20260502T204732Z` from baseline
+  `4ee1f67f07bf4428829f57460870d24e06f080bf`.
+- 2026-05-02T20:49:39Z: Ralph child completed bounded guidance updates,
+  created `evidence:evidence-quality-guidance-validation`, and moved ticket to
+  `review_required` for mandatory oracle critique.
+- 2026-05-02T20:54:00Z: Oracle critique passed with no findings. Recorded
+  acceptance and retrospective / promotion disposition; closed ticket.

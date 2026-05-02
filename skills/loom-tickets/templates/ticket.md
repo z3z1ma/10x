@@ -117,6 +117,8 @@ Owner records to source:
 Evidence readiness:
 Claims to support or challenge:
 Observation procedure:
+Freshness / environment expectation:
+Expected limitations or recheck triggers:
 
 Acceptance review readiness:
 Evidence and critique disposition:
@@ -125,6 +127,15 @@ Residual risks:
 # Evidence
 
 What evidence exists or is expected.
+
+- Link evidence records by stable ID.
+- State which acceptance or claim IDs each record supports or challenges.
+- Note whether evidence is fresh enough for the current source, record,
+  dependency, and environment state.
+- Summarize material limitations without turning the ticket into the raw evidence
+  store.
+- Remember: evidence feeds the ticket-owned acceptance gate; evidence does not
+  close the ticket by itself.
 
 # Critique Disposition
 

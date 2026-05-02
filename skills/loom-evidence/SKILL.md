@@ -13,6 +13,8 @@ Evidence owns observed artifacts.
 
 It records what was observed, how it was observed, what claims the observation
 supports or challenges, and what the evidence does not establish.
+The ticket, spec, critique, wiki, research, or constitution layer still owns the
+truth decision that consumes the evidence.
 
 ## What This Skill Owns
 
@@ -21,6 +23,7 @@ supports or challenges, and what the evidence does not establish.
 - procedure, artifact, environment, validity, and limitation sections
 - claim support and challenge links
 - provenance for external artifacts
+- freshness, invalidation, and supersession notes for observed artifacts
 
 Evidence does not own intended behavior, live execution state, review verdicts,
 accepted explanation, or durable policy.
@@ -48,7 +51,10 @@ Good evidence is:
 
 - observed, not inferred
 - specific about procedure and environment
+- freshness-aware about the source, record, dependency, and environment state it
+  was gathered from
 - explicit about what it supports and what it does not establish
+- explicit when it challenges a claim or when limitations make support weak
 - linked to tickets, specs, packets, critiques, or wiki pages when useful
 - recheckable enough that a future agent can judge its current value
 
@@ -59,13 +65,16 @@ Good evidence is:
 2. record the exact procedure or source of observation
 3. record artifacts, outputs, screenshots, logs, commands, files, or observations
 4. list supported claims and challenged claims separately
-5. state environment, validity, recheck trigger, and limitations
+5. state environment, freshness, validity, recheck trigger, invalidation or
+   supersession conditions, and limitations
 6. link the evidence back into the ticket or other owner record that needs it
 
 ## Done Means
 
 - the evidence record says what was observed and how
 - support and challenge links are explicit when claims are involved
+- freshness, invalidation, and supersession notes make the record's current value
+  inspectable
 - limitations prevent overclaiming
 - the owning ticket, critique, research, spec, or wiki page can cite the evidence
   without treating evidence as the owner of project truth
@@ -75,12 +84,14 @@ Good evidence is:
 Read immediately for evidence work:
 
 1. `templates/evidence.md` when creating an evidence record.
-2. `skills/loom-records/references/claim-coverage.md` when evidence supports or
+2. `references/evidence-quality.md` when deciding how strong, fresh, limited, or
+   reusable the evidence needs to be.
+3. `skills/loom-records/references/claim-coverage.md` when evidence supports or
    challenges spec acceptance IDs, ticket claims, or critique findings.
 
 Then read conditionally:
 
-3. `skills/loom-records/references/implementation-reality.md` when code, tests,
+4. `skills/loom-records/references/implementation-reality.md` when code, tests,
    specs, and observed outputs need their truth boundaries separated.
-4. `skills/loom-records/references/query-and-linking.md` when linking evidence
+5. `skills/loom-records/references/query-and-linking.md` when linking evidence
    back to tickets, specs, critiques, packets, or wiki pages.
