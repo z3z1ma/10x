@@ -3,7 +3,7 @@ id: research:skills-corpus-council-review
 kind: research
 status: concluded
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T07:58:42Z
+updated_at: 2026-05-02T08:46:28Z
 scope:
   kind: repository
   repositories:
@@ -18,6 +18,16 @@ links:
   plan:
     - plan:skills-corpus-protocol-sharpening
   ticket:
+    - ticket:0a1106b6
+    - ticket:4e8ebe92
+    - ticket:0cd38381
+    - ticket:50ded996
+    - ticket:1a12d9ff
+    - ticket:233cfdeb
+    - ticket:795fa0f4
+    - ticket:53cf2989
+    - ticket:cdf664af
+  superseded_ticket:
     - ticket:3uv5l5fh
 external_refs: {}
 ---
@@ -141,17 +151,18 @@ the corpus already uses the concepts. The improvements should reduce the need fo
 agent inference without adding a second ontology or turning Loom into a command
 system.
 
-The findings are broad enough to justify an initiative and plan, but the first
-execution pass can be owned by one high-risk ticket if it keeps a staged
-implementation order and splits follow-up tickets when scope becomes too wide.
+The findings are broad enough to justify an initiative and plan. The first broad
+execution ticket was split before implementation because smaller Ralph-sized
+tickets should produce higher-quality changes and cleaner acceptance dossiers.
 
 # Recommendations
 
 - Create a strategic initiative for skills corpus protocol sharpening.
 - Create a plan that sequences low-risk alignment, shared grammar hardening,
   operator ergonomics, duplicated-doctrine consolidation, and validation/critique.
-- Create one detailed ready ticket for the first comprehensive pass, with
-  mandatory critique and structural evidence gates.
+- Create smaller ready tickets for the first comprehensive pass, each scoped for a
+  higher-quality Ralph iteration, with final mandatory critique and structural
+  evidence gates.
 - Treat `loom-drive` visibility and README diagram correction as low-risk early
   alignment work.
 - Treat `OBJ-*` grammar, packet contract changes, ticket risk rules, cold-start
@@ -180,6 +191,7 @@ implementation order and splits follow-up tickets when scope becomes too wide.
 
 - `initiative:skills-corpus-protocol-sharpening`
 - `plan:skills-corpus-protocol-sharpening`
-- `ticket:3uv5l5fh`
+- `ticket:3uv5l5fh` was cancelled before implementation and superseded by the
+  child tickets in `plan:skills-corpus-protocol-sharpening`.
 - `evidence:skills-corpus-council-review`
 - `roadmap:bootstrap-the-markdown-first-protocol-corpus`

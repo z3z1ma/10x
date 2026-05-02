@@ -1,11 +1,11 @@
 ---
 id: ticket:3uv5l5fh
 kind: ticket
-status: ready
+status: cancelled
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T07:58:42Z
+updated_at: 2026-05-02T08:46:28Z
 scope:
   kind: repository
   repositories:
@@ -21,21 +21,50 @@ links:
     - evidence:skills-corpus-council-review
   plan:
     - plan:skills-corpus-protocol-sharpening
+  superseded_by:
+    - ticket:0a1106b6
+    - ticket:4e8ebe92
+    - ticket:0cd38381
+    - ticket:50ded996
+    - ticket:1a12d9ff
+    - ticket:233cfdeb
+    - ticket:795fa0f4
+    - ticket:53cf2989
+    - ticket:cdf664af
 external_refs: {}
 depends_on: []
 ---
 
 # Summary
 
-Execute the first comprehensive council-driven sharpening pass over Loom's
-`skills/` corpus and directly related public framing so the shipped Markdown
-protocol teaches Loom with stronger consistency, grammar, routing safety,
-operator ergonomics, and validation discipline.
+Cancelled before implementation. This broad execution ticket has been decomposed
+into smaller Ralph-sized tickets under `plan:skills-corpus-protocol-sharpening` so
+each unit of change can be implemented, evidenced, and critiqued at higher
+quality.
 
-This ticket owns the live execution state for the first pass. The tied plan owns
-sequencing. Research owns the reusable council synthesis. Evidence owns the
-observed council output and later validation artifacts. Critique will own the
-mandatory adversarial review before acceptance.
+This ticket no longer owns product-surface implementation. The tied plan owns
+sequencing. The replacement tickets own live execution state for their bounded
+slices. Research owns the reusable council synthesis. Evidence owns the observed
+council output and later validation artifacts. Critique will own adversarial
+review before acceptance.
+
+# Cancellation Disposition
+
+Cancelled at 2026-05-02T08:46:28Z before implementation began.
+
+Replacement execution tickets:
+
+- `ticket:0a1106b6` - public `loom-drive` and outer-loop framing alignment
+- `ticket:4e8ebe92` - objective coverage and shared record grammar
+- `ticket:0cd38381` - packet and handoff grammar
+- `ticket:50ded996` - ticket risk, critique, acceptance, and follow-up grammar
+- `ticket:1a12d9ff` - workspace cold-start, resume, and compaction guidance
+- `ticket:233cfdeb` - scratchpad, external-reference, and concurrency guardrails
+- `ticket:795fa0f4` - memory pruning and frontmatter/status expectations
+- `ticket:53cf2989` - owner-surface doctrine consolidation
+- `ticket:cdf664af` - final validation, critique, and reconciliation
+
+No product-surface edits were made under this ticket.
 
 # Context
 
@@ -411,37 +440,37 @@ Suggested implementation order:
 
 # Blockers
 
-None. The ticket is ready for a governed implementation pass or pre-implementation
-critique. Implementation should not start until the operator accepts this planning
-package or explicitly asks to proceed.
+None. This ticket is cancelled before implementation; use the replacement tickets
+for governed work.
 
 # Next Move / Next Route
 
-Pause for operator review of the new Loom records. After approval, begin the
-implementation pass from `plan:skills-corpus-protocol-sharpening`, starting with
-baseline validation queries and the low-risk alignment wave.
-
-Because this is high-risk protocol-authority work, mandatory critique is required
-before acceptance even if the implementation appears structurally clean.
+Use the replacement tickets in `plan:skills-corpus-protocol-sharpening`, starting
+with `ticket:0a1106b6`.
 
 # Ralph Readiness
 
-This ticket is not Ralph-ready as one single child iteration because it spans
-multiple protocol surfaces and risk classes. If a fresh worker is used, compile
-one Ralph packet per wave or per tightly bounded subset.
+This ticket is intentionally not Ralph-ready. It was cancelled because it spanned
+too many protocol surfaces and risk classes for one high-quality child iteration.
+Compile Ralph packets against the replacement tickets instead.
 
 Bounded iteration:
 
-- Candidate iteration 1: low-risk public and routing alignment.
-- Candidate iteration 2: shared record grammar hardening.
-- Candidate iteration 3: workspace/operator ergonomics.
-- Candidate iteration 4: owner-surface consolidation.
-- Candidate iteration 5: validation evidence and critique reconciliation.
+- Use `ticket:0a1106b6` for low-risk public and routing alignment.
+- Use `ticket:4e8ebe92` for shared record grammar hardening.
+- Use `ticket:0cd38381` for packet and handoff grammar.
+- Use `ticket:50ded996` for ticket risk and acceptance grammar.
+- Use `ticket:1a12d9ff` for workspace resume and compaction guidance.
+- Use `ticket:233cfdeb` for scratchpad, external-reference, and concurrency guidance.
+- Use `ticket:795fa0f4` for memory pruning and frontmatter expectations.
+- Use `ticket:53cf2989` for owner-surface doctrine consolidation.
+- Use `ticket:cdf664af` for validation evidence and critique reconciliation.
 
 Write boundary:
 
-- Use the wave-specific write scopes in `plan:skills-corpus-protocol-sharpening`.
-- Do not let a child edit outside the declared wave without returning to the
+- Use the replacement ticket write scopes in
+  `plan:skills-corpus-protocol-sharpening`.
+- Do not let a child edit outside its declared ticket without returning to the
   parent for packet or ticket refinement.
 
 Likely verification posture:
@@ -557,6 +586,11 @@ Governed by:
 # Journal
 
 - 2026-05-02T07:58:42Z: Created from the council review requested by the user.
-  Implementation has not started. The ticket is ready for operator review and a
-  staged protocol-authority implementation pass tied to
+  Implementation had not started. The ticket was initially ready for operator
+  review and a staged protocol-authority implementation pass tied to
   `plan:skills-corpus-protocol-sharpening`.
+- 2026-05-02T08:46:28Z: Cancelled before implementation after the user asked to
+  break work into smaller units for higher-quality Ralph iterations. Superseded
+  by `ticket:0a1106b6`, `ticket:4e8ebe92`, `ticket:0cd38381`,
+  `ticket:50ded996`, `ticket:1a12d9ff`, `ticket:233cfdeb`, `ticket:795fa0f4`,
+  `ticket:53cf2989`, and `ticket:cdf664af`.

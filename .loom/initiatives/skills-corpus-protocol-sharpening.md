@@ -3,7 +3,7 @@ id: initiative:skills-corpus-protocol-sharpening
 kind: initiative
 status: active
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T07:58:42Z
+updated_at: 2026-05-02T08:46:28Z
 scope:
   kind: repository
   repositories:
@@ -18,6 +18,16 @@ links:
   plan:
     - plan:skills-corpus-protocol-sharpening
   ticket:
+    - ticket:0a1106b6
+    - ticket:4e8ebe92
+    - ticket:0cd38381
+    - ticket:50ded996
+    - ticket:1a12d9ff
+    - ticket:233cfdeb
+    - ticket:795fa0f4
+    - ticket:53cf2989
+    - ticket:cdf664af
+  superseded_ticket:
     - ticket:3uv5l5fh
 ---
 
@@ -123,7 +133,9 @@ outcome container so downstream plan and ticket work does not live only in chat.
 - `evidence:skills-corpus-council-review` records the observed council output that
   triggered this initiative.
 - `plan:skills-corpus-protocol-sharpening` sequences execution.
-- `ticket:3uv5l5fh` owns live execution state for the first comprehensive pass.
+- Child tickets under `plan:skills-corpus-protocol-sharpening` own live execution
+  state for the first comprehensive pass; `ticket:3uv5l5fh` was cancelled before
+  implementation because it was too broad for one Ralph-quality iteration.
 
 # Risks
 
@@ -143,15 +155,20 @@ outcome container so downstream plan and ticket work does not live only in chat.
 - Research: `research:skills-corpus-council-review`
 - Evidence: `evidence:skills-corpus-council-review`
 - Plan: `plan:skills-corpus-protocol-sharpening`
-- Ticket: `ticket:3uv5l5fh`
+- Superseded broad ticket: `ticket:3uv5l5fh`
+- Execution tickets: `ticket:0a1106b6`, `ticket:4e8ebe92`, `ticket:0cd38381`,
+  `ticket:50ded996`, `ticket:1a12d9ff`, `ticket:233cfdeb`, `ticket:795fa0f4`,
+  `ticket:53cf2989`, and `ticket:cdf664af`
 - Roadmap: `roadmap:bootstrap-the-markdown-first-protocol-corpus`
 
 # Status Summary
 
 Council findings have been promoted out of chat into research and evidence. The
-next owner for execution strategy is `plan:skills-corpus-protocol-sharpening`,
-and the next live execution owner is `ticket:3uv5l5fh`. Implementation has not
-started under this initiative.
+initial broad ticket `ticket:3uv5l5fh` has been cancelled before implementation
+and replaced by smaller Ralph-sized tickets under
+`plan:skills-corpus-protocol-sharpening`. The first live execution owner is
+`ticket:0a1106b6`; later tickets are sequenced through plan dependencies.
+Implementation has not started under this initiative.
 
 # Completion Basis
 

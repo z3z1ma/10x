@@ -3,7 +3,7 @@ id: evidence:skills-corpus-council-review
 kind: evidence
 status: recorded
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T07:58:42Z
+updated_at: 2026-05-02T08:46:28Z
 scope:
   kind: repository
   repositories:
@@ -18,6 +18,16 @@ links:
   plan:
     - plan:skills-corpus-protocol-sharpening
   ticket:
+    - ticket:0a1106b6
+    - ticket:4e8ebe92
+    - ticket:0cd38381
+    - ticket:50ded996
+    - ticket:1a12d9ff
+    - ticket:233cfdeb
+    - ticket:795fa0f4
+    - ticket:53cf2989
+    - ticket:cdf664af
+  superseded_ticket:
     - ticket:3uv5l5fh
 external_refs: {}
 ---
@@ -132,8 +142,8 @@ not prove that any product-surface edit has been made correctly.
 # Result
 
 The observed council result provides enough grounded direction to create a Loom
-initiative, research synthesis, execution plan, and high-risk ticket before
-implementation begins.
+initiative, research synthesis, execution plan, and smaller high-quality execution
+tickets before implementation begins.
 
 # Interpretation
 
@@ -147,5 +157,6 @@ mandatory critique, not this review alone.
 - `initiative:skills-corpus-protocol-sharpening`
 - `research:skills-corpus-council-review`
 - `plan:skills-corpus-protocol-sharpening`
-- `ticket:3uv5l5fh`
+- `ticket:3uv5l5fh` was cancelled before implementation and superseded by the
+  smaller child tickets in `plan:skills-corpus-protocol-sharpening`.
 - `roadmap:bootstrap-the-markdown-first-protocol-corpus`

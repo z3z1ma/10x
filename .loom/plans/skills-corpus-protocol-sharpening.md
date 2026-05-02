@@ -3,7 +3,7 @@ id: plan:skills-corpus-protocol-sharpening
 kind: plan
 status: active
 created_at: 2026-05-02T07:58:42Z
-updated_at: 2026-05-02T07:58:42Z
+updated_at: 2026-05-02T08:46:28Z
 scope:
   kind: repository
   repositories:
@@ -18,6 +18,16 @@ links:
   evidence:
     - evidence:skills-corpus-council-review
   ticket:
+    - ticket:0a1106b6
+    - ticket:4e8ebe92
+    - ticket:0cd38381
+    - ticket:50ded996
+    - ticket:1a12d9ff
+    - ticket:233cfdeb
+    - ticket:795fa0f4
+    - ticket:53cf2989
+    - ticket:cdf664af
+  superseded_ticket:
     - ticket:3uv5l5fh
 ---
 
@@ -55,10 +65,10 @@ failure risk is not missing architecture; it is cross-surface drift and
 under-specified grammar that can make fresh agents infer behavior instead of
 recovering it from owner records.
 
-This plan serves `initiative:skills-corpus-protocol-sharpening` and drives
-`ticket:3uv5l5fh` as the first comprehensive pass. The ticket may split later
-follow-ups if implementation proves too broad, but live execution truth remains
-with the ticket and any explicitly created child tickets.
+This plan serves `initiative:skills-corpus-protocol-sharpening`. The initial broad
+ticket `ticket:3uv5l5fh` was cancelled before implementation and decomposed into
+smaller Ralph-sized tickets. Live execution truth now belongs to the child tickets
+listed in this plan; this plan owns only sequencing.
 
 # Workstreams
 
@@ -117,7 +127,7 @@ Validation and review:
 # Milestones
 
 1. Planning records created and linked: initiative, research, evidence, plan, and
-   ticket.
+   tickets.
 2. Low-risk drift corrected: `loom-drive` surfaced and README/public diagrams
    aligned with bootstrap doctrine.
 3. Shared grammar hardened: coverage, kinds, IDs, packets, risk/change,
@@ -149,7 +159,7 @@ to tickets if the work becomes too broad for one acceptance dossier.
 
 Wave 1:
 
-- `ticket:3uv5l5fh` low-risk alignment pass. Expected write scope:
+- `ticket:0a1106b6` low-risk public and routing alignment. Expected write scope:
   `README.md`, `PROTOCOL.md`, `ARCHITECTURE.md` if needed,
   `skills/loom-bootstrap/**`, and skill-map/routing references that enumerate
   workflow skills. The pass should avoid record grammar changes except where
@@ -157,38 +167,55 @@ Wave 1:
 
 Wave 2:
 
-- `ticket:3uv5l5fh` shared grammar pass. Expected write scope:
-  `skills/loom-records/**`, `skills/loom-tickets/**`, `skills/loom-initiatives/**`,
-  packet-related references/templates, and small pointers from affected skills.
-  This wave is high risk because it affects claim coverage, packet contracts, and
-  acceptance posture.
+- `ticket:4e8ebe92` shared record and objective grammar. Expected write scope:
+  `skills/loom-records/**`, `skills/loom-initiatives/**`, and small pointers from
+  affected skills. This wave is high risk because it affects claim coverage and
+  shared record grammar.
 
 Wave 3:
 
-- `ticket:3uv5l5fh` operator ergonomics pass. Expected write scope:
-  `skills/loom-workspace/**`, `skills/loom-bootstrap/**`, `skills/loom-drive/**`,
-  `skills/loom-memory/**`, `skills/loom-ralph/**`, `skills/loom-critique/**`, and
-  related references where the operator route is taught.
+- `ticket:0cd38381` packet and handoff grammar. Expected write scope:
+  `skills/loom-ralph/**`, `skills/loom-records/**`, `skills/loom-critique/**`,
+  `skills/loom-wiki/**`, and `skills/loom-drive/**`.
+- `ticket:50ded996` ticket risk, critique, acceptance, and follow-up grammar.
+  Expected write scope: `skills/loom-tickets/**`,
+  `skills/loom-records/references/change-class.md`, and targeted
+  `skills/loom-critique/**` pointers.
+- These tickets may run in parallel only if their child write scopes are narrowed
+  to avoid overlapping `skills/loom-records/**` edits.
 
 Wave 4:
 
-- `ticket:3uv5l5fh` consolidation pass. Expected write scope:
+- `ticket:1a12d9ff` workspace resume and compaction guidance. Expected write
+  scope: `skills/loom-workspace/**`, `skills/loom-bootstrap/**`,
+  `skills/loom-drive/**`, `skills/loom-tickets/**`, and `skills/loom-memory/**`.
+- `ticket:233cfdeb` scratchpad, external reference, and concurrency guardrails.
+  Expected write scope: `skills/loom-records/**`, `skills/loom-workspace/**`,
+  `skills/loom-git/**`, `skills/loom-evidence/**`, `skills/loom-research/**`,
+  `skills/loom-tickets/**`, and `skills/loom-memory/**`.
+- `ticket:795fa0f4` memory pruning and frontmatter expectations. Expected write
+  scope: `skills/loom-memory/**` plus narrow pointers to `skills/loom-records/**`
+  or `skills/loom-retrospective/**` if needed.
+
+Wave 5:
+
+- `ticket:53cf2989` owner-surface consolidation. Expected write scope:
   `skills/loom-wiki/**`, `skills/loom-codemap/**`, `skills/loom-retrospective/**`,
   `skills/loom-records/**`, `skills/loom-research/**`, `skills/loom-spike/**`, and
   `skills/loom-skill-authoring/**`.
 
-Wave 5:
+Wave 6:
 
-- `ticket:3uv5l5fh` validation, evidence, critique, and reconciliation. Expected
+- `ticket:cdf664af` validation, evidence, critique, and reconciliation. Expected
   write scope: `.loom/evidence/**`, `.loom/critique/**`, `.loom/tickets/**`, and
   any follow-up ticket records needed for unresolved findings. Product-surface
   edits should be frozen except for critique fixes.
 
 # Risks
 
-- The ticket may be too broad if all findings require deep edits. Mitigation:
-  keep `ticket:3uv5l5fh` as the first comprehensive pass but split explicit
-  follow-up tickets for work that cannot be accepted safely in this pass.
+- Even the child tickets may be too broad if a surface proves more tangled than
+  expected. Mitigation: split explicit follow-up tickets rather than expanding a
+  Ralph packet beyond one bounded iteration.
 - README edits could make README appear more authoritative than bootstrap.
   Mitigation: frame README as product overview and keep bootstrap doctrine as the
   operating authority.
@@ -219,16 +246,16 @@ Minimum evidence after implementation:
 - Empty-directory check for `skills/` directories.
 - Source-repo leakage check for `agent-loom`, absolute paths, `.opencode`,
   `examples/`, and `optional-utilities` inside shipped skills.
-- Manual comparison against this plan and `ticket:3uv5l5fh` acceptance criteria.
+- Manual comparison against this plan and child-ticket acceptance criteria.
 
 # Plan Readiness Review
 
 Spec / acceptance coverage:
 
 No separate spec exists yet. `initiative:skills-corpus-protocol-sharpening` owns
-strategic objective criteria; `ticket:3uv5l5fh` owns ticket-local acceptance for
-the first implementation pass. If behavior contracts become reusable or disputed,
-promote them into a spec before relying on them across multiple tickets.
+strategic objective criteria; child tickets own ticket-local acceptance for their
+bounded slices. If behavior contracts become reusable or disputed, promote them
+into a spec before relying on them across multiple tickets.
 
 Placeholder scan:
 
@@ -238,9 +265,9 @@ loopback conditions.
 
 Ticket-sized slices:
 
-The first ticket is broad but staged. If any wave cannot be reviewed in one
-acceptance dossier, create follow-up tickets and update this plan rather than
-expanding scope silently.
+The first broad ticket has been replaced by smaller tickets. If any child ticket
+cannot be reviewed in one acceptance dossier, create follow-up tickets and update
+this plan rather than expanding scope silently.
 
 Likely write scopes:
 
@@ -274,16 +301,16 @@ Stop / loopback conditions:
 
 # Exit Criteria
 
-- `ticket:3uv5l5fh` has been accepted or has explicitly spawned follow-up tickets
-  for residual work.
+- The child tickets have been accepted, cancelled with rationale, or have
+  explicitly spawned follow-up tickets for residual work.
 - The linked evidence records fresh structural validation from the final diff.
 - Mandatory critique exists and all medium/high findings are resolved, accepted as
   risk, or converted into linked follow-up tickets.
 - The initiative success metrics have a truthful status summary.
-- Any wiki or retrospective promotion decision is recorded in the ticket.
+- Any wiki or retrospective promotion decision is recorded in the relevant ticket.
 
 # Completion Basis
 
-When `status: completed`, cite `ticket:3uv5l5fh`, implementation evidence,
+When `status: completed`, cite the child tickets, implementation evidence,
 mandatory critique, and any follow-up tickets or accepted risks that explain why
 the plan can stop.
