@@ -23,7 +23,7 @@ This skill exists so review has the same durability and rigor as execution.
 - direct artifact critique
 - packetized implementation critique
 - named critique profiles
-- review severity and disposition
+- review severity and critique-owned finding state
 - follow-up pressure on tickets, specs, plans, and wiki pages
 
 Critique owns findings and verdicts. Tickets own live execution state,

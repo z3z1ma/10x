@@ -3,7 +3,7 @@ id: critique:drive-continuity-vocabulary-review
 kind: critique
 status: final
 created_at: 2026-05-02T17:06:10Z
-updated_at: 2026-05-02T17:13:16Z
+updated_at: 2026-05-02T17:37:51Z
 scope:
   kind: repository
   repositories:
@@ -55,7 +55,7 @@ Prior finding resolved. No new findings remain.
 Severity: medium
 Confidence: high
 State: open
-Ticket disposition: resolved
+Ticket-owned disposition summary: resolved in `ticket:9c2delu8`.
 
 Observation:
 

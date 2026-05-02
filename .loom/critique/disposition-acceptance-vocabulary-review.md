@@ -3,7 +3,7 @@ id: critique:disposition-acceptance-vocabulary-review
 kind: critique
 status: final
 created_at: 2026-05-02T15:56:59Z
-updated_at: 2026-05-02T15:56:59Z
+updated_at: 2026-05-02T17:37:51Z
 scope:
   kind: repository
   repositories:
@@ -59,7 +59,7 @@ wording issue is resolved.
 Severity: medium
 Confidence: high
 State: open
-Ticket disposition: resolved
+Ticket-owned disposition summary: resolved in `ticket:3twzep5n`.
 
 Resolution:
 
@@ -73,7 +73,7 @@ closure-blocking merely because they were once opened.
 Severity: medium
 Confidence: high
 State: open
-Ticket disposition: resolved
+Ticket-owned disposition summary: resolved in `ticket:3twzep5n`.
 
 Resolution:
 
@@ -85,7 +85,7 @@ parent merge notes.
 Severity: medium
 Confidence: high
 State: open
-Ticket disposition: resolved
+Ticket-owned disposition summary: resolved in `ticket:3twzep5n`.
 
 Resolution:
 
@@ -98,7 +98,7 @@ ticket-owned finding disposition / ticket-owned critique disposition rather than
 Severity: low
 Confidence: medium
 State: open
-Ticket disposition: resolved
+Ticket-owned disposition summary: resolved in `ticket:3twzep5n`.
 
 Resolution:
 
@@ -110,7 +110,7 @@ critique disposition status grammar.
 Severity: low
 Confidence: medium
 State: open
-Ticket disposition: resolved
+Ticket-owned disposition summary: resolved in `ticket:3twzep5n`.
 
 Resolution:
 

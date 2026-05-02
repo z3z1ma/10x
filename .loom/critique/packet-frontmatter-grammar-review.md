@@ -3,7 +3,7 @@ id: critique:packet-frontmatter-grammar-review
 kind: critique
 status: final
 created_at: 2026-05-02T16:14:35Z
-updated_at: 2026-05-02T16:14:35Z
+updated_at: 2026-05-02T17:37:51Z
 scope:
   kind: repository
   repositories:
@@ -56,7 +56,7 @@ review.
 Severity: medium
 Confidence: high
 State: open
-Ticket disposition: resolved
+Ticket-owned disposition summary: resolved in `ticket:4ilnwsnl`.
 
 Observation:
 

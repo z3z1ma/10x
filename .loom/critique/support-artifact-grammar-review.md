@@ -3,7 +3,7 @@ id: critique:support-artifact-grammar-review
 kind: critique
 status: final
 created_at: 2026-05-02T16:27:27Z
-updated_at: 2026-05-02T16:35:43Z
+updated_at: 2026-05-02T17:37:51Z
 scope:
   kind: repository
   repositories:
@@ -56,7 +56,7 @@ Both prior findings are resolved. No new findings remain.
 Severity: high
 Confidence: high
 State: open
-Ticket disposition: resolved
+Ticket-owned disposition summary: resolved in `ticket:lqiw3hvp`.
 
 Observation:
 
@@ -90,7 +90,7 @@ Challenges:
 Severity: medium
 Confidence: high
 State: open
-Ticket disposition: resolved
+Ticket-owned disposition summary: resolved in `ticket:lqiw3hvp`.
 
 Observation:
 

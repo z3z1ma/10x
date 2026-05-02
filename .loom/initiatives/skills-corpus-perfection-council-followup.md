@@ -1,9 +1,9 @@
 ---
 id: initiative:skills-corpus-perfection-council-followup
 kind: initiative
-status: active
+status: completed
 created_at: 2026-05-02T15:25:50Z
-updated_at: 2026-05-02T15:25:50Z
+updated_at: 2026-05-02T17:41:49Z
 scope:
   kind: repository
   repositories:
@@ -19,6 +19,10 @@ links:
     - ticket:u02z7o9j
     - ticket:9c2delu8
     - ticket:wfxfu4zp
+  evidence:
+    - evidence:skills-corpus-perfection-completion-validation
+  critique:
+    - critique:skills-corpus-perfection-completion-review
 external_refs: {}
 ---
 
@@ -117,12 +121,47 @@ fresh agents are most likely to guess.
 
 # Status Summary
 
-Active. The council review has been decomposed into seven Ralph-sized tickets.
-Execution should proceed sequentially unless the plan explicitly allows a later
-ticket to start after its dependencies close.
+Completed. The council review was decomposed into seven Ralph-sized tickets, each
+closed with evidence, oracle critique, retrospective disposition, semantic commit,
+and push. Completion evidence and oracle completion critique support the final
+acceptance decision.
 
 # Completion Basis
 
-When `status: completed`, cite the final ticket dispositions, evidence, oracle
-critique records, retrospective dispositions, commits pushed, and any accepted
-residual risks or follow-up tickets.
+Completed at: 2026-05-02T17:41:49Z
+
+Success metric coverage:
+
+- OBJ-001: supported by `ticket:3twzep5n`,
+  `evidence:disposition-acceptance-vocabulary-validation`,
+  `critique:disposition-acceptance-vocabulary-review`, and completion critique
+  repair of critique-owned finding-state wording.
+- OBJ-002: supported by `ticket:4ilnwsnl`,
+  `evidence:packet-frontmatter-grammar-validation`, and
+  `critique:packet-frontmatter-grammar-review`.
+- OBJ-003: supported by `ticket:lqiw3hvp`,
+  `evidence:support-artifact-grammar-validation`, and
+  `critique:support-artifact-grammar-review`.
+- OBJ-004: supported by `ticket:yk89awl5`,
+  `evidence:readme-bootstrap-authority-validation`, and
+  `critique:readme-bootstrap-authority-review`.
+- OBJ-005: supported by `ticket:u02z7o9j`,
+  `evidence:ticket-local-acceptance-readiness-validation`, and
+  `critique:ticket-local-acceptance-readiness-review`.
+- OBJ-006: supported by `ticket:9c2delu8`,
+  `evidence:drive-continuity-vocabulary-validation`, and
+  `critique:drive-continuity-vocabulary-review`.
+- OBJ-007: supported by `ticket:wfxfu4zp`,
+  `evidence:corpus-hygiene-sweep-validation`, and
+  `critique:corpus-hygiene-sweep-review`.
+- OBJ-008: supported by all seven closed child tickets, their evidence and
+  critique records, retrospective dispositions, pushed semantic commits, and
+  `evidence:skills-corpus-perfection-completion-validation`.
+
+Completion critique: `critique:skills-corpus-perfection-completion-review`
+returned `pass` after two closure-readiness findings were resolved.
+
+Accepted residual risks: validation and critique were structural/textual; there is
+no automated schema or rendered-document validation for this Markdown corpus.
+
+Follow-up tickets: none.

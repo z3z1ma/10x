@@ -1,9 +1,9 @@
 ---
 id: plan:skills-corpus-perfection-council-followup
 kind: plan
-status: active
+status: completed
 created_at: 2026-05-02T15:25:50Z
-updated_at: 2026-05-02T15:25:50Z
+updated_at: 2026-05-02T17:41:49Z
 scope:
   kind: repository
   repositories:
@@ -19,6 +19,10 @@ links:
     - ticket:u02z7o9j
     - ticket:9c2delu8
     - ticket:wfxfu4zp
+  evidence:
+    - evidence:skills-corpus-perfection-completion-validation
+  critique:
+    - critique:skills-corpus-perfection-completion-review
 external_refs: {}
 ---
 
@@ -251,6 +255,51 @@ Stop / loopback conditions:
 
 # Completion Basis
 
-When `status: completed`, cite the child tickets, evidence records, critique
-records, semantic commits, pushes, retrospective dispositions, and any follow-up
-tickets or accepted risks.
+Completed at: 2026-05-02T17:41:49Z
+
+Child tickets: `ticket:3twzep5n`, `ticket:4ilnwsnl`, `ticket:lqiw3hvp`,
+`ticket:yk89awl5`, `ticket:u02z7o9j`, `ticket:9c2delu8`, and
+`ticket:wfxfu4zp` are closed.
+
+Evidence records:
+
+- `evidence:disposition-acceptance-vocabulary-validation`
+- `evidence:packet-frontmatter-grammar-validation`
+- `evidence:support-artifact-grammar-validation`
+- `evidence:readme-bootstrap-authority-validation`
+- `evidence:ticket-local-acceptance-readiness-validation`
+- `evidence:drive-continuity-vocabulary-validation`
+- `evidence:corpus-hygiene-sweep-validation`
+- `evidence:skills-corpus-perfection-completion-validation`
+
+Critique records:
+
+- `critique:disposition-acceptance-vocabulary-review`
+- `critique:packet-frontmatter-grammar-review`
+- `critique:support-artifact-grammar-review`
+- `critique:readme-bootstrap-authority-review`
+- `critique:ticket-local-acceptance-readiness-review`
+- `critique:drive-continuity-vocabulary-review`
+- `critique:corpus-hygiene-sweep-review`
+- `critique:skills-corpus-perfection-completion-review`
+
+Semantic ticket commits pushed:
+
+- `330a7b2 docs: normalize critique disposition grammar`
+- `6f7be0b docs: canonicalize packet frontmatter grammar`
+- `57f19fb docs: clarify support artifact grammar`
+- `16bb2a3 docs: align readme authority framing`
+- `e3fa3b4 docs: clarify ticket acceptance readiness`
+- `08b42ba docs: simplify drive continuity vocabulary`
+- `85e4236 docs: run final corpus hygiene sweep`
+
+Retrospective disposition: each child ticket records retrospective disposition.
+Durable lessons were promoted directly into the owner product surfaces and
+completion evidence. No separate wiki, research, spec, constitution, or memory
+promotion is needed for this plan.
+
+Follow-up tickets or accepted risks: none.
+
+Completion critique: `critique:skills-corpus-perfection-completion-review`
+returned `pass` after the critique/ticket disposition-boundary and completion
+evidence grep-scope findings were resolved.
