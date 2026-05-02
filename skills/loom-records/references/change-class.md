@@ -33,7 +33,7 @@ guessing from vibes.
 
 ## Template Use
 
-Tickets and packets may declare change class:
+New tickets must declare both fields in frontmatter:
 
 ```yaml
 change_class: code-behavior
@@ -43,9 +43,20 @@ risk_class: medium
 When a ticket has several classes, name the primary class in frontmatter and
 list secondary classes in the body.
 
-Prefer `risk_class` in ticket frontmatter when risk affects critique,
-verification, or acceptance. Packets may repeat or narrow the ticket risk for one
-iteration, but the ticket owns the final risk and critique disposition.
+This strictness is intentional: even low-risk governed work needs an explicit
+risk and change judgment so evidence, critique, packet posture, and acceptance
+can fail closed instead of being inferred from vibes.
+
+Apply this requirement to new tickets and to tickets being materially updated for
+readiness, Ralph, critique, acceptance, reopening, or closure. Legacy tickets
+without these fields should be normalized when touched or before governed
+execution or acceptance; their prior absence does not make them broken merely by
+existing.
+
+Packets may repeat or narrow the ticket risk for one iteration, but the ticket
+owns the final risk and critique disposition. The risk class restated in a
+ticket's `# Critique Disposition` must match frontmatter `risk_class`; if it does
+not, reconcile the ticket before routing review or closure.
 
 ## Discipline
 

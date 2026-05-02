@@ -43,13 +43,18 @@ write `None - no findings` when no finding applies.
 
 Severity: low | medium | high
 Confidence: low | medium | high
-Disposition: open | resolved | accepted_risk | superseded
+Disposition: open | resolved | accepted_risk | superseded | converted_to_follow_up
 
 Observation:
 
 Why it matters:
 
 Follow-up:
+
+Use linked ticket references when a finding is converted to follow-up work, for
+example `ticket:<token>`. Tickets consume this as a ticket-owned disposition such
+as `critique:example-review#FIND-001` — converted to follow-up ticket
+`ticket:<token>`.
 
 For claim-specific findings, include:
 

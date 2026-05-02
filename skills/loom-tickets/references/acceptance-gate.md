@@ -19,6 +19,16 @@ implementation.
 - recent Ralph packet outcomes
 - relevant plan or initiative context
 
+Ticket frontmatter `risk_class` is the canonical ticket risk. The risk class in
+`# Critique Disposition` restates that same value for critique routing and must
+not become a second, contradictory risk claim.
+
+New tickets and tickets being materially updated for readiness, Ralph, critique,
+acceptance, reopening, or closure must declare `change_class` and `risk_class`.
+Legacy tickets without those fields are normalized when touched or before they
+are used for governed execution or acceptance; they are not declared broken
+merely by existing.
+
 ## Acceptance Dossier
 
 The acceptance dossier is the composed ticket-owned view used for closure.
@@ -50,18 +60,37 @@ Acceptance Dossier =
 - Is critique policy explicit enough for this change class and risk class?
 - When critique policy requires profiles, are those profiles complete?
 - If critique is mandatory, does required critique exist and are medium/high
-  findings resolved, explicitly accepted as risk, or converted into linked
-  follow-up tickets?
+  findings resolved, explicitly accepted as risk, superseded by evidence, or
+  converted into linked follow-up tickets?
 - If critique is recommended but not performed, does the ticket record why it
   was deferred or intentionally not needed before closure?
 - For any existing critique, are medium and high severity findings resolved,
-  explicitly accepted, or converted into follow-up tickets?
-- Are finding references qualified, for example `critique:<slug>#FIND-001`?
+  accepted as risk, superseded by evidence, or converted into linked follow-up
+  tickets?
+- Are finding references qualified, for example `critique:example-review#FIND-001`?
 - Is wiki or retrospective follow-through complete or truthfully deferred?
 - If human signoff or accepted-risk provenance is required, does
   `# Acceptance Decision` name who accepted, when, on what basis, and with what
   residual risks?
 - Are links and status fields coherent?
+
+## Finding Disposition
+
+Tickets consume critique findings; critique records do not close tickets. For
+each finding reference, use a qualified reference such as
+`critique:example-review#FIND-001` and record one ticket-owned disposition:
+
+- `resolved` — the finding was addressed by a specific change or evidence ref.
+- `accepted_risk` — the risk remains but is intentionally accepted; record the
+  rationale and acceptance provenance in `# Acceptance Decision`.
+- `superseded` — newer evidence invalidates or replaces the finding; cite that
+  evidence.
+- `converted_to_follow_up` — the finding is real but outside this ticket's
+  closure scope; link the follow-up ticket that now owns the remaining work.
+
+Medium/high findings are not closure-compatible while merely open, missing, or
+unexplained. They must be resolved, explicitly accepted as risk, superseded by
+evidence, or converted into linked follow-up tickets.
 
 ## Outcomes
 
@@ -78,6 +107,10 @@ Acceptance Dossier =
 - Do not close because the code feels done.
 - Do not close over unresolved required critique.
 - Do not close over missing mandatory critique.
+- Do not close over missing evidence for covered claims or acceptance criteria.
+- Do not close over medium/high critique findings unless they are resolved,
+  accepted as risk, superseded by evidence, or converted into linked follow-up
+  tickets.
 - Do not close over recommended critique without a ticket-owned disposition.
 - Do not let acceptance live only in chat.
 - Create follow-up tickets for substantial residual work.

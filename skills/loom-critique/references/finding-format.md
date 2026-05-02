@@ -6,7 +6,7 @@ Each meaningful finding should normally include:
 - a short title
 - severity: `low | medium | high`
 - confidence: `low | medium | high`
-- disposition: `open | resolved | accepted_risk | superseded`
+- disposition: `open | resolved | accepted_risk | superseded | converted_to_follow_up`
 - what was observed
 - why it matters
 - what follow-up would reduce the risk
@@ -22,10 +22,12 @@ A critique record should help someone act, not merely worry.
 When another record refers to a finding, qualify it:
 
 ```text
-critique:<slug>#FIND-001
+critique:example-review#FIND-001
 ```
 
-Tickets should use those references when tracking critique disposition.
+Tickets should use those references when tracking critique disposition. The
+ticket owns acceptance: it records whether each finding was resolved, accepted as
+risk, superseded by evidence, or converted into a linked follow-up ticket.
 
 ## Receiving Findings
 
@@ -37,7 +39,8 @@ For each finding:
 2. restate the technical requirement if it is unclear
 3. inspect the relevant source, record, evidence, or diff
 4. decide whether the finding is valid for this project and ticket scope
-5. implement, clarify, accept risk, supersede with evidence, or create follow-up
+5. implement, clarify, accept risk, supersede with evidence, or create a linked
+   follow-up ticket
 6. update the ticket critique disposition
 
 Do not partially implement a multi-item review when some items are unclear and

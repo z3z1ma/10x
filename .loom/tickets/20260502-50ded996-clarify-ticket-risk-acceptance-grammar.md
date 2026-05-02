@@ -1,11 +1,11 @@
 ---
 id: ticket:50ded996
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T09:28:53Z
+updated_at: 2026-05-02T10:11:03Z
 scope:
   kind: repository
   repositories:
@@ -19,6 +19,11 @@ links:
     - research:skills-corpus-council-review
   evidence:
     - evidence:skills-corpus-council-review
+    - evidence:ticket-risk-acceptance-grammar-validation
+  critique:
+    - critique:ticket-risk-acceptance-grammar-review
+  packet:
+    - packet:ralph-ticket-50ded996-20260502T095614Z
   plan:
     - plan:skills-corpus-protocol-sharpening
   supersedes:
@@ -49,13 +54,13 @@ decision.
 
 # Scope
 
-- Decide and document whether `change_class` and `risk_class` are required for
-  every ticket or only when evidence/critique/packet posture depends on them.
+- Decide and document when `change_class` and `risk_class` are required, including
+  the lifecycle boundary for legacy tickets.
 - Preserve or revise the current ticket template so it matches the selected rule.
 - Explain the relationship between frontmatter `risk_class` and risk class inside
   `# Critique Disposition`.
-- Clarify finding disposition grammar: resolved, accepted as risk, deferred with
-  rationale when allowed, or converted into a linked follow-up ticket.
+- Clarify finding disposition grammar: resolved, accepted as risk, superseded by
+  evidence, or converted into a linked follow-up ticket.
 - Keep the acceptance gate fail-closed over unresolved required critique and
   missing evidence.
 - Update `loom-critique` pointers only where needed so critique findings and
@@ -95,10 +100,10 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening#OBJ-002` | implementation evidence pending | mandatory critique pending | open |
-| `initiative:skills-corpus-protocol-sharpening#OBJ-005` | implementation evidence pending | mandatory critique pending | open |
-| `research:skills-corpus-council-review#CLAIM-006` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | supported_pending_review |
-| `research:skills-corpus-council-review#CLAIM-009` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | mandatory critique pending | supported_pending_review |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-002` | `evidence:ticket-risk-acceptance-grammar-validation` | `critique:ticket-risk-acceptance-grammar-review` | supported |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-005` | `evidence:ticket-risk-acceptance-grammar-validation` | `critique:ticket-risk-acceptance-grammar-review` | supported |
+| `research:skills-corpus-council-review#CLAIM-006` | `evidence:skills-corpus-council-review`; `evidence:ticket-risk-acceptance-grammar-validation` | `critique:ticket-risk-acceptance-grammar-review` | supported |
+| `research:skills-corpus-council-review#CLAIM-009` | `evidence:skills-corpus-council-review`; `evidence:ticket-risk-acceptance-grammar-validation` | `critique:ticket-risk-acceptance-grammar-review` | supported |
 
 # Execution Notes
 
@@ -108,8 +113,7 @@ kept, make the template and readiness guidance match that rule.
 
 # Blockers
 
-Do not start until `ticket:4e8ebe92` lands or is intentionally deferred, because
-follow-up and accepted-risk references may depend on shared semantic link grammar.
+None. Dependency `ticket:4e8ebe92` is closed.
 
 # Next Move / Next Route
 
@@ -141,12 +145,13 @@ Expected output contract:
 
 # Evidence
 
-Expected:
+Recorded:
 
-- `git diff --check`
-- targeted grep checks for `change_class`, `risk_class`, critique disposition,
-  accepted risk, follow-up, and `FIND-*` references
-- manual comparison against acceptance gate guardrails
+- `evidence:ticket-risk-acceptance-grammar-validation`
+- `git diff --check` passed with no output.
+- Targeted searches confirmed ticket classification lifecycle boundary,
+  frontmatter risk alignment, accepted risk, superseded-by-evidence,
+  follow-up conversion, and compatible finding examples.
 
 # Critique Disposition
 
@@ -166,28 +171,35 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+All findings resolved in `critique:ticket-risk-acceptance-grammar-review`.
 
-Disposition status: pending
+Disposition status: complete
 
 Deferral / not-required rationale:
 
-None. Critique is mandatory.
+Not deferred. Mandatory critique is recorded in
+`critique:ticket-risk-acceptance-grammar-review`.
 
 # Wiki Disposition
 
-Pending. Finding-to-follow-up conversion may deserve wiki promotion if it becomes
-a reusable operator pattern beyond the ticket references.
+Deferred intentionally. Retrospective found no separate wiki page needed because
+the accepted finding-disposition and follow-up conversion guidance now lives in
+the ticket and critique owner surfaces. Final integration review may still choose
+broader wiki promotion for the full sharpening pass.
 
 # Acceptance Decision
 
-Accepted by:
+Accepted by: OpenCode parent agent
 
-Accepted at:
+Accepted at: 2026-05-02T10:11:03Z
 
-Basis:
+Basis: Ralph packet `packet:ralph-ticket-50ded996-20260502T095614Z`, validation
+evidence `evidence:ticket-risk-acceptance-grammar-validation`, and final oracle
+critique `critique:ticket-risk-acceptance-grammar-review` with all findings
+resolved.
 
-Residual risks:
+Residual risks: Enforcement remains protocol/operator-driven rather than
+automated; final corpus-wide validation remains owned by `ticket:cdf664af`.
 
 # Dependencies
 
@@ -197,3 +209,9 @@ Residual risks:
 
 - 2026-05-02T08:46:28Z: Split from cancelled broad ticket `ticket:3uv5l5fh` as
   the ticket risk and acceptance grammar slice.
+- 2026-05-02T09:56:14Z: Started Ralph iteration
+  `packet:ralph-ticket-50ded996-20260502T095614Z` for ticket risk and acceptance
+  grammar.
+- 2026-05-02T10:11:03Z: Accepted and closed after Ralph implementation,
+  structural validation, oracle critique, resolved acceptance-grammar findings,
+  and retrospective disposition. No ticket-scoped follow-up remains.

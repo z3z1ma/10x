@@ -84,6 +84,11 @@ What evidence exists or is expected.
 
 Risk class: low | medium | high
 
+Must match frontmatter `risk_class`. The frontmatter field is the ticket's
+canonical risk classification; this section restates that risk only to explain
+the critique policy and acceptance disposition. If the two differ, reconcile the
+ticket before readiness, critique routing, or closure.
+
 Critique policy: optional | recommended | mandatory
 
 Policy rationale:
@@ -94,7 +99,20 @@ List profile names, or write `None - reason`.
 
 Findings:
 
-List real finding references, or write `None - no critique yet`.
+List real finding references and ticket-owned dispositions, or write
+`None - no critique yet`.
+
+Example:
+
+- `critique:example-review#FIND-001` — `resolved` by <evidence or change ref>
+- `critique:example-review#FIND-002` — `accepted_risk`; rationale and acceptance
+  provenance recorded in `# Acceptance Decision`
+- `critique:example-review#FIND-003` — `superseded` by <evidence ref>
+- `critique:example-review#FIND-004` — `converted_to_follow_up` as
+  `ticket:<token>`
+
+Medium/high findings must be resolved, explicitly accepted as risk, superseded
+by evidence, or converted into linked follow-up tickets before closure.
 
 Disposition status: pending | completed | deferred | not_required
 
