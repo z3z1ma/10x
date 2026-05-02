@@ -68,9 +68,9 @@ Use this routing before relying on recency, habit, or command names:
   reminders, or hot context -> memory
 
 Workflow skills coordinate work across those owners. They do not create new truth
-layers. Workspace entry, record grammar, Ralph, Git, debugging, spikes, code maps,
-shipping, retrospective, and skill authoring should each route durable claims back
-to the owner layer above.
+layers. Workspace entry, record grammar, `loom-drive` objective/workflow driving,
+Ralph, Git, debugging, spikes, code maps, shipping, retrospective, and skill
+authoring should each route durable claims back to the owner layer above.
 
 ## Implementation Reality
 

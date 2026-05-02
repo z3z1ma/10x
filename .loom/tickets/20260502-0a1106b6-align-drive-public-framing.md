@@ -1,11 +1,11 @@
 ---
 id: ticket:0a1106b6
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T08:46:28Z
+updated_at: 2026-05-02T09:13:27Z
 scope:
   kind: repository
   repositories:
@@ -19,6 +19,11 @@ links:
     - research:skills-corpus-council-review
   evidence:
     - evidence:skills-corpus-council-review
+    - evidence:public-drive-framing-validation
+  critique:
+    - critique:public-drive-framing-review
+  packet:
+    - packet:ralph-ticket-0a1106b6-20260502T090349Z
   plan:
     - plan:skills-corpus-protocol-sharpening
   supersedes:
@@ -98,9 +103,9 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening` OBJ-001 | implementation evidence pending | critique recommended | open |
-| `research:skills-corpus-council-review#CLAIM-002` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | critique recommended | supported_pending_review |
-| `research:skills-corpus-council-review#CLAIM-003` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | critique recommended | supported_pending_review |
+| `initiative:skills-corpus-protocol-sharpening` OBJ-001 | `evidence:public-drive-framing-validation` | `critique:public-drive-framing-review` | supported |
+| `research:skills-corpus-council-review#CLAIM-002` | `evidence:skills-corpus-council-review`; `evidence:public-drive-framing-validation` | `critique:public-drive-framing-review` | supported |
+| `research:skills-corpus-council-review#CLAIM-003` | `evidence:skills-corpus-council-review`; `evidence:public-drive-framing-validation` | `critique:public-drive-framing-review` | supported |
 
 # Execution Notes
 
@@ -144,11 +149,16 @@ Expected output contract:
 
 # Evidence
 
-Expected:
+Recorded:
 
-- `git diff --check`
-- targeted `rg` checks for `loom-drive`, outer-loop wording, packets, and memory
-- diff review showing no shared grammar or packet contract changes landed here
+- `evidence:public-drive-framing-validation`
+- `git diff --check` passed with no output.
+- Targeted searches confirmed `loom-drive` visibility in README and bootstrap
+  routing.
+- Targeted search confirmed the old linear README outer-loop conveyor no longer
+  appears.
+- Targeted searches confirmed README distinguishes canonical owner layers from
+  packet and memory support surfaces.
 
 # Critique Disposition
 
@@ -169,29 +179,34 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+None remaining. Oracle first reported one README packet-row wording nit; the fixer
+resolved it and the final oracle pass returned `pass` with no findings.
 
-Disposition status: pending
+Disposition status: complete
 
 Deferral / not-required rationale:
 
-None yet.
+Not deferred. Critique is recorded in `critique:public-drive-framing-review`.
 
 # Wiki Disposition
 
-Likely deferred. This ticket should improve product-facing instructions directly;
-wiki promotion is only needed if the framing decision needs a reusable project
-explanation beyond the skill/docs text.
+Deferred intentionally. Retrospective found no separate wiki or research promotion
+needed because the accepted explanation was placed directly in the product-facing
+README and bootstrap reference. The final integration ticket will still perform a
+broader cross-surface review.
 
 # Acceptance Decision
 
-Accepted by:
+Accepted by: OpenCode parent agent
 
-Accepted at:
+Accepted at: 2026-05-02T09:13:27Z
 
-Basis:
+Basis: Ralph packet `packet:ralph-ticket-0a1106b6-20260502T090349Z`, validation
+evidence `evidence:public-drive-framing-validation`, and final oracle critique
+`critique:public-drive-framing-review` with no findings.
 
-Residual risks:
+Residual risks: Review was scoped to this ticket. Cross-surface final validation
+and critique remain owned by `ticket:cdf664af`.
 
 # Dependencies
 
@@ -201,3 +216,9 @@ No hard upstream tickets.
 
 - 2026-05-02T08:46:28Z: Split from cancelled broad ticket `ticket:3uv5l5fh` as
   the first Ralph-sized public-alignment slice.
+- 2026-05-02T09:03:49Z: Started Ralph iteration
+  `packet:ralph-ticket-0a1106b6-20260502T090349Z` for README/public workflow map
+  alignment.
+- 2026-05-02T09:13:27Z: Accepted and closed after Ralph implementation, structural
+  validation, oracle critique, one resolved nit, and retrospective disposition. No
+  ticket-scoped follow-up remains.

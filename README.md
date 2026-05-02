@@ -72,7 +72,7 @@ The fastest way to understand Loom is to stop protecting one precious agent sess
 
 1. Start a nontrivial coding-agent task.
 2. Let the work cross at least one ambiguity: a behavior question, failed attempt, review concern, research finding, partial implementation, or open risk.
-3. Let the installed Loom skills place durable truth into records: ticket, research, spec, evidence, critique, wiki, and packet as needed.
+3. Let the installed Loom skills place durable truth into owner records such as tickets, research, specs, evidence, critique, and wiki, with packets as bounded handoff support when needed.
 4. Stop the session: close the chat, compact the context, switch models, switch harnesses, hand the work to another agent, or come back tomorrow.
 5. Start from a fresh session and ask for the next step:
 
@@ -143,11 +143,18 @@ Reach for Loom when the cost of losing the plot is higher than the cost of keepi
 
 Loom has two loops.
 
-The **outer loop** decides where truth belongs:
+The **outer loop** decides where truth belongs and shapes the next bounded move.
+Its backbone is:
 
 ```text
-research -> spec -> plan -> ticket -> evidence -> critique -> wiki -> memory
+constitution -> initiative -> plan -> ticket
 ```
+
+Research and specs strengthen that backbone when evidence or intended behavior is
+missing. Evidence, critique, and wiki are follow-through routes for observations,
+review, and accepted explanation. Packets and memory are support surfaces: packets
+carry bounded worker contracts, and memory holds optional recall without owning
+project truth.
 
 The **inner loop** compiles a packet for a fresh worker:
 
@@ -180,7 +187,7 @@ For software work:
 - evidence owns observed validation
 - critique owns adversarial review and residual risk
 - wiki owns accepted reusable explanation
-- memory owns optional retrieval cues, preferences, and reminders
+- memory can support retrieval cues, preferences, and reminders without owning project truth
 
 Memory can help the agent recover context. It does not become shadow truth. The project must remain truthful if memory is absent or stale.
 
@@ -188,7 +195,10 @@ Memory can help the agent recover context. It does not become shadow truth. The 
 
 ## 🗂️ Project layers
 
-Loom separates project state into canonical layers.
+Loom separates project state into canonical owner layers and durable support
+surfaces.
+
+Canonical owner layers own project truth:
 
 | Layer | What goes there |
 | --- | --- |
@@ -201,7 +211,12 @@ Loom separates project state into canonical layers.
 | `evidence` | Observed artifacts, validation output, reproduction steps, logs, screenshots, scan results |
 | `critique` | Adversarial findings, review verdicts, residual risk |
 | `wiki` | Accepted explanation, architecture concepts, reusable workflow knowledge |
-| `packet` | Bounded child-worker contracts; not durable project state |
+
+Durable support surfaces help execution and recovery without owning project truth:
+
+| Surface | What goes there |
+| --- | --- |
+| `packet` | Bounded child-worker contracts; durable support, not project truth |
 | `memory` | Optional support recall: retrieval cues, preferences, entities, reminders, and hot context |
 
 The layers are ordinary Markdown records inside the repo. They are structured enough for agents to reason over and simple enough for humans to inspect.
@@ -464,8 +479,9 @@ Included:
 
 - `skills/`, the canonical Loom surface
 - `loom-bootstrap`, the entry skill that anchors the rest of the package
-- project-layer skills for constitution, initiatives, research, specs, plans, tickets, evidence, critique, wiki, and memory
-- workflow skills for workspace entry, records, Ralph, Git, debugging, spike, codemap, ship, retrospective, and skill authoring
+- project-owner skills for constitution, initiatives, research, specs, plans, tickets, evidence, critique, and wiki
+- the `loom-memory` support skill for optional recall without shadow truth
+- workflow skills for workspace entry, records, `loom-drive` objective/workflow driving, Ralph, Git, debugging, spike, codemap, ship, retrospective, and skill authoring
 - templates and references for Markdown-native operation
 - harness manifests and adapters where useful
 - `PROTOCOL.md`, the stable protocol summary
@@ -493,6 +509,7 @@ The product surface is the skill package. The skills are the protocol in operati
 | `loom-critique` | Adversarial review, findings, verdicts, residual risk |
 | `loom-wiki` | Accepted explanation and reusable understanding |
 | `loom-memory` | Support recall, retrieval cues, preferences, and reminders without shadow truth |
+| `loom-drive` | Objective and workflow coordination that routes work through owner layers without owning project truth |
 | `loom-ralph` | Bounded fresh-context implementation loop |
 | `loom-git` | Implementation isolation, baseline, branch/worktree provenance |
 | `loom-debugging` | Reproduce-first debug workflow through existing layers |
