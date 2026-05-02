@@ -27,6 +27,26 @@ What belongs inside this initiative.
 
 What does not belong here.
 
+# Delegated Authority / Autonomy Boundaries
+
+Optional for ordinary initiatives. Required when this initiative anchors
+delegated drive or autonomous objective work.
+
+Record only authority the user or governing records actually delegated:
+
+- what the agent may decide without asking
+- what must return to the user as a human-decision trigger
+- budget, time, risk, privacy, safety, or other autonomy limits
+
+# Objective-Level Stop Conditions
+
+Optional for ordinary initiatives. Required when this initiative anchors
+delegated drive or autonomous objective work.
+
+Name the objective-level conditions that require stopping, asking the user, or
+returning to shaping before continuation. Do not use this section for ticket live
+execution state, blockers, or closure decisions.
+
 # Success Metrics
 
 How success should be judged. Use stable `OBJ-*` IDs when downstream work needs

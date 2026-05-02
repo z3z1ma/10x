@@ -79,8 +79,9 @@ There are two outcomes:
 Failed gates do not block their own repair routes. They do block pretending the
 repair already happened.
 
-- Authority gate: objective, autonomy, non-goals, and human-decision triggers are
-  clear enough; otherwise ask the user or update the initiative.
+- Authority gate: objective, non-goals, `# Delegated Authority / Autonomy
+  Boundaries`, and `# Objective-Level Stop Conditions` are clear enough for
+  delegated drive work; otherwise ask the user or update the initiative.
 - Scope gate: next work is inside the initiative, plan, ticket, and write scope;
   otherwise refine plan/ticket scope or stop.
 - Behavior gate: intended behavior and acceptance are not ambiguous; otherwise

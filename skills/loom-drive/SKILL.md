@@ -53,8 +53,9 @@ The loop remains recoverable across sessions only when the current drive state i
 recorded in owner artifacts. Before executing downstream work, establish a drive
 checkpoint from existing layers:
 
-- initiative owns the objective, measurable success criteria, delegated autonomy,
-  budget/time limits, and objective-level stop conditions
+- initiative owns the objective, measurable success criteria,
+  `# Delegated Authority / Autonomy Boundaries`, and
+  `# Objective-Level Stop Conditions` for delegated drive work
 - initiative success criteria should use stable objective criterion IDs such as
   `OBJ-001` when downstream tickets, evidence, or critique need to cite them
 - research owns unresolved evidence, options, rejected paths, and conclusions
@@ -149,9 +150,11 @@ Clarify these before downstream tickets depend on them:
 
 - measurable objective and success criteria
 - hard constraints, non-goals, and risk tolerance
-- autonomy limit: what the agent may decide without returning to the user
-- budget or time limits, if any
-- stop conditions that require human judgment
+- Delegated Authority / Autonomy Boundaries: what the agent may decide without
+  returning to the user, what requires user approval, and any budget, time, risk,
+  privacy, safety, or other limits
+- Objective-Level Stop Conditions: when continuation must stop, ask the user, or
+  return to shaping before more work proceeds
 - first tranche priority when several routes are plausible
 
 Once those are clear enough, proceed through Loom records without asking for
@@ -235,7 +238,8 @@ context pressure or improve reviewability.
 
 ## Stop Or Ask The User When
 
-- success criteria, autonomy limits, or non-goals remain materially ambiguous
+- success criteria, Delegated Authority / Autonomy Boundaries, Objective-Level
+  Stop Conditions, or non-goals remain materially ambiguous
 - the next step would invent product direction the user has not delegated
 - scope would widen beyond the current initiative, plan, ticket, or write boundary
 - required evidence is missing or contradicted

@@ -13,7 +13,7 @@ Use this map before launching tickets or child work.
 | Drive fact | Owner |
 | --- | --- |
 | objective, why it matters, success metrics | initiative |
-| delegated autonomy, budget/time limits, objective-level stop conditions | initiative |
+| `# Delegated Authority / Autonomy Boundaries` and `# Objective-Level Stop Conditions` for delegated drive work | initiative |
 | evidence gaps, options, rejected approaches, conclusions | research |
 | intended product behavior, reusable acceptance IDs | spec |
 | tranche strategy, sequencing, dependencies, execution waves | plan |
@@ -37,12 +37,13 @@ fields inspectable in prose:
 - measurable success criteria or acceptance signals, preferably with stable
   criterion IDs such as `OBJ-001`
 - hard constraints and non-goals
-- delegated autonomy: what the agent may decide without asking
-- human-decision triggers: what must come back to the user
-- budget, time, risk, privacy, or safety limits
+- `# Delegated Authority / Autonomy Boundaries`: what the agent may decide
+  without asking, what must come back to the user as a human-decision trigger,
+  and any budget, time, risk, privacy, safety, or other limits
+- `# Objective-Level Stop Conditions`: when continuation must stop, ask the user,
+  or return to shaping before more work proceeds
 - current tranche purpose
 - known remaining gaps
-- stop conditions
 
 These do not require new frontmatter keys. The requirement is that a fresh agent
 can find the facts in the owner records and continue honestly.
@@ -64,7 +65,8 @@ Recommended locations:
 | evidence | `# Supports Claims` and `# Challenges Claims` |
 | critique | findings, verdict, residual risks, and challenged claims |
 
-The snapshot should answer exactly enough for a fresh parent to resume:
+The snapshot should answer exactly enough for a fresh parent to resume without
+making the initiative own live ticket execution:
 
 ```text
 drive objective: <initiative id and one-sentence objective>

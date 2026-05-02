@@ -26,8 +26,9 @@ intake -> objective-contract -> owner-shaping -> tranche-planning -> ticket-exec
 ```
 
 - `intake`: decide whether the request is actually drive-shaped.
-- `objective-contract`: capture outcome, success signals, authority, limits, and
-  stop conditions.
+- `objective-contract`: capture outcome, success signals,
+  `# Delegated Authority / Autonomy Boundaries`, and
+  `# Objective-Level Stop Conditions` when delegated drive work is in scope.
 - `owner-shaping`: create or refine initiative/research/spec/plan truth.
 - `tranche-planning`: slice only the next useful bounded work set.
 - `ticket-execution`: advance tickets through `local_edit`, `ralph`, `critique`,
@@ -73,8 +74,11 @@ Ask as few questions as can safely establish:
 1. target outcome in measurable terms
 2. success criteria or acceptance signals
 3. constraints, non-goals, and risk tolerance
-4. delegated autonomy and what requires user approval
-5. budget/time limits and stop conditions
+4. Delegated Authority / Autonomy Boundaries: what the agent may decide, what
+   requires user approval, and any budget/time, risk, privacy, safety, or other
+   autonomy limits
+5. Objective-Level Stop Conditions: when continuation must stop, ask the user,
+   or return to shaping before more work proceeds
 6. preferred first tranche when multiple routes are equally plausible
 
 If the user cannot answer everything, record reasonable assumptions only when
