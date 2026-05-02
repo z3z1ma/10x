@@ -35,6 +35,11 @@ The target type changes the evidence reviewed. It does not change the owner
 model: critique owns findings and verdicts, while tickets own live execution
 state.
 
+Use the family-appropriate `review_target` shape when recording that target:
+direct critique records keep a scalar, grep-friendly target handle in
+frontmatter, while critique packets use a structured mapping for target kind,
+summary, stable reference, diff handle, and optional paths.
+
 ## Packet Expectation
 
 Use a critique packet for implementation/code review when a fresh reviewer

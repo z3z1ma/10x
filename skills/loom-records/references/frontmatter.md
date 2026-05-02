@@ -44,7 +44,25 @@ Some kinds add more:
   `references/packet-frontmatter.md` for the shared packet grammar and valid
   values
 - wiki pages may add `page_type`
-- critique records may add `review_target`
+- critique records may add scalar `review_target`; critique packets use the
+  structured packet-family variant documented in `references/packet-frontmatter.md`
+
+### Critique `review_target`
+
+Direct critique records use a scalar `review_target` frontmatter value:
+
+```yaml
+review_target: <record ref | path | PR | branch | commit | diff range | concise target summary>
+```
+
+Keep this value human-readable and grep-friendly. It should identify the artifact
+or change under review without requiring a parser. Use the critique record body
+for detail such as why it was reviewed, the changed-file set, or evidence
+inspected.
+
+Critique packets may use structured `review_target` frontmatter because packets
+are bounded review contracts. That structured variant belongs to packet-family
+grammar, not canonical critique record grammar.
 
 New packet records should use `child_write_scope` for the child mutation
 boundary. Older packet records may still contain `write_scope`; treat that as

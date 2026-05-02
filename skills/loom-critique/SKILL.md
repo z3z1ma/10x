@@ -62,13 +62,24 @@ Critique should be:
 
 ## Default Procedure
 
-1. choose the review target
+1. choose the review target and record it in the family-appropriate shape
 2. classify the review shape
 3. choose critique profiles proportional to the risk
 4. inspect the relevant diff, files, records, tests, evidence, and packet output
 5. write findings with severity, confidence, and challenged claims when relevant
 6. record the verdict and required follow-up
 7. link the critique back to the target ticket and related artifacts
+
+## Review Target Grammar
+
+- Direct critique records use scalar `review_target` frontmatter: one
+  grep-friendly record ref, path, PR, branch, commit, diff range, or concise
+  target summary. Put longer target explanation in the `# Review Target` body
+  section, not in nested frontmatter.
+- Critique packets use structured `review_target` frontmatter because a bounded
+  fresh-context review contract benefits from target type, stable reference, diff
+  handle, and optional paths. Keep the packet `summary` field human-readable and
+  grep-friendly.
 
 ## Review Shapes
 

@@ -8,7 +8,7 @@ scope:
   kind: repository
   repositories:
     - repo:root
-review_target: <record ref | code change target>
+review_target: <scalar record ref, path, PR, branch, commit, diff range, or target summary>
 links: {}
 external_refs: {}
 ---
@@ -19,8 +19,11 @@ What this critique reviewed.
 
 # Review Target
 
-Name the specific target and why it was reviewed. For code review, name the
-branch, commit, diff range, pull request, or changed file set.
+Name the specific target and why it was reviewed. The frontmatter
+`review_target` field for a direct critique record is intentionally a scalar,
+human-readable search handle. For code review, name the branch, commit, diff
+range, pull request, or changed file set here rather than nesting structured
+metadata in the critique record frontmatter.
 
 # Verdict
 

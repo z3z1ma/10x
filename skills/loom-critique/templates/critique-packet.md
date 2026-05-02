@@ -5,8 +5,11 @@ packet_kind: critique
 status: compiled
 target: ticket:<token>
 review_target:
-  kind: code_change
-  diff: <branch | commit | PR | diff target>
+  kind: <record|code_change|pull_request|branch|commit|diff|external_summary|release_package|handoff_package>
+  summary: <one-line human-readable review target>
+  ref: <record ref | path | branch | commit | PR | package ID | none>
+  diff: <branch | commit range | PR | diff target | none>
+  paths: []
 mode: review
 change_class: <record-hygiene|documentation-explanation|behavior-contract|code-behavior|protocol-authority|data-migration|security-sensitive|release-packaging>
 # Optional when the parent wants packet-local risk carried explicitly:
@@ -65,6 +68,9 @@ Ralph packet output, and acceptance or claim coverage targets that constrain
 the review.
 
 Frontmatter follows `skills/loom-records/references/packet-frontmatter.md`.
+This template describes new critique packet authoring; older consumed critique
+packets may retain the legacy-compatible `review_target` mapping documented in
+that reference.
 Critique owns this review packet's workflow; using packet grammar does not make
 the review Ralph-governed.
 
@@ -82,9 +88,12 @@ choose an explicit lowercase change slug and use it consistently in the packet I
 and filename.
 
 Do not conflate this encoded packet name with the structured `review_target`
-frontmatter field. `review_target` names the artifact, diff, PR, branch, commit,
-or record under review; the packet ID and filename name the support packet for
-routing and discovery.
+frontmatter field. Critique packet `review_target` is a mapping so fresh-context
+reviewers can inspect the target type, stable reference, diff handle, and changed
+paths without parsing prose. Keep `summary` as a one-line human-readable search
+handle, set unavailable fields to `none` rather than omitting the target, and use
+the packet body for longer rationale. The packet ID and filename name the support
+packet for routing and discovery.
 
 # Review Lens
 

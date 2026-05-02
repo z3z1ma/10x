@@ -109,9 +109,36 @@ that belong to particular packet families:
   later defines a family-local sequence field.
 - `verification_posture` is required for Ralph packets and omitted by critique
   and wiki packets unless those owning workflows define their own equivalent.
-- `review_target` is critique-family grammar. Critique templates include it so a
-  reviewer can identify the code change, artifact, PR, branch, commit, or record
-  under review.
+- `review_target` is critique-family grammar. Direct critique records use the
+  scalar variant documented in `frontmatter.md`; critique packets use the
+  structured variant below so a reviewer can identify the code change, artifact,
+  PR, branch, commit, or record under review.
+
+### Critique Packet `review_target`
+
+Critique packets use a structured mapping:
+
+```yaml
+review_target:
+  kind: <record|code_change|pull_request|branch|commit|diff|external_summary|release_package|handoff_package>
+  summary: <one-line human-readable review target>
+  ref: <record ref | path | branch | commit | PR | package ID | none>
+  diff: <branch | commit range | PR | diff target | none>
+  paths:
+    - <path or glob>
+```
+
+For newly compiled critique packets, `kind` and `summary` are required. Use
+`ref` when there is a stable target handle, `diff` when the review depends on a
+code or record diff, and `paths` when a changed-file set is useful. Write `none`
+for unavailable scalar fields rather than leaving the review target ambiguous.
+Keep `summary` grep-friendly; put longer rationale in the packet body.
+
+Legacy compatibility: older consumed critique packets may have only `kind` plus
+`diff` in this mapping. Treat those as understandable legacy support artifacts,
+not invalid records needing retroactive migration solely because they predate the
+current authoring shape. If such a packet is reopened, superseded, or recompiled,
+use the current template shape.
 
 Do not make a field required for all packet families merely because one workflow
 needs it. Shared packet grammar coordinates handoff support; workflow ownership
