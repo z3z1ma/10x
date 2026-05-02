@@ -53,6 +53,9 @@ When you need to create a record, prefer one of these:
 
 ### Copy a template
 
+Copy from the installed Loom skill package path for the current harness. In a
+source checkout or repo-root skill installation, that may look like:
+
 ```bash
 cp skills/loom-tickets/templates/ticket.md ".loom/tickets/<YYYYMMDD>-<token>-<short-slug>.md"
 ```

@@ -61,4 +61,6 @@ When a rejection or null result generalizes beyond this one decision, it is a ca
 
 Sometimes an investigation surfaces questions that matter but are not yet heavy enough to justify a dedicated research record. Rather than lose them, keep them in the Open Questions section of the parent research record, or create a research record with `status: deferred_questions` that collects related open questions for a topic.
 
-Deferred questions are a subset of research, not a separate record kind. When a question matures, promote it into its own research record and link back with `superseded_by` or `promoted_to`.
+Deferred questions are a subset of research, not a separate record kind. When a
+question matures, promote it into its own research record and name the source and
+successor in `links:` or body prose using the shared semantic link guidance.

@@ -540,19 +540,24 @@ Inside a Loom-enabled project, the runtime tree looks roughly like this:
 ```text
 .loom/
 ├── constitution/
+│   ├── constitution.md
+│   ├── decisions/
+│   └── roadmap/
 ├── initiatives/
 ├── research/
 ├── specs/
 ├── plans/
 ├── tickets/
-├── evidence/
 ├── critique/
 ├── wiki/
 ├── packets/
 │   ├── ralph/
 │   ├── critique/
 │   └── wiki/
-└── memory/        # optional
+├── evidence/
+└── memory/        # optional support recall
+    ├── system/
+    └── user/
 ```
 
 First records usually emerge through `loom-workspace`, `loom-constitution`, and `loom-tickets`.

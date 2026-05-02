@@ -85,7 +85,9 @@ feed that dossier. They do not close work by themselves.
 
 ## Native Creation Pattern
 
-A common shell flow is:
+A common shell flow copies the ticket template from the installed Loom skill
+package path for the current harness. In a source checkout or repo-root skill
+installation, that may look like:
 
 ```bash
 token="$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8)"

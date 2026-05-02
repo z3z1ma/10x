@@ -58,7 +58,10 @@ canonical truth owners, and it does not make critique or wiki packets
 Ralph-governed.
 
 Most canonical records may also carry optional `external_refs` when outside
-systems request, mirror, package, or help navigate the work.
+systems request, mirror, package, or help navigate the work. Templates may omit
+`external_refs` when outside references are uncommon for that record kind. Omitted
+means no external references are declared; add `external_refs: {}` or a populated
+mapping when a saved record needs an explicit outside-reference surface.
 
 ## Support Artifact Frontmatter
 

@@ -41,7 +41,7 @@ Route instead of editing when the repair would:
 ```bash
 find .loom -type f -name '*.md' | sort
 rg -n '^(id|kind|status|links|target):' .loom --glob '*.md'
-rg -n 'REQ-[0-9]{3}|ACC-[0-9]{3}|CLAIM-[0-9]{3}' .loom --glob '*.md'
+rg -n 'OBJ-[0-9]{3}|REQ-[0-9]{3}|ACC-[0-9]{3}|CLAIM-[0-9]{3}' .loom --glob '*.md'
 ```
 
 ## Routing

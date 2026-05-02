@@ -1,11 +1,11 @@
 ---
 id: ticket:wfxfu4zp
 kind: ticket
-status: ready
+status: closed
 change_class: record-hygiene
 risk_class: medium
 created_at: 2026-05-02T15:25:50Z
-updated_at: 2026-05-02T15:25:50Z
+updated_at: 2026-05-02T17:27:34Z
 scope:
   kind: repository
   repositories:
@@ -15,6 +15,12 @@ links:
     - initiative:skills-corpus-perfection-council-followup
   plan:
     - plan:skills-corpus-perfection-council-followup
+  evidence:
+    - evidence:corpus-hygiene-sweep-validation
+  critique:
+    - critique:corpus-hygiene-sweep-review
+  packet:
+    - packet:ralph-ticket-wfxfu4zp-20260502T171547Z
 external_refs: {}
 depends_on:
   - ticket:3twzep5n
@@ -57,7 +63,7 @@ shared terminology tickets to avoid churn and stale examples.
   omit it.
 - Remove or formalize ad hoc research link verbs.
 
-# Non-goals
+# Out Of Scope
 
 - Do not reopen settled vocabulary from earlier tickets unless evidence shows a
   direct inconsistency.
@@ -85,8 +91,12 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-perfection-council-followup#OBJ-007` | pending | pending | open |
-| `initiative:skills-corpus-perfection-council-followup#OBJ-008` | pending | pending | open |
+| `initiative:skills-corpus-perfection-council-followup#OBJ-007` | `evidence:corpus-hygiene-sweep-validation` | `critique:corpus-hygiene-sweep-review` | supported |
+| `initiative:skills-corpus-perfection-council-followup#OBJ-008` | `evidence:corpus-hygiene-sweep-validation` and this ticket acceptance dossier; semantic commit/push remains the next git step before final plan acceptance | `critique:corpus-hygiene-sweep-review` | supported_for_ticket_scope |
+| `ticket:wfxfu4zp#ACC-001` | `evidence:corpus-hygiene-sweep-validation` | `critique:corpus-hygiene-sweep-review` | supported |
+| `ticket:wfxfu4zp#ACC-002` | `evidence:corpus-hygiene-sweep-validation` | `critique:corpus-hygiene-sweep-review` | supported |
+| `ticket:wfxfu4zp#ACC-003` | `evidence:corpus-hygiene-sweep-validation`; diff shows Markdown-only product/record edits inside packet scope | `critique:corpus-hygiene-sweep-review` | supported |
+| `ticket:wfxfu4zp#ACC-004` | `critique:corpus-hygiene-sweep-review` | `critique:corpus-hygiene-sweep-review` passed with no findings | supported |
 
 # Execution Notes
 
@@ -94,29 +104,33 @@ This is the final child ticket before plan/initiative acceptance. It should also
 prepare the parent to mark the plan and initiative complete if all prior tickets
 are closed.
 
+Ralph iteration `packet:ralph-ticket-wfxfu4zp-20260502T171547Z` completed the
+targeted hygiene sweep. Product-surface edits covered `OBJ-*` claim-query gaps,
+runtime-tree ordering/detail drift, install-safe template-copy wording, scope
+heading standardization, memory support status examples, the `external_refs`
+template omission convention, and ad hoc research link verbs. No runtime,
+command-wrapper truth, or new canonical owner layer was introduced.
+
 # Blockers
 
-Depends on every earlier ticket in this plan.
+None current. Earlier dependencies were required before launch and remain linked
+for audit history.
 
 # Next Move / Next Route
 
-Ralph implementation packet after dependencies close.
+Closed. Commit and push this ticket before final plan/initiative acceptance.
 
-# Ralph Readiness
+# Route Readiness
 
-Bounded iteration: run targeted low-risk hygiene sweep and prepare final plan
-reconciliation.
+Route: ticket acceptance review completed.
 
-Write boundary: targeted `skills/**` and README/bootstrap/workspace summary files
-as needed for the named hygiene findings, this ticket, one evidence record, one
-critique record, and the Ralph packet. Parent may update plan/initiative after
-critique.
+Review target: final corpus hygiene sweep across scoped product surfaces and
+Loom records.
 
-Likely verification posture: observation-first structural validation.
+Evidence reviewed: `evidence:corpus-hygiene-sweep-validation`, Ralph packet,
+oracle critique, and the git diff.
 
-Expected output contract: changed files, evidence, critique, ticket closure
-recommendation, retrospective disposition, and final plan/initiative completion
-recommendation.
+Acceptance result: close-ready with no oracle findings.
 
 # Evidence
 
@@ -125,6 +139,11 @@ Expected:
 - `git diff --check`
 - targeted searches for every hygiene finding in scope
 - manual comparison against owning references/templates
+
+Recorded:
+
+- `evidence:corpus-hygiene-sweep-validation` records before/after targeted
+  searches for each scoped hygiene item and `git diff --check` with exit 0.
 
 # Critique Disposition
 
@@ -143,24 +162,34 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+Recorded in `critique:corpus-hygiene-sweep-review`:
 
-Disposition status: pending
+- None - no findings.
+
+Disposition status: completed
 
 Deferral / not-required rationale:
 
-None. Critique is required by user instruction.
+Not deferred. Mandatory oracle critique passed with no findings.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+Retrospective disposition complete. Durable lessons were promoted directly into
+the owner product surfaces: README runtime tree, bootstrap/tooling copy guidance,
+ticket skill copy guidance and template heading, record grammar query/frontmatter
+references, workspace status snapshot query, research link guidance, and memory
+entity template status vocabulary. No separate wiki page, research record, spec,
+constitution decision, or memory entry is needed for this ticket.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-02T17:27:34Z
+Basis: Ralph packet `packet:ralph-ticket-wfxfu4zp-20260502T171547Z`; evidence
+`evidence:corpus-hygiene-sweep-validation`; oracle critique
+`critique:corpus-hygiene-sweep-review` with no findings.
+Residual risks: validation and critique were structural/textual; future operator
+application is not proven beyond corpus consistency.
 
 # Dependencies
 
@@ -177,3 +206,11 @@ Residual risks:
   `COUNCIL-FIND-005`, `COUNCIL-FIND-009`, `COUNCIL-FIND-010`,
   `COUNCIL-FIND-012`, `COUNCIL-FIND-013`, `COUNCIL-FIND-014`, and
   `COUNCIL-FIND-015`.
+- 2026-05-02T17:15:47Z: Started Ralph iteration
+  `packet:ralph-ticket-wfxfu4zp-20260502T171547Z` for the final hygiene sweep.
+- 2026-05-02T17:20:51Z: Ralph child sweep completed product-surface hygiene
+  edits and recorded `evidence:corpus-hygiene-sweep-validation`; ticket moved to
+  `review_required` because oracle critique is mandatory before closure.
+- 2026-05-02T17:27:34Z: Oracle critique passed with no findings. Recorded
+  `critique:corpus-hygiene-sweep-review`, retrospective disposition, and
+  acceptance; closed ticket.

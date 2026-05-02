@@ -21,7 +21,7 @@ rg -n '^kind:' .loom skills/loom-*/templates skills/loom-*/references
 ```bash
 rg -n '^id: (constitution:main|decision:[0-9]{4}|roadmap:|initiative:|research:|spec:|plan:|ticket:|packet:(ralph|critique|wiki)-|critique:|wiki:|evidence:|workspace:main)' .loom
 rg -n '^packet_kind: (ralph|critique|wiki)$' .loom/packets skills/loom-*/templates
-rg -n '\.loom/(constitution/(constitution\.md|decisions/|roadmap/)|initiatives/|research/|specs/|plans/|tickets/|packets/(ralph|critique|wiki)/|critique/|wiki/|evidence/|memory/)' .loom skills
+rg -n '\.loom/(constitution/(constitution\.md|decisions/|roadmap/)|initiatives/|research/|specs/|plans/|tickets/|critique/|wiki/|packets/(ralph|critique|wiki)/|evidence/|memory/)' .loom skills
 ```
 
 These are broad discovery queries for the currently supported corpus families,

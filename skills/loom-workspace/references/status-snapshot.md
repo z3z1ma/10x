@@ -114,7 +114,7 @@ work. They still do not replace the owner update needed for a truthful resume.
 rg -n '^status:' .loom/tickets --glob '*.md'
 rg -n '^status: (active|blocked|review_required|complete_pending_acceptance)\b' .loom/tickets --glob '*.md'
 rg -n '^status:' .loom/{constitution,initiatives,research,specs,plans,critique,wiki,evidence,packets} --glob '*.md'
-rg -n 'REQ-[0-9]{3}|ACC-[0-9]{3}|CLAIM-[0-9]{3}' .loom --glob '*.md'
+rg -n 'OBJ-[0-9]{3}|REQ-[0-9]{3}|ACC-[0-9]{3}|CLAIM-[0-9]{3}' .loom --glob '*.md'
 find .loom/{tickets,critique,wiki,evidence} -type f -name '*.md' | sort
 git status --short
 ```

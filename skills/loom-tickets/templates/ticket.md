@@ -31,7 +31,7 @@ Why this deserves attention in the current phase.
 
 What belongs inside this ticket.
 
-# Non-goals
+# Out Of Scope
 
 What should not happen inside this ticket.
 
