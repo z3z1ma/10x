@@ -12,9 +12,10 @@ implementation.
 - linked spec and coverage IDs
 - ticket claim matrix when present
 - evidence
-- critique records and finding dispositions
+- critique records and ticket-owned finding dispositions
 - critique policy: `optional`, `recommended`, or `mandatory`, plus rationale and
-  disposition status `pending`, `completed`, `deferred`, or `not_required`
+  ticket-owned disposition status `pending`, `blocking`, `completed`, `deferred`,
+  or `not_required`
 - wiki disposition
 - recent Ralph packet outcomes
 - relevant plan or initiative context
@@ -59,14 +60,16 @@ Acceptance Dossier =
   claims?
 - Is critique policy explicit enough for this change class and risk class?
 - When critique policy requires profiles, are those profiles complete?
-- If critique is mandatory, does required critique exist and are medium/high
-  findings resolved, explicitly accepted as risk, superseded by evidence, or
-  converted into linked follow-up tickets?
+- If critique is mandatory, does required critique exist and do all open
+  medium/high findings have ticket-owned dispositions of `resolved`,
+  `accepted_risk`, `superseded`, or `converted_to_follow_up`?
 - If critique is recommended but not performed, does the ticket record why it
   was deferred or intentionally not needed before closure?
-- For any existing critique, are medium and high severity findings resolved,
-  accepted as risk, superseded by evidence, or converted into linked follow-up
-  tickets?
+- For any existing critique, do open medium and high severity findings have
+  ticket-owned dispositions of `resolved`, `accepted_risk`, `superseded`, or
+  `converted_to_follow_up`?
+- For withdrawn findings, does the critique record provide withdrawal rationale,
+  with any ticket citation limited to audit history rather than closure blocking?
 - Are finding references qualified, for example `critique:example-review#FIND-001`?
 - Is wiki or retrospective follow-through complete or truthfully deferred?
 - If human signoff or accepted-risk provenance is required, does
@@ -74,7 +77,7 @@ Acceptance Dossier =
   residual risks?
 - Are links and status fields coherent?
 
-## Finding Disposition
+## Ticket-Owned Finding Disposition
 
 Tickets consume critique findings; critique records do not close tickets. For
 each finding reference, use a qualified reference such as
@@ -88,9 +91,18 @@ each finding reference, use a qualified reference such as
 - `converted_to_follow_up` — the finding is real but outside this ticket's
   closure scope; link the follow-up ticket that now owns the remaining work.
 
-Medium/high findings are not closure-compatible while merely open, missing, or
-unexplained. They must be resolved, explicitly accepted as risk, superseded by
-evidence, or converted into linked follow-up tickets.
+Open medium/high findings are not closure-compatible while missing ticket-owned
+disposition, evidence, acceptance provenance, or linked follow-up tickets as
+appropriate.
+
+Withdrawn findings are closure-compatible when the critique record retracts them
+with rationale. They do not require a ticket-owned finding disposition, though the
+ticket may cite them for audit history.
+
+Do not put these values in a critique record as if critique accepted its own
+findings. Critique owns finding state and verdict; the ticket owns how each
+finding affects closure. See `skills/loom-records/references/status-lifecycle.md`
+for the shared boundary vocabulary.
 
 ## Outcomes
 
@@ -108,9 +120,9 @@ evidence, or converted into linked follow-up tickets.
 - Do not close over unresolved required critique.
 - Do not close over missing mandatory critique.
 - Do not close over missing evidence for covered claims or acceptance criteria.
-- Do not close over medium/high critique findings unless they are resolved,
-  accepted as risk, superseded by evidence, or converted into linked follow-up
-  tickets.
+- Do not close over open medium/high critique findings unless the ticket records
+  `resolved`, `accepted_risk`, `superseded`, or `converted_to_follow_up` with the
+  needed evidence, acceptance provenance, or linked follow-up ticket.
 - Do not close over recommended critique without a ticket-owned disposition.
 - Do not let acceptance live only in chat.
 - Create follow-up tickets for substantial residual work.

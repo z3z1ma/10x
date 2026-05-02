@@ -123,10 +123,13 @@ Use these defaults unless the project says otherwise:
 - meaningful workflow or behavior changes usually deserve critique
 - meaningful code changes usually deserve critique
 - accepted understanding that future agents will need should become wiki, not only ticket prose
-- if critique found unresolved medium or high-severity issues, do not pretend the work is fully accepted
-- recommended critique needs a recorded ticket disposition before closure
-- mandatory critique blocks closure until medium/high findings are resolved,
-  accepted as risk, superseded by evidence, or turned into linked follow-up work
+- if critique found unresolved open medium or high-severity issues, do not pretend the work is fully accepted
+- recommended critique needs a recorded ticket-owned disposition status before closure
+- mandatory critique blocks closure until open medium/high findings have
+  ticket-owned dispositions of `resolved`, `accepted_risk`, `superseded`, or
+  `converted_to_follow_up`
+- withdrawn findings require critique rationale and may be cited by the ticket
+  for audit history, but are not unresolved findings for closure purposes
 
 ## Honesty Rules
 

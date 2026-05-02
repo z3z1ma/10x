@@ -32,7 +32,8 @@ Use one verdict value and explain it:
 - `inconclusive`
 
 Set `status: final` only when evidence reviewed, findings, residual risks, and
-acceptance recommendation are complete enough for the ticket to consume.
+acceptance recommendation are complete enough for the ticket to consume. Final
+critique status does not close the ticket.
 
 # Findings
 
@@ -43,7 +44,7 @@ write `None - no findings` when no finding applies.
 
 Severity: low | medium | high
 Confidence: low | medium | high
-Disposition: open | resolved | accepted_risk | superseded | converted_to_follow_up
+State: open | withdrawn
 
 Observation:
 
@@ -51,10 +52,18 @@ Why it matters:
 
 Follow-up:
 
-Use linked ticket references when a finding is converted to follow-up work, for
-example `ticket:<token>`. Tickets consume this as a ticket-owned disposition such
-as `critique:example-review#FIND-001` — converted to follow-up ticket
-`ticket:<token>`.
+If `State: withdrawn`, record the withdrawal rationale here. Withdrawn findings
+may be cited by tickets for audit history, but they do not require ticket-owned
+finding dispositions.
+
+When recommending follow-up work, cite an existing or proposed ticket reference
+when practical, for example `ticket:<token>`. Tickets consume this as a
+ticket-owned disposition such as `critique:example-review#FIND-001` — converted
+to follow-up ticket `ticket:<token>`.
+
+Do not record `resolved`, `accepted_risk`, `superseded`, or
+`converted_to_follow_up` as critique-owned state. Those are ticket-owned finding
+dispositions recorded in the ticket acceptance gate.
 
 For claim-specific findings, include:
 
@@ -78,3 +87,5 @@ What should happen before acceptance or closure.
 
 Use a concrete recommendation: close-ready, complete pending acceptance,
 review required, active follow-up required, blocked, or accepted risk needed.
+This recommendation informs the ticket-owned acceptance decision; it does not
+close the ticket by itself.

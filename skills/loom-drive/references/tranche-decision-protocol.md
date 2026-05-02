@@ -23,6 +23,9 @@ notes: <why this gap matters now>
 
 The matrix does not create a new layer. It is a reasoning shape inside the owner
 records that already own objective status, plan strategy, and ticket coverage.
+If `accepted_risk` appears in a gap matrix, cite the ticket-owned acceptance
+decision or critique disposition that accepted the risk; the matrix itself does
+not accept risk.
 
 ## Tranche Contract
 

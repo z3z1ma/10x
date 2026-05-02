@@ -175,7 +175,8 @@ boundaries.
    `references/tranche-decision-protocol.md` to turn objective gaps into a
    tranche contract and next-route decision.
 5. **Create or refine tickets** — tickets own live execution state, blockers,
-   next move, acceptance disposition, evidence disposition, and closure.
+   next move, critique disposition, acceptance decisions, evidence disposition,
+   and closure.
 6. **Run preflight gates** — distinguish repair/shaping routes from execution
    routes. Failed gates route to their owner repair path; they block local edits,
    Ralph, acceptance, and dependent continuation until repaired.
@@ -223,8 +224,8 @@ context pressure or improve reviewability.
 - the next step would invent product direction the user has not delegated
 - scope would widen beyond the current initiative, plan, ticket, or write boundary
 - required evidence is missing or contradicted
-- medium/high critique findings are unresolved and not accepted as risk or linked
-  to follow-up work
+- open or unresolved medium/high critique findings lack ticket-owned dispositions
+  such as resolved, accepted risk, superseded, or linked follow-up work
 - a ticket is blocked, write scopes overlap unsafely, or parallel work could
   corrupt shared state
 - budget, time, safety, privacy, or risk limits are reached
@@ -236,7 +237,8 @@ context pressure or improve reviewability.
 - the objective and success criteria live in the correct owner record
 - current execution state lives in tickets, not chat or a plan
 - each child or local execution step has been reconciled into ticket truth
-- evidence and critique dispositions are explicit enough for the next decision
+- evidence and ticket-owned critique dispositions are explicit enough for the next
+  decision
 - the parent has either created the next bounded tranche, asked the user a focused
   question, routed to critique/wiki/retrospective, or recorded why the loop stops
 

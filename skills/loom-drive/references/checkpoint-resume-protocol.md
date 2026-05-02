@@ -39,8 +39,9 @@ updated_at: <timestamp>
 ```
 
 Put each field in the owner record that owns it. The initiative can summarize the
-drive anchor and objective status; tickets own active execution state; plans own
-tranche sequencing; evidence and critique own support and findings.
+drive anchor and objective status; tickets own active execution state, critique
+disposition, and acceptance decisions; plans own tranche sequencing; evidence and
+critique own support, findings, and verdicts.
 
 ## Deterministic Resume Discovery
 
@@ -86,9 +87,10 @@ repair already happened.
   route to spec before implementation.
 - Evidence gate: required observations exist; otherwise route to evidence or
   research before relying on the claim.
-- Critique gate: mandatory critique is complete, pending as next route, or not
-  required with rationale; unresolved medium/high findings block acceptance and
-  dependent implementation that would rely on the challenged claim.
+- Critique gate: mandatory critique is complete, pending as next route, blocking,
+  or not required with rationale according to ticket-owned disposition status;
+  unresolved medium/high findings block acceptance and dependent implementation
+  that would rely on the challenged claim.
 - Write-boundary gate: child write scopes are explicit and non-overlapping unless
   intentionally sequenced; otherwise route to plan/ticket/Ralph packet repair.
 - Budget/safety gate: time, cost, privacy, security, and risk limits are not

@@ -16,7 +16,7 @@ Use the most specific section available before falling back to generic links.
 | evidence supports a claim | `# Supports Claims` |
 | evidence weakens or falsifies a claim | `# Challenges Claims` |
 | critique challenges a claim | finding `Challenges:` |
-| critique finding state on a ticket | `# Critique Disposition` |
+| ticket-owned finding disposition / ticket-owned critique disposition | `# Critique Disposition` |
 | superseded record | record lifecycle `status: superseded` plus successor in `links:` or body prose |
 | superseded claim or criterion ID | owning record prose, claim matrix, or coverage state naming the successor ID |
 | accepted risk | ticket `# Claim Matrix`, ticket acceptance notes, or critique disposition |
@@ -87,7 +87,7 @@ Do not:
 
 - use `links:` instead of `depends_on` for hard execution prerequisites
 - bury evidence support only in prose
-- bury critique finding disposition only in prose
+- bury ticket-owned finding disposition only in prose
 - copy outside issue tracker state into `links:`
 - let `external_refs:` become a shadow ticket ledger
 - use PRs, dashboards, generated context, or release metadata as shadow closure

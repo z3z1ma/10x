@@ -99,7 +99,7 @@ List profile names, or write `None - reason`.
 
 Findings:
 
-List real finding references and ticket-owned dispositions, or write
+List real finding references and ticket-owned finding dispositions, or write
 `None - no critique yet`.
 
 Example:
@@ -111,10 +111,17 @@ Example:
 - `critique:example-review#FIND-004` — `converted_to_follow_up` as
   `ticket:<token>`
 
-Medium/high findings must be resolved, explicitly accepted as risk, superseded
-by evidence, or converted into linked follow-up tickets before closure.
+Open medium/high findings must have ticket-owned dispositions of `resolved`,
+`accepted_risk`, `superseded`, or `converted_to_follow_up` before closure, with
+evidence, acceptance provenance, or linked follow-up tickets as appropriate.
+Withdrawn findings require critique rationale and may be cited for audit history
+without ticket-owned finding disposition.
 
-Disposition status: pending | completed | deferred | not_required
+Disposition status: pending | blocking | completed | deferred | not_required
+
+Use `blocking` only when unresolved required critique currently blocks acceptance
+or dependent continuation. This status is a ticket-owned gate summary, not a
+critique verdict.
 
 Deferral / not-required rationale:
 

@@ -72,7 +72,7 @@ objective criteria: <OBJ-IDs with satisfied | partial | open | blocked>
 current tranche: <plan milestone / wave / purpose>
 active tickets: <ticket IDs and states>
 evidence state: <claim IDs with evidence links or gaps>
-critique state: <required | pending | blocking | completed | deferred with rationale>
+critique state: <required | pending | blocking | completed | deferred | not_required, citing ticket truth>
 next action: continue | ask_user | critique | wiki | research | spec | plan | ticket | stop
 next action owner: <which layer must change next>
 reason: <why this follows from current owner truth>
@@ -106,15 +106,17 @@ After each ticket or tranche, update the owning records enough to answer:
 objective status: satisfied | partially_satisfied | open | blocked | out_of_scope
 criteria supported: <claims and evidence links>
 criteria still open: <claims or gaps>
-critique state: not_required | pending | blocking | completed | accepted_risk
+ticket critique disposition status: pending | blocking | completed | deferred | not_required
+finding dispositions: <qualified finding refs with resolved | accepted_risk | superseded | converted_to_follow_up, or none>
 next action: continue | ask_user | critique | wiki | research | spec | plan | ticket | stop
 next tranche: <ticket IDs or plan update, if known>
 reason: <why this next action follows from the records>
 ```
 
 Put the answer in the layer that owns it. For example, objective-level status
-belongs in the initiative, live execution status belongs in the ticket, and
-sequencing changes belong in the plan.
+belongs in the initiative, live execution and acceptance state belong in the
+ticket, critique findings and verdicts belong in critique, and sequencing changes
+belong in the plan. Drive snapshots cite those owners; they do not own acceptance.
 
 If the next action is `continue`, the plan or ticket chain should name the next
 tranche. If the next action is `ask_user`, record the exact question and why the

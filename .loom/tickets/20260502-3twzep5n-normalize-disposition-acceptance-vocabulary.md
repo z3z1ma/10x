@@ -1,11 +1,11 @@
 ---
 id: ticket:3twzep5n
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-02T15:25:50Z
-updated_at: 2026-05-02T15:25:50Z
+updated_at: 2026-05-02T15:56:59Z
 scope:
   kind: repository
   repositories:
@@ -15,6 +15,14 @@ links:
     - initiative:skills-corpus-perfection-council-followup
   plan:
     - plan:skills-corpus-perfection-council-followup
+  packet:
+    - packet:ralph-ticket-3twzep5n-20260502T153040Z
+    - packet:ralph-ticket-3twzep5n-20260502T154425Z
+    - packet:ralph-ticket-3twzep5n-20260502T155314Z
+  evidence:
+    - evidence:disposition-acceptance-vocabulary-validation
+  critique:
+    - critique:disposition-acceptance-vocabulary-review
 external_refs: {}
 depends_on: []
 ---
@@ -77,7 +85,7 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-perfection-council-followup#OBJ-001` | pending | pending | open |
+| `initiative:skills-corpus-perfection-council-followup#OBJ-001` | `evidence:disposition-acceptance-vocabulary-validation` | `critique:disposition-acceptance-vocabulary-review` with all findings resolved | supported |
 
 # Execution Notes
 
@@ -93,7 +101,7 @@ None.
 
 # Next Move / Next Route
 
-Ralph implementation packet.
+Closed. Continue to `ticket:4ilnwsnl`.
 
 # Ralph Readiness
 
@@ -111,11 +119,9 @@ recommendation, and any required retrospective promotion.
 
 # Evidence
 
-Expected:
-
-- `git diff --check`
-- targeted searches for disposition terms before/after
-- manual comparison against bootstrap closure doctrine and ticket acceptance gate
+- `evidence:disposition-acceptance-vocabulary-validation` records structural
+  validation, targeted disposition vocabulary searches, manual comparison against
+  bootstrap closure doctrine and ticket acceptance gate, and `git diff --check`.
 
 # Critique Disposition
 
@@ -135,24 +141,39 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+Recorded in `critique:disposition-acceptance-vocabulary-review`:
 
-Disposition status: pending
+- `critique:disposition-acceptance-vocabulary-review#ORACLE-3TWZEP5N-001` - resolved.
+- `critique:disposition-acceptance-vocabulary-review#ORACLE-3TWZEP5N-002` - resolved.
+- `critique:disposition-acceptance-vocabulary-review#ORACLE-3TWZEP5N-003` - resolved.
+- `critique:disposition-acceptance-vocabulary-review#ORACLE-3TWZEP5N-004` - resolved.
+- `critique:disposition-acceptance-vocabulary-review#ORACLE-3TWZEP5N-RC-001` - resolved.
+
+Disposition status: completed
 
 Deferral / not-required rationale:
 
-None. Critique is mandatory.
+Not deferred. Mandatory oracle critique passed with no remaining findings.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+Retrospective disposition complete. Durable lessons were promoted directly into
+the owner product surfaces: shared lifecycle grammar, ticket acceptance gate,
+critique finding format/template, drive stop/checkpoint wording, semantic link
+usage, and bootstrap closure doctrine. No separate wiki page, research record,
+spec, constitution decision, or memory entry is needed for this ticket.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-02T15:56:59Z
+Basis: Ralph packets `packet:ralph-ticket-3twzep5n-20260502T153040Z`,
+`packet:ralph-ticket-3twzep5n-20260502T154425Z`, and
+`packet:ralph-ticket-3twzep5n-20260502T155314Z`; evidence
+`evidence:disposition-acceptance-vocabulary-validation`; final oracle critique
+`critique:disposition-acceptance-vocabulary-review` with no remaining findings.
+Residual risks: validation and critique were structural/textual; future operator
+application is not proven beyond corpus consistency.
 
 # Dependencies
 
@@ -161,3 +182,27 @@ None.
 # Journal
 
 - 2026-05-02T15:25:50Z: Created from council finding `COUNCIL-FIND-001`.
+- 2026-05-02T15:30:39Z: Moved to active and compiled Ralph packet
+  `packet:ralph-ticket-3twzep5n-20260502T153040Z` from commit
+  `4e17691f7cacf2792a61ee2ed5aff6159effcf93`.
+- 2026-05-02T15:36:04Z: Ralph child implementation normalized the shared,
+  ticket, critique, drive, and bootstrap vocabulary surfaces; recorded structural
+  evidence in `evidence:disposition-acceptance-vocabulary-validation`; moved to
+  `review_required` because mandatory oracle critique remains pending.
+- 2026-05-02T15:44:25Z: Oracle critique found medium issues in withdrawn-finding
+  closure semantics, stale semantic-link wording, and packet lifecycle
+  reconciliation. Parent consumed the first packet and moved ticket back to
+  active for Ralph repair packet `packet:ralph-ticket-3twzep5n-20260502T154425Z`.
+- 2026-05-02T15:45:34Z: Ralph child repair made the withdrawn-finding closure
+  rule explicit, replaced stale semantic-link wording, added `blocking` to the
+  ticket template disposition status grammar, refreshed validation evidence, and
+  moved the ticket to `review_required` for mandatory oracle re-check.
+- 2026-05-02T15:53:13Z: Oracle re-check passed all medium/high findings but
+  reported one low drive wording issue. Moved back to active for narrow Ralph
+  repair packet `packet:ralph-ticket-3twzep5n-20260502T155314Z`.
+- 2026-05-02T15:54:03Z: Narrow Ralph repair updated the drive stop condition so
+  only open or unresolved medium/high critique findings lacking ticket-owned
+  dispositions stop the drive, refreshed validation evidence, and moved the
+  ticket back to `review_required` for mandatory oracle re-check.
+- 2026-05-02T15:56:59Z: Final oracle re-check passed with no remaining findings;
+  ticket accepted and closed after retrospective disposition was recorded.

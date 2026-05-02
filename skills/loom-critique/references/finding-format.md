@@ -6,7 +6,7 @@ Each meaningful finding should normally include:
 - a short title
 - severity: `low | medium | high`
 - confidence: `low | medium | high`
-- disposition: `open | resolved | accepted_risk | superseded | converted_to_follow_up`
+- state: `open | withdrawn`
 - what was observed
 - why it matters
 - what follow-up would reduce the risk
@@ -25,9 +25,36 @@ When another record refers to a finding, qualify it:
 critique:example-review#FIND-001
 ```
 
-Tickets should use those references when tracking critique disposition. The
-ticket owns acceptance: it records whether each finding was resolved, accepted as
-risk, superseded by evidence, or converted into a linked follow-up ticket.
+Tickets should use those references when tracking critique disposition for open
+medium/high findings. The ticket owns acceptance: it records whether each open
+finding that affects closure has a ticket-owned disposition of `resolved`,
+`accepted_risk`, `superseded`, or `converted_to_follow_up`.
+
+## Finding State vs Ticket Disposition
+
+Critique records produce findings, verdicts, residual risks, and follow-up
+recommendations. They do not close ticket work and do not accept their own
+findings on behalf of the ticket.
+
+Use critique-owned finding state narrowly:
+
+- `open` — the finding is part of the review output and the ticket must consume
+  it.
+- `withdrawn` — the critique retracts the finding with rationale; the ticket may
+  cite that rationale when reconciling review history.
+
+Only open medium/high findings require ticket-owned finding dispositions before
+closure. Withdrawn findings require critique rationale, not ticket-owned finding
+disposition; a ticket may cite them for audit history without treating them as
+closure blockers.
+
+Use ticket-owned finding dispositions only in the ticket's
+`# Critique Disposition` section:
+
+- `resolved`
+- `accepted_risk`
+- `superseded`
+- `converted_to_follow_up`
 
 ## Receiving Findings
 
@@ -39,9 +66,10 @@ For each finding:
 2. restate the technical requirement if it is unclear
 3. inspect the relevant source, record, evidence, or diff
 4. decide whether the finding is valid for this project and ticket scope
-5. implement, clarify, accept risk, supersede with evidence, or create a linked
-   follow-up ticket
-6. update the ticket critique disposition
+5. implement, clarify, accept risk with provenance, supersede with evidence, or
+   create a linked follow-up ticket
+6. update the ticket critique disposition for open findings, or cite withdrawn
+   findings only as audit history when their critique rationale is sufficient
 
 Do not partially implement a multi-item review when some items are unclear and
 could affect the others. Clarify first or split the work into explicit follow-up

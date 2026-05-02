@@ -87,11 +87,14 @@ profiles even when the diff looks small.
 
 Critique policy affects ticket closure through the ticket's acceptance gate:
 
-- mandatory critique blocks `closed` until the required review exists and its
-  medium/high findings are resolved, explicitly accepted as risk, superseded by
-  evidence, or converted into linked follow-up work
-- recommended critique requires a recorded ticket disposition before closure:
-  completed, explicitly deferred, or intentionally not needed with rationale
+- mandatory critique blocks `closed` until the required review exists and every
+  open medium/high finding has a ticket-owned disposition of `resolved`,
+  `accepted_risk`, `superseded`, or `converted_to_follow_up`
+- withdrawn findings require critique-owned rationale. They may be cited by the
+  ticket for audit history, but do not require ticket-owned finding disposition
+  and do not block closure merely because of severity.
+- recommended critique requires a recorded ticket-owned disposition status before
+  closure: `completed`, `deferred`, or `not_required` with rationale
 - optional critique does not block closure unless a ticket, spec, plan, or human
   gate made it required for that work
 

@@ -97,9 +97,9 @@ critique can then cite those IDs when judging whether the drive should continue.
 - accepted explanation or reusable workflow knowledge -> wiki
 - support-only recall, retrieval cues, preferences, reminders, or hot context -> memory
 
-Do not let the plan become the ledger. Do not let a packet, subagent response, or
-wiki page redefine acceptance. Move truth into the owning layer before relying on
-it.
+Do not let the plan become the ledger. Do not let a packet, subagent response,
+drive snapshot, critique verdict, or wiki page redefine acceptance. Move truth
+into the owning ticket before relying on it.
 
 ## Tranche Shape
 
@@ -156,7 +156,8 @@ After each ticket or tranche, the parent checks:
 
 - Which objective criterion IDs are satisfied, partially satisfied, or still open?
 - Which objective/spec/ticket claims have evidence?
-- Is critique required, complete, deferred with rationale, or blocking?
+- Is critique required, pending, blocking, completed, deferred with rationale, or
+  not required according to ticket-owned disposition status?
 - Did implementation discover new research, spec, plan, or constitution truth?
 - Is the next ticket tranche obvious and within delegated authority?
 - Would continuing exceed budget, scope, safety, or context limits?
@@ -165,7 +166,8 @@ Record the reassessment where it belongs before continuing:
 
 - initiative status summary for objective-level satisfaction and remaining gaps
 - plan strategy snapshot for tranche-level sequencing changes
-- ticket journal and acceptance disposition for live execution state
+- ticket journal, critique disposition, and acceptance decision for live execution
+  and closure state
 - evidence and critique links for support or blockers
 
 For drives with stable objective IDs, every continuation decision should be
@@ -183,7 +185,7 @@ Stop or ask the user when:
 - a tradeoff would invent product direction or accept material risk
 - continuation would widen scope beyond delegated authority
 - required evidence is absent or contradicted
-- critique has unresolved medium/high findings without accepted disposition
+- critique has unresolved medium/high findings without ticket-owned disposition
 - write scopes conflict or shared state makes parallel work unsafe
 - a blocker prevents ticket progress
 - budget, time, privacy, safety, or context limits are hit

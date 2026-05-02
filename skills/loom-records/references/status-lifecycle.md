@@ -17,6 +17,33 @@ normal non-ticket record statuses.
 - `superseded` — replaced by a named successor
 - `retired` — intentionally no longer used
 
+## Disposition And Acceptance Vocabulary Boundaries
+
+Status, finding state, critique disposition, and acceptance decision are related
+but not interchangeable.
+
+- **Critique-owned finding state** lives inside critique records. Use `open` for a
+  finding that remains part of the review output, or `withdrawn` when the
+  critique itself retracts the finding with rationale. Critique records also own
+  verdicts, severity, confidence, residual risks, and required follow-up. Only
+  open medium/high findings require ticket-owned finding dispositions before
+  closure. Withdrawn findings require critique rationale and may be cited by the
+  ticket for audit history, but they are not closure-blocking merely because of
+  severity.
+- **Ticket-owned finding disposition** lives in the ticket's
+  `# Critique Disposition` section for each qualified finding reference. Use
+  `resolved`, `accepted_risk`, `superseded`, or `converted_to_follow_up`.
+- **Ticket-owned critique disposition status** describes gate progress for the
+  ticket as a whole: `pending`, `blocking`, `completed`, `deferred`, or
+  `not_required`.
+- **Ticket-owned acceptance decision** owns closure provenance and residual risk.
+  A critique verdict, packet result, drive checkpoint, or support handoff may
+  recommend a route, but it does not accept or close ticket work.
+
+Drive and checkpoint snapshots may summarize critique and acceptance state only by
+citing the ticket and critique records that own it. They must not become a second
+acceptance ledger.
+
 ## Layer-Specific Status Sets
 
 Use these sets unless the owning skill records a narrower one:
