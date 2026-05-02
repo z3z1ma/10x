@@ -35,7 +35,9 @@ Use these sets unless the owning skill records a narrower one:
 - workspace support records: `active | superseded | retired`
 - memory support files: lightweight local status is optional; when used, prefer
   retrieval-oriented values such as `active`, `stale`, `superseded`, or
-  `retired`, and do not let memory status own canonical project truth
+  `retired`, and do not let memory status own canonical project truth, live
+  execution state, evidence sufficiency, or accepted explanation. Validators
+  should not require memory files to have a `status` field.
 - support handoff templates: any `status` field is template-local unless the
   owning skill says otherwise; it does not create canonical truth, ticket state,
   or packet lifecycle status

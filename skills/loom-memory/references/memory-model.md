@@ -93,12 +93,25 @@ Promote memory when it stops being support-only:
 - strategic objective or success metric -> initiative
 - durable principle, hard constraint, or accepted decision -> constitution
 
-Demote or prune when:
+Link, stale-mark, demote, or prune when memory has stopped being the best shape:
 
 - canonical truth now exists and memory only duplicates it
 - hot context is no longer hot
 - an observation is too stale to help retrieval
 - an action-item reminder became ticket work or no longer matters
+
+Use this order of preference:
+
+1. leave the item alone if it is still current, support-only, and useful
+2. replace detail with a short pointer when an owner record now carries the truth
+3. mark the item stale if it is historically useful but no longer current
+4. promote it before relying on it for project truth, acceptance, evidence,
+   intended behavior, or accepted explanation
+5. prune it when it is low-signal, unverifiable, obsolete, or redundant
+
+Pruning is safe only because memory is optional in the correctness sense. If
+removing the item would make the canonical graph false, incomplete, or unsafe,
+do not prune it as memory; move or restate the claim in the owning layer first.
 
 ## Examples
 

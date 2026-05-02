@@ -59,7 +59,9 @@ systems request, mirror, package, or help navigate the work.
 Memory is a support recall layer, not canonical project truth. Default memory
 files may use the lightweight `<!-- L0: ... -->` header from `loom-memory`
 templates instead of YAML frontmatter, and they do not need canonical `id`,
-`kind`, `scope`, or `links` fields merely to exist.
+`kind`, `status`, `created_at`, `updated_at`, `scope`, or `links` fields merely
+to exist. Canonical record validators should not fail memory files for missing
+canonical frontmatter.
 
 If a project chooses to wrap a memory support file in YAML, validators should
 accept support-only metadata such as `kind: memory`, a local retrieval-oriented

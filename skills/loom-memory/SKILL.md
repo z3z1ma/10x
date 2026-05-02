@@ -79,11 +79,38 @@ Every active memory file should start with a one-line `<!-- L0: ... -->` header.
 
 That allows cheap scanning before deep reading.
 
+Default memory files do not need YAML frontmatter. If a project adds YAML for
+local convenience, treat any `status`, timestamps, or `kind: memory` as
+support-only retrieval metadata, not as canonical record identity or live state.
+Validators must not require canonical `id`, `kind`, `status`, timestamps,
+`scope`, or `links` merely because memory exists.
+
 ## Promotion Rule
 
 Memory is allowed to be provisional. When a memory item becomes durable project
 truth, repeated operator knowledge, live execution state, or evidence for a
 claim, promote it to the owning layer and simplify or remove the memory copy.
+
+## Structure And Pruning Rule
+
+Keep memory as small linked cards. At ticket closure, retrospective promotion,
+rename or supersession cleanup, and ordinary memory housekeeping, make the
+smallest honest choice for each item:
+
+- leave it alone when it is current, support-only, and still reduces orientation
+  cost
+- link it to the owner record when canonical truth exists and a pointer still
+  helps retrieval
+- mark it stale when it is historically useful but no longer current
+- promote it to the owner layer when future work would rely on it as truth, then
+  replace the memory detail with a pointer or remove it
+- prune it when it is obsolete, unverifiable, duplicated elsewhere, or no longer
+  helps retrieval
+
+Do not create a separate memory cadence ledger. Memory cleanup rides existing
+owner workflows and local housekeeping; tickets remain the live execution ledger,
+evidence remains the observation store, research remains the investigation log,
+and wiki remains accepted explanation.
 
 ## Done Means
 

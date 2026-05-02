@@ -1,11 +1,11 @@
 ---
 id: ticket:795fa0f4
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-02T08:46:28Z
-updated_at: 2026-05-02T09:28:53Z
+updated_at: 2026-05-02T10:50:58Z
 scope:
   kind: repository
   repositories:
@@ -19,6 +19,11 @@ links:
     - research:skills-corpus-council-review
   evidence:
     - evidence:skills-corpus-council-review
+    - evidence:memory-pruning-frontmatter-validation
+  critique:
+    - critique:memory-pruning-frontmatter-review
+  packet:
+    - packet:ralph-ticket-795fa0f4-20260502T104301Z
   plan:
     - plan:skills-corpus-protocol-sharpening
   supersedes:
@@ -93,8 +98,8 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-protocol-sharpening#OBJ-003` | implementation evidence pending | critique recommended | open |
-| `research:skills-corpus-council-review#CLAIM-007` | `evidence:skills-corpus-council-review` supports need; implementation evidence pending | critique recommended | supported_pending_review |
+| `initiative:skills-corpus-protocol-sharpening#OBJ-003` | `evidence:memory-pruning-frontmatter-validation` | `critique:memory-pruning-frontmatter-review` | supported |
+| `research:skills-corpus-council-review#CLAIM-007` | `evidence:skills-corpus-council-review`; `evidence:memory-pruning-frontmatter-validation` | `critique:memory-pruning-frontmatter-review` | supported |
 
 # Execution Notes
 
@@ -103,12 +108,11 @@ not a conceptual redesign.
 
 # Blockers
 
-Do not start until `ticket:4e8ebe92` and `ticket:1a12d9ff` have landed or been
-intentionally deferred.
+None. Dependencies `ticket:4e8ebe92` and `ticket:1a12d9ff` are closed.
 
 # Next Move / Next Route
 
-Ralph implementation packet or local edit for memory boundary precision.
+Closed. Continue with the next sequenced plan ticket, `ticket:53cf2989`.
 
 # Ralph Readiness
 
@@ -137,12 +141,13 @@ Expected output contract:
 
 # Evidence
 
-Expected:
+Recorded:
 
-- `git diff --check`
-- targeted grep checks for prune, promotion, frontmatter, status, optionality,
-  stale memory, second-ledger, and canonical-truth wording
-- manual check against the existing memory support-layer records
+- `evidence:memory-pruning-frontmatter-validation`
+- `git diff --check` passed with no output.
+- Targeted searches confirmed pruning/promotion/stale handling, memory
+  frontmatter/status exceptions, optionality as correctness boundary, owner-layer
+  promotion, retrospective/closure housekeeping triggers, and no new runtime.
 
 # Critique Disposition
 
@@ -162,28 +167,35 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+No findings in `critique:memory-pruning-frontmatter-review`.
 
-Disposition status: pending
+Disposition status: complete
 
 Deferral / not-required rationale:
 
-None yet.
+Not deferred. Oracle critique is recorded in
+`critique:memory-pruning-frontmatter-review`.
 
 # Wiki Disposition
 
-Likely deferred unless implementation surfaces a reusable memory maintenance
-pattern not captured by the skill references.
+Deferred intentionally. The accepted memory maintenance guidance now lives in the
+memory and records owner surfaces. No separate wiki page is needed for this
+ticket; the final corpus-wide validation ticket may still choose broader wiki
+promotion.
 
 # Acceptance Decision
 
-Accepted by:
+Accepted by: OpenCode parent agent
 
-Accepted at:
+Accepted at: 2026-05-02T10:50:58Z
 
-Basis:
+Basis: Ralph packet `packet:ralph-ticket-795fa0f4-20260502T104301Z`, validation
+evidence `evidence:memory-pruning-frontmatter-validation`, and final oracle
+critique `critique:memory-pruning-frontmatter-review` with no findings.
 
-Residual risks:
+Residual risks: Guidance is not runtime-enforced; future validators or adapters
+must preserve the memory exception if they add validation behavior later.
+Historical `.loom/memory` files were intentionally not rewritten or validated.
 
 # Dependencies
 
@@ -194,3 +206,10 @@ Residual risks:
 
 - 2026-05-02T08:46:28Z: Split from cancelled broad ticket `ticket:3uv5l5fh` as
   the memory pruning and frontmatter expectation slice.
+- 2026-05-02T10:43:01Z: Started Ralph iteration
+  `packet:ralph-ticket-795fa0f4-20260502T104301Z` for memory pruning and
+  frontmatter/status expectations.
+- 2026-05-02T10:47:08Z: Moved to review after Ralph implementation and structural
+  validation.
+- 2026-05-02T10:50:58Z: Accepted and closed after structural evidence, oracle
+  critique with no findings, and retrospective disposition.

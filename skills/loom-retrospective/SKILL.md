@@ -68,11 +68,15 @@ It promotes learning into the records that already own that kind of knowledge.
 4. update owner records only when the lesson is accepted enough to preserve
 5. update the ticket or initiative disposition to say what was promoted, deferred,
    or intentionally not promoted
+6. when memory held support context for the work, leave useful current cues,
+   replace promoted detail with owner-record pointers, mark stale historical cues,
+   or prune obsolete reminders
 
 ## Done Means
 
 - durable learning moved to the owner layer that can maintain it
 - no retrospective-only ledger was created
+- memory was not left as the only source for promoted truth
 - the ticket or initiative truth says what follow-through happened or was deferred
 - repeated mistakes now have one prevention artifact, or the absence of durable
   follow-through is explicit
