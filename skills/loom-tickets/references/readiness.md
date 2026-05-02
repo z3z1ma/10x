@@ -2,6 +2,10 @@
 
 A ticket is ready when the next governed route can proceed without chat history.
 
+Readiness is route-neutral. A ready ticket might route to a local edit, a Ralph
+implementation packet, direct critique, wiki/retrospective work, evidence
+recording, research/spec/plan refinement, or ticket acceptance review.
+
 Ralph-ready is stricter: the ticket must also make one bounded implementation
 iteration, write boundary, likely verification posture, and expected output
 contract legible enough for a fresh worker.
@@ -22,6 +26,11 @@ this checklist passes.
 - acceptance criteria are concrete enough to guide behavior
 - coverage names relevant spec acceptance IDs when the work implements or
   verifies a spec
+- when no spec owns the acceptance contract, ticket-local acceptance criteria use
+  stable `ACC-*` IDs in the ticket and downstream records cite them as
+  `ticket:<token>#ACC-001`
+- ticket-local `ACC-*` criteria are not used to redefine or replace a reusable
+  spec-owned acceptance contract
 - relevant upstream artifacts are linked
 - the likely evidence path is visible
 - critique risk class matches frontmatter `risk_class`; required profiles are
@@ -34,3 +43,19 @@ this checklist passes.
 
 If several of those are missing, do not force Ralph, critique, wiki, or closure.
 Refine the ticket first.
+
+## Route Readiness
+
+Use `# Route Readiness` or equivalent prose to make the next governed route
+specific without implying that every handoff is Ralph.
+
+- For a local edit, name the bounded edit and write boundary.
+- For Ralph, keep the stricter Ralph-ready fields: bounded iteration, write
+  boundary, likely verification posture, and expected output contract.
+- For direct critique, name the review target, required profiles, and evidence to
+  review.
+- For wiki or retrospective work, name the explanation or lesson to promote and
+  the owner records it should source.
+- For evidence recording, name the claim references and observation procedure.
+- For ticket acceptance review, name the evidence, critique disposition, and
+  residual risks that the gate must evaluate.

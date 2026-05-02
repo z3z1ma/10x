@@ -55,6 +55,8 @@ A good ticket should let a fresh agent answer:
 - what is out of scope
 - what counts as done
 - which acceptance IDs it covers, when a spec names them
+- which ticket-local `ACC-*` IDs it owns, when no spec owns the acceptance
+  contract
 - what evidence exists
 - what the blockers are
 - what the next move is
@@ -74,7 +76,9 @@ and closure state.
 
 Specs own reusable acceptance contracts. Tickets may own ticket-local acceptance
 criteria only when no separate spec exists and the criteria are scoped to that
-ticket.
+ticket. When a ticket owns local acceptance criteria, write stable local IDs such
+as `ACC-001` in `# Acceptance Criteria` and cite them from other records as
+`ticket:<token>#ACC-001`.
 
 Optional commands, commits, PRs, packets, evidence, critique, and wiki pages may
 feed that dossier. They do not close work by themselves.

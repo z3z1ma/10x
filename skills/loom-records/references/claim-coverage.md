@@ -12,7 +12,8 @@ Use local IDs inside the record that owns the criterion or claim:
 
 - `OBJ-001` for initiative objective criteria under Success Metrics
 - `REQ-001` for requirements
-- `ACC-001` for acceptance units
+- `ACC-001` for acceptance units in the spec or ticket that owns the acceptance
+  contract
 - `CLAIM-001` for non-spec claims that need traceability
 
 Keep IDs stable after downstream records refer to them. If a claim is split,
@@ -26,6 +27,7 @@ record, qualify the ID with the owning record ID:
 ```text
 initiative:<slug>#OBJ-001
 spec:<slug>#ACC-001
+ticket:<token>#ACC-001
 research:<slug>#CLAIM-002
 ```
 
@@ -81,6 +83,28 @@ Covers:
 
 Replace placeholder refs with real claim IDs before saving a real ticket.
 
+When no spec owns the acceptance contract, the ticket may own ticket-local
+acceptance criteria. Write the local IDs in `# Acceptance Criteria` and cite them
+from packets, evidence, and critique as `ticket:<token>#ACC-001`:
+
+```md
+# Acceptance Criteria
+
+- ACC-001: The ticket readiness template is route-neutral.
+- ACC-002: Evidence records the structural validation outputs.
+
+# Coverage
+
+Covers:
+- initiative:<slug>#OBJ-001
+- ticket:<token>#ACC-001
+- ticket:<token>#ACC-002
+```
+
+Do not use ticket-local `ACC-*` IDs to replace a reusable spec-owned acceptance
+contract. If the criterion should guide future tickets, promote or restate it in
+a spec and cite `spec:<slug>#ACC-001` instead.
+
 Tickets nearing acceptance may also carry a claim matrix. The matrix is a
 ticket-owned view over links; it is not a new truth owner.
 
@@ -91,6 +115,7 @@ ticket-owned view over links; it is not a new truth owner.
 | --- | --- | --- | --- |
 | initiative:<slug>#OBJ-001 | evidence:<slug> | critique:<slug>#FIND-002 resolved | supported_pending_review |
 | spec:<slug>#ACC-001 | evidence:<slug> | critique:<slug>#FIND-001 resolved | supported |
+| ticket:<token>#ACC-001 | evidence:<slug> | pending | supported_pending_review |
 ```
 
 Use this status vocabulary:
@@ -111,6 +136,7 @@ Packets should declare the verification targets for the bounded iteration:
 
 - initiative:<slug>#OBJ-001
 - spec:<slug>#ACC-001
+- ticket:<token>#ACC-001
 ```
 
 ## Evidence Shape
@@ -123,6 +149,7 @@ Evidence should name claims it supports:
 - initiative:<slug>#OBJ-001
 - spec:<slug>#ACC-001
 - spec:<slug>#ACC-002
+- ticket:<token>#ACC-001
 ```
 
 ## Critique Shape
@@ -133,6 +160,7 @@ Critique findings should name claims they challenge when applicable:
 Challenges:
 - initiative:<slug>#OBJ-001
 - spec:<slug>#ACC-002
+- ticket:<token>#ACC-001
 ```
 
 ## Useful Queries
@@ -141,6 +169,7 @@ Challenges:
 rg -n 'initiative:<slug>#OBJ-001' .loom
 rg -n '\bOBJ-[0-9]{3}\b' .loom/initiatives skills/loom-initiatives
 rg -n 'spec:<slug>#ACC-002' .loom
+rg -n 'ticket:<token>#ACC-001' .loom
 rg -n '^# Supports Claims|^Supports:' .loom/evidence
 rg -n '^Challenges:' .loom/critique
 rg -n '^# Coverage|^Covers:' .loom/tickets

@@ -39,11 +39,26 @@ What should not happen inside this ticket.
 
 What must be true for this ticket to be accepted.
 
+If a spec owns the acceptance contract, summarize only the ticket-scoped work
+here and cite the spec-owned acceptance IDs under `# Coverage`.
+
+If no spec owns the acceptance contract, this ticket may own ticket-local
+acceptance criteria. Write stable local IDs so evidence and critique can cite
+them, for example:
+
+- ACC-001: The bounded change produces the intended observable result.
+- ACC-002: Required evidence is linked before acceptance review.
+
 # Coverage
 
 Covers:
 
 List qualified claim or acceptance IDs. If none apply, write `None - reason`.
+
+- Use `spec:<slug>#ACC-001` for spec-owned acceptance.
+- Use `ticket:<token>#ACC-001` for ticket-local acceptance criteria owned in
+  this ticket.
+- Use `initiative:<slug>#OBJ-001` for initiative objectives this ticket advances.
 
 # Claim Matrix
 
@@ -67,14 +82,42 @@ The next governed route: local edit, Ralph implementation packet, direct
 critique, wiki/retrospective pass, evidence recording, research/spec/plan
 refinement, or ticket acceptance review.
 
-# Ralph Readiness
+# Route Readiness
 
-Fill only when the next route is Ralph.
+Name the next governed route and the information needed for that route. Use only
+the route sections that apply; remove or mark unrelated sections `N/A`.
+
+Route: local edit | Ralph implementation packet | direct critique |
+wiki/retrospective pass | evidence recording | research/spec/plan refinement |
+ticket acceptance review
+
+Local edit readiness:
+Bounded edit:
+Write boundary:
+
+Ralph readiness, required only when the next route is Ralph:
 
 Bounded iteration:
 Write boundary:
 Likely verification posture:
 Expected output contract:
+
+Critique readiness:
+Review target:
+Required profiles:
+Evidence to review:
+
+Wiki / retrospective readiness:
+Explanation or lesson to promote:
+Owner records to source:
+
+Evidence readiness:
+Claims to support or challenge:
+Observation procedure:
+
+Acceptance review readiness:
+Evidence and critique disposition:
+Residual risks:
 
 # Evidence
 

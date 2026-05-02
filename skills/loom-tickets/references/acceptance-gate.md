@@ -9,7 +9,7 @@ implementation.
 
 - ticket
 - change class and risk class
-- linked spec and coverage IDs
+- linked spec acceptance IDs and ticket-local acceptance IDs in scope
 - ticket claim matrix when present
 - evidence
 - critique records and ticket-owned finding dispositions
@@ -54,6 +54,8 @@ Acceptance Dossier =
 - Does implementation reality match intended behavior, or is the gap explicitly
   recorded?
 - Does evidence support each covered claim reference?
+- If acceptance is ticket-local, are `ACC-*` references qualified outside the
+  ticket as `ticket:<token>#ACC-001`?
 - Is the evidence fresh enough for the current source, record, dependency, and
   environment state, or are its limits explicit?
 - Does the claim matrix accurately summarize support, challenge, and open

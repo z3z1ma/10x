@@ -1,11 +1,11 @@
 ---
 id: ticket:u02z7o9j
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-02T15:25:50Z
-updated_at: 2026-05-02T15:25:50Z
+updated_at: 2026-05-02T16:55:55Z
 scope:
   kind: repository
   repositories:
@@ -15,6 +15,12 @@ links:
     - initiative:skills-corpus-perfection-council-followup
   plan:
     - plan:skills-corpus-perfection-council-followup
+  packet:
+    - packet:ralph-ticket-u02z7o9j-20260502T164630Z
+  evidence:
+    - evidence:ticket-local-acceptance-readiness-validation
+  critique:
+    - critique:ticket-local-acceptance-readiness-review
 external_refs: {}
 depends_on:
   - ticket:3twzep5n
@@ -65,12 +71,22 @@ readiness headings train fresh agents to guess or misroute bounded work.
 Covers:
 
 - `initiative:skills-corpus-perfection-council-followup#OBJ-005`
+- `ticket:u02z7o9j#ACC-001`
+- `ticket:u02z7o9j#ACC-002`
+- `ticket:u02z7o9j#ACC-003`
+- `ticket:u02z7o9j#ACC-004`
+- `ticket:u02z7o9j#ACC-005`
 
 # Claim Matrix
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-perfection-council-followup#OBJ-005` | pending | pending | open |
+| `initiative:skills-corpus-perfection-council-followup#OBJ-005` | `evidence:ticket-local-acceptance-readiness-validation` | `critique:ticket-local-acceptance-readiness-review` | supported |
+| `ticket:u02z7o9j#ACC-001` | `evidence:ticket-local-acceptance-readiness-validation` | `critique:ticket-local-acceptance-readiness-review` | supported |
+| `ticket:u02z7o9j#ACC-002` | `evidence:ticket-local-acceptance-readiness-validation` | `critique:ticket-local-acceptance-readiness-review` | supported |
+| `ticket:u02z7o9j#ACC-003` | `evidence:ticket-local-acceptance-readiness-validation` | `critique:ticket-local-acceptance-readiness-review` | supported |
+| `ticket:u02z7o9j#ACC-004` | `evidence:ticket-local-acceptance-readiness-validation` | `critique:ticket-local-acceptance-readiness-review` | supported |
+| `ticket:u02z7o9j#ACC-005` | `critique:ticket-local-acceptance-readiness-review` | `critique:ticket-local-acceptance-readiness-review` | supported |
 
 # Execution Notes
 
@@ -80,33 +96,31 @@ and `skills/loom-tickets/references/readiness.md`.
 
 # Blockers
 
-Depends on `ticket:3twzep5n` so critique disposition wording is settled.
+None. Dependency `ticket:3twzep5n` is closed.
 
 # Next Move / Next Route
 
-Ralph implementation packet after dependency closes.
+Closed. Commit and push this ticket before continuing to `ticket:9c2delu8`.
 
-# Ralph Readiness
+# Route Readiness
 
-Bounded iteration: clarify ticket-local acceptance IDs and route-neutral ticket
+Route: ticket acceptance review completed.
+
+Review target: child diff for ticket-local acceptance IDs and route-neutral ticket
 readiness.
 
-Write boundary: `skills/loom-tickets/**`, `skills/loom-records/**`, this ticket,
-one evidence record, one critique record, and the Ralph packet.
+Required profiles: records-grammar, operator-clarity, routing-safety.
 
-Likely verification posture: observation-first structural validation.
-
-Expected output contract: changed files, evidence, critique, ticket closure
-recommendation, and retrospective disposition.
+Evidence reviewed: `evidence:ticket-local-acceptance-readiness-validation`, the
+Ralph child output, the git diff, and
+`critique:ticket-local-acceptance-readiness-review`.
 
 # Evidence
 
-Expected:
+Created:
 
-- `git diff --check`
-- targeted searches for `Ralph Readiness`, `Handoff Readiness`, `ACC-*`, and
-  `ticket:<token>#ACC-001`
-- manual comparison against claim coverage and ticket readiness guidance
+- `evidence:ticket-local-acceptance-readiness-validation` records before/after
+  targeted searches, `git diff --check`, and manual structural comparison.
 
 # Critique Disposition
 
@@ -125,24 +139,32 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+None - oracle critique passed with no findings.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
-None. Critique is required by user instruction.
+Not deferred. Mandatory oracle critique passed with no findings.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+Retrospective disposition complete. Durable lessons were promoted directly into
+the owner product surfaces: ticket template route readiness, ticket readiness
+guidance, ticket acceptance gate guidance, ticket skill acceptance-boundary prose,
+and claim coverage grammar. No separate wiki page, research record, spec,
+constitution decision, or memory entry is needed for this ticket.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-02T16:55:55Z
+Basis: Ralph packet `packet:ralph-ticket-u02z7o9j-20260502T164630Z`; evidence
+`evidence:ticket-local-acceptance-readiness-validation`; oracle critique
+`critique:ticket-local-acceptance-readiness-review` with no findings.
+Residual risks: validation and critique were structural/textual; historical
+dogfood tickets still using `# Ralph Readiness` remain outside this product-scope
+ticket and do not change the shipped ticket template.
 
 # Dependencies
 
@@ -152,3 +174,16 @@ Residual risks:
 
 - 2026-05-02T15:25:50Z: Created from council findings `COUNCIL-FIND-007` and
   `COUNCIL-FIND-008`.
+- 2026-05-02T16:46:30Z: Dependency closed. Moved to active and compiled Ralph
+  packet `packet:ralph-ticket-u02z7o9j-20260502T164630Z` from commit
+  `16bb2a3c1f71fb56215f52b6c3d111764213e21d`.
+- 2026-05-02T16:48:46Z: Ralph child updated ticket guidance, ticket template,
+  acceptance gate guidance, and claim coverage grammar for ticket-local `ACC-*`
+  references and route-neutral readiness. Evidence recorded in
+  `evidence:ticket-local-acceptance-readiness-validation`. Moved to
+  `review_required` because mandatory oracle critique remains outstanding.
+- 2026-05-02T16:51:09Z: Parent reconciliation added the missing ticket-local
+  critique example in claim coverage, refreshed evidence, and consumed Ralph
+  packet `packet:ralph-ticket-u02z7o9j-20260502T164630Z`.
+- 2026-05-02T16:55:55Z: Oracle critique passed with no findings. Recorded final
+  critique, retrospective disposition, and acceptance; closed ticket.
