@@ -53,8 +53,8 @@ to use it first.
 - Codex can read the marketplace from `.agents/plugins/marketplace.json`.
 - Codex can load the `loom` plugin's canonical skills from `skills/` after the
   Git-backed root plugin is installed.
-- project-local `SessionStart` hooks emit all seven `loom-bootstrap` references as
-  source-marked stdout outputs, one file per command.
+- project-local `SessionStart` hooks emit the current ordered `loom-bootstrap`
+  references as source-marked stdout outputs, one file per command.
 - same-session startup probes can see hook stdout as model context.
 - each current bootstrap reference remains below Codex's per-output practical
   probe size and Claude's documented 10,000-character hook-output context cap used

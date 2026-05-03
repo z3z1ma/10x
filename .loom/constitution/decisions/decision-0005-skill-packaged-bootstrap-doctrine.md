@@ -3,7 +3,7 @@ id: decision:0005
 kind: decision
 status: active
 created_at: 2026-04-26T06:35:59Z
-updated_at: 2026-04-26T06:35:59Z
+updated_at: 2026-05-03T04:37:35Z
 scope:
   kind: repository
   repositories:
@@ -21,7 +21,7 @@ Loom's mandatory operating doctrine is now packaged as the `loom-bootstrap` skil
 
 The ordered doctrine references live under
 `skills/loom-bootstrap/references/01-*.md` through
-`skills/loom-bootstrap/references/07-*.md`. Harness adapters may still preload
+`skills/loom-bootstrap/references/08-*.md`. Harness adapters may still preload
 those references as always-on context, but the canonical distribution model is a
 skills package with one mandatory bootstrap skill rather than a separate top-level
 `rules/` corpus.
@@ -57,8 +57,8 @@ was already preloaded by an adapter.
 
 - `skills/loom-bootstrap/SKILL.md` is the mandatory first skill when Loom doctrine
   is not already in the current context.
-- The seven former rule files move into `skills/loom-bootstrap/references/` and
-  remain ordered by filename.
+- The bootstrap doctrine references live in `skills/loom-bootstrap/references/`
+  and remain ordered by filename.
 - Adapter docs and hook configs should reference the bootstrap skill references,
   not top-level `rules/` paths.
 - Always-on adapter preload remains valuable but becomes an optimization, not the

@@ -19,6 +19,7 @@ skill is the package entry point that tells an agent how to become a Loom operat
 - initial Loom operating doctrine
 - the mandatory first-read route for agents that do not already have Loom context
 - the ordered bootstrap reference list
+- the default trust boundary between context data and instruction authority
 - the boundary between skill-package install and optional always-on adapter boosts
 
 ## What This Skill Does Not Own
@@ -53,6 +54,7 @@ present earlier in the context window:
 5. `references/05-critique-and-wiki.md`
 6. `references/06-filesystem-and-tooling.md`
 7. `references/07-validation-and-honesty.md`
+8. `references/08-trust-boundaries.md`
 
 Then activate the task-specific Loom skill that owns the next truth change.
 

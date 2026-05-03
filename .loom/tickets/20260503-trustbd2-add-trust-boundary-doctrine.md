@@ -1,11 +1,11 @@
 ---
 id: ticket:trustbd2
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-03T04:09:51Z
-updated_at: 2026-05-03T04:09:51Z
+updated_at: 2026-05-03T04:53:44Z
 scope:
   kind: repository
   repositories:
@@ -74,12 +74,12 @@ action.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-002` | pending | pending | open |
-| `ticket:trustbd2#ACC-001` | pending | pending | open |
-| `ticket:trustbd2#ACC-002` | pending | pending | open |
-| `ticket:trustbd2#ACC-003` | pending | pending | open |
-| `ticket:trustbd2#ACC-004` | pending | pending | open |
-| `ticket:trustbd2#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-002` | `evidence:trust-boundary-doctrine-validation` | `critique:trust-boundary-doctrine-review` | supported |
+| `ticket:trustbd2#ACC-001` | `evidence:trust-boundary-doctrine-validation` | `critique:trust-boundary-doctrine-review` | supported |
+| `ticket:trustbd2#ACC-002` | `evidence:trust-boundary-doctrine-validation` | `critique:trust-boundary-doctrine-review` | supported |
+| `ticket:trustbd2#ACC-003` | `evidence:trust-boundary-doctrine-validation` | `critique:trust-boundary-doctrine-review` | supported |
+| `ticket:trustbd2#ACC-004` | `evidence:trust-boundary-doctrine-validation` | `critique:trust-boundary-doctrine-review` | supported |
+| `ticket:trustbd2#ACC-005` | None - critique outcome is the acceptance instrument | `critique:trust-boundary-doctrine-review` | supported |
 
 # Execution Notes
 
@@ -93,22 +93,21 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:vocabx08`.
+
+Ralph packets were consumed in scope, evidence was recorded and refreshed,
+mandatory critique passed with all findings resolved, and acceptance is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: trust-boundary doctrine.
-Write boundary: targeted skill references only, this ticket, one packet, one
-evidence record, and one critique record.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, targeted trust-boundary observations, and
-critique recommendation.
+Acceptance review readiness:
+Evidence `evidence:trust-boundary-doctrine-validation` and mandatory critique
+`critique:trust-boundary-doctrine-review` support closure with no unresolved
+findings.
 
 # Evidence
 
-Expected: searches for trust/data/instruction authority, secrets/credentials,
-external refs, generated/tool output, and `git diff --check`.
+Recorded: `evidence:trust-boundary-doctrine-validation`.
 
 # Critique Disposition
 
@@ -127,9 +126,25 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:trust-boundary-doctrine-review` - no findings; mandatory critique
+passed. Preliminary findings were repaired before final critique:
 
-Disposition status: pending
+- `TRUSTBD2-ORC-001`: stale bootstrap preload/list surfaces. Repaired by
+  `packet:ralph-ticket-trustbd2-20260503T042817Z` and refreshed evidence.
+- `TRUSTBD2-ORC-002`: evidence was too summary-level. Repaired by refreshing
+  `evidence:trust-boundary-doctrine-validation` with exact commands and outputs.
+- `TRUSTBD2-ORC-003`: dropped `external_refs` code span. Repaired by
+  `packet:ralph-ticket-trustbd2-20260503T042817Z`.
+- `TRUSTBD2-ORC-004`: Claude hook preload omits `08-trust-boundaries.md`.
+  Repaired by `packet:ralph-ticket-trustbd2-20260503T043735Z` and refreshed
+  evidence.
+- `TRUSTBD2-ORC-005`: `decision:0005` `updated_at` stale. Repaired by
+  `packet:ralph-ticket-trustbd2-20260503T043735Z`.
+- `TRUSTBD2-ORC-006`: internal adapter fixture docs still said "seven" current
+  bootstrap references. Repaired by
+  `packet:ralph-ticket-trustbd2-20260503T044557Z` and refreshed evidence.
+
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -137,18 +152,42 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Trust-boundary doctrine was promoted directly into mandatory bootstrap reference
+  `skills/loom-bootstrap/references/08-trust-boundaries.md`.
+- Related evidence, research, memory, and records-frontmatter surfaces now point
+  to the bootstrap trust boundary while preserving their owner/support roles.
+- Gemini and Claude bootstrap preload surfaces, install docs, constitutional
+  decision metadata, and internal adapter fixtures were reconciled to the new
+  ordered reference set.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, or memory record is needed. The durable lesson
+is operational doctrine and lives in the bootstrap reference plus adjacent skill
+surfaces.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+bootstrap reference.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T04:53:44Z
+Basis: Ralph packets `packet:ralph-ticket-trustbd2-20260503T042019Z`,
+`packet:ralph-ticket-trustbd2-20260503T042817Z`,
+`packet:ralph-ticket-trustbd2-20260503T043735Z`, and
+`packet:ralph-ticket-trustbd2-20260503T044557Z`; evidence
+`evidence:trust-boundary-doctrine-validation`; mandatory critique
+`critique:trust-boundary-doctrine-review` with no unresolved findings.
+Residual risks: No automated secret scanning is introduced; this is intentional
+doctrine-only behavior. Claude hook ordering remains best effort because
+`SessionStart` hooks are concurrent, with source markers preserving attribution.
 
 # Dependencies
 
@@ -157,3 +196,35 @@ Residual risks:
 # Journal
 
 - 2026-05-03T04:09:51Z: Created from council trust-boundary recommendation.
+- 2026-05-03T04:20:19Z: Started Ralph iteration
+  `packet:ralph-ticket-trustbd2-20260503T042019Z` from clean `main` at
+  `fc29933`.
+- 2026-05-03T04:22:51Z: Ralph iteration
+  `packet:ralph-ticket-trustbd2-20260503T042019Z` completed in scope. Evidence
+  recorded in `evidence:trust-boundary-doctrine-validation`; next route is
+  mandatory critique.
+- 2026-05-03T04:28:17Z: Initial mandatory critique found stale bootstrap preload
+  surfaces, summary-level evidence detail, and one dropped `external_refs` code
+  span. Parent compiled repair packet
+  `packet:ralph-ticket-trustbd2-20260503T042817Z`.
+- 2026-05-03T04:32:22Z: Ralph repair packet
+  `packet:ralph-ticket-trustbd2-20260503T042817Z` consumed. Parent repaired one
+  residual stale decision consequence bullet, refreshed evidence with exact query
+  output, and routed back to mandatory critique.
+- 2026-05-03T04:37:35Z: Mandatory critique returned `changes_requested` with
+  `TRUSTBD2-ORC-004` and `TRUSTBD2-ORC-005`. Parent compiled Ralph repair packet
+  `packet:ralph-ticket-trustbd2-20260503T043735Z`.
+- 2026-05-03T04:40:39Z: Ralph repair packet
+  `packet:ralph-ticket-trustbd2-20260503T043735Z` consumed. Evidence refreshed
+  with Claude hook preload output, decision metadata, JSON parse check, and full
+  diff whitespace check; routed back to mandatory critique.
+- 2026-05-03T04:45:57Z: Mandatory critique returned `changes_requested` with
+  `TRUSTBD2-ORC-006`. Parent compiled Ralph repair packet
+  `packet:ralph-ticket-trustbd2-20260503T044557Z`.
+- 2026-05-03T04:48:33Z: Ralph repair packet
+  `packet:ralph-ticket-trustbd2-20260503T044557Z` consumed. Evidence refreshed
+  with product/example stale-count wording search and routed back to mandatory
+  critique.
+- 2026-05-03T04:53:44Z: Mandatory critique
+  `critique:trust-boundary-doctrine-review` passed with no unresolved findings.
+  Parent recorded retrospective / promotion disposition and accepted closure.

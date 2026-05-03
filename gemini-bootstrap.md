@@ -13,3 +13,5 @@
 @./skills/loom-bootstrap/references/06-filesystem-and-tooling.md
 
 @./skills/loom-bootstrap/references/07-validation-and-honesty.md
+
+@./skills/loom-bootstrap/references/08-trust-boundaries.md

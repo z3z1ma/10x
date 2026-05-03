@@ -39,6 +39,11 @@
             "type": "command",
             "command": "sleep 1.20; printf '===== LOOM_BOOTSTRAP_REFERENCE 07-validation-and-honesty.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/07-validation-and-honesty.md\"",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "sleep 1.40; printf '===== LOOM_BOOTSTRAP_REFERENCE 08-trust-boundaries.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/08-trust-boundaries.md\"",
+            "timeout": 10
           }
         ]
       }

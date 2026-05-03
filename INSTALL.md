@@ -188,6 +188,7 @@ The context preload is a convenience. The canonical surface remains `skills/`, e
 5. `skills/loom-bootstrap/references/05-critique-and-wiki.md`
 6. `skills/loom-bootstrap/references/06-filesystem-and-tooling.md`
 7. `skills/loom-bootstrap/references/07-validation-and-honesty.md`
+8. `skills/loom-bootstrap/references/08-trust-boundaries.md`
 
 If a native adapter preloads those references, the agent can proceed directly into Loom routing. Otherwise, use `loom-bootstrap` before work starts.
 

@@ -35,10 +35,10 @@ This avoids three wrong solutions:
 
 - plugin validation passes with `claude plugin validate .`
 - plugin skills remain `SKILL.md` directories from canonical `skills/`
-- the `SessionStart` hook emits the ordered `loom-bootstrap` references as seven
+- the `SessionStart` hook emits the current ordered `loom-bootstrap` references as
   source-marked stdout outputs, one file per command
-- same-session startup probes can see all seven bootstrap references without Claude's
-  persisted-output preview/truncation behavior
+- same-session startup probes can see all current ordered bootstrap references
+  without Claude's persisted-output preview/truncation behavior
 - each current bootstrap reference remains below Claude's documented 10,000-character
   hook-output context cap
 - ordering is treated as best effort; source markers, not strict order, are the
