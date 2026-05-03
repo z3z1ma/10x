@@ -102,12 +102,20 @@ source_fingerprint:
   integration_remote: <remote name|none|unknown>
   integration_ref: <ref, tag, commit, or unknown>
   integration_commit: <sha or unknown>
-  git_status_summary: <clean|dirty|unknown>
+  git_status_summary: <clean|dirty_tracked|dirty_untracked|dirty_mixed|unknown>
   git_status_detail: <short status detail or unknown - rationale>
   compiled_from:
     - ticket:<token>
     - spec:<slug>
 ```
+
+Use `git_status_summary` as the machine-readable launch-freshness signal: `clean`
+for no observed tracked or untracked worktree changes, `dirty_tracked` for
+tracked changes only, `dirty_untracked` for untracked files only, `dirty_mixed`
+for both tracked and untracked changes, and `unknown` only with rationale when
+the parent cannot inspect status safely. Keep human-readable status details,
+affected-surface examples, and `unknown - <rationale>` text in
+`git_status_detail`.
 
 Before launch, the parent checks whether governing records, resolved integration
 refs, or write-scope files changed materially since the packet was compiled. The

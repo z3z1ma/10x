@@ -30,7 +30,7 @@ source_fingerprint:
   integration_remote: <remote name|none|unknown>
   integration_ref: <ref, tag, commit, or unknown>
   integration_commit: <sha or unknown>
-  git_status_summary: <clean|dirty|unknown>
+  git_status_summary: <clean|dirty_tracked|dirty_untracked|dirty_mixed|unknown>
   git_status_detail: <short status detail or unknown - rationale>
   # Provenance: owner records or artifacts used to compile this synthesis baseline.
   compiled_from:

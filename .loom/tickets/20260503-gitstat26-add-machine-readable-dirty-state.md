@@ -1,11 +1,11 @@
 ---
 id: ticket:gitstat26
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-03T06:20:11Z
-updated_at: 2026-05-03T06:20:11Z
+updated_at: 2026-05-03T08:02:37Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,9 @@ links:
     - plan:skills-corpus-context-integrity-hardening-pass
   research:
     - research:skills-corpus-third-pass-follow-up-validation
+  critique:
+    - critique:git-dirty-state-fingerprint-review
+    - critique:git-dirty-state-fingerprint-rereview
 external_refs: {}
 depends_on:
   - ticket:shipacc1
@@ -69,12 +72,12 @@ Fresh workers and parents need clear launch-freshness signals.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-027` | pending | pending | open |
-| `ticket:gitstat26#ACC-001` | pending | pending | open |
-| `ticket:gitstat26#ACC-002` | pending | pending | open |
-| `ticket:gitstat26#ACC-003` | pending | pending | open |
-| `ticket:gitstat26#ACC-004` | pending | pending | open |
-| `ticket:gitstat26#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-027` | `evidence:git-dirty-state-fingerprint-validation` | `critique:git-dirty-state-fingerprint-rereview` | supported |
+| `ticket:gitstat26#ACC-001` | `evidence:git-dirty-state-fingerprint-validation` | `critique:git-dirty-state-fingerprint-rereview` | supported |
+| `ticket:gitstat26#ACC-002` | `evidence:git-dirty-state-fingerprint-validation` | `critique:git-dirty-state-fingerprint-rereview` | supported |
+| `ticket:gitstat26#ACC-003` | `evidence:git-dirty-state-fingerprint-validation` | `critique:git-dirty-state-fingerprint-rereview` | supported |
+| `ticket:gitstat26#ACC-004` | `evidence:git-dirty-state-fingerprint-validation` | `critique:git-dirty-state-fingerprint-rereview` | supported |
+| `ticket:gitstat26#ACC-005` | `evidence:git-dirty-state-fingerprint-validation` | `critique:git-dirty-state-fingerprint-rereview` | supported |
 
 # Execution Notes
 
@@ -83,11 +86,16 @@ Ralph packet contract, and packet templates.
 
 # Blockers
 
-Blocked until `ticket:shipacc1` and `ticket:netgate25` close.
+None - prerequisites `ticket:shipacc1` and `ticket:netgate25` are closed and
+pushed.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:ralphg20`.
+
+Ralph packet `packet:ralph-ticket-gitstat26-20260503T075047Z` completed in
+scope, evidence was recorded, mandatory critique F-001 was resolved, rereview
+passed with no findings, and acceptance is complete.
 
 # Route Readiness
 
@@ -99,10 +107,18 @@ Likely verification posture: observation-first structural validation.
 Expected output contract: changed files, dirty-state observations, and critique
 recommendation.
 
+Acceptance review readiness:
+Evidence `evidence:git-dirty-state-fingerprint-validation` and mandatory critique
+rereview `critique:git-dirty-state-fingerprint-rereview` support closure.
+
 # Evidence
 
 Expected: targeted searches for `dirty_tracked`, `dirty_untracked`,
 `dirty_mixed`, `git_status_detail`, and `git diff --check`.
+
+Recorded:
+
+- `evidence:git-dirty-state-fingerprint-validation`
 
 # Critique Disposition
 
@@ -120,9 +136,15 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:git-dirty-state-fingerprint-review#F-001`: stale next route conflicted
+with `status: review_required`. Disposition: resolved by updating `# Next Move /
+Next Route` from `ralph` to `critique` and naming mandatory critique rereview as
+the current step.
 
-Disposition status: pending
+`critique:git-dirty-state-fingerprint-rereview`: no findings; mandatory rereview
+passed and confirmed F-001 resolved.
+
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -130,18 +152,34 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Machine-readable dirty-state fingerprint guidance was promoted into packet
+  frontmatter, Ralph packet contract, and packet-family templates.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to packet source-fingerprint guidance.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in packet
+source-fingerprint guidance and templates.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T08:02:37Z
+Basis: Ralph packet `packet:ralph-ticket-gitstat26-20260503T075047Z`; evidence
+`evidence:git-dirty-state-fingerprint-validation`; initial mandatory critique
+`critique:git-dirty-state-fingerprint-review` with F-001 resolved; mandatory
+rereview `critique:git-dirty-state-fingerprint-rereview` with no findings.
+Residual risks: Historical consumed packets may still contain legacy
+`git_status_summary: dirty`; this is acceptable because they are support
+artifacts, not current authoring guidance.
 
 # Dependencies
 
@@ -151,3 +189,14 @@ Residual risks:
 # Journal
 
 - 2026-05-03T06:20:11Z: Created from third-pass secondary polish finding.
+- 2026-05-03T07:50:47Z: Parent confirmed `ticket:netgate25` pushed, moved this
+  ticket to active, and compiled Ralph iteration 1.
+- 2026-05-03T07:54:00Z: Ralph child returned `stop`; parent accepted the scoped
+  implementation output, recorded evidence, consumed the packet, and moved to
+  mandatory critique.
+- 2026-05-03T07:58:57Z: Mandatory critique found F-001, a stale ticket next-route
+  value. Parent resolved the ticket ledger conflict and queued rereview before
+  acceptance.
+- 2026-05-03T08:02:37Z: Mandatory rereview
+  `critique:git-dirty-state-fingerprint-rereview` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.

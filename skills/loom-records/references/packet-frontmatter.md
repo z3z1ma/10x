@@ -48,7 +48,7 @@ source_fingerprint:
   integration_remote: <remote name|none|unknown>
   integration_ref: <ref, tag, commit, or unknown>
   integration_commit: <sha or unknown>
-  git_status_summary: <clean|dirty|unknown>
+  git_status_summary: <clean|dirty_tracked|dirty_untracked|dirty_mixed|unknown>
   git_status_detail: <short status detail or unknown - rationale>
   # Provenance: owner records or artifacts used to compile this packet baseline.
   compiled_from:
@@ -363,19 +363,25 @@ source_fingerprint:
   integration_remote: <remote name|none|unknown>
   integration_ref: <ref, tag, commit, or unknown>
   integration_commit: <sha or unknown>
-  git_status_summary: <clean|dirty|unknown>
+  git_status_summary: <clean|dirty_tracked|dirty_untracked|dirty_mixed|unknown>
   git_status_detail: <short status detail or unknown - rationale>
   # Provenance: owner records or artifacts used to compile this packet baseline.
   compiled_from:
     - ticket:<token>
 ```
 
-`git_status_summary` gives the coarse cleanliness state; `git_status_detail`
-should carry the short status details, or `unknown - <rationale>` when the parent
-cannot inspect them. Ralph packets must treat this block as a strict freshness
-contract. Before launch, the parent should compare this baseline against
-governing records, the resolved integration ref, and child-write-scope files. At
-execution time, the packet consumer should stop and report `blocked` or
+`git_status_summary` gives the machine-readable cleanliness state. Use `clean`
+when the parent observed no tracked or untracked worktree changes relevant to the
+packet baseline. Use `dirty_tracked` when tracked files are modified, deleted, or
+staged and there are no untracked files; `dirty_untracked` when only untracked
+files are present; and `dirty_mixed` when both tracked and untracked changes are
+present. Use `unknown` only when the parent cannot inspect status safely or
+truthfully. `git_status_detail` should carry the short human-readable status
+details, examples of affected surfaces when useful, or `unknown - <rationale>`
+when the parent cannot inspect them. Ralph packets must treat this block as a
+strict freshness contract. Before launch, the parent should compare this baseline
+against governing records, the resolved integration ref, and child-write-scope
+files. At execution time, the packet consumer should stop and report `blocked` or
 `escalate` if those surfaces appear materially changed in a way that makes the
 contract unsafe. If the packet is materially stale, supersede it rather than
 asking the consumer to guess. For critique and wiki packets, use exact values
