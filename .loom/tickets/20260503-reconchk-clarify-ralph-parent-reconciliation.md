@@ -1,11 +1,11 @@
 ---
 id: ticket:reconchk
 kind: ticket
-status: ready
-change_class: workflow-boundary
+status: closed
+change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T04:09:51Z
-updated_at: 2026-05-03T04:09:51Z
+updated_at: 2026-05-03T05:39:42Z
 scope:
   kind: repository
   repositories:
@@ -72,12 +72,12 @@ copyable and recovery queries should find stale packets.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-007` | pending | pending | open |
-| `ticket:reconchk#ACC-001` | pending | pending | open |
-| `ticket:reconchk#ACC-002` | pending | pending | open |
-| `ticket:reconchk#ACC-003` | pending | pending | open |
-| `ticket:reconchk#ACC-004` | pending | pending | open |
-| `ticket:reconchk#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-007` | `evidence:ralph-parent-reconciliation-validation` | `critique:ralph-parent-reconciliation-review` | supported |
+| `ticket:reconchk#ACC-001` | `evidence:ralph-parent-reconciliation-validation` | `critique:ralph-parent-reconciliation-review` | supported |
+| `ticket:reconchk#ACC-002` | `evidence:ralph-parent-reconciliation-validation` | `critique:ralph-parent-reconciliation-review` | supported |
+| `ticket:reconchk#ACC-003` | `evidence:ralph-parent-reconciliation-validation` | `critique:ralph-parent-reconciliation-review` | supported |
+| `ticket:reconchk#ACC-004` | `evidence:ralph-parent-reconciliation-validation` | `critique:ralph-parent-reconciliation-review` | supported |
+| `ticket:reconchk#ACC-005` | None - critique outcome is the acceptance instrument | `critique:ralph-parent-reconciliation-review` | supported |
 
 # Execution Notes
 
@@ -91,21 +91,21 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:localed7`.
+
+Ralph packet `packet:ralph-ticket-reconchk-20260503T053234Z` completed in scope,
+evidence was recorded, mandatory critique passed with no findings, and acceptance
+is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: parent reconciliation checklist and stale packet recovery.
-Write boundary: Ralph references and directly related query/status references.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, reconciliation query observations, and
-critique recommendation.
+Acceptance review readiness:
+Evidence `evidence:ralph-parent-reconciliation-validation` and mandatory critique
+`critique:ralph-parent-reconciliation-review` support closure with no findings.
 
 # Evidence
 
-Expected: targeted searches for reconciliation checklist, stale `compiled` packet
-query, packet terminal statuses, ticket truth boundary, and `git diff --check`.
+Recorded: `evidence:ralph-parent-reconciliation-validation`.
 
 # Critique Disposition
 
@@ -124,9 +124,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:ralph-parent-reconciliation-review` - no findings; mandatory critique
+passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -134,18 +135,34 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Parent reconciliation checklist guidance was promoted directly into
+  `skills/loom-ralph/references/work-driver.md`.
+- Stale compiled packet recovery guidance was promoted directly into Ralph packet,
+  query/linking, and status lifecycle references.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to Ralph and shared records references.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in Ralph
+and shared records references.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T05:39:42Z
+Basis: Ralph packet `packet:ralph-ticket-reconchk-20260503T053234Z`; evidence
+`evidence:ralph-parent-reconciliation-validation`; mandatory critique
+`critique:ralph-parent-reconciliation-review` with no findings.
+Residual risks: Review is structural and manual. Guidance cannot prove future
+operators will reconcile correctly; it makes the required path explicit.
 
 # Dependencies
 
@@ -154,3 +171,14 @@ Residual risks:
 # Journal
 
 - 2026-05-03T04:09:51Z: Created from council parent reconciliation finding.
+- 2026-05-03T05:32:34Z: Started Ralph iteration
+  `packet:ralph-ticket-reconchk-20260503T053234Z` from clean `main` at
+  `c4a476e`. Normalized ticket `change_class` to valid `protocol-authority`
+  before execution.
+- 2026-05-03T05:35:38Z: Ralph iteration
+  `packet:ralph-ticket-reconchk-20260503T053234Z` completed in scope. Evidence
+  recorded in `evidence:ralph-parent-reconciliation-validation`; next route is
+  mandatory critique.
+- 2026-05-03T05:39:42Z: Mandatory critique
+  `critique:ralph-parent-reconciliation-review` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.

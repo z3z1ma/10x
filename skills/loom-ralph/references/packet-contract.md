@@ -229,6 +229,16 @@ the unusable contract. Update ticket truth, preserve useful evidence or critique
 findings where applicable, and compile a new packet only after the owner records
 and write boundary are accurate.
 
+For stale `compiled` packet recovery, first discover pending packets, then read
+the packet before acting. Compare its target, governing records, source
+fingerprint, child write scope, parent merge scope, and intended iteration against
+current ticket truth and source files. If any launch-safety surface materially
+changed before launch, do not ask the child to guess: set the old packet to
+`superseded` when a corrected packet will replace it, or `abandoned` when the
+work will not proceed. Keep the disposition in packet status and parent merge
+notes, while ticket execution state, acceptance, evidence sufficiency, and next
+route remain ticket-owned.
+
 ## Child Outcomes vs Routes
 
 A Ralph child should return one child outcome: `continue`, `stop`, `blocked`, or

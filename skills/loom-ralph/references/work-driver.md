@@ -26,13 +26,21 @@ It is not "just code." It is ticket-owned execution.
    fingerprint, Git execution context when relevant, context budget,
    verification posture, stop conditions, and output contract.
 7. Launch the bounded iteration through the available harness transport.
-8. Reconcile the child output as parent:
-   - check scope discipline
-   - check child write boundary
+8. Reconcile the child output as parent. Do this as a ticket-owned merge, not as
+   a new reconciliation record kind:
+   - compare the child outcome to the packet mission, stop conditions, output
+     contract, verification targets, and verification posture
+   - check scope discipline, child write boundary, and absence of forbidden
+     machinery or owner-layer drift
    - check Git diff against the declared write scope when files changed
-   - record evidence
-   - update ticket journal and status
-   - update packet status away from `compiled`
+   - preserve observed red/green, before/after, structural, or skipped
+     verification evidence in the evidence layer when the ticket will rely on it
+   - translate the child recommendation into ticket journal, claim coverage,
+     critique/wiki disposition, next route, and status; the child outcome does not
+     set those fields by itself
+   - update packet parent merge notes and move packet status away from `compiled`
+     only after the ticket and any required evidence or critique records tell the
+     truth
 9. Decide the next route using
    `skills/loom-records/references/route-vocabulary.md`:
    - `ralph` for another bounded implementation packet
@@ -60,3 +68,5 @@ It is not "just code." It is ticket-owned execution.
 - Do not let a branch, worktree, commit, or PR replace ticket truth.
 - Do not widen scope because a nearby fix looks easy.
 - The child may recommend ticket updates; the parent commits ticket truth.
+- Do not let packet parent merge notes become the execution ledger; they support
+  ticket reconciliation and packet lifecycle only.

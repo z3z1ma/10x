@@ -61,6 +61,20 @@ rg -n 'ticket:<token>' .loom
 rg -l '^status: (proposed|ready|active|blocked|review_required|complete_pending_acceptance)$' .loom/tickets
 ```
 
+### Find pending compiled packets
+
+```bash
+rg -l '^status: compiled$' .loom/packets
+rg -n '^id: packet:|^target:|^updated_at:|^  (git_commit|integration_ref|integration_commit|git_status_summary):|^child_write_scope:|^parent_merge_scope:' .loom/packets
+```
+
+Use this as stale-packet discovery, not disposition by query. Read each matching
+packet and compare its source fingerprint, governing records, target ticket,
+write scopes, and intended iteration against current owner truth before launch.
+Then leave the packet `compiled`, mark it `superseded`, or mark it `abandoned`
+according to `status-lifecycle.md`; do not create a generated index or separate
+reconciliation ledger.
+
 ### Find stale wiki pages
 
 ```bash

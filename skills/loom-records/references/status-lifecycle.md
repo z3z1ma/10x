@@ -188,3 +188,17 @@ When a launched child result is rejected, corrupted, stale, or overscoped, the
 packet still needs an honest terminal status plus parent merge notes; do not let
 the status imply acceptance unless the ticket and owning records actually accept
 the result.
+
+When discovering an old `compiled` packet, treat the query result as a launch
+safety warning, not as proof of staleness. Read the packet, compare its target,
+source fingerprint, governing records, child write scope, and intended iteration
+against current owner truth, and then choose the packet-owned disposition:
+
+- leave `compiled` only when the same launch contract is still fresh enough
+- change to `superseded` when a corrected packet replaces the stale contract
+- change to `abandoned` when no successor is intended
+
+Packet status remains support-state only. It does not own ticket execution,
+acceptance, evidence sufficiency, critique verdicts, or next route, and it does
+not require a runtime enum, schema, validator, generated index, merge script, or
+new reconciliation record kind.
