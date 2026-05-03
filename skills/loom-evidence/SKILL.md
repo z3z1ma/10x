@@ -72,6 +72,13 @@ Good evidence is:
 - linked to tickets, specs, packets, critiques, or wiki pages when useful
 - recheckable enough that a future agent can judge its current value
 
+## Naming
+
+Create new evidence records as `.loom/evidence/<YYYYMMDD>-<slug>.md`.
+The canonical ID remains `evidence:<slug>` without the date prefix. Use the
+record creation date for the filename prefix so evidence can support temporal
+discovery and future retention or cleanup decisions.
+
 ## Default Procedure
 
 1. identify the claim, acceptance ID, ticket, packet, or critique question the

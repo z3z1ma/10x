@@ -3,7 +3,7 @@ id: critique:route-token-simplification-review
 kind: critique
 status: final
 created_at: 2026-05-03T19:42:50Z
-updated_at: 2026-05-03T19:46:54Z
+updated_at: 2026-05-03T20:09:17Z
 scope:
   kind: repository
   repositories:
@@ -155,6 +155,8 @@ Challenges:
   should be treated as provenance, not current product guidance.
 - The replacement `examples/*/expected-flow.md` files are untracked until a future
   staging/commit step includes them with the corresponding deletions.
+- This critique file was renamed to the date-prefixed critique filename
+  convention after the naming rule changed; its canonical ID did not change.
 - This review is structural documentation critique; there is no app runtime or
   automated behavior suite for this repository.
 

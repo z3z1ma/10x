@@ -14,7 +14,10 @@ Ask:
 - do the status and link choices make sense for the kind
 - if the status is non-ticket, does it match `references/status-lifecycle.md`
 - if claims are named, do coverage/support/challenge references use stable IDs
-- do the filename and ID agree
+- do the filename and ID agree; for initiative, plan, critique, and evidence
+  date+slug records, the slug after `<YYYYMMDD>-` should match the canonical ID
+  slug, the date should match the record's `created_at` date, and the date stays
+  out of the ID
 - do saved `.loom` records and saved workspace/support metadata avoid unresolved
   template placeholders, example IDs, and generic TODO/TBD tokens unless the
   record explicitly documents them as observed source text

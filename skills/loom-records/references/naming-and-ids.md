@@ -50,17 +50,17 @@ when their owner boundary and path conventions are explicit.
 | `constitution` | `constitution:main` | canonical owner record | `.loom/constitution/constitution.md` |
 | `decision` | `decision:0001` | canonical owner record | `.loom/constitution/decisions/decision-0001-<slug>.md` |
 | `roadmap` | `roadmap:<slug>` | canonical owner record | `.loom/constitution/roadmap/<slug>.md` |
-| `initiative` | `initiative:<slug>` | canonical owner record | `.loom/initiatives/<slug>.md` |
+| `initiative` | `initiative:<slug>` | canonical owner record | `.loom/initiatives/<YYYYMMDD>-<slug>.md` |
 | `research` | `research:<slug>` | canonical owner record | `.loom/research/<slug>.md` |
 | `spec` | `spec:<slug>` | canonical owner record | `.loom/specs/<slug>.md` |
-| `plan` | `plan:<slug>` | canonical owner record | `.loom/plans/<slug>.md` |
+| `plan` | `plan:<slug>` | canonical owner record | `.loom/plans/<YYYYMMDD>-<slug>.md` |
 | `ticket` | `ticket:<token>` | canonical live execution ledger | `.loom/tickets/<YYYYMMDD>-<token>-<short-slug>.md` |
 | `packet` with `packet_kind: ralph` | `packet:ralph-<encoded-target>-<UTC compact timestamp>` | non-canonical bounded contract | `.loom/packets/ralph/<UTC compact timestamp>-ticket-<token>-iter-<NN>.md` |
 | `packet` with `packet_kind: critique` | `packet:critique-<encoded-target-or-change-slug>-<UTC compact timestamp>` | non-canonical bounded contract | `.loom/packets/critique/<UTC compact timestamp>-<encoded-target-or-change-slug>.md` |
 | `packet` with `packet_kind: wiki` | `packet:wiki-<encoded-target>-<UTC compact timestamp>` | non-canonical bounded contract | `.loom/packets/wiki/<UTC compact timestamp>-<encoded-target>.md` |
-| `critique` | `critique:<slug>` | canonical owner record | `.loom/critique/<slug>.md` |
+| `critique` | `critique:<slug>` | canonical owner record | `.loom/critique/<YYYYMMDD>-<slug>.md` |
 | `wiki` | `wiki:<slug>` | canonical owner record | `.loom/wiki/<category>/<slug>.md` |
-| `evidence` | `evidence:<slug>` | canonical owner record | `.loom/evidence/<slug>.md` |
+| `evidence` | `evidence:<slug>` | canonical owner record | `.loom/evidence/<YYYYMMDD>-<slug>.md` |
 | `workspace` | `workspace:main` | stable workspace metadata, not canonical project truth | `.loom/workspace.md` |
 | `workspace-support` | support-local `workspace:<slug>` such as `workspace:harness` | support-local transport metadata | project-local workspace support path such as `.loom/harness.md` |
 | `support-artifact` | optional support-local `support:<domain>-<slug>` | support-local workflow metadata | `.loom/support/<domain>/<slug>.md` |
@@ -145,8 +145,28 @@ while `iteration` describes the child handoff sequence.
 Use a semantic slug:
 
 - `.loom/specs/<slug>.md`
-- `.loom/plans/<slug>.md`
 - `.loom/wiki/workflows/<slug>.md`
+
+### Date-prefixed owner records
+
+Use UTC date + slug for owner records whose temporal relevance is important for
+review, cleanup, or future retention policy:
+
+- `.loom/initiatives/<YYYYMMDD>-<slug>.md`
+- `.loom/plans/<YYYYMMDD>-<slug>.md`
+- `.loom/critique/<YYYYMMDD>-<slug>.md`
+- `.loom/evidence/<YYYYMMDD>-<slug>.md`
+
+The date prefix is a filename discovery and retention aid. It does not become
+part of the canonical ID:
+
+- `.loom/plans/20260503-protocol-sharpening.md` uses `id: plan:protocol-sharpening`
+- `.loom/critique/20260503-protocol-sharpening-review.md` uses `id: critique:protocol-sharpening-review`
+
+Use the record creation date for `<YYYYMMDD>`. Do not rewrite the filename date
+when `updated_at` changes. Existing older records without a date prefix are
+legacy-compatible; rename them only as an intentional reconciliation pass that
+updates or confirms inbound path references.
 
 ### Tickets
 

@@ -22,6 +22,13 @@ They are the place where the project says, "this cross-cutting result matters en
 - success metrics and objective ownership
 - explicit downstream execution graph
 
+## Naming
+
+Create new initiative records as `.loom/initiatives/<YYYYMMDD>-<slug>.md`.
+The canonical ID remains `initiative:<slug>` without the date prefix. Use the
+record creation date for the filename prefix so initiatives support temporal
+discovery and future retention or cleanup decisions.
+
 ## Milestone Boundary
 
 Initiative milestones are outcome checkpoints for a strategic result.

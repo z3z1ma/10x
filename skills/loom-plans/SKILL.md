@@ -21,6 +21,13 @@ They explain how the work should be sequenced without trying to replace ticket t
 - milestones at the execution-strategy layer
 - explicit route from initiative/spec to ticket work
 
+## Naming
+
+Create new plan records as `.loom/plans/<YYYYMMDD>-<slug>.md`.
+The canonical ID remains `plan:<slug>` without the date prefix. Use the record
+creation date for the filename prefix so plans support temporal discovery and
+future retention or cleanup decisions.
+
 ## Milestone Boundary
 
 Plan milestones are execution-sequencing checkpoints.

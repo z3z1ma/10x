@@ -26,6 +26,13 @@ This skill exists so review has the same durability and rigor as execution.
 - review severity and critique-owned finding state
 - follow-up pressure on tickets, specs, plans, and wiki pages
 
+## Naming
+
+Create new direct critique records as `.loom/critique/<YYYYMMDD>-<slug>.md`.
+The canonical ID remains `critique:<slug>` without the date prefix. Use the
+record creation date for the filename prefix so critique records support temporal
+discovery and future retention or cleanup decisions.
+
 Critique owns findings and verdicts. Tickets own live execution state,
 acceptance disposition, accepted risk, and closure.
 

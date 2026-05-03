@@ -33,7 +33,7 @@ parent_merge_scope:
     - "<TBD: ticket:<token> when a ticket owns execution, owner record ref, or None - no parent record reconciliation needed>"
     # or: None - <rationale for no additional parent record reconciliation>
   paths:
-    - "<TBD: .loom/critique/<slug>.md, other owner path, or None - no parent path reconciliation needed>"
+    - "<TBD: .loom/critique/<YYYYMMDD>-<slug>.md, other owner path, or None - no parent path reconciliation needed>"
     # or: None - <rationale for no parent path reconciliation>
 source_fingerprint:
   git_commit: "<TBD: sha or unknown>"
