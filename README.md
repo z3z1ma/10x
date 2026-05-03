@@ -475,22 +475,28 @@ The protocol is the corpus.
 
 This repository ships the Loom skill package.
 
+The package product surface is the top-level `skills/` corpus. Support docs,
+harness manifests/adapters, examples, packaging files, packets, memory, and saved
+support artifacts may explain, transport, validate, or recover Loom work; they do
+not own protocol truth.
+
 It is not a runtime, service, daemon, MCP server, product CLI, workflow engine, hidden database, or prompt dump.
 
 Included:
 
-- `skills/`, the canonical Loom surface
+- `skills/`, the package product surface and canonical Loom skill corpus
 - `loom-bootstrap`, the entry skill that anchors the rest of the package
 - project-owner skills for constitution, initiatives, research, specs, plans, tickets, evidence, critique, and wiki
 - the `loom-memory` support skill for optional recall without shadow truth
 - workflow skills for workspace entry, records, `loom-drive` objective/workflow driving, Ralph, Git, debugging, spike, codemap, ship, retrospective, and skill authoring
 - templates and references for Markdown-native operation
-- harness manifests and adapters where useful
-- `PROTOCOL.md`, the stable protocol summary
-- `ARCHITECTURE.md`, the implementation and package architecture notes
-- internal examples and fixtures for maintainer review, not product-surface guidance
+- harness manifests and adapters as install/transport support, not doctrine sources
+- `PROTOCOL.md`, the stable protocol summary, not a separate product surface
+- `ARCHITECTURE.md`, implementation and package architecture notes for maintainers
+- packaging files and repository metadata for distribution and maintainer workflows
+- internal examples and fixtures for maintainer review, not product-surface guidance or protocol truth
 
-The product surface is the skill package. The skills are the protocol in operational form.
+The product surface is `skills/`: the skills are the protocol in operational form.
 
 ---
 
