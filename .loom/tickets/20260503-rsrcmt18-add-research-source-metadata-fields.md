@@ -1,11 +1,11 @@
 ---
 id: ticket:rsrcmt18
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T06:20:11Z
-updated_at: 2026-05-03T06:20:11Z
+updated_at: 2026-05-03T07:28:48Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,8 @@ links:
     - plan:skills-corpus-context-integrity-hardening-pass
   research:
     - research:skills-corpus-third-pass-follow-up-validation
+  critique:
+    - critique:research-template-source-metadata-review
 external_refs: {}
 depends_on:
   - ticket:shipacc1
@@ -69,12 +71,12 @@ shadow truth if provenance, freshness, and trust limits are not explicit.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-019` | pending | pending | open |
-| `ticket:rsrcmt18#ACC-001` | pending | pending | open |
-| `ticket:rsrcmt18#ACC-002` | pending | pending | open |
-| `ticket:rsrcmt18#ACC-003` | pending | pending | open |
-| `ticket:rsrcmt18#ACC-004` | pending | pending | open |
-| `ticket:rsrcmt18#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-019` | `evidence:research-template-source-metadata-validation` | `critique:research-template-source-metadata-review` | supported |
+| `ticket:rsrcmt18#ACC-001` | `evidence:research-template-source-metadata-validation` | `critique:research-template-source-metadata-review` | supported |
+| `ticket:rsrcmt18#ACC-002` | `evidence:research-template-source-metadata-validation` | `critique:research-template-source-metadata-review` | supported |
+| `ticket:rsrcmt18#ACC-003` | `evidence:research-template-source-metadata-validation` | `critique:research-template-source-metadata-review` | supported |
+| `ticket:rsrcmt18#ACC-004` | `evidence:research-template-source-metadata-validation` | `critique:research-template-source-metadata-review` | supported |
+| `ticket:rsrcmt18#ACC-005` | `evidence:research-template-source-metadata-validation` | `critique:research-template-source-metadata-review` | supported |
 
 # Execution Notes
 
@@ -83,26 +85,31 @@ reference only if alignment wording is needed.
 
 # Blockers
 
-Blocked until `ticket:shipacc1` closes.
+None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:pktws19`.
+
+Ralph packet `packet:ralph-ticket-rsrcmt18-20260503T072340Z` completed in scope,
+evidence was recorded, mandatory critique passed with no findings, and acceptance
+is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: research source metadata template fields.
-Write boundary: research template and directly related source-handling wording
-only.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, source metadata observations, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:research-template-source-metadata-validation` and mandatory
+critique `critique:research-template-source-metadata-review` support closure.
 
 # Evidence
 
-Expected: targeted searches for source metadata fields, freshness/recheck/trust
-wording, source authority boundary, and `git diff --check`.
+Recorded:
+
+- `evidence:research-template-source-metadata-validation`
+
+The evidence records targeted searches for source metadata fields,
+freshness/recheck/trust wording, source authority boundary, forbidden additions,
+and `git diff --check`.
 
 # Critique Disposition
 
@@ -120,9 +127,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+- `critique:research-template-source-metadata-review` - no findings; mandatory
+  critique passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -130,18 +138,35 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Research template source metadata prompts were promoted into
+  `skills/loom-research/templates/research.md`.
+- Field alignment was promoted into
+  `skills/loom-research/references/source-handling.md`.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to research template and source-handling guidance.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+research template and source-handling guidance.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T07:28:48Z
+Basis: Ralph packet `packet:ralph-ticket-rsrcmt18-20260503T072340Z`; evidence
+`evidence:research-template-source-metadata-validation`; mandatory critique
+`critique:research-template-source-metadata-review` with no findings.
+Residual risks: Future research quality depends on operators filling metadata
+honestly when source-dependent claims matter. Template prompts are lightweight and
+do not enforce correctness by themselves.
 
 # Dependencies
 
@@ -150,3 +175,12 @@ Residual risks:
 # Journal
 
 - 2026-05-03T06:20:11Z: Created from third-pass audit finding 7.
+- 2026-05-03T07:23:41Z: Started Ralph iteration
+  `packet:ralph-ticket-rsrcmt18-20260503T072340Z` from clean `main` at
+  `bbe01ec`.
+- 2026-05-03T07:25:10Z: Ralph iteration consumed. Product edits landed inside
+  packet write scope, `evidence:research-template-source-metadata-validation`
+  recorded, and ticket moved to `review_required` for mandatory critique.
+- 2026-05-03T07:28:48Z: Mandatory critique
+  `critique:research-template-source-metadata-review` passed with no findings.
+  Parent recorded retrospective / promotion disposition and accepted closure.

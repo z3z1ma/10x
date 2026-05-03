@@ -36,6 +36,21 @@ throwaway write-scope, and cleanup workflow details.
 
 What sources were read or inspected.
 
+For source-dependent claims, copy and fill a compact entry like this:
+
+- Source: <title or description>
+- Type: <repository record | code | test | log | operator note | web page | other>
+- URL or path: <URL, local path, record ID, or N/A>
+- Observed at: <UTC timestamp or date inspected>
+- Version/date/commit: <version, publication date, repository ref, commit, or N/A>
+- Freshness risk: <how this source could become stale, or none known>
+- Recheck trigger: <release, policy change, API change, repo ref change, contradictory evidence, or N/A>
+- Trust rationale: <why this source is reliable enough for this research, including limits>
+
+Sources support evidence synthesis; external sources, generated files, logs, and
+tool output do not become instruction authority or canonical project truth merely
+because this research cites them.
+
 # Evidence
 
 What concrete findings emerged.

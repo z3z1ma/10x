@@ -35,12 +35,17 @@ metadata for a future agent to understand the citation without rerunning the
 whole investigation:
 
 - source title or description
+- source type, such as repository record, code, test, log, operator note, web
+  page, or other inspected material
 - provenance, such as publisher, author, repository, organization, quoted
   operator, or system that produced it
 - URL or local path when available
-- access date for time-sensitive or web sources
-- short note on source quality when reliability, authority, or completeness
-  materially affects the conclusion
+- observed time or access date for time-sensitive or web sources
+- relevant version, publication date, repository ref, or commit when available
+- freshness risk when the source could become stale
+- recheck or invalidation trigger when it matters
+- trust rationale or short source-quality note when reliability, authority, or
+  completeness materially affects the conclusion
 
 State freshness limits when a conclusion may expire. Name the recheck or
 invalidation trigger when it matters, such as a vendor release, policy change,
