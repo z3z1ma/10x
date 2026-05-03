@@ -246,6 +246,8 @@ Durable support surfaces help execution and recovery without owning project trut
 | `memory` | Optional support recall: retrieval cues, preferences, entities, reminders, and hot context |
 | `support` | Optional, lazy-materialized saved support artifacts such as drive handoffs; not canonical truth |
 
+Workspace and harness metadata, such as `.loom/workspace.md` and `.loom/harness.md`, are also support metadata: they help entry, routing, and environment recovery, but they do not own project truth.
+
 The layers are ordinary Markdown records inside the repo. They are structured enough for agents to reason over and simple enough for humans to inspect.
 
 ## How agents route work
