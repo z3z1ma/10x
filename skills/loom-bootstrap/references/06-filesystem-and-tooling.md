@@ -68,14 +68,19 @@ cp skills/loom-tickets/templates/ticket.md ".loom/tickets/<YYYYMMDD>-<token>-<sh
 
 ### Emit a here-doc
 
-Replace every placeholder in the example before saving it. Research records do
-not use `draft` status; keep `status: active` only when the copied record has a
-real research question.
+Replace the slug before running, then clear every remaining placeholder before
+treating the saved file as truth. Research records do not use `draft` status;
+keep `status: active` only when the copied record has a real research question.
 
 ```bash
-cat > .loom/research/<slug>.md <<'EOF'
+slug="<replace-with-real-slug>"
+if [ "$slug" = "<replace-with-real-slug>" ]; then
+  printf 'Replace slug before writing the record.\n' >&2
+else
+  path=".loom/research/${slug}.md"
+  cat > "$path" <<EOF
 ---
-id: research:<slug>
+id: research:${slug}
 kind: research
 status: active
 created_at: <UTC timestamp>
@@ -91,6 +96,8 @@ links: {}
 
 <TBD: write the research question before saving>
 EOF
+  rg -n '<[^>]+>|TBD' "$path"
+fi
 ```
 
 ### Use an inline snippet

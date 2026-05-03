@@ -1,11 +1,11 @@
 ---
 id: ticket:bootdoc17
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T06:20:11Z
-updated_at: 2026-05-03T06:20:11Z
+updated_at: 2026-05-03T07:22:10Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,8 @@ links:
     - plan:skills-corpus-context-integrity-hardening-pass
   research:
     - research:skills-corpus-third-pass-follow-up-validation
+  critique:
+    - critique:bootstrap-heredoc-copy-safety-review
 external_refs: {}
 depends_on:
   - ticket:shipacc1
@@ -68,12 +70,12 @@ Bootstrap examples are high-leverage copy surfaces for fresh agents.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-018` | pending | pending | open |
-| `ticket:bootdoc17#ACC-001` | pending | pending | open |
-| `ticket:bootdoc17#ACC-002` | pending | pending | open |
-| `ticket:bootdoc17#ACC-003` | pending | pending | open |
-| `ticket:bootdoc17#ACC-004` | pending | pending | open |
-| `ticket:bootdoc17#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-018` | `evidence:bootstrap-heredoc-copy-safety-validation` | `critique:bootstrap-heredoc-copy-safety-review` | supported |
+| `ticket:bootdoc17#ACC-001` | `evidence:bootstrap-heredoc-copy-safety-validation` | `critique:bootstrap-heredoc-copy-safety-review` | supported |
+| `ticket:bootdoc17#ACC-002` | `evidence:bootstrap-heredoc-copy-safety-validation` | `critique:bootstrap-heredoc-copy-safety-review` | supported |
+| `ticket:bootdoc17#ACC-003` | `evidence:bootstrap-heredoc-copy-safety-validation` | `critique:bootstrap-heredoc-copy-safety-review` | supported |
+| `ticket:bootdoc17#ACC-004` | `evidence:bootstrap-heredoc-copy-safety-validation` | `critique:bootstrap-heredoc-copy-safety-review` | supported |
+| `ticket:bootdoc17#ACC-005` | `evidence:bootstrap-heredoc-copy-safety-validation` | `critique:bootstrap-heredoc-copy-safety-review` | supported |
 
 # Execution Notes
 
@@ -81,24 +83,30 @@ Likely touched file: `skills/loom-bootstrap/references/06-filesystem-and-tooling
 
 # Blockers
 
-Blocked until `ticket:shipacc1` closes.
+None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:rsrcmt18`.
+
+Ralph packet `packet:ralph-ticket-bootdoc17-20260503T071649Z` completed in
+scope, evidence was recorded, mandatory critique passed with no findings, and
+acceptance is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: copy-safe bootstrap here-doc example.
-Write boundary: bootstrap filesystem/tooling reference only.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed file, copy-safety observations, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:bootstrap-heredoc-copy-safety-validation` and mandatory
+critique `critique:bootstrap-heredoc-copy-safety-review` support closure.
 
 # Evidence
 
-Expected: targeted searches for `<slug>`, path variable, placeholder scan, and
+Recorded:
+
+- `evidence:bootstrap-heredoc-copy-safety-validation`
+
+The evidence records targeted searches for literal `<slug>` output paths, the
+path variable, local placeholder scan, forbidden additions, template changes, and
 `git diff --check`.
 
 # Critique Disposition
@@ -117,9 +125,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+- `critique:bootstrap-heredoc-copy-safety-review` - no findings; mandatory
+  critique passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -127,18 +136,33 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Copy-safe bootstrap here-doc guidance was promoted into
+  `skills/loom-bootstrap/references/06-filesystem-and-tooling.md`.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to bootstrap filesystem/tooling guidance.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in
+bootstrap filesystem/tooling guidance.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T07:22:10Z
+Basis: Ralph packet `packet:ralph-ticket-bootdoc17-20260503T071649Z`; evidence
+`evidence:bootstrap-heredoc-copy-safety-validation`; mandatory critique
+`critique:bootstrap-heredoc-copy-safety-review` with no findings.
+Residual risks: The placeholder scan is heuristic and post-write; the here-doc is
+intentionally unquoted to interpolate `${slug}`; slug validation is sentinel-only.
+These are acceptable for the scoped copy-safety guidance change.
 
 # Dependencies
 
@@ -147,3 +171,12 @@ Residual risks:
 # Journal
 
 - 2026-05-03T06:20:11Z: Created from third-pass audit finding 6.
+- 2026-05-03T07:16:49Z: Started Ralph iteration
+  `packet:ralph-ticket-bootdoc17-20260503T071649Z` from clean `main` at
+  `f93b432`.
+- 2026-05-03T07:18:35Z: Ralph iteration consumed. Product edit landed inside
+  packet write scope, `evidence:bootstrap-heredoc-copy-safety-validation`
+  recorded, and ticket moved to `review_required` for mandatory critique.
+- 2026-05-03T07:22:10Z: Mandatory critique
+  `critique:bootstrap-heredoc-copy-safety-review` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.
