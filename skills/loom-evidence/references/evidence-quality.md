@@ -7,7 +7,7 @@ verdicts, intended behavior, or closure.
 Good evidence answers four questions:
 
 1. what was observed
-2. how, when, and where it was observed
+2. how, when, where, and from which source state it was observed
 3. which claims the observation supports or challenges
 4. what the observation does not establish
 
@@ -32,7 +32,8 @@ dependencies, environment, and procedure.
 
 An evidence record should make freshness inspectable by naming:
 
-- the commit, branch, timestamp, relevant files, and environment observed
+- the observed-at timestamp, commit, branch, relevant files or record versions,
+  procedure, procedure verdict or exit code when applicable, and environment observed
 - whether the observation is fresh enough for the claim it supports or challenges
 - what would require rechecking the observation
 - whether newer evidence supersedes it or invalidates part of it
@@ -67,6 +68,23 @@ Use support and challenge links precisely:
 - `Challenges Claims` lists claim IDs the observation weakens, falsifies, or
   leaves unexpectedly unsupported.
 - Mixed evidence should list both sides instead of smoothing conflict away.
+
+Concrete challenging-evidence example:
+
+```md
+# Supports Claims
+
+None - the observed command failed.
+
+# Challenges Claims
+
+- ticket:abc12345#ACC-002 — `git diff --check` returned exit code 1 at
+  commit `abc1234`, so the observation challenges the claim that the edited
+  Markdown passed structural whitespace validation.
+```
+
+This example records a challenge to a claim. It does not decide ticket
+acceptance, critique verdict, intended behavior, or closure.
 
 Evidence strength depends on the change class and risk class. Manual inspection
 may be sufficient for small record hygiene. Behavioral, protocol-authority,

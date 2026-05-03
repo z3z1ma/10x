@@ -19,14 +19,20 @@ Do not claim acceptance, closure, critique verdicts, or intended behavior here.
 
 # Procedure
 
-Exactly what was run, checked, or inspected. Include commands, manual inspection
-steps, timestamps when relevant, and enough context for a future agent to judge
-freshness.
+Observed at: <UTC timestamp>
+Source state: <commit / branch / relevant record versions / external source version>
+Procedure: <commands, manual inspection steps, query, or capture method>
+Procedure verdict / exit code: <observed pass/fail/mixed/inconclusive and exit code when applicable>
+
+Include enough context for a future agent to judge freshness without treating this
+record as an acceptance decision.
 
 # Artifacts
 
 List files, outputs, screenshots, logs, commands, or observations that matter.
-Keep observed artifacts separate from later inference.
+Keep observed artifacts separate from later inference. Link to, name, or excerpt
+raw logs when that is enough; full raw logs do not need to be stored inline in
+every evidence record.
 
 # Supports Claims
 
@@ -50,10 +56,10 @@ Relevant config:
 
 # Validity
 
-Valid for:
-Fresh enough for:
-Recheck when:
-Invalidated by:
+Valid for: <claims, source state, and environment this observation can speak to>
+Fresh enough for: <claims or review questions; not acceptance or closure>
+Recheck when: <source, records, dependencies, environment, procedure, or scope changes>
+Invalidated by: <conditions that would make this observation unreliable for the cited claims>
 Supersedes / superseded by:
 
 # Limitations

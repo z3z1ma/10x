@@ -1,11 +1,11 @@
 ---
 id: ticket:evfresh8
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T00:56:36Z
-updated_at: 2026-05-03T00:56:36Z
+updated_at: 2026-05-03T02:50:42Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,12 @@ links:
     - plan:skills-corpus-residual-protocol-sharpening-pass
   research:
     - research:skills-corpus-residual-audit-synthesis
+  packet:
+    - packet:ralph-ticket-evfresh8-20260503T024435Z
+  evidence:
+    - evidence:evidence-freshness-validation
+  critique:
+    - critique:evidence-freshness-review
 external_refs: {}
 depends_on: []
 ---
@@ -77,8 +83,8 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-residual-protocol-sharpening-pass#OBJ-010` | pending | pending | open |
-| `ticket:evfresh8#ACC-001` through `ticket:evfresh8#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-residual-protocol-sharpening-pass#OBJ-010` | `evidence:evidence-freshness-validation` | `critique:evidence-freshness-review` | supported |
+| `ticket:evfresh8#ACC-001` through `ticket:evfresh8#ACC-005` | `evidence:evidence-freshness-validation` | `critique:evidence-freshness-review` | supported |
 
 # Execution Notes
 
@@ -92,24 +98,22 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:srcmeta13`.
+
+Ralph packet `packet:ralph-ticket-evfresh8-20260503T024435Z` was consumed in
+scope, evidence was recorded, oracle critique passed with no findings, and
+acceptance is complete.
 
 # Route Readiness
 
-Route: ralph
+Acceptance review readiness:
 
-Bounded iteration: evidence freshness and challenge example cleanup.
-Write boundary: evidence/claim coverage guidance, this ticket, one evidence
-record, one critique record, and one Ralph packet.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, evidence, ticket update, and critique
-recommendation.
+Evidence `evidence:evidence-freshness-validation` and oracle critique
+`critique:evidence-freshness-review` support closure with no findings.
 
 # Evidence
 
-Expected: before/after searches for `Fresh enough for`, `Invalidated by`,
-`Challenges Claims`, `exit code`, `verdict`, `source state`, and
-`git diff --check`.
+Recorded: `evidence:evidence-freshness-validation`.
 
 # Critique Disposition
 
@@ -128,9 +132,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:evidence-freshness-review` - no findings; mandatory oracle critique
+passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -138,18 +143,35 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Evidence freshness metadata prompts were promoted directly into the evidence
+  template and evidence skill procedure.
+- The concrete challenging-evidence example was promoted into evidence-quality
+  guidance.
+
+Deferred / not-required rationale:
+
+No separate wiki page, research record, spec, constitution decision, or memory
+entry is needed. The durable lesson is the product guidance itself.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+touched evidence template and references.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T02:50:42Z
+Basis: Ralph packet `packet:ralph-ticket-evfresh8-20260503T024435Z`; evidence
+`evidence:evidence-freshness-validation`; oracle critique
+`critique:evidence-freshness-review` with no findings.
+Residual risks: validation is structural/manual; no validator enforces evidence
+fields. Correct use still depends on operators replacing placeholders honestly
+when creating evidence records.
 
 # Dependencies
 
@@ -158,3 +180,13 @@ None.
 # Journal
 
 - 2026-05-03T00:56:36Z: Created from older audit action 7.
+- 2026-05-03T02:44:36Z: Marked active and compiled Ralph packet
+  `packet:ralph-ticket-evfresh8-20260503T024435Z` for evidence freshness
+  metadata and challenging-evidence examples.
+- 2026-05-03T02:47:50Z: Ralph iteration
+  `packet:ralph-ticket-evfresh8-20260503T024435Z` completed in scope. Evidence
+  recorded in `evidence:evidence-freshness-validation`; next route is mandatory
+  oracle critique.
+- 2026-05-03T02:50:42Z: Mandatory oracle critique
+  `critique:evidence-freshness-review` passed with no findings. Parent recorded
+  retrospective / promotion disposition and accepted closure.

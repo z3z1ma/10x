@@ -23,7 +23,8 @@ truth decision that consumes the evidence.
 - procedure, artifact, environment, validity, and limitation sections
 - claim support and challenge links
 - provenance for external artifacts
-- freshness, invalidation, and supersession notes for observed artifacts
+- observed-at, source-state, procedure verdict, freshness, invalidation, and
+  supersession notes for observed artifacts
 
 Evidence does not own intended behavior, live execution state, review verdicts,
 accepted explanation, or durable policy.
@@ -62,16 +63,20 @@ Good evidence is:
 
 1. identify the claim, acceptance ID, ticket, packet, or critique question the
    evidence bears on
-2. record the exact procedure or source of observation
+2. record when it was observed, the source state observed, and the exact
+   procedure or source of observation
 3. record artifacts, outputs, screenshots, logs, commands, files, or observations
-4. list supported claims and challenged claims separately
-5. state environment, freshness, validity, recheck trigger, invalidation or
+4. record the observed procedure verdict and exit code when applicable
+5. list supported claims and challenged claims separately
+6. state environment, freshness, validity, recheck trigger, invalidation or
    supersession conditions, and limitations
-6. link the evidence back into the ticket or other owner record that needs it
+7. link the evidence back into the ticket or other owner record that needs it
 
 ## Done Means
 
 - the evidence record says what was observed and how
+- observed-at, source-state, and procedure verdict details are explicit enough
+  to judge whether copied evidence is still current
 - support and challenge links are explicit when claims are involved
 - freshness, invalidation, and supersession notes make the record's current value
   inspectable
