@@ -43,18 +43,20 @@ skill name, command, or ticket status into a route token.
 | `critique` | run adversarial review and record findings, verdicts, and risks |
 | `wiki` | promote accepted explanation or reusable workflow knowledge |
 | `retrospective` | assimilate accepted learning into the correct owner layers before closure |
-| `acceptance_review` | evaluate ticket-owned acceptance and closure readiness without implying closure |
-| `ship` | package already-truthful work for merge, release, PR, or handoff without owning closure |
+| `acceptance_review` | evaluate ticket-owned acceptance, evidence/critique disposition, closure readiness, and residual risk without external handoff deciding closure |
+| `ship` | package already-truthful work for merge, release, PR, or handoff summaries without owning closure |
 | `continue` | route-token use only: proceed to the next already-governed tranche or route named by owner records; do not use this row to interpret a Ralph child outcome named `continue` |
 | `stop` | route-token use only: stop because the objective is satisfied, blocked, unsafe, out of scope, over budget, or awaiting external action; recorded stop routes must include a stop reason or condition; do not use this row to interpret a Ralph child outcome named `stop` |
 
 Workflow coordinator tokens exist only when the coordinator is itself the next
 governed move. Use `debugging`, `spike`, `codemap`, or `ship` when the next step
-is to run that first-class workflow. If the next truth change is already narrower,
-route through the owner token instead: for example, use `research` for a known
+is to run that first-class workflow, such as drafting PR summaries, release notes,
+handoff packages, evidence/risk summaries, or follow-up lists from already
+truthful owner records. If the next truth change is already narrower, route
+through the owner token instead: for example, use `research` for a known
 investigation write, `evidence` for an observation record, `wiki` for an accepted
 atlas page, `ralph` for a bounded implementation packet, `critique` for review,
-or `acceptance_review` for ticket closure evaluation.
+or `acceptance_review` for ticket-owned closure and residual-risk evaluation.
 
 ## `local_edit` Boundaries
 

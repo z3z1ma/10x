@@ -80,10 +80,11 @@ do not use ticket lifecycle statuses such as `ready`, `active`,
 - For wiki or retrospective work, name the explanation or lesson to promote and
   the owner records it should source.
 - For evidence recording, name the claim references and observation procedure.
-- For `acceptance_review`, name the evidence, critique disposition, and
-  residual risks that the gate must evaluate.
+- For `acceptance_review`, name the evidence, critique disposition, closure
+  readiness, and residual risks that the ticket-owned gate must evaluate.
 - For `ship`, name the ticket/evidence/critique records to package and the
-  external handoff surface without treating shipping as closure.
+  external handoff surface, including PR-summary, release-note, evidence/risk,
+  and follow-up-list needs when relevant, without treating shipping as closure.
 
 ### `local_edit` And Ticket Truth
 

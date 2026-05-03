@@ -14,7 +14,8 @@ route-token grammar in `skills/loom-records/references/route-vocabulary.md`.
 - evidence synthesis, investigation, option comparison, rejected path, or null result -> `loom-research`
 - intended behavior or acceptance contract -> `loom-specs`
 - sequencing or rollout strategy -> `loom-plans`
-- live execution status or next bounded work item -> `loom-tickets`
+- live execution status, next bounded work item, acceptance disposition, closure
+  readiness, or residual-risk evaluation -> `loom-tickets`
 - observed artifacts, validation output, screenshots, logs, reproduction, red/green
   results, or scan artifacts -> `loom-evidence`
 - adversarial review -> `loom-critique`
@@ -40,10 +41,11 @@ route-token grammar in `skills/loom-records/references/route-vocabulary.md`.
   `loom-spike`
 - codebase/module atlas work -> route token `codemap`, coordinator
   `loom-codemap`
-- merge, release, PR, or handoff packaging -> route token `ship`, coordinator
-  `loom-ship`
+- merge, release, PR, or handoff packaging from already-truthful owner records ->
+  route token `ship`, coordinator `loom-ship`
 - accepted learning assimilation before closure -> `loom-retrospective`
-- `acceptance_review` or closure disposition -> `loom-tickets`
+- `acceptance_review`, closure disposition, or residual-risk evaluation ->
+  `loom-tickets`
 - graph repair, broken links, naming, or drift -> `loom-records`
 - wiki write or audit mechanics -> `loom-wiki`
 
@@ -64,6 +66,11 @@ that truth honestly.
 
 Workflow skills coordinate routes through owner layers. They do not create new
 truth layers or outrank the owner records they update.
+
+`loom-ship` packages PR summaries, release notes, handoff packages,
+evidence/risk summaries, and follow-up lists. It mirrors already-truthful Loom
+records for external surfaces; it does not replace ticket-owned
+`acceptance_review` or create a release ledger.
 
 Commands are optional invocation adapters for these routes. They are not owner
 layers or workflow truth owners.

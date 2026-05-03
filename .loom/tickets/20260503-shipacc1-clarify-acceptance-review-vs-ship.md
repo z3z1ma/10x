@@ -1,11 +1,11 @@
 ---
 id: ticket:shipacc1
 kind: ticket
-status: ready
-change_class: workflow-boundary
+status: closed
+change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T04:09:51Z
-updated_at: 2026-05-03T04:09:51Z
+updated_at: 2026-05-03T06:32:06Z
 scope:
   kind: repository
   repositories:
@@ -73,12 +73,12 @@ ticket-owned acceptance.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-011` | pending | pending | open |
-| `ticket:shipacc1#ACC-001` | pending | pending | open |
-| `ticket:shipacc1#ACC-002` | pending | pending | open |
-| `ticket:shipacc1#ACC-003` | pending | pending | open |
-| `ticket:shipacc1#ACC-004` | pending | pending | open |
-| `ticket:shipacc1#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-011` | `evidence:acceptance-ship-boundary-validation` | `critique:acceptance-ship-boundary-review` | supported |
+| `ticket:shipacc1#ACC-001` | `evidence:acceptance-ship-boundary-validation` | `critique:acceptance-ship-boundary-review` | supported |
+| `ticket:shipacc1#ACC-002` | `evidence:acceptance-ship-boundary-validation` | `critique:acceptance-ship-boundary-review` | supported |
+| `ticket:shipacc1#ACC-003` | `evidence:acceptance-ship-boundary-validation` | `critique:acceptance-ship-boundary-review` | supported |
+| `ticket:shipacc1#ACC-004` | `evidence:acceptance-ship-boundary-validation` | `critique:acceptance-ship-boundary-review` | supported |
+| `ticket:shipacc1#ACC-005` | `evidence:acceptance-ship-boundary-validation` | `critique:acceptance-ship-boundary-review` | supported |
 
 # Execution Notes
 
@@ -91,7 +91,11 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to follow-up tickets.
+
+Ralph packet `packet:ralph-ticket-shipacc1-20260503T061600Z` completed in scope,
+evidence was recorded, mandatory critique passed with no findings, and acceptance
+is complete.
 
 # Route Readiness
 
@@ -102,10 +106,18 @@ Likely verification posture: observation-first structural validation.
 Expected output contract: changed files, acceptance/ship observations, and critique
 recommendation.
 
+Acceptance review readiness:
+Evidence `evidence:acceptance-ship-boundary-validation` and mandatory critique
+`critique:acceptance-ship-boundary-review` support closure with no findings.
+
 # Evidence
 
-Expected: targeted searches for `acceptance_review`, `ship`, closure, package,
-ticket-owned acceptance, and `git diff --check`.
+Recorded:
+
+- `evidence:acceptance-ship-boundary-validation`
+
+The evidence records targeted searches for `acceptance_review`, `ship`, closure,
+package, ticket-owned acceptance, and `git diff --check`.
 
 # Critique Disposition
 
@@ -123,9 +135,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:acceptance-ship-boundary-review` - no findings; mandatory critique
+passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -133,18 +146,34 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Acceptance-review versus ship boundaries were promoted into `loom-ship`, route
+  vocabulary, ticket readiness, and workspace routing guidance.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to ship, route, ticket-readiness, and workspace-routing
+references.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in ship,
+route, ticket-readiness, and workspace-routing references.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T06:32:06Z
+Basis: Ralph packet `packet:ralph-ticket-shipacc1-20260503T061600Z`; evidence
+`evidence:acceptance-ship-boundary-validation`; mandatory critique
+`critique:acceptance-ship-boundary-review` with no findings.
+Residual risks: Documentation-only enforcement depends on future operators
+following route and ship guidance. Evidence is structural/textual, appropriate
+for a Markdown protocol guidance change.
 
 # Dependencies
 
@@ -153,3 +182,13 @@ Residual risks:
 # Journal
 
 - 2026-05-03T04:09:51Z: Created from council acceptance-review versus ship finding.
+- 2026-05-03T06:16:00Z: Started Ralph iteration
+  `packet:ralph-ticket-shipacc1-20260503T061600Z` from clean `main` at
+  `02858e0`. Normalized ticket `change_class` to valid `protocol-authority`
+  before execution.
+- 2026-05-03T06:29:18Z: Ralph iteration consumed. Product edits landed inside
+  packet write scope, `evidence:acceptance-ship-boundary-validation` recorded,
+  and ticket moved to `review_required` for mandatory critique.
+- 2026-05-03T06:32:06Z: Mandatory critique
+  `critique:acceptance-ship-boundary-review` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.

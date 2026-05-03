@@ -4,6 +4,9 @@ Use this reference when implementation work is substantially complete and the
 operator needs an explicit branch, PR, merge, keep, or abandon decision.
 
 Shipping packages already-truthful Loom work. It does not close tickets.
+If acceptance, closure readiness, or residual risk still needs evaluation, name
+ticket-owned `acceptance_review` as the next route instead of treating the
+handoff package as a closure decision.
 
 Use `skills/loom-git/SKILL.md` for the Git mechanics behind branch, worktree,
 diff, merge, PR, cleanup, or abandon operations. This reference only shapes the
@@ -22,6 +25,8 @@ Before presenting handoff options, check:
 
 If required evidence or critique is missing, route there before presenting the
 work as ready to merge or PR.
+If acceptance disposition or residual-risk evaluation is still undecided, route
+to `acceptance_review` before presenting the handoff as closure-ready.
 
 ## Standard Options
 
@@ -47,10 +52,12 @@ For each option, say what Loom truth will remain after the action:
 Before merge or PR packaging:
 
 - cite ticket, evidence, critique, and follow-up records in the summary
+- include release-note, evidence/risk-summary, and follow-up-list material when
+  useful for the external handoff
 - rerun or cite integration validation when several child branches were combined
 - keep external PR descriptions as mirrors of Loom truth, not the canonical ledger
-- do not mark the ticket `closed` unless the ticket acceptance gate has actually
-  closed it
+- do not mark the ticket `closed` unless ticket-owned `acceptance_review` or an
+  equivalent ticket acceptance gate has actually closed it
 
 ## Keep Branch Or Worktree
 

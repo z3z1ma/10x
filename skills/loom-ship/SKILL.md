@@ -8,10 +8,11 @@ metadata:
 
 # loom-ship
 
-Shipping packages work for an external handoff.
+Shipping packages already-truthful Loom work for an external handoff.
 
-It does not own closure. The ticket acceptance gate owns closure; optional
-commands may invoke that workflow but do not own it.
+It does not own closure. `acceptance_review` is the ticket-owned route for
+evaluating acceptance, closure readiness, and residual risk; optional commands
+may invoke that workflow but do not own it.
 
 ## What This Workflow Coordinates
 
@@ -34,6 +35,8 @@ commands may invoke that workflow but do not own it.
 - the ticket is not yet truthful
 - evidence is missing
 - critique is required but unresolved
+- the goal is for shipping itself to evaluate acceptance, closure readiness, or
+  residual risk
 - the goal is to close the work
 
 ## Inputs
@@ -58,14 +61,17 @@ commands may invoke that workflow but do not own it.
 
 ## Guardrail
 
-Shipping may summarize and package. Ticket-owned acceptance disposition owns closure.
+Shipping may summarize and package already-truthful ticket, evidence, critique,
+wiki, risk, and follow-up disposition. Ticket-owned acceptance disposition owns
+closure.
 
 ## Done Means
 
 - the package cites Loom records rather than relying on conversation context
 - risks and unresolved follow-ups are visible
 - external summaries remain summaries; ticket acceptance still decides closure
-- the next route is explicit, usually ticket acceptance review or critique
+- the next route or handoff action is explicit, including `acceptance_review`
+  when ticket-owned closure evaluation remains
 
 ## Read In This Order
 
