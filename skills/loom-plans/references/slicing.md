@@ -18,25 +18,20 @@ A good ticket slice is:
 
 If the plan cannot yield slices like that, keep decomposing.
 
-## Execution Route
+## Execution
 
 Plans are not executed by checking off plan prose as the live ledger.
 
-Execute a plan by creating or advancing bounded tickets beneath it. A ticket then
-chooses the next route with the shared route vocabulary in
-`skills/loom-records/references/route-vocabulary.md`. Common execution-side
-outcomes include `local_edit` for a tiny in-context mutation, `ralph` for a
-bounded implementation packet, `debugging` for reproduce-first diagnosis,
-`spike` for bounded discovery, `codemap` for repository mapping, `evidence` for
-observation recording, `critique` for review, `wiki` or `retrospective` for
-accepted-learning promotion, `acceptance_review` for ticket-owned acceptance
-evaluation, or `ship` for already-truthful PR/merge/release/handoff packaging.
-Shipping does not close the ticket.
+Execute a plan by creating or advancing bounded tickets beneath it. The ticket,
+linked owner records, evidence, critique disposition, blockers, and journal should
+make the next action inferable without a serialized workflow field. Common actions
+include a tiny local edit, Ralph packet, reproduce-first debugging, bounded spike,
+codemap, evidence recording, critique, wiki/retrospective promotion, ticket-owned
+acceptance evaluation, or ship packaging. Shipping does not close the ticket.
 
-This list is illustrative, not exhaustive. If the current state needs operator
-input, workspace repair, records repair, owner-layer shaping, evidence
-preservation, continuation, or stop, choose that route instead of forcing another
-execution route.
+If the current state needs operator input, workspace repair, records repair,
+owner-layer shaping, evidence preservation, continuation, or stop, handle that
+need directly in the owner layer instead of forcing another execution pass.
 
 If a plan step looks like a task checklist, translate it into ticket acceptance,
 packet task text, or evidence expectations before a worker starts. Do not let a

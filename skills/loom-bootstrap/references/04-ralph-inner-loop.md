@@ -178,7 +178,8 @@ The posture is declared in the packet frontmatter so the child cannot quietly sk
 The child should return one of:
 
 - `continue` — meaningful progress happened and another Ralph iteration is likely next
-- `stop` — this bounded iteration is finished and Ralph may not be the next route
+- `stop` — this bounded iteration is finished and another Ralph packet may not be
+  needed
 - `blocked` — a concrete blocker prevented progress
 - `escalate` — the right next step is higher-order reframing, review, or policy work
 

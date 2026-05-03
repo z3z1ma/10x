@@ -60,7 +60,7 @@ reminds operators that retrospective is a workflow route, not a new record kind.
 - observed artifacts, challenged observations, or validation artifacts -> `loom-evidence`
 - missing evidence that still needs work -> ticket follow-up or test expectation
 - support-only recall cleanup, retrieval cues, preferences, or reminders ->
-  support coordinator `loom-memory`; not a saved `next route:` token
+  support coordinator `loom-memory`; not project truth
 
 ## Retrospective Loop
 
@@ -84,7 +84,7 @@ practical:
 - repeated implementation pitfall -> research null result or wiki troubleshooting
 - repeated project-local technique -> project-local skill
 - support-only reminder -> support coordinator `loom-memory` after owner truth is
-  promoted or ruled out; not a saved `next route:` token
+  promoted or ruled out; not project truth
 
 If there is nothing durable to promote, say so. Do not invent artifacts to look
 productive.
@@ -94,13 +94,13 @@ productive.
 1. read the ticket, initiative, critique, evidence, packet, or work slice being
    assimilated
 2. list durable lessons separately from one-time execution details
-3. route each lesson to exactly one owner layer where practical
+3. move each lesson to exactly one owner layer where practical
 4. update owner records only when the lesson is accepted enough to preserve
 5. update the ticket or initiative disposition to say what was promoted,
    deferred, blocking, or intentionally not required; for tickets use
    `# Retrospective / Promotion Disposition` as the standard closure home, with
-   `# Wiki Disposition` only for the route-specific wiki outcome when wiki is one
-   promotion route
+   `# Wiki Disposition` only for the wiki-specific outcome when wiki is one
+   promotion path
 6. when memory held support context for the work, leave useful current cues,
    replace promoted detail with owner-record pointers, mark stale historical cues,
    or prune obsolete reminders

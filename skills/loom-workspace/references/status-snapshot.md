@@ -17,18 +17,17 @@ acceptance, suspicious, or ready for the next bounded move.
 ## Procedure
 
 1. Confirm the workspace root and `.loom/` tree.
-2. Read only enough constitution and owner context to avoid wrong routing.
+2. Read only enough constitution and owner context to avoid the wrong owner or workflow choice.
 3. List tickets in `ready`, `active`, `blocked`, `review_required`, and
    `complete_pending_acceptance`.
 4. For the target slice, note linked owners and support records.
 5. Surface contradictions and drift.
-6. Recommend the next owner layer or workflow route. When naming a
-   route value, use the shared tokens from
-   `skills/loom-records/references/route-vocabulary.md`.
+6. Recommend the owner layer or workflow coordinator that should act next, based
+   on the records inspected. Do not add saved workflow-choice fields.
 
-## Cold-Start And Post-Compaction Resume Route
+## Cold-Start And Post-Compaction Resume
 
-Use this route when entering a Loom workspace without reliable transcript
+Use this procedure when entering a Loom workspace without reliable transcript
 context, after context compaction, or when asked to recover current work from
 files.
 
@@ -45,14 +44,14 @@ files.
    already in flight.
 4. For each relevant ticket, read its upstream owner chain: initiative, research,
    spec, plan, and any cited packet or support records needed to understand the
-   next route. `.loom/workspace.md`, `.loom/harness.md`, and saved
+   current state. `.loom/workspace.md`, `.loom/harness.md`, and saved
    `.loom/support/` artifacts are optional support context, not canonical owners.
 5. Inspect evidence and critique only as needed to evaluate the ticket's current
-   acceptance, review, blocker, or next-route disposition.
+   acceptance, review, blocker, or remaining-work disposition.
 6. Continue from the owning records. If chat history, transcript memory, memory
    files, generated context, or an external tracker disagrees with the owner
-   records, treat the owner records as canonical and route the mismatch to the
-   layer that owns the fact.
+   records, treat the owner records as canonical and repair the layer that owns
+   the fact.
 
 Normal workspace entry can resume a bounded ticket or status queue without
 invoking the full `loom-drive` loop. Use `loom-drive` when the work is a
@@ -65,8 +64,8 @@ Before ending a session, compacting context, or handing off after meaningful
 work, update the existing owners that make recovery truthful:
 
 - ticket: live status, blocker, progress, scoped acceptance disposition, critique
-  disposition, evidence disposition, retrospective / promotion disposition,
-  route-specific wiki disposition when applicable, and the next route
+  disposition, evidence disposition, retrospective / promotion disposition, wiki
+  disposition when applicable, and journal entries needed for recovery
 - evidence: observed outputs, validation artifacts, reproduction logs, or other
   artifacts that support or challenge claims
 - critique: adversarial findings, verdicts, severities, residual risks, and
@@ -89,13 +88,14 @@ easy to miss on resume and quickly become shadow ledgers.
 
 Route scratchpad-like material to the smallest correct owner instead:
 
-- live state, blockers, progress, acceptance disposition, and next route -> ticket
+- live state, blockers, progress, acceptance disposition, and journaled execution
+  context -> ticket
 - observed command output, validation artifacts, screenshots, or reproduction logs -> evidence
 - adversarial findings, verdicts, residual risks, or required follow-up -> critique
 - synthesis, tradeoffs, rejected options, and null results -> research
 - accepted explanation or reusable workflow knowledge -> wiki
 - support-only reminders, retrieval cues, or pointers to owners -> support
-  coordinator `loom-memory`; not a saved `next route:` token
+  coordinator `loom-memory`; not project truth
 - intended behavior -> spec
 - sequencing or rollout strategy -> plan
 - principles, constraints, and citable decisions -> constitution
@@ -116,8 +116,8 @@ work. They still do not replace the owner update needed for a truthful resume.
   acceptance, evidence sufficiency, critique verdicts, wiki truth, canonical
   truth, or packet lifecycle
 - packet remains `compiled` after the child output has returned
-- next-route fields use ticket lifecycle statuses such as `review_required` or
-  command/adapter names instead of route tokens
+- saved workflow fields are carrying choices that should be inferred from
+  owner truth and the ticket journal
 
 ## Native Queries
 

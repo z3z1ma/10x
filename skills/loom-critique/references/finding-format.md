@@ -1,9 +1,9 @@
 # Finding Format
 
-This reference owns critique finding format and critique-owned finding state.
-For route tokens, use `skills/loom-records/references/route-vocabulary.md`; for
-shared lifecycle and disposition boundary guidance, use
-`skills/loom-records/references/status-lifecycle.md`.
+This reference owns critique finding format and critique-owned finding state. For
+shared lifecycle, workflow-selection, and disposition boundary guidance, use
+`skills/loom-records/references/status-lifecycle.md` and
+`skills/loom-records/references/route-vocabulary.md`.
 
 Each meaningful finding should normally include:
 
@@ -42,10 +42,9 @@ recommendations. They do not close ticket work and do not accept their own
 findings on behalf of the ticket.
 
 Acceptance recommendation labels in critique records are non-canonical advice for
-the ticket's acceptance gate. They are not ticket lifecycle states, route tokens,
-or ticket-owned finding dispositions. When critique needs to mention an existing
-ticket state or route token, quote it as the ticket-owned next action and state
-that critique does not apply it.
+the ticket's acceptance gate. They are not ticket lifecycle states, workflow
+instructions, or ticket-owned finding dispositions. Critique may recommend
+follow-up, but the ticket owns acceptance and state changes.
 
 Use critique-owned finding state narrowly:
 
@@ -68,8 +67,8 @@ Use ticket-owned finding dispositions only in the ticket's
 - `converted_to_follow_up`
 
 These dispositions are ticket-owned closure-gate vocabulary. They are not
-critique finding states, ticket lifecycle states, route tokens, runtime enums,
-schemas, validators, or command-router values.
+critique finding states, ticket lifecycle states, workflow instructions, runtime
+enums, schemas, validators, or command-router values.
 
 ## Receiving Findings
 

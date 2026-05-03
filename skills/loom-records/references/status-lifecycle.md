@@ -5,10 +5,11 @@ disposition vocabulary. Statuses should make a record's age and authority
 legible without requiring a runtime enum, schema, validator, or command router.
 
 Tickets keep their own execution state machine in
-`skills/loom-tickets/references/state-machine.md`. Route tokens live in
-`skills/loom-records/references/route-vocabulary.md`. This reference covers the
-normal non-ticket record statuses plus boundary guidance for packet statuses,
-finding states, and ticket-owned dispositions.
+`skills/loom-tickets/references/state-machine.md`. Workflow-selection guidance
+lives in `skills/loom-records/references/route-vocabulary.md`, but owner records
+should not serialize saved workflow-choice fields. This reference covers the normal
+non-ticket record statuses plus boundary guidance for packet statuses, finding
+states, and ticket-owned dispositions.
 
 ## Common Cross-Layer Status Words
 
@@ -28,12 +29,12 @@ vocabulary; layer-specific status sets below are authoritative for each kind.
 Status, finding state, critique disposition, and acceptance decision are related
 but not interchangeable.
 
-- **Route tokens** such as `constitution`, `initiative`, `research`, `ralph`,
-  `critique`, `continue`, and `stop` live in route fields and name the next
-  governed move. They are not lifecycle statuses. When a Ralph child returns an
-  outcome such as `continue`, `stop`, `blocked`, or `escalate`, the parent must
-  reconcile it into ticket truth and translate it into the next owner-truth route
-  before any route field treats it as routing truth.
+- **Workflow choices** such as constitution, initiative, research, Ralph,
+  critique, continuing, or stopping are agent decisions made from owner truth.
+  They are not lifecycle statuses and should not be serialized into saved workflow
+  fields. When a Ralph child returns an outcome such as `continue`, `stop`,
+  `blocked`, or `escalate`, the parent must reconcile it into ticket truth before
+  depending on it.
 - **Critique-owned finding state** lives inside critique records. Use `open` for a
   finding that remains part of the review output, or `withdrawn` when the
   critique itself retracts the finding with rationale. Critique records also own
@@ -84,7 +85,7 @@ state rather than a general lifecycle status. Use the ticket state machine in
 `complete_pending_acceptance`, `closed`, and `cancelled`.
 
 Do not copy non-ticket lifecycle words into ticket `status` fields, and do not
-use ticket execution states as route tokens.
+use ticket execution states as workflow instructions.
 
 ## Support-Surface Statuses
 
@@ -111,7 +112,7 @@ the support surface a canonical truth owner.
 Packet records are the support-surface exception: their `status` field owns only
 their own packet lifecycle state. Ralph, critique, and wiki packets share the
 packet status values below, while `packet_kind` and the owning workflow keep body
-shape, route ownership, and merge responsibilities separate.
+shape, workflow ownership, and merge responsibilities separate.
 
 Support artifacts saved under optional `.loom/support/` paths are
 lazy-materialized support files. Their statuses are local to the artifact and do
@@ -232,6 +233,6 @@ against current owner truth, and then choose the packet-owned disposition:
 - change to `abandoned` when no successor is intended
 
 Packet status remains support-state only. It does not own ticket execution,
-acceptance, evidence sufficiency, critique verdicts, or next route, and it does
-not require a runtime enum, schema, validator, generated index, merge script, or
-new reconciliation record kind.
+acceptance, evidence sufficiency, critique verdicts, or workflow choice, and it
+does not require a runtime enum, schema, validator, generated index, merge script,
+or new reconciliation record kind.

@@ -11,14 +11,14 @@
 
 "Prepare the PR body for this release-packaging ticket using Loom records."
 
-## Expected Route
+## Expected Flow
 
 1. read constitution and the ticket's scoped claims
 2. inspect covered spec acceptance IDs
 3. package the PR summary from Loom records
 4. record package evidence
 5. run critique on the package
-6. promote wiki explanation only if the packaging route is reusable
+6. promote wiki explanation only if the packaging workflow is reusable
 7. leave ticket closure to acceptance
 
 ## Expected Artifacts

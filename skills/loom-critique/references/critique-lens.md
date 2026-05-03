@@ -114,12 +114,12 @@ Profiles are lenses, not permanent agents or new layers.
 - whether the next agent will know what to do
 - explicit stop conditions
 - honest ticket, evidence, critique, retrospective / promotion disposition, and
-  route-specific wiki disposition when applicable
+  wiki-specific disposition when applicable
 - whether explanatory pages overstate certainty
 
 ### `workflow-boundary`
 
-- whether the workflow routes through existing owner layers instead of creating a
+- whether the workflow moves through existing owner layers instead of creating a
   hidden ledger
 - whether plans, packets, critique, ship summaries, or external systems are
   accidentally owning ticket truth

@@ -146,7 +146,7 @@ First-class harness instructions are in [INSTALL.md](INSTALL.md):
 
 After install, work normally. In a skills-aware harness, Loom should feel much like Superpowers: the agent discovers the bootstrap and downstream skills when the work calls for them.
 
-Explicit prompts are escape hatches, not the main UX. They are still useful when you want to prod a cold session, force repair, or make the routing visible:
+Explicit prompts are escape hatches, not the main UX. They are still useful when you want to prod a cold session, force repair, or make the owner/workflow choice visible:
 
 ```text
 Use loom-bootstrap, then continue from the project records.
@@ -246,21 +246,21 @@ Durable support surfaces help execution and recovery without owning project trut
 | `memory` | Optional support recall: retrieval cues, preferences, entities, reminders, and hot context |
 | `support` | Optional, lazy-materialized saved support artifacts such as drive handoffs; not canonical truth |
 
-Workspace and harness metadata, such as `.loom/workspace.md` and `.loom/harness.md`, are also support metadata: they help entry, routing, and environment recovery, but they do not own project truth.
+Workspace and harness metadata, such as `.loom/workspace.md` and `.loom/harness.md`, are also support metadata: they help entry, owner selection, and environment recovery, but they do not own project truth.
 
 The layers are ordinary Markdown records inside the repo. They are structured enough for agents to reason over and simple enough for humans to inspect.
 
-## How agents route work
+## How agents choose work
 
 The agent starts by asking one question:
 
 **What kind of truth is this?**
 
-Use this table as an introductory orientation, not the complete route vocabulary.
-Canonical route tokens and saved-field route grammar are owned by
-`skills/loom-records/references/route-vocabulary.md`.
+Use this table as introductory orientation, not a token list to serialize into
+records. Agents choose the next skill by reasoning over owner truth, tickets,
+evidence, critique, plans, specs, and journals.
 
-| Situation | Loom route |
+| Situation | Loom owner or workflow |
 | --- | --- |
 | Missing understanding | `research` |
 | Unclear intended behavior | `spec` |
@@ -270,13 +270,13 @@ Canonical route tokens and saved-field route grammar are owned by
 | Review pressure, concern, or residual risk | `critique` |
 | Stable accepted understanding | `wiki` |
 | Bounded implementation pass | Ralph with a Ralph packet |
-| Retrieval cue, preference, reminder, or hot context | Support recall, not a route token; promote through the owning route if it becomes durable truth |
+| Retrieval cue, preference, reminder, or hot context | Support recall; move it to the owning layer if it becomes durable truth |
 
 A vague bug report becomes reproduction evidence, root-cause research, a tightened spec if behavior is ambiguous, a ticket for the fix, a Ralph packet for the implementation pass, green evidence, critique when risk warrants, and wiki promotion if the lesson should survive.
 
-No new workflow was invented. The agent used the vocabulary.
+No new workflow was invented. The agent used the owner graph and skills.
 
-## Outer loop: route work
+## Outer loop: shape work
 
 The outer loop shapes work before execution.
 
@@ -417,7 +417,7 @@ This is where Loom crosses from coding workflow into knowledge-work protocol.
 
 ## Workflows emerge from the vocabulary
 
-Workflow skills coordinate routes through existing owner layers. They do not create ledgers or new owner layers.
+Workflow skills coordinate work through existing owner layers. They do not create ledgers or new owner layers.
 
 ```text
 brainstorm:
@@ -531,8 +531,8 @@ The product surface is `skills/`: the skills are the protocol in operational for
 
 | Skill | Role |
 | --- | --- |
-| `loom-bootstrap` | Entry doctrine and route into Loom; usually reached automatically through skills |
-| `loom-workspace` | Workspace entry, structure check, first routing decision |
+| `loom-bootstrap` | Entry doctrine and Loom operating posture; usually reached automatically through skills |
+| `loom-workspace` | Workspace entry, structure check, first owner/workflow decision |
 | `loom-records` | IDs, frontmatter, typed links, status, validation, repair |
 | `loom-constitution` | Project identity, constraints, decisions, roadmap direction |
 | `loom-initiatives` | Strategic outcomes and success framing |

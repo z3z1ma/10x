@@ -36,26 +36,17 @@ It is not "just code." It is ticket-owned execution.
    - preserve observed red/green, before/after, structural, or skipped
      verification evidence in the evidence layer when the ticket will rely on it
    - translate the child recommendation into ticket journal, claim coverage,
-     critique/wiki disposition, next route, and status; the child outcome does not
-     set those fields by itself
+     critique/wiki disposition, blockers, acceptance posture, and status; the
+     child outcome does not set those fields by itself
    - update packet parent merge notes and move packet status away from `compiled`
      only after the ticket and any required evidence or critique records tell the
      truth
-9. Decide the next route using
-   `skills/loom-records/references/route-vocabulary.md` as the complete saved
-   route grammar. Common execution-side outcomes include:
-   - `ralph` for another bounded implementation packet
-   - `debugging`, `spike`, or `codemap` when diagnosis, discovery, or mapping
-     should happen before more implementation
-   - `critique` when review is next
-   - `wiki` or `retrospective` when accepted learning should be promoted
-   - `research`, `spec`, `plan`, or `ticket` for owner-layer refinement
-   - `acceptance_review` for ticket-owned acceptance evaluation
-   - `ship` for packaging already-truthful work without closing the ticket
-
-   This list is illustrative, not exhaustive. If the current state needs operator
-   input, workspace repair, records repair, evidence preservation, continuation,
-   or stop, choose that route instead of forcing another implementation route.
+9. Decide what the ticket now needs by reasoning from the reconciled dossier. It
+   may need another Ralph packet, debugging, spike, codemap, critique, wiki,
+   retrospective, research, spec, plan, ticket refinement, acceptance review,
+   ship packaging, operator input, workspace repair, records repair, evidence
+   preservation, continuation, or closure. Do not serialize that choice as a route
+   field.
 
 ## Stop States
 
@@ -67,8 +58,8 @@ It is not "just code." It is ticket-owned execution.
 ## Guardrails
 
 - Do not execute without a ticket owning live state.
-- Do not force Ralph from a merely proposed or generally ready ticket; route back
-  to ticket/spec/plan refinement when Ralph-readiness is missing.
+- Do not force Ralph from a merely proposed or generally ready ticket; update the
+  ticket/spec/plan when Ralph-readiness is missing.
 - Do not let a packet outrank the ticket or owner records.
 - Do not let a branch, worktree, commit, or PR replace ticket truth.
 - Do not widen scope because a nearby fix looks easy.

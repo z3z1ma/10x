@@ -1,4 +1,4 @@
-# Expected Route
+# Expected Flow
 
 1. Create or update a spec for shipping behavior.
 2. Create or update a plan if multiple tickets are needed.
@@ -7,6 +7,6 @@
    budget, child write scope, parent merge scope, and verification targets.
 5. Execute one bounded implementation slice.
 6. Reconcile the child output back into ticket truth.
-7. Route to packetized implementation critique against the ticket context and git
+7. Run packetized implementation critique against the ticket context and git
    diff.
 8. Update wiki only after accepted explanation should persist.

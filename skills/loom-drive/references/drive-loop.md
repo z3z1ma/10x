@@ -3,8 +3,8 @@
 This reference supports the `loom-drive` skill.
 
 The drive loop is a skill-driven parent workflow through existing Loom owner
-layers. It starts from a user request and advances only through recorded state and
-bounded routes.
+layers. It starts from a user request and advances only through recorded owner
+truth and bounded packets.
 
 ## Parent Invariants
 
@@ -32,20 +32,21 @@ intake -> objective-contract -> owner-shaping -> tranche-planning -> ticket-exec
 - `owner-shaping`: create or refine constitution/initiative/research/spec/plan
   truth.
 - `tranche-planning`: slice only the next useful bounded work set.
-- `ticket-execution`: advance tickets through `local_edit`, `ralph`,
-  `debugging`, `spike`, `codemap`, `evidence`, `critique`, `wiki`,
-  `retrospective`, `acceptance_review`, or `ship` routes.
+- `ticket-execution`: advance tickets through local edits, Ralph packets,
+  debugging, spikes, codemaps, evidence, critique, wiki, retrospective,
+  acceptance review, or ship packaging as the record truth requires.
 - `reconciliation`: update ticket truth and any owner records affected by the
   result.
 - `reassessment`: compare current state against the objective contract.
-- `continuation`: create the next tranche or choose the next route.
+- `continuation`: create the next tranche or choose the next owner/workflow step
+  by reasoning from the records.
 - `ask_user`: pause for a focused decision the agent cannot safely infer.
 - `stop`: objective satisfied, blocked, unsafe, over budget, or outside authority.
 
 Before `ticket-execution`, run the hard preflight gates in
-`checkpoint-resume-protocol.md`. A failed gate may route to the owner repair path
-that clears it, but it blocks implementation execution, acceptance, `ship`,
-external handoff/PR/release packaging, and dependent continuation until repaired.
+`checkpoint-resume-protocol.md`. A failed gate points to the owner repair that can
+clear it and blocks implementation execution, acceptance, `ship`, external
+handoff/PR/release packaging, and dependent continuation until repaired.
 
 Do not skip directly from intake to execution for broad objectives. The graph must
 first contain enough objective truth to make continuation recoverable.
@@ -58,10 +59,9 @@ Ask what the user actually requested:
   criteria, then drive through this loop.
 - **Existing initiative continuation**: read the initiative/plan/ticket chain,
   identify the next unmet objective gap, and create or advance the next tranche.
-- **Single bounded task**: route directly to `ticket`, `local_edit`, `ralph`,
-  `debugging`, `spike`, or `codemap` as appropriate instead of using the full
-  drive loop.
-- **Unknown evidence or behavior**: route to research or spec shaping before
+- **Single bounded task**: use the ticket owner, a local edit, Ralph, debugging,
+  spike, or codemap as appropriate instead of using the full drive loop.
+- **Unknown evidence or behavior**: use research or spec shaping before
   creating execution tickets.
 
 Drive-shaped work has both an outcome and delegated continuation. If the user
@@ -85,9 +85,9 @@ Ask as few questions as can safely establish:
 6. preferred first tranche when multiple routes are equally plausible
 
 If the user cannot answer everything, record reasonable assumptions only when
-they are low risk and explicitly reversible. Otherwise choose `ask_user` and
-record the decision needed, why the agent cannot infer it safely, and which owner
-record will be updated after the answer.
+they are low risk and explicitly reversible. Otherwise ask the user and record the
+decision needed, why the agent cannot infer it safely, and which owner record will
+be updated after the answer.
 
 When the answer becomes durable, convert success criteria into stable objective
 criterion IDs in the initiative, such as `OBJ-001`. Tickets, evidence, and
@@ -108,7 +108,7 @@ critique can then cite those IDs when judging whether the drive should continue.
 - adversarial verdicts and required follow-up -> critique
 - accepted explanation or reusable workflow knowledge -> wiki
 - support-only recall, retrieval cues, preferences, reminders, or hot context ->
-  support coordinator `loom-memory`; not a saved `next route:` token
+  support coordinator `loom-memory`; not project truth
 
 Do not let the plan become the ledger. Do not let a packet, subagent response,
 drive snapshot, critique verdict, or wiki page redefine acceptance. Move truth
@@ -122,7 +122,7 @@ review and recovery tractable.
 Use `tranche-decision-protocol.md` when objective criteria, evidence gaps,
 critique state, dependency order, or write-scope conflicts make the next tranche
 unclear. If the owner chain already names one bounded ready ticket and the next
-route is safe, do not create extra gap or tranche paperwork.
+safe action is inferable, do not create extra gap or tranche paperwork.
 
 A good tranche:
 
@@ -158,24 +158,21 @@ For each ticket or follow-up:
 - use wiki or retrospective when accepted understanding should persist
 - use ship when already-truthful work needs PR, merge, release, or handoff
   packaging without closing the ticket
-- route back to constitution/initiative/research/spec/plan when execution reveals
-  missing authority, strategic framing, evidence, behavior, or sequencing truth
+- update constitution/initiative/research/spec/plan when execution reveals missing
+  authority, strategic framing, evidence, behavior, or sequencing truth
 
 Before launching child work, declare target, read scope, write scope, stop
 conditions, verification posture, and output contract. After return, reconcile
 before launching dependent work.
 
-When several routes are possible, apply the route decision priority from
+When several actions are possible, apply the decision priority from
 `tranche-decision-protocol.md` instead of selecting the most implementation-like
-route by habit.
+action by habit.
 
-Use canonical route tokens from
-`skills/loom-records/references/route-vocabulary.md` when recording route fields;
-ordinary prose may still use workflow names such as Ralph.
-
-When several child routes can run independently, treat that as route federation:
-each child gets a bounded route contract, non-overlapping write scope, output
-contract, and parent merge target. Do not rely on a shared chat plan.
+When several child tasks can run independently, treat that as bounded parallel
+work: each child gets a packet or explicit handoff contract, non-overlapping write
+scope, output contract, and parent merge target. Do not rely on a shared chat
+plan.
 
 ## Reassessment Checklist
 
@@ -201,7 +198,7 @@ For drives with stable objective IDs, every continuation decision should be
 traceable to at least one objective criterion, spec acceptance ID, or ticket-local
 claim. If none exists, repair the objective contract before continuing.
 
-The answer determines whether to continue, ask the user, route to review/wiki, or
+The answer determines whether to continue, ask the user, run review/wiki work, or
 stop.
 
 ## Stop And Escalation Conditions
@@ -216,8 +213,7 @@ Stop or ask the user when:
 - write scopes conflict or shared state makes parallel work unsafe
 - a blocker prevents ticket progress
 - budget, time, privacy, safety, or context limits are hit
-- the next step cannot be represented as a bounded Loom route or owner-record
-  update
+- the next step cannot be represented as a bounded packet or owner-record update
 
 Stopping is a correct loop outcome when it preserves truth and authority.
 

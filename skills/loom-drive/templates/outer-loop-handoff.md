@@ -38,7 +38,7 @@ handoff_write_scope:
 # Outer-Loop Synthesis Handoff
 
 Use this template only when a dedicated subagent would help the parent manage
-context while shaping an objective, tranche, or next route. It collects a
+context while shaping an objective or tranche. It collects a
 proposal for parent review; accepted results still land in the owning Loom
 records.
 
@@ -82,8 +82,7 @@ handoff only:
   no unreconciled support value remains.
 - `drive_checkpoint` points a fresh parent back to the current drive anchor,
   active tranche, and gate state that existed when the handoff was saved. It
-  summarizes owner records; it does not own objective status, ticket state, or
-  next-route truth.
+  summarizes owner records; it does not own objective status or ticket state.
 - `gate_status` is the checkpoint's compact hard-gate observation for this saved
   handoff: use `clear` when no known gate blocks the proposed route, or `blocked`
   with blocker context in the body when a gate prevents safe continuation. It is
@@ -99,7 +98,7 @@ that owns that truth and leave the handoff as a support artifact.
 ## Parent Instructions
 
 - Read the linked objective chain and only the source files named below.
-- Propose owner-record updates, ticket slices, risks, and next routes.
+- Propose owner-record updates, ticket slices, risks, and open gaps.
 - Do not modify files unless the parent explicitly grants a write scope.
 - Do not close tickets, accept critique risk, or redefine success criteria.
 - Return proposed changes for parent review and reconciliation.
@@ -135,20 +134,14 @@ Include:
 - proposed owner-record changes
 - proposed tickets or ticket refinements
 - required evidence and critique posture
-- controlled stop fields when proposing `stop`, or user questions when proposing
-  `ask_user`
+- stop conditions or focused user questions when owner records cannot safely
+  answer a decision
 
 ## Output Contract
 
-- proposed next route: ask_user / workspace_status / records_repair /
-  constitution / initiative / research / spec / plan / ticket / local_edit /
-  ralph / debugging / spike / codemap / evidence / critique / wiki /
-  retrospective / acceptance_review / ship / continue / stop
-- if proposed next route is `stop`: `stop_kind`, `stop_reason`, `owner_record`,
-  `resume_condition`, and `closure_claim`
 - objective criterion IDs affected and proposed status changes
 - current tranche assessment and proposed next tranche
-- route decision priority applied and why
+- decision priority applied and why
 - safety gates checked and any blockers
 - resume checkpoint updates required before parent stops
 - owner-record changes proposed, grouped by layer

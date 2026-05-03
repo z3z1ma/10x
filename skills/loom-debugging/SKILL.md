@@ -46,7 +46,7 @@ Follow:
    the fix needs fresh context, explicit child write scope, or packetized
    isolation; Ralph packets normally use `verification_posture: test-first`
 6. preserve red and green evidence
-7. route to critique when risk warrants
+7. run critique when risk warrants
 8. run retrospective if the lesson should prevent repeated mistakes
 
 ## Artifact Routing
@@ -56,7 +56,7 @@ Follow:
 | reproduction steps | evidence |
 | root cause investigation | research |
 | intended behavior clarification | spec |
-| fix execution | ticket plus `local_edit` or Ralph, according to route readiness |
+| fix execution | ticket plus a local edit or Ralph packet, according to ticket facts and write-scope needs |
 | regression evidence | evidence |
 | recurring evidence gap | ticket follow-up or test expectation via retrospective |
 | recurring lesson | wiki, research, spec, plan, initiative, constitution, or evidence via retrospective; memory may keep support-only recall or owner-record pointers |

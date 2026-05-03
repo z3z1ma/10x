@@ -66,16 +66,15 @@ disposition.
 A Loom transaction moves through this spine:
 
 ```text
-route -> shape -> ready -> execute -> reconcile -> verify -> accept -> promote -> close
+orient -> shape -> ready -> execute -> reconcile -> verify -> accept -> promote -> close
 ```
 
-- `route`: choose the owner layer and next route
+- `orient`: choose the owner layer and inspect the records that own the work
 - `shape`: refine owner records until the next move is unambiguous
-- `ready`: make the ticket ready for the next route; Ralph-ready is stricter
-- `execute`: perform the next governed route named by the owner graph and shared
-  route vocabulary, such as `local_edit`, `ralph`, `debugging`, `spike`,
-  `codemap`, `critique`, `wiki`, `retrospective`, `evidence`, `ship`, or
-  `acceptance_review`
+- `ready`: make the ticket ready for a bounded continuation; Ralph-ready is stricter
+- `execute`: perform the next governed action implied by the owner graph, such
+  as local editing, Ralph, debugging, spike/codemap research, critique, wiki,
+  retrospective, evidence capture, shipping, or acceptance review
 - `reconcile`: update ticket truth and any owner records affected by the result
 - `verify`: record required evidence and critique disposition
 - `accept`: record the ticket-owned acceptance disposition and whether closure is ready
@@ -122,15 +121,15 @@ Keep these categories separate:
 | --- | --- | --- |
 | owner layer | constitution, initiative, research, spec, plan, ticket, evidence, critique, wiki | project truth by type |
 | support surface | packet, memory, optional `.loom/support/` artifacts, workspace/harness records | recovery, recall, retrieval cues, bounded handoff, or scope support without owning project truth |
-| execution route | `local_edit`, `ralph`, `debugging`, `spike`, `codemap`, `critique`, `wiki`, `retrospective`, `evidence`, `acceptance_review`, `ship` | a way to move work through owner layers; `ship` packages or hands off work without owning ticket closure |
+| workflow path | local editing, Ralph, debugging, spike/codemap research, critique, wiki, retrospective, evidence, acceptance review, ship | a way to move work through owner layers; `ship` packages or hands off work without owning ticket closure |
 | transport | slash command, subagent, headless CLI, manual handoff, harness adapter | invocation mechanics only |
 
 Never choose a transport first and infer truth ownership from it. Choose the
-owner, then the route, then the transport.
+owner, then the workflow path, then the transport.
 
-Use `skills/loom-records/references/route-vocabulary.md` for the canonical route
-token list. Route tokens are grep-friendly Markdown vocabulary, not a runtime
-enum, command router, or command truth.
+Use `skills/loom-records/references/route-vocabulary.md` for workflow-selection
+cues. It keeps its old filename for compatibility, but it is not a saved route
+token registry.
 
 ## Claim Coverage Lifecycle
 

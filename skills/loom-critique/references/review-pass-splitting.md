@@ -30,7 +30,7 @@ Default passes:
    rollback, and operational hazards.
 4. Operator clarity and follow-through
    Check ticket truth, evidence, critique disposition, retrospective / promotion
-   disposition, route-specific wiki disposition when applicable, and whether the
+   disposition, wiki-specific disposition when applicable, and whether the
    next agent can continue cold.
 
 Each pass may produce its own critique record, or one consolidated critique

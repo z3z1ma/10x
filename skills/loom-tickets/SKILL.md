@@ -1,6 +1,6 @@
 ---
 name: loom-tickets
-description: "Maintain ticket execution and acceptance. Use when bounded work, state, blockers, evidence/critique disposition, route readiness, or closure truth changes."
+description: "Maintain ticket execution and acceptance. Use when bounded work, state, blockers, evidence/critique disposition, or closure truth changes."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -35,8 +35,8 @@ If execution truth changed, the ticket should absorb it.
 - blockers changed
 - evidence changed
 - critique changed what the ticket should say
-- route-specific wiki or broader retrospective / promotion follow-through
-  happened, was deferred, or was not required
+- wiki or broader retrospective / promotion follow-through happened, was
+  deferred, or was not required
 - a Ralph run needs to be reconciled
 - acceptance or closure needs to be decided through the ticket-owned gate
 
@@ -60,7 +60,7 @@ A good ticket should let a fresh agent answer:
   contract
 - what evidence exists
 - what the blockers are
-- what the next move is
+- what remains open, blocked, under review, or ready for acceptance
 - which acceptance IDs are in scope, without redefining the spec contract
 
 ## Dependency Model
@@ -72,9 +72,8 @@ Use `links:` for softer relationships such as critique, wiki, or related work.
 ## Acceptance Boundary
 
 Tickets own the live acceptance dossier: scoped acceptance IDs, evidence
-disposition, critique disposition, retrospective / promotion disposition,
-route-specific wiki disposition when applicable, accepted risk, blockers, and
-closure state.
+disposition, critique disposition, retrospective / promotion disposition, wiki
+disposition when applicable, accepted risk, blockers, and closure state.
 
 Specs own reusable acceptance contracts. Tickets may own ticket-local acceptance
 criteria only when no separate spec exists and the criteria are scoped to that
@@ -113,7 +112,8 @@ Then replace the placeholders in the copied file.
 
 - the ticket tells the truth about live execution
 - status matches reality
-- the next move is legible
+- the current blockers, evidence gaps, review gaps, acceptance gaps, and journal
+  make continuation legible to a fresh agent without a serialized workflow field
 - evidence is linked, fresh enough for the acceptance claim, and explicit about
   observed support, observed challenge, and limitations; missing evidence is
   explicitly absent for a reason

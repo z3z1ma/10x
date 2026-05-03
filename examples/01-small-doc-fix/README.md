@@ -10,12 +10,10 @@
 
 "Fix the broken link in the wiki page."
 
-## Expected Route
+## Expected Flow
 
 Local edit is acceptable when the change is tiny, low risk, and does not widen
 scope.
-
-Route:
 
 1. orient enough to confirm Loom is present
 2. read `constitution:main`

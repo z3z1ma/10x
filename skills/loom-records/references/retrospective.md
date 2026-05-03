@@ -16,13 +16,13 @@ It promotes what was learned into the owner layers that should carry it.
   look productive
 - for tickets, the standard closure home for this outcome is
   `# Retrospective / Promotion Disposition`; wiki disposition is only the
-  route-specific result when wiki is one selected owner layer
+  wiki-specific result when wiki is one selected owner layer
 
 ## Routing Pointers
 
 Use `skills/loom-retrospective/SKILL.md` for the
 observe/distill/promote/prevent procedure. When a lesson is ready to preserve,
-route by owner:
+choose by owner:
 
 - accepted explanation or workflow -> `loom-wiki`
 - durable investigation result, rejected option, or null result -> `loom-research`
@@ -32,9 +32,9 @@ route by owner:
 - changed durable policy or principle -> `loom-constitution`
 - observed artifact, challenged observation, or validation artifact -> `loom-evidence`
 - support-only recall cleanup, retrieval cue, preference, reminder, or owner-record
-  pointer -> support coordinator `loom-memory`; not a saved `next route:` token
+  pointer -> support coordinator `loom-memory`; not project truth
 
-After routing, update the ticket or initiative that owns the closing work to say
+After promotion, update the ticket or initiative that owns the closing work to say
 what was promoted, deferred, blocking, or not required. Retrospective remains a
 workflow over existing owner layers; it does not create a retrospective-only
 ledger and it does not replace ticket acceptance.

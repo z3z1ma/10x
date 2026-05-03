@@ -104,8 +104,6 @@ Use one concrete non-canonical critique recommendation label:
   acceptance claim.
 
 These labels are recommendation vocabulary only. They are not ticket states,
-route tokens, finding dispositions, or closure decisions. If a recommendation
-explicitly names a real ticket state or route token, quote it as the ticket-owned
-next action and state that critique does not apply it. This recommendation
-informs the ticket-owned acceptance decision; it does not mutate ticket state or
-close the ticket by itself.
+workflow instructions, finding dispositions, or closure decisions. This
+recommendation informs the ticket-owned acceptance decision; it does not mutate
+ticket state or close the ticket by itself.

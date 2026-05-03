@@ -23,7 +23,7 @@ Each example names:
 
 - starting `.loom` slice
 - operator request
-- expected route
+- expected flow
 - expected artifacts
 - expected final state
 - common wrong behavior
@@ -33,7 +33,7 @@ Each example should include:
 ```text
 before/
 operator-request.md
-expected-route.md
+expected-flow.md
 after/
 common-wrong-behavior.md
 ```

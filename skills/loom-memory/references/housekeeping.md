@@ -64,4 +64,4 @@ underlying project truth changed; the owning canonical record decides that.
 Memory action items are reminders only.
 
 Promote to a ticket when the item has scope, acceptance criteria, blockers,
-dependencies, or a real next route. Do not track live progress in memory.
+dependencies, or live execution state. Do not track progress in memory.

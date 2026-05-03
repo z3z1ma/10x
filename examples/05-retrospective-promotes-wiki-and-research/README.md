@@ -11,7 +11,7 @@
 
 "Close this out and make sure the lesson persists."
 
-## Expected Route
+## Expected Flow
 
 1. run retrospective before closure
 2. identify stable learning and repeated mistakes

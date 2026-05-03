@@ -98,11 +98,10 @@ push remote, and review target instead of collapsing them into one remote name.
 
 Before launch, the parent verifies:
 
-- target-ticket route authorization: the saved target ticket explicitly names
-  `ralph` as the authorized next route, such as in `# Next Move / Next Route` or
-  another saved next-route field, and its Ralph-readiness fields match this
-  packet's bounded iteration, child write boundary, verification posture, and
-  output contract
+- target-ticket readiness: the ticket dossier, scope, acceptance criteria,
+  blockers, linked owner records, and journal justify one bounded Ralph
+  implementation iteration and match this packet's child write boundary,
+  verification posture, and output contract
 - source freshness: `source_fingerprint` still matches governing records,
   resolved integration ref, git status expectations, and child-write-scope files;
   supersede this packet instead of launching if the contract is materially stale
@@ -129,10 +128,10 @@ Before launch, the parent verifies:
 - output contract: required return fields are complete enough for parent-side
   ticket truth, evidence, critique, and packet lifecycle reconciliation
 
-If the target ticket does not authorize Ralph, or if its saved readiness details
-do not match the packet, the parent reconciles the ticket or supersedes this
-packet before launch. Do not ask the child to infer authority from the packet or
-let this packet overrule ticket-owned route truth.
+If the target ticket is not Ralph-ready, or if its scoped facts no longer match
+the packet, the parent reconciles the ticket or supersedes this packet before
+launch. Do not ask the child to infer authority from the packet or let this packet
+overrule ticket-owned truth.
 
 # Source Snapshot
 

@@ -19,12 +19,12 @@ implementation.
 - retrospective / promotion disposition: ticket-owned status `pending`,
   `blocking`, `completed`, `deferred`, or `not_required`, plus promoted owner
   records or rationale
-- wiki disposition when wiki is one of the promotion routes
+- wiki disposition when wiki is one of the promotion paths
 - recent Ralph packet outcomes
 - relevant plan or initiative context
 
 Ticket frontmatter `risk_class` is the canonical ticket risk. The risk class in
-`# Critique Disposition` restates that same value for critique routing and must
+`# Critique Disposition` restates that same value for critique planning and must
 not become a second, contradictory risk claim.
 
 New tickets and tickets being materially updated for readiness, Ralph, critique,
@@ -80,8 +80,8 @@ Acceptance Dossier =
 - Is retrospective / promotion disposition resolved for closure as `completed`,
   `deferred`, or `not_required`, or does it remain `blocking` because required
   promotion or prevention follow-through is incomplete?
-- If wiki is one promotion route, does `# Wiki Disposition` record the
-  route-specific outcome without replacing the broader promotion decision?
+- If wiki is one promotion path, does `# Wiki Disposition` record the
+  wiki-specific outcome without replacing the broader promotion decision?
 - If human signoff or accepted-risk provenance is required, does
   `# Acceptance Decision` name who accepted, when, on what basis, and with what
   residual risks?

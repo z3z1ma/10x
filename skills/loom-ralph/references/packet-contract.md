@@ -7,10 +7,9 @@ frontmatter fields and valid values. This reference owns Ralph-specific contract
 guidance: how an implementation packet frames a child iteration, stop
 conditions, evidence obligations, and parent reconciliation.
 
-Use `skills/loom-records/references/route-vocabulary.md` for route tokens and
-`skills/loom-records/references/status-lifecycle.md` for packet lifecycle status
-boundaries. Ralph child outcomes are packet output vocabulary, not route tokens
-or ticket states until the parent reconciles them.
+Use `skills/loom-records/references/status-lifecycle.md` for packet lifecycle
+status boundaries. Ralph child outcomes are packet output vocabulary, not ticket
+states or workflow instructions until the parent reconciles them.
 
 ## Minimum packet contents
 
@@ -44,11 +43,10 @@ save the file as
 
 Before launching a Ralph child, the parent should check:
 
-- target-ticket route authorization: the saved target ticket explicitly names
-  `ralph` as the authorized next route, such as in `# Next Move / Next Route` or
-  another saved next-route field, and the ticket's Ralph-readiness fields match
-  this packet's bounded iteration, child write boundary, verification posture,
-  and output contract
+- target-ticket readiness: the ticket dossier, scope, acceptance criteria,
+  blockers, linked owner records, and journal justify one bounded Ralph
+  implementation iteration, and they match this packet's child write boundary,
+  verification posture, and output contract
 - source freshness: governing records, resolved integration ref, working-tree
   status, and child-write-scope files still match the `source_fingerprint` closely
   enough to trust the packet
@@ -73,10 +71,10 @@ Before launching a Ralph child, the parent should check:
 - output contract: the required return fields are sufficient for parent-side
   reconciliation of ticket state, evidence, critique, and packet status
 
-If the target ticket does not authorize Ralph, or if its saved readiness details
-do not match the packet, the parent must reconcile the ticket or supersede the
-packet before launch. Do not ask the child to infer authority from the packet or
-let a packet overrule ticket-owned route truth.
+If the target ticket does not justify Ralph, or if its current facts do not match
+the packet, the parent must reconcile the ticket or supersede the packet before
+launch. Do not ask the child to infer authority from the packet or let a packet
+overrule ticket truth.
 
 ## Strong packet body
 
@@ -275,20 +273,18 @@ current ticket truth and source files. If any launch-safety surface materially
 changed before launch, do not ask the child to guess: set the old packet to
 `superseded` when a corrected packet will replace it, or `abandoned` when the
 work will not proceed. Keep the disposition in packet status and parent merge
-notes, while ticket execution state, acceptance, evidence sufficiency, and next
-route remain ticket-owned.
+notes, while ticket execution state, acceptance, and evidence sufficiency remain
+ticket-owned.
 
-## Child Outcomes vs Routes
+## Child Outcomes
 
 A Ralph child should return one child outcome: `continue`, `stop`, `blocked`, or
 `escalate`. These words describe the bounded iteration result for the parent;
-they do not directly set `next route:` and they do not change ticket state.
+they do not change ticket state.
 
-The parent reconciles the child outcome into ticket truth and then chooses the
-next governed route, such as `ticket`, `research`, `critique`,
-`acceptance_review`, `continue`, or `stop`. This is especially important for
-`continue` and `stop`, which are also route tokens when they appear in a route
-field.
+The parent reconciles the child outcome into ticket truth and then reasons from
+the updated dossier to decide whether more implementation, research, critique,
+acceptance review, or closure is needed.
 
 ## Verification Targets
 

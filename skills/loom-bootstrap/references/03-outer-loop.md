@@ -54,14 +54,10 @@ A ready ticket should make all of these legible:
 - what acceptance means
 - what artifacts constrain the work
 - what evidence the parent will expect
-- which next route applies; use
-  `skills/loom-records/references/route-vocabulary.md` for canonical route
-  tokens. Common execution-side tokens include `local_edit`, `ralph`,
-  `debugging`, `spike`, `codemap`, `critique`, `wiki`, `retrospective`,
-  `evidence`, `acceptance_review`, or `ship`, but the route vocabulary is the
-  complete saved route grammar
-- when the next route is `ship`, the ticket still owns acceptance and closure;
-  shipping packages or hands off already-truthful work
+- which blockers, evidence gaps, critique gaps, acceptance gaps, or journal facts
+  a fresh agent should inspect before continuing
+- whether packaging or handoff is needed, without treating shipping as ticket
+  closure
 
 If the ticket cannot do that, keep working in the outer loop.
 
@@ -102,17 +98,17 @@ Plans are execution strategy, not execution truth.
 
 The outer loop should keep decomposing until the next step is bounded enough to fit one of these shapes:
 
-- one `local_edit` pass with no packet
+- one tiny local edit with no packet
 - one `ralph` implementation packet
 - one workflow-coordinator pass such as `debugging`, `spike`, `codemap`, or
   `ship`
-- one `critique` pass
-- one `wiki` pass
-- one owner-layer refinement or review route from the canonical route vocabulary
+- one critique pass
+- one wiki pass
+- one owner-layer refinement or review pass
 
 If the current state needs operator input, workspace repair, records repair,
-evidence preservation, continuation, or stop, choose that route from the complete
-route vocabulary instead of forcing another implementation route.
+evidence preservation, continuation, or stop, handle that need directly in the
+owner layer instead of forcing another implementation pass.
 
 If the next step still feels like "do the whole feature", it is not decomposed enough.
 
@@ -129,16 +125,16 @@ When Ralph returns with:
 - ticket too wide
 - scope unexpectedly larger than expected
 
-the parent should route back outward instead of forcing execution through ambiguity.
+the parent should go back outward instead of forcing execution through ambiguity.
 
-Typical loopback routes, expressed with canonical route tokens where possible:
+Typical loopbacks:
 
-- `ralph` -> `research`
-- `ralph` -> `spec`
-- `ralph` -> `plan`
-- `ralph` -> `ticket` refinement
-- `ralph` -> `initiative` when objective or autonomy framing was missing
-- `ralph` -> `constitution` in rare architectural or policy cases
+- Ralph -> research when evidence or tradeoffs are missing
+- Ralph -> spec when intended behavior is ambiguous
+- Ralph -> plan when sequencing is wrong
+- Ralph -> ticket refinement when the execution owner is too wide or stale
+- Ralph -> initiative when objective or autonomy framing was missing
+- Ralph -> constitution in rare architectural or policy cases
 
 ## Consult Constitution Before Deciding
 

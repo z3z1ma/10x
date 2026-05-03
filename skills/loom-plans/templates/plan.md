@@ -40,10 +40,10 @@ Why the order looks the way it does.
 # Claim / Acceptance Coverage
 
 Map upstream initiative objectives, spec claim IDs, and ticket-local acceptance
-criteria into downstream tickets. The plan routes claim coverage; tickets own live
+criteria into downstream tickets. The plan maps claim coverage; tickets own live
 coverage state, evidence disposition, and acceptance decisions.
 
-| Source claim / acceptance ID | Downstream ticket | Coverage expectation | Evidence / critique route | Notes |
+| Source claim / acceptance ID | Downstream ticket | Coverage expectation | Evidence / critique expectation | Notes |
 | --- | --- | --- | --- | --- |
 | `<record>#<claim-or-ACC>` | `ticket:<token>` | What the ticket must cover | Expected evidence or critique | `None - reason` only when no claim-bearing source applies |
 
@@ -52,10 +52,10 @@ coverage state, evidence disposition, and acceptance decisions.
 Use when multiple tickets can be sequenced or run independently from the plan.
 
 Save-ready rule: remove unused wave examples and placeholder rows before saving.
-Replace placeholders with real tickets, write scopes, and routes, or use a
-meaningful `None - reason` when a wave or coverage item genuinely does not
-apply; keep claim / acceptance coverage, evidence / critique route, readiness,
-exit, and completion gates intact.
+Replace placeholders with real tickets, write scopes, and owner/workflow notes,
+or use a meaningful `None - reason` when a wave or coverage item genuinely does
+not apply; keep claim / acceptance coverage, evidence / critique expectations,
+readiness, exit, and completion gates intact.
 
 Do not require parallel execution by default. Before any sibling Ralph work runs
 in parallel, record the independence and write scope overlap check here. Real
@@ -66,7 +66,7 @@ Wave 1:
 
 List real ticket IDs, why they can run independently, expected packet
 `child_write_scope` or likely write scope, dependency/contention checks, and the
-parent reconciliation route. If no wave applies, write `None - reason`.
+parent reconciliation path. If no wave applies, write `None - reason`.
 
 Wave 2:
 
@@ -78,8 +78,8 @@ Wave readiness table:
 
 | Wave | Tickets | Independent because | Expected `child_write_scope` / write scope overlap check | Dependency / shared-state check | Parent reconciliation |
 | --- | --- | --- | --- | --- | --- |
-| `Wave 1` | `ticket:<token-a>`, `ticket:<token-b>` | No same-wave dependency | `ticket:<token-a>` writes `<path-a>`; `ticket:<token-b>` writes `<path-b>`; no overlapping `child_write_scope` paths | No generated file, lockfile, migration, or stateful contention | Ticket-owned update plus evidence/critique route |
-| No wave | `None - reason` | `None - reason` | `None - reason` | `None - reason` | Continue with sequential ticket route |
+| `Wave 1` | `ticket:<token-a>`, `ticket:<token-b>` | No same-wave dependency | `ticket:<token-a>` writes `<path-a>`; `ticket:<token-b>` writes `<path-b>`; no overlapping `child_write_scope` paths | No generated file, lockfile, migration, or stateful contention | Ticket-owned update plus evidence/critique disposition |
+| No wave | `None - reason` | `None - reason` | `None - reason` | `None - reason` | Continue with sequential tickets |
 
 # Risks
 
@@ -107,7 +107,7 @@ Expected packet `child_write_scope` / write scope overlap check:
 
 Likely verification posture:
 
-Evidence and critique route:
+Evidence and critique expectations:
 
 Stop / loopback conditions:
 

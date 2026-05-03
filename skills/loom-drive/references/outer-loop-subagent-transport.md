@@ -14,7 +14,7 @@ list.
 
 This is transport only:
 
-- the subagent proposes owner-record changes, tickets, risks, and next routes
+- the subagent proposes owner-record changes, tickets, risks, and open gaps
 - the parent reviews the output before applying it
 - canonical records retain truth ownership
 - tickets retain live execution ownership
@@ -22,7 +22,7 @@ This is transport only:
 
 The parent must reconcile accepted results into the owner layer that owns that
 truth. Do not depend on subagent output, launch dependent work, close tickets, or
-treat evidence, critique, wiki, acceptance, or next-route claims as accepted
+treat evidence, critique, wiki, acceptance, or workflow recommendations as accepted
 until that reconciliation happens.
 
 ## Saved Handoff Support Surface

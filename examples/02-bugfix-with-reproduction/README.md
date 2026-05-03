@@ -11,7 +11,7 @@
 "Investigate why ticket acceptance closes tickets with unresolved high-severity
 critique and fix it."
 
-## Expected Route
+## Expected Flow
 
 Use the debug workflow:
 
@@ -21,7 +21,7 @@ Use the debug workflow:
 4. tighten the fix ticket
 5. compile a Ralph packet with `verification_posture: test-first`
 6. preserve red and green evidence
-7. route to critique before acceptance
+7. run critique before acceptance
 8. run retrospective if the failure reveals a repeated mistake
 
 ## Expected Artifacts

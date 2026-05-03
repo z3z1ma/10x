@@ -1,6 +1,6 @@
 ---
 name: loom-workspace
-description: "Enter or repair a Loom workspace before downstream work. Use when repository scope, Loom structure, owner chain, workspace trust, or next route is unclear."
+description: "Enter or repair a Loom workspace before downstream work. Use when repository scope, Loom structure, owner chain, or workspace trust is unclear."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: control-plane
@@ -56,8 +56,8 @@ current fact.
 - the workspace needs a health pass before packet work
 - you are recovering after a cold start or context compaction and need to find
   the current active ticket or live queue from files
-- you are about to stop or compact and need to make the next route recoverable in
-  the existing owner layers
+- you are about to stop or compact and need owner records to make continuation
+  recoverable without transcript context
 
 ## Do Not Use This Skill When
 
@@ -73,7 +73,8 @@ current fact.
 5. resolve repository ownership of the target path
 6. if resuming, list active, blocked, review, and acceptance queues from tickets
 7. read the governing artifact chain
-8. route into the next owner layer, skill, or workflow coordinator
+8. choose the next owner layer, skill, or workflow coordinator from the record
+   truth
 
 ## Signals That You Should Halt Or Escalate
 
@@ -97,7 +98,8 @@ Prefer direct inspection before inventing a helper abstraction:
 
 - the workspace root is explicit
 - structural trust is explicit
-- the next owner layer, skill, or workflow coordinator is explicit
+- the owner layer, skill, or workflow coordinator needed for the user's task is
+  clear from the records
 - you are not guessing about scope or routing
 
 ## Read In This Order

@@ -20,9 +20,8 @@ depends_on: []
 What this bounded work item is.
 
 Save-ready rule: replace every placeholder before saving. Remove the unused
-acceptance owner branch and unused route-readiness branches; do not remove
-evidence, critique, retrospective / promotion, acceptance, or closure gates just
-because they are pending.
+acceptance owner branch; do not remove evidence, critique, retrospective /
+promotion, acceptance, or closure gates just because they are pending.
 
 # Context
 
@@ -92,140 +91,6 @@ Useful implementation notes, but not a transcript dump.
 
 Named blockers only. If none exist, write `None`.
 
-# Next Move / Next Route
-
-Next route: <TBD: choose one route token before saving>
-
-Use `skills/loom-records/references/route-vocabulary.md`:
-`ask_user`, `workspace_status`, `records_repair`, `constitution`, `initiative`,
-`research`, `spec`, `plan`, `ticket`, `local_edit`, `ralph`, `debugging`,
-`spike`, `codemap`, `evidence`, `critique`, `wiki`, `retrospective`,
-`acceptance_review`, `ship`, `continue`, or `stop`.
-
-# Route Readiness
-
-Describe the information needed to execute the route named in `# Next Move /
-Next Route`. Do not repeat the route token or allowed-token list here. Use only
-the route sections that apply; remove or mark unrelated sections `N/A`.
-
-Local edit readiness:
-Bounded edit:
-Write boundary:
-Why this is cheap and safe in the current context:
-Expected evidence or observation:
-Escalation trigger if the edit becomes ambiguous, risky, behavior-defining, or too large:
-
-Ralph readiness, required only when the next route is `ralph`:
-
-Bounded iteration:
-Write boundary:
-Likely verification posture:
-Expected output contract:
-
-Critique readiness:
-Review target:
-Required profiles:
-Evidence to review:
-
-Debugging readiness:
-Failing behavior or incident:
-Reproduction / observation expectation:
-Root-cause, fix, or prevention handoff boundary:
-
-Spike readiness:
-Question or option to test:
-Throwaway write boundary:
-Expected research / evidence output:
-
-Codemap readiness:
-Repository or module area to map:
-Expected evidence / research / wiki atlas output:
-Downstream route this map should unblock:
-
-Ask-user readiness:
-Decision needed:
-Unsafe-inference reason:
-Owner record to update after answer:
-
-Workspace status readiness:
-Workspace surface or queue to inspect:
-Owner-chain or trust question to answer:
-Narrower route this status pass should make selectable:
-
-Records repair readiness:
-Broken, stale, or contradictory records or links:
-Graph consistency rule to restore:
-Dependent work that must wait:
-
-Constitution readiness:
-Principle, constraint, decision, roadmap, or identity truth to create/refine:
-Why this belongs above initiative/plan/ticket:
-Downstream records to reconcile:
-
-Initiative readiness:
-Objective, metric, autonomy boundary, or strategic framing to create/refine:
-Success criteria / OBJ IDs affected:
-Downstream records to reconcile:
-
-Research readiness:
-Question, evidence, options, or null result to synthesize:
-Expected conclusion format:
-Downstream owner that will use the result:
-
-Spec readiness:
-Fuzzy intended behavior:
-Acceptance, requirement, or scenario to clarify:
-Tickets or plans that must inherit the contract:
-
-Plan readiness:
-Sequencing, dependency, tranche, or rollout uncertainty:
-Owner records to update afterward:
-
-Ticket readiness:
-Execution-owner change needed:
-Owner-chain inputs to preserve:
-
-Wiki readiness:
-Accepted explanation or workflow to preserve:
-Source owner records and statuses:
-Evidence / critique basis:
-Limits and stale triggers:
-
-Retrospective readiness:
-Lesson or prevention artifact to evaluate:
-Candidate owner layers:
-Closure impact if promotion is deferred:
-
-Evidence readiness:
-Claims to support or challenge:
-Observation procedure:
-Freshness / environment expectation:
-Expected limitations or recheck triggers:
-
-Acceptance review readiness:
-Evidence and critique disposition:
-Closure readiness question / acceptance dossier gap:
-Residual risks:
-
-Ship readiness:
-Ticket / evidence / critique records to package:
-External handoff surface:
-Next ticket-owned route after packaging:
-
-Continue readiness:
-Already-governed tranche or narrower route to proceed with:
-Owner record authorizing continuation:
-Reason no new scoping decision is needed:
-Ralph-outcome distinction: route token, not child outcome
-
-Stop readiness:
-stop_kind: <TBD: satisfied | blocked | unsafe | out_of_scope | over_budget | awaiting_external | no_recoverable_route | not_worth_graph_cost | cancelled_by_owner>
-stop_reason:
-owner_record:
-resume_condition:
-closure_claim: <TBD: yes or no>
-Ralph-outcome distinction: route token, not child outcome
-
 # Evidence
 
 What evidence exists or is expected.
@@ -246,7 +111,7 @@ Risk class: <TBD: repeat frontmatter risk_class>
 Must match frontmatter `risk_class`. The frontmatter field is the ticket's
 canonical risk classification; this section restates that risk only to explain
 the critique policy and acceptance disposition. If the two differ, reconcile the
-ticket before readiness, critique routing, or closure.
+ticket before readiness, critique planning, or closure.
 
 Critique policy: <TBD: choose optional, recommended, or mandatory>
 
@@ -303,7 +168,7 @@ Deferral / not-required rationale:
 # Retrospective / Promotion Disposition
 
 Ticket-owned closure summary for durable learning and follow-through across all
-promotion routes. This section does not create a retrospective record kind or
+promotion paths. This section does not create a retrospective record kind or
 make retrospective replace acceptance; it tells acceptance review whether
 compounding work is resolved for this ticket.
 
@@ -327,10 +192,9 @@ Deferred / not-required rationale:
 
 # Wiki Disposition
 
-Route-specific wiki outcome when accepted explanation is one of the promotion
-routes. Write `N/A - no wiki promotion route` when the broader retrospective /
-promotion disposition routes learning elsewhere or finds no durable wiki-worthy
-explanation.
+Wiki outcome when accepted explanation is one selected promotion path. Write
+`N/A - no wiki promotion needed` when the broader retrospective / promotion
+disposition sends learning elsewhere or finds no durable wiki-worthy explanation.
 
 # Acceptance Decision
 

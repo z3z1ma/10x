@@ -41,10 +41,10 @@ Ralph packets use `kind: packet`, `packet_kind: ralph`, and the
 
 - the work is still under-scoped
 - the ticket is too vague
-- the next move is obviously another route from the canonical route vocabulary,
-  such as `research`, `spec`, `plan`, `ticket` refinement, `debugging`,
-  `spike`, `codemap`, `ship`, or `acceptance_review`; Ralph is only for bounded
-  implementation packets
+- the ticket data shows that the missing work is research, spec shaping, plan or
+  ticket refinement, debugging, spike, codemap, shipping, acceptance review, or
+  another non-implementation workflow; Ralph is only for bounded implementation
+  packets
 - the next move is critique or wiki; use that domain skill first
 - the task is a tiny local edit that does not need a packet
 
@@ -63,10 +63,10 @@ Ralph packets use `kind: packet`, `packet_kind: ralph`, and the
 10. check whether sources or write-scope files changed materially before launch
 11. launch the fresh worker through the available harness transport
 12. inspect and reconcile the result back into the ticket
-13. route to the next canonical route, such as another `ralph` implementation
-    packet, `critique`, `wiki`, `research`, `spec`, `plan`, `ticket`,
-    `debugging`, `spike`, `codemap`, `ship`, or `acceptance_review`; `ship` is
-    packaging or handoff only and does not close the ticket
+13. decide from the reconciled ticket data whether another packet, critique,
+    wiki, research, spec, plan, ticket update, debugging, spike, codemap, ship,
+    or acceptance review is needed; `ship` is packaging or handoff only and does
+    not close the ticket
 
 ## Strong Ralph Discipline
 
@@ -116,7 +116,7 @@ behaves and usually need structural evidence plus critique.
 - packet status moved away from non-terminal `compiled` after reconciliation;
   terminal packet statuses are `consumed`, `superseded`, and `abandoned`
 - the ticket tells the truth afterward
-- the next route is explicit
+- the ticket and packet parent merge notes make the post-iteration state legible
 
 ## Read In This Order
 
@@ -139,8 +139,9 @@ Then read conditionally:
    worker, especially parallel Ralph.
 7. `skills/loom-critique/SKILL.md` or `skills/loom-wiki/SKILL.md` when the next
    packetized pass is review or synthesis rather than implementation.
-8. `skills/loom-records/references/route-vocabulary.md` when writing or checking
-   `next route:` values after parent reconciliation.
+8. `skills/loom-records/references/route-vocabulary.md` when distinguishing
+   packet child outcomes from ticket states, support cues, commands, or workflow
+   choices.
 9. `references/harness-invocation.md` only when transport mechanics need to be
    documented or chosen.
 10. `templates/ralph-packet.md` only when creating the packet.

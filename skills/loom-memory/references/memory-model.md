@@ -85,7 +85,7 @@ workspace file surface.
 Promote memory when it stops being support-only:
 
 - repeated explanation -> wiki
-- scoped work, blocker, next route, or acceptance state -> ticket
+- scoped work, blocker, acceptance state, or live execution progress -> ticket
 - observed output supporting or challenging a claim -> evidence
 - intended behavior or acceptance rule -> spec
 - investigation conclusion or rejected path -> research

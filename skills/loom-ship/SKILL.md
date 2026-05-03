@@ -10,9 +10,9 @@ metadata:
 
 Shipping packages already-truthful Loom work for an external handoff.
 
-It does not own closure. `acceptance_review` is the ticket-owned route for
-evaluating acceptance, closure readiness, and residual risk; optional commands
-may invoke that workflow but do not own it.
+It does not own closure. The ticket-owned acceptance gate evaluates acceptance,
+closure readiness, and residual risk; optional commands may invoke that workflow
+but do not own it.
 
 ## What This Workflow Coordinates
 
@@ -45,8 +45,8 @@ may invoke that workflow but do not own it.
 - plan or initiative, when relevant
 - evidence
 - critique
-- retrospective / promotion disposition, plus route-specific wiki disposition when
-  wiki was one selected promotion route
+- retrospective / promotion disposition, plus wiki-specific disposition when wiki
+  was one selected promotion path
 - known follow-ups
 - external refs, when present
 
@@ -77,8 +77,7 @@ the drive-owned checkpoint before packaging.
 - the package cites Loom records rather than relying on conversation context
 - risks and unresolved follow-ups are visible
 - external summaries remain summaries; ticket acceptance still decides closure
-- the next route or handoff action is explicit, including `acceptance_review`
-  when ticket-owned closure evaluation remains
+- unresolved handoff actions and ticket-owned acceptance gaps are explicit
 
 ## Read In This Order
 

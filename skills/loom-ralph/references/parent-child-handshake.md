@@ -27,7 +27,8 @@ The parent should ask:
 3. did the packet source fingerprint remain fresh enough for the work
 4. did the child respect or explicitly justify exceeding the context budget
 5. what evidence exists
-6. did the child's self-review concerns change risk, scope, or next route
+6. did the child's self-review concerns change risk, scope, blockers, or
+   acceptance posture
 7. what claims or acceptance IDs are now supported or challenged
 8. what does the ticket now need to say
 9. is critique next

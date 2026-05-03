@@ -1,13 +1,13 @@
 # Ticket Readiness
 
-A ticket is ready when the next governed route can proceed without chat history.
+A ticket is ready when a fresh agent can continue the bounded work from the
+ticket dossier and linked owner records without chat history.
 
-Readiness is route-neutral. A ready ticket might route to any canonical route
-token in `skills/loom-records/references/route-vocabulary.md`, including
-`ask_user`, `workspace_status`, `records_repair`, `constitution`, `initiative`,
-`research`, `spec`, `plan`, `ticket`, `local_edit`, `ralph`, `debugging`,
-`spike`, `codemap`, `evidence`, `critique`, `wiki`, `retrospective`,
-`acceptance_review`, `ship`, `continue`, or `stop`.
+Readiness is not a serialized routing decision. The agent should infer whether to
+edit locally, compile a packet, gather evidence, run critique, update a spec or
+plan, ask the user, or evaluate acceptance from the ticket's state, blockers,
+scope, acceptance criteria, evidence, critique disposition, linked owner records,
+and journal.
 
 Ralph-ready is stricter: the ticket must also make one bounded implementation
 iteration, write boundary, likely verification posture, and expected output
@@ -38,98 +38,48 @@ this checklist passes.
 - the likely evidence path is visible
 - critique risk class matches frontmatter `risk_class`; required profiles are
   explicit when review is expected
-- the next route is explicit in `# Next Move / Next Route` or equivalent prose,
-  using the shared route vocabulary: `local_edit`, `ralph`, `debugging`,
-  `spike`, `codemap`, `critique`, `wiki`, `retrospective`, `evidence`,
-  `constitution`, `initiative`, `research`, `spec`, `plan`, `ticket`,
-  `acceptance_review`, `ship`, `ask_user`, `workspace_status`,
-  `records_repair`, `continue`, or `stop`
+- the current blockers, evidence gaps, critique gaps, acceptance gaps, and journal
+  are explicit enough for a fresh agent to choose the next skill or action by
+  reasoning over the records
 - the ticket is small enough to fit one bounded iteration or a short sequence of
   clearly staged iterations
 
 If several of those are missing, do not force Ralph, critique, wiki, or closure.
 Refine the ticket first.
 
-## Route Readiness
+## Continuation Without Serialized Routes
 
-Use `# Route Readiness` or equivalent prose to make the route named in `# Next
-Move / Next Route` specific without implying that every handoff is Ralph. Do not
-use it as a second route-token selector or duplicate the allowed-token list.
+Do not add `next route`, `Route`, route-readiness, or token-list sections to
+tickets. They create a second scheduling surface and make the ticket look like a
+workflow router.
 
-Use `skills/loom-records/references/route-vocabulary.md` for route-token grammar;
-do not use ticket lifecycle statuses such as `ready`, `active`,
-`review_required`, or `complete_pending_acceptance` as next-route values.
+Instead, keep the ticket facts sharp:
 
-- For `ask_user`, name the decision needed, why the agent cannot infer it safely,
-  and the owner record to update after the answer; do not use it for low-risk,
-  reversible assumptions inside delegated authority.
-- For `workspace_status`, name the workspace surface to inspect, the owner-chain
-  or queue trust question to answer, and the narrower route the status pass should
-  make selectable.
-- For `records_repair`, name the broken, stale, or contradictory records or links,
-  the graph consistency rule being restored, and dependent work that must wait.
-- For `constitution`, name the principle, constraint, decision, roadmap, or
-  identity truth to create/refine, why it belongs above initiative/plan/ticket,
-  and downstream records to reconcile.
-- For `initiative`, name the objective, metric, autonomy boundary, or strategic
-  framing to create/refine, success criteria or `OBJ-*` IDs affected, and
-  downstream records to reconcile.
-- For `research`, name the question, evidence or option set to inspect, expected
-  conclusion or null result, and downstream owner that will use the synthesis.
-- For `spec`, name the fuzzy intended behavior, reusable acceptance or scenario
-  to clarify, and tickets or plans that must inherit the clarified contract.
-- For `plan`, name the sequencing, dependency, tranche, or rollout uncertainty to
-  resolve and the tickets or owner records that must be updated afterward.
-- For `ticket`, name the execution-owner change needed, such as create, refine,
-  split, reopen, block, or reconcile, plus the owner-chain inputs it must preserve.
-- For `local_edit`, name the bounded edit, write boundary, why it is cheap and
-  safe in the current context, expected evidence or observation, and escalation
-  trigger if the edit proves ambiguous, risky, behavior-defining, or too large.
-- For `ralph`, keep the stricter Ralph-ready fields: bounded iteration, write
-  boundary, likely verification posture, and expected output contract.
-- For `debugging`, name the failing behavior, reproduction/evidence expectation,
-  and root-cause or fix handoff boundary.
-- For `spike`, name the question or option to test, throwaway write boundary, and
-  expected research/evidence output.
-- For `codemap`, name the repository or module area to map, expected
-  evidence/research/wiki atlas output, and downstream route the map should
-  unblock.
-- For `critique`, name the review target, required profiles, and evidence to
-  review.
-- For `wiki`, name the accepted explanation or workflow to preserve, source owner
-  records and statuses, evidence/critique basis, limits, and stale triggers.
-- For `retrospective`, name the lesson or prevention artifact to evaluate,
-  candidate owner layers, and closure impact if promotion is deferred.
-- For `evidence`, name the claim references and observation procedure.
-- For `acceptance_review`, name the evidence, critique disposition, closure
-  readiness, and residual risks that the ticket-owned gate must evaluate.
-- For `ship`, name the ticket/evidence/critique records to package and the
-  external handoff surface, including PR-summary, release-note, evidence/risk,
-  and follow-up-list needs when relevant, without treating shipping as closure.
-- For `continue`, name the already-governed tranche or narrower route to proceed
-  with, the owner record that authorizes it, and why no new scoping decision is
-  needed. This is a route token for parent-owned execution flow, not a Ralph
-  child outcome named `continue`.
-- For `stop`, name `stop_kind`, `stop_reason`, `owner_record`,
-  `resume_condition`, and `closure_claim`. `stop_kind: satisfied` may support
-  closure only when ticket-owned acceptance, evidence, critique, and
-  retrospective / promotion disposition are already closure-compatible. Other stop
-  kinds pause, abandon, or block continuation; they do not imply closure. This is
-  a route token for parent-owned execution flow, not a Ralph child outcome named
-  `stop`.
+- `status` says the live execution state.
+- `# Blockers` names real blockers or `None`.
+- `# Evidence`, `# Critique Disposition`, `# Retrospective / Promotion
+  Disposition`, and `# Acceptance Decision` say what gates are satisfied or open.
+- `# Journal` records material progress, decisions, and why work stopped or
+  resumed.
+- Linked specs, plans, research, evidence, critique, packets, and wiki pages
+  provide the context an agent needs to choose the next skill.
+
+The agent's reasoning is part of Loom's operating model. Skills guide that
+reasoning; tickets should provide enough data for it, not serialize the workflow
+choice.
 
 ### `local_edit` And Ticket Truth
 
-`local_edit` is a lightweight route for a tiny in-context mutation, not a bypass
-around tickets. If a ticket owns the work, the ticket still owns live execution
-state, scope, acceptance disposition, evidence disposition, critique disposition,
-and the next route after the edit.
+`local_edit` is a lightweight phrase for a tiny in-context mutation, not a bypass
+around tickets and not a workflow field. If a ticket owns the work, the ticket still
+owns live execution state, scope, acceptance disposition, evidence disposition,
+critique disposition, and the journal after the edit.
 
 A local-edit-ready ticket should make the write boundary narrow enough that the
 operator can stop without guessing. If the change needs a fresh worker, a wider
 implementation pass, unclear behavior decisions, investigation, or adversarial
-review, route to `ralph`, `spec`, `research`, `critique`, or the appropriate
-owner route instead.
+review, choose Ralph, spec, research, critique, or the appropriate owner skill
+instead.
 
 Evidence expectations should match the claim being made: structural Markdown
 cleanup may need only diff review or targeted text observations, while behavior,

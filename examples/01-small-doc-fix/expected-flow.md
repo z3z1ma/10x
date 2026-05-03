@@ -1,4 +1,4 @@
-# Expected Route
+# Expected Flow
 
 1. Orient enough to confirm Loom is present.
 2. Read `constitution:main`.

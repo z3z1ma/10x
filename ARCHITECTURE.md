@@ -139,9 +139,9 @@ when the harness supports it cleanly, but they must not define Loom truth.
 
 Examples are internal teaching fixtures, not product-surface guidance and not
 canonical project truth. They should remain minimal, internally consistent, and
-replayable by a cold reader. A good example
-shows the starting `.loom` slice, operator request, expected route, expected
-artifacts, final state, and common wrong behavior.
+replayable by a cold reader. A good example shows the starting `.loom` slice,
+operator request, expected flow, expected artifacts, final state, and common
+wrong behavior.
 
 ## Design Biases
 

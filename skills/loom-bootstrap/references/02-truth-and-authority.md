@@ -97,8 +97,7 @@ Use this routing before relying on recency, habit, or command names:
 - adversarial findings, verdicts, severities, and required follow-up -> critique
 - accepted explanation, workflow knowledge, troubleshooting, or reusable synthesis -> wiki
 - support-only recall, retrieval cues, preferences, observations, entities,
-  reminders, or hot context -> support coordinator `loom-memory`; not a saved
-  `next route:` token
+  reminders, or hot context -> support coordinator `loom-memory`; not project truth
 
 Workflow skills coordinate work across those owners. They do not create new truth
 layers. Workspace entry, record grammar, `loom-drive` objective/workflow driving,

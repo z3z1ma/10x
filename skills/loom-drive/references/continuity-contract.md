@@ -18,13 +18,13 @@ Use this map before launching tickets or child work.
 | evidence gaps, options, rejected approaches, conclusions | research |
 | intended product behavior, reusable acceptance IDs | spec |
 | tranche strategy, sequencing, dependencies, execution waves | plan |
-| live state, blockers, next route, scoped coverage | ticket |
+| live state, blockers, scoped coverage, journaled progress | ticket |
 | evidence disposition, critique disposition, acceptance decision | ticket |
 | bounded child context, source snapshot, read/write scope, output contract | packet or bounded handoff |
 | observed support or challenge artifacts | evidence |
 | adversarial findings, severity, verdict, residual risk | critique |
 | accepted reusable explanation | wiki |
-| support-only recall, retrieval cues, preferences, reminders, or hot context that does not own project truth | support coordinator `loom-memory`; not a saved `next route:` token |
+| support-only recall, retrieval cues, preferences, reminders, or hot context that does not own project truth | support coordinator `loom-memory`; not project truth |
 
 If no existing record owns a drive fact, either create the correct owner record or
 choose `ask_user` when the missing fact is an operator decision the agent cannot
@@ -62,7 +62,7 @@ Recommended locations:
 | --- | --- |
 | initiative | `# Status Summary`, plus criterion IDs under `# Success Metrics` |
 | plan | `# Strategy Snapshot` and `# Execution Waves` |
-| ticket | `# Coverage`, `# Claim Matrix`, `# Next Move / Next Route`, `# Evidence`, `# Critique Disposition`, and `# Journal` |
+| ticket | `# Coverage`, `# Claim Matrix`, `# Evidence`, `# Critique Disposition`, `# Blockers`, and `# Journal` |
 | packet or handoff | frontmatter/source snapshot plus output contract and parent merge notes |
 | evidence | `# Supports Claims` and `# Challenges Claims` |
 | critique | findings, verdict, residual risks, and challenged claims |
@@ -77,20 +77,14 @@ current tranche: <plan milestone / wave / purpose>
 active tickets: <ticket IDs and states>
 evidence state: <claim IDs with evidence links or gaps>
 critique state: <required | pending | blocking | completed | deferred | not_required, citing ticket truth>
-next route: ask_user | workspace_status | records_repair | constitution | initiative | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop
-next route owner: <which layer must change next>
-reason: <why this follows from current owner truth>
-stop_kind: <required when next route is stop; otherwise omit>
-stop_reason: <required when next route is stop; otherwise omit>
-owner_record: <required when next route is stop; otherwise omit>
-resume_condition: <required when next route is stop; otherwise omit>
-closure_claim: <required when next route is stop; otherwise omit>
+open blockers or gaps: <owner records and claim IDs>
+handoff note: <optional prose when stopping or handing off; omit when records are already clear>
 ```
 
-When the `next route` is `stop`, `reason` alone is not enough. Record the
-controlled stop fields from `skills/loom-records/references/route-vocabulary.md`:
-`stop_kind`, `stop_reason`, `owner_record`, `resume_condition`, and
-`closure_claim`.
+Do not add saved workflow-choice fields to the snapshot. A fresh parent should infer the
+next action from owner facts, blockers, evidence, critique disposition, acceptance
+state, plan sequencing, and ticket journals. If that is not possible, repair the
+owner records instead of adding a token.
 
 Do not duplicate this full block everywhere. Put each fact in the owner record
 that owns it, and link across records so the snapshot is recoverable by ordinary
@@ -135,35 +129,24 @@ criteria supported: <claims and evidence links>
 criteria still open: <claims or gaps>
 ticket critique disposition status: pending | blocking | completed | deferred | not_required
 finding dispositions: <qualified finding refs with resolved | accepted_risk | superseded | converted_to_follow_up, or none>
-next route: ask_user | workspace_status | records_repair | constitution | initiative | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop
-next tranche: <ticket IDs or plan update, if known>
-reason: <why this next route follows from the records>
-stop_kind: <required when next route is stop; otherwise omit>
-stop_reason: <required when next route is stop; otherwise omit>
-owner_record: <required when next route is stop; otherwise omit>
-resume_condition: <required when next route is stop; otherwise omit>
-closure_claim: <required when next route is stop; otherwise omit>
+next tranche or open owner gap: <ticket IDs, plan update, blocker, or None>
+handoff note: <optional prose when needed for recovery; not a workflow token>
 ```
 
-When the `next route` is `stop`, `reason` alone is not enough. Record
-`stop_kind`, `stop_reason`, `owner_record`, `resume_condition`, and
-`closure_claim`, and do not imply closure unless the ticket-owned acceptance gate
-is already closure-compatible.
+Do not imply closure unless the ticket-owned acceptance gate is closure-compatible.
+Use ticket `closed`, `blocked`, or `cancelled` states and the acceptance decision
+or blocker rationale instead of serialized stop workflow fields.
 
 Put the answer in the layer that owns it. For example, objective-level status
 belongs in the initiative, live execution and acceptance state belong in the
 ticket, critique findings and verdicts belong in critique, and sequencing changes
 belong in the plan. Drive snapshots cite those owners; they do not own acceptance.
 
-If the next route is `continue`, the plan or ticket chain should name the next
-tranche. If the next route is `ask_user`, record the decision needed, why the
-agent cannot safely infer the answer, and which owner record should be updated
-after the response. Do not ask the user merely to approve a low-risk, reversible
-assumption inside delegated authority.
-
-Use `skills/loom-records/references/route-vocabulary.md` for the canonical route
-token grammar. Do not use ticket lifecycle statuses such as `review_required` or
-`complete_pending_acceptance` as `next route:` values.
+If work continues, the plan or ticket chain should make the next tranche legible.
+If a user decision is needed, record the decision needed, why the agent cannot
+safely infer the answer, and which owner record should be updated after the
+response. Do not ask the user merely to approve a low-risk, reversible assumption
+inside delegated authority.
 
 ## Checkpoint Before Child Work
 
@@ -187,4 +170,4 @@ Stop driving and repair continuity when:
 - success is judged by vibes instead of linked criteria and evidence
 - critique state is remembered but not linked from the ticket
 - a subagent output is treated as authoritative before parent reconciliation
-- a fresh session would lose the reason for the next route
+- a fresh session would lose why work should continue, pause, ask, or close

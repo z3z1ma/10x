@@ -4,14 +4,14 @@
 
 - `constitution:main`
 - no accepted spec for the requested behavior
-- proposed ticket exists but is not Ralph-ready until the spec and route are
-  clear
+- proposed ticket exists but is not Ralph-ready until the spec and bounded
+  execution shape are clear
 
 ## Operator Request
 
 "Add a packaging workflow that summarizes completed work for a PR."
 
-## Expected Route
+## Expected Flow
 
 1. create or update a spec for intended behavior
 2. create or update a plan if sequencing spans multiple tickets
@@ -19,7 +19,7 @@
 4. compile a Ralph packet with explicit write scope
 5. execute one bounded implementation slice
 6. reconcile child output back into ticket truth
-7. route to critique
+7. run critique
 8. update wiki only for accepted explanation
 
 ## Expected Artifacts

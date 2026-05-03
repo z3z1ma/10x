@@ -9,7 +9,7 @@
 
 "Change how Loom decides whether evidence is required before ticket closure."
 
-## Expected Route
+## Expected Flow
 
 1. read constitution and relevant bootstrap references
 2. create or update research if tradeoffs are not settled

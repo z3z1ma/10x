@@ -166,8 +166,8 @@ Promote something into the wiki when one or more of these are true:
 
 Retrospective is the default promotion gate for non-trivial completed work.
 The ticket should record the broader retrospective / promotion disposition for
-closure; wiki disposition records only the route-specific wiki outcome when wiki
-is one selected promotion route. Direct wiki work is allowed when the ticket is
+closure; wiki disposition records only the wiki-specific outcome when wiki is one
+selected promotion path. Direct wiki work is allowed when the ticket is
 explicitly a wiki/explanation task or when the parent records why retrospective
 is unnecessary.
 

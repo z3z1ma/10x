@@ -92,7 +92,7 @@ the claim being made, such as:
   references; check `examples/` only for internal fixture consistency
 - do not add hidden runtimes, helper-dependent instructions, or monolithic CLI
   assumptions
-- express new workflows as routes through existing owner layers before adding
+- express new workflows as movement through existing owner layers before adding
   new artifact kinds
 - keep traceability grep-friendly with stable IDs, typed links, explicit
   coverage, evidence, and critique references

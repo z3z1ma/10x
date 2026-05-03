@@ -1,4 +1,4 @@
-# Expected Route
+# Expected Flow
 
 1. Read `constitution:main`.
 2. Read ticket:pr000001.
@@ -8,5 +8,5 @@
 6. Run critique on the package.
 7. Finalize the PR body with evidence and critique references plus evidence
    limitations.
-8. Promote wiki explanation only if the route is reusable.
+8. Promote wiki explanation only if the packaging workflow is reusable.
 9. Leave closure to ticket acceptance review.

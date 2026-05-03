@@ -1,4 +1,4 @@
-# Expected Route
+# Expected Flow
 
 1. Run retrospective before acceptance.
 2. Promote accepted explanation into wiki.

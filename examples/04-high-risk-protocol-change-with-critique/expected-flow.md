@@ -1,4 +1,4 @@
-# Expected Route
+# Expected Flow
 
 1. Read constitution and relevant bootstrap references.
 2. Update spec or bootstrap reference text only after ownership is clear.
