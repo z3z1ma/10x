@@ -2,6 +2,11 @@
 
 Loom is intentionally grep-friendly.
 
+The recipes below are examples for discovery and orientation. They are not a
+mandatory runtime, generated index, schema validator, or proof by themselves.
+After a query finds something relevant, read the owning record before changing
+truth or claiming validation.
+
 ## Common Queries
 
 ### Find all IDs
@@ -9,6 +14,18 @@ Loom is intentionally grep-friendly.
 ```bash
 rg -n '^id:' .loom
 ```
+
+### Cold-start orientation
+
+```bash
+rg -n '^id:|^kind:|^status:|^target:|^links:|^  [a-z_]+:|^    - (constitution|decision|roadmap|initiative|research|spec|plan|ticket|packet|critique|wiki|evidence|workspace|support):' .loom/constitution .loom/initiatives .loom/research .loom/specs .loom/plans .loom/tickets .loom/packets .loom/critique .loom/evidence .loom/wiki 2>/dev/null
+find .loom/initiatives .loom/research .loom/specs .loom/plans .loom/tickets .loom/packets .loom/critique .loom/evidence .loom/wiki -type f -name '*.md' 2>/dev/null | sort
+```
+
+Use this to build a first map of the active owner graph, including conditional
+research/spec owners and typed link targets. It does not replace reading the
+constitution, governing initiative / research / spec / plan / ticket chain,
+packet, evidence, or critique records that apply to the current work.
 
 ### List current supported kind declarations
 
@@ -55,13 +72,18 @@ when a workflow intentionally saves them.
 rg -n 'ticket:<token>' .loom
 ```
 
-### List open tickets
+### List active/open tickets
 
 ```bash
+rg -n '^id: ticket:|^status: (proposed|ready|active|blocked|review_required|complete_pending_acceptance)$|^updated_at:|^links:' .loom/tickets
 rg -l '^status: (proposed|ready|active|blocked|review_required|complete_pending_acceptance)$' .loom/tickets
 ```
 
-### Find pending compiled packets
+These statuses are the non-terminal ticket ledger states. Read the ticket before
+deciding whether the work is actually ready, blocked, waiting for review, or
+pending acceptance.
+
+### Find pending or stale compiled packets
 
 ```bash
 rg -l '^status: compiled$' .loom/packets
@@ -75,11 +97,16 @@ Then leave the packet `compiled`, mark it `superseded`, or mark it `abandoned`
 according to `status-lifecycle.md`; do not create a generated index or separate
 reconciliation ledger.
 
-### Find stale wiki pages
+### Find stale or superseded records
 
 ```bash
+rg -n '^status: (stale|superseded|abandoned)$|^supersedes:|superseded by|replaced by' .loom
 rg -l '^status: stale$' .loom/wiki
 ```
+
+Treat these as lifecycle-discovery queries. Read `status-lifecycle.md`, the
+record itself, and inbound references before deleting, renaming, or relying on a
+stale or superseded artifact.
 
 ### Trace one acceptance claim
 
@@ -92,6 +119,19 @@ rg -n 'spec:<slug>#ACC-002' .loom
 ```bash
 rg -n 'initiative:<slug>#OBJ-001' .loom
 ```
+
+### Trace a claim through tickets, packets, evidence, and critique
+
+```bash
+claim='spec:<slug>#ACC-002'
+rg -n "$claim" .loom/specs .loom/tickets .loom/packets .loom/evidence .loom/critique .loom/wiki 2>/dev/null
+rg -n '^# Supports Claims|^Supports:|^Challenges:|^Evidence:|^Critique:' .loom/tickets .loom/evidence .loom/critique 2>/dev/null
+```
+
+Use the first query when you know the exact claim ID. Use the second query to
+find nearby coverage declarations. Evidence and critique can support or
+challenge claims; they do not redefine the acceptance contract owned by specs or
+tickets.
 
 ### Find objective criteria in initiatives
 
@@ -110,6 +150,27 @@ rg -n '^# Supports Claims|^Supports:' .loom/evidence
 ```bash
 rg -n '^Challenges:' .loom/critique
 ```
+
+### Find open critique findings
+
+```bash
+rg -n '^id: critique:|^status:|^target:|^verdict:|^severity:|^confidence:|^disposition:|\b(open|unresolved|requires_follow_up|needs_follow_up|blocked)\b' .loom/critique
+```
+
+Use this to discover possible unresolved review work. The critique record owns
+findings and verdicts; the ticket owns whether each relevant finding blocks
+acceptance, is resolved, is accepted risk, is superseded, or becomes follow-up.
+
+### Find unreplaced placeholders
+
+```bash
+rg -n '<(TBD|TODO|token|slug|YYYYMMDD|UTC timestamp|path|id)>|\b(TBD|TODO|FIXME|XXX)\b' .loom skills
+rg -n '<[^>]*(slug|token|id|path|timestamp|summary|description)[^>]*>' .loom skills
+```
+
+Placeholder hits are risk signals, not automatic failures. Templates,
+references, and examples often contain intentional placeholders; active records
+and copied examples should not leave placeholders that pretend to be real truth.
 
 ## Linking Rules
 

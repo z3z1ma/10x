@@ -47,6 +47,12 @@ The agent should not wait for a specialized query runtime before it can understa
 Specialized helpers may exist, but the graph should still yield to ordinary
 command composition.
 
+For a larger catalog of ordinary-tool recipes for tickets, packets, claims,
+evidence, critique, stale records, and placeholder scans, use
+`skills/loom-records/references/query-and-linking.md`. Those recipes are
+discovery aids, not mandatory runtime dependencies or validation proof by
+themselves.
+
 ## Creating Files
 
 When you need to create a record, prefer one of these:

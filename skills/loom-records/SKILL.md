@@ -18,6 +18,9 @@ It is the place to consult when you need to know:
 - how evidence, critique, coverage, and external references should link without
   changing owner-layer authority
 - how to validate and reconcile a set of records without a bundled script
+- how to use ordinary-tool graph queries for tickets, packets, claims, evidence,
+  critique, stale records, and placeholder risk without treating query output as
+  proof by itself
 
 ## What This Skill Owns
 
@@ -110,8 +113,9 @@ Then read conditionally:
    statuses.
 5. `references/claim-coverage.md` when requirements, acceptance, evidence, or
    critique need traceable claim IDs.
-6. `references/query-and-linking.md` when searching graph edges or reconciling
-   references.
+6. `references/query-and-linking.md` when searching graph edges, orienting in
+   tickets and packets, tracing claims through evidence or critique, scanning
+   placeholders, or reconciling references.
 7. `references/semantic-link-usage.md` when deciding whether a relationship
    belongs in `links:`, `depends_on`, coverage, evidence, critique, or
    external refs.
