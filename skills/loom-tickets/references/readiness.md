@@ -60,31 +60,52 @@ Use `skills/loom-records/references/route-vocabulary.md` for route-token grammar
 do not use ticket lifecycle statuses such as `ready`, `active`,
 `review_required`, or `complete_pending_acceptance` as next-route values.
 
+- For `ask_user`, name the decision needed, why the agent cannot infer it safely,
+  and the owner record to update after the answer; do not use it for low-risk,
+  reversible assumptions inside delegated authority.
+- For `workspace_status`, name the workspace surface to inspect, the owner-chain
+  or queue trust question to answer, and the narrower route the status pass should
+  make selectable.
+- For `records_repair`, name the broken, stale, or contradictory records or links,
+  the graph consistency rule being restored, and dependent work that must wait.
+- For `constitution` or `initiative`, name the owner truth to create or refine,
+  the decision/objective/boundary affected, and any downstream records to
+  reconcile.
+- For `research`, name the question, evidence or option set to inspect, expected
+  conclusion or null result, and downstream owner that will use the synthesis.
+- For `spec`, name the fuzzy intended behavior, reusable acceptance or scenario
+  to clarify, and tickets or plans that must inherit the clarified contract.
+- For `plan`, name the sequencing, dependency, tranche, or rollout uncertainty to
+  resolve and the tickets or owner records that must be updated afterward.
+- For `ticket`, name the execution-owner change needed, such as create, refine,
+  split, reopen, block, or reconcile, plus the owner-chain inputs it must preserve.
 - For `local_edit`, name the bounded edit, write boundary, why it is cheap and
   safe in the current context, expected evidence or observation, and escalation
   trigger if the edit proves ambiguous, risky, behavior-defining, or too large.
-- For Ralph, keep the stricter Ralph-ready fields: bounded iteration, write
+- For `ralph`, keep the stricter Ralph-ready fields: bounded iteration, write
   boundary, likely verification posture, and expected output contract.
 - For `debugging`, name the failing behavior, reproduction/evidence expectation,
   and root-cause or fix handoff boundary.
 - For `spike` or `codemap`, name the research/evidence/wiki outputs the workflow
   should produce and any throwaway write boundary.
-- For `ask_user`, name the decision needed, why the agent cannot infer it safely,
-  and the owner record to update after the answer; do not use it for low-risk,
-  reversible assumptions inside delegated authority.
-- For `constitution` or `initiative`, name the owner truth to create or refine,
-  the decision/objective/boundary affected, and any downstream records to
-  reconcile.
 - For `critique`, name the review target, required profiles, and evidence to
   review.
-- For wiki or retrospective work, name the explanation or lesson to promote and
+- For `wiki` or `retrospective`, name the explanation or lesson to promote and
   the owner records it should source.
-- For evidence recording, name the claim references and observation procedure.
+- For `evidence`, name the claim references and observation procedure.
 - For `acceptance_review`, name the evidence, critique disposition, closure
   readiness, and residual risks that the ticket-owned gate must evaluate.
 - For `ship`, name the ticket/evidence/critique records to package and the
   external handoff surface, including PR-summary, release-note, evidence/risk,
   and follow-up-list needs when relevant, without treating shipping as closure.
+- For `continue`, name the already-governed tranche or narrower route to proceed
+  with, the owner record that authorizes it, and why no new scoping decision is
+  needed. This is a route token for parent-owned execution flow, not a Ralph
+  child outcome named `continue`.
+- For `stop`, name the stop reason or condition, the owner record that makes the
+  stop truthful, and any external action or future trigger that could reopen work.
+  This is a route token for parent-owned execution flow, not a Ralph child outcome
+  named `stop`.
 
 ### `local_edit` And Ticket Truth
 

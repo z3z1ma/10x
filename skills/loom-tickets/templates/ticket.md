@@ -144,10 +144,38 @@ Decision needed:
 Unsafe-inference reason:
 Owner record to update after answer:
 
+Workspace status readiness:
+Workspace surface or queue to inspect:
+Owner-chain or trust question to answer:
+Narrower route this status pass should make selectable:
+
+Records repair readiness:
+Broken, stale, or contradictory records or links:
+Graph consistency rule to restore:
+Dependent work that must wait:
+
 Constitution / initiative readiness:
 Owner truth to create or refine:
 Decision, objective, or boundary affected:
 Downstream records to reconcile:
+
+Research readiness:
+Question, evidence, options, or null result to synthesize:
+Expected conclusion format:
+Downstream owner that will use the result:
+
+Spec readiness:
+Fuzzy intended behavior:
+Acceptance, requirement, or scenario to clarify:
+Tickets or plans that must inherit the contract:
+
+Plan readiness:
+Sequencing, dependency, tranche, or rollout uncertainty:
+Owner records to update afterward:
+
+Ticket readiness:
+Execution-owner change needed:
+Owner-chain inputs to preserve:
 
 Wiki / retrospective / promotion readiness:
 Explanation or lesson to promote:
@@ -167,6 +195,18 @@ Ship readiness:
 Ticket / evidence / critique records to package:
 External handoff surface:
 Next ticket-owned route after packaging:
+
+Continue readiness:
+Already-governed tranche or narrower route to proceed with:
+Owner record authorizing continuation:
+Reason no new scoping decision is needed:
+Ralph-outcome distinction: route token, not child outcome
+
+Stop readiness:
+Stop reason or condition:
+Owner record making the stop truthful:
+External action or future trigger that could reopen work:
+Ralph-outcome distinction: route token, not child outcome
 
 # Evidence
 
