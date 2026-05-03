@@ -89,10 +89,10 @@ Named blockers only. If none exist, write `None`.
 Next route: <TBD: choose one route token before saving>
 
 Use `skills/loom-records/references/route-vocabulary.md`:
-`ask_user`, `workspace_status`, `records_repair`, `research`, `spec`, `plan`,
-`ticket`, `local_edit`, `ralph`, `debugging`, `spike`, `codemap`, `evidence`,
-`critique`, `wiki`, `retrospective`, `acceptance_review`, `ship`, `continue`, or
-`stop`.
+`ask_user`, `workspace_status`, `records_repair`, `constitution`, `initiative`,
+`research`, `spec`, `plan`, `ticket`, `local_edit`, `ralph`, `debugging`,
+`spike`, `codemap`, `evidence`, `critique`, `wiki`, `retrospective`,
+`acceptance_review`, `ship`, `continue`, or `stop`.
 
 # Route Readiness
 
@@ -130,6 +130,16 @@ Codemap readiness:
 Repository or module area to map:
 Expected evidence / research / wiki atlas output:
 Downstream route this map should unblock:
+
+Ask-user readiness:
+Decision needed:
+Unsafe-inference reason:
+Owner record to update after answer:
+
+Constitution / initiative readiness:
+Owner truth to create or refine:
+Decision, objective, or boundary affected:
+Downstream records to reconcile:
 
 Wiki / retrospective / promotion readiness:
 Explanation or lesson to promote:

@@ -37,9 +37,10 @@ When this skill activates, the parent accepts a drive contract:
 - make the objective measurable enough to judge continuation
 - preserve all durable truth in the correct Loom owner layer
 - decompose only the next useful tranche, not the whole imagined future
-- execute only bounded work through the route named by the canonical route
-  vocabulary, such as `local_edit`, `ralph`, `debugging`, `spike`, `codemap`,
-  `critique`, `wiki`, `retrospective`, `acceptance_review`, or `ship`
+- advance the objective only through the route named by the canonical route
+  vocabulary, such as `constitution`, `initiative`, `research`, `spec`, `plan`,
+  `ticket`, `local_edit`, `ralph`, `debugging`, `spike`, `codemap`, `critique`,
+  `wiki`, `retrospective`, `acceptance_review`, or `ship`
 - reconcile every child result before depending on it
 - continue without waiting for unnecessary user prompts while work remains within
   delegated authority
@@ -90,9 +91,10 @@ launch, the checkpoint must already be current; "can update later" is not enough
 - focused objective-shaping questions before downstream execution
 - the repeated parent loop across existing Loom owner layers
 - tranche planning and ticket creation posture
-- delegation boundaries for route-token moves such as `ralph`, `local_edit`,
-  `debugging`, `spike`, `codemap`, `critique`, `wiki`, `research`, `ship`, and
-  optional subagents
+- delegation boundaries for route-token moves such as `constitution`,
+  `initiative`, `research`, `spec`, `plan`, `ticket`, `ralph`, `local_edit`,
+  `debugging`, `spike`, `codemap`, `critique`, `wiki`, `ship`, and optional
+  subagents
 - continuation, human-escalation, and stop-condition decisions
 
 ## What This Skill Does Not Own
@@ -171,14 +173,16 @@ boundaries.
 0. **Accept or refuse the drive contract** — decide whether enough authority,
    objective clarity, and workspace trust exist to drive rather than merely plan
    or ask questions.
-1. **Shape the objective** — decide whether the request needs an initiative,
-   `research`, `spec`, `plan`, `ticket`, `local_edit`, or workflow-coordinator
-   route such as `debugging`, `spike`, `codemap`, or `ship`; use
+1. **Shape the objective** — decide whether the request needs `constitution`,
+   `initiative`, `research`, `spec`, `plan`, `ticket`, `local_edit`, or a
+   workflow-coordinator route such as `debugging`, `spike`, `codemap`, or `ship`; use
    `skills/loom-records/references/route-vocabulary.md` for the canonical route
    list.
-2. **Record owner truth** — create or refine the initiative for outcome and
-   metrics; add research, spec, or plan records only when those layers own missing
-   evidence, behavior, or sequencing truth.
+2. **Record owner truth** — update constitution only when principles,
+   constraints, roadmap direction, or citable decisions must change; create or
+   refine the initiative for outcome and metrics; add research, spec, or plan
+   records only when those layers own missing evidence, behavior, or sequencing
+   truth.
 3. **Check continuity** — confirm objective, autonomy, current tranche, coverage,
    evidence, critique, and next-route state live in owner records rather than
    unrecorded conversation context.
@@ -193,10 +197,12 @@ boundaries.
 6. **Run preflight gates** — distinguish repair/shaping routes from execution
    routes. Failed gates route to their owner repair path; they block `local_edit`,
    `ralph`, `acceptance_review`, and dependent continuation until repaired.
-7. **Execute bounded work** — use `local_edit` for tiny safe changes, `ralph` for
-   fresh-context implementation, and the appropriate domain workflow route for
-   `debugging`, `spike`, `codemap`, `critique`, `wiki`, `research`,
-   `retrospective`, `acceptance_review`, or `ship`. Declare read/write scope and
+7. **Execute or route bounded work** — use owner routes such as `constitution`,
+   `initiative`, `research`, `spec`, `plan`, or `ticket` when truth must be shaped
+   before implementation; use `local_edit` for tiny safe changes, `ralph` for
+   fresh-context implementation, and domain workflow routes such as `debugging`,
+   `spike`, `codemap`, `critique`, `wiki`, `retrospective`, `acceptance_review`,
+   or `ship` when those workflows own the next move. Declare read/write scope and
    stop conditions before child work. `ship` packages or hands off already
    truthful work; it does not own ticket closure.
 8. **Reconcile results** — inspect child output, update ticket truth, route
@@ -262,6 +268,12 @@ context pressure or improve reviewability.
 - budget, time, safety, privacy, or risk limits are reached
 - continuation would depend on state or capabilities that cannot be expressed in
   Loom owner records and bounded routes
+
+When the next route is `ask_user`, ask one focused question or a small batch of
+related choices, state why owner records and delegated autonomy cannot safely
+answer it, and name the owner record that should be updated after the response.
+Do not ask the user merely to approve low-risk, reversible assumptions that stay
+inside delegated authority.
 
 ## Done Means
 

@@ -29,7 +29,8 @@ intake -> objective-contract -> owner-shaping -> tranche-planning -> ticket-exec
 - `objective-contract`: capture outcome, success signals,
   `# Delegated Authority / Autonomy Boundaries`, and
   `# Objective-Level Stop Conditions` when delegated drive work is in scope.
-- `owner-shaping`: create or refine initiative/research/spec/plan truth.
+- `owner-shaping`: create or refine constitution/initiative/research/spec/plan
+  truth.
 - `tranche-planning`: slice only the next useful bounded work set.
 - `ticket-execution`: advance tickets through `local_edit`, `ralph`,
   `debugging`, `spike`, `codemap`, `evidence`, `critique`, `wiki`,
@@ -84,7 +85,9 @@ Ask as few questions as can safely establish:
 6. preferred first tranche when multiple routes are equally plausible
 
 If the user cannot answer everything, record reasonable assumptions only when
-they are low risk and explicitly reversible. Otherwise stop and ask.
+they are low risk and explicitly reversible. Otherwise choose `ask_user` and
+record the decision needed, why the agent cannot infer it safely, and which owner
+record will be updated after the answer.
 
 When the answer becomes durable, convert success criteria into stable objective
 criterion IDs in the initiative, such as `OBJ-001`. Tickets, evidence, and
@@ -92,7 +95,10 @@ critique can then cite those IDs when judging whether the drive should continue.
 
 ## Owner-Layer Routing
 
-- objective, outcome metrics, strategic framing -> initiative
+- project identity, principles, hard constraints, durable roadmap direction, or
+  citable decisions -> constitution
+- objective, outcome metrics, strategic framing, delegated autonomy boundaries ->
+  initiative
 - missing evidence, options, tradeoffs, rejected paths -> research
 - intended behavior and reusable acceptance contract -> spec
 - sequencing, rollout, and tranche strategy -> plan
@@ -151,8 +157,8 @@ For each ticket or follow-up:
 - use wiki or retrospective when accepted understanding should persist
 - use ship when already-truthful work needs PR, merge, release, or handoff
   packaging without closing the ticket
-- route back to research/spec/plan when execution reveals missing evidence,
-  behavior, or sequencing truth
+- route back to constitution/initiative/research/spec/plan when execution reveals
+  missing authority, strategic framing, evidence, behavior, or sequencing truth
 
 Before launching child work, declare target, read scope, write scope, stop
 conditions, verification posture, and output contract. After return, reconcile

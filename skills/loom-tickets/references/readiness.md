@@ -4,10 +4,10 @@ A ticket is ready when the next governed route can proceed without chat history.
 
 Readiness is route-neutral. A ready ticket might route to any canonical route
 token in `skills/loom-records/references/route-vocabulary.md`, including
-`ask_user`, `workspace_status`, `records_repair`, `research`, `spec`, `plan`,
-`ticket`, `local_edit`, `ralph`, `debugging`, `spike`, `codemap`, `evidence`,
-`critique`, `wiki`, `retrospective`, `acceptance_review`, `ship`, `continue`,
-or `stop`.
+`ask_user`, `workspace_status`, `records_repair`, `constitution`, `initiative`,
+`research`, `spec`, `plan`, `ticket`, `local_edit`, `ralph`, `debugging`,
+`spike`, `codemap`, `evidence`, `critique`, `wiki`, `retrospective`,
+`acceptance_review`, `ship`, `continue`, or `stop`.
 
 Ralph-ready is stricter: the ticket must also make one bounded implementation
 iteration, write boundary, likely verification posture, and expected output
@@ -41,8 +41,9 @@ this checklist passes.
 - the next route is explicit in `# Next Move / Next Route` or equivalent prose,
   using the shared route vocabulary: `local_edit`, `ralph`, `debugging`,
   `spike`, `codemap`, `critique`, `wiki`, `retrospective`, `evidence`,
-  `research`, `spec`, `plan`, `ticket`, `acceptance_review`, `ship`,
-  `ask_user`, `workspace_status`, `records_repair`, `continue`, or `stop`
+  `constitution`, `initiative`, `research`, `spec`, `plan`, `ticket`,
+  `acceptance_review`, `ship`, `ask_user`, `workspace_status`,
+  `records_repair`, `continue`, or `stop`
 - the ticket is small enough to fit one bounded iteration or a short sequence of
   clearly staged iterations
 
@@ -66,6 +67,12 @@ do not use ticket lifecycle statuses such as `ready`, `active`,
   and root-cause or fix handoff boundary.
 - For `spike` or `codemap`, name the research/evidence/wiki outputs the workflow
   should produce and any throwaway write boundary.
+- For `ask_user`, name the decision needed, why the agent cannot infer it safely,
+  and the owner record to update after the answer; do not use it for low-risk,
+  reversible assumptions inside delegated authority.
+- For `constitution` or `initiative`, name the owner truth to create or refine,
+  the decision/objective/boundary affected, and any downstream records to
+  reconcile.
 - For `critique`, name the review target, required profiles, and evidence to
   review.
 - For wiki or retrospective work, name the explanation or lesson to promote and

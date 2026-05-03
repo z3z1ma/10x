@@ -22,6 +22,12 @@ normal non-ticket record statuses.
 Status, finding state, critique disposition, and acceptance decision are related
 but not interchangeable.
 
+- **Route tokens** such as `constitution`, `initiative`, `research`, `ralph`,
+  `critique`, `continue`, and `stop` live in route fields and name the next
+  governed move. They are not lifecycle statuses. When a Ralph child returns an
+  outcome such as `continue`, `stop`, `blocked`, or `escalate`, the parent must
+  reconcile it into ticket truth and translate it into the next owner-truth route
+  before any route field treats it as routing truth.
 - **Critique-owned finding state** lives inside critique records. Use `open` for a
   finding that remains part of the review output, or `withdrawn` when the
   critique itself retracts the finding with rationale. Critique records also own

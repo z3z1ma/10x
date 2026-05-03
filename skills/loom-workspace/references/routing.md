@@ -7,8 +7,10 @@ route-token grammar in `skills/loom-records/references/route-vocabulary.md`.
 
 ## Which layer owns the next truth change?
 
-- project identity, principles, constraints -> `loom-constitution`
-- strategic outcome framing -> `loom-initiatives`
+- project identity, principles, constraints -> route token `constitution`, owner
+  `loom-constitution`
+- strategic outcome framing -> route token `initiative`, owner
+  `loom-initiatives`
 - evidence synthesis, investigation, option comparison, rejected path, or null result -> `loom-research`
 - intended behavior or acceptance contract -> `loom-specs`
 - sequencing or rollout strategy -> `loom-plans`

@@ -23,6 +23,8 @@ skill name, command, or ticket status into a route token.
 | `ask_user` | pause for a focused operator decision the agent cannot safely infer |
 | `workspace_status` | inspect workspace structure, queues, and owner-chain trust before choosing a narrower route |
 | `records_repair` | repair broken, stale, or contradictory Loom graph records before dependent work |
+| `constitution` | create or update constitutional identity, principles, hard constraints, roadmap direction, or citable decisions |
+| `initiative` | create or update strategic outcome framing, objectives, success metrics, or delegated autonomy boundaries |
 | `research` | gather or synthesize evidence, options, tradeoffs, or null results |
 | `spec` | clarify intended behavior, requirements, scenarios, or reusable acceptance |
 | `plan` | clarify sequencing, dependency order, tranches, or rollout strategy |
@@ -51,22 +53,37 @@ or `acceptance_review` for ticket closure evaluation.
 
 ## Non-Routes
 
-Keep these categories distinct from route tokens:
+Keep these categories distinct from route tokens. Matching words can appear in
+more than one category; the field and owner decide what the word means.
 
-- **Ticket lifecycle statuses** such as `ready`, `active`, `blocked`,
-  `review_required`, `complete_pending_acceptance`, `closed`, and `cancelled`.
-  They describe ticket state; they are not `next route:` values.
-- **Record lifecycle statuses** such as `draft`, `active`, `accepted`,
-  `recorded`, `superseded`, or `abandoned`. They describe a record's lifecycle,
-  not the next governed move.
-- **Command or adapter names** such as slash commands, harness commands, MCPs, or
-  package-specific invocation wrappers. Commands may transport a route, but the
-  owner records and workflow skills still own Loom truth.
-- **Skill display names** such as Ralph or loom-drive when used as prose. In a
-  route-value field, use the token (`ralph`, `debugging`, `spike`, `codemap`,
-  `ship`, `continue`, `acceptance_review`, etc.) rather than title case, spaces,
-  or hyphens. Do not add a token merely because a skill exists; route tokens name
-  governed moves, not the skill inventory.
+| Category | Examples | Boundary rule |
+| --- | --- | --- |
+| Route tokens | `constitution`, `initiative`, `research`, `ralph`, `critique`, `continue`, `stop` | Use only when a route field asks for the next governed move. Tokens remain Markdown vocabulary, not a runtime enum, schema, validator, command router, skill inventory, or owner layer. |
+| Ticket lifecycle states | `proposed`, `ready`, `active`, `blocked`, `review_required`, `complete_pending_acceptance`, `closed`, `cancelled` | Describe live ticket execution state. They are not `next route:` values. |
+| Record lifecycle statuses | `draft`, `active`, `accepted`, `recorded`, `superseded`, `abandoned` | Describe a record's lifecycle or support-surface state, not the next governed move. |
+| Ralph child outcomes | `continue`, `stop`, `blocked`, `escalate` | A child outcome is not a route token by itself. It becomes routing truth only after the parent reconciles the child output and translates it into the next owner-truth route, such as `ticket`, `research`, `critique`, `ask_user`, `continue`, or `stop`. |
+| Critique-owned finding states | `open`, `withdrawn` | Live inside critique records and describe whether the critique still stands behind a finding. They are not ticket states or route tokens. |
+| Ticket-owned finding dispositions | `resolved`, `accepted_risk`, `superseded`, `converted_to_follow_up` | Live in the ticket's critique disposition section for qualified findings. They are not critique finding states and do not name the next route. |
+| Commands and adapters | slash commands, harness commands, MCPs, package-specific wrappers | Commands may transport or prompt a route, but owner records and workflow skills still own Loom truth. |
+| Skill display names | Ralph, loom-drive, loom-critique | Use ordinary prose for skill names. In a route-value field, use the token (`ralph`, `debugging`, `spike`, `codemap`, `ship`, `continue`, `acceptance_review`, etc.) rather than title case, spaces, or hyphens. Do not add a token merely because a skill exists; route tokens name governed moves, not the skill inventory. |
+
+## `ask_user` Readiness
+
+Use `ask_user` only when the next safe move requires an operator decision the
+agent cannot infer from owner records, delegated authority, or a low-risk
+reversible assumption.
+
+An `ask_user` route should record:
+
+- decision needed: the exact focused question or choice;
+- unsafe-inference reason: why proceeding would invent product direction, accept
+  material risk, exceed authority, or otherwise rely on an unsafe assumption;
+- owner record to update after answer: the constitution, initiative, research,
+  spec, plan, ticket, or other owner record that will carry the durable result.
+
+Do not use `ask_user` as an approval gate for every downstream step. If the
+assumption is low risk, reversible, and inside delegated authority, record the
+assumption in the owner record and continue through the appropriate route.
 
 ## Examples
 
@@ -74,8 +91,15 @@ Keep these categories distinct from route tokens:
 next route: ralph
 next route owner: loom-ralph packet contract, then ticket reconciliation
 
+next route: constitution
+next route owner: loom-constitution
+
 Route: acceptance_review
 Route: ask_user
+decision needed: Choose whether the accepted constraint should become a constitutional decision.
+unsafe-inference reason: The agent cannot safely invent durable project authority.
+owner record to update after answer: constitution:main or decision:<slug>
+
 proposed next route: research
 ```
 

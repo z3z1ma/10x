@@ -56,9 +56,9 @@ A ready ticket should make all of these legible:
 - what evidence the parent will expect
 - which next route applies; use
   `skills/loom-records/references/route-vocabulary.md` for canonical route
-  tokens such as `local_edit`, `ralph`, `debugging`, `spike`, `codemap`,
-  `critique`, `wiki`, `retrospective`, `evidence`, `research`, `spec`, `plan`,
-  `ticket`, `acceptance_review`, or `ship`
+  tokens such as `constitution`, `initiative`, `research`, `spec`, `plan`,
+  `ticket`, `local_edit`, `ralph`, `debugging`, `spike`, `codemap`, `critique`,
+  `wiki`, `retrospective`, `evidence`, `acceptance_review`, or `ship`
 - when the next route is `ship`, the ticket still owns acceptance and closure;
   shipping packages or hands off already-truthful work
 
@@ -132,7 +132,8 @@ Typical loopback routes, expressed with canonical route tokens where possible:
 - `ralph` -> `spec`
 - `ralph` -> `plan`
 - `ralph` -> `ticket` refinement
-- `ralph` -> constitution in rare architectural cases
+- `ralph` -> `initiative` when objective or autonomy framing was missing
+- `ralph` -> `constitution` in rare architectural or policy cases
 
 ## Consult Constitution Before Deciding
 

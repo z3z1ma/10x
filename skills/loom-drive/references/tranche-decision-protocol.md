@@ -18,7 +18,7 @@ claim: <OBJ-001 | ACC-001 | ticket-local criterion>
 state: open | partial | supported | challenged | blocked | accepted_risk | satisfied
 current support: <evidence / critique / ticket links>
 gap type: evidence | behavior | implementation | review | explanation | sequencing | decision
-next owner: research | spec | plan | ticket | evidence | critique | wiki | user
+next owner: constitution | initiative | research | spec | plan | ticket | evidence | critique | wiki | user
 candidate route: <route>
 notes: <why this gap matters now>
 ```
@@ -60,6 +60,8 @@ ticket or operator explicitly records a different rationale.
 | Product direction, autonomy, risk, budget, or success meaning is materially unclear | `ask_user` |
 | The workspace is untrustworthy | `workspace_status` |
 | The owner chain has broken, stale, or contradictory records | `records_repair` |
+| Project identity, principles, hard constraints, roadmap direction, or citable decisions must change | `constitution` |
+| Strategic outcome framing, objective criteria, success metrics, or delegated autonomy boundaries must change | `initiative` |
 | Evidence is missing for a decision or option | `research` |
 | Intended behavior or acceptance is ambiguous | `spec` |
 | Sequencing, dependency order, or tranche boundary is ambiguous | `plan` |
@@ -81,6 +83,12 @@ review routes are first-class continuation outcomes.
 
 ## Route Entry And Result Criteria
 
+- Constitution enters with missing or changed project identity, principle,
+  constraint, roadmap, or decision truth and exits with constitutional truth
+  updated or explicitly deferred.
+- Initiative enters with strategic outcome, objective, success-metric, or
+  delegated-autonomy truth to create or refine and exits with the initiative
+  updated or explicitly deferred.
 - Research enters with a question and exits with evidence-backed conclusions or
   explicit uncertainty.
 - Spec enters with ambiguous intended behavior and exits with acceptance criteria.
@@ -111,6 +119,10 @@ Use `skills/loom-records/references/route-vocabulary.md` for route-token grammar
 
 After each route, reconcile before continuing:
 
+- constitution result -> constitution record, then initiative/plan/ticket if it
+  changes downstream work
+- initiative result -> initiative record, then plan/ticket if it changes objective
+  execution
 - research result -> research record, then spec/plan/ticket if it changes next
   work
 - spec change -> spec record and ticket coverage

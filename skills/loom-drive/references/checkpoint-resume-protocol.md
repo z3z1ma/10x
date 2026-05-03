@@ -31,8 +31,8 @@ active tickets: <ticket IDs and live states>
 hard gates: <clear | blocked, with blocker links>
 last route result: <route, output link, reconciliation target>
 last child output: <packet/handoff/evidence/critique link if applicable>
-pending operator question: <exact question or none>
-next route: <ask_user | workspace_status | records_repair | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop>
+pending operator question: <decision needed, unsafe-inference reason, and owner record to update after answer; or none>
+next route: <ask_user | workspace_status | records_repair | constitution | initiative | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop>
 next route owner: <which owner skill/layer changes next>
 resume instruction: <one sentence a fresh parent can follow>
 updated_at: <timestamp>
@@ -59,8 +59,9 @@ rg -n 'loom-drive|objective-driven|OBJ-[0-9]{3}' .loom
 3. Read the anchor initiative or the active ticket chain surfaced by the search.
 4. Read linked research/spec/plan/evidence/critique only as needed to recover the
    next route.
-5. If no checkpoint or anchor can be found, do not invent one from memory. Ask
-   the user or route to `workspace_status` diagnosis.
+5. If no checkpoint or anchor can be found, do not invent one from memory. Route
+   to `ask_user` with the decision needed, unsafe-inference reason, and owner
+   record to update after the answer, or route to `workspace_status` diagnosis.
 
 ## Hard Preflight Gates
 
@@ -70,8 +71,8 @@ or route federation.
 There are two outcomes:
 
 - **repair route required**: the failed gate routes to the owner layer that can
-  repair it, such as research, spec, plan, ticket refinement, evidence, critique,
-  `records_repair`, or `ask_user`
+  repair it, such as `constitution`, `initiative`, `research`, `spec`, `plan`,
+  `ticket` refinement, `evidence`, `critique`, `records_repair`, or `ask_user`
 - **execution blocked**: implementation, acceptance, and dependent continuation
   must not proceed until the gate is repaired or the user explicitly accepts the
   risk in the owning ticket
@@ -81,7 +82,10 @@ repair already happened.
 
 - Authority gate: objective, non-goals, `# Delegated Authority / Autonomy
   Boundaries`, and `# Objective-Level Stop Conditions` are clear enough for
-  delegated drive work; otherwise ask the user or update the initiative.
+  delegated drive work; otherwise choose `ask_user`, `constitution`, or
+  `initiative` according to the truth that must change next. `ask_user` requires
+  the decision needed, unsafe-inference reason, and owner record to update after
+  the answer.
 - Scope gate: next work is inside the initiative, plan, ticket, and write scope;
   otherwise refine plan/ticket scope or stop.
 - Behavior gate: intended behavior and acceptance are not ambiguous; otherwise

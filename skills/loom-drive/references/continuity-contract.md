@@ -12,6 +12,7 @@ Use this map before launching tickets or child work.
 
 | Drive fact | Owner |
 | --- | --- |
+| durable identity, principles, hard constraints, roadmap direction, citable decisions | constitution |
 | objective, why it matters, success metrics | initiative |
 | `# Delegated Authority / Autonomy Boundaries` and `# Objective-Level Stop Conditions` for delegated drive work | initiative |
 | evidence gaps, options, rejected approaches, conclusions | research |
@@ -26,7 +27,8 @@ Use this map before launching tickets or child work.
 | support-only recall, retrieval cues, preferences, reminders, or hot context that does not own project truth | memory |
 
 If no existing record owns a drive fact, either create the correct owner record or
-stop and ask the user. Do not invent a hidden state surface.
+choose `ask_user` when the missing fact is an operator decision the agent cannot
+safely infer. Do not invent a hidden state surface.
 
 ## Objective Contract Fields
 
@@ -75,7 +77,7 @@ current tranche: <plan milestone / wave / purpose>
 active tickets: <ticket IDs and states>
 evidence state: <claim IDs with evidence links or gaps>
 critique state: <required | pending | blocking | completed | deferred | not_required, citing ticket truth>
-next route: ask_user | workspace_status | records_repair | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop
+next route: ask_user | workspace_status | records_repair | constitution | initiative | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop
 next route owner: <which layer must change next>
 reason: <why this follows from current owner truth>
 ```
@@ -123,7 +125,7 @@ criteria supported: <claims and evidence links>
 criteria still open: <claims or gaps>
 ticket critique disposition status: pending | blocking | completed | deferred | not_required
 finding dispositions: <qualified finding refs with resolved | accepted_risk | superseded | converted_to_follow_up, or none>
-next route: ask_user | workspace_status | records_repair | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop
+next route: ask_user | workspace_status | records_repair | constitution | initiative | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop
 next tranche: <ticket IDs or plan update, if known>
 reason: <why this next route follows from the records>
 ```
@@ -134,8 +136,10 @@ ticket, critique findings and verdicts belong in critique, and sequencing change
 belong in the plan. Drive snapshots cite those owners; they do not own acceptance.
 
 If the next route is `continue`, the plan or ticket chain should name the next
-tranche. If the next route is `ask_user`, record the exact question and why the
-agent cannot safely infer the answer.
+tranche. If the next route is `ask_user`, record the decision needed, why the
+agent cannot safely infer the answer, and which owner record should be updated
+after the response. Do not ask the user merely to approve a low-risk, reversible
+assumption inside delegated authority.
 
 Use `skills/loom-records/references/route-vocabulary.md` for the canonical route
 token grammar. Do not use ticket lifecycle statuses such as `review_required` or
