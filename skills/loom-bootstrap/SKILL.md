@@ -27,7 +27,7 @@ skill is the package entry point that tells an agent how to become a Loom operat
 - live execution state; tickets own that
 - project policy; constitution records own that
 - intended behavior contracts; specs own those
-- evidence, critique, wiki, packets, or memory truth
+- evidence observations, critique verdicts, wiki explanation, packet lifecycle, or memory support recall
 - harness adapter mechanics beyond naming the expected bootstrap contract
 
 ## Mandatory Bootstrap Rule

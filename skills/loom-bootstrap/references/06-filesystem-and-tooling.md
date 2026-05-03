@@ -55,98 +55,29 @@ themselves.
 
 ## Creating Files
 
-When you need to create a record, prefer one of these:
+When you need to create a record, start from the template owned by the relevant
+skill and choose the safest file-creation method available in the current harness.
+The protocol cares that the saved record is truthful, named correctly,
+placeholder-free, and linked into the right owner layer. It does not require one
+canonical command shape.
 
-### Copy a template
+### Use the owning template
 
-Copy from the installed Loom skill package path for the current harness. In a
-source checkout or repo-root skill installation, use a copy-safe flow that refuses
-placeholder filenames:
+Templates live under the owning skill's `templates/` directory. In a source
+checkout or repo-root skill installation, ticket templates live at paths such as:
 
-```bash
-token="$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8)"
-stamp="$(date -u +%Y%m%d)"
-slug="${LOOM_TICKET_SLUG:-}"
-
-case "$slug" in
-  ""|*[!a-z0-9-]*)
-    printf 'Set LOOM_TICKET_SLUG to a lowercase slug before copying.\n' >&2
-    exit 1
-    ;;
-esac
-
-path=".loom/tickets/${stamp}-${token}-${slug}.md"
-cp skills/loom-tickets/templates/ticket.md "$path"
+```text
+skills/loom-tickets/templates/ticket.md
 ```
 
-### Emit a here-doc
+Use the template as the contract for required fields and sections. How you create
+the file is an implementation choice: harness-native file tools, shell commands,
+editor operations, or a small one-off script are all acceptable when they are
+safe, inspectable, and proportional to the task.
 
-Set the slug and question before running, then validate the temporary file before
-moving it into `.loom/research/`. Research records do not use `draft` status;
-keep `status: active` only when the copied record has a real research question.
-
-```bash
-slug="${LOOM_RESEARCH_SLUG:-}"
-question="${LOOM_RESEARCH_QUESTION:-}"
-
-case "$slug" in
-  ""|*[!a-z0-9-]*)
-    printf 'Set LOOM_RESEARCH_SLUG to a lowercase slug before writing.\n' >&2
-    exit 1
-    ;;
-esac
-
-if [ -z "$question" ]; then
-  printf 'Set LOOM_RESEARCH_QUESTION before writing an active research record.\n' >&2
-  exit 1
-fi
-
-now="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-path=".loom/research/${slug}.md"
-
-if [ -e "$path" ]; then
-  printf 'Research record already exists; choose a new slug or reconcile the existing record first.\n' >&2
-  exit 1
-fi
-
-tmp="$(mktemp)"
-trap 'rm -f "$tmp"' EXIT
-
-if ! cat > "$tmp" <<EOF
----
-id: research:${slug}
-kind: research
-status: active
-created_at: ${now}
-updated_at: ${now}
-scope:
-  kind: repository
-  repositories:
-    - repo:root
-links: {}
----
-
-# Question
-
-${question}
-EOF
-then
-  printf 'Failed to write temporary research record.\n' >&2
-  exit 1
-fi
-
-if rg -n '<[^>]+>|\bTBD\b|\bTODO\b' "$tmp"; then
-  printf 'Record still contains placeholders; repair before relying on it.\n' >&2
-  exit 1
-fi
-
-mv "$tmp" "$path" || exit 1
-trap - EXIT
-```
-
-### Use an inline snippet
-
-If you need to generate a token, normalize a slug, or create several similar files, a small inline shell or Python snippet is acceptable.
+Before treating the saved file as truth, clear template placeholders, set real
+frontmatter values, follow the naming and ID rules, and run the smallest honest
+structural check for the claim being made.
 
 ## Ticket Token Generation
 
