@@ -256,6 +256,10 @@ The agent starts by asking one question:
 
 **What kind of truth is this?**
 
+Use this table as an introductory orientation, not the complete route vocabulary.
+Canonical route tokens and saved-field route grammar are owned by
+`skills/loom-records/references/route-vocabulary.md`.
+
 | Situation | Loom route |
 | --- | --- |
 | Missing understanding | `research` |
