@@ -1,11 +1,11 @@
 ---
 id: ticket:wroute15
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T06:20:11Z
-updated_at: 2026-05-03T06:20:11Z
+updated_at: 2026-05-03T07:01:20Z
 scope:
   kind: repository
   repositories:
@@ -70,12 +70,12 @@ consistently.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-016` | pending | pending | open |
-| `ticket:wroute15#ACC-001` | pending | pending | open |
-| `ticket:wroute15#ACC-002` | pending | pending | open |
-| `ticket:wroute15#ACC-003` | pending | pending | open |
-| `ticket:wroute15#ACC-004` | pending | pending | open |
-| `ticket:wroute15#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-016` | `evidence:workspace-routing-row-normalization-validation` | `critique:workspace-routing-row-normalization-review` | supported |
+| `ticket:wroute15#ACC-001` | `evidence:workspace-routing-row-normalization-validation` | `critique:workspace-routing-row-normalization-review` | supported |
+| `ticket:wroute15#ACC-002` | `evidence:workspace-routing-row-normalization-validation` | `critique:workspace-routing-row-normalization-review` | supported |
+| `ticket:wroute15#ACC-003` | `evidence:workspace-routing-row-normalization-validation` | `critique:workspace-routing-row-normalization-review` | supported |
+| `ticket:wroute15#ACC-004` | `evidence:workspace-routing-row-normalization-validation` | `critique:workspace-routing-row-normalization-review` | supported |
+| `ticket:wroute15#ACC-005` | `evidence:workspace-routing-row-normalization-validation` | `critique:workspace-routing-row-normalization-review` | supported |
 
 # Execution Notes
 
@@ -83,25 +83,31 @@ Likely touched file: `skills/loom-workspace/references/routing.md`.
 
 # Blockers
 
-Blocked until `ticket:shipacc1` closes.
+None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:phvalid16`.
+
+Ralph packet `packet:ralph-ticket-wroute15-20260503T065527Z` completed in scope,
+evidence was recorded, mandatory critique passed with no findings, and acceptance
+is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: workspace routing row normalization.
-Write boundary: workspace routing reference only.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed file, routing row observations, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:workspace-routing-row-normalization-validation` and mandatory
+critique `critique:workspace-routing-row-normalization-review` support closure
+with no findings.
 
 # Evidence
 
-Expected: targeted searches for route token, owner/coordinator, support skill,
-memory, route vocabulary, and `git diff --check`.
+Recorded:
+
+- `evidence:workspace-routing-row-normalization-validation`
+
+The evidence records targeted searches for route token, owner/coordinator,
+support skill, memory, route vocabulary, and `git diff --check`.
 
 # Critique Disposition
 
@@ -119,9 +125,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:workspace-routing-row-normalization-review` - no findings; mandatory
+critique passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -129,18 +136,32 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Workspace route-token versus owner/coordinator wording was promoted into
+  `skills/loom-workspace/references/routing.md`.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to workspace routing guidance.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in
+workspace routing guidance.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T07:01:20Z
+Basis: Ralph packet `packet:ralph-ticket-wroute15-20260503T065527Z`; evidence
+`evidence:workspace-routing-row-normalization-validation`; mandatory critique
+`critique:workspace-routing-row-normalization-review` with no findings.
+Residual risks: Documentation-only enforcement depends on future operators
+choosing the correct route token from the mapping guidance.
 
 # Dependencies
 
@@ -149,3 +170,12 @@ Residual risks:
 # Journal
 
 - 2026-05-03T06:20:11Z: Created from third-pass audit finding 4.
+- 2026-05-03T06:55:27Z: Started Ralph iteration
+  `packet:ralph-ticket-wroute15-20260503T065527Z` from clean `main` at
+  `4cef2af`.
+- 2026-05-03T06:57:36Z: Ralph iteration consumed. Product edit landed inside
+  packet write scope, `evidence:workspace-routing-row-normalization-validation`
+  recorded, and ticket moved to `review_required` for mandatory critique.
+- 2026-05-03T07:01:20Z: Mandatory critique
+  `critique:workspace-routing-row-normalization-review` passed with no findings.
+  Parent recorded retrospective / promotion disposition and accepted closure.

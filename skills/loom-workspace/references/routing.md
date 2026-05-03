@@ -4,6 +4,8 @@ Use these questions to decide the next owner layer or workflow coordinator.
 
 When recording a route field such as `next route:` or `Route:`, use the shared
 route-token grammar in `skills/loom-records/references/route-vocabulary.md`.
+That reference is the canonical saved-field token source; this page maps those
+tokens to owner layers or workflow/support coordinators.
 
 ## Which layer owns the next truth change?
 
@@ -11,30 +13,38 @@ route-token grammar in `skills/loom-records/references/route-vocabulary.md`.
   `loom-constitution`
 - strategic outcome framing -> route token `initiative`, owner
   `loom-initiatives`
-- evidence synthesis, investigation, option comparison, rejected path, or null result -> `loom-research`
-- intended behavior or acceptance contract -> `loom-specs`
-- sequencing or rollout strategy -> `loom-plans`
+- evidence synthesis, investigation, option comparison, rejected path, or null
+  result -> route token `research`, owner `loom-research`
+- intended behavior or acceptance contract -> route token `spec`, owner
+  `loom-specs`
+- sequencing or rollout strategy -> route token `plan`, owner `loom-plans`
 - live execution status, next bounded work item, acceptance disposition, closure
-  readiness, or residual-risk evaluation -> `loom-tickets`
+  readiness, or residual-risk evaluation -> route token `ticket`, owner
+  `loom-tickets`
 - observed artifacts, validation output, screenshots, logs, reproduction, red/green
-  results, or scan artifacts -> `loom-evidence`
-- adversarial review -> `loom-critique`
-- persistent explanation / interlinked knowledge -> `loom-wiki`
+  results, or scan artifacts -> route token `evidence`, owner `loom-evidence`
+- adversarial review -> route token `critique`, owner `loom-critique`
+- persistent explanation / interlinked knowledge -> route token `wiki`, owner
+  `loom-wiki`
 
 ## Which workflow or support coordinator should drive the route?
 
 - high-level objective continuation through owner records, ticket tranches,
   Ralph/local execution, evidence, critique, wiki, and reassessment ->
-  `loom-drive`
+  coordinator `loom-drive`; record the saved route token for the owner truth or
+  workflow that changes next
 - support-only recall, preferences, retrieval cues, entities, reminders, or hot
-  context -> `loom-memory`
-- shared grammar, naming, linking, status, or validation conventions -> `loom-records`
+  context -> support coordinator `loom-memory`; not a project-truth route token
+- shared grammar, naming, linking, status, or validation conventions ->
+  coordinator `loom-records`; use route token `records_repair` only for broken,
+  stale, or contradictory graph repair
 - tiny, safe, in-context mutation with a narrow known write boundary -> route
   token `local_edit`; if a ticket owns the work, `loom-tickets` still owns live
   state and acceptance reconciliation
-- one bounded fresh-context implementation step -> `loom-ralph`, after the ticket
-  is Ralph-ready
-- implementation isolation, branch/worktree hygiene, or Git provenance -> `loom-git`
+- one bounded fresh-context implementation step -> route token `ralph`,
+  coordinator `loom-ralph`, after the ticket is Ralph-ready
+- implementation isolation, branch/worktree hygiene, or Git provenance ->
+  coordinator `loom-git`
 - debugging or incident flow -> route token `debugging`, coordinator
   `loom-debugging`
 - bounded experiment, prototype, or sketch -> route token `spike`, coordinator
@@ -43,11 +53,14 @@ route-token grammar in `skills/loom-records/references/route-vocabulary.md`.
   `loom-codemap`
 - merge, release, PR, or handoff packaging from already-truthful owner records ->
   route token `ship`, coordinator `loom-ship`
-- accepted learning assimilation before closure -> `loom-retrospective`
+- accepted learning assimilation before closure -> route token `retrospective`,
+  coordinator `loom-retrospective`
 - `acceptance_review`, closure disposition, or residual-risk evaluation ->
-  `loom-tickets`
-- graph repair, broken links, naming, or drift -> `loom-records`
-- wiki write or audit mechanics -> `loom-wiki`
+  route token `acceptance_review`, owner `loom-tickets`
+- graph repair, broken links, naming, or drift -> route token `records_repair`,
+  coordinator `loom-records`
+- wiki write or audit mechanics -> route token `wiki`, owner/coordinator
+  `loom-wiki`
 
 ## The Constitution First Rule
 
