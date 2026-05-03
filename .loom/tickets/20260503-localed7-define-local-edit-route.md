@@ -1,11 +1,11 @@
 ---
 id: ticket:localed7
 kind: ticket
-status: ready
-change_class: workflow-boundary
+status: closed
+change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T04:09:51Z
-updated_at: 2026-05-03T04:09:51Z
+updated_at: 2026-05-03T05:47:58Z
 scope:
   kind: repository
   repositories:
@@ -71,12 +71,12 @@ truth in tickets when a ticket owns the work.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-008` | pending | pending | open |
-| `ticket:localed7#ACC-001` | pending | pending | open |
-| `ticket:localed7#ACC-002` | pending | pending | open |
-| `ticket:localed7#ACC-003` | pending | pending | open |
-| `ticket:localed7#ACC-004` | pending | pending | open |
-| `ticket:localed7#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-008` | `evidence:local-edit-route-validation` | `critique:local-edit-route-review` | supported |
+| `ticket:localed7#ACC-001` | `evidence:local-edit-route-validation` | `critique:local-edit-route-review` | supported |
+| `ticket:localed7#ACC-002` | `evidence:local-edit-route-validation` | `critique:local-edit-route-review` | supported |
+| `ticket:localed7#ACC-003` | `evidence:local-edit-route-validation` | `critique:local-edit-route-review` | supported |
+| `ticket:localed7#ACC-004` | `evidence:local-edit-route-validation` | `critique:local-edit-route-review` | supported |
+| `ticket:localed7#ACC-005` | None - critique outcome is the acceptance instrument | `critique:local-edit-route-review` | supported |
 
 # Execution Notes
 
@@ -89,21 +89,21 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:queryrc9`.
+
+Ralph packet `packet:ralph-ticket-localed7-20260503T054106Z` completed in scope,
+evidence was recorded, mandatory critique passed with no findings, and acceptance
+is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: local edit route definition.
-Write boundary: workspace/ticket/records routing references only.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, local-edit wording observations, and
-critique recommendation.
+Acceptance review readiness:
+Evidence `evidence:local-edit-route-validation` and mandatory critique
+`critique:local-edit-route-review` support closure with no findings.
 
 # Evidence
 
-Expected: targeted searches for `local_edit`, Ralph escalation, ticket-owned live
-state, evidence conditions, and `git diff --check`.
+Recorded: `evidence:local-edit-route-validation`.
 
 # Critique Disposition
 
@@ -122,9 +122,9 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:local-edit-route-review` - no findings; mandatory critique passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -132,18 +132,34 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- `local_edit` boundary, ticket-truth, evidence, and escalation guidance was
+  promoted directly into workspace routing, ticket readiness, and route vocabulary
+  references.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to route and readiness references.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in route
+and readiness references.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T05:47:58Z
+Basis: Ralph packet `packet:ralph-ticket-localed7-20260503T054106Z`; evidence
+`evidence:local-edit-route-validation`; mandatory critique
+`critique:local-edit-route-review` with no findings.
+Residual risks: Structural/manual review only; no automated test suite exists for
+this Markdown corpus. The ticket template's local-edit readiness stub remains
+brief, but canonical readiness/reference guidance carries the full rule set.
 
 # Dependencies
 
@@ -152,3 +168,14 @@ Residual risks:
 # Journal
 
 - 2026-05-03T04:09:51Z: Created from council local-edit ergonomics finding.
+- 2026-05-03T05:41:06Z: Started Ralph iteration
+  `packet:ralph-ticket-localed7-20260503T054106Z` from clean `main` at
+  `b4f2058`. Normalized ticket `change_class` to valid `protocol-authority`
+  before execution.
+- 2026-05-03T05:43:08Z: Ralph iteration
+  `packet:ralph-ticket-localed7-20260503T054106Z` completed in scope. Evidence
+  recorded in `evidence:local-edit-route-validation`; next route is mandatory
+  critique.
+- 2026-05-03T05:47:58Z: Mandatory critique
+  `critique:local-edit-route-review` passed with no findings. Parent recorded
+  retrospective / promotion disposition and accepted closure.

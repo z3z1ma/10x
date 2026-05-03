@@ -60,7 +60,9 @@ Use `skills/loom-records/references/route-vocabulary.md` for route-token grammar
 do not use ticket lifecycle statuses such as `ready`, `active`,
 `review_required`, or `complete_pending_acceptance` as next-route values.
 
-- For `local_edit`, name the bounded edit and write boundary.
+- For `local_edit`, name the bounded edit, write boundary, why it is cheap and
+  safe in the current context, expected evidence or observation, and escalation
+  trigger if the edit proves ambiguous, risky, behavior-defining, or too large.
 - For Ralph, keep the stricter Ralph-ready fields: bounded iteration, write
   boundary, likely verification posture, and expected output contract.
 - For `debugging`, name the failing behavior, reproduction/evidence expectation,
@@ -82,3 +84,21 @@ do not use ticket lifecycle statuses such as `ready`, `active`,
   residual risks that the gate must evaluate.
 - For `ship`, name the ticket/evidence/critique records to package and the
   external handoff surface without treating shipping as closure.
+
+### `local_edit` And Ticket Truth
+
+`local_edit` is a lightweight route for a tiny in-context mutation, not a bypass
+around tickets. If a ticket owns the work, the ticket still owns live execution
+state, scope, acceptance disposition, evidence disposition, critique disposition,
+and the next route after the edit.
+
+A local-edit-ready ticket should make the write boundary narrow enough that the
+operator can stop without guessing. If the change needs a fresh worker, a wider
+implementation pass, unclear behavior decisions, investigation, or adversarial
+review, route to `ralph`, `spec`, `research`, `critique`, or the appropriate
+owner route instead.
+
+Evidence expectations should match the claim being made: structural Markdown
+cleanup may need only diff review or targeted text observations, while behavior,
+validation, completion, protocol-authority, or risky claims need observed
+evidence and possibly critique before acceptance.

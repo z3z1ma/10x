@@ -34,7 +34,7 @@ skill name, command, or ticket status into a route token.
 | `spec` | clarify intended behavior, requirements, scenarios, or reusable acceptance |
 | `plan` | clarify sequencing, dependency order, tranches, or rollout strategy |
 | `ticket` | create or update the live execution owner for bounded work |
-| `local_edit` | execute a tiny, safe, in-context mutation without a fresh child packet |
+| `local_edit` | execute a tiny, safe, in-context mutation with a named write boundary and no fresh child packet |
 | `ralph` | launch or reconcile one Ralph implementation packet for a bounded ticket slice |
 | `debugging` | run a reproduce-first debugging or incident workflow before the next fix or prevention route is clear |
 | `spike` | run a bounded spike, sketch, prototype, or experiment as a research-shaped workflow |
@@ -55,6 +55,26 @@ route through the owner token instead: for example, use `research` for a known
 investigation write, `evidence` for an observation record, `wiki` for an accepted
 atlas page, `ralph` for a bounded implementation packet, `critique` for review,
 or `acceptance_review` for ticket closure evaluation.
+
+## `local_edit` Boundaries
+
+Use `local_edit` for a cheap, bounded edit that is safe to perform in the current
+context: small wording cleanup, link repair, record hygiene, or a narrowly scoped
+Markdown guidance change. The owner record or operator handoff should name the
+write boundary and the observation or evidence expected from the edit.
+
+`local_edit` is not a `loom-local-edit` skill, command wrapper, bypass mode, or
+new owner layer. When a ticket owns the work, the ticket remains the live ledger
+for execution state, acceptance, evidence disposition, critique disposition, and
+the next route. Route tokens only name the next governed move; they do not move
+truth out of the owner record.
+
+Escalate from `local_edit` to the route that owns the missing truth when the work
+becomes ambiguous, risky, behavior-defining, protocol-authority-changing, or too
+large for a current-context edit. Use `ralph` for a bounded fresh-context
+implementation slice, `spec` for intended behavior, `research` for missing
+evidence or tradeoffs, `critique` for adversarial review, and `evidence` for
+observations that must persist.
 
 ## Non-Routes
 

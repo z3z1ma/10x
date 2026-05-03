@@ -28,6 +28,9 @@ route-token grammar in `skills/loom-records/references/route-vocabulary.md`.
 - support-only recall, preferences, retrieval cues, entities, reminders, or hot
   context -> `loom-memory`
 - shared grammar, naming, linking, status, or validation conventions -> `loom-records`
+- tiny, safe, in-context mutation with a narrow known write boundary -> route
+  token `local_edit`; if a ticket owns the work, `loom-tickets` still owns live
+  state and acceptance reconciliation
 - one bounded fresh-context implementation step -> `loom-ralph`, after the ticket
   is Ralph-ready
 - implementation isolation, branch/worktree hygiene, or Git provenance -> `loom-git`
@@ -64,3 +67,27 @@ truth layers or outrank the owner records they update.
 
 Commands are optional invocation adapters for these routes. They are not owner
 layers or workflow truth owners.
+
+## `local_edit` Boundary
+
+Use `local_edit` only when the next mutation is cheap, bounded, and safe to make
+in the current context: for example, a small wording fix, link repair, record
+hygiene edit, or clearly scoped Markdown guidance adjustment. Name the exact
+write boundary before editing.
+
+`local_edit` does not bypass ticket truth. When a ticket owns the work, the
+ticket remains the live execution ledger for state, scope, acceptance, evidence
+disposition, and the next route. The edit may be local; reconciliation still
+belongs to the ticket owner.
+
+Escalate away from `local_edit` when the change is implementation-sized, needs a
+fresh-context handoff, has ambiguous intended behavior, depends on missing
+evidence, changes meaningful protocol authority, or needs adversarial review.
+Route those cases to `ralph`, `spec`, `research`, `critique`, or another owner
+route according to the truth that must change next.
+
+Evidence is required when the local edit supports a completion, behavior,
+validation, or protocol-authority claim. For purely structural cleanup, a diff
+review or targeted text observation may be enough; for behavior or risky changes,
+route to `evidence` and/or `critique` instead of treating the edit itself as
+proof.
