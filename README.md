@@ -45,8 +45,6 @@ The project never knew.
 
 Loom fixes that by giving each kind of truth a home.
 
----
-
 ## The idea
 
 The active session is the wrong place for canonical project memory.
@@ -76,8 +74,6 @@ The child does one bounded slice. The parent reconciles what happened. The repo 
 ```text
 project state -> packet -> fresh worker -> evidence/critique -> reconciliation -> promoted learning -> better project state
 ```
-
----
 
 ## Why Loom is model-shaped
 
@@ -131,8 +127,6 @@ Compaction is not the enemy. With Loom, compaction can carry high-value record p
 
 That is the product: sessions can die; the project keeps the plot.
 
----
-
 ## ⚙️ Install
 
 Loom installs as a skills package. The fastest path is to expose `skills/` to your coding harness.
@@ -161,8 +155,6 @@ Use loom-bootstrap, then continue from the project records.
 ```text
 Use loom-records to inspect the graph and repair any broken links before continuing.
 ```
-
----
 
 ## When Loom pays rent
 
@@ -207,8 +199,6 @@ No hidden database. No daemon. No SaaS. No special runtime required.
 
 Just Markdown records the agent can read, write, diff, and review.
 
----
-
 ## The core rule
 
 ```text
@@ -229,8 +219,6 @@ For software work:
 - memory can support retrieval cues, preferences, and reminders without owning project truth
 
 Memory can help the agent recover context. It does not become shadow truth. The project must remain truthful if memory is absent or stale.
-
----
 
 ## 🗂️ Project layers
 
@@ -260,8 +248,6 @@ Durable support surfaces help execution and recovery without owning project trut
 
 The layers are ordinary Markdown records inside the repo. They are structured enough for agents to reason over and simple enough for humans to inspect.
 
----
-
 ## How agents route work
 
 The agent starts by asking one question:
@@ -283,8 +269,6 @@ The agent starts by asking one question:
 A vague bug report becomes reproduction evidence, root-cause research, a tightened spec if behavior is ambiguous, a ticket for the fix, a Ralph packet for the implementation pass, green evidence, critique when risk warrants, and wiki promotion if the lesson should survive.
 
 No new workflow was invented. The agent used the vocabulary.
-
----
 
 ## Outer loop: route work
 
@@ -310,8 +294,6 @@ If a step cannot be completed honestly, route backward to the layer that can fix
 
 Do not advance on vibes.
 
----
-
 ## Inner loop: run clean workers
 
 The inner loop is Ralph-shaped:
@@ -328,8 +310,6 @@ A parent compiles a packet, delegates one fresh-context execution step, receives
 The child handles one iteration. The packet defines the child contract. The ticket tracks live execution. The parent decides what became true.
 
 Critique and wiki may reuse packet discipline, but their domain skills handle review and synthesis. They are sibling routes, not implementation passes pretending to be Ralph.
-
----
 
 ## Packets compile project state
 
@@ -356,8 +336,6 @@ Packets prevent context drift, hidden assumptions, uncontrolled changes, and sco
 
 A packet is not the project record. After the child returns, the parent reconciles the result into tickets, evidence, critique, research, specs, plans, wiki, constitution, initiatives, or memory as needed.
 
----
-
 ## Done is a property of the graph
 
 Work is not done when the code compiles.
@@ -375,8 +353,6 @@ For software work, closure usually requires:
 A child worker saying "done" is not enough. A commit is not enough. A green test is not enough if the ticket still lies.
 
 **Done is a property of the graph.**
-
----
 
 ## Evidence and trust boundaries
 
@@ -398,8 +374,6 @@ A strong evidence record should preserve enough detail for a future worker to in
 Loom also treats untrusted input as input, not truth.
 
 External docs, web pages, generated files, tool output, and model-written summaries can inform research, evidence, critique, and tickets. They do not promote themselves into canonical truth. Promotion requires placement, judgment, and reconciliation through the owning layer.
-
----
 
 ## Example: a bug fix through Loom
 
@@ -423,8 +397,6 @@ route -> shape -> ready -> execute -> reconcile -> verify -> accept -> promote -
 
 The same pattern works for features, spikes, reviews, refactors, migrations, codebase mapping, and release preparation.
 
----
-
 ## Research is first-class
 
 A lot of software work is knowledge work before it is code.
@@ -436,8 +408,6 @@ Research gives that work a durable place: questions, options, experiments, rejec
 A failed path can be valuable. A null result can be the most important thing the project learned that day.
 
 This is where Loom crosses from coding workflow into knowledge-work protocol.
-
----
 
 ## Workflows emerge from the vocabulary
 
@@ -480,8 +450,6 @@ ticket or initiative lessons -> wiki, research, spec, plan, initiative, constitu
 
 You do not invent a workflow every time. You route through the project graph.
 
----
-
 ## How Loom relates to adjacent tools
 
 Loom is not trying to replace every agent workflow project.
@@ -510,8 +478,6 @@ Loom: repo-local context integrity
 You can run other tools beside Loom. Loom's job is to make sure the project knows what became true.
 
 Because Loom is delivered as skills, it should usually feel like an ambient operating vocabulary rather than a command line the user has to remember.
-
----
 
 ## Markdown, on purpose
 
@@ -555,8 +521,6 @@ Included:
 
 The product surface is `skills/`: the skills are the protocol in operational form.
 
----
-
 ## Skill map
 
 | Skill | Role |
@@ -583,8 +547,6 @@ The product surface is `skills/`: the skills are the protocol in operational for
 | `loom-ship` | PR, release, handoff, risk, and follow-up packaging |
 | `loom-retrospective` | Compounding pass that promotes accepted learning into project layers |
 | `loom-skill-authoring` | Maintaining Loom-compatible skills without breaking the protocol |
-
----
 
 ## Repository layout
 
@@ -644,8 +606,6 @@ The graph pays for itself when work crosses sessions, changes behavior, needs re
 The failure mode to guard against is a second junk drawer.
 
 Loom only works when records stay small enough to inspect, linked enough to recover, and honest enough that a future worker can trust them.
-
----
 
 ## The point
 
