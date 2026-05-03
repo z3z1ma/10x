@@ -1,11 +1,11 @@
 ---
 id: ticket:claimmx5
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: low
 created_at: 2026-05-03T00:56:36Z
-updated_at: 2026-05-03T00:56:36Z
+updated_at: 2026-05-03T02:17:18Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,12 @@ links:
     - plan:skills-corpus-residual-protocol-sharpening-pass
   research:
     - research:skills-corpus-residual-audit-synthesis
+  packet:
+    - packet:ralph-ticket-claimmx5-20260503T021312Z
+  evidence:
+    - evidence:claim-matrix-status-guidance-validation
+  critique:
+    - critique:claim-matrix-status-guidance-review
 external_refs: {}
 depends_on: []
 ---
@@ -75,8 +81,8 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-residual-protocol-sharpening-pass#OBJ-007` | pending | pending | open |
-| `ticket:claimmx5#ACC-001` through `ticket:claimmx5#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-residual-protocol-sharpening-pass#OBJ-007` | `evidence:claim-matrix-status-guidance-validation` | `critique:claim-matrix-status-guidance-review` | supported |
+| `ticket:claimmx5#ACC-001` through `ticket:claimmx5#ACC-005` | `evidence:claim-matrix-status-guidance-validation` | `critique:claim-matrix-status-guidance-review` | supported |
 
 # Execution Notes
 
@@ -89,23 +95,17 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:wsalias6`.
 
 # Route Readiness
 
-Route: ralph
-
-Bounded iteration: ticket template claim matrix status guidance.
-Write boundary: ticket template/claim coverage if needed, this ticket, one
-evidence record, one critique record, and one Ralph packet.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, evidence, ticket update, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:claim-matrix-status-guidance-validation` and oracle critique
+`critique:claim-matrix-status-guidance-review` support closure with no findings.
 
 # Evidence
 
-Expected: before/after searches for `Claim Matrix`, allowed status values, and
-`git diff --check`.
+Recorded: `evidence:claim-matrix-status-guidance-validation`.
 
 # Critique Disposition
 
@@ -124,9 +124,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:claim-matrix-status-guidance-review` - no findings; mandatory oracle
+critique passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -134,18 +135,33 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Claim matrix status copy guidance was promoted directly into the ticket
+  template while leaving claim coverage as canonical vocabulary owner.
+
+Deferred / not-required rationale:
+
+No separate wiki page, research record, spec, constitution decision, or memory
+entry is needed. The durable lesson is the product guidance itself.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+ticket template and claim coverage reference.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T02:17:18Z
+Basis: Ralph packet `packet:ralph-ticket-claimmx5-20260503T021312Z`; evidence
+`evidence:claim-matrix-status-guidance-validation`; oracle critique
+`critique:claim-matrix-status-guidance-review` with no findings.
+Residual risks: validation is structural/manual; there is no automated
+protocol-template test suite. Status tokens are repeated in the template for copy
+safety, so future vocabulary changes must reconcile the pointer/list.
 
 # Dependencies
 
@@ -154,3 +170,10 @@ None.
 # Journal
 
 - 2026-05-03T00:56:36Z: Created from council finding `NC2-005`.
+- 2026-05-03T02:14:37Z: Ralph iteration
+  `packet:ralph-ticket-claimmx5-20260503T021312Z` completed in scope. Evidence
+  recorded in `evidence:claim-matrix-status-guidance-validation`; next route is
+  mandatory oracle critique.
+- 2026-05-03T02:17:18Z: Mandatory oracle critique
+  `critique:claim-matrix-status-guidance-review` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.

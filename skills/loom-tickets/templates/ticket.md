@@ -72,6 +72,9 @@ List qualified claim or acceptance IDs. If none apply, write `None - reason`.
 
 Use only real claim, evidence, and critique references. Remove this table or
 write `None - reason` when no claim matrix applies yet.
+Use the canonical status vocabulary from
+`skills/loom-records/references/claim-coverage.md`: `open`, `supported`,
+`supported_pending_review`, `challenged`, `accepted_risk`, or `superseded`.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
