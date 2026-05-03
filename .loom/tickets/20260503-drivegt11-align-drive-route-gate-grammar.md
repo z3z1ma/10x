@@ -1,11 +1,11 @@
 ---
 id: ticket:drivegt11
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T01:57:25Z
-updated_at: 2026-05-03T01:57:25Z
+updated_at: 2026-05-03T02:11:22Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,12 @@ links:
     - plan:skills-corpus-residual-protocol-sharpening-pass
   research:
     - research:skills-corpus-residual-audit-synthesis
+  packet:
+    - packet:ralph-ticket-drivegt11-20260503T020045Z
+  evidence:
+    - evidence:drive-route-gate-grammar-validation
+  critique:
+    - critique:drive-route-gate-grammar-review
 external_refs: {}
 depends_on: []
 ---
@@ -85,8 +91,8 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-residual-protocol-sharpening-pass#OBJ-014` | pending | pending | open |
-| `ticket:drivegt11#ACC-001` through `ticket:drivegt11#ACC-006` | pending | pending | open |
+| `initiative:skills-corpus-residual-protocol-sharpening-pass#OBJ-014` | `evidence:drive-route-gate-grammar-validation` | `critique:drive-route-gate-grammar-review` | supported |
+| `ticket:drivegt11#ACC-001` through `ticket:drivegt11#ACC-006` | `evidence:drive-route-gate-grammar-validation` | `critique:drive-route-gate-grammar-review` | supported |
 
 # Execution Notes
 
@@ -102,24 +108,18 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:claimmx5`.
 
 # Route Readiness
 
-Route: ralph
-
-Bounded iteration: drive/README route and checkpoint gate grammar.
-Write boundary: route/drive/README guidance, this ticket, one evidence record,
-one critique record, and one Ralph packet.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, evidence, ticket update, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:drive-route-gate-grammar-validation` and oracle critique
+`critique:drive-route-gate-grammar-review` support closure with no unresolved
+findings.
 
 # Evidence
 
-Expected: before/after searches for `mandatory critique`, `not_required`,
-`memory`, `next route`, `stop`, stop reason/condition wording, and
-`git diff --check`.
+Recorded: `evidence:drive-route-gate-grammar-validation`.
 
 # Critique Disposition
 
@@ -139,9 +139,14 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:drive-route-gate-grammar-review#DRVGT11-ORC-001` - resolved by
+updating the ticket route readiness from stale Ralph launch details to the current
+critique/acceptance route.
 
-Disposition status: pending
+`critique:drive-route-gate-grammar-review#DRVGT11-ORC-002` - resolved by adding
+baseline before-search snippets to `evidence:drive-route-gate-grammar-validation`.
+
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -149,18 +154,35 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Drive checkpoint critique-gate, memory support-route, and recorded `stop`
+  reason guidance were promoted directly into README, route vocabulary, and drive
+  references.
+
+Deferred / not-required rationale:
+
+No separate wiki page, research record, spec, constitution decision, or memory
+entry is needed. The durable lesson is the product guidance itself.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+touched README, route vocabulary, and drive guidance.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T02:11:22Z
+Basis: Ralph packet `packet:ralph-ticket-drivegt11-20260503T020045Z`; evidence
+`evidence:drive-route-gate-grammar-validation`; oracle critique
+`critique:drive-route-gate-grammar-review` with `DRVGT11-ORC-001` and
+`DRVGT11-ORC-002` resolved.
+Residual risks: validation is structural/manual; there is no automated
+protocol-template test suite. Evidence before-state search snippets were
+reconstructed from the recorded source commit and disclosed as such.
 
 # Dependencies
 
@@ -169,3 +191,13 @@ None.
 # Journal
 
 - 2026-05-03T01:57:25Z: Created from follow-up validation after `ticket:wssupp4`.
+- 2026-05-03T02:03:31Z: Ralph iteration
+  `packet:ralph-ticket-drivegt11-20260503T020045Z` completed in scope. Evidence
+  recorded in `evidence:drive-route-gate-grammar-validation`; next route is
+  mandatory oracle critique.
+- 2026-05-03T02:07:36Z: First oracle pass found stale route readiness and
+  summarized before-search evidence. Repaired route readiness to current critique
+  route and added baseline search snippets to the evidence record before rerun.
+- 2026-05-03T02:11:22Z: Oracle re-critique passed with both prior findings
+  resolved. Parent recorded critique, retrospective / promotion disposition, and
+  accepted closure.

@@ -76,7 +76,7 @@ ticket or operator explicitly records a different rationale.
 | Accepted explanation should persist for future agents | `wiki` or `retrospective` |
 | Ticket-owned closure readiness needs evaluation | `acceptance_review` |
 | Already-truthful work needs merge, release, PR, or handoff packaging | `ship` |
-| Objective criteria are satisfied and no owner work remains | `stop` |
+| Objective criteria are satisfied and no owner work remains | `stop`, with a recorded stop reason or condition |
 
 This table prevents implementation from becoming the default answer. Shaping and
 review routes are first-class continuation outcomes.
@@ -111,8 +111,8 @@ review routes are first-class continuation outcomes.
   disposition and exits with external handoff packaging plus the next
   ticket-owned route.
 
-Every route result must name the owner records that changed and the next route or
-stop condition.
+Every route result must name the owner records that changed and the next route.
+If the next route is `stop`, record the stop reason or condition.
 
 Use `skills/loom-records/references/route-vocabulary.md` for route-token grammar.
 

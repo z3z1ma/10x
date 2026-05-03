@@ -82,6 +82,10 @@ next route owner: <which layer must change next>
 reason: <why this follows from current owner truth>
 ```
 
+When the `next route` is `stop`, the `reason` must state the stop condition,
+such as objective satisfied, external action required, unsafe, out of scope, or
+over budget.
+
 Do not duplicate this full block everywhere. Put each fact in the owner record
 that owns it, and link across records so the snapshot is recoverable by ordinary
 search.
@@ -129,6 +133,9 @@ next route: ask_user | workspace_status | records_repair | constitution | initia
 next tranche: <ticket IDs or plan update, if known>
 reason: <why this next route follows from the records>
 ```
+
+When the `next route` is `stop`, the `reason` must state the stop condition,
+not merely repeat that the drive is stopping.
 
 Put the answer in the layer that owns it. For example, objective-level status
 belongs in the initiative, live execution and acceptance state belong in the

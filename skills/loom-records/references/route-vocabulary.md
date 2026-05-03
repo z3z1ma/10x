@@ -41,7 +41,7 @@ skill name, command, or ticket status into a route token.
 | `acceptance_review` | evaluate ticket-owned acceptance and closure readiness without implying closure |
 | `ship` | package already-truthful work for merge, release, PR, or handoff without owning closure |
 | `continue` | proceed to the next already-governed tranche or route named by owner records |
-| `stop` | stop because the objective is satisfied, blocked, unsafe, out of scope, over budget, or awaiting external action |
+| `stop` | stop because the objective is satisfied, blocked, unsafe, out of scope, over budget, or awaiting external action; recorded stop routes must include a stop reason or condition |
 
 Workflow coordinator tokens exist only when the coordinator is itself the next
 governed move. Use `debugging`, `spike`, `codemap`, or `ship` when the next step
@@ -64,6 +64,7 @@ more than one category; the field and owner decide what the word means.
 | Ralph child outcomes | `continue`, `stop`, `blocked`, `escalate` | A child outcome is not a route token by itself. It becomes routing truth only after the parent reconciles the child output and translates it into the next owner-truth route, such as `ticket`, `research`, `critique`, `ask_user`, `continue`, or `stop`. |
 | Critique-owned finding states | `open`, `withdrawn` | Live inside critique records and describe whether the critique still stands behind a finding. They are not ticket states or route tokens. |
 | Ticket-owned finding dispositions | `resolved`, `accepted_risk`, `superseded`, `converted_to_follow_up` | Live in the ticket's critique disposition section for qualified findings. They are not critique finding states and do not name the next route. |
+| Support-memory surfaces | `memory`, `loom-memory`, retrieval cues, preferences, reminders, hot context | Memory is optional support recall, not canonical project truth. Do not use `memory` as a `next route:` token; route durable truth changes through the owner token that owns them. |
 | Commands and adapters | slash commands, harness commands, MCPs, package-specific wrappers | Commands may transport or prompt a route, but owner records and workflow skills still own Loom truth. |
 | Skill display names | Ralph, loom-drive, loom-critique | Use ordinary prose for skill names. In a route-value field, use the token (`ralph`, `debugging`, `spike`, `codemap`, `ship`, `continue`, `acceptance_review`, etc.) rather than title case, spaces, or hyphens. Do not add a token merely because a skill exists; route tokens name governed moves, not the skill inventory. |
 
@@ -101,6 +102,9 @@ unsafe-inference reason: The agent cannot safely invent durable project authorit
 owner record to update after answer: constitution:main or decision:<slug>
 
 proposed next route: research
+
+next route: stop
+stop reason: OBJ-001 and OBJ-002 are satisfied, required evidence is linked, and no owner work remains.
 ```
 
 If multiple routes are plausible, choose the token for the truth that changes

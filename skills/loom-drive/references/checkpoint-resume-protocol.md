@@ -38,6 +38,10 @@ resume instruction: <one sentence a fresh parent can follow>
 updated_at: <timestamp>
 ```
 
+If `next route` is `stop`, record a local stop reason or condition next to the
+route, such as objective satisfied, blocked on external action, unsafe, out of
+scope, or over budget.
+
 Put each field in the owner record that owns it. The initiative can summarize the
 drive anchor and objective status; tickets own active execution state, critique
 disposition, and acceptance decisions; plans own tranche sequencing; evidence and
@@ -92,8 +96,10 @@ repair already happened.
   route to spec before implementation.
 - Evidence gate: required observations exist; otherwise route to evidence or
   research before relying on the claim.
-- Critique gate: mandatory critique is complete, pending as next route, blocking,
-  or not required with rationale according to ticket-owned disposition status;
+- Critique gate: mandatory critique is complete, pending as next route, or
+  blocking according to ticket-owned disposition status; mandatory critique is
+  never `not_required`. Recommended or optional critique may be `not_required`
+  only with ticket-owned rationale;
   unresolved medium/high findings block acceptance and dependent implementation
   that would rely on the challenged claim.
 - Write-boundary gate: child write scopes are explicit and non-overlapping unless

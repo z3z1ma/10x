@@ -241,7 +241,7 @@ The agent starts by asking one question:
 | Review pressure, concern, or residual risk | `critique` |
 | Stable accepted understanding | `wiki` |
 | Bounded implementation pass | Ralph with a Ralph packet |
-| Retrieval cue, preference, reminder, or hot context | `memory`, until it deserves promotion |
+| Retrieval cue, preference, reminder, or hot context | Support recall, not a route token; promote through the owning route if it becomes durable truth |
 
 A vague bug report becomes reproduction evidence, root-cause research, a tightened spec if behavior is ambiguous, a ticket for the fix, a Ralph packet for the implementation pass, green evidence, critique when risk warrants, and wiki promotion if the lesson should survive.
 
