@@ -61,7 +61,13 @@ observed artifacts; specs and wiki own accepted behavior or explanation.
 
 - Do not draft execution records from a still-fuzzy request.
 - Do not answer with code.
-- Do not silently choose between ambiguous readings.
+- Do not silently choose between materially ambiguous readings. Route to
+  `ask_user` when proceeding would invent authority, accept material risk,
+  change owner-record truth, or make an irreversible or high-risk decision.
+- If an assumption is low risk, reversible, and inside delegated authority,
+  record it in the owning record before continuing through the appropriate
+  route.
 - Do not bypass constitutional conflicts.
-- Do not let an approved-sounding chat summary replace spec, plan, or ticket
-  ownership when the decision needs to persist.
+- Do not let an approved-sounding chat or transcript summary replace spec,
+  plan, ticket, or other owner-record ownership when the decision or assumption
+  needs to persist.
