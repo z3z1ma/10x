@@ -1,9 +1,9 @@
 ---
 id: plan:skills-corpus-context-integrity-hardening-pass
 kind: plan
-status: active
+status: completed
 created_at: 2026-05-03T04:09:51Z
-updated_at: 2026-05-03T06:33:53Z
+updated_at: 2026-05-03T09:10:16Z
 scope:
   kind: repository
   repositories:
@@ -44,6 +44,10 @@ links:
     - ticket:retmem27
     - ticket:critph28
     - ticket:readrte29
+  evidence:
+    - evidence:context-integrity-hardening-pass-completion-validation
+  critique:
+    - critique:context-integrity-hardening-pass-completion-review
 external_refs: {}
 ---
 
@@ -246,6 +250,32 @@ material unresolved critique risk.
 
 # Completion Basis
 
-When `status: completed`, cite child tickets, evidence records, critique records,
-semantic commits, pushes, retrospective dispositions, residual risks, and any
-follow-up tickets.
+Completed at: 2026-05-03T08:57:46Z
+
+Basis:
+
+- All downstream tickets linked in this plan are `closed` and have completed
+  ticket-owned critique disposition.
+- Each downstream ticket records evidence, critique, retrospective / promotion
+  disposition, and acceptance basis; per-ticket semantic commits are present in
+  Git history and pushed through the final downstream ticket commit.
+- Completion evidence:
+  `evidence:context-integrity-hardening-pass-completion-validation`.
+- Completion critique:
+  `critique:context-integrity-hardening-pass-completion-review` passed with no
+  open findings.
+- Final downstream ticket commit pushed before parent closure:
+  `57977410c8aa8ec4a7ef7339596052361da84a9f`.
+- No unresolved medium/high critique findings remain in the plan-linked ticket
+  set.
+- No runtime, hidden helper, CLI, schema engine, DB, daemon, MCP dependency, or
+  new canonical owner layer was introduced.
+
+Residual risks:
+
+- Future edits can still drift the corpus; route those through new tickets or the
+  relevant owner layers instead of reopening this completed plan by default.
+
+Follow-up tickets:
+
+- None from this plan closure.

@@ -1,9 +1,9 @@
 ---
 id: initiative:skills-corpus-context-integrity-hardening-pass
 kind: initiative
-status: active
+status: completed
 created_at: 2026-05-03T04:09:51Z
-updated_at: 2026-05-03T06:20:11Z
+updated_at: 2026-05-03T09:10:16Z
 scope:
   kind: repository
   repositories:
@@ -14,6 +14,10 @@ links:
     - research:skills-corpus-third-pass-follow-up-validation
   plan:
     - plan:skills-corpus-context-integrity-hardening-pass
+  evidence:
+    - evidence:context-integrity-hardening-pass-completion-validation
+  critique:
+    - critique:context-integrity-hardening-pass-completion-review
   ticket:
     - ticket:bootinv1
     - ticket:trustbd2
@@ -212,12 +216,39 @@ Stop or ask the user if any ticket requires:
 
 # Status Summary
 
-Active. Execute tickets sequentially with Ralph/fixer, evidence, critique,
-retrospective disposition, semantic commits, and pushes. Third-pass follow-up
-tickets were added from `research:skills-corpus-third-pass-follow-up-validation`.
+Completed. The linked plan closed all downstream tickets through Ralph/fixer,
+evidence, mandatory critique, and retrospective / promotion disposition, with
+semantic commits pushed through the final downstream ticket commit. Third-pass follow-up tickets from
+`research:skills-corpus-third-pass-follow-up-validation` are included in the
+completed ticket set.
 
 # Completion Basis
 
-When `status: completed`, cite child tickets, evidence, critique records,
-retrospective dispositions, semantic commits, pushes, accepted risks, and any
-follow-up tickets.
+Completed at: 2026-05-03T08:57:46Z
+
+Basis:
+
+- Success metrics `OBJ-001` through `OBJ-030` are covered by the linked plan and
+  closed downstream tickets.
+- Completion evidence:
+  `evidence:context-integrity-hardening-pass-completion-validation`.
+- Completion critique:
+  `critique:context-integrity-hardening-pass-completion-review` passed with no
+  open findings.
+- Final downstream ticket commit pushed before parent closure:
+  `57977410c8aa8ec4a7ef7339596052361da84a9f`.
+- All plan-linked tickets are `closed` with completed critique disposition and
+  recorded retrospective / promotion disposition.
+- No accepted risk required user approval; no unresolved medium/high critique
+  findings remain.
+- No validators, schema engines, command routers, CLIs, daemons, databases, MCP
+  dependencies, hidden helpers, or new canonical owner layers were introduced.
+
+Residual risks:
+
+- Future protocol sharpening may create new initiatives or tickets, but this
+  initiative's scoped objectives are complete.
+
+Follow-up tickets:
+
+- None from this initiative closure.
