@@ -1,11 +1,11 @@
 ---
 id: ticket:wsalias6
 kind: ticket
-status: ready
+status: closed
 change_class: record-hygiene
 risk_class: low
 created_at: 2026-05-03T00:56:36Z
-updated_at: 2026-05-03T00:56:36Z
+updated_at: 2026-05-03T02:22:39Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,12 @@ links:
     - plan:skills-corpus-residual-protocol-sharpening-pass
   research:
     - research:skills-corpus-residual-audit-synthesis
+  packet:
+    - packet:ralph-ticket-wsalias6-20260503T021836Z
+  evidence:
+    - evidence:workspace-alias-template-validation
+  critique:
+    - critique:workspace-alias-template-review
 external_refs: {}
 depends_on: []
 ---
@@ -74,8 +80,8 @@ Covers:
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-residual-protocol-sharpening-pass#OBJ-008` | pending | pending | open |
-| `ticket:wsalias6#ACC-001` through `ticket:wsalias6#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-residual-protocol-sharpening-pass#OBJ-008` | `evidence:workspace-alias-template-validation` | `critique:workspace-alias-template-review` | supported |
+| `ticket:wsalias6#ACC-001` through `ticket:wsalias6#ACC-005` | `evidence:workspace-alias-template-validation` | `critique:workspace-alias-template-review` | supported |
 
 # Execution Notes
 
@@ -87,23 +93,17 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:pktmeta12`.
 
 # Route Readiness
 
-Route: ralph
-
-Bounded iteration: workspace template alias dedupe.
-Write boundary: workspace template, this ticket, one evidence record, one
-critique record, and one Ralph packet.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, evidence, ticket update, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:workspace-alias-template-validation` and oracle critique
+`critique:workspace-alias-template-review` support closure with no findings.
 
 # Evidence
 
-Expected: before/after searches for `repo_aliases`, body YAML alias blocks, and
-`git diff --check`.
+Recorded: `evidence:workspace-alias-template-validation`.
 
 # Critique Disposition
 
@@ -121,9 +121,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:workspace-alias-template-review` - no findings; mandatory oracle
+critique passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -131,18 +132,32 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Workspace alias dedupe guidance was promoted directly into the workspace
+  template by making frontmatter the authoritative alias surface.
+
+Deferred / not-required rationale:
+
+No separate wiki page, research record, spec, constitution decision, or memory
+entry is needed. The durable lesson is the product guidance itself.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+workspace template.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T02:22:39Z
+Basis: Ralph packet `packet:ralph-ticket-wsalias6-20260503T021836Z`; evidence
+`evidence:workspace-alias-template-validation`; oracle critique
+`critique:workspace-alias-template-review` with no findings.
+Residual risks: validation is structural/manual; there is no automated
+protocol-template test suite.
 
 # Dependencies
 
@@ -151,3 +166,10 @@ None.
 # Journal
 
 - 2026-05-03T00:56:36Z: Created from council finding `NC2-006`.
+- 2026-05-03T02:19:58Z: Ralph iteration
+  `packet:ralph-ticket-wsalias6-20260503T021836Z` completed in scope. Evidence
+  recorded in `evidence:workspace-alias-template-validation`; next route is
+  mandatory oracle critique.
+- 2026-05-03T02:22:39Z: Mandatory oracle critique
+  `critique:workspace-alias-template-review` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.

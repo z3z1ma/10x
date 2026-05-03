@@ -20,12 +20,10 @@ Operational scope aliases for this Loom workspace.
 
 # Repository Aliases
 
-```yaml
-repo_aliases:
-  repo:root: .
-```
+Use the `repo_aliases` mapping in this record's frontmatter as the authoritative
+alias surface.
 
 # Notes
 
-These aliases help agents resolve scope. They do not own project behavior,
-strategy, or execution truth.
+These aliases are workspace support metadata that help agents resolve scope.
+They do not own project behavior, strategy, or execution truth.
