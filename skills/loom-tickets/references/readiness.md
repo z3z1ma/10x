@@ -68,9 +68,12 @@ do not use ticket lifecycle statuses such as `ready`, `active`,
   make selectable.
 - For `records_repair`, name the broken, stale, or contradictory records or links,
   the graph consistency rule being restored, and dependent work that must wait.
-- For `constitution` or `initiative`, name the owner truth to create or refine,
-  the decision/objective/boundary affected, and any downstream records to
-  reconcile.
+- For `constitution`, name the principle, constraint, decision, roadmap, or
+  identity truth to create/refine, why it belongs above initiative/plan/ticket,
+  and downstream records to reconcile.
+- For `initiative`, name the objective, metric, autonomy boundary, or strategic
+  framing to create/refine, success criteria or `OBJ-*` IDs affected, and
+  downstream records to reconcile.
 - For `research`, name the question, evidence or option set to inspect, expected
   conclusion or null result, and downstream owner that will use the synthesis.
 - For `spec`, name the fuzzy intended behavior, reusable acceptance or scenario
@@ -86,12 +89,17 @@ do not use ticket lifecycle statuses such as `ready`, `active`,
   boundary, likely verification posture, and expected output contract.
 - For `debugging`, name the failing behavior, reproduction/evidence expectation,
   and root-cause or fix handoff boundary.
-- For `spike` or `codemap`, name the research/evidence/wiki outputs the workflow
-  should produce and any throwaway write boundary.
+- For `spike`, name the question or option to test, throwaway write boundary, and
+  expected research/evidence output.
+- For `codemap`, name the repository or module area to map, expected
+  evidence/research/wiki atlas output, and downstream route the map should
+  unblock.
 - For `critique`, name the review target, required profiles, and evidence to
   review.
-- For `wiki` or `retrospective`, name the explanation or lesson to promote and
-  the owner records it should source.
+- For `wiki`, name the accepted explanation or workflow to preserve, source owner
+  records and statuses, evidence/critique basis, limits, and stale triggers.
+- For `retrospective`, name the lesson or prevention artifact to evaluate,
+  candidate owner layers, and closure impact if promotion is deferred.
 - For `evidence`, name the claim references and observation procedure.
 - For `acceptance_review`, name the evidence, critique disposition, closure
   readiness, and residual risks that the ticket-owned gate must evaluate.
@@ -102,10 +110,13 @@ do not use ticket lifecycle statuses such as `ready`, `active`,
   with, the owner record that authorizes it, and why no new scoping decision is
   needed. This is a route token for parent-owned execution flow, not a Ralph
   child outcome named `continue`.
-- For `stop`, name the stop reason or condition, the owner record that makes the
-  stop truthful, and any external action or future trigger that could reopen work.
-  This is a route token for parent-owned execution flow, not a Ralph child outcome
-  named `stop`.
+- For `stop`, name `stop_kind`, `stop_reason`, `owner_record`,
+  `resume_condition`, and `closure_claim`. `stop_kind: satisfied` may support
+  closure only when ticket-owned acceptance, evidence, critique, and
+  retrospective / promotion disposition are already closure-compatible. Other stop
+  kinds pause, abandon, or block continuation; they do not imply closure. This is
+  a route token for parent-owned execution flow, not a Ralph child outcome named
+  `stop`.
 
 ### `local_edit` And Ticket Truth
 

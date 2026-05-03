@@ -1,6 +1,6 @@
 ---
 name: loom-records
-description: "Shared Loom record grammar: frontmatter, IDs, filenames, typed links, status lifecycles, claim coverage syntax, template use, and native validation patterns. Use when creating or reshaping any Loom artifact, reconciling references, deciding how to name a file, or validating records directly."
+description: "Use Loom's shared record grammar. Use when creating, naming, linking, validating, repairing, or reconciling Loom artifacts."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: shared-grammar

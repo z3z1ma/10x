@@ -1,6 +1,6 @@
 ---
 name: loom-skill-authoring
-description: "Create or refine Loom-compatible skills that are scoped, durable, discoverable, and template-backed. Use when adding a new subsystem skill, tightening a skill description, extending references/templates, or auditing a skill for overlap, ambiguity, or anti-patterns."
+description: "Maintain Loom-compatible skills. Use when adding, tightening, reviewing, or auditing skill boundaries, templates, references, or descriptions."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: authoring

@@ -1,6 +1,6 @@
 ---
 name: loom-evidence
-description: "Maintain observed artifacts and outputs without turning evidence into project-truth ownership. Use when validation output, reproduction steps, test results, screenshots, logs, scan results, red/green output, or other observations need durable preservation with claim-level support or challenge links."
+description: "Preserve observed artifacts as evidence. Use when validation outputs, reproductions, logs, scans, screenshots, or red/green results need claim links."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer

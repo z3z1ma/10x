@@ -107,7 +107,8 @@ critique can then cite those IDs when judging whether the drive should continue.
 - observed artifacts and validation output -> evidence
 - adversarial verdicts and required follow-up -> critique
 - accepted explanation or reusable workflow knowledge -> wiki
-- support-only recall, retrieval cues, preferences, reminders, or hot context -> memory
+- support-only recall, retrieval cues, preferences, reminders, or hot context ->
+  support coordinator `loom-memory`; not a saved `next route:` token
 
 Do not let the plan become the ledger. Do not let a packet, subagent response,
 drive snapshot, critique verdict, or wiki page redefine acceptance. Move truth

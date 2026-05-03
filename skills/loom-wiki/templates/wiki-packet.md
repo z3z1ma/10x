@@ -49,7 +49,15 @@ context_budget:
   max_excerpt_lines_per_file: 80
   avoid_full_file_reads: true
 # Context: source set the wiki synthesizer should read or trust for this bounded synthesis.
-sources: {}
+sources:
+  owner_records:
+    - "<TBD: owner record ref to trust, or None - rationale>"
+  evidence:
+    - "<TBD: evidence ref to trust, or None - rationale>"
+  critique:
+    - "<TBD: critique ref to trust, or None - rationale>"
+  research:
+    - "<TBD: research ref to trust, or None - rationale>"
 links: {}
 ---
 
@@ -68,6 +76,15 @@ leave it empty or as placeholder-only `records: []` / `paths: []`.
 
 Which canonical records and evidence this packet should trust.
 
+| Source | Owner status | Acceptance/evidence basis | Freshness check | Limits |
+| --- | --- | --- | --- | --- |
+| research:<slug> | concluded | evidence:<slug> supports CLAIM-001 | checked at <timestamp/commit> | does not cover <limit> |
+| spec:<slug> | accepted | ticket:<token> accepted ACC-001 | still current as of <timestamp> | only covers <scope> |
+
+Wiki packets must not promote unsettled research, unresolved critique, stale
+evidence, or draft specs into accepted explanation unless the packet explicitly
+names the gap and stops or routes repair.
+
 Frontmatter follows `skills/loom-records/references/packet-frontmatter.md`.
 Wiki owns this synthesis packet's workflow; using packet grammar does not make
 the synthesis Ralph-governed.
@@ -84,7 +101,9 @@ only when `loom-wiki` explicitly allows that for the synthesis shape.
 Use `source_fingerprint.compiled_from` for packet compilation provenance and
 `sources` for accepted truth sources the wiki synthesizer should read or trust.
 The lists may overlap, but wiki packets should not duplicate source inventories
-unless the same source is both provenance and synthesis context.
+unless the same source is both provenance and synthesis context. Do not leave
+`sources` empty in a saved compiled wiki packet; use exact refs or `None -
+<rationale>` entries.
 
 Encode the target in packet IDs and filenames using
 `skills/loom-records/references/naming-and-ids.md`; for example,

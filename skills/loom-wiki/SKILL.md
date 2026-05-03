@@ -1,6 +1,6 @@
 ---
 name: loom-wiki
-description: "Maintain the persistent, interlinked explanation layer for accepted understanding. Use when an answer, architecture concept, workflow, troubleshooting pattern, or operator reference should compound into durable knowledge rather than disappear into chat."
+description: "Maintain accepted explanation. Use when architecture, workflow, troubleshooting, or reference knowledge should persist for future operators."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer

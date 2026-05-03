@@ -40,6 +40,8 @@ For source-dependent claims, copy and fill a compact entry like this:
 
 - Source: <title or description>
 - Type: <repository record | code | test | log | operator note | web page | other>
+- Producer / provenance: <author, publisher, repository, organization, operator, generated artifact, or N/A>
+- Access context: <public, private, local, generated, operator-provided; include permissions or retrieval constraints when material>
 - URL or path: <URL, local path, record ID, or N/A>
 - Observed at: <UTC timestamp or date inspected>
 - Version/date/commit: <version, publication date, repository ref, commit, or N/A>

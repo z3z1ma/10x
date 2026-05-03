@@ -135,7 +135,8 @@ Include:
 - proposed owner-record changes
 - proposed tickets or ticket refinements
 - required evidence and critique posture
-- stop conditions or user questions
+- controlled stop fields when proposing `stop`, or user questions when proposing
+  `ask_user`
 
 ## Output Contract
 
@@ -143,6 +144,8 @@ Include:
   constitution / initiative / research / spec / plan / ticket / local_edit /
   ralph / debugging / spike / codemap / evidence / critique / wiki /
   retrospective / acceptance_review / ship / continue / stop
+- if proposed next route is `stop`: `stop_kind`, `stop_reason`, `owner_record`,
+  `resume_condition`, and `closure_claim`
 - objective criterion IDs affected and proposed status changes
 - current tranche assessment and proposed next tranche
 - route decision priority applied and why

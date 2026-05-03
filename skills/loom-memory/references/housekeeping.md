@@ -11,8 +11,9 @@ authoritative over time.
 - add or fix `[[links]]`
 - keep entity entries compact
 - replace duplicated canonical truth with short pointers
-- promote memory items that became ticket, wiki, evidence, spec, research, plan,
-  initiative, or constitution truth
+- move memory items that became ticket, wiki, evidence, spec, research, plan,
+  initiative, or constitution truth into that owner layer, then leave only a
+  support pointer if useful
 - remove action-item reminders after they become real ticket work
 - leave current support-only items alone when they still reduce orientation cost
 

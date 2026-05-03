@@ -24,7 +24,7 @@ Use this map before launching tickets or child work.
 | observed support or challenge artifacts | evidence |
 | adversarial findings, severity, verdict, residual risk | critique |
 | accepted reusable explanation | wiki |
-| support-only recall, retrieval cues, preferences, reminders, or hot context that does not own project truth | memory |
+| support-only recall, retrieval cues, preferences, reminders, or hot context that does not own project truth | support coordinator `loom-memory`; not a saved `next route:` token |
 
 If no existing record owns a drive fact, either create the correct owner record or
 choose `ask_user` when the missing fact is an operator decision the agent cannot
@@ -80,11 +80,17 @@ critique state: <required | pending | blocking | completed | deferred | not_requ
 next route: ask_user | workspace_status | records_repair | constitution | initiative | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop
 next route owner: <which layer must change next>
 reason: <why this follows from current owner truth>
+stop_kind: <required when next route is stop; otherwise omit>
+stop_reason: <required when next route is stop; otherwise omit>
+owner_record: <required when next route is stop; otherwise omit>
+resume_condition: <required when next route is stop; otherwise omit>
+closure_claim: <required when next route is stop; otherwise omit>
 ```
 
-When the `next route` is `stop`, the `reason` must state the stop condition,
-such as objective satisfied, external action required, unsafe, out of scope, or
-over budget.
+When the `next route` is `stop`, `reason` alone is not enough. Record the
+controlled stop fields from `skills/loom-records/references/route-vocabulary.md`:
+`stop_kind`, `stop_reason`, `owner_record`, `resume_condition`, and
+`closure_claim`.
 
 Do not duplicate this full block everywhere. Put each fact in the owner record
 that owns it, and link across records so the snapshot is recoverable by ordinary
@@ -132,10 +138,17 @@ finding dispositions: <qualified finding refs with resolved | accepted_risk | su
 next route: ask_user | workspace_status | records_repair | constitution | initiative | research | spec | plan | ticket | local_edit | ralph | debugging | spike | codemap | evidence | critique | wiki | retrospective | acceptance_review | ship | continue | stop
 next tranche: <ticket IDs or plan update, if known>
 reason: <why this next route follows from the records>
+stop_kind: <required when next route is stop; otherwise omit>
+stop_reason: <required when next route is stop; otherwise omit>
+owner_record: <required when next route is stop; otherwise omit>
+resume_condition: <required when next route is stop; otherwise omit>
+closure_claim: <required when next route is stop; otherwise omit>
 ```
 
-When the `next route` is `stop`, the `reason` must state the stop condition,
-not merely repeat that the drive is stopping.
+When the `next route` is `stop`, `reason` alone is not enough. Record
+`stop_kind`, `stop_reason`, `owner_record`, `resume_condition`, and
+`closure_claim`, and do not imply closure unless the ticket-owned acceptance gate
+is already closure-compatible.
 
 Put the answer in the layer that owns it. For example, objective-level status
 belongs in the initiative, live execution and acceptance state belong in the

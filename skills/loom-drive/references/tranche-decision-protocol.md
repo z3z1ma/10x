@@ -79,7 +79,7 @@ ticket or operator explicitly records a different rationale.
 | Ticket-owned closure readiness needs evaluation | `acceptance_review` |
 | Already-truthful work needs merge, release, PR, or handoff packaging | `ship` |
 | A route result has been reconciled into owner records, and those records already name the next governed tranche or route | `continue`, as a route token only; not a Ralph child outcome |
-| Objective criteria are satisfied and no owner work remains | `stop`, with a recorded stop reason or condition |
+| Objective criteria are satisfied and no owner work remains | `stop`, with controlled stop fields recorded |
 
 This table prevents implementation from becoming the default answer. Shaping and
 review routes are first-class continuation outcomes. Do not use `continue` as a
@@ -139,7 +139,8 @@ the route they already name.
   claim unless ticket-owned acceptance already supports closure.
 
 Every route result must name the owner records that changed and the next route.
-If the next route is `stop`, record the stop reason or condition.
+If the next route is `stop`, record `stop_kind`, `stop_reason`, `owner_record`,
+`resume_condition`, and `closure_claim`.
 
 Use `skills/loom-records/references/route-vocabulary.md` for route-token grammar.
 
@@ -183,7 +184,7 @@ After each route, reconcile before continuing:
   follow-up route; shipping does not close the ticket
 - continue -> no new owner truth by itself; follow the owner-named route or
   tranche
-- stop -> ticket, initiative, or drive anchor stop reason, resume condition, and
-  any unresolved blocker or external action
+- stop -> ticket, initiative, or drive anchor `stop_kind`, stop reason, resume
+  condition, closure-claim posture, and any unresolved blocker or external action
 
 If the parent cannot name reconciliation targets, the route is not ready.

@@ -1,6 +1,6 @@
 ---
 name: loom-retrospective
-description: "Run Loom's compounding pass across existing owner layers. Use when a non-trivial ticket or initiative is closing, critique surfaced stable lessons, the same question has been re-derived, or accepted learning should be promoted into wiki, research, spec, plan, initiative, constitution, evidence, or memory."
+description: "Run Loom's compounding pass before closure. Use when accepted lessons should move into owner layers and memory needs support-only cleanup."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow
@@ -29,8 +29,8 @@ reminds operators that retrospective is a workflow route, not a new record kind.
   direction
 - evidence preservation for observed artifacts, challenged observations, or
   validation artifacts
-- memory updates for support-only continuity, retrieval cues, preferences, or
-  reminders
+- memory cleanup for support-only continuity, retrieval cues, preferences,
+  reminders, or owner-record pointers
 
 ## Use This Skill When
 
@@ -59,7 +59,8 @@ reminds operators that retrospective is a workflow route, not a new record kind.
 - changed principles, constraints, decisions, or roadmap direction -> `loom-constitution`
 - observed artifacts, challenged observations, or validation artifacts -> `loom-evidence`
 - missing evidence that still needs work -> ticket follow-up or test expectation
-- support-only recall, retrieval cues, preferences, or reminders -> `loom-memory`
+- support-only recall cleanup, retrieval cues, preferences, or reminders ->
+  support coordinator `loom-memory`; not a saved `next route:` token
 
 ## Retrospective Loop
 
@@ -82,7 +83,8 @@ practical:
 - recurring operator confusion -> wiki workflow or reference page
 - repeated implementation pitfall -> research null result or wiki troubleshooting
 - repeated project-local technique -> project-local skill
-- support-only reminder -> memory
+- support-only reminder -> support coordinator `loom-memory` after owner truth is
+  promoted or ruled out; not a saved `next route:` token
 
 If there is nothing durable to promote, say so. Do not invent artifacts to look
 productive.
@@ -135,5 +137,5 @@ Then read conditionally:
 6. `skills/loom-evidence/SKILL.md` when observed artifacts, challenged
    observations, or validation artifacts need preservation.
 7. `skills/loom-memory/SKILL.md` when support-only memory context may need
-   promotion to an owner layer, replacement with owner-record pointers, stale
-   marking, or pruning.
+   cleanup after owner truth is promoted or ruled out, replacement with
+   owner-record pointers, stale marking, or pruning.

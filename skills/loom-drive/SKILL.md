@@ -1,6 +1,6 @@
 ---
 name: loom-drive
-description: "Drive a high-level user objective across multiple Loom phases. Use when the user delegates an outcome that needs objective shaping, owner-record updates, bounded tickets, Ralph/local execution, evidence, critique, reassessment, and continuation without prompting every downstream step."
+description: "Drive delegated objectives through Loom owner layers. Use when advancement needs shaping, ticket tranches, execution, evidence, critique, and continuation."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow-coordinator

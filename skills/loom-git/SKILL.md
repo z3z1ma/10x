@@ -1,6 +1,6 @@
 ---
 name: loom-git
-description: "Use Git for Loom implementation isolation, diff review, and provenance. Use when discovering a repository's integration baseline, preparing branches or worktrees, coordinating parallel Ralph work, reviewing diffs, staging commits, merging, or recording Git context in packets and evidence."
+description: "Coordinate Git isolation and provenance for Loom work. Use when branches, worktrees, baselines, diffs, merges, or PR handoffs affect ticket or packet truth."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow

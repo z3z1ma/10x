@@ -1,6 +1,6 @@
 ---
 name: loom-bootstrap
-description: "Mandatory: use this first in a Loom workspace when Loom doctrine is not already present in the current context. Seeing this skill means Loom is active; read this skill and its ordered references before any work unless an adapter has already loaded the same bootstrap doctrine earlier in the context window."
+description: "Enter Loom doctrine before work. Use first in Loom workspaces unless an adapter has already loaded the ordered bootstrap references."
 compatibility: Markdown-native, skill-packaged Loom protocol.
 metadata:
   skill_kind: bootstrap

@@ -1,6 +1,6 @@
 ---
 name: loom-spike
-description: "Run bounded spike and sketch investigations as research variants. Use when an experiment, prototype, or UI/product sketch should produce evidence, conclusions, null results, and a downstream route without becoming a new layer."
+description: "Run bounded spike or sketch investigations. Use when an experiment, prototype, or UI/product sketch should produce evidence and a downstream route."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow

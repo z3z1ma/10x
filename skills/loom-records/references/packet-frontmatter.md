@@ -67,7 +67,15 @@ context_budget:
   max_excerpt_lines_per_file: <integer or unknown>
   avoid_full_file_reads: <true|false>
 # Context: source set the packet consumer should read or trust for this bounded task.
-sources: {}
+sources:
+  records:
+    - <record ref | None - rationale>
+  evidence:
+    - <evidence ref | None - rationale>
+  files:
+    - <path or glob | None - rationale>
+  external:
+    - <external ref | None - rationale>
 links: {}
 ---
 ```
@@ -125,6 +133,11 @@ The lists may overlap when the same record both shaped the packet and must be
 read by the consumer, but they do not need to be duplicate inventories. Prefer a
 short, truthful `compiled_from` list plus a task-specific `sources` mapping over
 performative repetition.
+
+Do not leave `sources` empty in a saved compiled packet. Empty source context is
+ambiguous and launch-blocking unless the packet family explicitly says no source
+context is granted and records `None - <rationale>` entries that make the bounded
+task safe.
 
 ## Optional Shared And Family Fields
 

@@ -1,6 +1,6 @@
 ---
 name: loom-research
-description: "Maintain reusable investigations, experiments, evidence synthesis, comparisons, and recommendations. Use when the project needs discovery before commitment, when tradeoffs should remain citable, or when implementation findings deserve a durable record instead of disappearing into chat."
+description: "Preserve reusable investigations. Use when evidence, tradeoffs, rejected options, null results, or external-source synthesis should remain citable."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer

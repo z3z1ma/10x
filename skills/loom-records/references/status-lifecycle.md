@@ -10,7 +10,10 @@ Tickets keep their own execution state machine in
 normal non-ticket record statuses plus boundary guidance for packet statuses,
 finding states, and ticket-owned dispositions.
 
-## Universal Vocabulary
+## Common Cross-Layer Status Words
+
+These words are common across several layers. They are not the complete status
+vocabulary; layer-specific status sets below are authoritative for each kind.
 
 - `draft` — proposed but not accepted for downstream use
 - `active` — current working truth for that layer

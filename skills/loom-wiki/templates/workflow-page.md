@@ -1,5 +1,5 @@
 ---
-id: wiki:<slug>
+id: "wiki:<workflow-slug>"
 kind: wiki
 page_type: workflow
 status: draft

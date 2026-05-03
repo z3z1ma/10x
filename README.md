@@ -572,6 +572,8 @@ Inside a Loom-enabled project, the runtime tree looks roughly like this:
 
 ```text
 .loom/
+├── workspace.md        # optional workspace metadata; support, not project truth
+├── harness.md          # optional harness metadata; support, not project truth
 ├── constitution/
 │   ├── constitution.md
 │   ├── decisions/

@@ -1,5 +1,5 @@
 ---
-id: wiki:<slug>
+id: "wiki:<concept-slug>"
 kind: wiki
 page_type: concept
 status: draft

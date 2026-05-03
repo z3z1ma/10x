@@ -111,6 +111,9 @@ the route sections that apply; remove or mark unrelated sections `N/A`.
 Local edit readiness:
 Bounded edit:
 Write boundary:
+Why this is cheap and safe in the current context:
+Expected evidence or observation:
+Escalation trigger if the edit becomes ambiguous, risky, behavior-defining, or too large:
 
 Ralph readiness, required only when the next route is `ralph`:
 
@@ -154,9 +157,14 @@ Broken, stale, or contradictory records or links:
 Graph consistency rule to restore:
 Dependent work that must wait:
 
-Constitution / initiative readiness:
-Owner truth to create or refine:
-Decision, objective, or boundary affected:
+Constitution readiness:
+Principle, constraint, decision, roadmap, or identity truth to create/refine:
+Why this belongs above initiative/plan/ticket:
+Downstream records to reconcile:
+
+Initiative readiness:
+Objective, metric, autonomy boundary, or strategic framing to create/refine:
+Success criteria / OBJ IDs affected:
 Downstream records to reconcile:
 
 Research readiness:
@@ -177,9 +185,16 @@ Ticket readiness:
 Execution-owner change needed:
 Owner-chain inputs to preserve:
 
-Wiki / retrospective / promotion readiness:
-Explanation or lesson to promote:
-Owner records to source:
+Wiki readiness:
+Accepted explanation or workflow to preserve:
+Source owner records and statuses:
+Evidence / critique basis:
+Limits and stale triggers:
+
+Retrospective readiness:
+Lesson or prevention artifact to evaluate:
+Candidate owner layers:
+Closure impact if promotion is deferred:
 
 Evidence readiness:
 Claims to support or challenge:
@@ -204,9 +219,11 @@ Reason no new scoping decision is needed:
 Ralph-outcome distinction: route token, not child outcome
 
 Stop readiness:
-Stop reason or condition:
-Owner record making the stop truthful:
-External action or future trigger that could reopen work:
+stop_kind: <TBD: satisfied | blocked | unsafe | out_of_scope | over_budget | awaiting_external | no_recoverable_route | not_worth_graph_cost | cancelled_by_owner>
+stop_reason:
+owner_record:
+resume_condition:
+closure_claim: <TBD: yes or no>
 Ralph-outcome distinction: route token, not child outcome
 
 # Evidence

@@ -93,13 +93,13 @@ example under review.
 
 ```bash
 rg -n '(<[^>[:cntrl:]]+>|\bTODO\b|\bTBD\b|[a-z]+:<[^>]+>|example:[a-z0-9-]+)' \
-  .loom/workspace.md .loom/harness.md .loom/support 2>/dev/null
+  .loom/workspace.md .loom/harness.md .loom/support .loom/memory 2>/dev/null
 ```
 
 Support hits do not become canonical-truth failures, but unresolved placeholders
-in workspace metadata, harness metadata, or saved support artifacts are still
-routing and recovery failures until cleared or explicitly documented as observed
-text.
+in workspace metadata, harness metadata, saved support artifacts, or memory files
+are still routing and recovery failures until cleared or explicitly documented as
+observed text.
 
 ### Status vocabulary spot check
 

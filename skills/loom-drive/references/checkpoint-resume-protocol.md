@@ -38,9 +38,10 @@ resume instruction: <one sentence a fresh parent can follow>
 updated_at: <timestamp>
 ```
 
-If `next route` is `stop`, record a local stop reason or condition next to the
-route, such as objective satisfied, blocked on external action, unsafe, out of
-scope, or over budget.
+If `next route` is `stop`, record controlled stop fields next to the route:
+`stop_kind`, `stop_reason`, `owner_record`, `resume_condition`, and
+`closure_claim`. Use `skills/loom-records/references/route-vocabulary.md` for the
+canonical `stop_kind` values.
 
 Put each field in the owner record that owns it. The initiative can summarize the
 drive anchor and objective status; tickets own active execution state, critique
@@ -80,10 +81,24 @@ There are two outcomes:
   `ticket` refinement, `evidence`, `critique`, `records_repair`, or `ask_user`
 - **execution blocked**: implementation, acceptance, shipping or external handoff
   packaging, and dependent continuation must not proceed until the gate is
-  repaired or the user explicitly accepts the risk in the owning ticket
+  repaired. Operator risk acceptance may disposition a known residual risk in the
+  owning ticket; it cannot satisfy a missing prerequisite gate.
 
 Failed gates do not block their own repair routes. They do block pretending the
 repair already happened.
+
+Accepted risk does not make these gate-passing:
+
+- missing mandatory critique
+- missing evidence required for the claim being made
+- ambiguous intended behavior for behavior-affecting work
+- unknown or overlapping write scope
+- stale source fingerprint for child launch
+- missing checkpoint fields required for recoverable continuation
+
+When the missing prerequisite can be repaired, route to the owner repair path.
+When the work is intentionally abandoned or unsafe to continue, route to `stop`
+with controlled stop fields and the owner record that makes the stop truthful.
 
 - Authority gate: objective, non-goals, `# Delegated Authority / Autonomy
   Boundaries`, and `# Objective-Level Stop Conditions` are clear enough for
@@ -97,10 +112,17 @@ repair already happened.
   route to spec before implementation.
 - Evidence gate: required observations exist; otherwise route to evidence or
   research before relying on the claim.
-- Critique gate: mandatory critique is complete, pending as next route, or
-  blocking according to ticket-owned disposition status; mandatory critique is
-  never `not_required`. Recommended or optional critique may be `not_required`
-  only with ticket-owned rationale;
+- Critique gate: mandatory critique has three outcomes:
+  - `complete`: downstream routes may proceed, subject to ticket-owned finding
+    dispositions.
+  - `pending`: only the `critique` repair route may proceed. `local_edit`,
+    `ralph`, `acceptance_review`, `ship`, external handoff/PR/release packaging,
+    dependent continuation, and route federation remain blocked.
+  - `blocking`: only repair, disposition, follow-up-ticket creation, or
+    `ask_user` may proceed according to the owning ticket.
+  Mandatory critique is never satisfied by `not_required`, `deferred`, draft
+  critique, stub critique, or an unreconciled packet result. Recommended or
+  optional critique may be `not_required` only with ticket-owned rationale;
   unresolved medium/high findings block acceptance and dependent implementation
   that would rely on the challenged claim.
 - Write-boundary gate: child write scopes are explicit and non-overlapping unless

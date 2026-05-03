@@ -43,8 +43,10 @@ tokens to owner layers or workflow/support coordinators.
   state and acceptance reconciliation
 - one bounded fresh-context implementation step -> route token `ralph`,
   coordinator `loom-ralph`, after the ticket is Ralph-ready
-- implementation isolation, branch/worktree hygiene, or Git provenance ->
-  coordinator `loom-git`
+- implementation isolation, branch/worktree hygiene, or Git provenance -> support
+  coordinator `loom-git`; do not record `next route: git` or `next route:
+  loom-git`. The saved route remains the owner/workflow token being served, such
+  as `ticket`, `ralph`, `local_edit`, `ship`, or `records_repair`.
 - debugging or incident flow -> route token `debugging`, coordinator
   `loom-debugging`
 - bounded experiment, prototype, or sketch -> route token `spike`, coordinator

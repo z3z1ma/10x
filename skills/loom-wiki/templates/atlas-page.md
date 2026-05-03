@@ -1,5 +1,5 @@
 ---
-id: wiki:<slug>
+id: "wiki:<atlas-slug>"
 kind: wiki
 page_type: atlas
 status: draft

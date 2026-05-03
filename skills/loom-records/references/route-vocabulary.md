@@ -46,17 +46,35 @@ skill name, command, or ticket status into a route token.
 | `acceptance_review` | evaluate ticket-owned acceptance, evidence/critique disposition, closure readiness, and residual risk without external handoff deciding closure |
 | `ship` | package already-truthful work for merge, release, PR, or handoff summaries without owning closure |
 | `continue` | route-token use only: proceed to the next already-governed tranche or route named by owner records; do not use this row to interpret a Ralph child outcome named `continue` |
-| `stop` | route-token use only: stop because the objective is satisfied, blocked, unsafe, out of scope, over budget, or awaiting external action; recorded stop routes must include a stop reason or condition; do not use this row to interpret a Ralph child outcome named `stop` |
+| `stop` | route-token use only: stop because the objective is satisfied, blocked, unsafe, out of scope, over budget, awaiting external action, cancelled, or not worth graph cost; recorded stop routes must include controlled stop fields; do not use this row to interpret a Ralph child outcome named `stop` |
 
 Workflow coordinator tokens exist only when the coordinator is itself the next
-governed move. Use `debugging`, `spike`, `codemap`, or `ship` when the next step
-is to run that first-class workflow, such as drafting PR summaries, release notes,
-handoff packages, evidence/risk summaries, or follow-up lists from already
-truthful owner records. If the next truth change is already narrower, route
-through the owner token instead: for example, use `research` for a known
-investigation write, `evidence` for an observation record, `wiki` for an accepted
-atlas page, `ralph` for a bounded implementation packet, `critique` for review,
-or `acceptance_review` for ticket-owned closure and residual-risk evaluation.
+governed move. Use workflow route tokens such as `debugging`, `spike`, `codemap`,
+`ship`, or `retrospective` when the next step is to run that first-class workflow,
+such as drafting PR summaries, release notes, handoff packages, evidence/risk
+summaries, follow-up lists, or promotion disposition from already-truthful owner
+records. If the next truth change is already narrower, route through the owner
+token instead: for example, use `research` for a known investigation write,
+`evidence` for an observation record, `wiki` for an accepted atlas page, `ralph`
+for a bounded implementation packet, `critique` for review, or
+`acceptance_review` for ticket-owned closure and residual-risk evaluation.
+
+## `stop` Readiness
+
+For `next route: stop`, record:
+
+```text
+stop_kind: satisfied | blocked | unsafe | out_of_scope | over_budget | awaiting_external | no_recoverable_route | not_worth_graph_cost | cancelled_by_owner
+stop_reason: <why work stops now>
+owner_record: <record that makes the stop truthful>
+resume_condition: <condition that could make work safe or useful again, or None>
+closure_claim: yes | no
+```
+
+`stop_kind: satisfied` may support closure only when ticket-owned acceptance,
+evidence, critique, and retrospective / promotion disposition are already
+closure-compatible. Other stop kinds pause, abandon, or block continuation; they
+do not imply closure.
 
 ## `local_edit` Boundaries
 
@@ -92,6 +110,7 @@ more than one category; the field and owner decide what the word means.
 | Critique-owned finding states | `open`, `withdrawn` | Live inside critique records and describe whether the critique still stands behind a finding. They are not ticket states or route tokens. |
 | Ticket-owned finding dispositions | `resolved`, `accepted_risk`, `superseded`, `converted_to_follow_up` | Live in the ticket's critique disposition section for qualified findings. They are not critique finding states and do not name the next route. |
 | Support-memory surfaces | `memory`, `loom-memory`, retrieval cues, preferences, reminders, hot context | Memory is optional support recall, not canonical project truth. Do not use `memory` as a `next route:` token; route durable truth changes through the owner token that owns them. |
+| Git support coordinator | `git`, `loom-git`, branch, worktree, baseline, diff provenance | Git coordination is support behavior, not a route token. Do not record `next route: git` or `next route: loom-git`; record the owner/workflow token being served, such as `ticket`, `ralph`, `local_edit`, `ship`, or `records_repair`. |
 | Commands and adapters | slash commands, harness commands, MCPs, package-specific wrappers | Commands may transport or prompt a route, but owner records and workflow skills still own Loom truth. |
 | Skill display names | Ralph, loom-drive, loom-critique | Use ordinary prose for skill names. In a route-value field, use the token (`ralph`, `debugging`, `spike`, `codemap`, `ship`, `continue`, `acceptance_review`, etc.) rather than title case, spaces, or hyphens. Do not add a token merely because a skill exists; route tokens name governed moves, not the skill inventory. |
 
@@ -135,7 +154,11 @@ owner record to update after answer: constitution:main or decision:<slug>
 proposed next route: research
 
 next route: stop
-stop reason: OBJ-001 and OBJ-002 are satisfied, required evidence is linked, and no owner work remains.
+stop_kind: satisfied
+stop_reason: OBJ-001 and OBJ-002 are satisfied, required evidence is linked, and no owner work remains.
+owner_record: ticket:<token>
+resume_condition: None - objective is satisfied
+closure_claim: yes
 
 next route: continue
 continue reason: ticket:<token> already names the next governed tranche; this is not a Ralph child outcome.

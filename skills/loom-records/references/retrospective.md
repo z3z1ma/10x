@@ -31,7 +31,8 @@ route by owner:
 - changed strategic framing -> `loom-initiatives`
 - changed durable policy or principle -> `loom-constitution`
 - observed artifact, challenged observation, or validation artifact -> `loom-evidence`
-- support-only continuity, retrieval cue, preference, or reminder -> `loom-memory`
+- support-only recall cleanup, retrieval cue, preference, reminder, or owner-record
+  pointer -> support coordinator `loom-memory`; not a saved `next route:` token
 
 After routing, update the ticket or initiative that owns the closing work to say
 what was promoted, deferred, blocking, or not required. Retrospective remains a

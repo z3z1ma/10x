@@ -1,6 +1,6 @@
 ---
 name: loom-plans
-description: "Maintain execution strategy, decomposition, sequencing, rollout, and milestone coordination. Use when the work needs more than one ticket, when order matters, or when the project needs an explicit route from strategy to bounded execution."
+description: "Maintain sequencing and rollout strategy. Use when work needs multiple tickets, dependency order, tranches, or execution waves."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer

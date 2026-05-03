@@ -1,6 +1,6 @@
 ---
 name: loom-ship
-description: "Package already-truthful Loom work for merge, release, or handoff without closing tickets. Use when ticket, evidence, critique, and promotion disposition should become a PR summary, release note draft, risk summary, or follow-up list."
+description: "Package already-truthful Loom work. Use when PR, release, evidence/risk, follow-up, or handoff summaries should mirror owner records."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow

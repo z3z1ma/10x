@@ -60,10 +60,23 @@ When you need to create a record, prefer one of these:
 ### Copy a template
 
 Copy from the installed Loom skill package path for the current harness. In a
-source checkout or repo-root skill installation, that may look like:
+source checkout or repo-root skill installation, use a copy-safe flow that refuses
+placeholder filenames:
 
 ```bash
-cp skills/loom-tickets/templates/ticket.md ".loom/tickets/<YYYYMMDD>-<token>-<short-slug>.md"
+token="$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8)"
+stamp="$(date -u +%Y%m%d)"
+slug="${LOOM_TICKET_SLUG:-}"
+
+case "$slug" in
+  ""|*[!a-z0-9-]*)
+    printf 'Set LOOM_TICKET_SLUG to a lowercase slug before copying.\n' >&2
+    exit 1
+    ;;
+esac
+
+path=".loom/tickets/${stamp}-${token}-${slug}.md"
+cp skills/loom-tickets/templates/ticket.md "$path"
 ```
 
 ### Emit a here-doc

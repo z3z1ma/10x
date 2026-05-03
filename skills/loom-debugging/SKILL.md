@@ -1,6 +1,6 @@
 ---
 name: loom-debugging
-description: "Run a reproduce-first debug or incident workflow through existing Loom layers. Use when behavior fails, root cause is unknown, or a fix needs reproduction evidence, root-cause preservation, and regression evidence."
+description: "Run reproduce-first debugging. Use when behavior fails, root cause is unknown, or a fix needs red/green evidence."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow

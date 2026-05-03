@@ -1,6 +1,6 @@
 ---
 name: loom-critique
-description: "Run adversarial review as a first-class Loom layer. Use when code changes, behavior changes, Loom records, or other work products need pressure-testing against evidence before acceptance."
+description: "Run adversarial review. Use when code, behavior, records, evidence, or acceptance claims need pressure-testing before acceptance."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer

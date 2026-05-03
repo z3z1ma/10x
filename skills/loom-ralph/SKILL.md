@@ -1,6 +1,6 @@
 ---
 name: loom-ralph
-description: "Run the inner implementation loop through bounded fresh-context packets. Use when one exact ticket is Ralph-ready for one explicit implementation iteration and the write boundary, verification posture, source fingerprint, and output contract should be declared up front. For critique or wiki packets, activate the domain skill first and reuse packet discipline there."
+description: "Run Ralph implementation packets. Use when a Ralph-ready ticket needs fresh context with explicit scope, fingerprint, verification, and output contract."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: inner-loop

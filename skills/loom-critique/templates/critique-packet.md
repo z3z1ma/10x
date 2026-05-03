@@ -59,7 +59,15 @@ context_budget:
   max_excerpt_lines_per_file: 80
   avoid_full_file_reads: true
 # Context: source set the critique reviewer should read or trust for this bounded review.
-sources: {}
+sources:
+  target_records:
+    - "<TBD: record ref under review, or None - rationale>"
+  evidence:
+    - "<TBD: evidence ref to review, or None - rationale>"
+  diffs_or_paths:
+    - "<TBD: path, branch, commit range, PR, or None - rationale>"
+  prior_packets:
+    - "<TBD: packet ref to review, or None - rationale>"
 links: {}
 ---
 
@@ -92,7 +100,9 @@ only when `loom-critique` explicitly allows that for the review shape.
 Use `source_fingerprint.compiled_from` for packet compilation provenance and
 `sources` for review context such as governing records, evidence, diffs, prior
 packet output, or changed files. The lists may overlap, but critique packets do
-not need duplicate source inventories to satisfy shared packet grammar.
+not need duplicate source inventories to satisfy shared packet grammar. Do not
+leave `sources` empty in a saved compiled critique packet; use exact refs or
+`None - <rationale>` entries.
 
 `target` may name `ticket:<token>` when the ticket itself is the review target,
 but critique packets may also target a record, diff, path set, external summary,

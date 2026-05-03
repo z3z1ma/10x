@@ -1,6 +1,6 @@
 ---
 name: loom-tickets
-description: "Maintain live execution records and ticket-owned acceptance decisions. Use when new work needs a bounded owner, when execution status, blockers, evidence, critique, route-specific wiki, or retrospective / promotion disposition changes, or when Ralph and other workflow passes must reconcile their consequences into ticket truth."
+description: "Maintain ticket execution and acceptance. Use when bounded work, state, blockers, evidence/critique disposition, route readiness, or closure truth changes."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -94,7 +94,17 @@ installation, that may look like:
 ```bash
 token="$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8)"
 stamp="$(date -u +%Y%m%d)"
-cp skills/loom-tickets/templates/ticket.md ".loom/tickets/${stamp}-${token}-short-slug.md"
+slug="${LOOM_TICKET_SLUG:-}"
+
+case "$slug" in
+  ""|*[!a-z0-9-]*)
+    printf 'Set LOOM_TICKET_SLUG to a lowercase slug before copying.\n' >&2
+    exit 1
+    ;;
+esac
+
+path=".loom/tickets/${stamp}-${token}-${slug}.md"
+cp skills/loom-tickets/templates/ticket.md "$path"
 ```
 
 Then replace the placeholders in the copied file.

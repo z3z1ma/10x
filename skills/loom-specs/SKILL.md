@@ -1,6 +1,6 @@
 ---
 name: loom-specs
-description: "Maintain behavior contracts, requirements, scenarios, constraints, and acceptance criteria. Use when intended behavior is still fuzzy, when downstream implementation needs one canonical contract, or when critique and wiki will need a stable statement of what the system is supposed to do."
+description: "Define intended behavior and acceptance contracts. Use when requirements, scenarios, constraints, or acceptance criteria are fuzzy or reusable."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer

@@ -94,7 +94,8 @@ Route scratchpad-like material to the smallest correct owner instead:
 - adversarial findings, verdicts, residual risks, or required follow-up -> critique
 - synthesis, tradeoffs, rejected options, and null results -> research
 - accepted explanation or reusable workflow knowledge -> wiki
-- support-only reminders, retrieval cues, or pointers to owners -> memory
+- support-only reminders, retrieval cues, or pointers to owners -> support
+  coordinator `loom-memory`; not a saved `next route:` token
 - intended behavior -> spec
 - sequencing or rollout strategy -> plan
 - principles, constraints, and citable decisions -> constitution

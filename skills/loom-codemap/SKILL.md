@@ -1,6 +1,6 @@
 ---
 name: loom-codemap
-description: "Map a repository or module into Loom wiki, research, and evidence. Use when orientation cost is high, packet compilation keeps rediscovering structure, or path-local context adapters need safe source records."
+description: "Map repository or module structure. Use when orientation is costly, packets rediscover paths, or accepted atlas/research/evidence context is needed."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow

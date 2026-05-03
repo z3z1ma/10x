@@ -1,6 +1,6 @@
 ---
 name: loom-constitution
-description: "Maintain durable project identity, principles, constraints, strategic direction, decision records, and roadmap records. Use when the work changes what the project is, what it values, what it refuses, or what long-lived direction it is committing to beyond current execution."
+description: "Maintain durable project identity and constraints. Use when principles, decisions, roadmap direction, or long-lived project policy must change."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer

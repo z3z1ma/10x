@@ -1,6 +1,6 @@
 ---
 name: loom-initiatives
-description: "Maintain strategic outcome containers above plans and tickets. Use when the work spans multiple downstream artifacts, needs durable success metrics or milestones, or should have one long-lived strategic owner instead of a loose pile of tickets."
+description: "Maintain strategic outcome framing. Use when work spans tickets, needs success metrics, delegated autonomy, or a long-lived objective owner."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer

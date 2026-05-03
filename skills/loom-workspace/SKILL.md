@@ -1,6 +1,6 @@
 ---
 name: loom-workspace
-description: "Enter a Loom workspace safely: discover structure, bootstrap the tree, resolve ownership, read constitution first, and route to the correct subsystem before downstream work. Use when the next owner layer is unclear, the workspace may be uninitialized, scope looks ambiguous, or you need to decide whether the next move is outer-loop framing, evidence, Ralph execution, critique, wiki, retrospective, or another workflow coordinator."
+description: "Enter or repair a Loom workspace before downstream work. Use when repository scope, Loom structure, owner chain, workspace trust, or next route is unclear."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: control-plane

@@ -4,6 +4,8 @@ A Loom-enabled project normally uses this workspace tree:
 
 ```text
 .loom/
+├── workspace.md        # optional workspace metadata; support, not project truth
+├── harness.md          # optional harness metadata; support, not project truth
 ├── constitution/
 │   ├── constitution.md
 │   ├── decisions/
@@ -32,6 +34,10 @@ fresh checkout may omit owner paths or support paths that have no records yet.
 Bootstrap should create the standard owner and packet/memory support tree when
 needed, and any directory that contains records should use the path assigned to
 that record or support kind.
+
+`.loom/workspace.md` and `.loom/harness.md` are optional support metadata files.
+They help entry, scope, and fresh-context launch recovery; they do not own project
+truth.
 
 The canonical owner paths are `constitution`, `initiatives`, `research`,
 `specs`, `plans`, `tickets`, `critique`, `wiki`, and `evidence`. `packets`,

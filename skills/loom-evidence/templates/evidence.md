@@ -85,4 +85,7 @@ this evidence alone.
 
 # Related Records
 
-Link or name the ticket, critique, wiki page, plan, or spec this evidence supports.
+Link or name relevant ticket, spec, plan, research, initiative, decision,
+evidence, critique, wiki, packet, ship package, or support artifact refs. Do not
+imply support artifacts own the claim; use them only as provenance, handoff, or
+navigation context.

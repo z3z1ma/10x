@@ -1,5 +1,5 @@
 ---
-id: wiki:<slug>
+id: "wiki:<reference-slug>"
 kind: wiki
 page_type: reference
 status: draft
