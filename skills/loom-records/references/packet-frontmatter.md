@@ -60,7 +60,7 @@ execution_context:
   isolation: <none|branch|worktree|sandbox|unknown>
   git_shared_metadata_mutations: <forbidden|allowed|unknown>
   destructive_commands: <forbidden|allowed|unknown>
-  network: <allowed|forbidden|unknown>
+  network: <allowed|forbidden|unknown - rationale when unknown>
 context_budget:
   posture: <tight|normal|expansive>
   max_source_files: <integer or unknown>
@@ -395,7 +395,7 @@ execution_context:
   isolation: <none|branch|worktree|sandbox|unknown>
   git_shared_metadata_mutations: <forbidden|allowed|unknown>
   destructive_commands: <forbidden|allowed|unknown>
-  network: <allowed|forbidden|unknown>
+  network: <allowed|forbidden|unknown - rationale when unknown>
 ```
 
 Ralph packets must declare enough execution context for launch safety, including
@@ -403,6 +403,21 @@ branch/worktree/isolation and command-policy expectations. For non-Git,
 read-only, critique, or wiki packet work, use `none` or `unknown` honestly rather
 than inventing a branch, worktree, remote, or command policy the parent did not
 actually establish.
+
+`execution_context.network` must be one of these explicit postures:
+
+- `allowed` — network use is permitted within the bounded packet task and any
+  higher-priority harness or operator constraints.
+- `forbidden` — the packet work must not intentionally use the network.
+- `unknown - <rationale>` — the parent cannot truthfully determine the network
+  posture, but records why launching is still safe for this bounded packet work.
+
+Bare `network: unknown`, or an unknown network posture whose rationale does not
+make launch safe for the bounded task, is launch-blocking. The parent should
+resolve the posture to `allowed` or `forbidden`, add a sufficient `unknown -
+<rationale>` explanation, or supersede the packet rather than asking the packet
+consumer to guess. This fail-closed launch gate does not forbid all network use;
+it prevents silent launch under an unexplained network boundary.
 
 ## Context Budget
 

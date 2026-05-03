@@ -184,8 +184,9 @@ makes that necessary, and should say so in its output.
 Ralph packets must declare the execution environment using the shared
 `execution_context` field. For Git-backed work this includes branch, worktree,
 isolation, network posture, destructive-command policy, and shared Git metadata
-policy; unknown values require rationale and should be launch blockers when they
-make the child boundary unsafe.
+policy. Unknown values require rationale and should be launch blockers when they
+make the child boundary unsafe; `network: unknown` specifically fails closed
+unless the packet records why that uncertainty is safe for the bounded child work.
 
 Required frontmatter:
 
@@ -197,11 +198,20 @@ execution_context:
   isolation: none | branch | worktree | sandbox
   git_shared_metadata_mutations: forbidden | allowed | unknown
   destructive_commands: forbidden
-  network: allowed | forbidden | unknown
+  network: allowed | forbidden | unknown - rationale when unknown
 ```
 
 This helps a future parent understand where the child worked and what tool
 permissions were expected.
+
+Preserve `network: allowed` and `network: forbidden` as explicit launch-ready
+choices when they truthfully describe the intended run. Use `network: unknown -
+<rationale>` only when the parent cannot resolve the network posture and the
+rationale explains why the child can still safely execute the packet without
+guessing about network boundaries. Bare `network: unknown`, or a rationale that
+does not make the bounded work safe, is launch-blocking; clarify or supersede the
+packet before launch rather than imposing a blanket network ban or relying on a
+runtime policy engine.
 
 Use `skills/loom-git/SKILL.md` when choosing these values for Git-backed work.
 For fork/upstream, stacked-diff, and multi-repo packets, name the primary

@@ -44,7 +44,7 @@ execution_context:
   isolation: none
   git_shared_metadata_mutations: forbidden
   destructive_commands: forbidden
-  network: "<TBD: choose allowed, forbidden, or unknown - rationale before saving>"
+  network: "<TBD: choose allowed, forbidden, or unknown - rationale that makes launch safe before saving>"
 context_budget:
   posture: normal
   max_source_files: 8
@@ -110,7 +110,9 @@ Before launch, the parent verifies:
 - parent merge scope: `parent_merge_scope` names the ticket and any evidence,
   critique, packet-status, or other paths the parent must reconcile after return
 - Git/execution context: branch, worktree, isolation, network posture, destructive
-  command policy, and shared Git metadata policy match the intended run
+  command policy, and shared Git metadata policy match the intended run; bare
+  `network: unknown` is launch-blocking unless the packet records why that
+  uncertainty is safe for this bounded iteration
 - verification posture: `verification_posture` fits the change class and names
   the red/green, before/after, or verification-neutral evidence expected
 - stop conditions: freshness, scope boundary, execution-context, and

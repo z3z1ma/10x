@@ -52,7 +52,7 @@ execution_context:
   isolation: <none|branch|worktree|sandbox|unknown>
   git_shared_metadata_mutations: <forbidden|allowed|unknown>
   destructive_commands: <forbidden|allowed|unknown>
-  network: "<TBD: choose allowed, forbidden, or unknown - rationale before saving>"
+  network: "<TBD: choose allowed, forbidden, or unknown - rationale that makes launch safe before saving>"
 context_budget:
   posture: normal
   max_source_files: 8
@@ -84,9 +84,10 @@ Keep enough packet metadata for the reviewer and parent to identify the target,
 source baseline, child/reviewer write boundary, and parent reconciliation targets.
 Use `unknown`, `none`, or an explicit rationale when exact Git or execution
 details are unavailable or not material to the review; do not invent branch,
-remote, worktree, or command-policy precision. Omit or mark common support blocks
-inapplicable only when `loom-critique` explicitly allows that for the review
-shape.
+remote, worktree, or command-policy precision. For `execution_context.network`,
+bare `unknown` is launch-blocking unless the packet records why that uncertainty
+is safe for the bounded review. Omit or mark common support blocks inapplicable
+only when `loom-critique` explicitly allows that for the review shape.
 
 Use `source_fingerprint.compiled_from` for packet compilation provenance and
 `sources` for review context such as governing records, evidence, diffs, prior
