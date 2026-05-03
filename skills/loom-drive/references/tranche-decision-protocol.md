@@ -73,7 +73,8 @@ ticket or operator explicitly records a different rationale.
 | A ticket is Ralph-ready for one bounded implementation iteration that needs a fresh child packet or explicit write boundary | `ralph` |
 | Observed support or challenge needs durable preservation | `evidence` |
 | Risk, protocol authority, code behavior, or acceptance sufficiency needs review | `critique` |
-| Accepted explanation should persist for future agents | `wiki` or `retrospective` |
+| Accepted reusable explanation, architecture explanation, or workflow concept should persist for future agents | `wiki` |
+| Accepted learning should compound or promote across owner layers before closure | `retrospective` |
 | Ticket-owned closure readiness needs evaluation | `acceptance_review` |
 | Already-truthful work needs merge, release, PR, or handoff packaging | `ship` |
 | A route result has been reconciled into owner records, and those records already name the next governed tranche or route | `continue`, as a route token only; not a Ralph child outcome |

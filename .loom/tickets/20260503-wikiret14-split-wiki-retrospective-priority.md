@@ -1,11 +1,11 @@
 ---
 id: ticket:wikiret14
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T06:20:11Z
-updated_at: 2026-05-03T06:20:11Z
+updated_at: 2026-05-03T06:54:13Z
 scope:
   kind: repository
   repositories:
@@ -73,12 +73,12 @@ promotion pass across owner layers.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-015` | pending | pending | open |
-| `ticket:wikiret14#ACC-001` | pending | pending | open |
-| `ticket:wikiret14#ACC-002` | pending | pending | open |
-| `ticket:wikiret14#ACC-003` | pending | pending | open |
-| `ticket:wikiret14#ACC-004` | pending | pending | open |
-| `ticket:wikiret14#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-015` | `evidence:wiki-retrospective-priority-validation` | `critique:wiki-retrospective-priority-review` | supported |
+| `ticket:wikiret14#ACC-001` | `evidence:wiki-retrospective-priority-validation` | `critique:wiki-retrospective-priority-review` | supported |
+| `ticket:wikiret14#ACC-002` | `evidence:wiki-retrospective-priority-validation` | `critique:wiki-retrospective-priority-review` | supported |
+| `ticket:wikiret14#ACC-003` | `evidence:wiki-retrospective-priority-validation` | `critique:wiki-retrospective-priority-review` | supported |
+| `ticket:wikiret14#ACC-004` | `evidence:wiki-retrospective-priority-validation` | `critique:wiki-retrospective-priority-review` | supported |
+| `ticket:wikiret14#ACC-005` | `evidence:wiki-retrospective-priority-validation` | `critique:wiki-retrospective-priority-review` | supported |
 
 # Execution Notes
 
@@ -86,25 +86,30 @@ Likely touched file: `skills/loom-drive/references/tranche-decision-protocol.md`
 
 # Blockers
 
-Blocked until `ticket:shipacc1` and `ticket:drvcont13` close.
+None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:wroute15`.
+
+Ralph packet `packet:ralph-ticket-wikiret14-20260503T064951Z` completed in scope,
+evidence was recorded, mandatory critique passed with no findings, and acceptance
+is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: split wiki and retrospective drive priority rows.
-Write boundary: drive tranche decision reference only.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed file, row separation observations, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:wiki-retrospective-priority-validation` and mandatory critique
+`critique:wiki-retrospective-priority-review` support closure with no findings.
 
 # Evidence
 
-Expected: targeted searches for `wiki`, `retrospective`, route priority,
-reconciliation guidance, and `git diff --check`.
+Recorded:
+
+- `evidence:wiki-retrospective-priority-validation`
+
+The evidence records targeted searches for `wiki`, `retrospective`, route
+priority, reconciliation guidance, and `git diff --check`.
 
 # Critique Disposition
 
@@ -122,9 +127,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:wiki-retrospective-priority-review` - no findings; mandatory critique
+passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -132,18 +138,32 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Separate drive `wiki` and `retrospective` route-priority rows were promoted into
+  `skills/loom-drive/references/tranche-decision-protocol.md`.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to drive tranche decision guidance.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in drive
+tranche decision guidance.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T06:54:13Z
+Basis: Ralph packet `packet:ralph-ticket-wikiret14-20260503T064951Z`; evidence
+`evidence:wiki-retrospective-priority-validation`; mandatory critique
+`critique:wiki-retrospective-priority-review` with no findings.
+Residual risks: Documentation-only enforcement depends on future operators
+choosing between wiki capture and retrospective promotion correctly.
 
 # Dependencies
 
@@ -153,3 +173,12 @@ Residual risks:
 # Journal
 
 - 2026-05-03T06:20:11Z: Created from third-pass audit finding 3.
+- 2026-05-03T06:49:51Z: Started Ralph iteration
+  `packet:ralph-ticket-wikiret14-20260503T064951Z` from clean `main` at
+  `922e342`.
+- 2026-05-03T06:51:39Z: Ralph iteration consumed. Product edit landed inside
+  packet write scope, `evidence:wiki-retrospective-priority-validation` recorded,
+  and ticket moved to `review_required` for mandatory critique.
+- 2026-05-03T06:54:13Z: Mandatory critique
+  `critique:wiki-retrospective-priority-review` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.
