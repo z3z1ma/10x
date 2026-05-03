@@ -1,11 +1,11 @@
 ---
 id: ticket:retmem27
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T06:20:11Z
-updated_at: 2026-05-03T06:20:11Z
+updated_at: 2026-05-03T08:41:48Z
 scope:
   kind: repository
   repositories:
@@ -17,6 +17,8 @@ links:
     - plan:skills-corpus-context-integrity-hardening-pass
   research:
     - research:skills-corpus-third-pass-follow-up-validation
+  critique:
+    - critique:retrospective-memory-read-order-review
 external_refs: {}
 depends_on:
   - ticket:shipacc1
@@ -72,12 +74,12 @@ to prune stale support context.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-028` | pending | pending | open |
-| `ticket:retmem27#ACC-001` | pending | pending | open |
-| `ticket:retmem27#ACC-002` | pending | pending | open |
-| `ticket:retmem27#ACC-003` | pending | pending | open |
-| `ticket:retmem27#ACC-004` | pending | pending | open |
-| `ticket:retmem27#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-028` | `evidence:retrospective-memory-read-order-validation` | `critique:retrospective-memory-read-order-review` | supported |
+| `ticket:retmem27#ACC-001` | `evidence:retrospective-memory-read-order-validation` | `critique:retrospective-memory-read-order-review` | supported |
+| `ticket:retmem27#ACC-002` | `evidence:retrospective-memory-read-order-validation` | `critique:retrospective-memory-read-order-review` | supported |
+| `ticket:retmem27#ACC-003` | `evidence:retrospective-memory-read-order-validation` | `critique:retrospective-memory-read-order-review` | supported |
+| `ticket:retmem27#ACC-004` | `evidence:retrospective-memory-read-order-validation` | `critique:retrospective-memory-read-order-review` | supported |
+| `ticket:retmem27#ACC-005` | `evidence:retrospective-memory-read-order-validation` | `critique:retrospective-memory-read-order-review` | supported |
 
 # Execution Notes
 
@@ -85,11 +87,15 @@ Likely touched file: `skills/loom-retrospective/SKILL.md`.
 
 # Blockers
 
-Blocked until `ticket:shipacc1` closes.
+None - prerequisite `ticket:shipacc1` is closed and pushed.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to the next open ticket.
+
+Ralph packet `packet:ralph-ticket-retmem27-20260503T083812Z` completed in scope,
+evidence was recorded, mandatory critique passed with no findings, and acceptance
+is complete.
 
 # Route Readiness
 
@@ -100,10 +106,18 @@ Likely verification posture: observation-first structural validation.
 Expected output contract: changed file, memory read-order observations, and
 critique recommendation.
 
+Acceptance review readiness:
+Evidence `evidence:retrospective-memory-read-order-validation` and mandatory
+critique `critique:retrospective-memory-read-order-review` support closure.
+
 # Evidence
 
 Expected: targeted searches for `loom-memory`, memory promotion/pruning, support
 recall, ticket closure boundary, and `git diff --check`.
+
+Recorded:
+
+- `evidence:retrospective-memory-read-order-validation`
 
 # Critique Disposition
 
@@ -122,9 +136,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:retrospective-memory-read-order-review`: no findings; mandatory
+critique passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -132,18 +147,33 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Retrospective memory read-order guidance was promoted into
+  `skills/loom-retrospective/SKILL.md`.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable operator guidance belongs in the retrospective skill itself.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted guidance lives in the
+retrospective skill.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T08:41:48Z
+Basis: Ralph packet `packet:ralph-ticket-retmem27-20260503T083812Z`; evidence
+`evidence:retrospective-memory-read-order-validation`; mandatory critique
+`critique:retrospective-memory-read-order-review` with no findings.
+Residual risks: Low residual risk that the read-order cue remains concise rather
+than restating the full memory model; accepted because it points to the owning
+`loom-memory` skill for details.
 
 # Dependencies
 
@@ -152,3 +182,11 @@ Residual risks:
 # Journal
 
 - 2026-05-03T06:20:11Z: Created from third-pass secondary polish finding.
+- 2026-05-03T08:38:11Z: Parent confirmed prerequisite is closed and pushed,
+  moved this ticket to active, and compiled Ralph iteration 1.
+- 2026-05-03T08:39:46Z: Ralph child returned `stop`; parent accepted the scoped
+  implementation output, recorded evidence, consumed the packet, and moved to
+  mandatory critique.
+- 2026-05-03T08:41:48Z: Mandatory critique
+  `critique:retrospective-memory-read-order-review` passed with no findings.
+  Parent recorded retrospective / promotion disposition and accepted closure.

@@ -134,3 +134,6 @@ Then read conditionally:
    when the lesson changes the owner truth those layers maintain.
 6. `skills/loom-evidence/SKILL.md` when observed artifacts, challenged
    observations, or validation artifacts need preservation.
+7. `skills/loom-memory/SKILL.md` when support-only memory context may need
+   promotion to an owner layer, replacement with owner-record pointers, stale
+   marking, or pruning.
