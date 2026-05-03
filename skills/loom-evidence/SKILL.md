@@ -63,6 +63,8 @@ Good evidence is:
 
 - observed, not inferred
 - specific about procedure and environment
+- clear about expected result versus actual observed result when a claim names an
+  expected behavior or outcome
 - freshness-aware about the source, record, dependency, and environment state it
   was gathered from
 - explicit about what it supports and what it does not establish
@@ -76,12 +78,13 @@ Good evidence is:
    evidence bears on
 2. record when it was observed, the source state observed, and the exact
    procedure or source of observation
-3. record artifacts, outputs, screenshots, logs, commands, files, or observations
-4. record the observed procedure verdict and exit code when applicable
-5. list supported claims and challenged claims separately
-6. state environment, freshness, validity, recheck trigger, invalidation or
+3. record the expected result when applicable and the actual observed result
+4. record artifacts, outputs, screenshots, logs, commands, files, or observations
+5. record the observed procedure verdict and exit code when applicable
+6. list supported claims, challenged claims, and weak or partial support separately
+7. state environment, freshness, validity, recheck trigger, invalidation or
    supersession conditions, and limitations
-7. link the evidence back into the ticket or other owner record that needs it
+8. link the evidence back into the ticket or other owner record that needs it
 
 ## Done Means
 

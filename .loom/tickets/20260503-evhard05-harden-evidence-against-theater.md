@@ -1,11 +1,11 @@
 ---
 id: ticket:evhard05
 kind: ticket
-status: ready
-change_class: evidence-quality
+status: closed
+change_class: protocol-authority
 risk_class: medium
 created_at: 2026-05-03T04:09:51Z
-updated_at: 2026-05-03T04:09:51Z
+updated_at: 2026-05-03T05:31:12Z
 scope:
   kind: repository
   repositories:
@@ -73,12 +73,12 @@ closure becomes untrustworthy.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-006` | pending | pending | open |
-| `ticket:evhard05#ACC-001` | pending | pending | open |
-| `ticket:evhard05#ACC-002` | pending | pending | open |
-| `ticket:evhard05#ACC-003` | pending | pending | open |
-| `ticket:evhard05#ACC-004` | pending | pending | open |
-| `ticket:evhard05#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-006` | `evidence:evidence-anti-theater-validation` | `critique:evidence-anti-theater-review` | supported |
+| `ticket:evhard05#ACC-001` | `evidence:evidence-anti-theater-validation` | `critique:evidence-anti-theater-review` | supported |
+| `ticket:evhard05#ACC-002` | `evidence:evidence-anti-theater-validation` | `critique:evidence-anti-theater-review` | supported |
+| `ticket:evhard05#ACC-003` | `evidence:evidence-anti-theater-validation` | `critique:evidence-anti-theater-review` | supported |
+| `ticket:evhard05#ACC-004` | `evidence:evidence-anti-theater-validation` | `critique:evidence-anti-theater-review` | supported |
+| `ticket:evhard05#ACC-005` | None - critique outcome is the acceptance instrument | `critique:evidence-anti-theater-review` | supported |
 
 # Execution Notes
 
@@ -92,22 +92,21 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:reconchk`.
+
+Ralph packet `packet:ralph-ticket-evhard05-20260503T052442Z` completed in scope,
+evidence was recorded, mandatory critique passed with no findings, and acceptance
+is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: evidence anti-theater hardening.
-Write boundary: evidence skill/template/reference and directly related claim
-coverage examples.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, evidence-quality observations, and
-critique recommendation.
+Acceptance review readiness:
+Evidence `evidence:evidence-anti-theater-validation` and mandatory critique
+`critique:evidence-anti-theater-review` support closure with no findings.
 
 # Evidence
 
-Expected: targeted searches for expected/actual, source state, support/challenge,
-limitations, recheck/invalidated-by, and `git diff --check`.
+Recorded: `evidence:evidence-anti-theater-validation`.
 
 # Critique Disposition
 
@@ -125,9 +124,9 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:evidence-anti-theater-review` - no findings; mandatory critique passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -135,18 +134,34 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Evidence expected/actual, freshness, partial-support, untested-limit, and
+  anti-acceptance guidance was promoted directly into the evidence skill,
+  evidence-quality reference, evidence template, and claim-coverage example.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to evidence guidance and claim-coverage examples.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+evidence skill/reference/template and claim-coverage reference.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T05:31:12Z
+Basis: Ralph packet `packet:ralph-ticket-evhard05-20260503T052442Z`; evidence
+`evidence:evidence-anti-theater-validation`; mandatory critique
+`critique:evidence-anti-theater-review` with no findings.
+Residual risks: This is prose/protocol guidance and cannot prove future operators
+will apply it correctly. The template intentionally relies on honest operator
+completion of `when applicable`, `None - reason`, limitations, and recheck fields.
 
 # Dependencies
 
@@ -155,3 +170,14 @@ Residual risks:
 # Journal
 
 - 2026-05-03T04:09:51Z: Created from council evidence anti-theater finding.
+- 2026-05-03T05:24:42Z: Started Ralph iteration
+  `packet:ralph-ticket-evhard05-20260503T052442Z` from clean `main` at
+  `88fcd76`. Normalized ticket `change_class` to valid `protocol-authority`
+  before execution.
+- 2026-05-03T05:27:17Z: Ralph iteration
+  `packet:ralph-ticket-evhard05-20260503T052442Z` completed in scope. Evidence
+  recorded in `evidence:evidence-anti-theater-validation`; next route is
+  mandatory critique.
+- 2026-05-03T05:31:12Z: Mandatory critique
+  `critique:evidence-anti-theater-review` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.

@@ -25,6 +25,23 @@ Avoid writing evidence as if it directly decides project truth. Evidence may say
 `spec:example#ACC-002`". It must not say "therefore the ticket is accepted",
 "therefore critique passes", or "therefore intended behavior is changed".
 
+## Expected Versus Actual Results
+
+When a claim, procedure, test, reproduction, or manual check has an expected
+outcome, record both sides:
+
+- **expected result** — the behavior, output, state, or artifact the owning
+  ticket, spec, packet, or procedure expected to observe
+- **actual observed result** — what the command, inspection, screenshot, log,
+  reproduction, or external artifact actually showed
+
+Keep the actual result close to the artifact. If the expected result came from a
+spec, ticket, packet, or command documentation, cite that owner instead of
+restating it as evidence-owned intended behavior.
+
+If the actual result differs from the expected result, record the difference as a
+challenge or limitation. Do not smooth the mismatch into a passing summary.
+
 ## Freshness
 
 Freshness is evidence's relationship to the current source, records,
@@ -59,6 +76,8 @@ Examples:
   migration path."
 - "This screenshot confirms the local UI state; it does not establish production
   behavior."
+- "This manual inspection partially supports `ticket:abc123#ACC-001`; it did not
+  check the untested retry path named by `spec:example#ACC-003`."
 
 ## Support And Challenge Strength
 
@@ -67,7 +86,20 @@ Use support and challenge links precisely:
 - `Supports Claims` lists claim IDs the observation makes more credible.
 - `Challenges Claims` lists claim IDs the observation weakens, falsifies, or
   leaves unexpectedly unsupported.
+- Partial support should say which part of a claim was observed and which part
+  remains untested or limited.
 - Mixed evidence should list both sides instead of smoothing conflict away.
+
+Common shapes:
+
+- **supports** — the actual observed result matches the expected result for the
+  cited claim within the stated source state, environment, and limitations
+- **challenges** — the actual observed result conflicts with the expected result
+  or exposes an unsupported assumption in the cited claim
+- **partial support** — the observation covers only part of the claim, only one
+  environment, only one scenario, or only a weaker proxy for the claim
+- **untested limitation** — the observation says nothing reliable about an
+  adjacent path, environment, scenario, or acceptance unit
 
 Concrete challenging-evidence example:
 
@@ -81,6 +113,11 @@ None - the observed command failed.
 - ticket:abc12345#ACC-002 — `git diff --check` returned exit code 1 at
   commit `abc1234`, so the observation challenges the claim that the edited
   Markdown passed structural whitespace validation.
+
+# Limitations
+
+- This does not test whether the edited guidance is complete or whether critique
+  will accept the implementation shape.
 ```
 
 This example records a challenge to a claim. It does not decide ticket
@@ -122,3 +159,6 @@ limitations so the ticket can fail closed honestly.
 
 Do not make evidence records close tickets, accept risks, withdraw findings,
 define intended behavior, or replace critique verdicts.
+
+Evidence can strengthen or weaken the dossier, including with partial support or
+untested limitations. It cannot convert that dossier into acceptance by itself.

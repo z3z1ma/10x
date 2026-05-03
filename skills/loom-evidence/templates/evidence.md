@@ -22,6 +22,8 @@ Do not claim acceptance, closure, critique verdicts, or intended behavior here.
 Observed at: <UTC timestamp>
 Source state: <commit / branch / relevant record versions / external source version>
 Procedure: <commands, manual inspection steps, query, or capture method>
+Expected result when applicable: <expected behavior, output, state, or artifact from the owning ticket/spec/packet/procedure>
+Actual observed result: <observed behavior, output, state, artifact, mismatch, or inconclusive result>
 Procedure verdict / exit code: <observed pass/fail/mixed/inconclusive and exit code when applicable>
 
 Include enough context for a future agent to judge freshness without treating this
@@ -37,12 +39,15 @@ every evidence record.
 # Supports Claims
 
 List stable claim or acceptance IDs this evidence supports.
+For partial support, name the observed portion and the untested or limited portion.
 
 If none apply, write `None - reason`.
 
 # Challenges Claims
 
 List stable claim or acceptance IDs this evidence weakens or falsifies.
+If the actual observed result differs from the expected result, cite the claim it
+challenges or state why no stable claim ID applies.
 
 If none apply, write `None - reason`.
 
@@ -53,6 +58,7 @@ Branch:
 Runtime:
 OS:
 Relevant config:
+External service / harness / data source when applicable:
 
 # Validity
 
@@ -64,12 +70,13 @@ Supersedes / superseded by:
 
 # Limitations
 
-What this evidence does not establish.
+What this evidence does not establish, including untested scenarios,
+environments, source states, adjacent claims, or critique questions.
 
 # Result
 
-What the evidence actually showed. This should be an observed result, not an
-acceptance decision.
+What the evidence actually showed, including expected-versus-actual mismatch when
+applicable. This should be an observed result, not an acceptance decision.
 
 # Interpretation
 

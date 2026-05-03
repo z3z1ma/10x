@@ -145,16 +145,29 @@ Packets should declare the verification targets for the bounded iteration:
 
 ## Evidence Shape
 
-Evidence should name claims it supports:
+Evidence should name claims it supports and distinguish challenges, partial
+support, and untested limits instead of turning an observation into acceptance:
 
 ```md
 # Supports Claims
 
-- initiative:<slug>#OBJ-001
-- spec:<slug>#ACC-001
-- spec:<slug>#ACC-002
-- ticket:<token>#ACC-001
+- spec:<slug>#ACC-001 — actual observed result matched the expected result for
+  the named scenario at commit `<sha>`.
+- ticket:<token>#ACC-001 — partial support only; the observed structural check
+  covered edited Markdown files, but did not test operator behavior.
+
+# Challenges Claims
+
+- spec:<slug>#ACC-002 — actual observed result differed from the expected result
+  in `<environment>`.
+
+# Limitations
+
+- Untested: `<scenario or environment>` for `spec:<slug>#ACC-003`.
 ```
+
+Evidence links make coverage inspectable. The ticket still owns scoped coverage
+state, evidence sufficiency, critique disposition, and closure decisions.
 
 ## Critique Shape
 
