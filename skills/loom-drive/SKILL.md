@@ -124,8 +124,16 @@ durable claims, route them into the layer that owns that kind of truth.
 
 ## Do Not Use This Skill When
 
+Direct routing wins over drive. If the next safe move is already one bounded
+owner action, call that owner route directly and let the ticket, record, or
+workflow that owns the truth carry the work.
+
 - the request is already one clear local edit or one Ralph-ready ticket
+- the work is one ticket-sized implementation slice with a clear `ticket` or
+  `ralph` route
 - the next truth change belongs entirely to one owner-layer skill
+- a single canonical owner record needs a narrow update and no objective-level
+  continuation decision is needed
 - the user is asking a question that should stay in research, spec shaping, or
   ordinary explanation
 - the request depends on capabilities outside the recorded Loom workflow
@@ -146,7 +154,9 @@ or repository scope is not trustworthy enough to drive.
 
 Do not activate merely because a task is large. Activate when the user is
 delegating outcome advancement across phases. A large but already ticket-ready
-implementation still belongs directly to `loom-tickets` or `loom-ralph`.
+implementation still belongs directly to `loom-tickets` or `loom-ralph`; a clear
+local edit still belongs to `local_edit`; and one single-owner record mutation
+still belongs to that owner skill.
 
 ## User Questioning Posture
 

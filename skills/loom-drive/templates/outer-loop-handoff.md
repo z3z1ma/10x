@@ -4,6 +4,14 @@ kind: support-artifact
 support_kind: drive-outer-loop-handoff
 handoff_kind: outer-loop-synthesis
 parent_objective: <initiative/spec/plan/ticket id; unrecorded objective only during intake>
+owner_workflow: loom-drive
+parent_responsible: <parent workflow or agent responsible for review and reconciliation>
+reconciliation_target:
+  records:
+    - <canonical owner record id where accepted truth must land>
+  paths:
+    - <canonical owner path if needed, or None>
+stale_or_prune_condition: <when to mark reconciled, abandoned, superseded, or pruned after review>
 status: draft
 created_at: <UTC timestamp>
 updated_at: <UTC timestamp>
@@ -64,6 +72,14 @@ handoff only:
 - `source_snapshot` records when the handoff prompt was compiled and which owner
   records or source artifacts were read. It is a freshness cue, not evidence
   sufficiency, acceptance, or owner-truth status.
+- `owner_workflow` and `parent_responsible` name the workflow and parent that
+  must review the handoff before any dependent work relies on it.
+- `reconciliation_target` names the canonical owner records or paths where any
+  accepted proposal must be merged. It is not a second ledger and does not grant
+  authority to skip ticket, evidence, critique, wiki, or packet reconciliation.
+- `stale_or_prune_condition` states when the saved handoff should be marked
+  `reconciled`, `abandoned`, `superseded`, or pruned after parent review because
+  no unreconciled support value remains.
 - `drive_checkpoint` points a fresh parent back to the current drive anchor,
   active tranche, and gate state that existed when the handoff was saved. It
   summarizes owner records; it does not own objective status, ticket state, or
@@ -142,4 +158,6 @@ Include:
 
 To be filled by the parent if this handoff is used. Record which proposed changes
 were applied, rejected, or converted into follow-up work. A handoff is not
-accepted drive truth until the parent reconciles it into owner records.
+accepted drive truth until the parent reconciles it into owner records. After
+review, mark the saved handoff `reconciled`, `abandoned`, or `superseded`, or
+prune it if the parent no longer needs the support artifact for audit or recovery.

@@ -96,6 +96,13 @@ canonical owner layer and must not own objective state, live ticket state,
 acceptance, evidence sufficiency, critique verdicts, wiki truth, canonical truth,
 or packet lifecycle.
 
+Saved support artifacts that delegate or summarize work should name the owner
+workflow or parent responsible for review, the canonical owner records or paths
+where accepted content must be reconciled, and the condition for marking the
+artifact reconciled, abandoned, superseded, or pruning it after review. Those
+fields are recovery notes only; they are not a scheduler, queue, database,
+command wrapper, drive state file, packet family, or new owner layer.
+
 `.loom/support/` is an optional, lazy-materialized support surface for saved
 support artifacts. Create it only when a workflow intentionally saves such an
 artifact; its presence never makes the support artifact canonical truth.
@@ -131,6 +138,14 @@ Saved drive outer-loop handoffs use this support frontmatter under
 
 ```yaml
 support_kind: drive-outer-loop-handoff
+owner_workflow: loom-drive
+parent_responsible: <parent workflow or agent responsible for review and reconciliation>
+reconciliation_target:
+  records:
+    - <canonical owner record id>
+  paths:
+    - <canonical owner path if needed, or None>
+stale_or_prune_condition: <when to mark reconciled, abandoned, superseded, or pruned after review>
 handoff_write_scope:
   records: []
   paths: []

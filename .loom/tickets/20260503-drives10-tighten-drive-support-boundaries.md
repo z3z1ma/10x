@@ -1,11 +1,11 @@
 ---
 id: ticket:drives10
 kind: ticket
-status: ready
-change_class: workflow-boundary
+status: closed
+change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-03T04:09:51Z
-updated_at: 2026-05-03T04:09:51Z
+updated_at: 2026-05-03T06:14:19Z
 scope:
   kind: repository
   repositories:
@@ -71,12 +71,12 @@ work and keep support artifacts reconciled into owner records.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-010` | pending | pending | open |
-| `ticket:drives10#ACC-001` | pending | pending | open |
-| `ticket:drives10#ACC-002` | pending | pending | open |
-| `ticket:drives10#ACC-003` | pending | pending | open |
-| `ticket:drives10#ACC-004` | pending | pending | open |
-| `ticket:drives10#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-010` | `evidence:drive-support-boundary-validation` | `critique:drive-support-boundary-review` | supported |
+| `ticket:drives10#ACC-001` | `evidence:drive-support-boundary-validation` | `critique:drive-support-boundary-review` | supported |
+| `ticket:drives10#ACC-002` | `evidence:drive-support-boundary-validation` | `critique:drive-support-boundary-review` | supported |
+| `ticket:drives10#ACC-003` | `evidence:drive-support-boundary-validation` | `critique:drive-support-boundary-review` | supported |
+| `ticket:drives10#ACC-004` | `evidence:drive-support-boundary-validation` | `critique:drive-support-boundary-review` | supported |
+| `ticket:drives10#ACC-005` | None - critique outcome is the acceptance instrument | `critique:drive-support-boundary-review` | supported |
 
 # Execution Notes
 
@@ -89,23 +89,21 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:shipacc1`.
+
+Ralph packet `packet:ralph-ticket-drives10-20260503T060716Z` completed in scope,
+evidence was recorded, mandatory critique passed with no findings, and acceptance
+is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: drive/support boundary tightening.
-Write boundary: drive skill/references/templates and directly related support
-grammar only.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, drive/support boundary observations, and
-critique recommendation.
+Acceptance review readiness:
+Evidence `evidence:drive-support-boundary-validation` and mandatory critique
+`critique:drive-support-boundary-review` support closure with no findings.
 
 # Evidence
 
-Expected: targeted searches for `Do not use drive`, support artifact owner,
-reconciliation target, prune/supersession, noncanonical support, and
-`git diff --check`.
+Recorded: `evidence:drive-support-boundary-validation`.
 
 # Critique Disposition
 
@@ -123,9 +121,10 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:drive-support-boundary-review` - no findings; mandatory critique
+passed.
 
-Disposition status: pending
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -133,18 +132,36 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Direct-route / do-not-use-drive boundaries were promoted into
+  `skills/loom-drive/SKILL.md`.
+- Saved handoff owner, reconciliation, and prune/supersession guidance was
+  promoted into drive support references/templates and shared support artifact
+  grammar.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to drive and support artifact guidance.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in drive
+and support artifact references/templates.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T06:14:19Z
+Basis: Ralph packet `packet:ralph-ticket-drives10-20260503T060716Z`; evidence
+`evidence:drive-support-boundary-validation`; mandatory critique
+`critique:drive-support-boundary-review` with no findings.
+Residual risks: Documentation-only enforcement depends on future operators
+following routing guidance. Pruning saved support artifacts remains
+judgment-based, not automated by design.
 
 # Dependencies
 
@@ -153,3 +170,14 @@ Residual risks:
 # Journal
 
 - 2026-05-03T04:09:51Z: Created from council drive/support boundary finding.
+- 2026-05-03T06:07:16Z: Started Ralph iteration
+  `packet:ralph-ticket-drives10-20260503T060716Z` from clean `main` at
+  `4dd406a`. Normalized ticket `change_class` to valid `protocol-authority`
+  before execution.
+- 2026-05-03T06:11:15Z: Ralph iteration
+  `packet:ralph-ticket-drives10-20260503T060716Z` completed in scope. Evidence
+  recorded in `evidence:drive-support-boundary-validation`; next route is
+  mandatory critique.
+- 2026-05-03T06:14:19Z: Mandatory critique
+  `critique:drive-support-boundary-review` passed with no findings. Parent
+  recorded retrospective / promotion disposition and accepted closure.

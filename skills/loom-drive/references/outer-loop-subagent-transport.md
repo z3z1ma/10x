@@ -37,6 +37,12 @@ non-canonical support surface
 `kind: support-artifact`, `support_kind: drive-outer-loop-handoff`, and
 `handoff_kind: outer-loop-synthesis`.
 
+Every saved handoff must name the owner workflow or parent responsible for the
+handoff, the canonical owner-record reconciliation target, and the condition for
+marking the handoff `reconciled`, `abandoned`, `superseded`, or pruning it after
+review. These fields are recovery notes for the parent, not a queue, drive state
+file, scheduler, database, command wrapper, packet family, or owner layer.
+
 Do not create `.loom/support/` merely during bootstrap. Create it only when a
 saved support artifact is intentionally materialized.
 
@@ -57,6 +63,9 @@ packet compatibility only.
 
 If any handoff metadata claim becomes durable project truth, move it into the
 owner layer that owns that truth and leave the handoff as a support artifact.
+After parent review, either reconcile accepted content into the declared owner
+records, mark the handoff `abandoned`, mark it `superseded` by the replacement,
+or prune the saved artifact when no unreconciled support value remains.
 
 ## Template Use
 

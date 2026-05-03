@@ -142,7 +142,10 @@ Prefer explicit transitions:
   used
 - support-local drive handoffs: `draft -> reconciled` after parent merge,
   `draft -> abandoned` when not used, or `draft|reconciled -> superseded` when a
-  later handoff replaces the support artifact
+  later handoff replaces the support artifact. A saved handoff may also be pruned
+  after parent review when accepted content has been reconciled into the declared
+  owner records and no support audit or recovery value remains; pruning is cleanup,
+  not a lifecycle status and not evidence that owner truth was accepted.
 
 Do not use status as a progress log. Use the body, ticket journal, critique, or
 evidence for the details that justify the status.
