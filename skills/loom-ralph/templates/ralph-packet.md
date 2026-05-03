@@ -91,6 +91,27 @@ when the frontmatter is not enough, especially for multi-repo packets.
 For fork/upstream or review-system workflows, distinguish integration remote,
 push remote, and review target instead of collapsing them into one remote name.
 
+# Parent Launch Checklist
+
+Before launch, the parent verifies:
+
+- source freshness: `source_fingerprint` still matches governing records,
+  resolved integration ref, git status expectations, and child-write-scope files;
+  supersede this packet instead of launching if the contract is materially stale
+- non-overlapping child write scope: `child_write_scope` records and paths are
+  exact, narrow, and do not conflict with any parallel packet; canonical-record
+  writes fail closed unless exact record refs are granted
+- parent merge scope: `parent_merge_scope` names the ticket and any evidence,
+  critique, packet-status, or other paths the parent must reconcile after return
+- Git/execution context: branch, worktree, isolation, network posture, destructive
+  command policy, and shared Git metadata policy match the intended run
+- verification posture: `verification_posture` fits the change class and names
+  the red/green, before/after, or verification-neutral evidence expected
+- stop conditions: freshness, scope boundary, execution-context, and
+  posture-specific stops are explicit enough for the child to fail closed
+- output contract: required return fields are complete enough for parent-side
+  ticket truth, evidence, critique, and packet lifecycle reconciliation
+
 # Source Snapshot
 
 Curated excerpts, summaries, or directions to the important source records.

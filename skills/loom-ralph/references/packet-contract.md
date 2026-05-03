@@ -35,6 +35,30 @@ save the file as
 `.loom/packets/ralph/<UTC compact timestamp>-ticket-<token>-iter-<NN>.md`, where
 `iter-<NN>` matches frontmatter `iteration`.
 
+## Parent launch checklist
+
+Before launching a Ralph child, the parent should check:
+
+- source freshness: governing records, resolved integration ref, working-tree
+  status, and child-write-scope files still match the `source_fingerprint` closely
+  enough to trust the packet
+- child write scope overlap: `child_write_scope` records and paths are exact,
+  narrow, non-overlapping with any parallel packet, and fail closed for canonical
+  record writes unless exact record refs are granted
+- parent merge scope: `parent_merge_scope` names the records and paths the parent
+  must reconcile, especially ticket truth, evidence or critique disposition, and
+  packet lifecycle notes when applicable
+- Git and execution context: branch, worktree, isolation, network posture,
+  destructive command policy, and shared Git metadata policy match the intended
+  execution run
+- verification posture: `verification_posture` fits the change class and states
+  what red/green, before/after, or verification-neutral evidence the child must
+  return
+- stop conditions: freshness, scope, execution-context, and posture-specific stop
+  conditions tell the child when to return `blocked` or `escalate`
+- output contract: the required return fields are sufficient for parent-side
+  reconciliation of ticket state, evidence, critique, and packet status
+
 ## Strong packet body
 
 A strong packet usually includes:
@@ -183,6 +207,10 @@ Terminal packet statuses are `consumed`, `superseded`, and `abandoned`.
   correction invalidates the result
 
 After reconciliation, parent must update packet status away from `compiled`.
+
+`consumed` only means output returned and parent merge notes exist. It does not
+mean the work was accepted, successful, merged, closure-compatible, or promoted
+into owner-layer truth; the ticket and other canonical owners decide those facts.
 
 If a launched child result is unusable because it was rejected, corrupted,
 materially stale, or outside scope, do not mark the work successful. Update the

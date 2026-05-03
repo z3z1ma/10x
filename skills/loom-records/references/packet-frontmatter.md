@@ -224,12 +224,13 @@ Valid shared values are:
 
 - `compiled` — ready for launch or pending parent action.
 - `consumed` — child or reviewer output returned and parent reconciliation notes
-  were recorded.
+  were recorded. This is not a claim that the work was accepted, successful,
+  merged, closure-compatible, or promoted into owner-layer truth.
 - `superseded` — governing records, source fingerprint, scope, or write boundary
   changed enough that a newer packet replaces this one.
 - `abandoned` — packet will not be launched and no successor is intended.
 
-Tickets still own live execution state and closure.
+Tickets still own live execution state, acceptance, and closure.
 
 ## Style Values
 
