@@ -98,9 +98,18 @@ push remote, and review target instead of collapsing them into one remote name.
 
 Before launch, the parent verifies:
 
+- target-ticket route authorization: the saved target ticket explicitly names
+  `ralph` as the authorized next route, such as in `# Next Move / Next Route` or
+  another saved next-route field, and its Ralph-readiness fields match this
+  packet's bounded iteration, child write boundary, verification posture, and
+  output contract
 - source freshness: `source_fingerprint` still matches governing records,
   resolved integration ref, git status expectations, and child-write-scope files;
   supersede this packet instead of launching if the contract is materially stale
+- resolved packet content: this saved compiled packet contains no unresolved
+  template placeholders, placeholder-only fields pretending to be packet truth,
+  generic angle-bracket placeholder tokens, or template example IDs that still use
+  placeholder values
 - non-overlapping child write scope: `child_write_scope` records and paths are
   exact, narrow, and do not conflict with any parallel packet; canonical-record
   writes fail closed unless exact record refs are granted; empty
@@ -119,6 +128,11 @@ Before launch, the parent verifies:
   posture-specific stops are explicit enough for the child to fail closed
 - output contract: required return fields are complete enough for parent-side
   ticket truth, evidence, critique, and packet lifecycle reconciliation
+
+If the target ticket does not authorize Ralph, or if its saved readiness details
+do not match the packet, the parent reconciles the ticket or supersedes this
+packet before launch. Do not ask the child to infer authority from the packet or
+let this packet overrule ticket-owned route truth.
 
 # Source Snapshot
 

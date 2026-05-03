@@ -44,9 +44,18 @@ save the file as
 
 Before launching a Ralph child, the parent should check:
 
+- target-ticket route authorization: the saved target ticket explicitly names
+  `ralph` as the authorized next route, such as in `# Next Move / Next Route` or
+  another saved next-route field, and the ticket's Ralph-readiness fields match
+  this packet's bounded iteration, child write boundary, verification posture,
+  and output contract
 - source freshness: governing records, resolved integration ref, working-tree
   status, and child-write-scope files still match the `source_fingerprint` closely
   enough to trust the packet
+- resolved packet content: the saved compiled packet contains no unresolved
+  template placeholders, placeholder-only fields pretending to be packet truth,
+  generic angle-bracket placeholder tokens, or template example IDs that still use
+  placeholder values
 - child write scope overlap: `child_write_scope` records and paths are exact,
   narrow, non-overlapping with any parallel packet, and fail closed for canonical
   record writes unless exact record refs are granted
@@ -63,6 +72,11 @@ Before launching a Ralph child, the parent should check:
   conditions tell the child when to return `blocked` or `escalate`
 - output contract: the required return fields are sufficient for parent-side
   reconciliation of ticket state, evidence, critique, and packet status
+
+If the target ticket does not authorize Ralph, or if its saved readiness details
+do not match the packet, the parent must reconcile the ticket or supersede the
+packet before launch. Do not ask the child to infer authority from the packet or
+let a packet overrule ticket-owned route truth.
 
 ## Strong packet body
 
