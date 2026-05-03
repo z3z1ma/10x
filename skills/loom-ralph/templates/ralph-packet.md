@@ -73,6 +73,9 @@ What larger chain constrains the work.
 
 Frontmatter follows `skills/loom-records/references/packet-frontmatter.md`;
 Ralph-specific body obligations follow `skills/loom-ralph/references/packet-contract.md`.
+For Ralph, `source_fingerprint`, `execution_context`, `child_write_scope`,
+`parent_merge_scope`, and `verification_posture` are strict launch-safety fields,
+not optional packet decoration.
 
 Use `source_fingerprint.compiled_from` for packet compilation provenance and
 `sources` for the context the Ralph child should read or trust. The two lists may

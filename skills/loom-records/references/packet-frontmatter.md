@@ -70,7 +70,10 @@ links: {}
 ---
 ```
 
-## Required Shared Fields
+## Required Shared Fields And Common Support Blocks
+
+These fields are required shared identity, routing, scope, and reconciliation
+grammar for core packet templates:
 
 - `id`
 - `kind: packet`
@@ -84,15 +87,26 @@ links: {}
 - `scope`
 - `child_write_scope`
 - `parent_merge_scope`
-- `source_fingerprint`
-- `execution_context`
-- `context_budget`
 - `sources`
 - `links`
 
-These fields are required for every current packet family. They make the support
-artifact routable, replayable enough for review, and explicit about child write
+These fields make the support artifact routable and explicit about child write
 authority and parent reconciliation authority.
+
+The following blocks are common packet-support metadata, but their requiredness
+and precision are family-owned:
+
+- `source_fingerprint`
+- `execution_context`
+- `context_budget`
+
+Ralph packets require all three blocks as strict launch-safety metadata. Current
+critique and wiki packet templates keep them by default because review and
+synthesis packets still benefit from visible baseline, execution, and context
+budget metadata, but those workflows should use `unknown`, `none`, or an explicit
+inapplicable rationale rather than inventing false Git or execution precision.
+Omit or mark these blocks inapplicable only when the owning workflow reference or
+template explicitly allows it.
 
 ## Provenance Versus Context Sources
 
@@ -348,12 +362,15 @@ source_fingerprint:
 
 `git_status_summary` gives the coarse cleanliness state; `git_status_detail`
 should carry the short status details, or `unknown - <rationale>` when the parent
-cannot inspect them. Before launch, the parent should compare this baseline
-against governing records, the resolved integration ref, and child-write-scope
-files. At execution time, the packet consumer should stop and report `blocked` or
+cannot inspect them. Ralph packets must treat this block as a strict freshness
+contract. Before launch, the parent should compare this baseline against
+governing records, the resolved integration ref, and child-write-scope files. At
+execution time, the packet consumer should stop and report `blocked` or
 `escalate` if those surfaces appear materially changed in a way that makes the
 contract unsafe. If the packet is materially stale, supersede it rather than
-asking the consumer to guess.
+asking the consumer to guess. For critique and wiki packets, use exact values
+when they are available and material to the review or synthesis; otherwise use
+`unknown`/`none` with rationale instead of fake precision.
 
 ## Execution Context
 
@@ -371,8 +388,11 @@ execution_context:
   network: <allowed|forbidden|unknown>
 ```
 
-For non-Git or read-only packet work, use `none` or `unknown` honestly rather than
-omitting the field.
+Ralph packets must declare enough execution context for launch safety, including
+branch/worktree/isolation and command-policy expectations. For non-Git,
+read-only, critique, or wiki packet work, use `none` or `unknown` honestly rather
+than inventing a branch, worktree, remote, or command policy the parent did not
+actually establish.
 
 ## Context Budget
 
@@ -389,7 +409,9 @@ context_budget:
 Current templates default to `posture: normal`, `max_source_files: 8`,
 `max_excerpt_lines_per_file: 80`, and `avoid_full_file_reads: true`. Use `tight`
 for very narrow record or code slices and `expansive` only when the parent is
-intentionally granting broader source reading.
+intentionally granting broader source reading. Use `unknown` for numeric limits
+only when the owning workflow permits an unbounded or parent-unspecified context
+budget; do not use it to avoid making a bounded handoff.
 
 The budget is guidance for bounded work, not a substitute for judgment. A packet
 consumer may exceed it only when the packet or discovered evidence makes that

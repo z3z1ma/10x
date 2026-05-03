@@ -39,9 +39,9 @@ execution_context:
   branch: <name|unknown>
   push_remote: <remote name|same_as_integration|none|unknown>
   worktree: <path|none|unknown>
-  isolation: none
-  git_shared_metadata_mutations: forbidden
-  destructive_commands: forbidden
+  isolation: <none|branch|worktree|sandbox|unknown>
+  git_shared_metadata_mutations: <forbidden|allowed|unknown>
+  destructive_commands: <forbidden|allowed|unknown>
   network: "<TBD: choose allowed, forbidden, or unknown - rationale before saving>"
 context_budget:
   posture: normal
@@ -71,6 +71,13 @@ Which canonical records and evidence this packet should trust.
 Frontmatter follows `skills/loom-records/references/packet-frontmatter.md`.
 Wiki owns this synthesis packet's workflow; using packet grammar does not make
 the synthesis Ralph-governed.
+
+Keep enough packet metadata for the synthesizer and parent to identify the target,
+accepted sources, child write boundary, and parent reconciliation targets. Use
+`unknown`, `none`, or an explicit rationale when exact Git or execution details
+are unavailable or not material to the synthesis; do not invent branch, remote,
+worktree, or command-policy precision. Omit or mark common support blocks
+inapplicable only when `loom-wiki` explicitly allows that for the synthesis shape.
 
 Use `source_fingerprint.compiled_from` for packet compilation provenance and
 `sources` for accepted truth sources the wiki synthesizer should read or trust.

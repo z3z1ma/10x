@@ -90,10 +90,11 @@ the code currently does.
 
 ## Source Fingerprint
 
-Every Ralph packet should make the compilation baseline inspectable using the
-shared packet-frontmatter shape.
+Every Ralph packet must make the compilation baseline inspectable using the
+shared packet-frontmatter shape. For Ralph this is not optional shared metadata;
+it is part of the launch-safety contract.
 
-Recommended frontmatter:
+Required frontmatter:
 
 ```yaml
 source_fingerprint:
@@ -152,10 +153,10 @@ give it canonical truth ownership.
 
 ## Context Budget
 
-Every Ralph packet should declare the expected source-reading posture using the
+Every Ralph packet must declare the expected source-reading posture using the
 shared `context_budget` field.
 
-Recommended frontmatter:
+Required frontmatter:
 
 ```yaml
 context_budget:
@@ -173,10 +174,13 @@ makes that necessary, and should say so in its output.
 
 ## Execution Context
 
-For Git-backed Ralph work, declare the execution environment using the shared
-`execution_context` field.
+Ralph packets must declare the execution environment using the shared
+`execution_context` field. For Git-backed work this includes branch, worktree,
+isolation, network posture, destructive-command policy, and shared Git metadata
+policy; unknown values require rationale and should be launch blockers when they
+make the child boundary unsafe.
 
-Recommended frontmatter:
+Required frontmatter:
 
 ```yaml
 execution_context:

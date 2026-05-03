@@ -1,11 +1,11 @@
 ---
 id: ticket:pktfam04
 kind: ticket
-status: ready
-change_class: packet-safety
+status: closed
+change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-03T04:09:51Z
-updated_at: 2026-05-03T04:09:51Z
+updated_at: 2026-05-03T05:23:00Z
 scope:
   kind: repository
   repositories:
@@ -73,12 +73,12 @@ Their required fields should be accurate by family.
 
 | Claim | Evidence | Critique | Status |
 | --- | --- | --- | --- |
-| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-005` | pending | pending | open |
-| `ticket:pktfam04#ACC-001` | pending | pending | open |
-| `ticket:pktfam04#ACC-002` | pending | pending | open |
-| `ticket:pktfam04#ACC-003` | pending | pending | open |
-| `ticket:pktfam04#ACC-004` | pending | pending | open |
-| `ticket:pktfam04#ACC-005` | pending | pending | open |
+| `initiative:skills-corpus-context-integrity-hardening-pass#OBJ-005` | `evidence:packet-family-requirements-validation` | `critique:packet-family-requirements-rereview` | supported |
+| `ticket:pktfam04#ACC-001` | `evidence:packet-family-requirements-validation` | `critique:packet-family-requirements-rereview` | supported |
+| `ticket:pktfam04#ACC-002` | `evidence:packet-family-requirements-validation` | `critique:packet-family-requirements-rereview` | supported |
+| `ticket:pktfam04#ACC-003` | `evidence:packet-family-requirements-validation` | `critique:packet-family-requirements-rereview` | supported |
+| `ticket:pktfam04#ACC-004` | `evidence:packet-family-requirements-validation` | `critique:packet-family-requirements-rereview` | supported |
+| `ticket:pktfam04#ACC-005` | None - critique outcome is the acceptance instrument | `critique:packet-family-requirements-rereview` | supported |
 
 # Execution Notes
 
@@ -91,21 +91,23 @@ None.
 
 # Next Move / Next Route
 
-Next route: ralph
+Closed. Commit and push this ticket before continuing to `ticket:evhard05`.
+
+Ralph packet `packet:ralph-ticket-pktfam04-20260503T050940Z` completed in scope,
+evidence was recorded, initial critique finding was resolved, mandatory critique
+re-review passed with no findings, and acceptance is complete.
 
 # Route Readiness
 
-Ralph readiness:
-Bounded iteration: packet-family requirement separation.
-Write boundary: packet frontmatter reference and packet templates/references.
-Likely verification posture: observation-first structural validation.
-Expected output contract: changed files, packet field observations, and critique
-recommendation.
+Acceptance review readiness:
+Evidence `evidence:packet-family-requirements-validation`, initial critique
+`critique:packet-family-requirements-review`, and final re-review
+`critique:packet-family-requirements-rereview` support closure. The only initial
+finding was resolved.
 
 # Evidence
 
-Expected: targeted searches for required shared fields, Ralph-only fields,
-`verification_posture`, critique/wiki packet fields, and `git diff --check`.
+Recorded: `evidence:packet-family-requirements-validation`.
 
 # Critique Disposition
 
@@ -123,9 +125,15 @@ Required critique profiles:
 
 Findings:
 
-None - no critique yet.
+`critique:packet-family-requirements-review#FIND-001` - resolved by changing the
+ticket and Ralph packet `change_class` from `packet-safety` to valid
+`protocol-authority`; verified by
+`critique:packet-family-requirements-rereview`.
 
-Disposition status: pending
+`critique:packet-family-requirements-rereview` - no new findings; mandatory
+critique passed.
+
+Disposition status: completed
 
 Deferral / not-required rationale:
 
@@ -133,18 +141,38 @@ Not deferred.
 
 # Retrospective / Promotion Disposition
 
-Pending after critique.
+Disposition status: completed
+
+Promoted:
+
+- Shared packet grammar separation was promoted directly into
+  `skills/loom-records/references/packet-frontmatter.md`.
+- Ralph strictness was promoted directly into
+  `skills/loom-ralph/references/packet-contract.md` and
+  `skills/loom-ralph/templates/ralph-packet.md`.
+- Critique/wiki fake-precision guidance was promoted directly into their packet
+  templates.
+
+Deferred / not-required rationale:
+
+No separate wiki, research, spec, constitution, or memory record is needed. The
+durable lesson is local to packet grammar and packet templates.
 
 # Wiki Disposition
 
-Pending retrospective decision after critique.
+N/A - no separate wiki promotion route. The accepted explanation lives in the
+packet grammar reference and packet templates.
 
 # Acceptance Decision
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-03T05:23:00Z
+Basis: Ralph packet `packet:ralph-ticket-pktfam04-20260503T050940Z`; evidence
+`evidence:packet-family-requirements-validation`; initial critique
+`critique:packet-family-requirements-review`; final no-findings re-review
+`critique:packet-family-requirements-rereview`.
+Residual risks: Validation remains manual and structural; no automated protocol
+validator exists by design. Historical packets are not migrated by this ticket.
 
 # Dependencies
 
@@ -153,3 +181,18 @@ Residual risks:
 # Journal
 
 - 2026-05-03T04:09:51Z: Created from council packet-family requirement finding.
+- 2026-05-03T05:09:40Z: Started Ralph iteration
+  `packet:ralph-ticket-pktfam04-20260503T050940Z` from clean `main` at
+  `da8d30a`.
+- 2026-05-03T05:13:40Z: Ralph iteration
+  `packet:ralph-ticket-pktfam04-20260503T050940Z` completed in scope. Evidence
+  recorded in `evidence:packet-family-requirements-validation`; next route is
+  mandatory critique.
+- 2026-05-03T05:20:23Z: Mandatory critique found one medium frontmatter
+  vocabulary issue: `packet-safety` was used as `change_class` instead of a
+  critique profile. Repaired ticket and packet frontmatter to
+  `change_class: protocol-authority`; next route is critique re-review.
+- 2026-05-03T05:23:00Z: Mandatory critique re-review
+  `critique:packet-family-requirements-rereview` passed with no findings. Parent
+  dispositioned `critique:packet-family-requirements-review#FIND-001` as
+  resolved and accepted closure.

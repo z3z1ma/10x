@@ -49,9 +49,9 @@ execution_context:
   branch: <name|unknown>
   push_remote: <remote name|same_as_integration|none|unknown>
   worktree: <path|none|unknown>
-  isolation: none
-  git_shared_metadata_mutations: forbidden
-  destructive_commands: forbidden
+  isolation: <none|branch|worktree|sandbox|unknown>
+  git_shared_metadata_mutations: <forbidden|allowed|unknown>
+  destructive_commands: <forbidden|allowed|unknown>
   network: "<TBD: choose allowed, forbidden, or unknown - rationale before saving>"
 context_budget:
   posture: normal
@@ -79,6 +79,14 @@ packets may retain the legacy-compatible `review_target` mapping documented in
 that reference.
 Critique owns this review packet's workflow; using packet grammar does not make
 the review Ralph-governed.
+
+Keep enough packet metadata for the reviewer and parent to identify the target,
+source baseline, child/reviewer write boundary, and parent reconciliation targets.
+Use `unknown`, `none`, or an explicit rationale when exact Git or execution
+details are unavailable or not material to the review; do not invent branch,
+remote, worktree, or command-policy precision. Omit or mark common support blocks
+inapplicable only when `loom-critique` explicitly allows that for the review
+shape.
 
 Use `source_fingerprint.compiled_from` for packet compilation provenance and
 `sources` for review context such as governing records, evidence, diffs, prior
