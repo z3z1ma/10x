@@ -8,7 +8,7 @@ Treat your coding-agent sessions like cattle, not pets.
 
 Loom is repo-local **context integrity** for long-running agentic software work.
 
-Coding agents do not act from "the whole project." They act from the context they can see or retrieve, the tools they can call, and the verification they can run. Long work degrades when project truth is trapped in chat, lossy summaries, stale plans, scratch files, or one precious session.
+Coding agents do not act from "the whole project." They act from the context they can see or retrieve, the tools they can call, and the verification they can run. Long work degrades when critical information is trapped in chat, lossy summaries, stale plans, scratch files, or one precious session.
 
 Loom turns the stable mechanics of agentic coding into a Markdown-native truth graph:
 
@@ -29,6 +29,135 @@ The result is simple:
 
 [Install Loom](INSTALL.md) · [Read the protocol](PROTOCOL.md) · [Architecture notes](ARCHITECTURE.md)
 
+## Quick Navigation
+
+| If you want to know... | Start here |
+| --- | --- |
+| What Loom is in one screen | [Loom At A Glance](#loom-at-a-glance) |
+| Why agent work needs this | [The problem](#the-problem) · [The idea](#the-idea) · [When Loom pays rent](#when-loom-pays-rent) |
+| How to try it quickly | [Try the cattle-not-pets demo](#try-the-cattle-not-pets-demo) |
+| How to install it | [Install](#install) · [INSTALL.md](INSTALL.md) |
+| How Loom decomposes work | [How Loom works](#how-loom-works) · [Project layers](#project-layers) · [How agents choose work](#how-agents-choose-work) |
+| How execution and handoff work | [Outer loop](#outer-loop-shape-work) · [Inner loop](#inner-loop-run-clean-workers) · [Packets](#packets-compile-project-state) |
+| How Loom decides work is done | [Done is a property of the graph](#done-is-a-property-of-the-graph) · [Evidence and trust boundaries](#evidence-and-trust-boundaries) |
+| What ships in this repo | [What ships](#what-ships) · [Skill map](#skill-map) · [Repository layout](#repository-layout) |
+
+<details>
+<summary>Full table of contents</summary>
+
+- [Loom At A Glance](#loom-at-a-glance)
+- [The problem](#the-problem)
+- [The idea](#the-idea)
+- [Why Loom is model-shaped](#why-loom-is-model-shaped)
+- [Try the cattle-not-pets demo](#try-the-cattle-not-pets-demo)
+- [Install](#install)
+- [When Loom pays rent](#when-loom-pays-rent)
+- [How Loom works](#how-loom-works)
+- [The core rule](#the-core-rule)
+- [Project layers](#project-layers)
+- [How agents choose work](#how-agents-choose-work)
+- [Outer loop: shape work](#outer-loop-shape-work)
+- [Inner loop: run clean workers](#inner-loop-run-clean-workers)
+- [Packets compile project state](#packets-compile-project-state)
+- [Done is a property of the graph](#done-is-a-property-of-the-graph)
+- [Evidence and trust boundaries](#evidence-and-trust-boundaries)
+- [Example: a bug fix through Loom](#example-a-bug-fix-through-loom)
+- [Research is first-class](#research-is-first-class)
+- [Workflows emerge from the vocabulary](#workflows-emerge-from-the-vocabulary)
+- [How Loom relates to adjacent tools](#how-loom-relates-to-adjacent-tools)
+- [Markdown, on purpose](#markdown-on-purpose)
+- [What ships](#what-ships)
+- [Skill map](#skill-map)
+- [Repository layout](#repository-layout)
+- [Costs](#costs)
+- [The point](#the-point)
+
+</details>
+
+## Loom At A Glance
+
+Read this as a noun/verb map, not an execution trace. The boxes are Loom nouns; the arrows are the verbs that keep agentic work decomposed into the right context owner. [Mermaid Live](https://mermaid.live/view#pako:eNqFVmtT4zYU_Ssa87FhN09IPJ2dKY_tUGAJjx22Lf2gyNeJFlnySnaAEv57jyQ7PMt-IVj3nqN7z33Y94kwGSVpkitzIxbcVuxi50ozJhR3bo9yZm40WZZLpdKN3na_Oxh0XGXNNaUb29l4NOl2hFHGpht5N9_KxTOsomy-Bg96_eGAr8Gz7nhIs3fAri5Lg3gius_7w972Gj2eTYYTeo5ujJsZd0jE8ruUjdjoGac1dUVtMluDfn_0k2Q8eufvq0QZU2zOjKngzstfZ_bjp8g1u4sKXSX_pGkaziLK1bM5XBfs89lvx_ug-Gx5QYzrjEldkc6A8H6MZdKSqKTR7OgsnuzCXRjtKlnV3hDukxlpHNx1WGmlFrJU5DrBElwtB63rsIyEdMC4GFEMLrAegFVqWUleySUFJMIVpmh5XC0EOccKqqwUrwnOp_s-MleSiBGFPChjM1rwpTQ20nCwlBXXghgiQ2CiekU1BU-peMzM0Y-a4N5pdFUKcflMSk-PVOllLF6-5yoffjm5BOcRcauDyHQLfqnfUfkM_pYcEGLR5LMkaD7n3q3RBOFnZPIcyiIZoeq3tfV338hr-UQA6GKpdnymotYhIB24_y-bC7BUUlxTFRAnX47-ZAq1agYpiiVMSR02UwZ-1r2UHGEq42pL8Y4IfKHVH1_3fvcdeTJzZJexJ7_XcHxHLO9PS9-DommdCM4YalWiXOFQmTmEqqAifpywRNotMDSv9Dr1HW7Ri6h8QOZSZ1J79JJsJkXVZIYCyazmilnprn_aBedfp9OTMy_jebM9fG6ooXb-6Z38poceVfK1-DNTh94WC6myzRtjofaLfm42VCQ43j8GQUGFsXdN5JgiWiJ0UbcTVlrKyXoNkailAkmjhm-w7X_z4dBtRVaD4eN6G2a84oFqegYK6ZznRlxFgUzd0yoscOAb9xX7WrYdtrn5aSUWxjiKW2zFLqJpN5raxeJW7KA5_oDzoI1bjz37hXl9VmFBeLeDgM79wnOs3TErNm1sniIjVBzWdudgRcvChfsxmQEvdW5s4dh6BB8veO7Q7o_mBu_Uhh-q9Rhpwz8NZmO9-KwtdEyhyf8ieGSkCNvAJ6GJOSXDHYeR4zD6oMy11es0mxtaGwLDLLA4LHGvrNi-99gPHk1ZHCqMt69SpOf0QozoOLdRc4shpJsVO33jlnagGutprEIzWEwTkswkBsFJH8iLXEtrCuNTdVRVWBvYOVilQK7Ypfe6jHUz6Gm8Z1heI216FC3QeAfBS29xLKut333gcS6kffbUS3Ercyz2J6Vpi9u48Ox77bN6Vl1vx6RFD8wwJHOsNP5NZH2V1F2r2reGpkYPgIf8axd7qgljbV6vMXz6yBzNEsqTdJK5lVmSAksdTLUtuH9M7j0YS3pBBbZlin8zbrGXrvQDMCXXf-FDoYWhZPNFkuZcOTzVJWaX9iTHqnp08W84u4vaVkk67AWKJL1PbpN0NPow6W9t46Op1-sOx73uqJPcJWl_sv1hPO4NR_3-YIQ_k-FDJ_k33NoFYDIYj0bD_nhrMtranjz8B4JHW70).
+
+```mermaid
+flowchart TB
+  classDef owner fill:#172033,stroke:#7d8590,color:#f0f6fc
+  classDef ledger fill:#31243a,stroke:#b084eb,color:#f0f6fc
+  classDef support fill:#2a2417,stroke:#8b949e,color:#f0f6fc,stroke-dasharray: 5 5
+  classDef route fill:#163225,stroke:#7d8590,color:#f0f6fc
+
+  B["loom-bootstrap<br/>load authority model"]:::route
+  ROUTE["route by<br/>truth type"]:::route
+
+  subgraph FRAME["Frame and intend"]
+    direction LR
+    C["constitution<br/>identity, principles,<br/>constraints, decisions"]:::owner
+    I["initiative<br/>outcomes,<br/>success metrics"]:::owner
+    SPEC["spec<br/>intended behavior,<br/>acceptance contract"]:::owner
+    P["plan<br/>sequence,<br/>rollout, dependencies"]:::owner
+  end
+
+  subgraph KNOW["Learn and explain"]
+    direction LR
+    R["research<br/>investigations,<br/>tradeoffs, conclusions"]:::owner
+    W["wiki<br/>accepted reusable<br/>explanation"]:::owner
+  end
+
+  T["ticket<br/>ONLY live ledger<br/>scope, blockers,<br/>acceptance, closure"]:::ledger
+
+  subgraph JUDGE["Observe and judge"]
+    direction LR
+    E["evidence<br/>observed output,<br/>logs, tests, screenshots"]:::owner
+    Q["critique<br/>findings, verdicts,<br/>residual risk"]:::owner
+  end
+
+  subgraph SUPPORT["Support and transport"]
+    direction LR
+    PKT["packet<br/>bounded child-worker contract"]:::support
+    MEM["memory<br/>retrieval cues,<br/>preferences, reminders"]:::support
+    EXT["external / support data<br/>PRs, issues, commands,<br/>logs, handoffs"]:::support
+  end
+
+  B -->|ask what changed| ROUTE
+  ROUTE -->|principle / policy| C
+  ROUTE -->|strategic outcome| I
+  ROUTE -->|evidence gap| R
+  ROUTE -->|behavior contract| SPEC
+  ROUTE -->|sequence| P
+  ROUTE -->|live work| T
+  ROUTE -->|observation| E
+  ROUTE -->|review| Q
+  ROUTE -->|accepted explanation| W
+
+  C -->|constrains| I
+  C -.->|bounds behavior + work| SPEC
+  C -.->|sets hard constraints| T
+  I -->|frames outcomes| P
+  I -.->|frames objective criteria| T
+  R -->|informs tradeoffs| SPEC
+  R -->|informs sequence| P
+  R -.->|reduces uncertainty| T
+  SPEC -->|contracts behavior| T
+  P -->|orders bounded work| T
+
+  T -->|delegates one slice| PKT
+  PKT -->|returns for reconciliation| T
+  T -->|requests observations| E
+  E -->|supports / challenges claims| T
+  E -->|grounds review| Q
+  T -->|requests critique| Q
+  Q -->|findings need disposition| T
+
+  T -->|promotes settled learning| W
+  W -.->|orients future work| T
+  T -.->|promotes investigation result| R
+  T -.->|promotes behavior clarity| SPEC
+  T -.->|promotes sequence change| P
+
+  MEM -.->|recalls graph pointers only| ROUTE
+  EXT -.->|untrusted input| R
+  EXT -.->|observed artifact| E
+```
+
 ---
 
 ## The problem
@@ -47,7 +176,7 @@ Loom fixes that by giving each kind of truth a home.
 
 ## The idea
 
-The active session is the wrong place for canonical project memory.
+The active session is the wrong place for canonical project context.
 
 A bigger context window lets an agent carry more state. Good compaction can preserve useful continuity. Loom is complementary: it moves durable state into repository records, so summaries can carry file paths, record IDs, and next actions while the full-fidelity truth stays in the repo.
 
@@ -99,7 +228,7 @@ It is not built around one model's current context size, one harness's command s
 
 ---
 
-## 🧪 Try the cattle-not-pets demo
+## Try the cattle-not-pets demo
 
 The fastest way to understand Loom is to stop protecting one precious agent session.
 
@@ -127,7 +256,7 @@ Compaction is not the enemy. With Loom, compaction can carry high-value record p
 
 That is the product: sessions can die; the project keeps the plot.
 
-## ⚙️ Install
+## Install
 
 Loom installs as a skills package. The fastest path is to expose `skills/` to your coding harness.
 
@@ -174,7 +303,7 @@ Reach for Loom when the cost of losing the plot is higher than the cost of keepi
 
 ---
 
-## 🧭 How Loom works
+## How Loom works
 
 Loom has two loops.
 
@@ -220,7 +349,7 @@ For software work:
 
 Memory can help the agent recover context. It does not become shadow truth. The project must remain truthful if memory is absent or stale.
 
-## 🗂️ Project layers
+## Project layers
 
 Loom separates project state into canonical owner layers and durable support surfaces.
 
@@ -503,7 +632,7 @@ The protocol is the corpus.
 
 ---
 
-## 📦 What ships
+## What ships
 
 This repository ships the Loom skill package.
 
