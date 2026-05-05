@@ -1,0 +1,70 @@
+README.md
+  human 9,11,13,15,21-22,27-28,31-32,34,40-41,43-45,53-55,61,71,73,75-112,118-120,122,124-132,138,140,142,144,146-152,154,156,158,160-170,172-205,207,213,215,217,219,221-225,227,229-238,244,247-248,256,266,268,287,289,299-300,315,323-324,331,339,343-345,353,359-364,368-370,372,398,400,404-405,412,424,426,428,430,432,434,436,438,440,442,444,447-450,453-455,457,459,461-463,465,467-469,488-513,519-522,533,537-538,541-543,562-563,584-586,600-601,643-645,647,649,651,653-663,668-675,678,722-723,751-752,814-815,826-828,830
+  human 11,90,111,179
+  ses_206c4d4ceffeEmtuMlOrQJne8y 32-89,91-110,112-160,231,259,306,352,635
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 293,
+          "added_lines": 293,
+          "deleted_lines": 28,
+          "hash": "human",
+          "lines": "9,11,13,15,21-22,27-28,31-32,34,40-41,43-45,53-55,61,71,73,75-112,118-120,122,124-132,138,140,142,144,146-152,154,156,158,160-170,172-205,207,213,215,217,219,221-225,227,229-238,244,247-248,256,266,268,287,289,299-300,315,323-324,331,339,343-345,353,359-364,368-370,372,398,400,404-405,412,424,426,428,430,432,434,436,438,440,442,444,447-450,453-455,457,459,461-463,465,467-469,488-513,519-522,533,537-538,541-543,562-563,584-586,600-601,643-645,647,649,651,653-663,668-675,678,722-723,751-752,814-815,826-828,830",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 0,
+          "added_lines": 0,
+          "deleted_lines": 4,
+          "hash": "human",
+          "lines": "11,90,111,179",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 42,
+          "added_lines": 0,
+          "deleted_lines": 90,
+          "hash": "ses_206c4d4ceffeEmtuMlOrQJne8y",
+          "lines": "32-89,91-110,112-160,231,259,306,352,635",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "README.md"
+    }
+  ],
+  "base_commit_sha": "f08619b7101f7daf1826178f19fe287d115d01c8",
+  "branch": "main",
+  "commit_sha": "b55f3f88f483d7f04854217ee6e130605d48005f",
+  "commit_time": "2026-05-05T14:07:18-07:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.2",
+  "prompts": {
+    "human": {
+      "accepted_lines": 293,
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "messages": [],
+      "overriden_lines": 0,
+      "total_additions": 293,
+      "total_deletions": 28
+    },
+    "ses_206c4d4ceffeEmtuMlOrQJne8y": {
+      "accepted_lines": 132,
+      "agent_id": {
+        "id": "ses_206c4d4ceffeEmtuMlOrQJne8y",
+        "model": "openai/gpt-5.5",
+        "tool": "opencode"
+      },
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "messages": [],
+      "overriden_lines": 0,
+      "total_additions": 132,
+      "total_deletions": 5
+    }
+  },
+  "repo": "https://github.com/z3z1ma/agent-loom.git",
+  "schema_version": "authorship/3.0.0"
+}
