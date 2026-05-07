@@ -1,0 +1,196 @@
+skills/loom-plans/references/plan-shape.md
+  ses_1fbf22432ffegbb6yzNyQ5qAV9 35,37-38,70-73
+  human 74
+.loom/critique/20260507-spec-contract-grammar-review.md
+  ses_1fbf22432ffegbb6yzNyQ5qAV9 1-132
+.loom/evidence/20260507-spec-contract-grammar-check.md
+  ses_1fbf22432ffegbb6yzNyQ5qAV9 1-142
+skills/loom-specs/references/spec-shape.md
+  ses_1fbf22432ffegbb6yzNyQ5qAV9 6,21-22,26-45,56-102,191-214,242-256,266-269,272-273
+  human 46,257
+skills/loom-plans/SKILL.md
+  ses_1fbf22432ffegbb6yzNyQ5qAV9 18,20,124,127
+skills/loom-specs/SKILL.md
+  ses_1fbf22432ffegbb6yzNyQ5qAV9 35-102,154-155,174-175,180-181,185-186,193-196,199-200
+skills/loom-specs/templates/spec.md
+  ses_1fbf22432ffegbb6yzNyQ5qAV9 19-26,94-97,99,103-105,107-114,123,125-128,134-153
+  human 106,124,154
+.loom/tickets/20260507-specgram-sharpen-spec-contract-grammar.md
+  ses_1fbf22432ffegbb6yzNyQ5qAV9 1-166
+package.json
+  human 3
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 7,
+          "added_lines": 7,
+          "deleted_lines": 0,
+          "hash": "ses_1fbf22432ffegbb6yzNyQ5qAV9",
+          "lines": "35,37-38,70-73",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "74",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-plans/references/plan-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 132,
+          "added_lines": 132,
+          "deleted_lines": 1,
+          "hash": "ses_1fbf22432ffegbb6yzNyQ5qAV9",
+          "lines": "1-132",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/critique/20260507-spec-contract-grammar-review.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 142,
+          "added_lines": 142,
+          "deleted_lines": 1,
+          "hash": "ses_1fbf22432ffegbb6yzNyQ5qAV9",
+          "lines": "1-142",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/evidence/20260507-spec-contract-grammar-check.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 115,
+          "added_lines": 115,
+          "deleted_lines": 1,
+          "hash": "ses_1fbf22432ffegbb6yzNyQ5qAV9",
+          "lines": "6,21-22,26-45,56-102,191-214,242-256,266-269,272-273",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "46,257",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-specs/references/spec-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 4,
+          "added_lines": 4,
+          "deleted_lines": 0,
+          "hash": "ses_1fbf22432ffegbb6yzNyQ5qAV9",
+          "lines": "18,20,124,127",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-plans/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 82,
+          "added_lines": 82,
+          "deleted_lines": 1,
+          "hash": "ses_1fbf22432ffegbb6yzNyQ5qAV9",
+          "lines": "35-102,154-155,174-175,180-181,185-186,193-196,199-200",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-specs/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 49,
+          "added_lines": 49,
+          "deleted_lines": 0,
+          "hash": "ses_1fbf22432ffegbb6yzNyQ5qAV9",
+          "lines": "19-26,94-97,99,103-105,107-114,123,125-128,134-153",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 3,
+          "added_lines": 3,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "106,124,154",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-specs/templates/spec.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 166,
+          "added_lines": 166,
+          "deleted_lines": 5,
+          "hash": "ses_1fbf22432ffegbb6yzNyQ5qAV9",
+          "lines": "1-166",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/tickets/20260507-specgram-sharpen-spec-contract-grammar.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "package.json"
+    }
+  ],
+  "base_commit_sha": "a091259d1acb26091fe79046d60ff76af96a34f0",
+  "commit_sha": "a091259d1acb26091fe79046d60ff76af96a34f0",
+  "commit_type": "commit_amend",
+  "git_ai_version": "1.4.2",
+  "prompts": {
+    "human": {
+      "accepted_lines": 7,
+      "agent_id": null,
+      "human_author": null,
+      "messages": [],
+      "overriden_lines": 0,
+      "total_additions": 7,
+      "total_deletions": 0
+    },
+    "ses_1fbf22432ffegbb6yzNyQ5qAV9": {
+      "accepted_lines": 697,
+      "agent_id": {
+        "id": "ses_1fbf22432ffegbb6yzNyQ5qAV9",
+        "model": "openai/gpt-5.5",
+        "tool": "opencode"
+      },
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "messages": [],
+      "overriden_lines": 0,
+      "total_additions": 697,
+      "total_deletions": 9
+    }
+  },
+  "schema_version": "authorship/3.0.0"
+}
