@@ -1,0 +1,175 @@
+skills/loom-records/references/claim-coverage.md
+  ses_1fbf89341ffeZ060HakXAiZkXH 194
+skills/loom-drive/references/continuity-contract.md
+  ses_1fbf89341ffeZ060HakXAiZkXH 30-31
+skills/loom-drive/references/checkpoint-resume-protocol.md
+  ses_1fbf89341ffeZ060HakXAiZkXH 112
+skills/loom-workspace/SKILL.md
+  ses_1fbf89341ffeZ060HakXAiZkXH 71-72
+skills/loom-drive/references/drive-loop.md
+  ses_1fbf89341ffeZ060HakXAiZkXH 46-50,182-183,223-224
+skills/loom-tickets/references/acceptance-gate.md
+  ses_1fbf89341ffeZ060HakXAiZkXH 72
+skills/loom-records/references/query-and-linking.md
+  ses_1fbf89341ffeZ060HakXAiZkXH 30,33,36-41,46-47,171,189,193-195
+  human 196
+skills/loom-drive/templates/outer-loop-handoff.md
+  ses_1fbf89341ffeZ060HakXAiZkXH 6,45-48
+  human 49
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "ses_1fbf89341ffeZ060HakXAiZkXH",
+          "lines": "194",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-records/references/claim-coverage.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "ses_1fbf89341ffeZ060HakXAiZkXH",
+          "lines": "30-31",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-drive/references/continuity-contract.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "ses_1fbf89341ffeZ060HakXAiZkXH",
+          "lines": "112",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-drive/references/checkpoint-resume-protocol.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "ses_1fbf89341ffeZ060HakXAiZkXH",
+          "lines": "71-72",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-workspace/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 9,
+          "added_lines": 9,
+          "deleted_lines": 4,
+          "hash": "ses_1fbf89341ffeZ060HakXAiZkXH",
+          "lines": "46-50,182-183,223-224",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-drive/references/drive-loop.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "ses_1fbf89341ffeZ060HakXAiZkXH",
+          "lines": "72",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-tickets/references/acceptance-gate.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 15,
+          "added_lines": 16,
+          "deleted_lines": 7,
+          "hash": "ses_1fbf89341ffeZ060HakXAiZkXH",
+          "lines": "30,33,36-41,46-47,171,189,193-195",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "196",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-records/references/query-and-linking.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 5,
+          "added_lines": 6,
+          "deleted_lines": 7,
+          "hash": "ses_1fbf89341ffeZ060HakXAiZkXH",
+          "lines": "6,45-48",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "49",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-drive/templates/outer-loop-handoff.md"
+    }
+  ],
+  "base_commit_sha": "567daf4f00016e76cddb312c83a1976e43722bb6",
+  "branch": "main",
+  "commit_sha": "076693c43b0e73dbc370cf89d9b7fb98a4d8593e",
+  "commit_time": "2026-05-07T13:18:15-07:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.2",
+  "prompts": {
+    "human": {
+      "accepted_lines": 2,
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "messages": [],
+      "overriden_lines": 0,
+      "total_additions": 2,
+      "total_deletions": 0
+    },
+    "ses_1fbf89341ffeZ060HakXAiZkXH": {
+      "accepted_lines": 36,
+      "agent_id": {
+        "id": "ses_1fbf89341ffeZ060HakXAiZkXH",
+        "model": "openai/gpt-5.5",
+        "tool": "opencode"
+      },
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "messages": [],
+      "overriden_lines": 0,
+      "total_additions": 38,
+      "total_deletions": 18
+    }
+  },
+  "repo": "https://github.com/z3z1ma/agent-loom.git",
+  "schema_version": "authorship/3.0.0"
+}
