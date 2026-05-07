@@ -10,16 +10,16 @@ Use the most specific section available before falling back to generic links.
 | Relationship | Use |
 | --- | --- |
 | hard execution prerequisite | `depends_on` |
-| ticket implements or verifies spec acceptance | `# Coverage` |
-| ticket acceptance view over claims | `# Claim Matrix` |
+| ticket implements or verifies spec acceptance | `# Acceptance` |
+| ticket acceptance view over claims | optional `# Claim Matrix` |
 | packet iteration target claims | `# Verification Targets` |
 | evidence supports a claim | `# Supports Claims` |
 | evidence weakens or falsifies a claim | `# Challenges Claims` |
 | critique challenges a claim | finding `Challenges:` |
-| ticket-owned finding disposition / ticket-owned critique disposition | `# Critique Disposition` |
+| ticket-owned finding disposition / ticket-owned critique disposition | `# Review And Follow-Through` |
 | superseded record | record lifecycle `status: superseded` plus successor in `links:` or body prose |
-| superseded claim or criterion ID | owning record prose, claim matrix, or coverage state naming the successor ID |
-| accepted risk | ticket `# Claim Matrix`, ticket acceptance notes, or critique disposition |
+| superseded claim or criterion ID | owning record prose, optional claim matrix, or acceptance state naming the successor ID |
+| accepted risk | ticket `# Claim Matrix`, ticket acceptance notes, review/follow-through notes, or acceptance decision |
 | follow-up ticket | ticket body follow-up section plus `links:` to the related owner records |
 | related ticket with no dependency | `links:` typed adjacency, not `depends_on` |
 | promotion from memory/research/ticket into wiki/spec/etc. | body prose naming source and target, plus `links:` when navigation matters |
@@ -52,7 +52,7 @@ workspaces.
   section. Do not leave agents guessing which record to trust next.
 - Claim or criterion ID supersession is narrower than record supersession. Mark
   the old `REQ-*`, `ACC-*`, `OBJ-*`, or `CLAIM-*` as superseded in the owning
-  record's prose, claim matrix, or coverage state and name the successor ID. Do
+  record's prose, optional claim matrix, or acceptance state and name the successor ID. Do
   not imply the whole record should have `status: superseded` unless the record
   itself has been replaced.
 - Promotion should name the source support or working artifact and the canonical
@@ -63,9 +63,9 @@ workspaces.
 - Follow-up tickets should be explicit ticket references, ideally with the reason
   for follow-up. A critique finding or accepted risk can point to the follow-up,
   but the ticket ledger owns live execution state.
-- Accepted risk should stay visible in the ticket acceptance or claim matrix and,
-  when applicable, in critique disposition. Do not hide accepted risk only in a
-  generic link.
+- Accepted risk should stay visible in the ticket acceptance, optional claim
+  matrix, review/follow-through notes, or acceptance decision. Do not hide
+  accepted risk only in a generic link.
 
 ## External References As Support Surfaces
 

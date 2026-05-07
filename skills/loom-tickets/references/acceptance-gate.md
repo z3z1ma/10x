@@ -10,7 +10,7 @@ implementation.
 - ticket
 - change class and risk class
 - linked spec acceptance IDs and ticket-local acceptance IDs in scope
-- ticket claim matrix when present
+- ticket claim matrix when present and useful
 - evidence
 - critique records and ticket-owned finding dispositions
 - critique policy: `optional`, `recommended`, or `mandatory`, plus rationale and
@@ -23,9 +23,9 @@ implementation.
 - recent Ralph packet outcomes
 - relevant plan or initiative context
 
-Ticket frontmatter `risk_class` is the canonical ticket risk. The risk class in
-`# Critique Disposition` restates that same value for critique planning and must
-not become a second, contradictory risk claim.
+Ticket frontmatter `risk_class` is the canonical ticket risk. Ticket body review
+sections may restate that value for critique planning, but they must not become a
+second, contradictory risk claim.
 
 New tickets and tickets being materially updated for readiness, Ralph, critique,
 acceptance, reopening, or closure must declare `change_class` and `risk_class`.
@@ -40,14 +40,11 @@ It is not a new record kind.
 
 ```text
 Acceptance Dossier =
-  Acceptance Criteria
-  + Coverage
-  + Claim Matrix
+  Acceptance
+  + optional Claim Matrix when coverage is complex
   + Evidence
   + Critique Policy
-  + Critique Disposition
-  + Retrospective / Promotion Disposition
-  + Wiki Disposition when applicable
+  + Review And Follow-Through
   + Journal
   + Acceptance Decision when required
 ```
@@ -62,8 +59,9 @@ Acceptance Dossier =
   ticket as `ticket:<token>#ACC-001`?
 - Is the evidence fresh enough for the current source, record, dependency, and
   environment state, or are its limits explicit?
-- Does the claim matrix accurately summarize support, challenge, and open
-  claims?
+- If a claim matrix is present, does it accurately summarize support, challenge,
+  and open claims? If absent, is inline coverage simple enough that no matrix is
+  needed?
 - Is critique policy explicit enough for this change class and risk class?
 - When critique policy requires profiles, are those profiles complete?
 - If critique is mandatory, does required critique exist and do all open
@@ -80,8 +78,9 @@ Acceptance Dossier =
 - Is retrospective / promotion disposition resolved for closure as `completed`,
   `deferred`, or `not_required`, or does it remain `blocking` because required
   promotion or prevention follow-through is incomplete?
-- If wiki is one promotion path, does `# Wiki Disposition` record the
-  wiki-specific outcome without replacing the broader promotion decision?
+- If wiki is one promotion path, does the wiki disposition inside
+  `# Review And Follow-Through` record the wiki-specific outcome without
+  replacing the broader promotion decision?
 - If human signoff or accepted-risk provenance is required, does
   `# Acceptance Decision` name who accepted, when, on what basis, and with what
   residual risks?

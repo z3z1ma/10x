@@ -62,7 +62,7 @@ Recommended locations:
 | --- | --- |
 | initiative | `# Status Summary`, plus criterion IDs under `# Success Metrics` |
 | plan | `# Strategy Snapshot` and `# Execution Waves` |
-| ticket | `# Coverage`, `# Claim Matrix`, `# Evidence`, `# Critique Disposition`, `# Blockers`, and `# Journal` |
+| ticket | `# Acceptance`, optional `# Claim Matrix`, `# Current State`, `# Evidence`, `# Review And Follow-Through`, `# Acceptance Decision`, and `# Journal` |
 | packet or handoff | frontmatter/source snapshot plus output contract and parent merge notes |
 | evidence | `# Supports Claims` and `# Challenges Claims` |
 | critique | findings, verdict, residual risks, and challenged claims |

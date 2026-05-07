@@ -1,6 +1,6 @@
 ---
 name: loom-constitution
-description: "Maintain durable project identity and constraints. Use when principles, decisions, roadmap direction, or long-lived project policy must change."
+description: "Maintain durable project identity and constraints. Use when architecture policy, principles, roadmap direction, citable decisions, hard constraints, or long-lived project rules must change."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -77,6 +77,30 @@ Useful starting queries:
 5. link downstream work where useful, except for `constitution:main`, which usually stays link-light
 6. when writing a decision record, state the rejected alternatives and their reasons so the record carries precedent value
 7. reconcile any plan/spec/wiki pages that are now out of date because the constitutional frame changed
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "This feels important, so it belongs in the constitution." | Constitution owns durable policy and constraints, not every important fact. |
+| "The decision is obvious, so rejected options are unnecessary." | Rejected options are what make decision records useful precedent. |
+| "A roadmap can track project progress." | Roadmaps express durable direction; initiatives, plans, and tickets own execution detail. |
+| "A wiki page can serve as policy." | Wiki explains accepted understanding. Constitution owns policy authority. |
+
+## Red Flags
+
+- constitutional prose is aspirational but not constraining
+- decision record lacks alternatives, consequences, or downstream reconciliation
+- roadmap lists ticket tasks instead of policy-level direction
+- policy change silently contradicts existing constitution records
+- specs, plans, or wiki pages remain stale after a constitutional change
+
+## Verification
+
+- [ ] Existing constitutional records were checked for precedent.
+- [ ] The change belongs to policy, durable direction, or citable decision truth.
+- [ ] Decision records name accepted choice, rejected alternatives, and consequences.
+- [ ] Downstream records that conflict with the new frame were reconciled or marked pending.
 
 ## Done Means
 

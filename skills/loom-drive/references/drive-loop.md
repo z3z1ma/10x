@@ -32,7 +32,7 @@ intake -> objective-contract -> owner-shaping -> tranche-planning -> ticket-exec
 - `owner-shaping`: create or refine constitution/initiative/research/spec/plan
   truth.
 - `tranche-planning`: slice only the next useful bounded work set.
-- `ticket-execution`: advance tickets through local edits, Ralph packets,
+- `ticket-execution`: advance tickets through local execution, Ralph packets,
   debugging, spikes, codemaps, evidence, critique, wiki, retrospective,
   acceptance review, or ship packaging as the record truth requires.
 - `reconciliation`: update ticket truth and any owner records affected by the
@@ -59,7 +59,7 @@ Ask what the user actually requested:
   criteria, then drive through this loop.
 - **Existing initiative continuation**: read the initiative/plan/ticket chain,
   identify the next unmet objective gap, and create or advance the next tranche.
-- **Single bounded task**: use the ticket owner, a local edit, Ralph, debugging,
+- **Single bounded task**: use the ticket owner, local execution, Ralph, debugging,
   spike, or codemap as appropriate instead of using the full drive loop.
 - **Unknown evidence or behavior**: use research or spec shaping before
   creating execution tickets.
@@ -76,13 +76,22 @@ Ask as few questions as can safely establish:
 
 1. target outcome in measurable terms
 2. success criteria or acceptance signals
-3. constraints, non-goals, and risk tolerance
-4. Delegated Authority / Autonomy Boundaries: what the agent may decide, what
+3. the observed baseline, current workaround, or concrete pain when the objective
+   depends on a problem claim
+4. the smallest valuable shape when the request is a bundled solution rather than
+   a crisp outcome
+5. constraints, non-goals, and risk tolerance
+6. Delegated Authority / Autonomy Boundaries: what the agent may decide, what
    requires user approval, and any budget/time, risk, privacy, safety, or other
    autonomy limits
-5. Objective-Level Stop Conditions: when continuation must stop, ask the user,
+7. Objective-Level Stop Conditions: when continuation must stop, ask the user,
    or return to shaping before more work proceeds
-6. preferred first tranche when multiple routes are equally plausible
+8. preferred first tranche when multiple routes are equally plausible
+
+For product, behavior, architecture, workflow, or operator-experience objectives,
+use the workspace pressure-check lens before committing to the objective contract:
+evidence, specificity, counterfactual, attachment, and durability gaps. Ask only
+the gaps that would change the owner record or first tranche.
 
 If the user cannot answer everything, record reasonable assumptions only when
 they are low risk and explicitly reversible. Otherwise ask the user and record the
@@ -142,9 +151,35 @@ make the next safe progress step durable.
 
 ## Execution Routing
 
+For outcome-driven software work, keep the delivery chain visible even when Loom
+does not use command pipelines. The normal chain is:
+
+```text
+discover/prioritize -> orient/codemap -> shape behavior/sequence -> execute -> clean up -> critique -> validate -> sync explanation/docs -> ship package
+```
+
+Translate each gate into Loom owners instead of copying a command runtime:
+
+- discovery and prioritization -> initiative, research, plan, or ticket triage
+- orientation and repo intelligence -> codemap, evidence, research, and wiki atlas
+- planning and behavior contract -> spec, plan, and ticket readiness
+- implementation -> local execution or Ralph under a ticket-owned scope
+- cleanup -> local execution plus critique/evidence when AI artifacts, debug traces,
+  placeholders, dead code, or over-engineering could distort the result
+- review -> critique with pass splitting proportional to risk
+- validation -> evidence tied to ticket/spec claims and acceptance criteria
+- documentation or explanation sync -> wiki, README/product docs, research, or
+  follow-up ticket according to what truth changed
+- PR, release, merge, or external handoff -> ship, with ticket acceptance still
+  owning closure
+
+Do not require every gate for every ticket. Do require an explicit disposition when
+a gate is skipped on non-trivial or high-risk work: not needed, deferred with
+rationale, converted to follow-up, or blocking.
+
 For each ticket or follow-up:
 
-- use a local edit when the change is tiny, obvious, and safe in the current
+- use local execution when the change is tiny, obvious, and safe in the current
   context
 - use Ralph when the implementation step benefits from fresh context or explicit
   write boundaries

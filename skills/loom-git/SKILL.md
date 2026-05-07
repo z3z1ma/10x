@@ -1,6 +1,6 @@
 ---
 name: loom-git
-description: "Coordinate Git isolation and provenance for Loom work. Use when branches, worktrees, baselines, diffs, merges, or PR handoffs affect ticket or packet truth."
+description: "Coordinate Git isolation and provenance for Loom work. Use when making code changes, branching, using worktrees, reviewing diffs, committing, merging, preparing PRs, or when dirty state affects ticket or packet truth."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow
@@ -123,6 +123,31 @@ Git cannot answer by itself:
 - whether evidence is sufficient
 - whether critique is required or resolved
 - whether a ticket may close
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "Use main or master; it is probably right." | Integration baseline must be discovered from records, repo state, remote metadata, or operator input. |
+| "The branch or PR shows the work is done." | Git transports changes. Tickets own live state and closure. |
+| "Commit history is enough evidence." | Diffs show what changed; evidence records what was observed. |
+| "Dirty unrelated files do not matter." | Dirty state affects provenance and write-scope safety even when unrelated files are not touched. |
+
+## Red Flags
+
+- branch was created from an assumed baseline
+- worktree contains unrelated dirty files before packet launch or shipping
+- PR or commit message claims acceptance without ticket evidence
+- child write scope and Git diff do not match
+- parallel workers share a checkout or overlapping write scope
+
+## Verification
+
+- [ ] Repository root and integration baseline are explicit.
+- [ ] Dirty state and unrelated changes are visible before mutation, handoff, or packaging.
+- [ ] Packet Git provenance is recorded when packetized implementation uses Git.
+- [ ] Diff stays inside ticket or packet write scope.
+- [ ] Git summaries do not replace ticket, evidence, critique, or wiki truth.
 
 ## Done Means
 

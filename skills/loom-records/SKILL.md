@@ -1,6 +1,6 @@
 ---
 name: loom-records
-description: "Use Loom's shared record grammar. Use when creating, naming, linking, validating, repairing, or reconciling Loom artifacts."
+description: "Use Loom's shared record grammar. Use when creating, naming, linking, validating, repairing, renaming, superseding, or reconciling Loom artifacts, claim IDs, statuses, packet metadata, or typed references."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: shared-grammar
@@ -88,6 +88,31 @@ Prefer records that are:
 4. fill in the required body sections
 5. add typed links for real relationships
 6. search for inbound and outbound references if this changes the graph
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "The record is well formatted, so it is true." | Structure enables inspection. Owner truth and evidence decide correctness. |
+| "The search output proves the graph is valid." | Queries are discovery aids. Validation still requires judgment against owner rules. |
+| "External refs in frontmatter make the external source authoritative." | External refs are provenance and navigation, not imported authority. |
+| "I can repair links after the rename." | Reference reconciliation is part of the mutation, not optional cleanup. |
+
+## Red Flags
+
+- frontmatter and body disagree about status, scope, or owner truth
+- IDs, filenames, and typed references drift apart
+- placeholder text appears in a saved record outside an intentional template
+- support artifacts or external references are treated as canonical owner records
+- rename, split, supersession, or removal lacks inbound-reference checks
+
+## Verification
+
+- [ ] Filename, ID, kind, and owner layer agree.
+- [ ] Required frontmatter and major sections are present for the record kind.
+- [ ] Typed links and direct references point to valid or explicitly stale/superseded targets.
+- [ ] Placeholder and copied-template residue are absent from saved records.
+- [ ] Validation claims are based on inspected records, not query output alone.
 
 ## Done Means
 

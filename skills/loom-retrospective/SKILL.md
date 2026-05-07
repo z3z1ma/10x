@@ -1,6 +1,6 @@
 ---
 name: loom-retrospective
-description: "Run Loom's compounding pass before closure. Use when accepted lessons should move into owner layers and memory needs support-only cleanup."
+description: "Run Loom's compounding pass before closure. Use after nontrivial tickets, bugs, spikes, reviews, launches, or repeated questions when accepted lessons should move into owner layers and memory needs support-only cleanup."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow
@@ -70,6 +70,12 @@ Observe concrete signals from ticket journals, packet outputs, critique findings
 evidence records, changed owner records, and recurring questions that had to be
 reconstructed.
 
+Also observe support signals that do not own truth but may reveal repeated
+friction: transcript patterns, operator corrections, recurring wishes, repeated
+review findings, stale handoff questions, or the same codebase explanation being
+rediscovered. Treat those signals as inputs to retrospective, not as accepted
+project truth.
+
 Distill durable lessons separately from one-time execution detail, then promote
 each accepted lesson to the owner layer that can maintain it.
 
@@ -89,6 +95,35 @@ practical:
 If there is nothing durable to promote, say so. Do not invent artifacts to look
 productive.
 
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "The ticket is done, so there is nothing to promote." | Closure is exactly when durable lessons should be checked. |
+| "Every useful note should become wiki." | Promote accepted reusable explanation to wiki; route evidence, behavior, sequencing, policy, or memory elsewhere. |
+| "Memory is enough for this lesson." | Memory can point to owner truth. It should not be the only home for project truth. |
+| "Retrospective can close the ticket." | Retrospective records follow-through. Ticket acceptance still decides closure. |
+| "A transcript pattern is enough evidence for a new workflow." | Transcript patterns are support signals; promote only the durable lesson, and route it to the owner layer that can maintain it. |
+
+## Red Flags
+
+- repeated mistake has no prevention artifact or explicit no-follow-up rationale
+- accepted lesson is left only in ticket journal, packet output, or chat
+- recurring workflow or review pain is left as a transcript habit instead of a
+  wiki page, research null result, spec clarification, ticket follow-up, or skill
+  update when one is warranted
+- wiki receives behavior contract, evidence, or policy truth that belongs elsewhere
+- memory still duplicates promoted truth after the owner layer is updated
+- retrospective disposition is pending while ticket status claims closure
+
+## Verification
+
+- [ ] Durable lessons are separated from one-time execution details.
+- [ ] Each promoted lesson went to exactly one owner layer where practical.
+- [ ] Ticket or initiative disposition says completed, deferred, blocking, or not required.
+- [ ] Memory cleanup happened when memory held support context for promoted truth.
+- [ ] Ticket closure remains gated by ticket-owned acceptance.
+
 ## Default Procedure
 
 1. read the ticket, initiative, critique, evidence, packet, or work slice being
@@ -97,10 +132,10 @@ productive.
 3. move each lesson to exactly one owner layer where practical
 4. update owner records only when the lesson is accepted enough to preserve
 5. update the ticket or initiative disposition to say what was promoted,
-   deferred, blocking, or intentionally not required; for tickets use
-   `# Retrospective / Promotion Disposition` as the standard closure home, with
-   `# Wiki Disposition` only for the wiki-specific outcome when wiki is one
-   promotion path
+   deferred, blocking, or intentionally not required; for tickets use the
+   promotion disposition inside `# Review And Follow-Through` as the standard
+   closure home, with wiki disposition only for the wiki-specific outcome when
+   wiki is one promotion path
 6. when memory held support context for the work, leave useful current cues,
    replace promoted detail with owner-record pointers, mark stale historical cues,
    or prune obsolete reminders

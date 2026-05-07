@@ -14,42 +14,45 @@ external_refs: {}
 
 # Summary
 
-What was observed, why it exists, and which claims it supports or challenges.
-Do not claim acceptance, closure, critique verdicts, or intended behavior here.
+What was observed, why this record exists, and which claims it supports or challenges.
+Evidence records observations; they do not decide acceptance, closure, policy, or critique verdicts.
 
 # Procedure
 
 Observed at: <UTC timestamp>
 Source state: <commit / branch / relevant record versions / external source version>
-Procedure: <commands, manual inspection steps, query, or capture method>
-Expected result when applicable: <expected behavior, output, state, or artifact from the owning ticket/spec/packet/procedure>
+Procedure: <commands, manual inspection steps, query, screenshot, or capture method>
+Expected result when applicable: <expected behavior, output, state, or artifact>
 Actual observed result: <observed behavior, output, state, artifact, mismatch, or inconclusive result>
-Procedure verdict / exit code: <observed pass/fail/mixed/inconclusive and exit code when applicable>
-
-Include enough context for a future agent to judge freshness without treating this
-record as an acceptance decision.
+Procedure verdict / exit code: <pass/fail/mixed/inconclusive and exit code when applicable>
 
 # Artifacts
 
-List files, outputs, screenshots, logs, commands, or observations that matter.
-Keep observed artifacts separate from later inference. Link to, name, or excerpt
-raw logs when that is enough; full raw logs do not need to be stored inline in
-every evidence record.
+Files, outputs, screenshots, logs, commands, paths, or observations that matter.
+Separate raw observations from later interpretation.
+
+# Visual / Product Evidence
+
+Use for UI, UX, product-shape, or design-quality claims; otherwise write `N/A`.
+
+- Baseline artifact:
+- After artifact:
+- Viewport / environment:
+- Primary user task checked:
+- What improved:
+- What still looks weak:
+- What this evidence does not prove:
 
 # Supports Claims
 
-List stable claim or acceptance IDs this evidence supports.
-For partial support, name the observed portion and the untested or limited portion.
-
-If none apply, write `None - reason`.
+List stable claim or acceptance IDs this evidence supports. For partial support,
+name the observed portion and the untested or limited portion. If none apply,
+write `None - reason`.
 
 # Challenges Claims
 
-List stable claim or acceptance IDs this evidence weakens or falsifies.
-If the actual observed result differs from the expected result, cite the claim it
-challenges or state why no stable claim ID applies.
-
-If none apply, write `None - reason`.
+List stable claim or acceptance IDs this evidence weakens or falsifies. If none
+apply, write `None - reason`.
 
 # Environment
 
@@ -65,7 +68,7 @@ External service / harness / data source when applicable:
 Valid for: <claims, source state, and environment this observation can speak to>
 Fresh enough for: <claims or review questions; not acceptance or closure>
 Recheck when: <source, records, dependencies, environment, procedure, or scope changes>
-Invalidated by: <conditions that would make this observation unreliable for the cited claims>
+Invalidated by: <conditions that would make this observation unreliable>
 Supersedes / superseded by:
 
 # Limitations
@@ -75,17 +78,14 @@ environments, source states, adjacent claims, or critique questions.
 
 # Result
 
-What the evidence actually showed, including expected-versus-actual mismatch when
-applicable. This should be an observed result, not an acceptance decision.
+The observed result in plain language, including expected-versus-actual mismatch when applicable.
 
 # Interpretation
 
-What limited inference is justified, and what conclusion is **not** justified by
-this evidence alone.
+The limited inference justified by the observation, and the conclusion that is
+not justified by this evidence alone.
 
 # Related Records
 
-Link or name relevant ticket, spec, plan, research, initiative, decision,
-evidence, critique, wiki, packet, ship package, or support artifact refs. Do not
-imply support artifacts own the claim; use them only as provenance, handoff, or
-navigation context.
+Relevant ticket, spec, plan, research, initiative, decision, evidence, critique,
+wiki, packet, ship package, or support artifact refs.

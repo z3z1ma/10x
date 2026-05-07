@@ -42,6 +42,18 @@ Ask:
 Before making a success, completion, fixed, passing, or ready-to-merge claim,
 ask what evidence would prove that exact claim.
 
+Use this gate before the claim leaves your mouth or enters a record:
+
+1. identify the exact claim being made
+2. identify the command, procedure, review, or observation that can support it
+3. run or inspect the full procedure on the current relevant source state
+4. read the output, exit status, failure count, diff, or observed artifact
+5. state only the claim the observation supports, with limitations
+
+If you have not performed that gate for the current source state, do not imply the
+work is complete, fixed, passing, ready, or safe to merge. Say what is known and
+what remains unverified instead.
+
 Good claim evidence names:
 
 - the command, procedure, review, or observation used
@@ -62,6 +74,7 @@ Do not accept these as evidence by themselves:
 - a test that was written after implementation without a red state when the
   packet required `test-first`
 - a partial command used to imply a broader suite passed
+- unread or summarized output used as if the full command result was inspected
 - a stale run from before relevant files, records, dependencies, or environment
   changed
 - confidence that a small change "should" work

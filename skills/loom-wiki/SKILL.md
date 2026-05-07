@@ -1,6 +1,6 @@
 ---
 name: loom-wiki
-description: "Maintain accepted explanation. Use when architecture, workflow, troubleshooting, or reference knowledge should persist for future operators."
+description: "Maintain accepted explanation. Use when architecture, workflow, troubleshooting, domain terminology, shared language, reference knowledge, or recurring how-to context should persist for future operators."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -18,6 +18,7 @@ Use it when understanding should persist and compound.
 - concept pages
 - workflow pages
 - reference pages
+- shared-language pages for accepted domain terminology and avoided synonyms
 - codebase atlas pages for accepted repository or module structure
 - inter-page linking
 - wiki packets for synthesis passes
@@ -41,6 +42,7 @@ Wiki is where you promote:
 - recurring answers
 - workflow guides
 - concepts worth naming
+- domain terminology and shared language
 - troubleshooting knowledge
 - references that summarize accepted patterns
 
@@ -50,6 +52,8 @@ Wiki is where you promote:
 - the answer synthesizes several records
 - a workflow changed materially
 - the accepted architecture deserves a clear page
+- accepted domain terminology, project jargon, or avoided synonyms should be
+  reusable instead of rediscovered
 - critique or research produced durable understanding that should become easier to reuse
 - a retrospective found accepted explanation that future agents should not have
   to re-derive
@@ -68,6 +72,7 @@ This package ships templates for:
 - concept pages
 - workflow pages
 - reference pages
+- shared-language reference pages
 - atlas pages
 
 Those are enough to start.
@@ -81,6 +86,29 @@ You can add more page types if the project genuinely needs them.
 4. write or update the page from accepted owner truth
 5. add sources and related pages
 6. link the page back into relevant tickets, critiques, or plans when useful
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "This explanation is well written, so it can be trusted." | Wiki pages are trusted because they are grounded in accepted owner truth, evidence, and critique outcomes. |
+| "The wiki can say what should happen next." | Tickets own live execution and plans own sequencing. Wiki explains accepted understanding. |
+| "We should promote every useful note." | Promote repeated, reusable, or accepted understanding. Do not turn wiki into transcript residue. |
+
+## Red Flags
+
+- page defines policy, acceptance, or live status instead of explaining accepted truth
+- sources are missing or point only to chat/transcript memory
+- stale or contested claims are written as settled
+- page duplicates a ticket journal or plan progress log
+- accepted understanding is buried in a packet output but not reconciled
+
+## Verification
+
+- [ ] Sources are canonical owner records, evidence, or accepted critique/research.
+- [ ] The page explains; it does not own policy, intended behavior, live state, or verdicts.
+- [ ] Related pages and owner records are linked where useful.
+- [ ] Stale, uncertain, or superseded claims are labeled.
 
 ## Done Means
 
@@ -110,10 +138,12 @@ Then read conditionally:
 
 3. `references/wiki-write.md` when creating or substantially rewriting a wiki
    page from accepted owner truth.
-4. `references/maintenance.md` when updating, staling, or superseding existing
+4. `references/shared-language.md` when accepted terminology, project jargon,
+   domain vocabulary, or avoided synonyms should persist.
+5. `references/maintenance.md` when updating, staling, or superseding existing
    pages.
-5. `references/wiki-audit.md` when auditing pages for staleness, duplication,
+6. `references/wiki-audit.md` when auditing pages for staleness, duplication,
    broken sources, or misplaced authority.
-6. `templates/index.md` only when creating or refreshing a wiki index.
-7. The relevant page template only when writing that page type.
-8. `templates/wiki-packet.md` only when a fresh synthesis pass is warranted.
+7. `templates/index.md` only when creating or refreshing a wiki index.
+8. The relevant page template only when writing that page type.
+9. `templates/wiki-packet.md` only when a fresh synthesis pass is warranted.

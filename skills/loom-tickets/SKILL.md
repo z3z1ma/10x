@@ -1,6 +1,6 @@
 ---
 name: loom-tickets
-description: "Maintain ticket execution and acceptance. Use when bounded work, state, blockers, evidence/critique disposition, or closure truth changes."
+description: "Maintain bounded execution and acceptance. Use when adding or changing code, tests, docs, config, refactors, migrations, cleanup, blockers, evidence/review disposition, or any done/close/acceptance claim."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -58,10 +58,12 @@ A good ticket should let a fresh agent answer:
 - which acceptance IDs it covers, when a spec names them
 - which ticket-local `ACC-*` IDs it owns, when no spec owns the acceptance
   contract
+- what assumptions or decision triggers could change scope or acceptance
 - what evidence exists
 - what the blockers are
 - what remains open, blocked, under review, or ready for acceptance
 - which acceptance IDs are in scope, without redefining the spec contract
+- whether a claim matrix is actually needed, or whether inline coverage is enough
 
 ## Dependency Model
 
@@ -78,7 +80,7 @@ disposition when applicable, accepted risk, blockers, and closure state.
 Specs own reusable acceptance contracts. Tickets may own ticket-local acceptance
 criteria only when no separate spec exists and the criteria are scoped to that
 ticket. When a ticket owns local acceptance criteria, write stable local IDs such
-as `ACC-001` in `# Acceptance Criteria` and cite them from other records as
+as `ACC-001` in `# Acceptance` and cite them from other records as
 `ticket:<token>#ACC-001`.
 
 Optional commands, commits, PRs, packets, evidence, critique, and wiki pages may
@@ -107,6 +109,31 @@ cp skills/loom-tickets/templates/ticket.md "$path"
 ```
 
 Then replace the placeholders in the copied file.
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "The child said done, so I can close the ticket." | Child output is input. Ticket-owned acceptance, evidence, critique, follow-through, and residual risk decide closure. |
+| "This ticket is small, so evidence can stay in chat." | Small tickets can use small evidence, but acceptance claims still need inspectable support or an explicit `not_required` rationale. |
+| "I'll keep a claim matrix for every ticket because it is safer." | Claim matrices are useful when coverage is complex. For simple tickets they add noise; inline acceptance and evidence links are clearer. |
+| "The plan or packet says what happens next." | Plans sequence and packets bound child work. Tickets own live execution state and acceptance disposition. |
+
+## Red Flags
+
+- status says `closed` while evidence, critique, or promotion disposition is still pending
+- acceptance criteria are vague enough that two implementations could both claim success
+- assumptions that change behavior or UX are hidden in execution notes
+- claim matrix rows duplicate simple coverage without adding clarity
+- critique findings are listed without ticket-owned dispositions
+
+## Verification
+
+- [ ] `# Acceptance` names the owner and real covered IDs or ticket-local criteria.
+- [ ] Evidence disposition says whether support is sufficient, insufficient, challenged, stale, pending, or not required.
+- [ ] Required critique policy and finding dispositions are closure-compatible.
+- [ ] Assumptions or decision triggers are explicit, not silently converted into scope.
+- [ ] Closure, if claimed, cites the ticket-owned acceptance basis.
 
 ## Done Means
 
@@ -139,5 +166,7 @@ Then read conditionally:
    critique profiles, or verification posture from the kind of mutation.
 6. `skills/loom-records/references/claim-coverage.md` when tying the ticket to
    spec acceptance or critique findings.
-7. `references/acceptance-gate.md` when deciding whether closure is honest.
-8. `templates/ticket.md` only when creating a ticket.
+7. `references/local-execution.md` when one bounded code, test, docs, config,
+   refactor, migration, or cleanup change can be executed without a Ralph packet.
+8. `references/acceptance-gate.md` when deciding whether closure is honest.
+9. `templates/ticket.md` only when creating a ticket.

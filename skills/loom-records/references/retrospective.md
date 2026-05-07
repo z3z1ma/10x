@@ -14,8 +14,8 @@ It promotes what was learned into the owner layers that should carry it.
   enough for that owner layer
 - if there is nothing durable to promote, say so; do not invent artifacts to
   look productive
-- for tickets, the standard closure home for this outcome is
-  `# Retrospective / Promotion Disposition`; wiki disposition is only the
+- for tickets, the standard closure home for this outcome is the promotion
+  disposition inside `# Review And Follow-Through`; wiki disposition is only the
   wiki-specific result when wiki is one selected owner layer
 
 ## Routing Pointers

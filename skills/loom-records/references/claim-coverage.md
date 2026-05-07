@@ -70,16 +70,18 @@ Specs should give important requirements and acceptance units IDs:
 ## Ticket Shape
 
 Tickets that advance an initiative objective or implement/verify a spec should
-name covered objective and acceptance IDs:
+name covered objective and acceptance IDs in `# Acceptance`:
 
 First decide which acceptance owner applies. If a spec owns the reusable
-acceptance contract, cite the spec-owned IDs under `# Coverage` and do not create
+acceptance contract, cite the spec-owned IDs under `# Acceptance` and do not create
 ticket-local `ACC-*` criteria for that contract:
 
 ```md
-# Coverage
+# Acceptance
 
-Covers:
+Owner: spec-owned
+
+Criteria / covered IDs:
 - initiative:<slug>#OBJ-001
 - spec:<slug>#ACC-001
 - spec:<slug>#ACC-002
@@ -88,29 +90,34 @@ Covers:
 Replace placeholder refs with real claim IDs before saving a real ticket.
 
 When no spec owns the acceptance contract, the ticket may own ticket-local
-acceptance criteria. Write the local IDs in `# Acceptance Criteria` and cite them
+acceptance criteria. Write the local IDs in `# Acceptance` and cite them
 from packets, evidence, and critique as `ticket:<token>#ACC-001`:
 
 ```md
-# Acceptance Criteria
+# Acceptance
 
-- ACC-001: The ticket readiness template is route-neutral.
-- ACC-002: Evidence records the structural validation outputs.
+Owner: ticket-local
 
-# Coverage
+Criteria / covered IDs:
 
-Covers:
 - initiative:<slug>#OBJ-001
 - ticket:<token>#ACC-001
 - ticket:<token>#ACC-002
+
+Ticket-local criteria:
+
+- ACC-001: The ticket readiness template is route-neutral.
+- ACC-002: Evidence records the structural validation outputs.
 ```
 
 Do not use ticket-local `ACC-*` IDs to replace a reusable spec-owned acceptance
 contract. If the criterion should guide future tickets, promote or restate it in
 a spec and cite `spec:<slug>#ACC-001` instead.
 
-Tickets nearing acceptance may also carry a claim matrix. The matrix is a
-ticket-owned view over links; it is not a new truth owner.
+Tickets nearing acceptance may also carry a claim matrix when several claims,
+evidence records, or critique findings make inline coverage hard to inspect. Do
+not add it by default. The matrix is a ticket-owned view over links; it is not a
+new truth owner and it is not required for small tickets.
 
 ```md
 # Claim Matrix
@@ -189,7 +196,7 @@ rg -n 'spec:<slug>#ACC-002' .loom
 rg -n 'ticket:<token>#ACC-001' .loom
 rg -n '^# Supports Claims|^Supports:' .loom/evidence
 rg -n '^Challenges:' .loom/critique
-rg -n '^# Coverage|^Covers:' .loom/tickets
+rg -n '^# Acceptance|Criteria / covered IDs:' .loom/tickets
 ```
 
 ## Discipline

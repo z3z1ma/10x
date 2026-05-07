@@ -472,6 +472,13 @@ Use this table as orientation, not as a script to dump into records.
 | Bounded implementation pass | Ralph with a Ralph packet |
 | Retrieval cue, preference, reminder, or hot context | Support recall; promote it if it becomes durable truth |
 
+For ordinary coding prompts, the same rule still applies. "Fix this bug" usually
+starts with debugging and evidence; "add this feature" may need a spec before a
+ticket; "refactor this" is ticket-owned code-structure work with behavior
+preservation evidence; "is this ready to merge?" is the ticket acceptance gate,
+not a PR-description exercise. The workspace skill includes a task routing
+catalog for these prompt-language cases.
+
 A vague bug report can become reproduction evidence, root-cause research, a tightened spec if behavior is ambiguous, a ticket for the fix, a packet for the implementation pass, green evidence, critique when risk warrants, and wiki promotion if the lesson should survive.
 
 No new workflow had to be invented. The agent used the graph.
@@ -685,6 +692,9 @@ research -> throwaway scope if needed -> evidence -> conclusions/null results ->
 code map:
 scan evidence -> research where structure is uncertain -> wiki atlas when accepted
 
+shared language:
+term conflict -> spec/research/constitution when meaning is unsettled or policy-bearing -> wiki shared-language page when accepted
+
 review:
 critique -> evidence -> ticket reconciliation -> acceptance or repair
 
@@ -695,7 +705,7 @@ git isolation:
 ticket/packet scope -> explicit baseline -> branch/worktree -> diff provenance -> handoff evidence
 
 implementation:
-ticket -> packet -> worker -> evidence -> reconcile
+ticket -> local execution or packet -> evidence -> critique as needed -> reconcile
 
 ship:
 ticket/evidence/critique/promotion disposition -> PR summary, release note, risk summary, follow-up list
@@ -794,7 +804,7 @@ The product surface is `skills/`: the skills are the protocol in operational for
 | Skill | Role |
 | --- | --- |
 | `loom-bootstrap` | Entry doctrine and Loom operating posture; usually reached automatically through skills |
-| `loom-workspace` | Workspace entry, structure check, first owner/workflow decision |
+| `loom-workspace` | Workspace entry, structure check, common-task routing, first owner/workflow decision |
 | `loom-records` | IDs, frontmatter, typed links, status, validation, repair |
 | `loom-constitution` | Project identity, constraints, decisions, roadmap direction |
 | `loom-initiatives` | Strategic outcomes and success framing |
@@ -804,7 +814,7 @@ The product surface is `skills/`: the skills are the protocol in operational for
 | `loom-tickets` | Live execution ledger and acceptance gate |
 | `loom-evidence` | Observed artifacts and claim support or challenge |
 | `loom-critique` | Adversarial review, findings, verdicts, residual risk |
-| `loom-wiki` | Accepted explanation and reusable understanding |
+| `loom-wiki` | Accepted explanation, shared language, and reusable understanding |
 | `loom-memory` | Support recall, retrieval cues, preferences, and reminders without shadow truth |
 | `loom-drive` | Objective and workflow coordination that routes work through owner layers without owning project truth |
 | `loom-ralph` | Bounded fresh-context implementation loop |

@@ -17,12 +17,20 @@ creating initiatives, specs, plans, or tickets.
 1. Orient without committing.
 2. Restate the request in one or two sentences.
 3. Name what is unclear.
-4. Ask a small number of sharp clarifying questions.
-5. Check constitution, decisions, wiki, and prior research for precedent.
-6. Surface assumptions as accepted, to-be-confirmed, or contested.
-7. When the work is creative or behavior-shaping, present two or three viable
+4. Ask a small number of sharp clarifying questions. For creative, product,
+   behavior, architecture, or workflow-shaping requests, run the pressure check
+   below before durable records or implementation depend on the answer.
+5. If a question can be answered by inspecting the workspace, inspect first
+   instead of asking the operator to restate available facts.
+6. Check constitution, decisions, wiki, and prior research for precedent.
+7. Surface assumptions as accepted, to-be-confirmed, or contested.
+8. When the work is creative or behavior-shaping, present two or three viable
    approaches with tradeoffs and a recommendation before narrowing.
-8. Route to the next owner layer or workflow.
+9. Route to the next owner layer or workflow.
+
+Ask one material question at a time when operator input is needed. A bundle of
+questions is acceptable only when every answer is independent and low-friction;
+otherwise it hides which decision actually blocks the route.
 
 ## Creative Shaping
 
@@ -37,10 +45,36 @@ Do this:
 - ask one question at a time when the operator needs to choose or clarify
 - prefer multiple-choice questions when that lowers friction without hiding nuance
 - name purpose, constraints, success criteria, and non-goals before proposing work
+- open the space before narrowing it: generate a small set of meaningfully
+  different approaches, cluster them into the real options, then converge on a
+  recommendation
 - propose two or three approaches with tradeoffs when alternatives matter
+- surface hidden assumptions and how each could be validated or invalidated
+- write a `Not Doing` list when focus or MVP shape is the important decision
 - separate accepted assumptions from contested or unconfirmed assumptions
 - keep large multi-subsystem ideas decomposed before creating one oversized plan
 - route accepted intended behavior to spec and sequencing to plan
+
+## Pressure Check
+
+Before turning a fuzzy request into a spec, plan, ticket, packet, or code change,
+scan for the gaps that would make the agent silently invent direction:
+
+- evidence gap: what observed user, operator, system, or maintenance pain shows
+  this matters now?
+- specificity gap: who or what exact surface benefits, and what changes for them?
+- counterfactual gap: what happens today if nothing ships, and what workaround or
+  cost exists now?
+- attachment gap: is the request attached to one solution shape before the value
+  has been clarified; what is the smallest valuable shape?
+- durability gap: what near-term change in the product, market, dependency,
+  harness, or team would make this direction wrong?
+
+Do not turn this into a questionnaire. Ask only the material gaps that are
+actually present, one question at a time when operator input is needed. If a
+material answer is unavailable, route it as a blocking question, research need,
+spec decision point, plan risk, or ticket assumption instead of hiding it in chat.
+Low-risk reversible assumptions may proceed only when recorded in the owner layer.
 
 For visual, spatial, or product-shape questions, a sketch route may be better
 than more prose. Use `loom-spike` sketch flow when mockups, diagrams, screenshots,
@@ -61,9 +95,14 @@ observed artifacts; specs and wiki own accepted behavior or explanation.
 
 - Do not draft execution records from a still-fuzzy request.
 - Do not answer with code.
-- Do not silently choose between materially ambiguous readings. Route to
-  `ask_user` when proceeding would invent authority, accept material risk,
-  change owner-record truth, or make an irreversible or high-risk decision.
+- Do not silently choose between materially ambiguous readings. Ask the user when
+  proceeding would invent authority, accept material risk, change owner-record
+  truth, or make an irreversible or high-risk decision.
+- Do not ask the user to answer questions the repository can answer through
+  direct inspection.
+- Do not turn the first plausible approach into a spec or ticket before hidden
+  assumptions, alternatives, and the smallest valuable shape have been checked
+  when those facts would change the result.
 - If an assumption is low risk, reversible, and inside delegated authority,
   record it in the owning record before continuing through the appropriate
   route.

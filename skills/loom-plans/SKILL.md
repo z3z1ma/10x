@@ -1,6 +1,6 @@
 ---
 name: loom-plans
-description: "Maintain sequencing and rollout strategy. Use when work needs multiple tickets, dependency order, tranches, or execution waves."
+description: "Maintain sequencing and rollout strategy. Use when a feature, refactor, migration, architecture change, or multi-step objective needs ordered tickets, dependencies, tranches, or parallel execution waves."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -58,6 +58,35 @@ A strong plan answers:
 - what milestones exist
 - what risks and dependencies shape the sequence
 - which tickets should exist beneath it
+- which slices are vertical enough to produce working, verifiable progress
+- which sections are thin on confidence, such as weak rationale, vague file or
+  record scope, missing test/evidence targets, or unresolved owner-layer gaps
+- where checkpoints or loopbacks should happen before continuing
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "I'll figure out the order while implementing." | Hidden sequencing becomes rework. Plans exist when order, dependency, or parallelism matters. |
+| "A complete plan should decompose everything." | Decompose enough to make the next safe tranche clear; do not manufacture roadmap theater. |
+| "Parallel work is faster." | Parallel tickets are safe only when dependencies and write scopes do not conflict. |
+| "The plan can track progress." | Tickets own live execution state. Plans own strategy snapshots and sequencing. |
+
+## Red Flags
+
+- tasks are horizontal layers that cannot be verified independently
+- ticket slices are too large for one focused execution/review loop
+- execution waves lack write-scope or dependency checks
+- plan snapshot is being used as a progress log
+- evidence or critique expectations are absent for risky tranches
+
+## Verification
+
+- [ ] Claim/acceptance coverage maps to downstream tickets or explains why none applies.
+- [ ] Ticket slices are small, ordered by dependency, and leave reviewable checkpoints.
+- [ ] Plan confidence gaps have been fixed, routed outward, or recorded as explicit assumptions.
+- [ ] Parallel waves, if any, include non-overlap and parent reconciliation checks.
+- [ ] Risks name owner-layer loopbacks when execution discovers missing truth.
 
 ## Done Means
 

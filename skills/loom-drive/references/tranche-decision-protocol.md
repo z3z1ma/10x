@@ -69,7 +69,7 @@ matters:
 | A failing behavior or incident needs reproduce-first diagnosis | use debugging before a normal fix |
 | A bounded experiment, prototype, or sketch should inform commitment | run a spike and preserve evidence/research output |
 | Repository or module structure must be mapped before downstream work can proceed safely | run codemap and preserve evidence/research/wiki output |
-| A ticket is ready and work is tiny, local, and safe | make the local edit and reconcile the ticket |
+| A ticket is ready and work is tiny, local, and safe | use local execution and reconcile the ticket |
 | A ticket needs fresh-context implementation with explicit write scope | compile a Ralph packet |
 | Observed support or challenge needs durable preservation | create evidence |
 | Risk, protocol authority, code behavior, or acceptance sufficiency needs review | run critique |
@@ -100,10 +100,10 @@ After each action, reconcile before continuing:
   support notes when useful, then read the owner chain again
 - graph repair -> repaired owner records, links, statuses, IDs, placeholders, or
   blocker notes
-- local edit -> ticket journal, changed paths, evidence if the ticket relies on
+- local execution -> ticket journal, changed paths, evidence if the ticket relies on
   observed behavior, and critique when risk warrants
 - Ralph child output -> packet status, ticket truth, evidence/critique as needed
-- debugging result -> evidence/research/spec/ticket/local edit/Ralph/retrospective
+- debugging result -> evidence/research/spec/ticket/local execution/Ralph/retrospective
   owners as appropriate
 - spike result -> research conclusions/null results, evidence artifacts, and any
   downstream spec/plan/ticket/wiki owner updates

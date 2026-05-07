@@ -1,6 +1,6 @@
 ---
 name: loom-ralph
-description: "Run Ralph implementation packets. Use when a Ralph-ready ticket needs fresh context with explicit scope, fingerprint, verification, and output contract."
+description: "Run Ralph implementation packets. Use for larger feature, refactor, test, migration, or cleanup slices when a Ralph-ready ticket needs fresh context, explicit write scope, fingerprint, verification, and output contract."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: inner-loop
@@ -46,7 +46,7 @@ Ralph packets use `kind: packet`, `packet_kind: ralph`, and the
   another non-implementation workflow; Ralph is only for bounded implementation
   packets
 - the next move is critique or wiki; use that domain skill first
-- the task is a tiny local edit that does not need a packet
+- the task is tiny local execution that does not need a packet
 
 ## Parent Procedure
 
@@ -82,6 +82,8 @@ A strong packet should make all of these explicit:
 - context budget
 - verification targets when claim coverage exists
 - verification posture and what counts as evidence for this iteration
+- assumptions and decision triggers that could block the child
+- quality delta for user-facing, operator-facing, or behavior-changing work
 - stop conditions
 - output contract
 - what the parent will do after the child returns
@@ -107,6 +109,31 @@ See `references/verification-posture.md` for details.
 Do not choose `none` just because the file is Markdown. Protocol authority,
 operator guidance, acceptance, or behavior-contract edits can change how Loom
 behaves and usually need structural evidence plus critique.
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "The packet is detailed, so the ticket can be vague." | Ralph starts from a Ralph-ready ticket. Packets cannot outrank or repair ticket truth by themselves. |
+| "The child can decide the missing product direction." | Material assumptions belong in owner records or user decisions before launch. |
+| "Verification posture `none` is fine because this is Markdown." | Protocol, acceptance, routing, and operator guidance changes can alter behavior and usually need evidence plus critique. |
+| "The child returned `stop`, so the ticket is done." | Child outcome vocabulary is not ticket closure. The parent reconciles evidence, critique, and acceptance first. |
+
+## Red Flags
+
+- child write scope is broad, empty, or only implied by prose
+- source fingerprint is stale or says `unknown` without launch-safe rationale
+- the packet lacks quality delta for user-facing or operator-facing work
+- stop conditions do not tell the child when to fail closed
+- child output is treated as final truth before parent reconciliation
+
+## Verification
+
+- [ ] Ticket is Ralph-ready and matches the packet scope.
+- [ ] Source fingerprint and write-scope files are fresh enough.
+- [ ] Verification posture is justified and evidence expectations are concrete.
+- [ ] Assumptions and quality delta are explicit when material.
+- [ ] Parent merge scope names ticket and supporting reconciliation targets.
 
 ## Done Means
 

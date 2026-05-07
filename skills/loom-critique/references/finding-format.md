@@ -59,7 +59,7 @@ disposition; a ticket may cite them for audit history without treating them as
 closure blockers.
 
 Use ticket-owned finding dispositions only in the ticket's
-`# Critique Disposition` section:
+`# Review And Follow-Through` section:
 
 - `resolved`
 - `accepted_risk`
@@ -92,3 +92,19 @@ tickets.
 If feedback is wrong, push back with evidence: cite code, tests, specs, tickets,
 or project decisions. Avoid performative agreement; the useful durable artifact is
 the technical disposition.
+
+For multi-item feedback, do not implement the clear items while leaving material
+items unclear if the unclear items could change the same files, behavior, or risk
+disposition. Clarify first, or split the feedback into explicit ticket-owned
+follow-ups with scope and verification expectations.
+
+For external review comments, classify the comment before action:
+
+- required blocker for this ticket
+- valid but outside current ticket scope
+- optional/nit that does not affect acceptance
+- incorrect for this codebase or owner truth
+- unclear and needs clarification
+
+The ticket owns how that classification affects acceptance. Critique owns the
+finding or review verdict when the classification itself should persist.

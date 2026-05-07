@@ -34,7 +34,6 @@ source_fingerprint:
   integration_commit: "<TBD: sha or unknown with rationale>"
   git_status_summary: "<TBD: clean, dirty_tracked, dirty_untracked, dirty_mixed, or unknown with rationale>"
   git_status_detail: "<TBD: short status detail or unknown with rationale>"
-  # Provenance: owner records or artifacts used to compile this packet baseline.
   compiled_from:
     - "ticket:<TBD: token>"
 execution_context:
@@ -50,7 +49,6 @@ context_budget:
   max_source_files: 8
   max_excerpt_lines_per_file: 80
   avoid_full_file_reads: true
-# Context: source set the Ralph child should read or trust for this bounded iteration.
 sources:
   constitution:
     - constitution:main
@@ -65,90 +63,57 @@ links: {}
 
 # Mission
 
-What this iteration is meant to achieve.
+What this one bounded iteration should achieve and why it is the next safe step.
 
 # Bound Context
 
-What larger chain constrains the work.
-
-Frontmatter follows `skills/loom-records/references/packet-frontmatter.md`;
-Ralph-specific body obligations follow `skills/loom-ralph/references/packet-contract.md`.
-For Ralph, `source_fingerprint`, `execution_context`, `child_write_scope`,
-`parent_merge_scope`, and `verification_posture` are strict launch-safety fields,
-not optional packet decoration.
-
-Use `source_fingerprint.compiled_from` for packet compilation provenance and
-`sources` for the context the Ralph child should read or trust. The two lists may
-overlap, but they do not need to duplicate each other.
-
-Name packets using `packet:ralph-ticket-<token>-<UTC compact timestamp>` and save
-them as `.loom/packets/ralph/<UTC compact timestamp>-ticket-<token>-iter-<NN>.md`.
-The filename `iter-<NN>` suffix must match frontmatter `iteration`.
-
-Name intended behavior separately from current implementation reality when this
-packet touches code.
-
-For Git-backed work, name the branch/worktree/integration-baseline posture here
-when the frontmatter is not enough, especially for multi-repo packets.
-
-For fork/upstream or review-system workflows, distinguish integration remote,
-push remote, and review target instead of collapsing them into one remote name.
+The owner chain that constrains the child. Name intended behavior separately from
+current implementation reality. Use `skills/loom-ralph/references/packet-contract.md`
+for field-level rules when compiling or reviewing this packet.
 
 # Parent Launch Checklist
 
 Before launch, the parent verifies:
 
-- target-ticket readiness: the ticket dossier, scope, acceptance criteria,
-  blockers, linked owner records, and journal justify one bounded Ralph
-  implementation iteration and match this packet's child write boundary,
-  verification posture, and output contract
-- source freshness: `source_fingerprint` still matches governing records,
-  resolved integration ref, git status expectations, and child-write-scope files;
-  supersede this packet instead of launching if the contract is materially stale
-- resolved packet content: this saved compiled packet contains no unresolved
-  template placeholders, placeholder-only fields pretending to be packet truth,
-  generic angle-bracket placeholder tokens, or template example IDs that still use
-  placeholder values
-- non-overlapping child write scope: `child_write_scope` records and paths are
-  exact, narrow, and do not conflict with any parallel packet; canonical-record
-  writes fail closed unless exact record refs are granted; empty
-  `child_write_scope.records` or `child_write_scope.paths` is ambiguous and
-  launch-blocking until replaced with exact entries or explicit
-  `None - <rationale>` entries
-- parent merge scope: `parent_merge_scope` names the ticket and any evidence,
-  critique, packet-status, or other paths the parent must reconcile after return
-- Git/execution context: branch, worktree, isolation, network posture, destructive
-  command policy, and shared Git metadata policy match the intended run; bare
-  `network: unknown` is launch-blocking unless the packet records why that
-  uncertainty is safe for this bounded iteration
-- verification posture: `verification_posture` fits the change class and names
-  the red/green, before/after, or verification-neutral evidence expected
-- stop conditions: freshness, scope boundary, execution-context, and
-  posture-specific stops are explicit enough for the child to fail closed
-- output contract: required return fields are complete enough for parent-side
-  ticket truth, evidence, critique, and packet lifecycle reconciliation
+- target ticket is Ralph-ready and matches this packet's scope;
+- source fingerprint still matches governing records and child-write-scope files;
+- child write scope and parent merge scope are exact or explicitly `None - reason`;
+- Git, network, destructive-command, and shared-metadata posture are safe;
+- verification posture fits the change class and evidence expectation;
+- stop conditions and output contract are complete;
+- no unresolved template placeholders or example IDs remain.
 
-If the target ticket is not Ralph-ready, or if its scoped facts no longer match
-the packet, the parent reconciles the ticket or supersedes this packet before
-launch. Do not ask the child to infer authority from the packet or let this packet
-overrule ticket-owned truth.
+If any check fails, reconcile the ticket or supersede the packet before launch.
 
 # Source Snapshot
 
-Curated excerpts, summaries, or directions to the important source records.
+Curated excerpts, summaries, or directions to the source records and files the child should read.
+
+# Assumptions / Decision Triggers
+
+| Assumption or question | Reversible? | Blocks child work? | Disposition |
+| --- | --- | --- | --- |
+| <TBD or None - no material assumptions> | <yes/no> | <yes/no> | <accepted, ask parent/user, or route to owner> |
 
 # Change Class
 
-Declared above as `change_class`. Explain how this class affects evidence,
-critique, and verification posture for this iteration. If optional `risk_class`
-is present, explain whether it repeats or narrows the ticket risk; the ticket
-still owns critique disposition and acceptance gates.
+Declared above as `change_class`. Explain how it affects evidence, critique,
+verification posture, and write-scope risk for this iteration.
+
+# Quality Delta
+
+Baseline/current state:
+
+Expected improvement:
+
+How the parent will judge the delta:
+
+Known non-goals:
 
 # Verification Targets
 
-Stable claim or acceptance IDs this iteration should satisfy or exercise.
-
-List real qualified IDs, or write `None - reason`.
+Stable claim or acceptance IDs this iteration should satisfy or exercise. List
+real qualified IDs, or write `None - reason`.
 
 # Task For This Iteration
 
@@ -156,53 +121,33 @@ The exact bounded task for the child.
 
 # Verification Posture
 
-Declared above as `verification_posture`. Valid values: `test-first`, `observation-first`, `none`.
+Declared above as `verification_posture`.
 
-Expand here with specifics the child needs:
-
-- for `test-first`: what failing check must exist before implementation, what counts as green, and where the check lives
-- for `observation-first`: what must be observed before and after, and how the before/after evidence is captured
-- for `none`: a one-line justification of why this iteration is verification-neutral
-
-For `test-first`, include the expected failure reason, red command or procedure,
-green command or procedure, and whether any broader regression command is
-expected after the targeted check passes.
-
-Use `none` only for verification-neutral work such as non-semantic record
-hygiene, reference reconciliation, packet compilation, or a pure refactor riding
-on an already-green suite. Do not use `none` for protocol authority, routing,
-acceptance, behavior-contract, or operator-guidance changes merely because they
-are written in Markdown.
+- `test-first`: name the failing check, expected failure reason, red command or procedure, green command or procedure, and broader regression command if expected.
+- `observation-first`: name the before-state observation, after-state observation, and artifact capture method.
+- `none`: justify why this iteration is genuinely verification-neutral.
 
 # Stop Conditions
 
 When the child should stop, block, or escalate instead of widening scope.
 
-Stop if governing records or child-write-scope files appear materially newer or
-otherwise materially different from the source fingerprint.
-
-For Git-backed work, stop if the resolved integration ref or worktree state no
-longer matches the declared execution context closely enough to trust the packet.
-
-Do not run `git fetch`, `git fetch --prune`, remote edits, Git config edits, or
-other shared Git metadata mutations unless this packet explicitly allows them.
-
-For `test-first`, stop conditions must include: a failing check exists before implementation, fails for the expected reason, and is driven to green inside this iteration.
-
-For `observation-first`, stop conditions must include: before-state evidence is captured, and after-state evidence confirms the intended change.
+Include freshness, write-scope, execution-context, and posture-specific stops. For
+`test-first`, the failing check must exist before implementation and be driven to
+green inside this iteration. For `observation-first`, before and after evidence
+must be captured.
 
 # Output Contract
 
 The child must return:
-- outcome (`continue|stop|blocked|escalate`)
-- files changed
-- records changed
-- evidence gathered (including red-to-green transition for `test-first`, or before/after observations for `observation-first`)
-- self-review findings or concerns, including any suspected scope, quality,
-  verification, or maintainability issues
-- blockers or risks
-- ticket recommendation
-  - The child recommends ticket changes; the parent commits ticket truth.
+
+- outcome (`continue|stop|blocked|escalate`);
+- files changed;
+- records changed;
+- evidence gathered, including red/green or before/after artifacts when applicable;
+- quality delta achieved or not achieved;
+- uncertainty discovered or questions that should have been asked earlier;
+- self-review findings, risks, and maintainability concerns;
+- ticket recommendation. The child recommends; the parent commits ticket truth.
 
 # Working Notes
 
@@ -214,4 +159,4 @@ To be filled by the child or copied back by the parent.
 
 # Parent Merge Notes
 
-What the parent concluded after reconciliation.
+What the parent concluded after reconciliation, including packet lifecycle status.

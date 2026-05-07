@@ -78,6 +78,36 @@ Profiles are lenses, not permanent agents or new layers.
 - integration boundaries
 - maintainability of the changed code
 
+For code changes, the default review axes are correctness, readability/simplicity,
+architecture, security/trust boundary, and performance. Pick specialized profiles
+when one axis carries material risk, but do not let a passing test suite erase the
+other axes.
+
+### `code-structure`
+
+- behavior preservation during refactor or simplification
+- whether module boundaries became deeper or shallower
+- coupling, locality, and test seam quality
+- removal of accidental complexity without hiding behavior changes
+- whether evidence proves no intended behavior changed
+- whether the simplification preserves all inputs, outputs, side effects, ordering,
+  and error behavior
+- whether the diff separates behavior-preserving cleanup from feature work
+
+### `ai-artifact-cleanup`
+
+- leftover debug statements, unique debug prefixes, console logs, or temporary
+  instrumentation
+- placeholder text, TODOs, stubs, no-op variables, commented-out code, dead
+  branches, or orphaned helpers left by an implementation pass
+- excessive explanatory comments that narrate obvious code instead of preserving
+  intent
+- over-engineered abstractions, wrappers, or generic utilities created before
+  enough use cases exist
+- hardcoded secrets, credentials, local paths, test data, or environment values
+- whether cleanup evidence used targeted searches or diff review rather than a
+  broad vibe that the code "looks clean"
+
 ### `test-coverage`
 
 - missing regression coverage
@@ -102,12 +132,52 @@ Profiles are lenses, not permanent agents or new layers.
 - dependency risk
 - unsafe tool permissions
 
+### `dependency-tooling`
+
+- package, runtime, build, lint, typecheck, formatter, or toolchain drift
+- compatibility and lockfile risk
+- generated-file and local automation boundaries
+- whether tooling changes affect developer or agent feedback loops
+- security exposure from dependency changes
+
 ### `performance`
 
 - asymptotic behavior
 - hot path changes
 - cache invalidation
-- measurement evidence
+- before/after measurement evidence
+- whether the alleged bottleneck was measured rather than assumed
+- whether the change affects representative data, devices, network, or runtime
+  constraints
+- whether one variable changed per experiment and repeated validation supports
+  the result
+
+### `product-ux`
+
+- primary user task clarity
+- whether the change solves a real user problem rather than only adding surface area
+- discoverability and flow friction
+- before/after quality delta against the baseline
+- empty, loading, error, and edge-state usefulness
+- whether the result is materially better or merely more complex
+
+### `visual-design`
+
+- information hierarchy and visual rhythm
+- affordance clarity for primary and destructive actions
+- density, spacing, typography, and scan path
+- responsive composition at small and large viewports
+- before/after screenshots or visual observations when available
+- avoidance of generic AI-looking patterns unless they are project-appropriate
+
+### `accessibility`
+
+- keyboard path and focus order
+- accessible names and visible labels
+- heading and landmark structure
+- color contrast and non-color indicators
+- reduced-motion behavior when motion is used
+- screen-reader legibility or accessibility-tree evidence when available
 
 ### `operator-clarity`
 
@@ -139,11 +209,29 @@ Profiles are lenses, not permanent agents or new layers.
 - whether skill descriptions and read order make activation discoverable without
   duplicating workflow truth
 
+### `review-feedback-disposition`
+
+- whether each external, human, subagent, or model-review finding was read fully
+  and understood before action
+- whether unclear multi-item feedback was clarified or split before partial
+  implementation
+- whether invalid feedback was rejected with evidence rather than performative
+  agreement or avoidance
+- whether accepted feedback was implemented one item at a time with verification
+  and ticket-owned disposition where closure depends on it
+
 ## Profile Selection
 
 - low risk: usually `operator-clarity` or no required profile
 - medium risk: choose the one or two profiles matching the change class
 - high risk: require the profile matching the domain plus `operator-clarity`
+- user-facing UI/product changes usually need `product-ux` plus `visual-design`
+  or `accessibility`, even when functional tests pass
+- changes produced by AI implementation or broad refactor should consider
+  `ai-artifact-cleanup` even when the main review profile is `code-change` or
+  `code-structure`
+- work that consumes review comments should consider `review-feedback-disposition`
+  when the correctness of the feedback affects closure
 
 If the risk class is unclear, treat it as medium and explain the uncertainty.
 

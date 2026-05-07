@@ -1,6 +1,6 @@
 ---
 name: loom-initiatives
-description: "Maintain strategic outcome framing. Use when work spans tickets, needs success metrics, delegated autonomy, or a long-lived objective owner."
+description: "Maintain strategic outcome framing. Use when a product, architecture, migration, quality, cleanup, or modernization effort spans tickets, needs success metrics, delegated autonomy, or a long-lived objective owner."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -60,6 +60,30 @@ A strong initiative answers:
 - which stable `OBJ-*` criteria downstream work may cite
 - what milestones matter
 - which plans, specs, research, and tickets execute it
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "A cluster of related tickets is automatically an initiative." | Initiatives exist when a durable strategic outcome and success criteria need an owner. |
+| "Success can be judged later." | If downstream tickets need coordination, success criteria should be explicit now. |
+| "The initiative can track progress." | Initiatives frame outcomes. Tickets track live execution and plans sequence work. |
+| "Milestones are just roadmap items." | Initiative milestones are outcome checkpoints, not constitutional roadmap commitments. |
+
+## Red Flags
+
+- no stable `OBJ-*` criteria while downstream tickets cite objective success
+- broad outcome lacks non-goals, delegated authority, or stop conditions when drive work depends on it
+- milestones read like a ticket progress log
+- downstream plan/ticket graph is invisible
+- initiative duplicates plan sequencing or ticket execution detail
+
+## Verification
+
+- [ ] Strategic outcome, why-now, and success metrics are explicit.
+- [ ] `OBJ-*` criteria exist when downstream coverage needs stable references.
+- [ ] Non-goals, autonomy boundaries, or stop conditions are present when delegated drive depends on them.
+- [ ] Downstream research, specs, plans, tickets, or blockers are linked or intentionally absent.
 
 ## Done Means
 

@@ -13,16 +13,15 @@ links: {}
 
 # Purpose
 
-Why this plan exists.
+Why this plan exists and what sequencing problem it solves.
 
 # Strategy
 
-The overall route or approach.
+The overall route or approach. Explain the tradeoff, not just the order.
 
 # Strategy Snapshot
 
-Current strategic picture only. Do not use this as a progress log; live state
-belongs in tickets.
+Current strategic picture only. Do not use this as a progress log; live state belongs in tickets.
 
 # Workstreams
 
@@ -30,86 +29,67 @@ Major streams or phases of execution strategy.
 
 # Milestones
 
-Execution-sequencing checkpoints. Do not use these as initiative outcome
-metrics, roadmap commitments, or ticket progress state.
+Execution-sequencing checkpoints. Do not use these as ticket progress state.
 
 # Sequencing
 
-Why the order looks the way it does.
+Why the order looks this way. Name dependencies, risk ordering, and fail-fast choices.
 
 # Claim / Acceptance Coverage
 
-Map upstream initiative objectives, spec claim IDs, and ticket-local acceptance
-criteria into downstream tickets. The plan maps claim coverage; tickets own live
-coverage state, evidence disposition, and acceptance decisions.
+Map upstream initiative objectives, spec acceptance IDs, and ticket-local criteria
+into downstream tickets. Tickets own live coverage state, evidence disposition,
+and acceptance decisions.
 
 | Source claim / acceptance ID | Downstream ticket | Coverage expectation | Evidence / critique expectation | Notes |
 | --- | --- | --- | --- | --- |
-| `<record>#<claim-or-ACC>` | `ticket:<token>` | What the ticket must cover | Expected evidence or critique | `None - reason` only when no claim-bearing source applies |
+| <TBD or None - reason> | <ticket:<token> or proposed> | <what must be covered> | <expected evidence/review> | <notes> |
+
+# Ticket Slices
+
+Each slice should be small enough for one focused implementation/review loop.
+
+| Ticket | Purpose | Likely write scope | Dependencies | Verification / critique posture |
+| --- | --- | --- | --- | --- |
+| <TBD> | <bounded outcome> | <paths or records> | <depends_on or none> | <test-first, observation-first, critique profiles> |
 
 # Execution Waves
 
-Use when multiple tickets can be sequenced or run independently from the plan.
+Optional. Use only when same-wave tickets can run independently or when sequential
+waves need explicit dependency boundaries.
 
-Save-ready rule: remove unused wave examples and placeholder rows before saving.
-Replace placeholders with real tickets, write scopes, and owner/workflow notes,
-or use a meaningful `None - reason` when a wave or coverage item genuinely does
-not apply; keep claim / acceptance coverage, evidence / critique expectations,
-readiness, exit, and completion gates intact.
+| Wave | Tickets | Independent because | Write-scope / shared-state check | Parent reconciliation |
+| --- | --- | --- | --- | --- |
+| <TBD or None - no wave needed> | <tickets> | <non-overlap rationale> | <contention check> | <merge/validation path> |
 
-Do not require parallel execution by default. Before any sibling Ralph work runs
-in parallel, record the independence and write scope overlap check here. Real
-waves require a concrete non-overlap summary; write `None - reason` only when no
-parallel wave applies.
+# Confidence Review
 
-Wave 1:
+Name the plan sections most likely to mislead downstream work. Fix them here or
+route them to the owner layer that can resolve them.
 
-List real ticket IDs, why they can run independently, expected packet
-`child_write_scope` or likely write scope, dependency/contention checks, and the
-parent reconciliation path. If no wave applies, write `None - reason`.
+- Requirements / claim trace:
+- Decision rationale / rejected alternatives:
+- File, record, test, evidence, and critique scope:
+- Cross-boundary risks:
+- Open questions that would change behavior, acceptance, or risk:
 
-Wave 2:
+# Risks And Loopbacks
 
-List real ticket IDs, dependencies on prior wave results, any changed write scope
-overlap risk, and parent integration validation. If no wave applies, write
-`None - reason`.
-
-Wave readiness table:
-
-| Wave | Tickets | Independent because | Expected `child_write_scope` / write scope overlap check | Dependency / shared-state check | Parent reconciliation |
-| --- | --- | --- | --- | --- | --- |
-| `Wave 1` | `ticket:<token-a>`, `ticket:<token-b>` | No same-wave dependency | `ticket:<token-a>` writes `<path-a>`; `ticket:<token-b>` writes `<path-b>`; no overlapping `child_write_scope` paths | No generated file, lockfile, migration, or stateful contention | Ticket-owned update plus evidence/critique disposition |
-| No wave | `None - reason` | `None - reason` | `None - reason` | `None - reason` | Continue with sequential tickets |
-
-# Risks
-
-What could break or distort the plan.
+What could break or distort the plan, and which owner layer should receive new
+truth if execution discovers the plan is wrong.
 
 # Evidence Strategy
 
-How the work under this plan should generally be evidenced or validated.
+How work under this plan should generally be evidenced, validated, and reviewed.
 
 # Plan Readiness Review
 
-Claim coverage:
-
-Spec / acceptance coverage:
-
-Placeholder scan:
-
-Ticket-sized slices:
-
-Likely write scopes:
-
-Parallel / wave independence:
-
-Expected packet `child_write_scope` / write scope overlap check:
-
-Likely verification posture:
-
-Evidence and critique expectations:
-
-Stop / loopback conditions:
+- Claim coverage:
+- Ticket-sized slices:
+- Likely write scopes:
+- Parallel / wave independence:
+- Evidence and critique expectations:
+- Stop / loopback conditions:
 
 # Exit Criteria
 

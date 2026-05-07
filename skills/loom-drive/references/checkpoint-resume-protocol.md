@@ -68,7 +68,7 @@ rg -n 'loom-drive|objective-driven|OBJ-[0-9]{3}' .loom
 
 ## Hard Preflight Gates
 
-These gates run before local edits, Ralph packets, acceptance review, ship, any
+These gates run before local execution, Ralph packets, acceptance review, ship, any
 external handoff/PR/release packaging, or dependent continuation.
 
 There are two outcomes:

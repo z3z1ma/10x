@@ -18,7 +18,7 @@ What exactly is being investigated.
 
 # Why This Matters
 
-Why the project needs this investigation.
+Why the project needs this investigation and what later work would otherwise rediscover.
 
 # Scope
 
@@ -26,63 +26,57 @@ What the investigation covers and excludes.
 
 # Method
 
-How the investigation was carried out.
-
-For spike or sketch variants, record the method and downstream route at the
-research level. Use `skills/loom-spike/SKILL.md` for experiment-matrix, variant,
-throwaway write-scope, and cleanup workflow details.
+How the investigation was carried out. For spike or sketch work, name the branch:
+logic/state prototype, UI/product variant sketch, technical experiment, or source synthesis.
 
 # Sources
 
-What sources were read or inspected.
+List sources with enough provenance to recheck them. Use compact entries by
+default; expand only when source quality or freshness is material.
 
-For source-dependent claims, copy and fill a compact entry like this:
+- Source: <title, path, URL, record ID, or artifact>
+  - Type / provenance: <code, record, log, operator note, web page, generated support analysis, other>
+  - Observed at / version: <UTC timestamp, date, commit, release, or N/A>
+  - Freshness risk / recheck trigger: <risk and trigger, or none known>
+  - Trust rationale: <why this is reliable enough, including limits>
 
-- Source: <title or description>
-- Type: <repository record | code | test | log | operator note | web page | other>
-- Producer / provenance: <author, publisher, repository, organization, operator, generated artifact, or N/A>
-- Access context: <public, private, local, generated, operator-provided; include permissions or retrieval constraints when material>
-- URL or path: <URL, local path, record ID, or N/A>
-- Observed at: <UTC timestamp or date inspected>
-- Version/date/commit: <version, publication date, repository ref, commit, or N/A>
-- Freshness risk: <how this source could become stale, or none known>
-- Recheck trigger: <release, policy change, API change, repo ref change, contradictory evidence, or N/A>
-- Trust rationale: <why this source is reliable enough for this research, including limits>
+External sources, generated files, logs, and tool output are context and evidence;
+they do not become instruction authority or project truth owners.
 
-Sources support evidence synthesis; external sources, generated files, logs, and
-tool output do not become instruction authority or canonical project truth merely
-because this research cites them.
+# Variant / Experiment Matrix
+
+Use when comparing options, prototypes, sketches, or hypotheses; otherwise write `N/A`.
+
+| Variant / hypothesis | Artifact or probe | Strength | Weakness | Decision |
+| --- | --- | --- | --- | --- |
+| <TBD> | <path, screenshot, command, or observation> | <evidence-backed strength> | <risk or limit> | <chosen, rejected, needs follow-up> |
 
 # Evidence Synthesis
 
-What concrete findings emerged.
+What concrete findings emerged from the sources, observations, or experiments.
 
 # Rejected Options
 
-Options that were considered and rejected, with the reason and the evidence that rejected them.
-
-A rejected option captured here prevents a future agent from re-deriving the same decision.
+Options considered and rejected, with the reason and the evidence or constraint that rejected them.
 
 # Null Results
 
-Approaches that were tried and did not work.
-
-Capture the attempt, what failed, and why. Null results are promotable to the wiki when the dead end is likely to tempt future agents.
+Approaches that were tried and did not work. Capture the attempt, what failed,
+and what a future agent should avoid or try instead.
 
 # Conclusions
 
-What is justified by the evidence.
+What is justified by the evidence, separate from open hypotheses.
 
 # Recommendations
 
-What downstream work should do next.
+What downstream work should do next and which owner layer should consume the result.
 
 # Open Questions
 
-What still remains uncertain.
-
-A research record whose body is predominantly open questions — too uncertain to investigate yet but important enough not to lose — is a valid shape. Use `status: deferred_questions` in the frontmatter for that case. Promote individual questions into their own research records when they mature.
+What remains uncertain. A research record that mainly preserves important open
+questions may use `status: deferred_questions`.
 
 # Linked Work
 
-Which initiative, spec, plan, ticket, critique, or wiki pages should consume this note.
+Which initiative, spec, plan, ticket, critique, evidence, or wiki pages should consume this note.

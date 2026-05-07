@@ -26,6 +26,8 @@ states or workflow instructions until the parent reconciles them.
 - execution context
 - verification targets when claim coverage exists
 - verification posture
+- assumptions and decision triggers that could block child work
+- quality delta for user-facing, operator-facing, or behavior-changing work
 - stop conditions
 - output contract
 
@@ -69,7 +71,8 @@ Before launching a Ralph child, the parent should check:
 - stop conditions: freshness, scope, execution-context, and posture-specific stop
   conditions tell the child when to return `blocked` or `escalate`
 - output contract: the required return fields are sufficient for parent-side
-  reconciliation of ticket state, evidence, critique, and packet status
+  reconciliation of ticket state, evidence, critique, and packet status, including
+  the exact observations that support any child success claim
 
 If the target ticket does not justify Ralph, or if its current facts do not match
 the packet, the parent must reconcile the ticket or supersede the packet before
@@ -83,7 +86,12 @@ A strong packet usually includes:
 - Mission
 - Bound Context
 - Source Snapshot
+- Assumptions / Decision Triggers
+- Change Class
+- Quality Delta
+- Verification Targets
 - Task For This Iteration
+- Verification Posture
 - Stop Conditions
 - Output Contract
 - Working Notes
@@ -99,6 +107,44 @@ It does need to include enough excerpts, summaries, or references that the child
 For code work, separate intended behavior from implementation reality. The
 packet should tell the child what the project intends and where to inspect what
 the code currently does.
+
+When framework, library, platform, or external API correctness matters, include
+the source-driven context the child needs: detected version or dependency source,
+official documentation or project-owned reference to inspect, and any known
+conflict between current code and current docs. A packet may require the child to
+fetch or inspect a source, but it must not pretend training-data confidence is
+evidence.
+
+## Child Critical Review Before Execution
+
+The child should read the packet as a contract before editing. If the packet has
+contradictory scope, missing write boundary, unresolved material assumption,
+impossible verification target, stale source fingerprint, or instruction that
+conflicts with higher Loom authority, the child should return `blocked` or
+`escalate` instead of guessing.
+
+For plan-derived packets, the child should also check that the iteration is one
+coherent slice. If the packet bundles unrelated feature work, cleanup, and
+refactor steps, the child should ask the parent to split or clarify unless the
+ticket explicitly made that bundle the bounded scope.
+
+## Assumptions And Quality Delta
+
+Packets should not ask children to silently invent product direction or accept
+material risk. If an assumption would change behavior, UX, architecture,
+acceptance, risk, or scope, record it in `# Assumptions / Decision Triggers` and
+mark whether it blocks child work.
+
+For user-facing, operator-facing, or behavior-changing work, record `# Quality
+Delta`:
+
+- baseline/current state
+- expected improvement
+- how the parent will judge the delta
+- known non-goals
+
+This keeps children from satisfying a packet mechanically while missing the
+reason the iteration should improve the product or workflow.
 
 ## Source Fingerprint
 
@@ -285,6 +331,17 @@ they do not change ticket state.
 The parent reconciles the child outcome into ticket truth and then reasons from
 the updated dossier to decide whether more implementation, research, critique,
 acceptance review, or closure is needed.
+
+A child outcome without fresh evidence is not enough for a completion claim. The
+parent must inspect the child diff, returned observations, and any relevant checks
+before depending on the result or launching dependent work. For parallel children,
+the parent also validates the integrated result after merging or reconciling each
+bounded output.
+
+Child output should be precise enough for review: changed files or records,
+commands or observations with actual results, red/green or before/after evidence
+when required, limitations, blockers, and recommended parent reconciliation. It
+should not be a transcript dump or a generic success summary.
 
 ## Verification Targets
 

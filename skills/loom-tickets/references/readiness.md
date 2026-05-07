@@ -26,9 +26,10 @@ this checklist passes.
   reopening, or closure; normalize legacy tickets when touched or before
   governed execution or acceptance, without treating their prior absence as
   instant non-conformance
+- `# Acceptance` names whether acceptance is spec-owned or ticket-local
 - acceptance criteria are concrete enough to guide behavior
-- coverage names relevant spec acceptance IDs when the work implements or
-  verifies a spec
+- covered IDs name relevant initiative objectives, spec acceptance IDs, or
+  ticket-local criteria when the work implements or verifies them
 - when no spec owns the acceptance contract, ticket-local acceptance criteria use
   stable `ACC-*` IDs in the ticket and downstream records cite them as
   `ticket:<token>#ACC-001`
@@ -38,9 +39,15 @@ this checklist passes.
 - the likely evidence path is visible
 - critique risk class matches frontmatter `risk_class`; required profiles are
   explicit when review is expected
-- the current blockers, evidence gaps, critique gaps, acceptance gaps, and journal
+- `# Current State`, `# Evidence`, `# Review And Follow-Through`, and `# Journal`
   are explicit enough for a fresh agent to choose the next skill or action by
   reasoning over the records
+- material assumptions and decision triggers are recorded instead of silently
+  being converted into scope
+- if the ticket came from external issue triage, prior comments, or review
+  feedback, the ticket records what was established, what is still needed, and
+  whether the next worker is ready for agent execution, human judgment, more
+  information, or cancellation/wontfix disposition
 - the ticket is small enough to fit one bounded iteration or a short sequence of
   clearly staged iterations
 
@@ -56,9 +63,9 @@ workflow router.
 Instead, keep the ticket facts sharp:
 
 - `status` says the live execution state.
-- `# Blockers` names real blockers or `None`.
-- `# Evidence`, `# Critique Disposition`, `# Retrospective / Promotion
-  Disposition`, and `# Acceptance Decision` say what gates are satisfied or open.
+- `# Current State` names real blockers or `None` and explains status rationale.
+- `# Evidence`, `# Review And Follow-Through`, and `# Acceptance Decision` say
+  what gates are satisfied or open.
 - `# Journal` records material progress, decisions, and why work stopped or
   resumed.
 - Linked specs, plans, research, evidence, critique, packets, and wiki pages
@@ -68,20 +75,29 @@ The agent's reasoning is part of Loom's operating model. Skills guide that
 reasoning; tickets should provide enough data for it, not serialize the workflow
 choice.
 
-### `local_edit` And Ticket Truth
+### Local Execution And Ticket Truth
 
-`local_edit` is a lightweight phrase for a tiny in-context mutation, not a bypass
-around tickets and not a workflow field. If a ticket owns the work, the ticket still
-owns live execution state, scope, acceptance disposition, evidence disposition,
-critique disposition, and the journal after the edit.
+Local execution is a lightweight phrase for a tiny or single bounded in-context
+mutation, not a bypass around tickets and not a workflow field. If a ticket owns
+the work, the ticket still owns live execution state, scope, acceptance
+disposition, evidence disposition, critique disposition, and the journal after
+the edit.
 
-A local-edit-ready ticket should make the write boundary narrow enough that the
+A local-execution-ready ticket should make the write boundary narrow enough that the
 operator can stop without guessing. If the change needs a fresh worker, a wider
 implementation pass, unclear behavior decisions, investigation, or adversarial
 review, choose Ralph, spec, research, critique, or the appropriate owner skill
 instead.
 
+For agent-ready implementation handoffs, the ticket should function like a durable
+brief: problem, scope, non-goals, relevant files or records, behavior/acceptance
+IDs, verification target, evidence expectation, stop conditions, and unresolved
+questions. Do not rely on external issue labels or comments as the live ledger;
+mirror the usable facts into the ticket and link the external source as support.
+
 Evidence expectations should match the claim being made: structural Markdown
 cleanup may need only diff review or targeted text observations, while behavior,
 validation, completion, protocol-authority, or risky claims need observed
 evidence and possibly critique before acceptance.
+
+Use `local-execution.md` for the full local execution loop.

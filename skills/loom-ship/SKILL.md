@@ -1,6 +1,6 @@
 ---
 name: loom-ship
-description: "Package already-truthful Loom work. Use when PR, release, evidence/risk, follow-up, or handoff summaries should mirror owner records."
+description: "Package already-truthful Loom work. Use when drafting PR descriptions, changelogs, release notes, merge/handoff summaries, launch or rollback notes, evidence/risk summaries, or follow-up lists that must mirror owner records."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow
@@ -58,6 +58,8 @@ but do not own it.
 - follow-up list
 - release note draft when useful
 - handoff option summary for merge, PR, keep, or abandon decisions when relevant
+- launch or rollback note when deployment risk, monitoring, migrations, feature
+  flags, or staged rollout are in scope
 
 ## Guardrail
 
@@ -71,6 +73,48 @@ handoff claim, scope and safety limits are respected, Git/worktree state is know
 when files are being packaged, and external summaries will mirror Loom truth. If
 `ship` is being invoked from `loom-drive`, satisfy drive's hard preflight gates in
 the drive-owned checkpoint before packaging.
+
+For releases or launches, mirror the owner records into an explicit package:
+validated scope, evidence summary, critique/finding disposition, known residual
+risks, documentation or wiki sync status, rollback or abandon option, monitoring
+or post-launch check, and follow-up ownership. If those facts are not already
+truthful in tickets, evidence, critique, wiki, plans, or constitution, route back
+before packaging.
+
+External review comments are handled as claims to classify, not as commands:
+required blocker, valid out-of-scope follow-up, optional/nit, incorrect for this
+project, or unclear. Ticket truth owns how each classification affects closure;
+ship only mirrors the disposition into PR, release, or handoff wording.
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "The PR description can explain what is true." | PRs mirror Loom truth. They do not own acceptance, evidence, or risk. |
+| "Shipping means the work is done." | Shipping packages already-truthful work; ticket acceptance owns closure. |
+| "Known follow-ups can stay in the handoff." | Follow-ups that affect closure or future work need ticket-owned disposition or new tickets. |
+| "A clean diff is enough to package." | The package also needs current evidence, critique disposition, and residual risk. |
+| "Launch notes can be written from memory." | Launch and rollback packages must mirror recorded evidence, risks, and owner dispositions. |
+
+## Red Flags
+
+- external summary makes stronger claims than ticket/evidence/critique supports
+- unresolved medium/high critique findings are hidden in release or PR wording
+- follow-ups are listed without owner, disposition, or ticket linkage
+- launch or rollback claims appear without health, monitoring, migration,
+  rollback, or post-launch evidence appropriate to the scope
+- Git state is unknown for files being packaged
+- shipping is used to bypass retrospective or acceptance gates
+
+## Verification
+
+- [ ] Ticket, evidence, critique, and promotion dispositions are current before packaging.
+- [ ] External summary mirrors owner records and names residual risks.
+- [ ] Follow-ups have owner-layer disposition or ticket links.
+- [ ] Launch, rollback, monitoring, and docs-sync claims are backed by owner
+      records or marked out of scope.
+- [ ] Git/worktree state is known when shipping file changes.
+- [ ] No closure claim is made outside the ticket acceptance gate.
 
 ## Done Means
 

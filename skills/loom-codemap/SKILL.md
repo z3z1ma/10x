@@ -1,6 +1,6 @@
 ---
 name: loom-codemap
-description: "Map repository or module structure. Use when orientation is costly, packets rediscover paths, or accepted atlas/research/evidence context is needed."
+description: "Map repository or module structure. Use when unfamiliar code, architecture, ownership, call paths, module boundaries, or repeated packet context discovery needs an accepted atlas, research note, or evidence-backed map."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow
@@ -38,12 +38,22 @@ observations into evidence.
 
 1. confirm the repository root and scope
 2. inspect existing wiki, research, evidence, specs, and plans for prior maps
-3. scan structure with native tools
-4. write research when discovery, uncertainty, or rejected interpretations matter
-5. write evidence for scan commands, file lists, screenshots, or observations
-6. write or update wiki pages for accepted structure
-7. if generating path-local context adapters, make them point to Loom records only
-8. record last verified date and source records on every atlas page
+3. collect deterministic structure before synthesis: manifests, package files,
+   build/test/CI entry points, source roots, tests, docs, recent commits, and
+   relevant ownership or hotspot signals when the scope warrants it
+4. scan structure with native tools
+5. note architectural friction when mapping a module: shallow wrappers, unclear
+   seams, missing test surfaces, coupling that spreads one concept across many
+   files, or repeated path rediscovery by packets
+6. write research when discovery, uncertainty, or rejected interpretations matter
+7. write evidence for scan commands, file lists, screenshots, or observations
+8. write or update wiki pages for accepted structure
+9. if generating path-local context adapters, make them point to Loom records only
+10. record last verified date and source records on every atlas page
+
+Do not synthesize from a file-tree glance alone when the map will guide future
+execution. Deterministic collection keeps the atlas from becoming a confident but
+stale story about the wrong files.
 
 ## Atlas Page Shape
 
@@ -74,6 +84,33 @@ Read:
 - decision:<decision-id>
 - plan:<plan-id>
 ```
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "A file tree dump is a code map." | A useful atlas explains structure, boundaries, and retrieval paths, with evidence when needed. |
+| "I can infer architecture from names." | First collect manifests, tests, docs, source roots, and current code paths; then synthesize. |
+| "Uncertain interpretation can go straight into wiki." | Uncertainty belongs in research until accepted. Wiki explains settled structure. |
+| "Path-local instructions can teach local truth." | Path adapters may point to Loom owners; they do not own independent truth. |
+| "Structure is obvious, so no evidence is needed." | If the map will be reused, preserve enough scan/source context to know when it must be rechecked. |
+
+## Red Flags
+
+- atlas page lacks source records, last-verified date, or scope boundary
+- atlas page was written from a file list without checking build/test/docs/source
+  entry points relevant to the scope
+- wiki page mixes accepted structure with unresolved investigation
+- generated adapter gives imperative instructions beyond owner-record pointers
+- map ignores repository boundaries or nested workspaces
+- repeated packet compilation still rediscovers paths after the codemap pass
+
+## Verification
+
+- [ ] Repository scope and map boundary are explicit.
+- [ ] Accepted structure is in wiki; uncertainty and rejected interpretations are in research.
+- [ ] Scan observations or file lists are evidence when the map depends on them.
+- [ ] Path-local adapters, if created, point to owner records and do not own truth.
 
 ## Done Means
 

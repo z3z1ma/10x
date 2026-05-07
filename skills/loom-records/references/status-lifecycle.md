@@ -44,7 +44,7 @@ but not interchangeable.
   ticket for audit history, but they are not closure-blocking merely because of
   severity.
 - **Ticket-owned finding disposition** lives in the ticket's
-  `# Critique Disposition` section for each qualified finding reference. Use
+  `# Review And Follow-Through` section for each qualified finding reference. Use
   `resolved`, `accepted_risk`, `superseded`, or `converted_to_follow_up`.
 - **Ticket-owned critique disposition status** describes gate progress for the
   ticket as a whole: `pending`, `blocking`, `completed`, `deferred`, or

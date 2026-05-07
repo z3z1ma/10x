@@ -98,7 +98,7 @@ Plans are execution strategy, not execution truth.
 
 The outer loop should keep decomposing until the next step is bounded enough to fit one of these shapes:
 
-- one tiny local edit with no packet
+- one tiny local execution step with no packet
 - one `ralph` implementation packet
 - one workflow-coordinator pass such as `debugging`, `spike`, `codemap`, or
   `ship`

@@ -1,6 +1,6 @@
 ---
 name: loom-bootstrap
-description: "Enter Loom doctrine before work. Use first in Loom workspaces unless an adapter has already loaded the ordered bootstrap references."
+description: "Enter Loom doctrine before work. Use first in Loom workspaces before coding, debugging, design, review, release, record edits, or any nontrivial task unless an adapter already loaded the ordered references."
 compatibility: Markdown-native, skill-packaged Loom protocol.
 metadata:
   skill_kind: bootstrap

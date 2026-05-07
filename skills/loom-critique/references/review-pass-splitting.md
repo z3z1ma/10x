@@ -53,6 +53,34 @@ check, not proof.
 For direct artifact critique, do not compile packets by default. Use a packet
 only when the review is broad, high risk, or needs fresh-context isolation.
 
+## Review Loop Stalls
+
+Review/fix loops should converge. They are stalling when:
+
+- the same medium/high finding reappears after a fix attempt;
+- each fix exposes a new owner-layer, scope, behavior, or evidence gap;
+- feedback remains unclear after one focused clarification attempt;
+- review comments are being implemented mechanically without resolving the
+  challenged claim;
+- the ticket cannot disposition findings without changing the spec, plan,
+  research, or scope.
+
+When a review loop stalls, stop treating the next action as another patch. Route
+the blocker to the owner that can resolve it:
+
+- unclear intended behavior -> spec or ticket acceptance refinement
+- insufficient evidence -> evidence or debugging/spike route
+- repeated implementation shape failure -> plan, codemap, research, or architecture
+  critique
+- disputed policy or authority -> constitution or protocol critique
+- out-of-scope but real issue -> follow-up ticket with `converted_to_follow_up`
+- accepted residual risk -> ticket acceptance decision with provenance
+
+For high-risk work, two unsuccessful fix/review rounds on the same finding should
+normally trigger escalation to the parent ticket or operator decision before a
+third implementation attempt. Record the ticket-owned disposition before closure;
+do not let an endless critique loop become the live ledger.
+
 ## Output
 
 - pass split chosen and why
@@ -60,3 +88,5 @@ only when the review is broad, high risk, or needs fresh-context isolation.
 - findings with severity and confidence
 - evidence reviewed
 - follow-up recommendation
+- stalled-loop assessment when repeated findings or unclear feedback affected the
+  review

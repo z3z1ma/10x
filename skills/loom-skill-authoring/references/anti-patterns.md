@@ -13,3 +13,5 @@ Avoid skills that are:
 - force-loading heavy references when conditional reads would preserve context
 - narrative one-offs that should be research, wiki, memory, or a ticket note
 - discipline rules with no pressure-test, critique, or evidence posture
+- skill edits that are "validated" only by the author's confidence that the prose
+  reads well

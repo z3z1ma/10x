@@ -12,17 +12,39 @@ coordinate and which existing records receive durable output.
 
 The description should make activation discoverable without loading the whole skill first.
 
-Descriptions should include the clearest "use when" trigger and, when relevant,
-the owner boundary that tells the agent where durable output belongs.
+Descriptions should include broad ordinary-language triggers, common aliases or
+phrases users actually type, and, when relevant, the owner boundary that tells the
+agent where durable output belongs.
 
 Prefer trigger-focused descriptions over workflow summaries. The description
 helps the harness or model decide whether to load the skill; the body should own
 the procedure. A description that summarizes a multi-step workflow can become a
 shortcut that future agents follow instead of reading the skill.
 
+A weak description says only `Maintain tickets` or `Run review`. A strong
+description also names user-task language: `Use when adding code, changing tests,
+refactoring, reviewing a PR, fixing a failing build, preparing a release, or
+checking whether work is done`. The goal is not keyword stuffing; it is making the
+skill activate when ordinary engineering work needs its paper process.
+
+Do not let broad activation blur ownership. A skill can be broadly triggered and
+still route durable truth to the right owner layer.
+
 ## 3. Operational clarity
 
 A skill should tell the agent what to do, not just what the skill is about.
+
+Prefer process over knowledge. If a section would not change agent behavior,
+remove it or move it to a conditional reference.
+
+Strong skills often include:
+
+- a compact overview of the discipline
+- concrete triggers and exclusions
+- a default procedure or branch-selection rule
+- common rationalizations paired with factual rebuttals
+- red flags that reveal the skill is being skipped or misused
+- verification checks backed by evidence
 
 ## 4. Templates when needed
 
@@ -55,3 +77,24 @@ Use the smallest honest validation for the change:
 
 Do not require a hidden test harness for every skill edit. Do require evidence
 strong enough for the claim being made.
+
+A pressure scenario can be lightweight: one realistic prompt, the expected route
+or refusal, and the rationalization it is meant to catch. When proportional, test
+the baseline without the guidance, then verify the edited skill closes the specific
+loophole. When that is too heavy, record the scenario and why structural review is
+the honest limit.
+
+## 8. Anti-rationalization
+
+When agents commonly skip a discipline under pressure, encode the skip as a
+`Common Rationalizations` row. A good row names the tempting shortcut and the
+reason it is wrong in Loom's owner model.
+
+Examples:
+
+- "The child said done, so I can close the ticket" -> ticket closure still needs
+  ticket-owned evidence, critique, follow-through, and acceptance disposition.
+- "The packet says it, so it outranks the ticket" -> packets are bounded support
+  contracts; ticket truth wins for live execution and acceptance.
+- "The screenshot looks fine" -> visual evidence supports a claim but does not
+  replace product-UX or visual-design critique when risk warrants review.

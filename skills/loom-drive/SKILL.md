@@ -1,6 +1,6 @@
 ---
 name: loom-drive
-description: "Drive delegated objectives through Loom owner layers. Use when advancement needs shaping, ticket tranches, execution, evidence, critique, and continuation."
+description: "Drive delegated objectives through Loom owner layers. Use when the user asks to build, improve, modernize, clean up, migrate, or continue a multi-step outcome that needs shaping, tickets, execution, evidence, critique, and continuation."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow-coordinator
@@ -90,7 +90,7 @@ launch, the checkpoint must already be current; "can update later" is not enough
 - the repeated parent loop across existing Loom owner layers
 - tranche planning and ticket creation posture
 - delegation boundaries for owner-layer updates, workflow coordination, packet
-  launches, local edits, and optional subagents
+  launches, local execution, and optional subagents
 - continuation, human-escalation, and stop-condition decisions
 
 ## What This Skill Does Not Own
@@ -124,7 +124,7 @@ Direct owner reasoning wins over drive. If the safe action is already one bounde
 owner update or workflow pass, use that owner skill directly and let the ticket,
 record, or workflow that owns the truth carry the work.
 
-- the request is already one clear local edit or one Ralph-ready ticket
+- the request is already one clear local execution step or one Ralph-ready ticket
 - the work is one ticket-sized implementation slice with a clear ticket owner or
   Ralph packet need
 - the next truth change belongs entirely to one owner-layer skill
@@ -150,18 +150,29 @@ or repository scope is not trustworthy enough to drive.
 
 Do not activate merely because a task is large. Activate when the user is
 delegating outcome advancement across phases. A large but already ticket-ready
-implementation still belongs directly to `loom-tickets` or `loom-ralph`; a clear
-local edit still belongs to `local_edit`; and one single-owner record mutation
-still belongs to that owner skill.
+implementation still belongs directly to `loom-tickets` or `loom-ralph`; clear
+local execution still belongs under the owning ticket or owner skill; and one
+single-owner record mutation still belongs to that owner skill.
 
 ## User Questioning Posture
 
 Ask only enough focused questions to make the first durable objective safe to
 record. Prefer a small batch of questions over repeated approval gates.
 
+Before recording an objective or first tranche, pressure-check the request when it
+would shape product behavior, architecture, workflow, or operator experience. Look
+for missing evidence that the problem matters, vague beneficiaries, absent current
+workarounds, attachment to one solution shape before value is clear, and durability
+risks that could make the direction wrong. Ask only the gaps that matter; do not
+make the user approve every reversible assumption.
+
 Clarify these before downstream tickets depend on them:
 
 - measurable objective and success criteria
+- current baseline, pain, workaround, or observed need when the objective depends
+  on a problem claim
+- the smallest valuable shape when the request arrives as a large solution or
+  bundled feature set
 - hard constraints, non-goals, and risk tolerance
 - Delegated Authority / Autonomy Boundaries: what the agent may decide without
   returning to the user, what requires user approval, and any budget, time, risk,
@@ -202,7 +213,7 @@ boundaries.
    edits, Ralph, acceptance review, ship, external handoff/PR/release packaging,
    and dependent continuation until repaired.
 7. **Execute bounded work** — use the owner skill when truth must be shaped before
-   implementation; use local edits for tiny safe changes, Ralph for fresh-context
+   implementation; use local execution for tiny safe changes, Ralph for fresh-context
    implementation packets, and domain workflows such as debugging, spike,
    codemap, critique, wiki, retrospective, acceptance review, or ship when their
    skills own the work. Declare read/write scope and stop conditions before child
@@ -240,6 +251,8 @@ bounded handoff would reduce context pressure or improve reviewability.
 
 - success criteria, Delegated Authority / Autonomy Boundaries, Objective-Level
   Stop Conditions, or non-goals remain materially ambiguous
+- a pressure check exposes an evidence, specificity, counterfactual, attachment,
+  or durability gap that would change the objective or first tranche
 - the next step would invent product direction the user has not delegated
 - scope would widen beyond the current initiative, plan, ticket, or write boundary
 - required evidence is missing or contradicted
@@ -256,6 +269,31 @@ related choices, state why owner records and delegated autonomy cannot safely
 answer it, and name the owner record that should be updated after the response.
 Do not ask the user merely to approve low-risk, reversible assumptions that stay
 inside delegated authority.
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "The user said continue, so I can decide the product direction." | Delegated autonomy advances recorded objectives. It does not invent materially new direction. |
+| "A drive summary can be the live ledger." | Drive coordinates. Tickets own live execution state and acceptance. |
+| "A big objective needs a big plan before action." | Decompose only enough to make the next safe tranche clear. |
+| "The subagent output looks complete, so I can depend on it." | Child or support output must be reconciled into owner records before it becomes usable truth. |
+
+## Red Flags
+
+- current tranche, blockers, or acceptance state exists only in chat
+- continuation depends on an assumption that should be an initiative, spec, plan, or ticket fact
+- several tickets are launched without dependency or write-scope checks
+- drive keeps asking for approval on obvious in-scope moves, or keeps moving after explicit stop conditions
+- support handoffs summarize owner truth but owner records remain stale
+
+## Verification
+
+- [ ] Objective, autonomy boundaries, and stop conditions live in owner records.
+- [ ] Current tranche and live execution state live in tickets.
+- [ ] Evidence, critique, wiki, and retrospective needs are routed to their owners.
+- [ ] Child/subagent output has been parent-reconciled before downstream dependence.
+- [ ] The next action is a bounded owner mutation, workflow pass, local execution, or packet.
 
 ## Done Means
 

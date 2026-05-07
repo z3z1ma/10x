@@ -68,6 +68,11 @@ These are reasoning cues, not values to save in a field:
 | workspace structure, repository scope, owner-chain trust, or cold-start recovery is unclear | `loom-workspace` |
 | support-only retrieval cues, preferences, reminders, entities, or hot context | `loom-memory` support recall |
 
+When the user asks in ordinary coding-task language such as bug, feature,
+refactor, tests, dependency, performance, UI, API, release, or done/acceptance
+terms, use `skills/loom-workspace/references/task-routing-catalog.md` as a
+prompt-language companion to this owner-truth table.
+
 Use ordinary prose when explaining why you chose a skill. Do not create a route
 field just to make the choice look deterministic.
 
@@ -81,7 +86,7 @@ Keep these categories distinct:
 | Record lifecycle statuses | `draft`, `active`, `accepted`, `recorded`, `superseded`, `abandoned` | Describe record lifecycle or support-surface state. They are not next-action commands. |
 | Ralph child outcomes | `continue`, `stop`, `blocked`, `escalate` | Child output for parent reconciliation inside the packet loop. It becomes ticket truth only after parent reconciliation. |
 | Critique-owned finding states | `open`, `withdrawn` | Live inside critique records and describe whether critique still stands behind a finding. |
-| Ticket-owned finding dispositions | `resolved`, `accepted_risk`, `superseded`, `converted_to_follow_up` | Live in the ticket's critique disposition section for qualified findings. They do not name a next workflow. |
+| Ticket-owned finding dispositions | `resolved`, `accepted_risk`, `superseded`, `converted_to_follow_up` | Live in the ticket's review/follow-through section for qualified findings. They do not name a next workflow. |
 | Support-memory surfaces | `memory`, `loom-memory`, retrieval cues, preferences, reminders, hot context | Support recall only. If the content becomes project truth, move it to the owner layer. |
 | Git support coordination | branch, worktree, baseline, diff provenance | Support behavior for isolation and provenance. Git does not own Loom truth or workflow ownership. |
 | Commands and adapters | slash commands, harness commands, MCPs, package wrappers | Invocation conveniences. They may transport work, but owner records and skills still own truth. |

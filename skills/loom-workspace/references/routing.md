@@ -1,6 +1,8 @@
 # Routing
 
-Use these questions to decide the next owner layer or workflow coordinator.
+Use these questions to decide the next owner layer or workflow coordinator. When
+the user speaks in ordinary coding-task language rather than Loom owner-layer
+language, use `task-routing-catalog.md` after this reference.
 
 Do not save `next route`, `Route`, or workflow-choice fields as a substitute for
 reasoning. The owner graph should contain enough facts for the agent to choose the
@@ -30,8 +32,9 @@ right skill. If it does not, repair the owner record that lacks the needed truth
   context -> `loom-memory` support coordinator, not project truth
 - shared grammar, naming, linking, status, validation conventions, or graph repair
   -> `loom-records`
-- tiny, safe, in-context mutation with a narrow known write boundary -> local edit
-  under the owning ticket or owner record; do not create a workflow field for it
+- tiny or single bounded in-context mutation with a narrow known write boundary ->
+  local execution under the owning ticket or owner record; do not create a
+  workflow field for it
 - one bounded fresh-context implementation step -> `loom-ralph`, after the ticket
   is Ralph-ready enough to compile a packet
 - implementation isolation, branch/worktree hygiene, or Git provenance ->
@@ -69,23 +72,26 @@ create a release ledger.
 Commands are optional invocation adapters. They are not owner layers, workflow
 truth owners, or route ledgers.
 
-## Local Edit Boundary
+## Local Execution Boundary
 
-Use a local edit only when the next mutation is cheap, bounded, and safe to make
-in the current context: for example, a small wording fix, link repair, record
-hygiene edit, or clearly scoped Markdown guidance adjustment. Know the exact write
+Use local execution only when the next mutation is cheap, bounded, and safe to
+make in the current context: for example, a small wording fix, link repair,
+record hygiene edit, clearly scoped Markdown guidance adjustment, or tiny code,
+test, docs, config, refactor, migration, or cleanup change. Know the exact write
 boundary before editing, but do not serialize it as a workflow token.
 
-Local edit does not bypass ticket truth. When a ticket owns the work, the ticket
+Local execution does not bypass ticket truth. When a ticket owns the work, the ticket
 remains the live execution ledger for state, scope, acceptance, evidence
 disposition, critique disposition, and journal reconciliation.
 
-Escalate away from local edit when the change is implementation-sized, needs a
-fresh-context handoff, has ambiguous intended behavior, depends on missing
+Escalate away from local execution when the change is implementation-sized, needs
+a fresh-context handoff, has ambiguous intended behavior, depends on missing
 evidence, changes meaningful protocol authority, or needs adversarial review.
-Choose the owner skill according to the truth that must change next.
+Choose the owner skill according to the truth that must change next. Use
+`skills/loom-tickets/references/local-execution.md` when a ticket owns the local
+execution loop.
 
-Evidence is required when the local edit supports a completion, behavior,
+Evidence is required when local execution supports a completion, behavior,
 validation, or protocol-authority claim. For purely structural cleanup, a diff
 review or targeted text observation may be enough; for behavior or risky changes,
 create evidence and/or critique instead of treating the edit itself as proof.

@@ -1,6 +1,6 @@
 ---
 name: loom-debugging
-description: "Run reproduce-first debugging. Use when behavior fails, root cause is unknown, or a fix needs red/green evidence."
+description: "Run reproduce-first debugging. Use when tests fail, builds break, behavior regresses, errors occur, flaky behavior appears, performance drops unexpectedly, root cause is unknown, or a fix needs red/green evidence."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: workflow
@@ -35,19 +35,21 @@ follow-through into the Loom records that own those facts.
 
 Follow:
 
-`reproduce -> localize -> explain -> fix -> evidence -> prevent`
+`feedback loop -> reproduce -> localize -> hypothesize -> fix -> evidence -> prevent`
 
-1. capture reproduction steps or current failing behavior as evidence
-2. investigate root cause before proposing a fix; create or update research if
+1. build or improve a fast feedback loop that can show the failure
+2. capture reproduction steps or current failing behavior as evidence
+3. investigate root cause before proposing a fix; create or update research if
    the root cause is not known
-3. update or create a spec if intended behavior is ambiguous
-4. create or tighten a ticket for the bounded fix
-5. choose `local_edit` for a tiny, local, safe fix, or compile a Ralph packet when
+4. generate ranked, falsifiable hypotheses when cause is unclear
+5. update or create a spec if intended behavior is ambiguous
+6. create or tighten a ticket for the bounded fix
+7. choose local execution for a tiny, local, safe fix, or compile a Ralph packet when
    the fix needs fresh context, explicit child write scope, or packetized
    isolation; Ralph packets normally use `verification_posture: test-first`
-6. preserve red and green evidence
-7. run critique when risk warrants
-8. run retrospective if the lesson should prevent repeated mistakes
+8. preserve red and green evidence
+9. run critique when risk warrants
+10. run retrospective if the lesson should prevent repeated mistakes
 
 ## Artifact Routing
 
@@ -56,17 +58,42 @@ Follow:
 | reproduction steps | evidence |
 | root cause investigation | research |
 | intended behavior clarification | spec |
-| fix execution | ticket plus a local edit or Ralph packet, according to ticket facts and write-scope needs |
+| fix execution | ticket plus local execution or Ralph packet, according to ticket facts and write-scope needs |
 | regression evidence | evidence |
 | recurring evidence gap | ticket follow-up or test expectation via retrospective |
 | recurring lesson | wiki, research, spec, plan, initiative, constitution, or evidence via retrospective; memory may keep support-only recall or owner-record pointers |
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "The fix is obvious." | Obvious fixes still need a feedback loop and evidence that the original failure no longer reproduces. |
+| "I cannot reproduce it, but this change might help." | If reproduction is unstable, improve observation or ask for artifacts; do not claim a root-cause fix. |
+| "Logging everything will reveal the issue." | Instrument predictions from hypotheses; broad logs create noise and cleanup debt. |
+| "A green nearby test proves the bug is fixed." | Regression evidence must exercise the real failure pattern or explicitly state the seam is missing. |
+
+## Red Flags
+
+- no fast or credible feedback loop before code changes
+- only one hypothesis was considered for an unknown root cause
+- instrumentation is untagged or not mapped to a prediction
+- fix addresses symptom but not source
+- prevention lesson is left in chat after a repeated failure
+
+## Verification
+
+- [ ] Original failure was reproduced or inability to reproduce is explicit.
+- [ ] Hypotheses were falsifiable when root cause was unknown.
+- [ ] Fix evidence includes red/green or before/after observations.
+- [ ] Temporary instrumentation and prototypes are removed or contained.
+- [ ] Prevention route is recorded when the lesson should persist.
 
 ## Done Means
 
 - the failure was reproduced or the inability to reproduce is explicit
 - root cause is evidence-backed or still marked unknown
 - intended behavior is owned by a spec when needed
-- the fix is owned by a ticket and either a reconciled local edit or packetized
+- the fix is owned by a ticket and either reconciled local execution or packetized
   child result, as appropriate
 - evidence exists for before and after behavior
 - prevention follow-through is explicit

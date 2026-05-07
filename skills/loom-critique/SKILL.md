@@ -1,6 +1,6 @@
 ---
 name: loom-critique
-description: "Run adversarial review. Use when code, behavior, records, evidence, or acceptance claims need pressure-testing before acceptance."
+description: "Run adversarial review. Use for PR/diff/code/security/UX/API/performance/design review, or when behavior, records, evidence, risks, or acceptance claims need pressure-testing before acceptance."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -77,6 +77,12 @@ Critique should be:
 6. record the verdict and required follow-up
 7. link the critique back to the target ticket and related artifacts
 
+For implementation review, read the verification story before the implementation
+details when possible: tests, evidence, before/after observations, screenshots,
+or performance numbers reveal what the author believes changed. Then inspect the
+diff against correctness, simplicity, architecture, security/trust boundary,
+performance, and owner-layer fit. Do not rubber-stamp because checks passed.
+
 ## Review Target Grammar
 
 - Direct critique records use scalar `review_target` frontmatter: one
@@ -114,6 +120,34 @@ The parent normally compiles a critique packet that includes:
 - required critique profiles
 
 The reviewer should use the packet and the diff as the main review surface.
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "LGTM is enough." | Durable critique needs target, evidence reviewed, verdict, residual risks, and findings or an explicit no-findings statement. |
+| "Tests passed, so critique should pass." | Tests are evidence. Critique reviews evidence sufficiency, scope, design, risks, and owner-layer truth. |
+| "Visual/product quality is taste." | Taste still has inspectable signals: primary task clarity, hierarchy, affordance, density, and before/after evidence. |
+| "The ticket can disposition findings later." | Critique owns findings and verdict now; tickets consume dispositions before closure. |
+| "External or subagent feedback is automatically right." | Review feedback is a claim to verify against project reality, specs, evidence, and code before implementing or rejecting it. |
+
+## Red Flags
+
+- review target is vague or not tied to actual files, records, diff, or artifact
+- critique summarizes implementer output without inspecting the source surface
+- findings lack severity, confidence, or follow-up
+- UI/product review ignores the baseline and primary user task
+- mandatory critique is marked complete before final verdict and evidence review
+- review feedback is implemented blindly without checking whether it is correct
+  for this codebase, ticket scope, or owner-record truth
+
+## Verification
+
+- [ ] Review target and profiles are explicit.
+- [ ] Actual files, records, tests, evidence, screenshots, or diffs were inspected.
+- [ ] Findings have severity, confidence, and challenged claims when relevant.
+- [ ] Residual risks and acceptance recommendation are explicit.
+- [ ] Ticket-owned dispositions remain in the ticket, not the critique record.
 
 ## Done Means
 

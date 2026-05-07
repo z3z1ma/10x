@@ -10,6 +10,7 @@
 - Sequencing
 - Claim / Acceptance Coverage
 - Execution Waves
+- Confidence Review
 - Risks
 - Evidence Strategy
 - Plan Readiness Review
@@ -40,6 +41,9 @@ Before a plan drives tickets or packets, review it for:
   "write tests later" steps that would make a worker guess
 - clear decomposition: each downstream slice can become one ticket or one short
   staged sequence of tickets
+- zero-context handoff quality: a fresh worker can infer the relevant files or
+  records, owner constraints, verification target, stop conditions, and non-goals
+  from the plan and linked records without transcript archaeology
 - likely write scopes: expected record or source boundaries are narrow enough to
   compare against packet `child_write_scope` values and check for overlap
 - execution-wave independence: any proposed parallel wave has no same-wave
@@ -52,6 +56,30 @@ Before a plan drives tickets or packets, review it for:
   downstream tickets should expect
 - stop and loopback conditions: ambiguity routes back to research, spec, plan, or
   ticket refinement instead of being forced through execution
+- critical pre-execution review: broad or high-risk plans are read once as if by
+  the downstream worker, and gaps that would make that worker guess are fixed or
+  routed before execution starts
+
+## Confidence Review
+
+Before a plan drives tickets or packets, scan the plan for the few sections most
+likely to mislead downstream work. Do not run a huge review ritual by default; fix
+or route the top gaps that would change execution.
+
+High-value confidence gaps include:
+
+- requirements or source claims not traced into slices
+- decisions stated without rationale or rejected alternatives
+- implementation slices with vague file, record, test, evidence, or critique scope
+- missing cross-boundary impact for security, data, performance, API, or UI work
+- open questions incorrectly deferred to implementation even though they would
+  change product behavior, acceptance, or risk
+- parallel waves without non-overlap, shared-state, and parent-reconciliation
+  evidence
+
+Confidence review may strengthen a plan. It may also route back to research, spec,
+constitution, or ticket refinement. It must not add implementation code, command
+choreography, or live progress state to the plan.
 
 This review can be inline for low-risk plans. Use critique when a plan is broad,
 high risk, or likely to mislead downstream workers.

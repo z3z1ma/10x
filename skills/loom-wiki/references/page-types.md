@@ -31,6 +31,14 @@ Examples:
 - packet fields
 - scope conventions
 - naming rules
+- shared terminology, canonical terms, and avoided synonyms
+
+## Shared-language page
+
+Use for accepted domain vocabulary, project jargon, architecture terms, and
+avoided synonyms that future agents should reuse consistently. Shared-language
+pages are normally reference pages or concept pages; use
+`references/shared-language.md` for entry shape and routing boundaries.
 
 ## Codebase atlas page
 

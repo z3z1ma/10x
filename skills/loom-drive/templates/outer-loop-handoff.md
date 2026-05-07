@@ -37,79 +37,18 @@ handoff_write_scope:
 
 # Outer-Loop Synthesis Handoff
 
-Use this template only when a dedicated subagent would help the parent manage
-context while shaping an objective or tranche. It collects a
-proposal for parent review; accepted results still land in the owning Loom
-records.
+Use only when a dedicated subagent would help the parent manage context while
+shaping an objective or tranche. This is a support artifact, not a packet family
+and not an owner of objective state, ticket state, acceptance, evidence
+sufficiency, critique verdicts, wiki truth, canonical truth, or packet lifecycle.
 
-This handoff is prompt-only by default. Save it only when the parent wants a
-durable support artifact for reviewability, context recovery, or handoff audit.
-If saved, place it under the optional, lazy-materialized, non-canonical support
-surface
-`.loom/support/drive-handoffs/<UTC compact timestamp>-<slug>.md` and keep the
-support-local `id`, `kind`, `support_kind`, and `handoff_kind` fields above.
+Accepted proposals must be reconciled into the canonical owner records named in
+`reconciliation_target` before downstream work relies on them.
 
-This is a bounded support handoff proposal. It is not a packet family, does not
-use `packet_kind`, and does not own objective state, live ticket state,
-acceptance, evidence sufficiency, critique verdicts, wiki truth, canonical truth,
-or packet lifecycle. Its `handoff_write_scope` describes any proposal-time
-mutation permission the parent grants for this handoff; it is separate from Ralph
-packet `child_write_scope` and from legacy packet `write_scope` compatibility.
-
-The frontmatter `status` is support-local proposal status for this handoff only:
-`draft` means not yet reconciled, `reconciled` means the parent reviewed it and
-moved any accepted truth into owner records, `abandoned` means it will not be
-used, and `superseded` means a later support handoff replaced it. These statuses
-are not canonical record truth, ticket execution state, or shared packet
-lifecycle status, and they do not participate in packet transitions such as
-`compiled -> consumed`.
-
-## Saved Handoff Metadata Fields
-
-Use the frontmatter fields as support-local recovery notes for this saved
-handoff only:
-
-- `source_snapshot` records when the handoff prompt was compiled and which owner
-  records or source artifacts were read. It is a freshness cue, not evidence
-  sufficiency, acceptance, or owner-truth status.
-- `owner_workflow` and `parent_responsible` name the workflow and parent that
-  must review the handoff before any dependent work relies on it.
-- `reconciliation_target` names the canonical owner records or paths where any
-  accepted proposal must be merged. It is not a second ledger and does not grant
-  authority to skip ticket, evidence, critique, wiki, or packet reconciliation.
-- `stale_or_prune_condition` states when the saved handoff should be marked
-  `reconciled`, `abandoned`, `superseded`, or pruned after parent review because
-  no unreconciled support value remains.
-- `drive_checkpoint` points a fresh parent back to the current drive anchor,
-  active tranche, and gate state that existed when the handoff was saved. It
-  summarizes owner records; it does not own objective status or ticket state.
-- `gate_status` is the checkpoint's compact hard-gate observation for this saved
-  handoff: use `clear` when no known gate blocks the proposed route, or `blocked`
-  with blocker context in the body when a gate prevents safe continuation. It is
-  not a ticket lifecycle status, critique disposition, or acceptance decision.
-- `handoff_write_scope` names any proposal-time records or paths the parent lets
-  this handoff mutate. Use `None - no writes` when the handoff is read-only. This
-  field is not Ralph `child_write_scope`, not legacy packet `write_scope`, and
-  not permission to reconcile canonical truth without parent review.
-
-If any metadata claim becomes durable project truth, move it into the owner layer
-that owns that truth and leave the handoff as a support artifact.
-
-## Parent Instructions
-
-- Read the linked objective chain and only the source files named below.
-- Propose owner-record updates, ticket slices, risks, and open gaps.
-- Do not modify files unless the parent explicitly grants a write scope.
-- Do not close tickets, accept critique risk, or redefine success criteria.
-- Return proposed changes for parent review and reconciliation.
-- Treat unrecorded objectives as intake-only. Once an initiative, spec, plan, or
-  ticket exists, cite owner record IDs instead of relying on conversation memory.
-
-## Bound Context
+# Bound Context
 
 - Objective / initiative:
 - Continuity snapshot:
-- Drive checkpoint / resume anchor:
 - Research:
 - Spec:
 - Plan:
@@ -117,43 +56,34 @@ that owns that truth and leave the handoff as a support artifact.
 - Evidence / critique / wiki to inspect:
 - Source paths, if any:
 
-## Task
+# Task
 
 Summarize the current objective state and propose the next bounded tranche.
 
 Include:
 
-- current objective and measurable success criteria
-- known constraints and non-goals
-- optional objective gap summary, only when current owner records do not already
-  make the next gap clear
-- conditional tranche detail, including included/excluded claims, likely tickets,
-  dependencies, handoff write-scope conflict check, evidence/critique gates, and
-  reassessment point when those facts are needed for a safe route decision
-- gaps or ambiguities that block safe continuation
-- proposed owner-record changes
-- proposed tickets or ticket refinements
-- required evidence and critique posture
-- stop conditions or focused user questions when owner records cannot safely
-  answer a decision
+- current objective and measurable success criteria;
+- known constraints and non-goals;
+- included/excluded claims;
+- likely tickets, dependencies, and write-scope conflicts;
+- evidence and critique gates;
+- gaps or ambiguities that block safe continuation;
+- proposed owner-record changes;
+- focused user questions when owner records cannot safely answer a decision.
 
-## Output Contract
+# Output Contract
 
-- objective criterion IDs affected and proposed status changes
-- current tranche assessment and proposed next tranche
-- decision priority applied and why
-- safety gates checked and any blockers
-- resume checkpoint updates required before parent stops
-- owner-record changes proposed, grouped by layer
-- ticket slices proposed, with scope and acceptance notes
-- risks and unresolved questions
-- evidence reviewed
-- recommendation for parent reconciliation
+- objective criterion IDs affected and proposed status changes;
+- current tranche assessment and proposed next tranche;
+- safety gates checked and blockers;
+- owner-record changes proposed, grouped by layer;
+- ticket slices proposed, with scope and acceptance notes;
+- risks and unresolved questions;
+- evidence reviewed;
+- recommendation for parent reconciliation.
 
-## Parent Merge Notes
+# Parent Merge Notes
 
-To be filled by the parent if this handoff is used. Record which proposed changes
-were applied, rejected, or converted into follow-up work. A handoff is not
-accepted drive truth until the parent reconciles it into owner records. After
-review, mark the saved handoff `reconciled`, `abandoned`, or `superseded`, or
-prune it if the parent no longer needs the support artifact for audit or recovery.
+To be filled by the parent if this handoff is used. Record which proposals were
+applied, rejected, or converted into follow-up work. Then mark this support
+artifact `reconciled`, `abandoned`, or `superseded`, or prune it if no longer useful.

@@ -1,6 +1,6 @@
 ---
 name: loom-skill-authoring
-description: "Maintain Loom-compatible skills. Use when adding, tightening, reviewing, or auditing skill boundaries, templates, references, or descriptions."
+description: "Maintain Loom-compatible skills. Use when adding, tightening, reviewing, or auditing skill boundaries, activation descriptions, common triggers, templates, references, routing, or anti-rationalization guidance."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: authoring
@@ -24,11 +24,15 @@ Use this skill to author Loom-compatible skills.
 
 A good Loom skill:
 
-- has a clear activation description
+- has a broad activation description that names ordinary user/task triggers and
+  owner boundaries
 - uses frontmatter metadata consistently with the skill boundary
 - owns one subsystem or one coherent capability
 - tells the agent what it governs and what it does not
 - teaches a practical procedure
+- names common rationalizations when agents are likely to skip the discipline
+- names red flags that show the skill is being violated
+- ends with evidence-backed verification, not a vibe check
 - provides references for nuanced judgment
 - provides templates when artifact creation is part of the workflow
 
@@ -47,10 +51,14 @@ A good Loom skill:
 
 ## Done Means
 
-- the skill has a clear activation description
+- the skill has a broad activation description with ordinary triggers, aliases,
+  and owner boundaries where relevant
 - frontmatter names `name`, `description`, `compatibility`, and appropriate
   `metadata` fields
 - the skill states what it owns and what it does not own
+- the skill teaches process over reference knowledge
+- common rationalizations, red flags, and verification are present when they would
+  change agent behavior
 - references and templates are placed only where they serve the skill boundary
 - the skill does not duplicate another owner or create a hidden runtime
 

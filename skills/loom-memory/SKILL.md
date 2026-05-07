@@ -1,6 +1,6 @@
 ---
 name: loom-memory
-description: "Maintain support recall. Use when hot context, preferences, retrieval cues, entities, or reminders help continuity without owning project truth."
+description: "Maintain support recall. Use when user preferences, hot context, retrieval cues, recurring entities, aliases, reminders, or pointers help continuity without owning project truth or live work state."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: support-layer
@@ -123,6 +123,30 @@ Do not create a separate memory cadence ledger. Memory cleanup rides existing
 owner workflows and local housekeeping; tickets remain the live execution ledger,
 evidence remains the observation store, research remains the investigation log,
 and wiki remains accepted explanation.
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "I need to remember this ticket state." | Ticket state belongs in tickets; memory may point to it only if useful. |
+| "This action item is too small for a ticket." | Real scoped Loom work needs a ticket or owner record, not a memory TODO. |
+| "A secret is safe in memory because it is local." | Memory is not a secret store. Keep sensitive values out of Loom artifacts. |
+| "Memory is easier than updating the owner record." | Convenience is a signal to promote or fix the owner layer, not bypass it. |
+
+## Red Flags
+
+- memory item would make the project story false if deleted
+- memory contains live blockers, acceptance decisions, or evidence claims
+- memory stores sensitive values or unredacted personal data
+- support-only notes conflict with canonical owner records
+- stale memory has no owner-record pointer or pruning decision
+
+## Verification
+
+- [ ] The remembered fact is support recall, not project truth.
+- [ ] Any canonical truth was promoted or linked to its owner layer.
+- [ ] No secrets or sensitive personal data were captured.
+- [ ] Stale, duplicated, or obsolete memory was marked or pruned when touched.
 
 ## Done Means
 

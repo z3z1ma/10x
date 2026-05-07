@@ -5,7 +5,22 @@ Systematic debugging is the high-discipline shape of `loom-debugging`.
 Use it when a failure exists and the root cause is not yet proven. The operating
 rule is simple: no durable fix claim before root-cause evidence.
 
-## Phase 1: Reproduce And Observe
+## Phase 1: Build A Feedback Loop
+
+The feedback loop is the work. Before hypothesizing deeply, create the fastest
+deterministic or high-signal loop you can:
+
+- failing test at the seam that reaches the bug
+- CLI or HTTP reproduction script
+- headless browser reproduction for UI bugs
+- replayed trace, fixture, or captured payload
+- throwaway harness around the failing path
+- repeated stress loop for nondeterministic failures
+
+Once a loop exists, improve it: make it faster, sharper, and less flaky. A vague
+or slow loop invites guessing.
+
+## Phase 2: Reproduce And Observe
 
 Before proposing a fix:
 
@@ -21,7 +36,7 @@ If the failure cannot be reproduced, do not guess. Record the failed reproductio
 attempt, add instrumentation or a narrower observation plan, and keep the ticket
 or research truth honest.
 
-## Phase 2: Localize Root Cause
+## Phase 3: Localize Root Cause
 
 Find the source, not just the symptom.
 
@@ -45,17 +60,20 @@ If multiple independent failures exist, group them by problem domain before
 launching parallel investigation. Use `loom-git` and `loom-plans` parallel-wave
 rules before any parallel child mutates files.
 
-## Phase 3: Hypothesize And Test Minimally
+## Phase 4: Hypothesize And Test Minimally
 
-Write the hypothesis plainly:
+Generate 3-5 ranked hypotheses before testing any one of them. A single plausible
+hypothesis anchors the investigation too early.
+
+Write each hypothesis as a falsifiable prediction:
 
 ```text
-I think <root cause> causes <observed failure> because <evidence>.
+If <root cause> is true, then <probe or change> will produce <observable result>.
 ```
 
-Then test one variable at a time. A hypothesis test may be a small diagnostic
-change, a targeted command, a temporary log, a failing automated check, or a
-minimal reproduction.
+Discard or sharpen hypotheses that cannot predict an observation. Then test one
+variable at a time. A hypothesis test may be a small diagnostic change, a
+targeted command, a temporary log, a failing automated check, or a minimal reproduction.
 
 If the hypothesis fails, update research or ticket notes and form a new one. Do
 not stack unrelated fixes until something passes.
@@ -64,7 +82,27 @@ If three fix attempts fail or each attempt exposes a new coupling problem, stop
 and route outward. That is usually an architecture, spec, or plan problem, not a
 request for a fourth guess.
 
-## Phase 4: Fix Through The Owner Graph
+## Performance Investigation Branch
+
+Performance work is debugging with measurement as the reproduction loop.
+
+Before optimizing:
+
+1. define the user-visible or operator-visible symptom, target, and constraint
+2. capture a baseline measurement from a representative source state and
+   environment
+3. identify the breaking point or budget when relevant: data size, request volume,
+   bundle size, latency percentile, device, viewport, network, or runtime
+4. form ranked hypotheses tied to measurable predictions
+5. profile or instrument the bottleneck, changing one variable per experiment
+6. repeat the measurement after each change and compare against the baseline
+7. consolidate the final result and record limitations
+
+Do not optimize because a pattern is fashionable or because a local machine feels
+fast. If the measurement cannot be made yet, record that evidence gap and route to
+research, spike, or ticket refinement instead of claiming a performance fix.
+
+## Phase 5: Fix Through The Owner Graph
 
 Once root cause is supported:
 

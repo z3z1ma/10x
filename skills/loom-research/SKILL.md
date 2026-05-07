@@ -1,6 +1,6 @@
 ---
 name: loom-research
-description: "Preserve reusable investigations. Use when evidence, tradeoffs, rejected options, null results, or external-source synthesis should remain citable."
+description: "Preserve reusable investigations. Use when compatibility, framework/library behavior, tradeoffs, rejected options, null results, performance/security/migration evidence, or external-source synthesis should remain citable."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -53,6 +53,32 @@ A strong research note answers:
 - what evidence was gathered
 - what conclusions are justified
 - what downstream work should do next
+- which options, hypotheses, or variants were rejected and why
+- what remains uncertain
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "I already know the answer." | Research exists when evidence or tradeoffs matter; record the evidence so future agents do not rediscover it. |
+| "Rejected options are not worth writing down." | Rejections prevent future churn when another agent is tempted by the same path. |
+| "Generated support analysis is authoritative." | Generated output is source material. Research owns synthesis and limits, not imported authority. |
+| "Open questions mean the research failed." | Honest open questions are useful when they are routed or deferred explicitly. |
+
+## Red Flags
+
+- conclusions are stronger than the cited evidence
+- sources lack provenance or freshness notes when current facts matter
+- alternatives are listed but not actually compared
+- null results are missing after failed attempts
+- recommendations do not name the downstream owner layer
+
+## Verification
+
+- [ ] Sources include enough provenance to recheck material claims.
+- [ ] Evidence synthesis separates observation from conclusion.
+- [ ] Rejected options and null results say what future agents should avoid.
+- [ ] Recommendations are bounded and routed to owner layers.
 
 ## Done Means
 

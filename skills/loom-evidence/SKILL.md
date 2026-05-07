@@ -1,6 +1,6 @@
 ---
 name: loom-evidence
-description: "Preserve observed artifacts as evidence. Use when validation outputs, reproductions, logs, scans, screenshots, or red/green results need claim links."
+description: "Preserve observed artifacts as evidence. Use for test/build/lint/typecheck/performance/browser outputs, reproductions, logs, scans, screenshots, before/after observations, or red/green results that need claim links."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer
@@ -92,6 +92,31 @@ discovery and future retention or cleanup decisions.
 7. state environment, freshness, validity, recheck trigger, invalidation or
    supersession conditions, and limitations
 8. link the evidence back into the ticket or other owner record that needs it
+
+## Common Rationalizations
+
+| Rationalization | Reality |
+| --- | --- |
+| "The command passed, so the ticket is accepted." | Passing output supports claims. The ticket owns acceptance. |
+| "A screenshot proves the UI is good." | A screenshot is a visual artifact. It needs scoped interpretation and may still need product-UX or visual-design critique. |
+| "The log is too long, so I'll summarize it from memory." | Preserve enough raw output, path, excerpt, or procedure detail for a future agent to judge the observation. |
+| "Evidence from yesterday is close enough." | Freshness depends on the current source, records, dependencies, environment, and claim. Name recheck triggers. |
+
+## Red Flags
+
+- actual result is missing or blended with interpretation
+- evidence supports a claim without naming limitations
+- challenged or failed observations are smoothed into a passing summary
+- source state, environment, or observed-at timestamp is absent
+- visual/product evidence lacks baseline, viewport, or primary task context
+
+## Verification
+
+- [ ] Observation, procedure, source state, and actual result are explicit.
+- [ ] Supports and challenges name stable claim IDs when applicable.
+- [ ] Limitations prevent overclaiming.
+- [ ] Freshness and recheck triggers are inspectable.
+- [ ] Visual/product claims include baseline/after context or state why not applicable.
 
 ## Done Means
 

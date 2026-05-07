@@ -20,6 +20,22 @@ Then record the limited interpretation that follows from that observation.
 Inference is allowed only when it is labeled as interpretation and bounded by the
 artifact actually observed.
 
+## Evidence Before Claims
+
+Evidence should make it hard to overclaim. For any completion, fixed, passing,
+ready-to-merge, child-success, or acceptance-support claim, record the exact
+observation before the inference:
+
+- what claim was being checked
+- what was run, read, reviewed, or observed
+- what output, artifact, diff, or state was actually seen
+- whether the observation supports the whole claim, partially supports it, or
+  leaves it untested
+
+A child report, green nearby check, or plausible diff is not enough by itself.
+Evidence records the observation that lets the ticket or critique decide whether
+the claim is supported.
+
 Avoid writing evidence as if it directly decides project truth. Evidence may say
 "this output supports `ticket:abc123#ACC-001`" or "this observation challenges
 `spec:example#ACC-002`". It must not say "therefore the ticket is accepted",
@@ -56,8 +72,10 @@ An evidence record should make freshness inspectable by naming:
 - whether newer evidence supersedes it or invalidates part of it
 
 `fresh enough` is proportional to the claim. A link-only cleanup may need only a
-current structural search. A protocol-authority, security, data, migration, or
-user-facing behavior change usually needs stronger current evidence and critique.
+current structural search. Protocol-authority, behavior, refactor,
+validation-instrumentation, dependency/tooling, performance-sensitive,
+security, data, migration, or user-facing product/UI changes usually need
+stronger current evidence and critique.
 
 ## Limitations
 
@@ -124,10 +142,61 @@ This example records a challenge to a claim. It does not decide ticket
 acceptance, critique verdict, intended behavior, or closure.
 
 Evidence strength depends on the change class and risk class. Manual inspection
-may be sufficient for small record hygiene. Behavioral, protocol-authority,
-security-sensitive, or data-sensitive changes usually need direct observations,
-fresh structural checks, relevant tests when available, and critique when policy
-requires it.
+may be sufficient for small record hygiene. Behavioral, code-structure,
+validation-instrumentation, dependency/tooling, performance-sensitive,
+protocol-authority, security-sensitive, UI/product, or data-sensitive changes
+usually need direct observations, fresh structural checks, relevant tests or
+measurements when available, and critique when policy requires it.
+
+## Visual And Product Evidence
+
+UI, UX, visual-design, and product-shape claims need evidence that speaks to the
+claim, not only to absence of console errors or passing unit tests.
+
+Useful visual/product evidence names:
+
+- baseline artifact and after artifact, such as screenshots, DOM observations, or
+  compact source-visible layout notes
+- viewport, device, browser, or rendering environment
+- primary user task checked
+- what improved compared with the baseline
+- what still looks weak
+- what the artifact does not prove
+
+Do not overclaim taste from one mechanical screenshot. Pair visual/product
+evidence with product-UX or visual-design critique when the ticket risk warrants it.
+
+## Performance Evidence
+
+Performance evidence must include numbers, not impressions.
+
+Record:
+
+- baseline source state, environment, device/runtime, data set, request shape, or
+  workload
+- target budget or breaking point when the ticket/spec names one
+- command, profiler, dashboard, trace, query plan, browser tool, or manual timing
+  method used
+- before and after measurements with units and repeated-run notes when useful
+- the hypothesis or bottleneck the measurement supports or falsifies
+- what changed between runs; one meaningful variable per experiment when possible
+- limitations such as synthetic-only data, local-only hardware, missing RUM, small
+  sample size, warm cache, or unrepresentative fixture
+
+Evidence may support a ticket's claim that a measured path improved. It does not
+prove every user, workload, environment, or future regression is covered unless the
+observation actually included those surfaces.
+
+## Launch And Rollback Evidence
+
+For launch, release, migration, or externally handed-off work, useful evidence may
+include pre-launch checks, health checks, monitoring snapshots, rollback dry-run
+notes, migration output, changelog/doc sync observations, or post-launch smoke
+results.
+
+Record the expected threshold and the observed result. If monitoring, rollback,
+or production verification is outside the current ticket scope, say so and let the
+ticket or ship package own the follow-up disposition.
 
 ## Invalidation And Supersession
 
