@@ -27,18 +27,24 @@ research/spec owners and typed link targets. It does not replace reading the
 constitution, governing initiative / research / spec / plan / ticket chain,
 packet, evidence, or critique records that apply to the current work.
 
-### List current supported kind declarations
+### List current workspace kind declarations
 
 ```bash
-rg -n '^kind:' .loom skills/loom-*/templates skills/loom-*/references
+rg -n '^kind:' .loom
 ```
+
+When auditing the skill corpus rather than a live workspace, run equivalent
+queries against the installed skills directory for the current harness. In a
+source checkout that may be `skills/`; in an installed bundle it may be a package
+cache or adapter-specific skill path. Do not assume a target Loom workspace has a
+repo-root `skills/` tree.
 
 ### Discover supported ID/path shapes
 
 ```bash
 rg -n '^id: (constitution:main|decision:[0-9]{4}|roadmap:|initiative:|research:|spec:|plan:|ticket:|packet:(ralph|critique|wiki)-|critique:|wiki:|evidence:|workspace:main|workspace:harness|support:[a-z0-9-]+)' .loom
-rg -n '^packet_kind: (ralph|critique|wiki)$' .loom/packets skills/loom-*/templates
-rg -n '\.loom/(constitution/(constitution\.md|decisions/|roadmap/)|initiatives/|research/|specs/|plans/|tickets/|critique/|wiki/|packets/(ralph|critique|wiki)/|evidence/|memory/|workspace\.md|harness\.md|support/)' .loom skills
+rg -n '^packet_kind: (ralph|critique|wiki)$' .loom/packets
+rg -n '\.loom/(constitution/(constitution\.md|decisions/|roadmap/)|initiatives/|research/|specs/|plans/|tickets/|critique/|wiki/|packets/(ralph|critique|wiki)/|evidence/|memory/|workspace\.md|harness\.md|support/)' .loom
 ```
 
 These are broad discovery queries for the currently supported corpus families,
@@ -57,7 +63,6 @@ project-truth owners.
 rg -n '^id: workspace:main|^kind: workspace$|^status:' .loom/workspace.md 2>/dev/null
 rg -n '^id: workspace:harness|^kind: workspace-support$|^status:' .loom/harness.md 2>/dev/null
 rg -n '^id: support:|^kind: support-artifact$|^support_kind:|^handoff_kind:|^status:' .loom/support 2>/dev/null
-rg -n '^kind: support-artifact$|^support_kind:|^handoff_kind:' skills/loom-*/templates 2>/dev/null
 find .loom/support/drive-handoffs -type f -name '*.md' 2>/dev/null | sort
 ```
 
@@ -163,7 +168,7 @@ rg -n '^id: critique:|^status:|^review_target:|^target:|^# Verdict|^Severity:|^C
 ### Find ticket-owned critique dispositions
 
 ```bash
-rg -n 'resolved|accepted_risk|superseded|converted_to_follow_up|requires_follow_up|blocked' .loom/tickets
+rg -n 'resolved|accepted_risk|superseded|converted_to_follow_up|blocking' .loom/tickets
 ```
 
 Use these to discover possible unresolved review work. The critique record owns
@@ -181,9 +186,13 @@ rg -n '(<[^>[:cntrl:]]+>|\bTODO\b|\bTBD\b|example:[a-z0-9-]+)' .loom
 Skill-package authoring placeholder audit:
 
 ```bash
-rg -n '(<[^>[:cntrl:]]+>|\bTODO\b|\bTBD\b|example:[a-z0-9-]+)' skills \
+rg -n '(<[^>[:cntrl:]]+>|\bTODO\b|\bTBD\b|example:[a-z0-9-]+)' <installed-skills-dir> \
   --glob '!**/templates/**'
 ```
+
+Use the actual skills installation path for the current harness. In a source
+checkout this may be `skills/`; in an installed bundle it may be a package cache
+or adapter-specific skill path.
 
 Templates are expected to contain placeholders. Saved `.loom` records, workspace
 metadata, saved support artifacts, and copied examples should not leave

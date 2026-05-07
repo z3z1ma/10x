@@ -191,7 +191,7 @@ Challenges:
 
 ```bash
 rg -n 'initiative:<slug>#OBJ-001' .loom
-rg -n '\bOBJ-[0-9]{3}\b' .loom/initiatives skills/loom-initiatives
+rg -n '\bOBJ-[0-9]{3}\b' .loom/initiatives
 rg -n 'spec:<slug>#ACC-002' .loom
 rg -n 'ticket:<token>#ACC-001' .loom
 rg -n '^# Supports Claims|^Supports:' .loom/evidence

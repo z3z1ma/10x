@@ -43,6 +43,11 @@ intake -> objective-contract -> owner-shaping -> tranche-planning -> ticket-exec
 - `ask_user`: pause for a focused decision the agent cannot safely infer.
 - `stop`: objective satisfied, blocked, unsafe, over budget, or outside authority.
 
+These are parent reasoning labels only. Do not save `continuation`, `ask_user`,
+or `stop` as frontmatter, ticket status, route fields, or workflow tokens; record
+the owner truth, blocker, acceptance decision, or focused user question in the
+layer that owns it.
+
 Before `ticket-execution`, run the hard preflight gates in
 `checkpoint-resume-protocol.md`. A failed gate points to the owner repair that can
 clear it and blocks implementation execution, acceptance, `ship`, external
@@ -174,8 +179,8 @@ Translate each gate into Loom owners instead of copying a command runtime:
   owning closure
 
 Do not require every gate for every ticket. Do require an explicit disposition when
-a gate is skipped on non-trivial or high-risk work: not needed, deferred with
-rationale, converted to follow-up, or blocking.
+a gate is skipped on non-trivial or high-risk work: `not_required` with rationale,
+`deferred` with rationale, `converted_to_follow_up`, or `blocking`.
 
 For each ticket or follow-up:
 
@@ -215,8 +220,8 @@ After each ticket or tranche, the parent checks:
 
 - Which objective criterion IDs are satisfied, partially satisfied, or still open?
 - Which objective/spec/ticket claims have evidence?
-- Is critique required, pending, blocking, completed, deferred with rationale, or
-  not required according to ticket-owned disposition status?
+- Is critique required, `pending`, `blocking`, `completed`, `deferred` with
+  rationale, or `not_required` according to ticket-owned disposition status?
 - Did implementation discover new research, spec, plan, or constitution truth?
 - Is the next ticket tranche obvious and within delegated authority?
 - Would continuing exceed budget, scope, safety, or context limits?

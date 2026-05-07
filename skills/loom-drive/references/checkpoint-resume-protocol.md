@@ -109,7 +109,7 @@ makes the stop truthful.
 - Evidence gate: required observations exist; otherwise create evidence or
   research before relying on the claim.
 - Critique gate: mandatory critique has three outcomes:
-  - `complete`: dependent work may proceed, subject to ticket-owned finding
+  - `completed`: dependent work may proceed, subject to ticket-owned finding
     dispositions.
   - `pending`: dependent work remains blocked until critique happens.
   - `blocking`: only repair, disposition, follow-up-ticket creation, or focused

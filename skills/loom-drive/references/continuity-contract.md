@@ -27,8 +27,8 @@ Use this map before launching tickets or child work.
 | support-only recall, retrieval cues, preferences, reminders, or hot context that does not own project truth | support coordinator `loom-memory`; not project truth |
 
 If no existing record owns a drive fact, either create the correct owner record or
-choose `ask_user` when the missing fact is an operator decision the agent cannot
-safely infer. Do not invent a hidden state surface.
+ask the user when the missing fact is an operator decision the agent cannot safely
+infer. Do not invent a hidden state surface or serialized workflow token.
 
 ## Objective Contract Fields
 

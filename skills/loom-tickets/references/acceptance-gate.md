@@ -69,7 +69,7 @@ Acceptance Dossier =
   do all open medium/high findings have ticket-owned dispositions of `resolved`,
   `accepted_risk`, `superseded`, or `converted_to_follow_up`?
 - If critique is recommended but not performed, does the ticket record why it
-  was deferred or intentionally not needed before closure?
+  was deferred or intentionally `not_required` before closure?
 - For any existing critique, do open medium and high severity findings have
   ticket-owned dispositions of `resolved`, `accepted_risk`, `superseded`, or
   `converted_to_follow_up`?

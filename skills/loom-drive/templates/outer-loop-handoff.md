@@ -3,7 +3,7 @@ id: "support:drive-handoff-<TBD: UTC compact timestamp>-<TBD: slug>"
 kind: support-artifact
 support_kind: drive-outer-loop-handoff
 handoff_kind: outer-loop-synthesis
-parent_objective: "<TBD: initiative, spec, plan, or ticket id; unrecorded objective only during intake>"
+parent_objective: "<TBD: canonical owner record id for the objective or tranche>"
 owner_workflow: loom-drive
 parent_responsible: "<TBD: parent workflow or agent responsible for review and reconciliation>"
 reconciliation_target:
@@ -41,6 +41,11 @@ Use only when a dedicated subagent would help the parent manage context while
 shaping an objective or tranche. This is a support artifact, not a packet family
 and not an owner of objective state, ticket state, acceptance, evidence
 sufficiency, critique verdicts, wiki truth, canonical truth, or packet lifecycle.
+
+If the objective is still unrecorded during intake, keep this handoff prompt-only.
+Do not save it as a support artifact until `parent_objective` and
+`reconciliation_target` name the canonical owner records where accepted truth must
+land.
 
 Accepted proposals must be reconciled into the canonical owner records named in
 `reconciliation_target` before downstream work relies on them.

@@ -68,7 +68,8 @@ current fact.
 
 1. confirm the workspace root
 2. inspect the `.loom/` tree and read order
-3. verify `constitution:main` exists or create it if the user is bootstrapping Loom
+3. verify `constitution:main` exists, or route to `loom-constitution` if the
+   user is bootstrapping Loom and the constitution must be created
 4. verify the canonical subdirectories exist
 5. resolve repository ownership of the target path
 6. if resuming, list active, blocked, review, and acceptance queues from tickets
