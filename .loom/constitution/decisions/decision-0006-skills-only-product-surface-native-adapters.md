@@ -1,9 +1,9 @@
 ---
 id: decision:0006
 kind: decision
-status: active
+status: superseded
 created_at: 2026-04-26T07:04:10Z
-updated_at: 2026-05-07T19:25:00Z
+updated_at: 2026-05-07T21:35:47Z
 scope:
   kind: repository
   repositories:
@@ -11,11 +11,20 @@ scope:
 links:
   decision:
     - decision:0005
+    - decision:0008
   initiative:
     - initiative:loom-install-experience
   ticket:
     - ticket:jt2vy25y
 ---
+
+# Supersession Note
+
+2026-05-07: `decision:0008` supersedes this record as the active product-surface
+policy. The rejection of fallback Makefile installers, shell installers, and
+top-level command-wrapper product surfaces is preserved. The single top-level
+`skills/` surface is replaced by the `loom-core/` and `loom-playbooks/` package
+roots.
 
 # Decision
 

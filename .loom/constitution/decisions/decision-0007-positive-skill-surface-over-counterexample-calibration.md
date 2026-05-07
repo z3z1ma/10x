@@ -3,7 +3,7 @@ id: decision:0007
 kind: decision
 status: active
 created_at: 2026-04-30T17:17:21Z
-updated_at: 2026-04-30T17:17:21Z
+updated_at: 2026-05-07T21:35:47Z
 scope:
   kind: repository
   repositories:
@@ -11,6 +11,7 @@ scope:
 links:
   decision:
     - decision:0006
+    - decision:0008
 ---
 
 # Decision
@@ -19,10 +20,11 @@ Loom's product-facing skills should teach positive structure, owner boundaries,
 default routes, and done conditions rather than exhaustive counterexample
 calibration.
 
-The `skills/` tree remains the only product surface. Internal examples can help
-maintainers visualize routes and spot drift, but examples are not loaded into the
-normal installed-agent context and must not be treated as product guidance or a
-second source of truth.
+The package-root skill trees under `loom-core/skills` and `loom-playbooks/skills`
+remain the product guidance surface. Internal examples can help maintainers
+visualize routes and spot drift, but examples are not loaded into the normal
+installed-agent context and must not be treated as product guidance or a second
+source of truth.
 
 Loom should provide a type system and transaction grammar. The frontend model and
 human operator compose that grammar from the user's verbs, the current owner
@@ -68,7 +70,7 @@ needed to compose those pieces.
 - Product-surface review should ask whether new prose makes the skill easier to
   compose, not whether it covers every possible edge case.
 - AGENTS guidance and public docs should keep `examples/` separate from the
-  skills-only product surface.
+  package-root skill product surface.
 
 # Revisit Conditions
 
@@ -79,7 +81,9 @@ surface by constitutional decision.
 
 # Supersession
 
-This extends `decision:0006` by clarifying that `skills/` is not only the
-distribution surface but also the product guidance surface. It narrows older
-language that treated examples as canonical protocol corpus: examples remain
-internal review fixtures, not product context.
+This originally extended `decision:0006` by clarifying that the installed skill
+surface is also the product guidance surface. `decision:0008` updates the package
+path from top-level `skills/` to `loom-core/skills` and `loom-playbooks/skills`.
+The writing standard still applies, and older language that treated examples as
+canonical protocol corpus remains narrowed: examples remain internal review
+fixtures, not product context.

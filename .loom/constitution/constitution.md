@@ -3,7 +3,7 @@ id: constitution:main
 kind: constitution
 status: active
 created_at: 2026-03-31T12:00:00Z
-updated_at: 2026-05-07T19:25:00Z
+updated_at: 2026-05-07T21:35:47Z
 scope:
   kind: workspace
 links: {}
@@ -17,10 +17,14 @@ Loom is not a runtime, daemon, model router, dashboard, MCP bundle, or product
 CLI. It is a protocol that turns work into a typed artifact graph, then teaches
 agents how to mutate that graph honestly with ordinary files.
 
-The product surface in this repository is `skills/`, including the mandatory
-`using-loom` doctrine references, plus skill-local templates and references.
-Internal examples may visualize routes for maintainers, but they are not loaded
-product context and do not define Loom's ontology.
+The product surface in this repository is split into two top-level package roots:
+`loom-core/` and `loom-playbooks/`. `loom-core` carries the canonical Loom kernel:
+using-Loom doctrine, canonical owner-layer skills, shared record/workspace
+operation, memory support, Ralph packet execution, retrospective closure, and
+skill-local templates and references. `loom-playbooks` carries optional workflow
+playbooks that compose on top of core. Internal examples may visualize routes for
+maintainers, but they are not loaded product context and do not define Loom's
+ontology.
 
 Loom should not try to make agents smarter by stuffing more context into each
 context window. It should make the work recoverable, bounded, reviewable, and
@@ -49,8 +53,11 @@ owns that kind of truth.
   `using-loom` first or by an adapter preloading the same ordered references.
 - `constitution:main` must be read before starting work so local decisions stay
   aligned with durable project policy.
-- Skills stay flat, self-contained, and subsystem-scoped through Markdown,
-  templates, and references rather than shipped scripts.
+- Skills stay flat, self-contained, and subsystem-scoped inside their package root
+  through Markdown, templates, and references rather than shipped scripts.
+- Core Loom and optional playbooks are separate product packages: playbooks depend
+  on core and must not duplicate core doctrine, owner-layer skills, record
+  grammar, Ralph, or retrospective.
 - Packet-consuming work prefers fresh harness contexts.
 - Tickets remain the sole execution ledger.
 - Packets are bounded execution contracts, not transcript dumps.
@@ -93,6 +100,7 @@ owns that kind of truth.
 - no hidden shadow ontology in helpers, wrappers, or runtimes
 - no supported cross-harness Makefile or shell installer as product surface
 - no top-level command-wrapper surface as product surface
+- no retired top-level `skills/` bundle preserved as a parallel product surface
 - no implicit widening of scope or write authority
 - no canonical truth outside designated canonical `.loom/` subtrees
 - no external system, PR description, issue tracker, chat transcript, or
@@ -106,10 +114,10 @@ owns that kind of truth.
 - local automation should stay thin, inspectable, and subordinate to published
   doctrine
 
-This repository is a Markdown-first protocol bundle built from skills,
-using-Loom doctrine references, templates, references, and canonical records
-rather than from a conventional application stack. Structural completeness
-without instructional clarity is not enough.
+This repository is a Markdown-first protocol bundle built from package-root
+skills, using-Loom doctrine references, templates, references, and canonical
+records rather than from a conventional application stack. Structural
+completeness without instructional clarity is not enough.
 
 # Strategic Direction
 
@@ -140,15 +148,15 @@ primitives sharper without making the system heavier in spirit:
 - internal examples should make the protocol evaluable across harnesses without
   becoming product guidance
 
-Future work should keep using-Loom doctrine, skills, templates, packet contracts,
-validation behavior, and acceptance gates visible in prose and ordinary files
-rather than only inferable from helper code, wrapper conventions, or external work
-systems.
+Future work should keep using-Loom doctrine, package-root skills, templates,
+packet contracts, validation behavior, and acceptance gates visible in prose and
+ordinary files rather than only inferable from helper code, wrapper conventions,
+or external work systems.
 
 # Current Focus
 
-- keep public docs, using-Loom doctrine, skills, and templates aligned as the
-  product-facing protocol corpus
+- keep public docs, using-Loom doctrine, `loom-core`, `loom-playbooks`, skills,
+  and templates aligned as the product-facing protocol corpus
 - keep internal examples consistent with that corpus without treating them as
   product context
 - reconcile remaining internal examples that still describe scripts, `docs`,
@@ -164,7 +172,9 @@ systems.
   critique, wiki, packets, and evidence so maintainers can review protocol shape
   without expanding the product surface
 - keep native harness adapters and external systems clearly secondary to
-  using-Loom doctrine, skills, and canonical records
+  using-Loom doctrine, package-root skills, and canonical records
+- execute `decision:0008` by retiring the root `skills/` product surface and
+  validating `loom-core` and `loom-playbooks` through native harness packages
 
 The immediate quality bar is no longer just that the files exist. The most
 important rules, skills, appendices, and canonical records should read like one
@@ -241,4 +251,8 @@ coherent operating manual.
   calibration and that internal examples are not loaded product context.
 - 2026-05-07: reconciled the mandatory entry skill name to `using-loom` across
   constitutional policy, doctrine, docs, and adapter preload paths while
-  preserving the skills-only product surface.
+  preserving the then-current skills-only product surface.
+- 2026-05-07: accepted `decision:0008`, replacing the single top-level `skills/`
+  product surface with `loom-core/` and `loom-playbooks/` package roots while
+  keeping core doctrine, canonical layers, Ralph, retrospective, and memory in
+  `loom-core`.

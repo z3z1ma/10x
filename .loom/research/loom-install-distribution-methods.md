@@ -3,7 +3,7 @@ id: research:loom-install-distribution-methods
 kind: research
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-05-07T19:30:00Z
+updated_at: 2026-05-07T21:35:47Z
 scope:
   kind: repository
   repositories:
@@ -24,6 +24,7 @@ links:
   decision:
     - decision:0005
     - decision:0006
+    - decision:0008
   ticket:
     - ticket:6uy1rx20
     - ticket:us1brnsv
@@ -107,6 +108,12 @@ ontology?
 2026-05-07 update: the mandatory entry skill is now `using-loom`; the former
 entry-skill name is historical unless a current owner record still explicitly
 says otherwise.
+
+2026-05-07 later update: `decision:0008` supersedes the single top-level
+`skills/` product surface described in much of this research. Current downstream
+work should use the `loom-core/` and `loom-playbooks/` package-root model. Text
+below that describes top-level `skills/` as the current product surface is
+historical evidence unless a newer owner record explicitly preserves it.
 
 2026-04-26 update: `decision:0005` and `decision:0006` supersede older
 conclusions in this research that treated top-level `rules/`, top-level

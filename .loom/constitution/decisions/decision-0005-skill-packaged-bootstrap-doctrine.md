@@ -3,12 +3,14 @@ id: decision:0005
 kind: decision
 status: active
 created_at: 2026-04-26T06:35:59Z
-updated_at: 2026-05-07T19:25:00Z
+updated_at: 2026-05-07T21:35:47Z
 scope:
   kind: repository
   repositories:
     - repo:root
 links:
+  decision:
+    - decision:0008
   initiative:
     - initiative:loom-install-experience
   ticket:
@@ -19,20 +21,19 @@ links:
 
 Loom's mandatory operating doctrine is packaged as the `using-loom` skill.
 
-The ordered doctrine references live under
-`skills/using-loom/references/01-*.md` through
-`skills/using-loom/references/08-*.md`. Harness adapters may still preload
-those references as always-on context, but the canonical distribution model is a
-skills package with one mandatory entry skill rather than a separate top-level
+The ordered doctrine references live under the core package's
+`loom-core/skills/using-loom/references/01-*.md` through
+`loom-core/skills/using-loom/references/08-*.md`. Harness adapters may still
+preload those references as always-on context, but the canonical distribution
+model is a skill-packaged mandatory entry point rather than a separate top-level
 `rules/` corpus.
 
 # Why This Decision Exists
 
-Remote plugin ecosystems make skills the common package unit. Codex in particular
-can expose installed plugin skills, but current source does not show installed
-plugins owning always-on instructions or hooks. Keeping Loom's mandatory doctrine
-outside the skill package therefore makes remote plugin install look incomplete
-even when the harness can install skills correctly.
+Remote plugin ecosystems make skills the common package unit. Keeping Loom's
+mandatory doctrine outside the skill package would make plugin installs depend on
+extra harness-specific context wiring even when the harness can install skills
+correctly.
 
 Packaging the doctrine as `using-loom` lets Loom remain Markdown-native and
 harness-agnostic while giving every plugin ecosystem one simple entry point:
@@ -55,10 +56,10 @@ was already preloaded by an adapter.
 
 # Consequences
 
-- `skills/using-loom/SKILL.md` is the mandatory first skill when Loom doctrine
-  is not already in the current context.
-- The using-Loom doctrine references live in `skills/using-loom/references/`
-  and remain ordered by filename.
+- `loom-core/skills/using-loom/SKILL.md` is the mandatory first skill when Loom
+  doctrine is not already in the current context.
+- The using-Loom doctrine references live in
+  `loom-core/skills/using-loom/references/` and remain ordered by filename.
 - Adapter docs and hook configs should reference the using-Loom skill references,
   not top-level `rules/` paths.
 - Always-on adapter preload remains valuable but becomes an optimization, not the
@@ -79,3 +80,7 @@ This narrows `decision:0004` by making one explicitly broad entry skill
 acceptable as the package entry point. It supersedes the constitutional assumption
 that top-level `rules/` files are the canonical always-on doctrine surface while
 preserving the requirement that Loom doctrine be loaded before work.
+
+`decision:0008` narrows the package path named by this decision: the mandatory
+entry skill now belongs to `loom-core/skills/using-loom/` rather than a top-level
+`skills/using-loom/` tree.

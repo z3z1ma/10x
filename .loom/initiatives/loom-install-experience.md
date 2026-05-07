@@ -3,7 +3,7 @@ id: initiative:loom-install-experience
 kind: initiative
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-05-07T19:30:00Z
+updated_at: 2026-05-07T21:51:37Z
 scope:
   kind: repository
   repositories:
@@ -11,16 +11,20 @@ scope:
 links:
   plan:
     - plan:install-experience-harness-adapters
+    - plan:split-core-and-playbooks-packages
   research:
     - research:loom-install-distribution-methods
+    - research:core-workflow-plugin-split-feasibility
     - research:harness-install-surfaces
     - research:codex-command-skill-installation
     - research:codex-plugin-distribution-surfaces
   spec:
+    - spec:core-and-playbooks-package-contract
     - spec:opencode-plugin-install-contract
   wiki:
     - wiki:harness-adapter-package-pattern
   ticket:
+    - ticket:hi5e7nbr
     - ticket:6uy1rx20
     - ticket:us1brnsv
     - ticket:q7h1d05q
@@ -40,7 +44,10 @@ links:
   decision:
     - decision:0005
     - decision:0006
+    - decision:0008
   critique:
+    - critique:core-playbooks-package-contract-review
+    - critique:core-playbooks-constitutional-decision-review
     - critique:codex-plugin-hook-config-review
 ---
 
