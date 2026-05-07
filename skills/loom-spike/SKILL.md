@@ -50,9 +50,15 @@ If the branch is ambiguous and the answer would change the artifact shape, ask a
 focused question or record a reversible assumption before continuing.
 
 If the spike only reads, compares, sketches, or records observations, research
-and evidence may be enough. If the spike writes throwaway code or mutates the
-repository, create or tighten a ticket and use a Ralph packet with explicit
+and evidence may be enough. If the spike writes throwaway code, changes source
+files, generates prototype artifacts, or makes other non-record repository
+mutations, create or tighten a ticket and use a Ralph packet with explicit
 cleanup expectations.
+
+Ordinary Loom record updates that preserve research, evidence, spec, or wiki truth
+are not throwaway prototype mutations by themselves; route them through their
+owning skills. The ticket/Ralph branch is for throwaway code, source-tree changes,
+generated prototype artifacts, or other non-record repository mutations.
 
 Throwaway prototypes should answer one explicit question. Keep them obviously
 temporary, runnable through one existing project command where practical, free of
@@ -129,6 +135,10 @@ and route accepted behavior or explanation to spec or wiki.
 - [ ] Evidence preserves artifacts or observations.
 - [ ] Accepted behavior routes to spec; accepted explanation routes to wiki.
 - [ ] Throwaway code is deleted, absorbed, or explicitly contained.
+- [ ] Spikes that write throwaway code, source-tree changes, generated prototype
+  artifacts, or other non-record repository mutations reconcile ticket state,
+  evidence, critique disposition, and cleanup outcome before downstream work relies
+  on the result.
 
 ## Done Means
 
@@ -137,6 +147,9 @@ and route accepted behavior or explanation to spec or wiki.
 - any accepted behavior is routed to spec
 - any accepted explanation is routed to wiki
 - throwaway code is removed or explicitly contained
+- if the spike wrote throwaway code, changed source files, generated prototype
+  artifacts, or made other non-record repository mutations, the owning ticket
+  tells the truth about state, evidence, review disposition, and cleanup
 
 ## Read In This Order
 
@@ -150,7 +163,8 @@ Read immediately for spike or sketch work:
 Then read conditionally:
 
 3. `skills/loom-tickets/SKILL.md` and `skills/loom-ralph/SKILL.md` when the
-   spike or sketch writes throwaway code or mutates repository files.
+   spike or sketch writes throwaway code, changes source files, generates
+   prototype artifacts, or makes other non-record repository mutations.
 4. `skills/loom-critique/SKILL.md` when variants or experiment conclusions need
    adversarial review.
 5. `skills/loom-specs/SKILL.md` when accepted behavior should become a contract.

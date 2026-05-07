@@ -120,3 +120,5 @@ Then read conditionally:
    implementation iteration.
 7. `skills/loom-critique/SKILL.md` when the fix or incident carries review
    risk.
+8. `skills/loom-retrospective/SKILL.md` when the prevention lesson should
+   persist beyond the ticket.

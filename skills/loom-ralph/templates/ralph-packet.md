@@ -32,8 +32,8 @@ source_fingerprint:
   integration_remote: "<TBD: remote name, none, or unknown with rationale>"
   integration_ref: "<TBD: ref, tag, commit, or unknown with rationale>"
   integration_commit: "<TBD: sha or unknown with rationale>"
-  git_status_summary: "<TBD: clean, dirty_tracked, dirty_untracked, dirty_mixed, or unknown with rationale>"
-  git_status_detail: "<TBD: short status detail or unknown with rationale>"
+  git_status_summary: "<TBD: clean, dirty_tracked, dirty_untracked, dirty_mixed, or unknown>"
+  git_status_detail: "<TBD: short status detail or unknown - rationale>"
   compiled_from:
     - "ticket:<TBD: token>"
 execution_context:

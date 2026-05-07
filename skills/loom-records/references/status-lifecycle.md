@@ -49,6 +49,9 @@ but not interchangeable.
 - **Ticket-owned critique disposition status** describes gate progress for the
   ticket as a whole: `pending`, `blocking`, `completed`, `deferred`, or
   `not_required`.
+- **Ticket-owned evidence disposition status** describes evidence support for the
+  ticket's scoped claims or acceptance gate: `pending`, `sufficient`,
+  `insufficient`, `challenged`, `stale`, `superseded`, or `not_required`.
 - **Ticket-owned acceptance decision** owns closure provenance and residual risk.
   A critique verdict, packet result, drive checkpoint, or support handoff may
   recommend a route, but it does not accept or close ticket work.
@@ -146,6 +149,12 @@ wiki truth, canonical truth, or packet lifecycle.
 Prefer explicit transitions:
 
 ### Canonical Owner Transitions
+
+Apply these transitions only when the record kind's status set above includes both
+the source status and the target status. For example, `stale` is currently a wiki
+lifecycle status, so use it through a kind-valid path such as `accepted -> stale`;
+roadmaps, initiatives, and plans use `completed` when they reach their exit
+criteria and `superseded` or `retired` when they should no longer be used.
 
 - `draft -> active` when a record becomes the current working source
 - `draft|active -> accepted` when downstream work can rely on it

@@ -174,13 +174,17 @@ review_target:
   diff: <branch | commit range | PR | diff target | none>
   paths:
     - <path or glob>
+    # or: None - <rationale for no path-specific target>
 ```
 
 For newly compiled critique packets, `kind` and `summary` are required. Use
 `ref` when there is a stable target handle, `diff` when the review depends on a
 code or record diff, and `paths` when a changed-file set is useful. Write `none`
 for unavailable scalar fields rather than leaving the review target ambiguous.
-Keep `summary` grep-friendly; put longer rationale in the packet body.
+For `paths`, list path or glob entries, omit the field when it is not useful, or
+use a single `None - <rationale>` list item when keeping the field makes the
+no-path target explicit. Keep `summary` grep-friendly; put longer rationale in
+the packet body.
 
 Legacy compatibility: older consumed critique packets may have only `kind` plus
 `diff` in this mapping. Treat those as understandable legacy support artifacts,
@@ -308,6 +312,11 @@ Use values from `skills/loom-records/references/change-class.md`:
 - `documentation-explanation`
 - `behavior-contract`
 - `code-behavior`
+- `code-structure`
+- `validation-instrumentation`
+- `dependency-tooling`
+- `performance-sensitive`
+- `ui-product`
 - `protocol-authority`
 - `data-migration`
 - `security-sensitive`

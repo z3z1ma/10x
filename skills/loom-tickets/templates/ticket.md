@@ -75,7 +75,7 @@ disposition.
 
 # Evidence
 
-Disposition: <TBD: pending, sufficient, insufficient, challenged, stale, or not_required>
+Disposition: <TBD: pending, sufficient, insufficient, challenged, stale, superseded, or not_required>
 
 Records:
 

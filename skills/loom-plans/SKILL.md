@@ -124,7 +124,6 @@ A strong plan answers:
 | "Progress belongs in the plan because ExecPlans have progress." | In Loom, tickets own live progress. Plans own route and decomposition; they point to tickets for current state. |
 | "A complete plan should decompose everything." | Decompose enough to make the next safe tranche clear; do not manufacture roadmap theater. |
 | "Parallel work is faster." | Parallel tickets are safe only when dependencies and write scopes do not conflict. |
-| "The plan can track progress." | Tickets own live execution state. Plans own route, decomposition, and sequencing. |
 
 ## Red Flags
 

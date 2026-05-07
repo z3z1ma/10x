@@ -138,6 +138,7 @@ Saved drive outer-loop handoffs use this support frontmatter under
 
 ```yaml
 support_kind: drive-outer-loop-handoff
+handoff_kind: outer-loop-synthesis
 owner_workflow: loom-drive
 parent_responsible: "<TBD: parent workflow or agent responsible for review and reconciliation>"
 reconciliation_target:

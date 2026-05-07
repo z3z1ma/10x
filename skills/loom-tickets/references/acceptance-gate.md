@@ -113,8 +113,8 @@ critique profiles required by policy.
 
 Do not copy raw logs into the ticket when an evidence record owns the observed
 artifact. Do summarize the ticket-owned disposition: whether evidence is
-sufficient, insufficient, challenged, stale, superseded, or pending. The closure
-decision remains in the ticket acceptance gate.
+sufficient, insufficient, challenged, stale, superseded, pending, or not_required.
+The closure decision remains in the ticket acceptance gate.
 
 ## Ticket-Owned Finding Disposition
 

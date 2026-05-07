@@ -29,7 +29,8 @@ child_write_scope:
     - "<TBD: critique child write paths, or None - reviewer returns output only>"
 parent_merge_scope:
   records:
-    - "<TBD: critique:<slug> and ticket:<token> when a ticket owns execution, or None - rationale>"
+    - "critique:<TBD: slug>"
+    - "<TBD: ticket:<token> when a ticket owns execution, or None - no ticket-owned execution>"
   paths:
     - "<TBD: parent reconciliation paths, or None - rationale>"
 source_fingerprint:
@@ -37,7 +38,7 @@ source_fingerprint:
   integration_remote: "<TBD: remote name, none, or unknown with rationale>"
   integration_ref: "<TBD: ref, tag, commit, or unknown with rationale>"
   integration_commit: "<TBD: sha or unknown with rationale>"
-  git_status_summary: "<TBD: clean, dirty_tracked, dirty_untracked, dirty_mixed, or unknown with rationale>"
+  git_status_summary: "<TBD: clean, dirty_tracked, dirty_untracked, dirty_mixed, or unknown>"
   git_status_detail: "<TBD: short status detail, or unknown - rationale>"
   compiled_from:
     - "<TBD: record ref or artifact used to compile this review baseline>"
@@ -125,7 +126,8 @@ Return:
 - residual risks;
 - follow-up recommendation.
 
-The parent creates or updates real critique and ticket records during reconciliation.
+The parent creates or updates the critique record named in `parent_merge_scope`
+and, when a ticket owns execution, reconciles ticket-owned dispositions there.
 
 # Working Notes
 

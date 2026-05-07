@@ -130,7 +130,7 @@ Then replace the placeholders in the copied file.
 ## Verification
 
 - [ ] `# Acceptance` names the owner and real covered IDs or ticket-local criteria.
-- [ ] Evidence disposition says whether support is sufficient, insufficient, challenged, stale, pending, or not required.
+- [ ] Evidence disposition says whether support is `sufficient`, `insufficient`, `challenged`, `stale`, `superseded`, `pending`, or `not_required`.
 - [ ] Required critique policy and finding dispositions are closure-compatible.
 - [ ] Assumptions or decision triggers are explicit, not silently converted into scope.
 - [ ] Closure, if claimed, cites the ticket-owned acceptance basis.
