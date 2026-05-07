@@ -3,7 +3,7 @@ id: research:loom-install-distribution-methods
 kind: research
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-04-26T07:23:57Z
+updated_at: 2026-05-07T19:30:00Z
 scope:
   kind: repository
   repositories:
@@ -104,12 +104,16 @@ ontology?
 
 # Why This Matters
 
+2026-05-07 update: the mandatory entry skill is now `using-loom`; the former
+entry-skill name is historical unless a current owner record still explicitly
+says otherwise.
+
 2026-04-26 update: `decision:0005` and `decision:0006` supersede older
 conclusions in this research that treated top-level `rules/`, top-level
 `commands/`, Makefile, or `scripts/install-loom.sh` as supported install surfaces.
 Historical evidence and rejected options below still describe the state when they
 were gathered; current downstream work should inherit `skills/` as the product
-surface and `loom-bootstrap` as the mandatory entry skill.
+surface and `using-loom` as the mandatory entry skill.
 
 Earlier installer work proved that global copy installs were possible, but
 `decision:0006` rejected that shape as a supported product surface.
@@ -117,9 +121,9 @@ Earlier installer work proved that global copy installs were possible, but
 The current product stance is simpler:
 
 - `skills/` is the product surface
-- `skills/loom-bootstrap` is the mandatory entry skill
+- `skills/using-loom` is the mandatory entry skill
 - native harness adapters expose the same `skills/` package
-- Claude and OpenCode may preload bootstrap references because their native
+- Claude and OpenCode may preload using-Loom references because their native
   adapter surfaces support it cleanly
 - Makefile, shell installer, top-level `rules/`, and top-level `commands/` are no
   longer supported install surfaces
@@ -217,7 +221,7 @@ these relevant constraints:
 
 - Loom is a Markdown-native control plane, not a runtime, daemon, MCP bundle,
   dashboard, model router, or product CLI.
-- The protocol core is `skills/`, especially `loom-bootstrap`, plus templates,
+- The protocol core is `skills/`, especially `using-loom`, plus templates,
   references, and canonical examples.
 - Record creation, packet compilation, validation, and graph inspection are
   visible protocol behaviors taught through Markdown guidance and ordinary file
@@ -226,7 +230,7 @@ these relevant constraints:
   truth.
 - Deleting fallback installers or command wrappers must not delete a Loom
   capability.
-- A valid install model must make `loom-bootstrap` discoverable before work and
+- A valid install model must make `using-loom` discoverable before work and
   preserve on-demand subsystem skills without requiring a central Loom runtime.
 
 These constraints rule out install strategies that make a CLI, plugin runtime,
@@ -249,7 +253,7 @@ Any install strategy must map these source surfaces honestly:
 
 | Loom source surface | Required install property | Notes |
 | --- | --- | --- |
-| `skills/loom-bootstrap/SKILL.md` and `skills/loom-bootstrap/references/*.md` | Mandatory first skill and ordered bootstrap doctrine. | A harness may preload references, but the skill remains the portable entry point. |
+| `skills/using-loom/SKILL.md` and `skills/using-loom/references/*.md` | Mandatory first skill and ordered using-Loom doctrine. | A harness may preload references, but the skill remains the portable entry point. |
 | `skills/*/SKILL.md` | Discoverable by name and description, full content hydrated only when relevant. | This maps well to Agent Skills style surfaces. |
 | `skills/*/references/` and `skills/*/templates/` | Readable on demand relative to each skill root. | A packaging format must preserve directories, not flatten skills into prose. |
 | `commands/*.md` | Optional explicit workflow wrappers. | Commands are adapter prompts, not the owner of Loom workflows. |
@@ -284,8 +288,8 @@ Implication for Loom:
 - Loom skills already fit the broad `SKILL.md` shape.
 - A generic `~/.agents/skills` install can reduce duplicated skill copies across
   Codex, Gemini CLI, Cursor, and OpenCode.
-- A generic Agent Skills install still needs `loom-bootstrap` first-use to be
-  explicit unless a native adapter preloads the same bootstrap references.
+- A generic Agent Skills install still needs `using-loom` first-use to be
+  explicit unless a native adapter preloads the same using-Loom references.
 - Claude Code still needs a Claude-native skill destination unless future Claude
   docs add generic `.agents/skills` support.
 
@@ -334,7 +338,7 @@ Doc-backed install surfaces:
   sources such as `./` resolve from the marketplace root, not from
   `.claude-plugin/`.
 
-Bootstrap preload fit:
+using-Loom preload fit:
 
 - Claude's clean always-on instruction surfaces are `CLAUDE.md` and
   `.claude/rules/*.md` / `~/.claude/rules/*.md`.
@@ -343,9 +347,9 @@ Bootstrap preload fit:
 - The fetched plugin docs do not state that the `claude plugin install` command
   runs arbitrary setup code, adds always-on doctrine, or appends to `CLAUDE.md`.
 - A plugin can include a custom agent and set it as the main thread through plugin
-  settings, but that is not equivalent to exposing Loom's bootstrap doctrine as a
+  settings, but that is not equivalent to exposing Loom's using-Loom doctrine as a
   reusable skill package. It changes the agent selection/system prompt rather than
-  exposing `loom-bootstrap`.
+  exposing `using-loom`.
 - Hook docs say static context should use `CLAUDE.md` when no script is needed,
   but they also state that `SessionStart` stdout is added as Claude context.
   `evidence:claude-sessionstart-stdout-context` observed local plugin hooks that
@@ -359,16 +363,16 @@ Assessment:
 
 - Claude plugins are attractive for packaging Loom skills, namespacing, versioning,
   and marketplace distribution.
-- Claude plugins expose `skills/`; optional bootstrap preload uses plugin
+- Claude plugins expose `skills/`; optional using-Loom preload uses plugin
   `SessionStart` stdout rather than manifest-only always-on instructions.
 - The accepted Claude adapter direction is automated native-plus-preload: a Claude
   plugin exposes canonical `skills`, and a plugin `SessionStart` hook emits
-  canonical bootstrap references as same-session, source-marked per-reference
+  canonical using-Loom references as same-session, source-marked per-reference
   stdout context.
 - Direct copy to `~/.claude` is no longer a supported fallback path after
   `decision:0006`.
-- Runtime probes showed per-reference hook stdout made all seven bootstrap
-  references visible in same-session startup context.
+- Runtime probes showed per-reference hook stdout made all then-current
+  using-Loom references visible in same-session startup context.
 - The per-reference design relies on source markers and best-effort sleep
   staggering.
   `01-core-identity.md` appeared first in repeated probes, but strict order after
@@ -441,15 +445,15 @@ Always-on rule fit:
 Assessment:
 
 - Codex plugins are a good candidate for distributing Loom skills. Completeness now
-  depends on installed plugin skill discovery for `loom-bootstrap`, not
+  depends on installed plugin skill discovery for `using-loom`, not
   plugin-owned hooks.
 - Command-wrapper distribution is no longer part of the product surface after
   `decision:0006`.
 - The repository-root Codex plugin spike can package canonical Loom skills and
   uses `.codex/hooks.json` only as a trusted project-local per-rule `SessionStart`
   stdout proof.
-- The `AGENTS.md` size budget remains relevant only for optional bootstrap preload
-  instructions. Loom should not mirror the full bootstrap corpus into `AGENTS.md`
+- The `AGENTS.md` size budget remains relevant only for optional using-Loom preload
+  instructions. Loom should not mirror the full using-Loom corpus into `AGENTS.md`
   as a product install path.
 - Current focused recommendation: do not accept Codex as a complete remote plugin
   install yet. Use the plugin-plus-hook-config proof for repository-local
@@ -504,9 +508,9 @@ Doc-backed install surfaces:
   inspection shows that hook runs only after an existing command is resolved; it
   does not prove slash-command registration.
 - `evidence:open-loom-smoke` validated `open-loom`, which reads ordered
-  `skills/loom-bootstrap/references/*.md`, default-exports an OpenCode-shaped
+  `skills/using-loom/references/*.md`, default-exports an OpenCode-shaped
   object with `id: "open-loom"` and `server()`, and uses the plugin
-  `config(config)` hook to register ordered bootstrap references through
+  `config(config)` hook to register ordered using-Loom references through
   `config.instructions` and bundled skills through `config.skills.paths`.
   OpenCode CLI `1.14.22` validated the resolved config and skill discovery in an
   isolated temporary environment. Follow-up validation also proved local
@@ -515,22 +519,22 @@ Doc-backed install surfaces:
   >=1.14.22 <2`.
 - `open-loom@0.1.0` is published on npm. A normal repo-root `opencode.json` with
   `plugin: ["open-loom@0.1.0"]` can load the package from OpenCode's package
-  cache and expose Loom bootstrap references and skills. In isolated cold-cache
+  cache and expose using-Loom references and skills. In isolated cold-cache
   validation, OpenCode `1.14.22` can log `NpmInstallFailedError` on the first
   config-file run while still caching the package; a second run in the same cache
   succeeds.
 
-Bootstrap preload fit:
+using-Loom preload fit:
 
 - OpenCode has a direct, clean preload route through `open-loom`: the plugin
   `config(config)` hook appends package absolute paths for
-  `skills/loom-bootstrap/references/*.md` to `config.instructions`.
+  `skills/using-loom/references/*.md` to `config.instructions`.
 
 Assessment:
 
 - The ideal OpenCode user experience is a plugin-first install: the user adds one
   entry to the `plugin` array in `opencode.json`, and the plugin exposes bundled
-  Loom bootstrap references and skills.
+  using-Loom references and skills.
 - That ideal is now accepted for `open-loom@0.1.0` on OpenCode `>=1.14.22 <2`,
   with the cold-cache first-run installer caveat tracked by `ticket:us1brnsv`.
   Official docs did not state this full static-resource registration shape; it is
@@ -575,25 +579,25 @@ Doc-backed install surfaces:
 - Gemini custom commands require a `prompt` string and optional `description`;
   Loom does not currently ship a command-wrapper product surface.
 
-Bootstrap preload fit:
+using-Loom preload fit:
 
 - Gemini extensions can load a context file from the extension directory,
   defaulting to `GEMINI.md` when present.
 - This may be a strong native fit if the extension can expose `skills/` and, when
-  desired, preload `loom-bootstrap` references through its context file.
+  desired, preload `using-loom` references through its context file.
 
 Assessment:
 
 - Gemini CLI extensions are a strong candidate for a first-class Loom install
   package.
 - A Gemini extension could package canonical skills under `skills/` and optionally
-  preload bootstrap references through an extension `GEMINI.md` or configured
+  preload using-Loom references through an extension `GEMINI.md` or configured
   context file.
 - The current direct install is serviceable, but a Gemini extension may better
   support install/update/disable/link workflows and avoids hand-editing global
   `GEMINI.md`.
 - Implementation should verify whether extension skills are discoverable and
-  whether optional bootstrap preload context is loaded with the right priority in
+  whether optional using-Loom preload context is loaded with the right priority in
   actual sessions.
 
 ## Cursor
@@ -626,9 +630,9 @@ Doc-backed install surfaces:
 - Local plugin testing uses `~/.cursor/plugins/local`, including symlinked plugin
   repositories.
 
-Bootstrap preload fit:
+using-Loom preload fit:
 
-- Cursor plugin rules may be a clean native way to preload Loom bootstrap
+- Cursor plugin rules may be a clean native way to preload using-Loom
   references if generated rule files can set `alwaysApply: true` and preserve
   enough attribution.
 - This may be better than directly mutating Cursor User Rules storage, which the
@@ -648,18 +652,18 @@ Assessment:
 
 ## Cross-Harness Plugin And Extension Fit
 
-| Harness | First-class package surface | Exposes skills? | Optional bootstrap preload? | Current fit |
+| Harness | First-class package surface | Exposes skills? | Optional using-Loom preload? | Current fit |
 | --- | --- | --- | --- | --- |
 | Claude Code | `.claude-plugin/plugin.json` plugins plus `.claude-plugin/marketplace.json` | Yes. | Yes, through source-marked `SessionStart` stdout. | Native plugin with optional preload; release hardening remains. |
 | Codex | `.codex-plugin/plugin.json` plugins and marketplaces | Target yes; installed Git-backed skill discovery still needs validation. | Only through config-layer hooks, not plugin ownership. | Active remote plugin validation target. |
-| OpenCode | JS/TS plugins via npm package or local file/path specs | Yes, via `config.skills.paths`. | Yes, via `config(config)` adding bootstrap references to `config.instructions`. | `open-loom` npm/local distribution. |
+| OpenCode | JS/TS plugins via npm package or local file/path specs | Yes, via `config.skills.paths`. | Yes, via `config(config)` adding using-Loom references to `config.instructions`. | `open-loom` npm/local distribution. |
 | Gemini CLI | `gemini-extension.json` extensions | Target yes. | To be validated through native extension context if used. | Native extension candidate. |
 | Cursor | `.cursor-plugin/plugin.json` plugins | Target yes. | To be validated through native plugin/rule context if used. | Native plugin candidate. |
 
 The strongest current product direction is native skills-package exposure per
-harness. Claude and OpenCode have validated optional bootstrap preload paths.
+harness. Claude and OpenCode have validated optional using-Loom preload paths.
 Codex, Gemini, and Cursor should be accepted only after their native paths expose
-`skills/` and preserve `loom-bootstrap` first-use. OpenCode distribution should
+`skills/` and preserve `using-loom` first-use. OpenCode distribution should
 assume npm publication for normal users and a local file/path plugin entry for
 cloned-repo use, not Git URL plugin specs.
 
@@ -669,7 +673,7 @@ cloned-repo use, not Git URL plugin specs.
 | --- | --- | --- | --- |
 | Direct user config copy | Transparent historical proof. | Requires per-harness mutation logic and careful uninstall. | Superseded as a supported product path by `decision:0006`. |
 | Managed single-file block | Preserves existing user content when marker logic is correct. | Harder to validate in UI; conflicts possible; size and precedence concerns. | Historical fallback pattern, not current product surface. |
-| Generic `~/.agents/skills` | Portable for some harnesses; reduces duplicated skills. | Harness support varies; does not itself enforce `loom-bootstrap` first-use. | Use only when it is the harness-native skill surface. |
+| Generic `~/.agents/skills` | Portable for some harnesses; reduces duplicated skills. | Harness support varies; does not itself enforce `using-loom` first-use. | Use only when it is the harness-native skill surface. |
 | Native plugin/extension package | Better install/update/disable/marketplace UX; documents package boundaries. | Harness-specific package files; may not cover optional preload. | Preferred product path when it exposes `skills/`. |
 | Project-local install | Version-controlled and team-visible. | Not a global user install; can pollute projects if used casually. | Good for teams adopting Loom per repository. |
 | Manual clone/link | Maximum transparency and low tooling. | Poor uninstall/update UX; user must know harness paths. | Useful developer/testing path, not best default. |
@@ -767,8 +771,8 @@ Loom implication:
 | Keep current Makefile/script as-is | Continue one shell adapter for all harnesses. | Historical proof existed. | Fragile, script-owned knowledge, weak first-class UX. | Reject; removed by `decision:0006`. |
 | One monolithic `loom install` CLI | Build a real Loom installer command. | Could centralize validation and UX. | Conflicts with constitutional no-product-CLI direction and risks hidden ontology. | Reject for core. |
 | Harness-native plugin/extension packages | Build per-harness packages that expose `skills/`. | Better install/update/disable/marketplace fit. | Surface coverage differs; adapters must not own semantics. | Preferred product path. |
-| Generic Agent Skills install | Install skills once under `~/.agents/skills`. | Portable and reduces duplication. | Harness support varies; bootstrap first-use still needs instruction. | Use only where it is native to the harness. |
-| Project-local Loom bootstrap | Commit Loom-compatible instructions/skills into a repository. | Version-controlled team adoption. | Different from global/native install; can mix product and project state. | Project adoption path, not package distribution. |
+| Generic Agent Skills install | Install skills once under `~/.agents/skills`. | Portable and reduces duplication. | Harness support varies; using-Loom first-use still needs instruction. | Use only where it is native to the harness. |
+| Project-local Loom adoption | Commit Loom-compatible instructions/skills into a repository. | Version-controlled team adoption. | Different from global/native install; can mix product and project state. | Project adoption path, not package distribution. |
 | Package manager formula | Homebrew/Nix/etc installs Loom bundle. | Familiar install/update. | Does not register with harnesses alone. | Optional distribution wrapper only. |
 | `curl | sh` remote installer | One-line install from GitHub. | Easy onboarding. | Trust and mutation risk; hard to review if script changes remotely. | Reject for product distribution. |
 | Manual clone/link | User clones repo and symlinks/copies surfaces. | Transparent and hackable. | High friction, poor uninstall/update. | Developer path, not default UX. |
@@ -781,30 +785,30 @@ Rejected because native package coverage is uneven.
 
 - The current direction is not one identical plugin mechanism everywhere; it is
   native skill-package distribution everywhere.
-- Optional bootstrap preload is adapter-specific and must not become a fallback
+- Optional using-Loom preload is adapter-specific and must not become a fallback
   installer requirement.
 - Harness support should be accepted only when that harness exposes `skills/` and
-  preserves `loom-bootstrap` first-use.
+  preserves `using-loom` first-use.
 
-## Generic On-Demand Skills As The Whole Bootstrap
+## Generic On-Demand Skills As The Whole Entry Path
 
 Superseded by `decision:0005`. The accepted shape is not an ordinary on-demand
-subsystem skill; it is the mandatory `loom-bootstrap` entry skill. Harnesses may
+subsystem skill; it is the mandatory `using-loom` entry skill. Harnesses may
 preload its references, but the portable completeness path is explicit first-use
-of `loom-bootstrap`.
+of `using-loom`.
 
 ## Claude Hook Hack For Loading Rules
 
 Superseded in part by later Claude evidence. The accepted Claude adapter uses
-plugin `SessionStart` stdout as optional source-marked bootstrap preload, not as a
+plugin `SessionStart` stdout as optional source-marked using-Loom preload, not as a
 fallback installer or doctrine owner. The residual risk is release hardening, not
 the product surface model.
 
 ## Codex `~/.codex/rules/` For Loom Markdown Rules
 
 Rejected by prior research because that surface is not equivalent to Loom
-Markdown instructions. Loom bootstrap references should remain under
-`skills/loom-bootstrap/references/` and may be preloaded only through an actual
+Markdown instructions. using-Loom references should remain under
+`skills/using-loom/references/` and may be preloaded only through an actual
 Codex instruction/context surface when that preload is explicitly configured.
 
 ## Cursor User Rules Database Mutation As The Strategic Endpoint
@@ -815,13 +819,13 @@ skill-package distribution of `skills/` instead of direct state database writes.
 ## Package Manager As The Sole Install Story
 
 Rejected because package managers can install the bundle but cannot by themselves
-make each harness discover `skills/` or enforce `loom-bootstrap` first-use.
+make each harness discover `skills/` or enforce `using-loom` first-use.
 
 ## Generated Aggregates As Canonical Truth
 
 Rejected because generated instruction files or harness wrappers are adapter
-outputs. Canonical behavior stays in `skills/`, especially
-`skills/loom-bootstrap`, and the templates and references inside skills.
+outputs. Canonical behavior stays in `skills/`, especially `skills/using-loom`,
+and the templates and references inside skills.
 
 # Null Results
 
@@ -847,38 +851,38 @@ outputs. Canonical behavior stays in `skills/`, especially
    model.
 
 2. The best install mechanism is the most native mechanism that can expose the
-   `skills/` package and preserve mandatory `loom-bootstrap` first-use without
+   `skills/` package and preserve mandatory `using-loom` first-use without
    changing Loom's source of truth.
 
 3. Cursor plugins and Gemini CLI extensions remain native package candidates, but
    their acceptance should depend on exposing `skills/` and preserving
-   `loom-bootstrap` first-use, not on copying fallback installer behavior.
+   `using-loom` first-use, not on copying fallback installer behavior.
 
 4. Claude Code plugins and Codex plugins should be evaluated as native skills
-   packages. Claude can additionally preload bootstrap references through plugin
+   packages. Claude can additionally preload using-Loom references through plugin
    `SessionStart` stdout; Codex installed plugin skill discovery remains the next
    evidence gap.
 
 5. OpenCode should continue through `open-loom` plugin-first validation. The
    ideal UX is a single `plugin` array entry in `opencode.json`. Current evidence
    validates local file plugin loading and `config(config)` registration for
-   ordered bootstrap references and bundled skills. Operator validation indicates
+   ordered using-Loom references and bundled skills. Operator validation indicates
    Git URL plugin specs are not supported, so npm publication and local file/path
    entries are the viable distribution paths.
 
 6. Portable Agent Skills are the common product denominator for Loom across
    harnesses. A complete Loom install is a native package exposing `skills/` plus
-   mandatory `loom-bootstrap` first-use; optional preload is an optimization.
+   mandatory `using-loom` first-use; optional preload is an optimization.
 
 7. `Makefile`, `scripts/install-loom.sh`, top-level `rules/`, and top-level
    `commands/` are removed as supported product surfaces by `decision:0006`.
 
 8. The current install architecture has two layers:
 
-- canonical product source: `skills/`, especially `skills/loom-bootstrap`, plus
+- canonical product source: `skills/`, especially `skills/using-loom`, plus
   templates and references inside skills
 - native adapter outputs: per-harness plugin/extension metadata and optional
-  bootstrap preload hooks derived from the canonical source
+  using-Loom preload hooks derived from the canonical source
 
 9. Adapter outputs need validation fixtures and disable/uninstall expectations,
    but they must remain derivative. The project should be able to replace them
@@ -891,8 +895,8 @@ outputs. Canonical behavior stays in `skills/`, especially
 Adopt a native skills-package strategy:
 
 - use first-class plugin, extension, or skill-package systems to expose `skills/`
-- require `loom-bootstrap` as the mandatory entry skill for every harness
-- use optional bootstrap-reference preload only when the native adapter can deliver
+- require `using-loom` as the mandatory entry skill for every harness
+- use optional using-Loom reference preload only when the native adapter can deliver
   it cleanly, as with Claude and OpenCode
 - do not preserve fallback copy installers or top-level command wrappers as product
   surfaces
@@ -902,9 +906,9 @@ Adopt a native skills-package strategy:
 | Harness | Recommended next strategy | Rationale |
 | --- | --- | --- |
 | OpenCode | Accepted plugin-first install via `open-loom@0.1.0`; investigate cold-cache first-run caveat separately. | Ideal UX is one `plugin` entry; npm package distribution and local file/path entries are validated. `ticket:us1brnsv` owns the remaining first-run package behavior. |
-| Claude Code | Use the native plugin to expose `skills/` and optionally preload bootstrap references through `SessionStart` stdout. | Skills remain the product surface; preload is an adapter bonus with documented ordering limits. |
-| Codex | Validate Git-backed plugin skill discovery for `loom-bootstrap`. | Plugins package skills; project-local hooks are optional preload proof, not product install. |
-| Gemini CLI | Prototype a native extension or skill-package adapter. | Acceptance depends on exposing `skills/` and preserving `loom-bootstrap` first-use. |
+| Claude Code | Use the native plugin to expose `skills/` and optionally preload using-Loom references through `SessionStart` stdout. | Skills remain the product surface; preload is an adapter bonus with documented ordering limits. |
+| Codex | Validate Git-backed plugin skill discovery for `using-loom`. | Plugins package skills; project-local hooks are optional preload proof, not product install. |
+| Gemini CLI | Prototype a native extension or skill-package adapter. | Acceptance depends on exposing `skills/` and preserving `using-loom` first-use. |
 | Cursor | Prototype a native plugin or skill-package adapter. | Acceptance depends on exposing `skills/` without treating generated rule files as product truth. |
 
 ## Implementation Sequencing Recommendation
@@ -912,8 +916,8 @@ Adopt a native skills-package strategy:
 1. Keep the fallback installer removed; do not reintroduce it while prototyping
    native adapters.
 2. Prototype Cursor plugin or skill-package packaging around `skills/` and
-   `loom-bootstrap` first-use.
-3. Prototype Gemini extension packaging around `skills/` and `loom-bootstrap`
+   `using-loom` first-use.
+3. Prototype Gemini extension packaging around `skills/` and `using-loom`
    first-use.
 4. Use the accepted OpenCode package as the first concrete adapter-package
    precedent, but do not assume other harnesses expose equivalent APIs.
@@ -931,9 +935,9 @@ For any future install implementation ticket, require evidence for:
 - native package contents and adapter metadata
 - disable/uninstall behavior through the harness's native package manager when
   available
-- `loom-bootstrap` is discoverable as the mandatory entry skill
-- optional bootstrap preload, when present, points at
-  `skills/loom-bootstrap/references/`
+- `using-loom` is discoverable as the mandatory entry skill
+- optional using-Loom preload, when present, points at
+  `skills/using-loom/references/`
 - skills are discoverable by name/description without eagerly loading full skill
   references/templates
 - adapter outputs identify their Loom source files

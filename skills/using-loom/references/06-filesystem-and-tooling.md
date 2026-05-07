@@ -1,6 +1,6 @@
 # Filesystem And Tooling
 
-This is an ordered bootstrap reference for the `loom-bootstrap` skill.
+This is an ordered reference for the `using-loom` skill.
 
 Loom assumes the filesystem is already a rich interface.
 
@@ -148,7 +148,7 @@ Slash commands, prompt wrappers, and harness adapters are invocation
 conveniences.
 
 Deleting a command surface should not delete a Loom capability. Durable behavior
-belongs in bootstrap doctrine, skills, references, templates, and canonical
+belongs in using-Loom doctrine, skills, references, templates, and canonical
 records.
 
 Commands may invoke acceptance, review, shipping, retrospective, or Ralph

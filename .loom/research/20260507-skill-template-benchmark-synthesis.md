@@ -45,7 +45,7 @@ This research compares Loom's `skills/` product surface with two cloned public s
   - Observed at: 2026-05-07T06:17:26Z
   - Version/date/commit: current dirty workspace state at observation time
   - Freshness risk: stale if `skills/` changes materially
-  - Recheck trigger: skill/template edits, bootstrap doctrine edits, or package framing changes
+  - Recheck trigger: skill/template edits, using-Loom doctrine edits, or package framing changes
   - Trust rationale: `skills/` is the product surface named by `constitution:main`.
 
 - Source: Matt Pocock engineering skills

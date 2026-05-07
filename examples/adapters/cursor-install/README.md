@@ -7,14 +7,14 @@
 - `.cursor-plugin/plugin.json` exposes canonical `skills/` using Cursor's native
   plugin manifest shape and overrides root hook discovery with an empty Cursor
   hook config; Claude-specific hooks live under `claude-hooks/`
-- `loom-bootstrap` is the required first skill; adapters may preload its
+- `using-loom` is the required first skill; adapters may preload its
   references only through a Cursor-native rule surface when that remains a native
   package feature
 
 ## Expected Properties
 
 - Cursor project rules are not treated as the product surface
-- Loom bootstrap references remain part of the `loom-bootstrap` skill, even when
+- Loom using-Loom references remain part of the `using-loom` skill, even when
   a native adapter preloads them
 - protocol skills remain the subsystem behavior source
 - disable/uninstall follows Cursor's native plugin or skill package UX

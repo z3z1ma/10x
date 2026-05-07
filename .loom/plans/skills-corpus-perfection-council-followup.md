@@ -214,7 +214,7 @@ Likely write scopes:
   `skills/loom-critique`, `skills/loom-wiki`, packet templates.
 - `ticket:lqiw3hvp`: `skills/loom-drive`, `skills/loom-workspace`,
   `skills/loom-records`.
-- `ticket:yk89awl5`: `README.md`, possibly bootstrap references if alignment
+- `ticket:yk89awl5`: `README.md`, possibly using-Loom references if alignment
   requires exact wording.
 - `ticket:u02z7o9j`: `skills/loom-tickets`, `skills/loom-records`, affected
   templates.

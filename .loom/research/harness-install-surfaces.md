@@ -26,7 +26,7 @@ This research is historical. `decision:0006` supersedes its recommendations by
 removing fallback installers, top-level `rules/`, and top-level `commands/` as
 supported product surfaces. Current install work should use native harness plugin,
 extension, or skill-package systems that expose canonical `skills/`, with
-`loom-bootstrap` as the mandatory entry skill.
+`using-loom` as the mandatory entry skill.
 
 # Question
 
@@ -150,7 +150,7 @@ Superseded by `decision:0006`.
 Do not add or restore a Makefile, shell installer, direct copy installer, or
 top-level command-wrapper distribution. Native harness adapters should expose
 canonical `skills/`; optional preload should read from
-`skills/loom-bootstrap/references/` when a harness supports it cleanly.
+`skills/using-loom/references/` when a harness supports it cleanly.
 
 # Open Questions
 

@@ -2,9 +2,9 @@
 id: wiki:harness-adapter-package-pattern
 kind: wiki
 page_type: workflow
-status: active
+status: accepted
 created_at: 2026-04-25T22:14:57Z
-updated_at: 2026-04-26T07:23:57Z
+updated_at: 2026-05-07T19:28:00Z
 scope:
   kind: repository
   repositories:
@@ -43,11 +43,11 @@ Adapter packages are harness-native packaging surfaces that make Loom easier to
 install without becoming owners of Loom semantics.
 
 `open-loom@0.1.0` is the first accepted example in this repository: an OpenCode
-npm plugin that exposes bundled `loom-bootstrap` references and skills through
+npm plugin that exposes bundled `using-loom` references and skills through
 OpenCode config surfaces.
 
 Claude Code is the first accepted hybrid example: a Claude plugin exposes skills
-while a plugin `SessionStart` hook emits `loom-bootstrap` references as
+while a plugin `SessionStart` hook emits `using-loom` references as
 same-session, source-marked context.
 
 # When To Use It
@@ -57,7 +57,7 @@ mechanism that can expose Loom's required surfaces more cleanly than direct
 user-config mutation.
 
 Do not use this pattern when the harness package system cannot express
-`loom-bootstrap` and skill discovery. In that case, do not claim support for that
+`using-loom` and skill discovery. In that case, do not claim support for that
 harness until a native route exists.
 
 Use the hybrid form only for optional bootstrap preload. The package must still
@@ -65,7 +65,7 @@ carry the canonical `skills/` surface.
 
 # Inputs
 
-- canonical `skills/`, especially `loom-bootstrap`
+- canonical `skills/`, especially `using-loom`
 - the harness's official package/plugin/extension docs
 - a ticket that owns one bounded harness install slice
 - evidence for package structure, install behavior, and surface discovery
@@ -76,7 +76,7 @@ carry the canonical `skills/` surface.
 1. Start from the canonical Loom surfaces. Do not copy dogfooding `.loom/` or
    `.opencode/` state into the package.
 2. Choose the smallest harness-native registration path that exposes
-   `loom-bootstrap` and subsystem skills.
+   `using-loom` and subsystem skills.
 3. Keep generated or emitted adapter content derivative and source-marked.
 4. Declare compatibility metadata when the package manager or harness supports it.
 5. Validate package layout before publication or release.
@@ -92,15 +92,15 @@ Use this procedure when a harness plugin/package cannot own every Loom surface.
 
 1. Name which Loom surfaces the package can natively expose and which it cannot.
 2. Route the missing surface to a documented static harness surface.
-3. Keep generated outputs derivative from canonical `loom-bootstrap` references
+3. Keep generated outputs derivative from canonical `using-loom` references
    and skills.
-4. Prefer skill-packaged bootstrap first; generate static instruction files only
+4. Prefer skill-packaged using-Loom doctrine first; generate static instruction files only
    when the harness lacks reliable skill-first discovery.
 5. Use hooks as the knowledge channel only when the harness docs and runtime
    evidence prove complete same-session context delivery and the ticket accepts
    the tradeoff.
-6. Fail closed when a bootstrap sync changes instructions after the session has
-   already loaded context; avoid bootstrap sync entirely when same-session hook
+6. Fail closed when a using-Loom sync changes instructions after the session has
+   already loaded context; avoid using-Loom sync entirely when same-session hook
    context is validated.
 7. Validate both manifest shape and real install/load behavior; schema validation
    alone is not enough.
@@ -117,19 +117,19 @@ The accepted Claude adapter uses this split:
 - `.claude-plugin/plugin.json` declares `claude-hooks/hooks.json` as the Claude
   hook config so root `hooks/` remains available for other harnesses if needed.
 - `SessionStart` uses matcher `startup|clear|compact` and emits one
-  source-marked stdout block per `loom-bootstrap` reference.
-- Each bootstrap reference output stays below Claude's documented
+  source-marked stdout block per `using-loom` reference.
+- Each using-Loom reference output stays below Claude's documented
   10,000-character hook-output context cap.
 - Small increasing sleeps make `01-core-identity.md` appear first in observed
   startup probes, but strict output ordering is not guaranteed; source markers are
   the stable attribution mechanism.
 - Disabling or uninstalling the plugin follows Claude's plugin manager UX because
-  the active bootstrap preload path is plugin hook context emitted at session
+  the active using-Loom preload path is plugin hook context emitted at session
   start.
 
 The important accepted limitation is ordering: Claude runs matching hooks
 concurrently, so per-reference outputs are source-marked and only best-effort
-ordered. Local startup probes saw all seven bootstrap references without
+ordered. Local startup probes saw all eight using-Loom references without
 preview/truncation and saw `01-core-identity.md` first, but did not prove strict
 numeric order after that.
 
@@ -162,9 +162,9 @@ was more complex than the per-reference design.
 - treating `${CLAUDE_PLUGIN_ROOT}` as the user's or project's `.claude` directory
 - selecting project-local install scope because `.claude/` exists instead of
   because the plugin is explicitly enabled for that project
-- relying on hook stdout or a custom agent prompt as the bootstrap doctrine layer
+- relying on hook stdout or a custom agent prompt as the using-Loom doctrine layer
   without runtime evidence and explicit ticket acceptance
-- replacing skill-packaged bootstrap with many chunked hook-context commands just
+- replacing skill-packaged using-Loom doctrine with many chunked hook-context commands just
   because a local probe worked once
 - accepting source-marked per-reference hook output as strictly ordered when the
   harness only provides best-effort ordering

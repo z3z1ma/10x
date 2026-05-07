@@ -3,7 +3,7 @@ id: initiative:loom-install-experience
 kind: initiative
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-04-26T07:23:57Z
+updated_at: 2026-05-07T19:30:00Z
 scope:
   kind: repository
   repositories:
@@ -99,7 +99,7 @@ portable Agent Skills. Loom needs to use those native surfaces while keeping
   accepted decision not to support that harness yet
 - first-class plugin, extension, or skill-package systems are used to cover Loom
   skills, and explicitly rejected where they do not
-- `loom-bootstrap` is discoverable after install, and adapters preload its ordered
+- `using-loom` is discoverable after install, and adapters preload its ordered
   references only where that is supported cleanly
 - skill discovery preserves portable Agent Skills semantics and keeps full skill
   content on-demand
@@ -144,11 +144,11 @@ portable Agent Skills. Loom needs to use those native surfaces while keeping
 - choosing plugin packaging because it feels more first-class even when it does
   not provide a clean always-on instruction surface
 - letting generated adapter packages drift from canonical `skills/` and
-  `loom-bootstrap` references
+  `using-loom` references
 - losing uninstall safety when a harness stores user rules in a non-file config
   database or managed settings surface
 - treating generic Agent Skills as sufficient while forgetting that
-  `loom-bootstrap` must be used first unless an adapter has already loaded it
+  `using-loom` must be used first unless an adapter has already loaded it
 - expanding install support faster than the project can maintain evidence for
   each harness
 
@@ -187,22 +187,22 @@ surfaces.
 
 The OpenCode slice has landed the first accepted package-adapter result:
 `open-loom@0.1.0` validates a plugin-array install for OpenCode `>=1.14.22 <2`,
-exposes `skills/`, and preloads bootstrap references through OpenCode
+exposes `skills/`, and preloads using-Loom references through OpenCode
 `instructions`. The remaining OpenCode cold-cache first-run package caveat is
 tracked by `ticket:us1brnsv`.
 
 The Claude slice has closed its local/prototype ticket and advanced the release
 path through `ticket:cldrel01`: marketplace and plugin for `skills/`, plus
 same-session, source-marked per-reference `SessionStart` stdout for optional
-bootstrap preload. Remaining Claude release risks are installed marketplace
+using-Loom preload. Remaining Claude release risks are installed marketplace
 behavior, package/cache contents, Windows shell behavior, `clear|compact` runtime
 events, and installed skill invocation.
 
 The Codex slice has been re-researched against current plugin and hook docs plus
 open-source Codex source: Codex plugins are the intended native path for canonical
 skills, and Codex config-layer `SessionStart` hooks can emit source-marked
-bootstrap references as optional same-session context. Current evidence does not
-prove installed Git-backed plugin skill discovery for `loom-bootstrap`, so
+using-Loom references as optional same-session context. Current evidence does not
+prove installed Git-backed plugin skill discovery for `using-loom`, so
 `ticket:lx9nnztk` remains active for the intended remote plugin install goal.
 
 # Completion Basis

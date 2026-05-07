@@ -80,7 +80,7 @@ actually validated.
 
 - activation too broad, causing ceremony or skill spam
 - activation too narrow, causing missed routing
-- body repeats doctrine that belongs in bootstrap
+- body repeats doctrine that belongs in using-Loom
 - workflow creates a shadow ledger outside tickets or owner records
 - reference is mandatory even though only rare users need it
 - template permits placeholder IDs or vague completion claims

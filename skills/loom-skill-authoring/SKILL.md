@@ -54,7 +54,7 @@ A good Loom skill:
 | Rationalization | Reality |
 | --- | --- |
 | "The skill reads well, so it is done." | Skill edits change future operator behavior; validation must check activation, boundaries, references, templates, and proportional evidence. |
-| "This rule can live in the new skill only." | Always-on doctrine belongs in bootstrap; owner truth belongs in owner records. Skills coordinate behavior without hiding core policy. |
+| "This rule can live in the new skill only." | Always-on doctrine belongs in using-Loom; owner truth belongs in owner records. Skills coordinate behavior without hiding core policy. |
 | "A broad description means the skill owns all related truth." | Broad activation improves discovery. Durable truth still routes to the owning Loom layer. |
 
 ## Red Flags
@@ -103,7 +103,7 @@ Then read conditionally:
    discipline, routing, or protocol authority and needs pressure-testing or
    critique before acceptance.
 5. `templates/simple-skill.md` when creating an owner-layer, workflow, support,
-   shared-grammar, inner-loop, control-plane, bootstrap, or authoring skill with a
+   shared-grammar, inner-loop, control-plane, entry-doctrine, or authoring skill with a
    single coherent boundary.
 6. `templates/router-skill.md` when creating a workflow coordinator that routes
    among multiple owner layers without owning a new truth layer.

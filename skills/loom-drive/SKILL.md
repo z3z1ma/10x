@@ -61,7 +61,8 @@ checkpoint from existing layers:
   `OBJ-001` when downstream tickets, evidence, or critique need to cite them
 - research owns unresolved evidence, options, rejected paths, and conclusions
 - spec owns intended behavior and reusable acceptance criteria
-- plan owns tranche strategy, sequencing, dependencies, and execution waves
+- plan owns high-level complex-change planning, decomposition, tranche strategy,
+  sequencing, dependencies, rollout, and execution waves
 - tickets own live execution state, blockers, scoped coverage, evidence
   disposition, critique disposition, acceptance decisions, and journals
 - packets own bounded child contracts; saved drive handoffs are support artifacts
@@ -328,8 +329,8 @@ Then read conditionally:
 7. `skills/loom-initiatives/SKILL.md` when creating or refining the objective and
     success metrics.
 8. `skills/loom-research/SKILL.md`, `skills/loom-specs/SKILL.md`, or
-    `skills/loom-plans/SKILL.md` when evidence, intended behavior, or sequencing
-    is missing.
+    `skills/loom-plans/SKILL.md` when evidence, intended behavior, or complex
+    planning truth is missing.
 9. `skills/loom-tickets/SKILL.md` before creating, advancing, or accepting
     bounded execution work.
 10. `skills/loom-ralph/SKILL.md` before packetized implementation execution.

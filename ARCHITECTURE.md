@@ -4,7 +4,7 @@ Loom is a Markdown-native control plane for AI knowledge work.
 
 It is not a toolchain, runtime, daemon, model router, MCP, dashboard, or product
 CLI. Loom's product surface is the visible skills corpus: the mandatory
-`loom-bootstrap` skill, subsystem skills, templates, references, and ordinary
+`using-loom` skill, subsystem skills, templates, references, and ordinary
 filesystem operations.
 
 ## Architectural Kernel
@@ -34,7 +34,8 @@ Canonical owner layers own project truth:
 - initiative owns strategic outcomes and success framing
 - research owns investigations, tradeoffs, conclusions, rejected paths, and null results
 - spec owns intended behavior, scenarios, requirements, and acceptance contracts
-- plan owns sequencing, rollout strategy, milestones, and execution waves
+- plan owns high-level complex-change planning, decomposition, sequencing,
+  rollout strategy, milestones, and execution waves
 - ticket owns live execution state, scoped coverage, blockers, acceptance disposition, and closure
 - evidence owns observed artifacts and validation outputs
 - critique owns adversarial findings, severities, verdicts, and residual risks
@@ -54,9 +55,9 @@ Durable support surfaces help operation without owning project truth:
 ## Loops
 
 The outer loop makes work legible before execution. It chooses the owner layer,
-adds research or specs when evidence or behavior is fuzzy, sequences work through
-plans when order matters, and creates or tightens the ticket that will own live
-execution.
+adds research or specs when evidence or behavior is fuzzy, uses plans when
+complex change needs high-level decomposition or sequencing, and creates or
+tightens the ticket that will own live execution.
 
 The inner loop is Ralph. Ralph advances one bounded implementation slice through
 one packet, one fresh worker, one output contract, and one parent reconciliation.
@@ -103,7 +104,7 @@ assimilates durable learning into the owner layer that can maintain it:
 - accepted explanation -> wiki
 - investigation results -> research
 - intended behavior clarifications -> spec
-- sequencing changes -> plan
+- changed complex-change strategy, decomposition, sequencing, rollout, or waves -> plan
 - strategic framing -> initiative
 - principles or decisions -> constitution
 - observed validation artifacts -> evidence
@@ -117,7 +118,7 @@ Skills are flat sibling subsystem playbooks. Each skill must be understandable
 from its own `SKILL.md`, references, and templates. Hidden inheritance, shipped
 helper scripts, and assembly-time behavior must not become the source of truth.
 
-`loom-bootstrap` is the mandatory package entry skill. It carries Loom's ordered
+`using-loom` is the mandatory package entry skill. It carries Loom's ordered
 operating doctrine as references. Harness adapters may preload those references as
 always-on context, but that preload is an optimization over the same skill package,
 not a separate doctrine surface.
@@ -132,7 +133,7 @@ Loom does not ship a command-wrapper surface or a cross-harness installer as the
 product. The product surface is `skills/`.
 
 Harness adapters transport Loom into particular tools through native plugin,
-extension, or skill-package systems. They may preload `loom-bootstrap` references
+extension, or skill-package systems. They may preload `using-loom` references
 when the harness supports it cleanly, but they must not define Loom truth.
 
 ## Examples
@@ -166,5 +167,5 @@ Loom rejects:
 - generated context files as independent project truth
 - transcript memory as the execution record
 
-A future agent should be able to install the skill package, use `loom-bootstrap`,
+A future agent should be able to install the skill package, use `using-loom`,
 read the graph, and operate the protocol without hidden runtime magic.

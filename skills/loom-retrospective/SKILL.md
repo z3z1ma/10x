@@ -23,7 +23,7 @@ reminds operators that retrospective is a workflow route, not a new record kind.
 - research preservation for durable investigation results, rejected options, and
   null results
 - spec updates for clarified intended behavior
-- plan updates for changed sequencing
+- plan updates for changed complex-change strategy, decomposition, or sequencing
 - initiative updates for changed strategic framing
 - constitution updates for changed principles, constraints, decisions, or roadmap
   direction
@@ -54,7 +54,7 @@ reminds operators that retrospective is a workflow route, not a new record kind.
 - accepted explanations and workflows -> `loom-wiki`
 - durable investigation results, rejected options, and null results -> `loom-research`
 - clarified intended behavior -> `loom-specs`
-- changed sequencing -> `loom-plans`
+- changed complex-change strategy, decomposition, or sequencing -> `loom-plans`
 - changed strategic framing -> `loom-initiatives`
 - changed principles, constraints, decisions, or roadmap direction -> `loom-constitution`
 - observed artifacts, challenged observations, or validation artifacts -> `loom-evidence`

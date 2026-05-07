@@ -27,7 +27,7 @@ choose by owner:
 - accepted explanation or workflow -> `loom-wiki`
 - durable investigation result, rejected option, or null result -> `loom-research`
 - clarified intended behavior -> `loom-specs`
-- changed sequencing -> `loom-plans`
+- changed complex-change strategy, decomposition, or sequencing -> `loom-plans`
 - changed strategic framing -> `loom-initiatives`
 - changed durable policy or principle -> `loom-constitution`
 - observed artifact, challenged observation, or validation artifact -> `loom-evidence`

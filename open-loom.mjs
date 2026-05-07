@@ -59,14 +59,14 @@ function pushUnique(array, value) {
 function surfaceOptions(options = {}) {
   return {
     rootDir: resolve(String(options.rootDir || PACKAGE_ROOT)),
-    bootstrap: options.bootstrap !== false,
+    usingLoom: options.usingLoom !== false,
     skills: options.skills !== false,
   };
 }
 
-export function readOrderedBootstrapFiles(options = {}) {
+export function readOrderedUsingLoomFiles(options = {}) {
   const { rootDir } = surfaceOptions(options);
-  const referencesDir = join(rootDir, "skills", "loom-bootstrap", "references");
+  const referencesDir = join(rootDir, "skills", "using-loom", "references");
   return markdownFilesIn(referencesDir).map((path) => ({
     path: posixPath(relative(rootDir, path)),
     absolutePath: path,
@@ -97,11 +97,11 @@ export function readSkillFiles(options = {}) {
 export function configureOpenCode(config, options = {}) {
   const surfaces = surfaceOptions(options);
 
-  if (surfaces.bootstrap) {
-    const bootstrapReferences = readOrderedBootstrapFiles(surfaces);
-    if (bootstrapReferences.length > 0) {
+  if (surfaces.usingLoom) {
+    const usingLoomReferences = readOrderedUsingLoomFiles(surfaces);
+    if (usingLoomReferences.length > 0) {
       config.instructions ??= [];
-      for (const reference of bootstrapReferences) pushUnique(config.instructions, reference.absolutePath);
+      for (const reference of usingLoomReferences) pushUnique(config.instructions, reference.absolutePath);
     }
   }
 
@@ -119,13 +119,13 @@ export function configureOpenCode(config, options = {}) {
 
 export function inspectLoomBundle(options = {}) {
   const surfaces = surfaceOptions(options);
-  const bootstrapReferences = readOrderedBootstrapFiles(surfaces);
+  const usingLoomReferences = readOrderedUsingLoomFiles(surfaces);
   const skills = readSkillFiles(surfaces);
 
   return {
-    bootstrap: {
-      result: "registered through config.instructions as ordered bootstrap references",
-      files: bootstrapReferences.map((reference) => reference.path),
+    usingLoom: {
+      result: "registered through config.instructions as ordered using-Loom references",
+      files: usingLoomReferences.map((reference) => reference.path),
     },
     skills: {
       result: "registered through config.skills.paths",
@@ -157,17 +157,17 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes(
   console.log(JSON.stringify({
     ok: true,
     pluginId: PLUGIN_ID,
-    bootstrapReferenceCount: inspection.bootstrap.files.length,
-    bootstrapReferenceFiles: inspection.bootstrap.files,
-    firstBootstrapReference: inspection.bootstrap.files[0],
-    lastBootstrapReference: inspection.bootstrap.files.at(-1),
+    usingLoomReferenceCount: inspection.usingLoom.files.length,
+    usingLoomReferenceFiles: inspection.usingLoom.files,
+    firstUsingLoomReference: inspection.usingLoom.files[0],
+    lastUsingLoomReference: inspection.usingLoom.files.at(-1),
     instructionCount: config.instructions.length,
     instructionsAreDeduped: config.instructions.length === beforeInstructionCount,
     firstInstruction: config.instructions[0],
     lastInstruction: config.instructions.at(-1),
     skillCount: inspection.skills.items.length,
     skillPath: config.skills?.paths?.[0],
-    bootstrapResult: inspection.bootstrap.result,
+    usingLoomResult: inspection.usingLoom.result,
     skillsResult: inspection.skills.result,
   }, null, 2));
 }

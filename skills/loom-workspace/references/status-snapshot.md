@@ -31,8 +31,8 @@ Use this procedure when entering a Loom workspace without reliable transcript
 context, after context compaction, or when asked to recover current work from
 files.
 
-1. Load `loom-bootstrap` doctrine, or confirm the harness already preloaded the
-   ordered bootstrap references.
+1. Load `using-loom` doctrine, or confirm the harness already preloaded the
+   ordered using-Loom references.
 2. Confirm the workspace root and `.loom/` tree, then read `constitution:main`.
 3. Discover the active ticket queue and other live states from ticket records:
 
@@ -97,7 +97,7 @@ Route scratchpad-like material to the smallest correct owner instead:
 - support-only reminders, retrieval cues, or pointers to owners -> support
   coordinator `loom-memory`; not project truth
 - intended behavior -> spec
-- sequencing or rollout strategy -> plan
+- complex-change planning, decomposition, sequencing, or rollout strategy -> plan
 - principles, constraints, and citable decisions -> constitution
 
 External trackers, pull requests, dashboards, harness artifacts, generated

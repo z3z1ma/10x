@@ -18,8 +18,8 @@ protocol.
 
 ## Bootstrap
 
-Loom's mandatory operating doctrine is packaged in `skills/loom-bootstrap`.
-Agents must use `loom-bootstrap` before work unless an adapter has already loaded
+Loom's mandatory operating doctrine is packaged in `skills/using-loom`.
+Agents must use `using-loom` before work unless an adapter has already loaded
 the same ordered references into the current context. Harness adapters may preload
 those references as always-on context, but that preload is an optimization over the
 same doctrine, not a separate protocol surface.

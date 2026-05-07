@@ -15,7 +15,7 @@ right skill. If it does not, repair the owner record that lacks the needed truth
 - evidence synthesis, investigation, option comparison, rejected path, or null
   result -> `loom-research`
 - intended behavior or acceptance contract -> `loom-specs`
-- sequencing or rollout strategy -> `loom-plans`
+- complex-change planning, decomposition, sequencing, or rollout strategy -> `loom-plans`
 - live execution status, bounded work, acceptance disposition, closure readiness,
   or residual-risk evaluation -> `loom-tickets`
 - observed artifacts, validation output, screenshots, logs, reproduction,

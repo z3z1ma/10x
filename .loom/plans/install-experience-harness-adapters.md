@@ -3,7 +3,7 @@ id: plan:install-experience-harness-adapters
 kind: plan
 status: active
 created_at: 2026-04-25T18:46:08Z
-updated_at: 2026-04-26T07:23:57Z
+updated_at: 2026-05-07T19:30:00Z
 scope:
   kind: repository
   repositories:
@@ -51,21 +51,21 @@ cross-harness installer.
 
 After `decision:0006`, this plan no longer preserves fallback installers. The
 target is native exposure of the canonical `skills/` package, with optional
-`loom-bootstrap` preload where a harness supports it cleanly.
+`using-loom` preload where a harness supports it cleanly.
 
 # Strategy
 
 Use the research recommendation as the route:
 
-1. Treat `skills/` as the primary package surface, with `loom-bootstrap` as the
+1. Treat `skills/` as the primary package surface, with `using-loom` as the
    mandatory entry skill.
-2. Use harness prototypes to establish adapter-package conventions: bootstrap
+2. Use harness prototypes to establish adapter-package conventions: using-Loom
    reference preloading when supported, source markers, fixture layout, validation
    evidence, and disable expectations.
 3. Apply that adapter-package discipline to Claude Code, Codex, OpenCode, Gemini,
    and Cursor without making always-on adapter preload the only completeness path.
 4. Keep optional always-on hooks or instruction files as boosts over the same
-   `loom-bootstrap` references, not separate doctrine.
+   `using-loom` references, not separate doctrine.
 5. Reconcile `INSTALL.md` and adapter fixtures after the per-harness decisions are
    proven.
 
@@ -77,27 +77,27 @@ implementation state, evidence, critique disposition, and acceptance decision.
 Current strategic picture:
 
 - `decision:0005` and `decision:0006` define the install strategy: Loom is a
-  skills package with `loom-bootstrap` as the mandatory first skill, and `skills/`
+  skills package with `using-loom` as the mandatory first skill, and `skills/`
   is the only product surface.
 - Claude Code has an accepted automated boost adapter: `.claude-plugin/plugin.json`
   exposes canonical `skills/`, `.claude-plugin/marketplace.json`
-  exposes marketplace `agent-loom`, and `claude-hooks/hooks.json` emits `loom-bootstrap`
+  exposes marketplace `agent-loom`, and `claude-hooks/hooks.json` emits `using-loom`
   references as same-session, source-marked `SessionStart` stdout. Remaining
   Claude release risks are installed marketplace behavior, package/cache contents,
   Windows shell behavior, `clear|compact` runtime events, and installed skill
   invocation.
 - Codex can now use the same skills-package story: `.codex-plugin/plugin.json`
-  exposes `loom-bootstrap` and the subsystem skills, while `.codex/hooks.json`
+  exposes `using-loom` and the subsystem skills, while `.codex/hooks.json`
   remains an optional trusted-project preload proof. The next Codex evidence need
   is installed plugin skill discovery, not plugin-owned hook support.
 - OpenCode is the first accepted adapter-package result. `open-loom@0.1.0` uses
-  the plugin `config(config)` hook to register bootstrap references through
+  the plugin `config(config)` hook to register using-Loom references through
   `config.instructions` and skills through `config.skills.paths`. The cold-cache
   npm-plugin first-run caveat is tracked separately by `ticket:us1brnsv`.
 - Generic Agent Skills are now the main cross-harness package shape where a
   harness supports them.
 - Adapter outputs must remain derivative from canonical `skills/`, especially
-  `loom-bootstrap`.
+  `using-loom`.
 
 # Workstreams
 
@@ -109,7 +109,7 @@ Complete package prototypes:
 Hybrid package prototypes:
 
 - `ticket:q7h1d05q` - prototype Claude Code hybrid install path: plugin for
-  skills plus hook-delivered bootstrap context
+  skills plus hook-delivered using-Loom context
 - `ticket:cldrel01` - proposed release-packaging hardening for Claude marketplace
   distribution beyond the accepted local/prototype integration
 - `ticket:lx9nnztk` - blocked Codex remote plugin install investigation
@@ -133,7 +133,7 @@ Shared follow-through inside the harness tickets:
 
 1. Cursor plugin and Gemini extension prototypes produce a concrete adapter
    package shape that exposes `skills/` without direct user-rule mutation.
-2. Claude and Codex tickets decide how plugin packaging exposes `loom-bootstrap`
+2. Claude and Codex tickets decide how plugin packaging exposes `using-loom`
    and whether optional hook preload should remain part of the adapter evidence.
 3. OpenCode plugin-first ticket proves the ideal plugin-array install shape, using
    npm publication for normal users and local file/path plugins for cloned-repo
@@ -152,7 +152,7 @@ native adapter package discipline.
 
 Claude and Codex come next because they need the same packaging discipline with an
 explicit split between plugin-delivered skills and optional hook- or
-instruction-delivered bootstrap preload.
+instruction-delivered using-Loom preload.
 
 OpenCode can proceed as soon as the plugin-first investigation is useful. It may
 need narrower validation before the shared skill-location decision, because the
@@ -196,8 +196,8 @@ Wave 3:
 # Risks
 
 - Plugin-first enthusiasm could hide the fact that agents still need to use
-  `loom-bootstrap` first.
-- Generated adapter outputs could become stale copies of canonical bootstrap
+  `using-loom` first.
+- Generated adapter outputs could become stale copies of canonical using-Loom
   references or skills.
 - A shared `~/.agents/skills` destination could reduce duplication but create
   surprising precedence behavior in harnesses that also have native skill roots.

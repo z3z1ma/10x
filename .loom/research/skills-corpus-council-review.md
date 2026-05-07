@@ -55,7 +55,7 @@ research, not merely as a chat summary or ticket checklist.
 This research covers council-observed improvement areas in:
 
 - `README.md` and public framing that explains Loom's premise.
-- `skills/loom-bootstrap/**` doctrine and routing.
+- `skills/using-loom/**` doctrine and routing.
 - every `skills/loom-*/SKILL.md` surface.
 - skill references and templates where record grammar, packet grammar, evidence,
   critique, wiki, memory, or routing behavior is taught.
@@ -69,7 +69,7 @@ the observed gaps, the reasoning behind them, and the downstream route.
 
 The user requested a council review of `skills/` with README context. A council
 subagent was launched with instructions to read enough of the corpus to provide a
-strategic, adversarial, actionable report covering bootstrap doctrine, every
+strategic, adversarial, actionable report covering using-Loom doctrine, every
 skill, references/templates, cross-surface consistency, operator ergonomics,
 failure modes, and writing quality.
 
@@ -127,7 +127,7 @@ approaches, and open questions for downstream plan and ticket work.
   Reason: Loom's premise requires durable owner records before non-trivial
   protocol-authority work begins.
 - Rejected option: make README the canonical authority and force skills to match
-  it by recency. Reason: `skills/`, especially bootstrap doctrine, is the product
+  it by recency. Reason: `skills/`, especially using-Loom doctrine, is the product
   surface and must stay aligned with README without losing owner-layer authority.
 - Rejected option: solve all findings through one broad copyediting pass. Reason:
   several findings affect protocol behavior, record grammar, or acceptance gates
@@ -166,7 +166,7 @@ tickets should produce higher-quality changes and cleaner acceptance dossiers.
 - Treat `loom-drive` visibility and README diagram correction as low-risk early
   alignment work.
 - Treat `OBJ-*` grammar, packet contract changes, ticket risk rules, cold-start
-  doctrine, and bootstrap routing changes as high-risk or medium-risk protocol
+  doctrine, and using-Loom routing changes as high-risk or medium-risk protocol
   changes requiring critique before acceptance.
 - Preserve any stable findings from critique as follow-up tickets or accepted
   risks instead of burying them in prose.
@@ -182,7 +182,7 @@ tickets should produce higher-quality changes and cleaner acceptance dossiers.
 - Should ticket `change_class` and `risk_class` become mandatory for every new
   ticket, or only for tickets where evidence/critique posture depends on them?
 - Should cold-start resume be taught only in `loom-workspace`, or also summarized
-  in bootstrap doctrine and README?
+  in using-Loom doctrine and README?
 - Which duplicated sections should be deleted versus replaced with short pointers
   to owner surfaces?
 

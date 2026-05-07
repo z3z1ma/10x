@@ -25,7 +25,7 @@ launching child work:
 
 ```text
 drive anchor: <initiative id or narrower owner id>
-objective criteria: <OBJ-IDs and satisfied | partial | open | blocked>
+objective criteria: <OBJ-IDs and satisfied | partially_satisfied | open | blocked | out_of_scope>
 current tranche: <plan section / wave / ticket IDs>
 active tickets: <ticket IDs and live states>
 hard gates: <clear | blocked, with blocker links>
@@ -50,7 +50,7 @@ is owner-record repair or a focused user question.
 
 When entering a workspace to resume a drive:
 
-1. Load `loom-bootstrap`, inspect workspace, and read `constitution:main`.
+1. Load `using-loom`, inspect workspace, and read `constitution:main`.
 2. Search active execution surfaces:
 
 ```bash

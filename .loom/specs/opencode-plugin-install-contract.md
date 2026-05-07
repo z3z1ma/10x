@@ -44,7 +44,7 @@ metadata for `open-loom@0.1.0`.
 
 OpenCode originally had a direct-copy install path. After `decision:0006`, the
 accepted product direction is a native OpenCode plugin that exposes canonical
-`skills/` and optionally preloads `loom-bootstrap` references without creating a
+`skills/` and optionally preloads `using-loom` references without creating a
 second semantic source of truth.
 
 # Desired Behavior
@@ -56,7 +56,7 @@ OpenCode's `plugin` array.
 When OpenCode loads the plugin, `open-loom` should expose the package's canonical
 Markdown surfaces through OpenCode's documented config surfaces:
 
-- ordered `loom-bootstrap` references through `config.instructions`
+- ordered `using-loom` references through `config.instructions`
 - bundled skills through `config.skills.paths`
 
 Users who clone the repository should be able to point OpenCode at a local file or
@@ -80,7 +80,7 @@ package-root plugin path instead of installing from npm.
 - REQ-001: The npm package entrypoint is `open-loom.mjs` and default-exports an
   OpenCode plugin object with `id: "open-loom"` and `server()`.
 - REQ-002: The plugin registers ordered
-  `skills/loom-bootstrap/references/*.md` files as absolute `config.instructions`
+  `skills/using-loom/references/*.md` files as absolute `config.instructions`
   paths.
 - REQ-003: The plugin registers the bundled `skills/` root in
   `config.skills.paths` when bundled skills exist.
@@ -100,25 +100,25 @@ package-root plugin path instead of installing from npm.
 # Scenarios
 
 - Npm package user adds `"plugin": ["open-loom@0.1.0"]` to an OpenCode config
-  file and OpenCode loads Loom bootstrap references and skills from its package
+  file and OpenCode loads using-Loom references and skills from its package
   cache.
 - Repository clone user points OpenCode at `file:///path/to/agent-loom/open-loom.mjs`
   and OpenCode loads the same Loom surfaces from the clone.
-- Contributor runs `node open-loom.mjs --smoke` to verify ordered bootstrap
+- Contributor runs `node open-loom.mjs --smoke` to verify ordered using-Loom
   references, skill path registration, and dedupe behavior without making a model
   request.
 - A package without removed `rules/` or `commands/` directories still registers
-  bootstrap references and skills without crashing.
+  using-Loom references and skills without crashing.
 - A first cold-cache npm-package run logs `NpmInstallFailedError`; the user runs
   OpenCode again and the cached package resolves. Further investigation belongs to
   `ticket:us1brnsv`.
 
 # Acceptance
 
-- ACC-001: `node open-loom.mjs --smoke` shows seven ordered bootstrap reference
+- ACC-001: `node open-loom.mjs --smoke` shows eight ordered using-Loom reference
   files and a bundled skill path, with no command-wrapper registration.
 - ACC-002: `opencode debug config` with a local plugin file or package-root entry
-  shows ordered Loom bootstrap reference paths in `instructions` and a Loom
+  shows ordered using-Loom reference paths in `instructions` and a Loom
   `skills.paths` entry.
 - ACC-003: `opencode debug skill` discovers Loom skills from the registered
   OpenCode skill path.

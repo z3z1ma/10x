@@ -1,6 +1,6 @@
 # Core Identity
 
-This is an ordered bootstrap reference for the `loom-bootstrap` skill.
+This is an ordered reference for the `using-loom` skill.
 
 Loom is a mandatory operating protocol whenever Loom is present in the workspace.
 
@@ -8,8 +8,11 @@ It is not decorative documentation and it is not a loose suggestion.
 If the repository uses Loom, you must use Loom's layers, loops, and truth boundaries instead of improvising a parallel workflow in chat or in ad hoc files.
 
 Loom is Markdown-native.
-It uses typed records and bounded handoffs to keep AI work recoverable across
-disposable context windows.
+It is structured paperwork for coding agents: typed records and bounded handoffs
+that make software work recoverable across disposable context windows.
+
+Those artifacts are not passive notes. They are work products the agent must
+satisfy while doing the work.
 
 The layer model decides which artifact owns each kind of truth.
 Ralph is the bounded handoff loop for execution.
@@ -22,6 +25,10 @@ Context windows and workers are disposable, so a packet carries one bounded work
 contract, evidence records observations, critique records review, and
 reconciliation updates the ticket-owned live ledger.
 
+The code becomes downstream of explicit, inspectable engineering artifacts. Loom
+does not make the repository know things; it gives agents a repo-local graph of
+typed work products they can read, update, verify, critique, hand off, and repair.
+
 ## The Main Mental Model
 
 Think in three operating axes at once:
@@ -33,7 +40,8 @@ Think in three operating axes at once:
 
 If you are not sure what to do next, ask:
 
-- what layer owns this
+- what work product is needed next
+- what layer owns that kind of truth
 - are we still shaping the work or already executing it
 - does the next step require a packet
 
@@ -98,15 +106,19 @@ The backbone of Loom is:
 
 `constitution -> initiative -> plan -> ticket`
 
-This is the default binding chain.
+This is the default binding chain for complex work.
 
 `research` and `spec` are important but conditional:
 
-- use **research** when evidence is missing
-- use **spec** when intended behavior is missing
+- use **research** when evidence, tradeoffs, or investigation are missing
+- use **spec** when intended behavior or acceptance is missing
 
 They strengthen the chain.
 They do not replace it.
+
+For small, clear work, it is fine to go straight to a ticket. For complex change,
+use a plan to think through the high-level shape first. Once the plan lays out the
+work, create tickets for the detailed bounded units of execution.
 
 ## The Two Loops
 
@@ -114,7 +126,8 @@ They do not replace it.
 
 The outer loop makes the work legible before execution.
 
-It scopes, researches, sharpens behavior, sequences the work, and creates the ticket that will own live execution.
+It scopes, researches, sharpens behavior, plans complex change when needed, and
+creates the ticket that will own live execution.
 
 ### Inner loop
 

@@ -67,7 +67,7 @@ Which canonical records and evidence this packet should trust.
 
 | Source | Owner status | Acceptance/evidence basis | Freshness check | Limits |
 | --- | --- | --- | --- | --- |
-| <TBD> | <accepted/concluded/final/closed> | <evidence or acceptance basis> | <timestamp/commit/check> | <limit> |
+| <TBD> | <kind-valid lifecycle status such as active, accepted, completed, concluded, recorded, final, or closed> | <evidence or acceptance basis> | <timestamp/commit/check> | <limit> |
 
 Do not promote unsettled research, unresolved critique, stale evidence, or draft
 specs into accepted explanation unless the packet names the gap and stops or routes repair.

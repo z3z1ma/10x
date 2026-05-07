@@ -120,7 +120,7 @@ Good memory:
 - "When touching install docs, start with `initiative:loom-install-experience`."
 - "The maintainer prefers concise final summaries unless the work is complex."
 - "`Ralph` is often discussed as the bounded implementation handoff loop; see
-  bootstrap references for authority."
+  using-Loom references for authority."
 
 Not memory:
 

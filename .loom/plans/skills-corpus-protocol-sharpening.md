@@ -71,14 +71,14 @@ recovering it from owner records.
 This plan serves `initiative:skills-corpus-protocol-sharpening`. The initial broad
 ticket `ticket:3uv5l5fh` was cancelled before implementation and decomposed into
 smaller Ralph-sized tickets. Live execution truth now belongs to the child tickets
-listed in this plan; this plan owns only sequencing.
+listed in this plan; this plan owns high-level sequencing and execution strategy.
 
 # Workstreams
 
 Public framing alignment:
 
 - Add `loom-drive` to skill maps and shipped-skill summaries where omitted.
-- Reconcile README's outer-loop explanation with bootstrap doctrine.
+- Reconcile README's outer-loop explanation with using-Loom doctrine.
 - Replace misleading canonical-layer wording with owner-layer/support-surface
   wording where packet or memory would otherwise appear canonical.
 
@@ -97,7 +97,7 @@ Shared record grammar:
 Operator ergonomics:
 
 - Add cold-start and post-compaction resume guidance to workspace entry and
-  summarize it in bootstrap or README only where necessary.
+  summarize it in using-Loom doctrine or README only where necessary.
 - Teach pre-compaction checkpoints without making memory or handoff notes a
   second ledger.
 - Ban generic scratchpads and route observations, hypotheses, execution state,
@@ -132,7 +132,7 @@ Validation and review:
 1. Planning records created and linked: initiative, research, evidence, plan, and
    tickets.
 2. Low-risk drift corrected: `loom-drive` surfaced and README/public diagrams
-   aligned with bootstrap doctrine.
+   aligned with using-Loom doctrine.
 3. Shared grammar hardened: coverage, kinds, IDs, packets, risk/change,
    semantic links, and external refs made coherent.
 4. Operator routes strengthened: resume, compaction, scratchpads, concurrency,
@@ -164,7 +164,7 @@ Wave 1:
 
 - `ticket:0a1106b6` low-risk public and routing alignment. Expected write scope:
   `README.md`, `PROTOCOL.md`, `ARCHITECTURE.md` if needed,
-  `skills/loom-bootstrap/**`, and skill-map/routing references that enumerate
+  `skills/using-loom/**`, and skill-map/routing references that enumerate
   workflow skills. The pass should avoid record grammar changes except where
   necessary to keep references truthful.
 
@@ -190,7 +190,7 @@ Wave 3:
 Wave 4:
 
 - `ticket:1a12d9ff` workspace resume and compaction guidance. Expected write
-  scope: `skills/loom-workspace/**`, `skills/loom-bootstrap/**`,
+  scope: `skills/loom-workspace/**`, `skills/using-loom/**`,
   `skills/loom-drive/**`, `skills/loom-tickets/**`, and `skills/loom-memory/**`.
 - `ticket:233cfdeb` scratchpad, external reference, and concurrency guardrails.
   Expected write scope: `skills/loom-records/**`, `skills/loom-workspace/**`,
@@ -219,8 +219,8 @@ Wave 6:
 - Even the child tickets may be too broad if a surface proves more tangled than
   expected. Mitigation: split explicit follow-up tickets rather than expanding a
   Ralph packet beyond one bounded iteration.
-- README edits could make README appear more authoritative than bootstrap.
-  Mitigation: frame README as product overview and keep bootstrap doctrine as the
+- README edits could make README appear more authoritative than using-Loom.
+  Mitigation: frame README as product overview and keep using-Loom doctrine as the
   operating authority.
 - Grammar edits could silently break existing records. Mitigation: use structural
   queries and explicit transition language for any changed reference shape.

@@ -60,7 +60,7 @@ outcome container so downstream plan and ticket work does not live only in chat.
 
 # In Scope
 
-- Reconcile README, protocol summary, architecture notes, bootstrap doctrine, and
+- Reconcile README, protocol summary, architecture notes, using-Loom doctrine, and
   skills where the same Loom concept is currently framed differently.
 - Surface `loom-drive` as a first-class workflow coordinator wherever skill maps
   and routing summaries enumerate workflow skills.
@@ -93,7 +93,7 @@ outcome container so downstream plan and ticket work does not live only in chat.
 
 # Success Metrics
 
-- OBJ-001: A fresh agent can read README plus `skills/loom-bootstrap` and recover
+- OBJ-001: A fresh agent can read README plus `skills/using-loom` and recover
   the same layer model, canonical/support boundary, and workflow map that the
   skill corpus teaches.
 - OBJ-002: The shared grammar in `loom-records` covers the record, coverage,

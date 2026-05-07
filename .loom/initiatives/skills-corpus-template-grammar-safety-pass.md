@@ -45,7 +45,7 @@ acceptance ownership, sibling packet anchors, and public package boundaries.
 
 - Clarify packet support-artifact lifecycle ownership without making packets own
   project truth.
-- Tighten mandatory critique closure wording in bootstrap doctrine.
+- Tighten mandatory critique closure wording in using-Loom doctrine.
 - Document or simplify drive outer-loop handoff metadata.
 - Split packet source-fingerprint provenance from packet source sets.
 - Remove ticket route-field duplication and acceptance placeholder ambiguity.
@@ -70,7 +70,7 @@ acceptance ownership, sibling packet anchors, and public package boundaries.
 
 - OBJ-001: Packet/support lifecycle wording says packets own their own support
   lifecycle status while not owning project truth or ticket live state.
-- OBJ-002: Bootstrap closure guidance cannot be read as allowing mandatory
+- OBJ-002: using-Loom closure guidance cannot be read as allowing mandatory
   critique to be deferred before closure.
 - OBJ-003: Drive outer-loop handoff metadata is documented or simplified so fresh
   agents do not guess field semantics.

@@ -15,9 +15,9 @@ being stated.
 
 ```text
 claim: <OBJ-001 | ACC-001 | ticket-local criterion>
-state: open | partial | supported | challenged | blocked | accepted_risk | satisfied
+state: open | partially_satisfied | satisfied | blocked | out_of_scope
 current support: <evidence / critique / ticket links>
-gap type: evidence | behavior | implementation | review | explanation | sequencing | decision
+gap type: evidence | behavior | implementation | review | explanation | planning | decision
 owner that can resolve the gap: <constitution | initiative | research | spec | plan | ticket | evidence | critique | wiki>
 operator decision: <decision needed, unsafe-inference reason, and owner record to update; only when human input is required>
 notes: <why this gap matters now>
@@ -64,7 +64,7 @@ matters:
 | Strategic outcome framing, success metrics, or delegated autonomy boundaries must change | update initiative truth |
 | Evidence is missing for a decision or option | update research or evidence, depending on whether synthesis or observation is missing |
 | Intended behavior or acceptance is ambiguous | update spec truth before implementation |
-| Sequencing, dependency order, or tranche boundary is ambiguous | update plan truth |
+| High-level execution shape, sequencing, dependency order, or tranche boundary is ambiguous | update plan truth |
 | No bounded live execution owner exists for the next mutation | create or refine a ticket |
 | A failing behavior or incident needs reproduce-first diagnosis | use debugging before a normal fix |
 | A bounded experiment, prototype, or sketch should inform commitment | run a spike and preserve evidence/research output |
@@ -109,7 +109,8 @@ After each action, reconcile before continuing:
   downstream spec/plan/ticket/wiki owner updates
 - codemap result -> evidence scans, research uncertainty when needed, and accepted
   wiki atlas/page updates
-- evidence -> evidence record and ticket claim matrix
+- evidence -> evidence record and ticket coverage or acceptance view; use a claim
+  matrix only when coverage is complex enough to need one
 - critique -> critique record and ticket critique disposition
 - wiki/retrospective -> wiki/research/spec/plan/initiative/constitution/evidence
   as owner truth requires, plus support-only memory cleanup or owner-record

@@ -3,7 +3,7 @@ id: constitution:main
 kind: constitution
 status: active
 created_at: 2026-03-31T12:00:00Z
-updated_at: 2026-04-30T17:17:21Z
+updated_at: 2026-05-07T19:25:00Z
 scope:
   kind: workspace
 links: {}
@@ -18,7 +18,7 @@ CLI. It is a protocol that turns work into a typed artifact graph, then teaches
 agents how to mutate that graph honestly with ordinary files.
 
 The product surface in this repository is `skills/`, including the mandatory
-`loom-bootstrap` doctrine references, plus skill-local templates and references.
+`using-loom` doctrine references, plus skill-local templates and references.
 Internal examples may visualize routes for maintainers, but they are not loaded
 product context and do not define Loom's ontology.
 
@@ -45,8 +45,8 @@ owns that kind of truth.
   a packet declares read/write/stop/output contracts, a fresh worker executes
   one slice, and the parent reconciles truth back into the ticket and related
   owners.
-- Loom bootstrap doctrine must be loaded before work, either by using
-  `loom-bootstrap` first or by an adapter preloading the same ordered references.
+- Loom using-Loom doctrine must be loaded before work, either by using
+  `using-loom` first or by an adapter preloading the same ordered references.
 - `constitution:main` must be read before starting work so local decisions stay
   aligned with durable project policy.
 - Skills stay flat, self-contained, and subsystem-scoped through Markdown,
@@ -107,7 +107,7 @@ owns that kind of truth.
   doctrine
 
 This repository is a Markdown-first protocol bundle built from skills,
-bootstrap doctrine references, templates, references, and canonical records
+using-Loom doctrine references, templates, references, and canonical records
 rather than from a conventional application stack. Structural completeness
 without instructional clarity is not enough.
 
@@ -140,14 +140,14 @@ primitives sharper without making the system heavier in spirit:
 - internal examples should make the protocol evaluable across harnesses without
   becoming product guidance
 
-Future work should keep bootstrap doctrine, skills, templates, packet contracts,
+Future work should keep using-Loom doctrine, skills, templates, packet contracts,
 validation behavior, and acceptance gates visible in prose and ordinary files
 rather than only inferable from helper code, wrapper conventions, or external work
 systems.
 
 # Current Focus
 
-- keep public docs, bootstrap doctrine, skills, and templates aligned as the
+- keep public docs, using-Loom doctrine, skills, and templates aligned as the
   product-facing protocol corpus
 - keep internal examples consistent with that corpus without treating them as
   product context
@@ -164,7 +164,7 @@ systems.
   critique, wiki, packets, and evidence so maintainers can review protocol shape
   without expanding the product surface
 - keep native harness adapters and external systems clearly secondary to
-  bootstrap doctrine, skills, and canonical records
+  using-Loom doctrine, skills, and canonical records
 
 The immediate quality bar is no longer just that the files exist. The most
 important rules, skills, appendices, and canonical records should read like one
@@ -229,13 +229,16 @@ coherent operating manual.
   procedures into skill references, quarantining optional utility skills, and
   tightening ticket, claim, packet, critique, evidence, structural checks, and
   versioning guidance
-- 2026-04-26: accepted `decision:0005`, moving the mandatory bootstrap doctrine
-  from top-level `rules/` into `skills/loom-bootstrap/references/` so Loom can be
-  distributed primarily as a skills package while preserving optional always-on
-  adapter preload.
+- 2026-04-26: accepted `decision:0005`, moving the mandatory operating doctrine
+  from top-level `rules/` into the skill-packaged ordered references so Loom can
+  be distributed primarily as a skills package while preserving optional
+  always-on adapter preload.
 - 2026-04-26: accepted `decision:0006`, making `skills/` the only product surface
   and removing fallback Makefile, shell installer, and top-level command-wrapper
   distribution paths.
 - 2026-04-30: accepted `decision:0007`, clarifying that product-facing skills
   should favor positive composable structure over exhaustive counterexample
   calibration and that internal examples are not loaded product context.
+- 2026-05-07: reconciled the mandatory entry skill name to `using-loom` across
+  constitutional policy, doctrine, docs, and adapter preload paths while
+  preserving the skills-only product surface.

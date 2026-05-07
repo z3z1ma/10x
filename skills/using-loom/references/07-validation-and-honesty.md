@@ -1,6 +1,6 @@
 # Validation And Honesty
 
-This is an ordered bootstrap reference for the `loom-bootstrap` skill.
+This is an ordered reference for the `using-loom` skill.
 
 Loom is only useful if its records are truthful and its completion claims mean something.
 

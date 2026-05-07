@@ -58,7 +58,7 @@ Challenges:
 
 - ticket:risk0001
 - evidence:evidence-gate-structural-check
-- `after/skills/loom-bootstrap/references/07-validation-and-honesty.md`
+- `after/skills/using-loom/references/07-validation-and-honesty.md`
 
 # Residual Risks
 

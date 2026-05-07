@@ -1,6 +1,6 @@
 # Outer Loop
 
-This is an ordered bootstrap reference for the `loom-bootstrap` skill.
+This is an ordered reference for the `using-loom` skill.
 
 The outer loop is Loom's scoping and framing engine.
 
@@ -15,7 +15,7 @@ Before you compile a packet, start coding, or choose a downstream route, answer 
 3. what larger strategic frame constrains it
 4. what evidence is missing
 5. what behavior is still fuzzy
-6. what sequence makes sense
+6. whether this is small enough for a ticket or complex enough to need planning
 7. what is the next bounded ticket-sized step
 
 If you cannot answer those, you are not ready for the inner loop yet.
@@ -32,7 +32,7 @@ Use it like this:
 - create or refine an **initiative** when the outcome is strategic and cross-cutting
 - create **research** when the work needs investigation before committing
 - create a **spec** when intended behavior is unclear or acceptance is fuzzy
-- create a **plan** when sequencing matters
+- create a **plan** when complex change needs high-level planning before tickets
 - create a **ticket** when one bounded execution owner is needed
 
 Not every task needs every layer.
@@ -87,12 +87,18 @@ Specs turn "I think we mean X" into "the project currently intends X".
 
 Add or update a plan when:
 
-- the order of work matters
+- the change is complex enough that jumping straight to tickets would force the
+  agent to guess the shape of the work
 - one ticket is not enough
+- the order of work matters
 - rollout strategy matters
 - there are dependencies or phases that future tickets should inherit
 
-Plans are execution strategy, not execution truth.
+Plans are for planning. They own the high-level shape of complex change:
+decomposition, sequencing, dependencies, phases, rollout, milestones, execution
+waves, and strategy that future tickets should inherit. Once the plan is clear,
+create tickets that go into the bounded execution detail for each planned slice.
+Plans are not live execution ledgers.
 
 ## Decomposition Rule
 
@@ -131,7 +137,7 @@ Typical loopbacks:
 
 - Ralph -> research when evidence or tradeoffs are missing
 - Ralph -> spec when intended behavior is ambiguous
-- Ralph -> plan when sequencing is wrong
+- Ralph -> plan when the high-level execution shape or sequencing is wrong
 - Ralph -> ticket refinement when the execution owner is too wide or stale
 - Ralph -> initiative when objective or autonomy framing was missing
 - Ralph -> constitution in rare architectural or policy cases

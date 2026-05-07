@@ -57,7 +57,7 @@ to cite objective criteria.
 # Milestones
 
 Outcome-level checkpoints for the strategic result. Do not use these as roadmap
-policy commitments, plan sequencing details, or ticket progress logs.
+policy commitments, plan strategy details, or ticket progress logs.
 
 # Dependencies
 

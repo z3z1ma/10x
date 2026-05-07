@@ -26,7 +26,7 @@ Decision records and roadmap records are first-class constitutional artifacts, n
 
 Roadmaps express durable strategic direction and policy-level milestones.
 
-They do not replace initiative success metrics, plan sequencing milestones, or
+They do not replace initiative success metrics, plan strategy milestones, or
 ticket execution state. If a roadmap starts tracking day-to-day progress, route
 that detail down into initiatives, plans, or tickets.
 

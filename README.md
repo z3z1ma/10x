@@ -137,7 +137,7 @@ Each form asks the agent to do a different kind of work:
 
 - specs force intended behavior to become explicit
 - research forces uncertainty, tradeoffs, failed paths, and null results to be preserved
-- plans force sequencing and dependency structure
+- plans force high-level complex changes to become decomposed into ticket-ready work
 - tickets force scope, acceptance, blockers, current state, and closure disposition
 - evidence forces observed output to be separated from model claims
 - critique forces adversarial review and residual risk to be stated directly
@@ -192,7 +192,7 @@ flowchart TB
   B -->|outcome, success metric| I["initiative"]
   B -->|uncertainty, tradeoff, experiment| R["research"]
   B -->|intended behavior, acceptance contract| S["spec"]
-  B -->|sequence, rollout, dependency| P["plan"]
+  B -->|complex change, decomposition, sequence, rollout| P["plan"]
   B -->|live scoped work| T["ticket"]
   B -->|observed output, test, log, screenshot| E["evidence"]
   B -->|review, concern, residual risk| Q["critique"]
@@ -295,7 +295,7 @@ A second demo can show the downstream benefit:
 In a skills-aware harness, you usually should not need magic words. If a cold session does not route automatically, a nudge is fine:
 
 ```text
-Use loom-bootstrap, then continue from the project records.
+Use using-loom, then continue from the project records.
 ```
 
 The point is not that a worker can survive without chat history.
@@ -326,7 +326,7 @@ After install, work normally. Loom is designed to be discovered by the agent whe
 Explicit prompts are escape hatches, not the main UX. They are useful when you want to prod a cold session, force repair, or make the owner/workflow choice visible:
 
 ```text
-Use loom-bootstrap, then continue from the project records.
+Use using-loom, then continue from the project records.
 ```
 
 ```text
@@ -409,7 +409,7 @@ For software work:
 - initiatives own strategic outcomes and success framing
 - research records own investigations, tradeoffs, experiments, rejected paths, and null results
 - specs own intended behavior and acceptance contracts
-- plans own sequencing and rollout strategy
+- plans own high-level complex-change planning, decomposition, sequencing, and rollout strategy
 - tickets own live execution state and acceptance disposition
 - evidence owns observed validation
 - critique owns adversarial review and residual risk
@@ -432,7 +432,7 @@ Canonical owner layers own durable project work products:
 | `initiative` | Strategic outcomes, success metrics, cross-cutting result framing |
 | `research` | Investigations, tradeoffs, experiments, rejected paths, null results, evidence synthesis |
 | `spec` | Intended behavior, requirements, scenarios, acceptance contracts |
-| `plan` | Execution strategy, decomposition, sequencing, rollout |
+| `plan` | High-level complex-change planning, decomposition, sequencing, rollout |
 | `ticket` | Live execution state, scoped work, blockers, acceptance disposition, closure |
 | `evidence` | Observed artifacts, validation output, reproduction steps, logs, screenshots, scan results |
 | `critique` | Adversarial findings, review verdicts, residual risk |
@@ -464,7 +464,7 @@ Use this table as orientation, not as a script to dump into records.
 | --- | --- |
 | Missing understanding | `research` |
 | Unclear intended behavior | `spec` |
-| Unclear sequencing | `plan` |
+| Complex change needing decomposition, sequencing, or rollout planning | `plan` |
 | Live scoped work | `ticket` |
 | Observed output or validation | `evidence` |
 | Review pressure, concern, or residual risk | `critique` |
@@ -767,7 +767,7 @@ Markdown also matters because humans can inspect it. A record that cannot be rev
 
 Optional utilities may validate, project, or summarize state. They do not define Loom semantics.
 
-Harness adapters may preload bootstrap references where a harness supports it cleanly. That is an adapter optimization over the same skill package, not a second doctrine source.
+Harness adapters may preload using-Loom references where a harness supports it cleanly. That is an adapter optimization over the same skill package, not a second doctrine source.
 
 The protocol is the corpus.
 
@@ -784,7 +784,7 @@ It is not a runtime, service, daemon, MCP server, product CLI, workflow engine, 
 Included:
 
 - `skills/`, the package product surface and canonical Loom skill corpus
-- `loom-bootstrap`, the entry skill that anchors the rest of the package
+- `using-loom`, the entry skill that anchors the rest of the package
 - project-owner skills for constitution, initiatives, research, specs, plans, tickets, evidence, critique, and wiki
 - the `loom-memory` support skill for optional recall without shadow truth
 - workflow skills for workspace entry, records, `loom-drive` objective/workflow driving, Ralph, Git, debugging, spike, codemap, ship, retrospective, and skill authoring
@@ -803,14 +803,14 @@ The product surface is `skills/`: the skills are the protocol in operational for
 
 | Skill | Role |
 | --- | --- |
-| `loom-bootstrap` | Entry doctrine and Loom operating posture; usually reached automatically through skills |
+| `using-loom` | Entry doctrine and Loom operating posture; usually reached automatically through skills |
 | `loom-workspace` | Workspace entry, structure check, common-task routing, first owner/workflow decision |
 | `loom-records` | IDs, frontmatter, typed links, status, validation, repair |
 | `loom-constitution` | Project identity, constraints, decisions, roadmap direction |
 | `loom-initiatives` | Strategic outcomes and success framing |
 | `loom-research` | Reusable discovery, experiments, tradeoffs, null results |
 | `loom-specs` | Intended behavior and acceptance contracts |
-| `loom-plans` | Sequencing, decomposition, rollout strategy |
+| `loom-plans` | High-level complex-change planning, decomposition, sequencing, rollout |
 | `loom-tickets` | Live execution ledger and acceptance gate |
 | `loom-evidence` | Observed artifacts and claim support or challenge |
 | `loom-critique` | Adversarial review, findings, verdicts, residual risk |

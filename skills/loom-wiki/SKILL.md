@@ -92,7 +92,7 @@ You can add more page types if the project genuinely needs them.
 | Rationalization | Reality |
 | --- | --- |
 | "This explanation is well written, so it can be trusted." | Wiki pages are trusted because they are grounded in accepted owner truth, evidence, and critique outcomes. |
-| "The wiki can say what should happen next." | Tickets own live execution and plans own sequencing. Wiki explains accepted understanding. |
+| "The wiki can say what should happen next." | Tickets own live execution and plans own complex-change strategy. Wiki explains accepted understanding. |
 | "We should promote every useful note." | Promote repeated, reusable, or accepted understanding. Do not turn wiki into transcript residue. |
 
 ## Red Flags

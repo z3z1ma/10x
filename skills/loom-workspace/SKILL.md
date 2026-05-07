@@ -31,8 +31,8 @@ inspect the workspace directly, make structural trust explicit, then route to th
 
 When Loom is present and the repo looks structurally plausible:
 
-1. load `loom-bootstrap` doctrine, or confirm the harness preloaded the ordered
-   bootstrap references
+1. load `using-loom` doctrine, or confirm the harness preloaded the ordered
+   using-Loom references
 2. inspect `.loom/`
 3. read `constitution:main`
 4. for cold-start or post-compaction recovery, discover active tickets and other

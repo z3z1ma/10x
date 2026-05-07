@@ -57,7 +57,7 @@ had the cited ambiguity, or still used the risky copy/template shape.
 - `skills/loom-drive/references/tranche-decision-protocol.md`
 - `skills/loom-workspace/references/routing.md`
 - `skills/loom-records/references/validation.md`
-- `skills/loom-bootstrap/references/06-filesystem-and-tooling.md`
+- `skills/using-loom/references/06-filesystem-and-tooling.md` (renamed entry-skill path)
 - `skills/loom-research/templates/research.md`
 - `skills/loom-research/references/source-handling.md`
 - `skills/loom-records/references/packet-frontmatter.md`
@@ -79,7 +79,7 @@ Validated findings:
 - Drive tranche route priority still groups `wiki` and `retrospective` in one row.
 - Workspace routing still mixes route-token rows with skill-name-only rows.
 - Record validation guidance lacks a saved-record placeholder scan and rule.
-- Bootstrap filesystem/tooling still includes a copyable here-doc path containing
+- using-Loom filesystem/tooling still includes a copyable here-doc path containing
   `<slug>`.
 - Research template `# Sources` remains prose-only despite stronger source
   handling guidance elsewhere.

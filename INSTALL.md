@@ -10,16 +10,16 @@ The intended install pattern:
 
 1. Install or expose `skills/` as the Loom package.
 2. Keep skill names and descriptions from `skills/*/SKILL.md` visible to the harness.
-3. Use `loom-bootstrap` first unless the same ordered doctrine is already loaded by an adapter.
+3. Use `using-loom` first unless the same ordered doctrine is already loaded by an adapter.
 4. Hydrate the task-specific skill when that skill owns the next truth change.
 5. Let the model read templates and references from that skill as needed.
 
-`loom-bootstrap` is mandatory. It is the entry skill that loads Loom's ordered doctrine and routes the agent into the right owner skill.
+`using-loom` is mandatory. It is the entry skill that loads Loom's ordered doctrine and routes the agent into the right owner skill.
 
 When a harness has an `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, user rules, or a similar instruction surface, point it at the skill rather than copying doctrine:
 
 ```md
-Loom is active in this workspace. Before any work, use the `loom-bootstrap` skill unless Loom's ordered bootstrap doctrine is already loaded in the current context. After bootstrap, route work through the Loom skill that owns the next truth change.
+Loom is active in this workspace. Before any work, use the `using-loom` skill unless Loom's ordered using-Loom doctrine is already loaded in the current context. After using-loom, route work through the Loom skill that owns the next truth change.
 ```
 
 That instruction is a pointer, not a new source of truth.
@@ -41,7 +41,7 @@ Then configure your harness to see:
 Start every Loom session with:
 
 ```text
-Use the loom-bootstrap skill. Then route the work through the Loom skill that owns the next truth change.
+Use the using-loom skill. Then route the work through the Loom skill that owns the next truth change.
 ```
 
 ## Claude Code
@@ -74,9 +74,9 @@ claude plugin validate /absolute/path/to/agent-loom
 
 The repository includes a Claude Code plugin manifest at `.claude-plugin/plugin.json` and a local marketplace catalog at `.claude-plugin/marketplace.json`.
 
-The plugin exposes canonical `skills/` directly from the repository root and declares `claude-hooks/hooks.json` as its Claude hook config. Loom uses that hook surface to emit the ordered `loom-bootstrap` references as same-session `SessionStart` hook stdout.
+The plugin exposes canonical `skills/` directly from the repository root and declares `claude-hooks/hooks.json` as its Claude hook config. Loom uses that hook surface to emit the ordered `using-loom` references as same-session `SessionStart` hook stdout.
 
-The hook preload is a convenience. The canonical surface remains `skills/`, especially `skills/loom-bootstrap`.
+The hook preload is a convenience. The canonical surface remains `skills/`, especially `skills/using-loom`.
 
 ## OpenCode
 
@@ -110,7 +110,7 @@ node open-loom.mjs --smoke
 
 This repository includes the `open-loom` OpenCode plugin at `open-loom.mjs`. It requires OpenCode `>=1.14.22 <2`.
 
-`open-loom` registers the bundled skill root with `config.skills.paths` and adds ordered `loom-bootstrap` references to `config.instructions`.
+`open-loom` registers the bundled skill root with `config.skills.paths` and adds ordered `using-loom` references to `config.instructions`.
 
 ## Codex
 
@@ -124,7 +124,7 @@ Codex currently requires opening `/plugins` after marketplace registration to in
 
 This repository includes a Codex plugin manifest at `.codex-plugin/plugin.json` and a marketplace catalog at `.agents/plugins/marketplace.json`. The plugin exposes canonical `skills/` directly from the repository root and is shaped for a Git-backed remote marketplace entry.
 
-Current evidence still needs installed plugin skill-discovery validation for `loom-bootstrap`, so this is not yet a broadly accepted Codex release path. The repository `.codex/` hook fixture proves optional trusted project preload of bootstrap references. It is not the product install path.
+Current evidence still needs installed plugin skill-discovery validation for `using-loom`, so this is not yet a broadly accepted Codex release path. The repository `.codex/` hook fixture proves optional trusted project preload of using-Loom references. It is not the product install path.
 
 ## Cursor
 
@@ -173,41 +173,41 @@ gemini extensions validate /absolute/path/to/agent-loom
 
 This repository includes a Gemini CLI extension manifest at `gemini-extension.json`.
 
-The extension exposes canonical `skills/` and uses `contextFileName` to load `gemini-bootstrap.md`, which imports the ordered `skills/loom-bootstrap/references/*.md` files with Gemini's native context import syntax.
+The extension exposes canonical `skills/` and uses `contextFileName` to load `gemini-bootstrap.md`, which imports the ordered `skills/using-loom/references/*.md` files with Gemini's native context import syntax.
 
-The context preload is a convenience. The canonical surface remains `skills/`, especially `skills/loom-bootstrap`.
+The context preload is a convenience. The canonical surface remains `skills/`, especially `skills/using-loom`.
 
 ## Bootstrap references
 
-`loom-bootstrap` reads these references in order:
+`using-loom` reads these references in order:
 
-1. `skills/loom-bootstrap/references/01-core-identity.md`
-2. `skills/loom-bootstrap/references/02-truth-and-authority.md`
-3. `skills/loom-bootstrap/references/03-outer-loop.md`
-4. `skills/loom-bootstrap/references/04-ralph-inner-loop.md`
-5. `skills/loom-bootstrap/references/05-critique-and-wiki.md`
-6. `skills/loom-bootstrap/references/06-filesystem-and-tooling.md`
-7. `skills/loom-bootstrap/references/07-validation-and-honesty.md`
-8. `skills/loom-bootstrap/references/08-trust-boundaries.md`
+1. `skills/using-loom/references/01-core-identity.md`
+2. `skills/using-loom/references/02-truth-and-authority.md`
+3. `skills/using-loom/references/03-outer-loop.md`
+4. `skills/using-loom/references/04-ralph-inner-loop.md`
+5. `skills/using-loom/references/05-critique-and-wiki.md`
+6. `skills/using-loom/references/06-filesystem-and-tooling.md`
+7. `skills/using-loom/references/07-validation-and-honesty.md`
+8. `skills/using-loom/references/08-trust-boundaries.md`
 
-If a native adapter preloads those references, the agent can proceed directly into Loom routing. Otherwise, use `loom-bootstrap` before work starts.
+If a native adapter preloads those references, the agent can proceed directly into Loom routing. Otherwise, use `using-loom` before work starts.
 
 ## First workspace prompt
 
 After installing Loom in a project, start with a small initialization request:
 
 ```text
-Use loom-bootstrap. Then inspect this repository with loom-workspace and create the minimum Loom records needed to track the current work honestly.
+Use using-loom. Then inspect this repository with loom-workspace and create the minimum Loom records needed to track the current work honestly.
 ```
 
 For a specific project goal:
 
 ```text
-Use loom-bootstrap. I want to work on: <goal>. Route through the Loom owner layer that should change first, and do not create extra records unless the graph needs them.
+Use using-loom. I want to work on: <goal>. Route through the Loom owner layer that should change first, and do not create extra records unless the graph needs them.
 ```
 
 For implementation work that already has a ticket:
 
 ```text
-Use loom-bootstrap and loom-tickets. Compile a Ralph packet for the next bounded implementation step. Include the upstream records the worker needs, the write scope, stop conditions, and the output contract.
+Use using-loom and loom-tickets. Compile a Ralph packet for the next bounded implementation step. Include the upstream records the worker needs, the write scope, stop conditions, and the output contract.
 ```

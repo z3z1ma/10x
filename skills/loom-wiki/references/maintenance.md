@@ -15,6 +15,8 @@ Update a page when:
 - `accepted` when aligned with accepted owner truth
 - `stale` when still useful but out of date
 - `superseded` when replaced by a better page
+- `retired` when the page should no longer be used and no successor page is the
+  right maintenance shape
 
 ## Related pages
 

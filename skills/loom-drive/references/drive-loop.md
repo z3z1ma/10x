@@ -110,7 +110,7 @@ critique can then cite those IDs when judging whether the drive should continue.
   initiative
 - missing evidence, options, tradeoffs, rejected paths -> research
 - intended behavior and reusable acceptance contract -> spec
-- sequencing, rollout, and tranche strategy -> plan
+- complex-change planning, decomposition, sequencing, rollout, and tranche strategy -> plan
 - live execution, blockers, next move, closure -> ticket
 - bounded child implementation contract -> packet through Ralph
 - observed artifacts and validation output -> evidence
@@ -194,7 +194,7 @@ For each ticket or follow-up:
 - use ship when already-truthful work needs PR, merge, release, or handoff
   packaging without closing the ticket
 - update constitution/initiative/research/spec/plan when execution reveals missing
-  authority, strategic framing, evidence, behavior, or sequencing truth
+  authority, strategic framing, evidence, behavior, or planning truth
 
 Before launching child work, declare target, read scope, write scope, stop
 conditions, verification posture, and output contract. After return, reconcile
@@ -224,7 +224,7 @@ After each ticket or tranche, the parent checks:
 Record the reassessment where it belongs before continuing:
 
 - initiative status summary for objective-level satisfaction and remaining gaps
-- plan strategy snapshot for tranche-level sequencing changes
+- plan strategy or execution-unit updates for tranche-level planning changes
 - ticket journal, critique disposition, and acceptance decision for live execution
   and closure state
 - evidence and critique links for support or blockers

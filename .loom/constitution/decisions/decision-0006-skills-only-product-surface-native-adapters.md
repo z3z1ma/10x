@@ -3,7 +3,7 @@ id: decision:0006
 kind: decision
 status: active
 created_at: 2026-04-26T07:04:10Z
-updated_at: 2026-04-26T07:04:10Z
+updated_at: 2026-05-07T19:25:00Z
 scope:
   kind: repository
   repositories:
@@ -26,14 +26,14 @@ or top-level command-wrapper package as the product. Harness integrations should
 use each harness's native plugin, extension, or skill-package system to expose the
 same canonical `skills/` directory.
 
-Native adapters may preload `skills/loom-bootstrap/references/` when the harness
+Native adapters may preload `skills/using-loom/references/` when the harness
 supports that cleanly. Preload is a bonus over the skill package, not a fallback
 install path and not a second source of doctrine.
 
 # Why This Decision Exists
 
 `decision:0005` made Loom's mandatory doctrine part of the skill package through
-`loom-bootstrap`. That removes the need for a separate installer whose job is to
+`using-loom`. That removes the need for a separate installer whose job is to
 copy rules into harness-specific instruction locations.
 
 Every target coding harness has or is expected to have a first-class way to
@@ -57,7 +57,7 @@ Loom simple, portable, and inspectable.
 - `Makefile` and `scripts/install-loom.sh` are removed.
 - Top-level `commands/` is removed from the product surface.
 - Native manifests and plugins should expose `skills/`; OpenCode and Claude may
-  additionally preload `loom-bootstrap` references.
+  additionally preload `using-loom` references.
 - Public install docs should teach native harness installs only.
 - Adapter examples should describe native plugin/skill-package behavior, not
   fallback copy installers.
@@ -68,7 +68,7 @@ Loom simple, portable, and inspectable.
 # Revisit Conditions
 
 Revisit if a target harness removes first-class skill/plugin distribution, or if
-empirical use shows that a skill-only product surface cannot make `loom-bootstrap`
+empirical use shows that a skill-only product surface cannot make `using-loom`
 discoverable enough for safe operation.
 
 # Supersession

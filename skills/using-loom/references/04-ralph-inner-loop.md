@@ -1,6 +1,6 @@
 # Ralph Inner Loop
 
-This is an ordered bootstrap reference for the `loom-bootstrap` skill.
+This is an ordered reference for the `using-loom` skill.
 
 Ralph is Loom's implementation loop.
 
@@ -230,7 +230,7 @@ packet child write scopes do not overlap.
 
 If shared migrations, generated files, lockfiles, stateful resources, or
 ambiguous ownership could make two packets interfere, run them sequentially or
-return to planning.
+return to planning before compiling more packets.
 
 ## The Working Pad Principle
 

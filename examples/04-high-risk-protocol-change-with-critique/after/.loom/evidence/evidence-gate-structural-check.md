@@ -26,7 +26,7 @@ Structural evidence for the high-risk evidence-gate protocol change fixture.
 
 # Artifacts
 
-- `after/skills/loom-bootstrap/references/07-validation-and-honesty.md`
+- `after/skills/using-loom/references/07-validation-and-honesty.md`
 - ticket:risk0001
 - critique:evidence-gate-review
 

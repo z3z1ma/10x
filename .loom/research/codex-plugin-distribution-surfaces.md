@@ -3,7 +3,7 @@ id: research:codex-plugin-distribution-surfaces
 kind: research
 status: active
 created_at: 2026-04-26T01:43:51Z
-updated_at: 2026-04-26T07:23:57Z
+updated_at: 2026-05-07T19:30:00Z
 scope:
   kind: repository
   repositories:
@@ -48,7 +48,7 @@ external_refs:
 # Question
 
 Can Loom deliver a complete remote Codex install where normal users add the Loom
-plugin and get `loom-bootstrap` plus canonical subsystem skills, without
+plugin and get `using-loom` plus canonical subsystem skills, without
 pretending Codex plugins own more than current docs and source prove?
 
 # Why This Matters
@@ -62,7 +62,7 @@ always-on context preload.
 
 The product goal is remote install for normal Codex users, not a cloned-repository
 or project-local proof. `decision:0005` changes the completeness bar: a remote
-plugin can be complete when it exposes the mandatory `loom-bootstrap` skill and
+plugin can be complete when it exposes the mandatory `using-loom` skill and
 the harness/user instruction tells agents to use it first. A repository-local
 `.codex/hooks.json` remains useful as an optional preload proof, not the release
 boundary.
@@ -126,7 +126,7 @@ Repository sources:
 - `ticket:p9m4x2qt`
 - superseded installer history
 - `INSTALL.md`
-- `skills/loom-bootstrap/references/*.md` and `skills/*/SKILL.md`
+- `skills/using-loom/references/*.md` and `skills/*/SKILL.md`
 
 External sources are listed in frontmatter under `external_refs`.
 
@@ -141,8 +141,8 @@ Local observations:
   `plugins stable true`.
 - A `SessionStart` hook probe returned hidden value `718293` from plain hook
   stdout in model-visible context.
-- A repository `.codex/hooks.json` startup probe saw all seven `LOOM_RULE_FILE`
-  rule markers and quoted `A child assertion is not enough.` from
+- A repository `.codex/hooks.json` startup probe saw all then-current
+  `LOOM_RULE_FILE` rule markers and quoted `A child assertion is not enough.` from
   `07-validation-and-honesty.md`.
 - A temp `CODEX_HOME` `codex plugin marketplace add` run registered the local
   `agent-loom` marketplace from the repository root.
@@ -153,8 +153,8 @@ Local observations:
   `[plugins.<marketplace/plugin>.enabled]`; plugin loading reads skills, MCP, and
   apps from the installed cache copy, while hook discovery reads active config
   layers and managed hook requirements, not installed plugin manifests.
-- The former top-level rule corpus is now the seven ordered
-  `loom-bootstrap` references.
+- The former top-level rule corpus is now the eight ordered `using-loom`
+  references.
 
 # Evidence
 
@@ -324,7 +324,7 @@ global instruction layer. Official `AGENTS.md` docs describe the discovery chain
   `AGENTS.md`, then configured fallback filenames
 - project docs stop at `project_doc_max_bytes`, documented as 32 KiB by default
 
-Official Codex hooks docs prove a better optional preload route for Loom bootstrap
+Official Codex hooks docs prove a better optional preload route for Loom using-Loom
 references than mirroring the full corpus into `AGENTS.md`: Codex discovers hooks from
 `hooks.json` files or inline `[hooks]` tables next to active config layers, and
 plain `SessionStart` stdout is added as extra developer context. The current
@@ -339,16 +339,16 @@ persisting only an enabled flag under user plugin config. Hook discovery walks
 config layers and managed hook requirements, not installed plugin cache roots.
 
 That makes the current hook shape a useful optional context-preload proof, not the
-remote product boundary. A remote `loom` plugin can package `loom-bootstrap`; the
+remote product boundary. A remote `loom` plugin can package `using-loom`; the
 mandatory first-use instruction should point agents there when hooks are not
 preloading context.
 
 The former Loom rule corpus measured 45,588 bytes before moving into
-`loom-bootstrap` references. A project-local strategy that blindly mirrors all
-bootstrap references into project `AGENTS.md` risks colliding with the documented
+skill-packaged using-Loom references. A project-local strategy that blindly mirrors all
+using-Loom references into project `AGENTS.md` risks colliding with the documented
 32 KiB default project-doc budget. A global `~/.codex/AGENTS.md` managed block may
 still work differently, but implementation work should observe rather than assume
-full bootstrap loading.
+full using-Loom loading.
 
 ## Hooks, Commands, And Agents
 
@@ -366,7 +366,7 @@ The plugin surface has inconsistencies that matter for Loom:
 This means Loom should not depend on plugin-owned hooks, plugin commands, or
 plugin agents for the Codex first-class install path until the target Codex
 CLI/runtime version proves those fields are loaded and supported. Codex hooks are
-still viable for optional bootstrap preload when installed as user, managed, or
+still viable for optional using-Loom preload when installed as user, managed, or
 trusted project config-layer hooks. Command wrappers are not part of the current
 product surface.
 
@@ -377,7 +377,7 @@ product surface.
 Rejected under the pre-`decision:0005` model because official docs and inspected
 source do not show plugins owning Codex's always-on instruction or hook loading
 chain. `decision:0005` supersedes this rejection by moving mandatory doctrine
-into `loom-bootstrap`, making installed skill discovery the key question instead
+into `using-loom`, making installed skill discovery the key question instead
 of plugin-owned hooks.
 
 ## Plugin-Owned Hooks As Rule Context
@@ -415,23 +415,23 @@ product shape. Codex work should validate plugin skill discovery instead.
 # Conclusions
 
 Codex has a real first-class plugin distribution surface for Loom's reusable
-workflow skills and a real `SessionStart` hook surface for optional bootstrap
+workflow skills and a real `SessionStart` hook surface for optional using-Loom
 preload. Together they are strong enough for a Codex native-plugin proof, not a
 fallback copy installer.
 
 After `decision:0005`, Codex plugins can be a complete Loom package if installed
-plugin skill discovery exposes `loom-bootstrap` and the other Loom skills. The
+plugin skill discovery exposes `using-loom` and the other Loom skills. The
 evidence-backed split is:
 
-- plugin package: `loom-bootstrap` plus canonical Loom subsystem skills through a
+- plugin package: `using-loom` plus canonical Loom subsystem skills through a
   repository-root plugin manifest and a Git-backed marketplace entry, optional
   future MCP/app metadata if a later ticket needs it
-- Codex hook config: optional ordered preload of `loom-bootstrap` references
+- Codex hook config: optional ordered preload of `using-loom` references
   through trusted project or user-level `SessionStart` hooks when explicitly
   configured outside the product package
 
 The current implementation should stay scoped as a prototype/proof fixture until
-installed Git-backed plugin skill discovery proves `loom-bootstrap` is available
+installed Git-backed plugin skill discovery proves `using-loom` is available
 and operator guidance makes it mandatory first-use.
 
 # Recommendations
@@ -441,8 +441,8 @@ and operator guidance makes it mandatory first-use.
    `.agents/plugins/marketplace.json` exposes an `agent-loom` marketplace with a
    Git-backed repository-root plugin entry.
 2. Do not treat `.codex/hooks.json` as product packaging. Keep it only as a
-   trusted project-local proof of optional bootstrap-reference preload.
-3. Validate installed Git-backed plugin discovery for `loom-bootstrap` before
+   trusted project-local proof of optional using-Loom-reference preload.
+3. Validate installed Git-backed plugin discovery for `using-loom` before
    accepting Codex remote packaging.
 4. Do not put generated command adapter skills into canonical top-level `skills/`;
    revisit command folding separately.
@@ -454,10 +454,10 @@ and operator guidance makes it mandatory first-use.
 
 # Open Questions
 
-- Does installed Git-backed plugin discovery expose `loom-bootstrap` in the target
+- Does installed Git-backed plugin discovery expose `using-loom` in the target
   Codex runtime, and what explicit invocation or selector shape should docs teach?
 - Should the Codex plugin include a minimal user-facing default prompt that points
-  at `loom-bootstrap` before other Loom work?
+  at `using-loom` before other Loom work?
 - Should a future release artifact copy the repository-root Codex plugin shape
   directly, or publish a narrower derivative package that excludes dogfooding
   records and unsupported surfaces?

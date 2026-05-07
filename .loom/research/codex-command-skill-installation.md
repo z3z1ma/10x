@@ -23,7 +23,7 @@ links:
 This research is historical. `decision:0006` removes top-level command wrappers
 and fallback installers from the product surface. Codex work should now validate
 native plugin skill discovery for canonical `skills/`, especially
-`loom-bootstrap`, rather than generating `loom-command-*` adapter skills from a
+`using-loom`, rather than generating `loom-command-*` adapter skills from a
 top-level `commands/` directory.
 
 # Question

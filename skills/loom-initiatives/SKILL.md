@@ -33,7 +33,7 @@ discovery and future retention or cleanup decisions.
 
 Initiative milestones are outcome checkpoints for a strategic result.
 
-They are not constitutional roadmap commitments, plan sequencing details, or
+They are not constitutional roadmap commitments, plan strategy details, or
 ticket progress logs. Use them to show whether the broader outcome is advancing,
 then let plans own execution order and tickets own live state.
 
@@ -76,7 +76,7 @@ A strong initiative answers:
 - broad outcome lacks non-goals, delegated authority, or stop conditions when drive work depends on it
 - milestones read like a ticket progress log
 - downstream plan/ticket graph is invisible
-- initiative duplicates plan sequencing or ticket execution detail
+- initiative duplicates plan strategy or ticket execution detail
 
 ## Verification
 

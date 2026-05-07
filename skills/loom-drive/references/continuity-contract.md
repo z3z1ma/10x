@@ -17,7 +17,7 @@ Use this map before launching tickets or child work.
 | `# Delegated Authority / Autonomy Boundaries` and `# Objective-Level Stop Conditions` for delegated drive work | initiative |
 | evidence gaps, options, rejected approaches, conclusions | research |
 | intended product behavior, reusable acceptance IDs | spec |
-| tranche strategy, sequencing, dependencies, execution waves | plan |
+| complex-change planning, decomposition, tranche strategy, sequencing, dependencies, rollout, execution waves | plan |
 | live state, blockers, scoped coverage, journaled progress | ticket |
 | evidence disposition, critique disposition, acceptance decision | ticket |
 | bounded child context, source snapshot, read/write scope, output contract | packet or bounded handoff |
@@ -61,7 +61,7 @@ Recommended locations:
 | Owner record | Put the snapshot here |
 | --- | --- |
 | initiative | `# Status Summary`, plus criterion IDs under `# Success Metrics` |
-| plan | `# Strategy Snapshot` and `# Execution Waves` |
+| plan | `# Strategy`, `# Execution Units / Ticket Slices`, and `# Execution Waves` when waves are needed |
 | ticket | `# Acceptance`, optional `# Claim Matrix`, `# Current State`, `# Evidence`, `# Review And Follow-Through`, `# Acceptance Decision`, and `# Journal` |
 | packet or handoff | frontmatter/source snapshot plus output contract and parent merge notes |
 | evidence | `# Supports Claims` and `# Challenges Claims` |
@@ -72,7 +72,7 @@ making the initiative own live ticket execution:
 
 ```text
 drive objective: <initiative id and one-sentence objective>
-objective criteria: <OBJ-IDs with satisfied | partial | open | blocked>
+objective criteria: <OBJ-IDs with satisfied | partially_satisfied | open | blocked | out_of_scope>
 current tranche: <plan milestone / wave / purpose>
 active tickets: <ticket IDs and states>
 evidence state: <claim IDs with evidence links or gaps>
@@ -83,7 +83,7 @@ handoff note: <optional prose when stopping or handing off; omit when records ar
 
 Do not add saved workflow-choice fields to the snapshot. A fresh parent should infer the
 next action from owner facts, blockers, evidence, critique disposition, acceptance
-state, plan sequencing, and ticket journals. If that is not possible, repair the
+state, plan strategy, and ticket journals. If that is not possible, repair the
 owner records instead of adding a token.
 
 Do not duplicate this full block everywhere. Put each fact in the owner record
@@ -139,8 +139,9 @@ or blocker rationale instead of serialized stop workflow fields.
 
 Put the answer in the layer that owns it. For example, objective-level status
 belongs in the initiative, live execution and acceptance state belong in the
-ticket, critique findings and verdicts belong in critique, and sequencing changes
-belong in the plan. Drive snapshots cite those owners; they do not own acceptance.
+ticket, critique findings and verdicts belong in critique, and complex-change
+strategy or sequencing changes belong in the plan. Drive snapshots cite those
+owners; they do not own acceptance.
 
 If work continues, the plan or ticket chain should make the next tranche legible.
 If a user decision is needed, record the decision needed, why the agent cannot

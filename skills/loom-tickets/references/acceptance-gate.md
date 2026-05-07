@@ -64,8 +64,9 @@ Acceptance Dossier =
   needed?
 - Is critique policy explicit enough for this change class and risk class?
 - When critique policy requires profiles, are those profiles complete?
-- If critique is mandatory, does required critique exist and do all open
-  medium/high findings have ticket-owned dispositions of `resolved`,
+- If critique is mandatory, is there a `final` critique record with explicit
+  verdict, evidence reviewed, residual risks, and acceptance recommendation, and
+  do all open medium/high findings have ticket-owned dispositions of `resolved`,
   `accepted_risk`, `superseded`, or `converted_to_follow_up`?
 - If critique is recommended but not performed, does the ticket record why it
   was deferred or intentionally not needed before closure?

@@ -18,7 +18,7 @@ Use records this way:
 
 - tickets own live execution state, blockers, scoped acceptance, evidence
   disposition, critique disposition, acceptance decisions, and journal history
-- plans own sequencing and tranche strategy
+- plans own complex-change planning, decomposition, sequencing, and tranche strategy
 - specs own intended behavior and reusable acceptance contracts
 - research owns investigations, options, conclusions, and null results
 - evidence owns observed artifacts and support/challenge links
@@ -57,7 +57,7 @@ These are reasoning cues, not values to save in a field:
 | objective framing, success metrics, delegated autonomy, or cross-ticket outcome ownership | `loom-initiatives` |
 | evidence synthesis, tradeoffs, rejected paths, options, or null results | `loom-research` |
 | intended behavior, requirements, scenarios, or reusable acceptance criteria | `loom-specs` |
-| sequencing, dependency order, tranche strategy, or rollout | `loom-plans` |
+| complex-change planning, decomposition, sequencing, dependency order, tranche strategy, or rollout | `loom-plans` |
 | live bounded execution state, blockers, scoped acceptance, critique/evidence disposition, or closure | `loom-tickets` |
 | one bounded implementation handoff needing explicit read/write scope and fresh context | `loom-ralph` packet |
 | observed outputs, validation artifacts, logs, screenshots, scans, or reproduction evidence | `loom-evidence` |
@@ -110,7 +110,7 @@ Use the existing owner surface:
   reason, and owner record that will change in the relevant ticket, initiative,
   spec, plan, or constitution record.
 - If work continues, the next action should be inferable from open blockers,
-  evidence gaps, critique disposition, acceptance gaps, plan sequencing, and the
+  evidence gaps, critique disposition, acceptance gaps, plan strategy, and the
   journal.
 
 The agent's reasoning is part of the protocol. Skills pair with that reasoning;

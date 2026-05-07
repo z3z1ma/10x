@@ -9,9 +9,9 @@
 - `.codex/config.toml` enables Codex hooks for trusted project-local use.
 - `.codex/hooks.json` registers one project-local `SessionStart` hook group with
   matcher `startup|resume|clear|compact`.
-- that hook group has one command per `loom-bootstrap` reference; each command
+- that hook group has one command per `using-loom` reference; each command
   prints a `===== LOOM_BOOTSTRAP_REFERENCE <filename> =====` source marker and
-  cats exactly one `skills/loom-bootstrap/references/<filename>` file to stdout.
+  cats exactly one `skills/using-loom/references/<filename>` file to stdout.
 - the hook commands use small increasing sleep delays so numeric rule order is
   likely in practice, especially `01-core-identity.md` first, but Codex hook
   ordering should still be treated as best effort.
@@ -27,25 +27,25 @@ codex plugin marketplace add z3z1ma/agent-loom
 
 After that validation, users should be able to install or enable `loom` from
 Codex's `/plugins` browser and get the complete Loom skill package, including the
-mandatory `loom-bootstrap` entry skill, without cloning this repository.
+mandatory `using-loom` entry skill, without cloning this repository.
 
 Current Codex evidence supports a skills-package target but does not yet prove
-installed Git-backed plugin skill discovery for `loom-bootstrap`. Installed
+installed Git-backed plugin skill discovery for `using-loom`. Installed
 plugins are not source-proven to own always-on hook or instruction loading, so the
 hook remains an optional preload proof rather than the completeness boundary.
 
 ## Hook-Context Proof Shape
 
 Use Codex plugin packaging for discoverable skills and optional Codex
-`SessionStart` hook stdout for same-session bootstrap context.
+`SessionStart` hook stdout for same-session using-Loom context.
 
 This keeps the core split simple:
 
-- plugins package `loom-bootstrap` and reusable subsystem skills
-- hooks may preload `loom-bootstrap` references as an optimization
+- plugins package `using-loom` and reusable subsystem skills
+- hooks may preload `using-loom` references as an optimization
 
 The final remote Codex adapter does not require plugin-owned hooks if
-`loom-bootstrap` is discoverable and the harness or user instruction tells agents
+`using-loom` is discoverable and the harness or user instruction tells agents
 to use it first.
 
 ## Expected Properties
@@ -53,10 +53,10 @@ to use it first.
 - Codex can read the marketplace from `.agents/plugins/marketplace.json`.
 - Codex can load the `loom` plugin's canonical skills from `skills/` after the
   Git-backed root plugin is installed.
-- project-local `SessionStart` hooks emit the current ordered `loom-bootstrap`
+- project-local `SessionStart` hooks emit the current ordered `using-loom`
   references as source-marked stdout outputs, one file per command.
 - same-session startup probes can see hook stdout as model context.
-- each current bootstrap reference remains below Codex's per-output practical
+- each current using-Loom reference remains below Codex's per-output practical
   probe size and Claude's documented 10,000-character hook-output context cap used
   by the sibling Claude adapter.
 - ordering is treated as best effort; source markers, not strict order, are the
@@ -65,7 +65,7 @@ to use it first.
 ## Limitations
 
 - A remote plugin install still needs a project/user instruction that says to use
-  `loom-bootstrap` first unless the ordered doctrine is already loaded.
+  `using-loom` first unless the ordered doctrine is already loaded.
 - Codex source and docs currently document hook loading from `hooks.json` files or
   inline `[hooks]` tables next to active config layers; plugin docs currently list
   plugins as skills, apps, MCP servers, and assets.
@@ -84,12 +84,12 @@ to use it first.
 
 ## Common Wrong Behavior
 
-- treating optional hook preload as more authoritative than `loom-bootstrap`
+- treating optional hook preload as more authoritative than `using-loom`
 - assuming Codex plugins own always-on instructions when current docs/source route hooks
   through Codex config layers
-- putting Loom bootstrap references under `~/.codex/rules/`, which is a shell
+- putting Loom using-Loom references under `~/.codex/rules/`, which is a shell
   execution policy surface rather than the Markdown instruction surface
-- concatenating all Loom bootstrap references into one hook output without
+- concatenating all Loom using-Loom references into one hook output without
   preserving source markers
 - assuming source-marked per-rule hook output preserves strict numeric order
 - copying dogfooding `.loom/` records into the plugin package

@@ -5,10 +5,10 @@
 This repository develops a distributable Markdown-native Loom bundle.
 
 The protocol core is the top-level `skills/` directory, especially the mandatory
-`skills/loom-bootstrap` entry skill and its ordered references.
+`skills/using-loom` entry skill and its ordered references.
 
 There is no app runtime, build pipeline, or test suite. The durable product asset
-is the skills corpus itself: skills, bootstrap doctrine references, templates,
+is the skills corpus itself: skills, using-Loom doctrine references, templates,
 and references.
 
 Loom should be treated as a control plane for AI knowledge work: a
@@ -38,7 +38,7 @@ constitutional record explicitly changes that boundary.
 
 The product surface is `skills/` only:
 
-- `skills/loom-bootstrap/` -- mandatory first-use bootstrap doctrine and ordered
+- `skills/using-loom/` -- mandatory first-use using-Loom doctrine and ordered
   references
 - `skills/` -- self-contained skill directories with `SKILL.md`, references,
   and templates
@@ -61,7 +61,7 @@ bundle. `.loom/` contains Loom records created while using the product on this
 repo.
 
 Neither `.opencode/` nor `.loom/` is the source of truth for how the product is
-designed. Use `skills/`, especially `skills/loom-bootstrap`, for that.
+designed. Use `skills/`, especially `skills/using-loom`, for that.
 
 ## Verification
 
@@ -86,9 +86,9 @@ the claim being made, such as:
 ## Editing Guidance
 
 - prefer the smallest correct change
-- keep bootstrap doctrine and `skills/` aligned when a change crosses their
+- keep using-Loom doctrine and `skills/` aligned when a change crosses their
   boundaries
-- when changing bootstrap references or a skill, check related templates and
+- when changing using-Loom references or a skill, check related templates and
   references; check `examples/` only for internal fixture consistency
 - do not add hidden runtimes, helper-dependent instructions, or monolithic CLI
   assumptions
@@ -103,7 +103,7 @@ the claim being made, such as:
 
 If a change touches multiple surfaces, verify:
 
-- `skills/loom-bootstrap/references/` doctrine wording
+- `skills/using-loom/references/` doctrine wording
 - `PROTOCOL.md`, `README.md`, and `ARCHITECTURE.md` when package framing changes
 - `skills/*/SKILL.md` instructions
 - `skills/*/references/` docs
@@ -115,7 +115,7 @@ If a change touches multiple surfaces, verify:
 
 ## Key Architecture Facts
 
-- bootstrap doctrine is mandatory before work, either through `loom-bootstrap` or
+- using-Loom doctrine is mandatory before work, either through `using-loom` or
   an adapter preloading the same ordered references
 - the layer model is Loom's source-of-truth type system
 - Ralph is Loom's bounded implementation handoff loop
@@ -125,7 +125,7 @@ If a change touches multiple surfaces, verify:
 - packets are bounded execution contracts
 - wiki is the persistent explanation layer
 - evidence stores observed artifacts without becoming project-truth ownership
-- native harness adapters may preload bootstrap references, but `skills/` remains
+- native harness adapters may preload using-Loom references, but `skills/` remains
   the product surface
 
 ## Current Product Direction
@@ -133,7 +133,7 @@ If a change touches multiple surfaces, verify:
 The next phase is protocol sharpening rather than platform expansion. Prioritize:
 
 - product-surface consistency across README, install docs, architecture notes,
-  AGENTS guidance, bootstrap doctrine, skills, and templates
+  AGENTS guidance, using-Loom doctrine, skills, and templates
 - shared non-ticket status lifecycle grammar in `skills/loom-records/references/status-lifecycle.md`
 - claim-level coverage across specs, tickets, packets, evidence, and critique
 - packet freshness and context-budget guidance

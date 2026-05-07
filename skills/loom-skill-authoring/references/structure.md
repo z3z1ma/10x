@@ -29,7 +29,7 @@ with owner-layer truth. Common values include:
   evidence, critique, wiki, or research
 - `workflow` for a bounded procedure that routes truth into existing owners
 - `workflow-coordinator`, `control-plane`, `inner-loop`, `shared-grammar`,
-  `support-layer`, `bootstrap`, or `authoring` when those more specific surfaces
+  `support-layer`, `entry-doctrine`, or `authoring` when those more specific surfaces
   match the skill boundary
 
 Owner-layer skills should name `metadata.owns_layer`, and the value should be the

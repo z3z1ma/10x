@@ -157,7 +157,7 @@ challenges exist.
 ### Find critique-owned open findings and verdict risk
 
 ```bash
-rg -n '^id: critique:|^status:|^review_target:|^target:|^verdict:|^severity:|^confidence:|^State: open|\bopen\b|\bunresolved\b' .loom/critique
+rg -n '^id: critique:|^status:|^review_target:|^target:|^# Verdict|^Severity:|^Confidence:|^State: open|\bopen\b|\bunresolved\b' .loom/critique
 ```
 
 ### Find ticket-owned critique dispositions

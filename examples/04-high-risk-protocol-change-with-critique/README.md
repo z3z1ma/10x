@@ -3,7 +3,7 @@
 ## Starting `.loom` Slice
 
 - `constitution:main`
-- source skills and bootstrap references that define ownership boundaries
+- source skills and using-Loom references that define ownership boundaries
 
 ## Operator Request
 
@@ -11,9 +11,9 @@
 
 ## Expected Flow
 
-1. read constitution and relevant bootstrap references
+1. read constitution and relevant using-Loom references
 2. create or update research if tradeoffs are not settled
-3. update spec or bootstrap reference text only after owner is clear
+3. update spec or using-Loom reference text only after owner is clear
 4. create a bounded ticket
 5. use Ralph for implementation if the surface is broad
 6. run critique with `protocol-change` and `operator-clarity` profiles
@@ -25,7 +25,7 @@
 
 - decision record if durable policy changed, or explicit decision deferral if
   critique blocks acceptance
-- spec or bootstrap reference changes
+- spec or using-Loom reference changes
 - ticket with high risk critique disposition
 - direct critique record
 - evidence from structural checks
@@ -35,11 +35,11 @@
 
 - authority model remains coherent
 - critique findings are resolved or explicitly carried forward
-- no lower layer silently overrides constitution or bootstrap doctrine
+- no lower layer silently overrides constitution or using-Loom doctrine
 
 ## Common Wrong Behavior
 
-- editing bootstrap doctrine from a chat thesis without operationalizing it
-- copying long product analysis into bootstrap doctrine
+- editing using-Loom doctrine from a chat thesis without operationalizing it
+- copying long product analysis into using-Loom doctrine
 - treating critique as optional for authority changes
 - closing on confidence instead of evidence

@@ -1,5 +1,5 @@
 {
-  "description": "Emit Loom bootstrap references as per-reference Claude SessionStart hook context.",
+  "description": "Emit Loom using-Loom references as per-reference Claude SessionStart hook context.",
   "hooks": {
     "SessionStart": [
       {
@@ -7,42 +7,42 @@
         "hooks": [
           {
             "type": "command",
-            "command": "printf '===== LOOM_BOOTSTRAP_REFERENCE 01-core-identity.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/01-core-identity.md\"",
+            "command": "printf '===== USING_LOOM_REFERENCE 01-core-identity.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/01-core-identity.md\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "sleep 0.20; printf '===== LOOM_BOOTSTRAP_REFERENCE 02-truth-and-authority.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/02-truth-and-authority.md\"",
+            "command": "sleep 0.20; printf '===== USING_LOOM_REFERENCE 02-truth-and-authority.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/02-truth-and-authority.md\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "sleep 0.40; printf '===== LOOM_BOOTSTRAP_REFERENCE 03-outer-loop.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/03-outer-loop.md\"",
+            "command": "sleep 0.40; printf '===== USING_LOOM_REFERENCE 03-outer-loop.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/03-outer-loop.md\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "sleep 0.60; printf '===== LOOM_BOOTSTRAP_REFERENCE 04-ralph-inner-loop.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/04-ralph-inner-loop.md\"",
+            "command": "sleep 0.60; printf '===== USING_LOOM_REFERENCE 04-ralph-inner-loop.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/04-ralph-inner-loop.md\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "sleep 0.80; printf '===== LOOM_BOOTSTRAP_REFERENCE 05-critique-and-wiki.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/05-critique-and-wiki.md\"",
+            "command": "sleep 0.80; printf '===== USING_LOOM_REFERENCE 05-critique-and-wiki.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/05-critique-and-wiki.md\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "sleep 1.00; printf '===== LOOM_BOOTSTRAP_REFERENCE 06-filesystem-and-tooling.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/06-filesystem-and-tooling.md\"",
+            "command": "sleep 1.00; printf '===== USING_LOOM_REFERENCE 06-filesystem-and-tooling.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/06-filesystem-and-tooling.md\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "sleep 1.20; printf '===== LOOM_BOOTSTRAP_REFERENCE 07-validation-and-honesty.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/07-validation-and-honesty.md\"",
+            "command": "sleep 1.20; printf '===== USING_LOOM_REFERENCE 07-validation-and-honesty.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/07-validation-and-honesty.md\"",
             "timeout": 10
           },
           {
             "type": "command",
-            "command": "sleep 1.40; printf '===== LOOM_BOOTSTRAP_REFERENCE 08-trust-boundaries.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/loom-bootstrap/references/08-trust-boundaries.md\"",
+            "command": "sleep 1.40; printf '===== USING_LOOM_REFERENCE 08-trust-boundaries.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/08-trust-boundaries.md\"",
             "timeout": 10
           }
         ]

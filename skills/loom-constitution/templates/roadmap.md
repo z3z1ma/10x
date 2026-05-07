@@ -24,7 +24,7 @@ What domains or workstreams matter inside this theme.
 # Milestones
 
 Policy-level strategic checkpoints. Do not use roadmap milestones for initiative
-success tracking, plan sequencing details, or ticket progress state.
+success tracking, plan strategy details, or ticket progress state.
 
 # Sequencing Assumptions
 

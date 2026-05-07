@@ -1,6 +1,6 @@
 # Critique And Wiki
 
-This is an ordered bootstrap reference for the `loom-bootstrap` skill.
+This is an ordered reference for the `using-loom` skill.
 
 Critique and Wiki are not side quests.
 They are how Loom pressure-tests work and how Loom compounds understanding.
@@ -231,7 +231,7 @@ A retrospective is a named workflow — not a new record kind and not a new dire
 - accepted explanations and workflows → wiki
 - durable investigation results, rejected options, null results → research
 - clarified intended behavior → spec
-- changed sequencing → plan
+- changed complex-change strategy, decomposition, sequencing, rollout, or waves → plan
 - changed strategic framing → initiative
 - changed principles, constraints, or citable decisions → constitution (including decision records)
 - observed artifacts, challenged observations, or validation artifacts → evidence

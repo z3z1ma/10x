@@ -1,6 +1,6 @@
 # Truth And Authority
 
-This is an ordered bootstrap reference for the `loom-bootstrap` skill.
+This is an ordered reference for the `using-loom` skill.
 
 Loom stays coherent by separating **instruction authority** from **project truth ownership**.
 
@@ -11,7 +11,7 @@ Those are related but not identical.
 When deciding what instructions to follow, use this order:
 
 1. operator and harness constraints
-2. Loom bootstrap doctrine
+2. using-Loom doctrine
 3. the active Loom skill
 4. the active packet, only inside its declared scope
 
@@ -67,7 +67,8 @@ This prevents claims from drifting into artifacts that cannot safely own them.
 - **initiative** owns strategic outcome framing
 - **research** owns evidence synthesis, investigations, tradeoffs, and conclusions
 - **spec** owns intended behavior and acceptance contract
-- **plan** owns sequencing and rollout strategy
+- **plan** owns high-level complex-change planning, decomposition, sequencing,
+  dependencies, rollout strategy, milestones, and execution waves
 - **ticket** owns live execution state
 - **packet** owns a bounded child-worker contract, not project truth
 - **critique** owns adversarial findings and review verdicts
@@ -90,7 +91,8 @@ Use this routing before relying on recency, habit, or command names:
 - strategic outcome framing, success metrics, or cross-cutting ownership -> initiative
 - evidence synthesis, tradeoffs, rejected options, investigations, or conclusions -> research
 - intended behavior, requirements, scenarios, or acceptance criteria -> spec
-- execution sequencing, rollout strategy, or dependency order -> plan
+- high-level complex-change planning, decomposition, execution sequencing,
+  rollout strategy, dependency order, milestones, or execution waves -> plan
 - live execution state, blockers, next move, acceptance disposition, or closure -> ticket
 - observed artifacts, raw outputs, red/green output, reproduction logs, screenshots,
   scan results, or validation artifacts -> evidence
@@ -147,6 +149,11 @@ Optional saved support artifacts may live under a lazy-materialized support tree
 
 - `.loom/support/`
 
+Workspace and harness metadata may also live at the workspace root:
+
+- `.loom/workspace.md`
+- `.loom/harness.md`
+
 Create `.loom/support/` only when a support artifact is intentionally saved,
 such as a drive handoff under `.loom/support/drive-handoffs/`. Its presence does
 not create a canonical owner layer.
@@ -161,6 +168,8 @@ it does not make that context authoritative.
 Saved support artifacts help recovery, handoff, or local workflow transport;
 they do not own objective state, live ticket state, acceptance, evidence
 sufficiency, critique verdicts, wiki truth, canonical truth, or packet lifecycle.
+Workspace and harness metadata help entry, scope, and fresh-context launch
+recovery; they are support metadata, not project truth.
 External systems help mirror or transport work.
 None of them outrank the canonical record owners.
 
