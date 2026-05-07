@@ -3,7 +3,7 @@ id: evidence:harness-package-surface-skeleton-check
 kind: evidence
 status: recorded
 created_at: 2026-05-07T22:26:09Z
-updated_at: 2026-05-07T22:29:50Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -235,7 +235,8 @@ Supersedes / superseded by: None.
 
 - Does not validate Claude, Codex, Cursor, Gemini, OpenCode, or generic harness
   runtime install/discovery behavior.
-- Does not create or validate `open-loom-core` or `open-loom-playbooks` packages.
+- Does not create or validate `@z3z1ma/open-loom-core` or
+  `@z3z1ma/open-loom-playbooks` packages.
 - Does not update public docs, examples, root `package.json`, or `open-loom.mjs`.
 - Does not prove package tarball contents.
 

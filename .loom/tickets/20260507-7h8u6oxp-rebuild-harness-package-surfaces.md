@@ -5,7 +5,7 @@ status: closed
 change_class: config
 risk_class: high
 created_at: 2026-05-07T22:20:29Z
-updated_at: 2026-05-07T22:35:31Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -79,7 +79,8 @@ In:
 
 Out:
 
-- Creating `open-loom-core` or `open-loom-playbooks` OpenCode packages.
+- Creating `@z3z1ma/open-loom-core` or `@z3z1ma/open-loom-playbooks` OpenCode
+  packages.
 - Editing root `package.json` or `open-loom.mjs` except to leave them for the
   OpenCode ticket.
 - Publishing packages or changing release versions.
@@ -153,7 +154,8 @@ Gaps / limits:
 
 - Evidence is structural only; it does not validate Claude, Codex, Cursor, Gemini,
   OpenCode, or generic harness runtime install/discovery behavior.
-- Evidence does not create or validate `open-loom-core` or `open-loom-playbooks`
+- Evidence does not create or validate `@z3z1ma/open-loom-core` or
+  `@z3z1ma/open-loom-playbooks`
   packages.
 - Evidence does not update public docs, examples, root `package.json`, or
   `open-loom.mjs`.

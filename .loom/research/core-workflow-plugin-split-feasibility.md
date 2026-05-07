@@ -3,7 +3,7 @@ id: research:core-workflow-plugin-split-feasibility
 kind: research
 status: active
 created_at: 2026-05-07T20:42:59Z
-updated_at: 2026-05-07T23:02:24Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -227,7 +227,7 @@ from this repository's `loom-core/` and `loom-playbooks/` subdirectories.
 | --- | --- | --- | --- |
 | Claude Code | Feasible. `plugin.json` appears single-plugin, but `.claude-plugin/marketplace.json` supports multiple plugin entries with relative sources. Plugin manifests can declare `skills` as a string or array. | A marketplace exposes `loom-core` and `loom-playbooks` plugin roots, each with its own `.claude-plugin/plugin.json` and self-contained skill root. Core plugin owns optional using-Loom `SessionStart` preload. | Plugin roots installed into cache cannot rely on paths outside themselves, so repo layout or release packaging must make each root self-contained. |
 | Codex | Feasible in manifest/catalog shape, and current hooks docs address the prior hook-surface gap. `plugin.json` appears single-plugin; `.agents/plugins/marketplace.json` can list multiple plugin entries. | Codex marketplace lists `loom-core` and `loom-playbooks`, each with `.codex-plugin/plugin.json` and `skills`. Core includes `using-loom` and can bundle optional `SessionStart` hook preload through the documented plugin hook surfaces if runtime validation confirms installed-plugin behavior. | Installed Git-backed plugin skill discovery and installed-plugin hook behavior for `using-loom` still need runtime validation before broad release claims. |
-| OpenCode | Feasible and probably straightforward. Config `plugin` is an array and current `open-loom.mjs` proves a plugin can register instructions and skill paths through config mutation. | Publish `open-loom-core` and `open-loom-playbooks` npm packages, or equivalent local file/path plugins. Core plugin registers ordered using-Loom references and core skills. Playbooks plugin registers playbook skills only. | Migration/deprecation of current `open-loom` full package needs its own follow-up; the split target is two packages only. |
+| OpenCode | Feasible and probably straightforward. Config `plugin` is an array and current `open-loom.mjs` proves a plugin can register instructions and skill paths through config mutation. | Publish `@z3z1ma/open-loom-core` and `@z3z1ma/open-loom-playbooks` npm packages, or equivalent local file/path plugins. Core plugin registers ordered using-Loom references and core skills. Playbooks plugin registers playbook skills only. | Migration/deprecation of current `open-loom` full package needs its own follow-up; the split target is two packages only. |
 | Gemini CLI | Feasible as two extensions, but not yet clean as one Git-backed marketplace-like repo. Docs show one `gemini-extension.json` per extension root and do not show a multi-extension repository manifest or Git subdirectory install. | Core extension contains `gemini-extension.json`, `skills/`, and `contextFileName` for optional using-Loom preload. Playbooks extension contains playbook skills. Users install both when they want full Loom. | Need validation or a packaging decision for Git distribution of two extension roots from one source repository. |
 | Cursor | Feasible. Cursor docs explicitly support multi-plugin repositories via `.cursor-plugin/marketplace.json`; `plugin.json` appears single-plugin; `skills` can be a string or array. | Cursor marketplace lists `loom-core` and `loom-playbooks` plugin roots. Core may include generated `rules/*.mdc` for optional using-Loom preload plus core skills; playbooks plugin includes playbook skills. | Need runtime validation for plugin rule ordering/applicability and install/reload behavior. |
 | Generic skills-directory install | Feasible. A user can expose only the core skill root or expose both roots. | Expose `loom-core/skills` only, or expose both `loom-core/skills` and `loom-playbooks/skills`. | Agent Skills itself defines skill directories, not package catalogs or multi-root precedence. Docs must be harness-specific. |
@@ -338,7 +338,7 @@ be self-contained or built into a self-contained release artifact.
 # Open Questions
 
 - How should the existing published `open-loom` package be deprecated or migrated
-  after `open-loom-core` and `open-loom-playbooks` exist?
+  after `@z3z1ma/open-loom-core` and `@z3z1ma/open-loom-playbooks` exist?
 - What release layout best preserves self-contained plugin roots without making
   generated adapter outputs the semantic owner of Loom?
 - Can Gemini install a subdirectory extension from a Git repository, or does it

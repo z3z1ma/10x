@@ -3,7 +3,7 @@ id: spec:opencode-plugin-install-contract
 kind: spec
 status: superseded
 created_at: 2026-04-25T22:14:57Z
-updated_at: 2026-05-07T21:44:08Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -43,9 +43,9 @@ external_refs:
 `spec:core-and-playbooks-package-contract` supersede this as the active future
 OpenCode package target. This record remains historical evidence for the accepted
 `open-loom@0.1.0` single-package behavior on OpenCode `>=1.14.22 <2` before the
-core/playbooks split. New OpenCode split work should target `open-loom-core` and
-`open-loom-playbooks`, not extend this single-package contract as current product
-truth.
+core/playbooks split. New OpenCode split work should target
+`@z3z1ma/open-loom-core` and `@z3z1ma/open-loom-playbooks`, not extend this
+single-package contract as current product truth.
 
 # Summary
 

@@ -13,6 +13,5 @@
     "agent-skills",
     "markdown"
   ],
-  "skills": "./skills/",
-  "hooks": "./claude-hooks/hooks.json"
+  "skills": "./skills/"
 }

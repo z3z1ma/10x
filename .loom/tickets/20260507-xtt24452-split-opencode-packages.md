@@ -5,7 +5,7 @@ status: closed
 change_class: config
 risk_class: high
 created_at: 2026-05-07T22:37:06Z
-updated_at: 2026-05-07T22:47:28Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -34,8 +34,8 @@ depends_on:
 
 # Summary
 
-Split the OpenCode package surface into `open-loom-core` and
-`open-loom-playbooks`, and convert the repository root package into private
+Split the OpenCode package surface into `@z3z1ma/open-loom-core` and
+`@z3z1ma/open-loom-playbooks`, and convert the repository root package into private
 non-published repo metadata.
 
 # Context
@@ -50,11 +50,11 @@ compatibility meta-package.
 
 In:
 
-- Add `loom-core/package.json` for package name `open-loom-core`.
+- Add `loom-core/package.json` for package name `@z3z1ma/open-loom-core`.
 - Add `loom-core/open-loom-core.mjs` that registers core using-Loom ordered
   references through `config.instructions` and core skills through
   `config.skills.paths`.
-- Add `loom-playbooks/package.json` for package name `open-loom-playbooks`.
+- Add `loom-playbooks/package.json` for package name `@z3z1ma/open-loom-playbooks`.
 - Add `loom-playbooks/open-loom-playbooks.mjs` that registers only playbook skills
   through `config.skills.paths` and does not preload core using-Loom doctrine.
 - Convert root `package.json` to private/non-published repo metadata with scripts
@@ -159,7 +159,7 @@ Findings:
 
 - No open findings in `critique:opencode-split-package-review`.
 - Initial playbooks dependency metadata gap was resolved before final critique by
-  adding `open-loom-core` to `loom-playbooks/package.json` description and
+  adding `@z3z1ma/open-loom-core` to `loom-playbooks/package.json` description and
   `peerDependencies`.
 
 Promotion disposition: deferred
@@ -207,8 +207,11 @@ here when useful.
 - 2026-05-07T22:41:46Z: Consumed Ralph iteration 01, recorded structural/package
   dry-run evidence with the npm-prefix command nuance, and moved the ticket to
   mandatory critique review.
-- 2026-05-07T22:45:12Z: Added `open-loom-core` dependency metadata to the
+- 2026-05-07T22:45:12Z: Added core dependency metadata to the
   playbooks package after critique, then reran playbooks smoke/dry-run checks and
   tightened evidence wording for untracked files.
 - 2026-05-07T22:47:28Z: Recorded final mandatory critique with no open findings,
   accepted the scoped OpenCode split package slice, and closed the ticket.
+- 2026-05-07T23:49:27Z: Reconciled package naming after the npm packages were
+  scoped as `@z3z1ma/open-loom-core` and `@z3z1ma/open-loom-playbooks`; reran
+  `npm run pack:check` successfully.

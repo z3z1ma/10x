@@ -14,6 +14,7 @@
     "markdown"
   ],
   "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Loom Core",
     "shortDescription": "Core Markdown-native protocol skills for Codex.",

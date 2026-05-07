@@ -3,7 +3,7 @@ id: evidence:opencode-split-package-check
 kind: evidence
 status: recorded
 created_at: 2026-05-07T22:41:46Z
-updated_at: 2026-05-07T22:45:12Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -21,9 +21,12 @@ external_refs: {}
 # Summary
 
 Recorded structural and package dry-run observations for `ticket:xtt24452`, which
-split the OpenCode package surface into `open-loom-core` and
-`open-loom-playbooks` and converted the repository root package to private
+split the OpenCode package surface into `@z3z1ma/open-loom-core` and
+`@z3z1ma/open-loom-playbooks` and converted the repository root package to private
 non-published repo metadata.
+
+2026-05-07 update: package names were later scoped under `@z3z1ma/`, and
+`npm run pack:check` was rerun successfully with the scoped names.
 
 # Procedure
 
@@ -58,8 +61,10 @@ Procedure:
   whitespace is covered by the explicit trailing-whitespace scans and package
   dry-runs, not by normal `git diff --check`.
 - After mandatory critique found that playbook package metadata did not state the
-  core package dependency, added `open-loom-core` to the playbook package
+  core package dependency, added `@z3z1ma/open-loom-core` to the playbook package
   description and `peerDependencies`, then reran playbooks smoke/dry-run checks.
+- After package names were scoped, reran `npm run pack:check`; dry-run output showed
+  `@z3z1ma/open-loom-core@0.1.10` and `@z3z1ma/open-loom-playbooks@0.1.10`.
 
 Expected result: core package smoke shows 8 using-Loom references and 15 core
 skills; playbooks package smoke shows 0 using-Loom references and 7 playbook
@@ -189,8 +194,8 @@ trailing-whitespace scans cover those new files until staging/commit review.
 Playbook core dependency metadata:
 
 ```text
-description: requires open-loom-core
-peerDependencies.open-loom-core: ^0.1.10
+description: requires @z3z1ma/open-loom-core
+peerDependencies.@z3z1ma/open-loom-core: ^0.1.10
 ```
 
 # Raw Artifact Store
@@ -209,10 +214,10 @@ N/A - no UI/product artifact was changed.
 # Supports Claims
 
 - spec:core-and-playbooks-package-contract#ACC-005 — structural support;
-  `open-loom-core` registers 8 using-Loom references and 15 core skills,
-  `open-loom-playbooks` registers 7 playbook skills and no core preload, both
-  package roots dry-run successfully, playbooks metadata names its `open-loom-core`
-  peer dependency, and root `package.json` is private.
+  `@z3z1ma/open-loom-core` registers 8 using-Loom references and 15 core skills,
+  `@z3z1ma/open-loom-playbooks` registers 7 playbook skills and no core preload,
+  both package roots dry-run successfully, playbooks metadata names its
+  `@z3z1ma/open-loom-core` peer dependency, and root `package.json` is private.
 - spec:core-and-playbooks-package-contract#ACC-007 — partial support scoped to
   changed OpenCode package files and root package metadata; root `skills/` is no
   longer presented as current OpenCode package truth.
@@ -263,9 +268,10 @@ Supersedes / superseded by: None.
 
 # Result
 
-The repository now has two structural OpenCode package roots, `open-loom-core` and
-`open-loom-playbooks`, while root package metadata is private/non-published. Local
-smoke and package-root dry-run checks passed.
+The repository now has two structural OpenCode package roots,
+`@z3z1ma/open-loom-core` and `@z3z1ma/open-loom-playbooks`, while root package
+metadata is private/non-published. Local smoke and package-root dry-run checks
+passed.
 
 # Interpretation
 

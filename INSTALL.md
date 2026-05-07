@@ -80,37 +80,54 @@ The hook preload is a convenience. The canonical surface remains `skills/`, espe
 
 ## OpenCode
 
-Normal install:
+Core-only install:
 
 ```bash
-opencode plugin open-loom --global
+opencode plugin @z3z1ma/open-loom-core --global
 ```
 
-Equivalent package plugin entry:
+Full install:
+
+```bash
+opencode plugin @z3z1ma/open-loom-core --global
+opencode plugin @z3z1ma/open-loom-playbooks --global
+```
+
+Equivalent package plugin entry for full install:
 
 ```json
 {
-  "plugin": ["open-loom"]
+  "plugin": [
+    "@z3z1ma/open-loom-core",
+    "@z3z1ma/open-loom-playbooks"
+  ]
 }
 ```
 
-For a cloned repository, point OpenCode at the local plugin file:
+For a cloned repository, point OpenCode at the local package plugin files:
 
 ```json
 {
-  "plugin": ["file:///absolute/path/to/agent-loom/open-loom.mjs"]
+  "plugin": [
+    "file:///absolute/path/to/agent-loom/loom-core/open-loom-core.mjs",
+    "file:///absolute/path/to/agent-loom/loom-playbooks/open-loom-playbooks.mjs"
+  ]
 }
 ```
 
 For a local structural check that does not require a model request:
 
 ```bash
-node open-loom.mjs --smoke
+node loom-core/open-loom-core.mjs --smoke
+node loom-playbooks/open-loom-playbooks.mjs --smoke
 ```
 
-This repository includes the `open-loom` OpenCode plugin at `open-loom.mjs`. It requires OpenCode `>=1.14.22 <2`.
+This repository publishes OpenCode packages as `@z3z1ma/open-loom-core` and
+`@z3z1ma/open-loom-playbooks`. Both require OpenCode `>=1.14.22 <2`.
 
-`open-loom` registers the bundled skill root with `config.skills.paths` and adds ordered `using-loom` references to `config.instructions`.
+`@z3z1ma/open-loom-core` registers core skills and adds ordered `using-loom`
+references to `config.instructions`. `@z3z1ma/open-loom-playbooks` registers only
+optional playbook skills and requires core.
 
 ## Codex
 

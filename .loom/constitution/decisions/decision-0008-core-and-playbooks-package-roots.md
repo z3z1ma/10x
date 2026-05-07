@@ -3,7 +3,7 @@ id: decision:0008
 kind: decision
 status: active
 created_at: 2026-05-07T21:35:47Z
-updated_at: 2026-05-07T23:20:14Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -145,8 +145,8 @@ using-Loom preload once installed-plugin behavior is validated.
   been loaded, but its package path moves under `loom-core/skills/using-loom/`.
 - Native adapters should expose `loom-core/skills` and, when installed,
   `loom-playbooks/skills` through their native package mechanisms.
-- OpenCode package work should target `open-loom-core` and
-  `open-loom-playbooks`; the existing `open-loom` package needs separate
+- OpenCode package work should target `@z3z1ma/open-loom-core` and
+  `@z3z1ma/open-loom-playbooks`; the existing `open-loom` package needs separate
   migration or deprecation handling.
 - Root-level catalog files may list both package roots for Claude, Codex, Cursor,
   or similar harnesses, but they are not semantic owners.

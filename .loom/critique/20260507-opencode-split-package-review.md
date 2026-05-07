@@ -3,7 +3,7 @@ id: critique:opencode-split-package-review
 kind: critique
 status: final
 created_at: 2026-05-07T22:47:28Z
-updated_at: 2026-05-07T22:47:28Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -25,10 +25,10 @@ external_refs: {}
 
 # Summary
 
-Reviewed the OpenCode package split after `open-loom-core` and
-`open-loom-playbooks` package roots were added, the repository root package was
+Reviewed the OpenCode package split after `@z3z1ma/open-loom-core` and
+`@z3z1ma/open-loom-playbooks` package roots were added, the repository root package was
 made private/non-published, and playbooks metadata was updated to state its
-`open-loom-core` dependency.
+`@z3z1ma/open-loom-core` dependency.
 
 # Review Target
 
@@ -55,12 +55,15 @@ No open findings.
 An initial critique found that `loom-playbooks/package.json` did not state the
 core package dependency clearly enough. The follow-up added both:
 
-- description text naming `open-loom-core`
-- `peerDependencies.open-loom-core: ^0.1.10`
+- description text naming `@z3z1ma/open-loom-core`
+- `peerDependencies.@z3z1ma/open-loom-core: ^0.1.10`
 
 The final critique verified that the dependency signal is present and that the
 evidence now avoids overstating `git diff --check` coverage for untracked
 package-root files.
+
+2026-05-07 update: package names were later scoped under `@z3z1ma/`; the follow-up
+package checks still pass with the scoped names.
 
 # Evidence Reviewed
 

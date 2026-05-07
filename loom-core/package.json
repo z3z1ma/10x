@@ -1,5 +1,5 @@
 {
-  "name": "open-loom-core",
+  "name": "@z3z1ma/open-loom-core",
   "version": "0.1.10",
   "description": "OpenCode core package for the Loom Markdown-native AI work protocol.",
   "type": "module",

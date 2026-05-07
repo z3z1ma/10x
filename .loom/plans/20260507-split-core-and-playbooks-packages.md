@@ -3,7 +3,7 @@ id: plan:split-core-and-playbooks-packages
 kind: plan
 status: active
 created_at: 2026-05-07T21:31:17Z
-updated_at: 2026-05-07T23:20:14Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -92,8 +92,8 @@ Agreed scoping decisions for this plan:
   duplicate full bundle.
 - Keep repo-level marketplace/catalog files as discovery surfaces that list both
   package roots.
-- OpenCode splits into two packages only: `open-loom-core` and
-  `open-loom-playbooks`; migration/deprecation of the current `open-loom` package
+- OpenCode splits into two packages only: `@z3z1ma/open-loom-core` and
+  `@z3z1ma/open-loom-playbooks`; migration/deprecation of the current `open-loom` package
   is a follow-up concern, and `spec:opencode-plugin-install-contract` is
   historical/superseded for future split work.
 - `loom-playbooks` requires `loom-core`; it must not duplicate core skills.
@@ -334,7 +334,7 @@ bundle. That creates a third product surface and makes drift likely.
 ## Unit: Split OpenCode Packages
 
 - Source claim / input: OpenCode target is two packages only:
-  `open-loom-core` and `open-loom-playbooks`.
+  `@z3z1ma/open-loom-core` and `@z3z1ma/open-loom-playbooks`.
 - Observable outcome: each package root has its own OpenCode plugin module and
   package metadata; core registers using-Loom references and core skills, while
   playbooks registers playbook skills and does not preload core doctrine. The
@@ -539,8 +539,8 @@ Expected validation by tranche:
   legacy workflow-package names, treating the Gemini root core shim as an explicit
   exception rather than current full-product truth
 - JSON syntax checks for plugin and marketplace manifests
-- OpenCode per-package smoke checks for `open-loom-core` and
-  `open-loom-playbooks`
+- OpenCode per-package smoke checks for `@z3z1ma/open-loom-core` and
+  `@z3z1ma/open-loom-playbooks`
 - Codex installed-plugin skill and hook validation before claiming core preload
 - Gemini distribution-route validation before claiming remote extension install;
   current research rejects one-repo subdirectory install as unsupported, while

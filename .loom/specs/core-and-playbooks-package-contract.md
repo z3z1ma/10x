@@ -3,7 +3,7 @@ id: spec:core-and-playbooks-package-contract
 kind: spec
 status: active
 created_at: 2026-05-07T21:41:42Z
-updated_at: 2026-05-07T23:20:14Z
+updated_at: 2026-05-07T23:49:27Z
 scope:
   kind: repository
   repositories:
@@ -182,8 +182,9 @@ Positive examples:
   core owner layers and cite core as a prerequisite.
 - A Claude/Codex/Cursor repo-level marketplace lists both package roots but does
   not own semantic behavior itself.
-- OpenCode install docs name `open-loom-core` and `open-loom-playbooks`, not a
-  single full `open-loom` package, after the split is implemented.
+- OpenCode install docs name `@z3z1ma/open-loom-core` and
+  `@z3z1ma/open-loom-playbooks`, not a single full `open-loom` package, after the
+  split is implemented.
 
 Non-examples:
 
@@ -238,9 +239,9 @@ Non-examples:
 - REQ-009: Repo-level marketplace or catalog files MAY list both package roots when
   the harness supports catalogs, but they MUST remain discovery/transport surfaces
   rather than semantic owners.
-- REQ-010: OpenCode split work MUST target `open-loom-core` and
-  `open-loom-playbooks`; it MUST NOT present the existing `open-loom` package as
-  the new full-package answer without an explicit follow-up decision.
+- REQ-010: OpenCode split work MUST target `@z3z1ma/open-loom-core` and
+  `@z3z1ma/open-loom-playbooks`; it MUST NOT present the existing `open-loom`
+  package as the new full-package answer without an explicit follow-up decision.
 - REQ-011: Codex package docs MUST NOT claim installed-plugin hook preload until a
   current runtime validation proves bundled core hooks load as expected.
 - REQ-012: Gemini package docs MUST NOT claim a one-repository subdirectory or
@@ -309,8 +310,8 @@ Exercises: REQ-010, REQ-015, ACC-004, ACC-005
 
 GIVEN OpenCode package work has been implemented
 WHEN a user configures OpenCode with the split packages
-THEN `open-loom-core` exposes core using-Loom references and core skills
-AND `open-loom-playbooks` exposes playbook skills only
+THEN `@z3z1ma/open-loom-core` exposes core using-Loom references and core skills
+AND `@z3z1ma/open-loom-playbooks` exposes playbook skills only
 AND the repository root package is private/non-published repo metadata rather than
 a third publishable `open-loom` package or compatibility meta-package.
 
@@ -369,10 +370,10 @@ evidence.
   and clear dependency wording on `loom-core`.
 - ACC-004: Harness package metadata and root catalogs, where present, expose the
   two package roots as separate installable units.
-- ACC-005: OpenCode package checks demonstrate `open-loom-core` and
-  `open-loom-playbooks` register the correct package-root skill paths and any core
-  preload paths, while the repository root package is private/non-published and
-  does not present a third publishable Loom package.
+- ACC-005: OpenCode package checks demonstrate `@z3z1ma/open-loom-core` and
+  `@z3z1ma/open-loom-playbooks` register the correct package-root skill paths and
+  any core preload paths, while the repository root package is private/non-published
+  and does not present a third publishable Loom package.
 - ACC-006: Codex and Gemini docs only claim behavior that has current runtime
   evidence or explicitly mark the behavior as unvalidated/deferred.
 - ACC-007: Public docs, active owner records, examples intended as current review
@@ -406,7 +407,7 @@ Coverage:
 | ACC-002 | package inspection | Evidence record showing core-only skill discovery or equivalent structural proof | Harness-specific discovery should be captured separately |
 | ACC-003 | targeted grep/review | Evidence record showing no duplicated core directories under playbooks and dependency wording present | Review should include playbook `SKILL.md` files |
 | ACC-004 | manifest/catalog validation | Evidence record with JSON checks and path checks | Runtime install may need harness-specific evidence |
-| ACC-005 | OpenCode smoke | Evidence record for `open-loom-core`, `open-loom-playbooks`, and root private package checks | Root package should remain repo metadata, not a third published package |
+| ACC-005 | OpenCode smoke | Evidence record for `@z3z1ma/open-loom-core`, `@z3z1ma/open-loom-playbooks`, and root private package checks | Root package should remain repo metadata, not a third published package |
 | ACC-006 | runtime harness validation or deferral | Codex/Gemini evidence records or explicit ticket deferral | Do not infer from docs alone |
 | ACC-007 | stale reference scan | Evidence record with grep queries and review notes | Historical/superseded records may still mention root `skills/` |
 | ACC-008 | critique | Final critique record and ticket dispositions | Critique does not close tickets itself |
@@ -431,9 +432,9 @@ Coverage:
 
 | Assumption or question | Reversible? | Blocks downstream work? | Disposition |
 | --- | --- | --- | --- |
-| `loom-core` and `loom-playbooks` are the package names | yes | no | accepted by `decision:0008` |
+| `loom-core` and `loom-playbooks` are the package-root names | yes | no | accepted by `decision:0008` |
 | `loom-playbooks` requires core instead of duplicating it | yes, but costly | yes for playbook packaging | accepted by `decision:0008` |
-| OpenCode uses two packages only | yes | yes for OpenCode package work | accepted for this contract; legacy `open-loom` migration remains follow-up |
+| OpenCode uses two scoped packages only | yes | yes for OpenCode package work | accepted for this contract; legacy `open-loom` migration remains follow-up |
 | Existing root `open-loom` package handling after split | yes | yes for OpenCode package work | root package becomes private/non-published repo metadata; no compatibility meta-package |
 | Codex installed-plugin hooks work for core preload | yes | no for package layout; yes for preload claims | requires runtime evidence |
 | Gemini can support two package roots cleanly | yes | no for package layout; yes for Gemini install claims | root install is accepted as core-only by `decision:0009`; playbooks still require local-link docs, accepted release/distribution route, or upstream support |
@@ -442,7 +443,7 @@ Coverage:
 
 - Should future releases add a convenience meta-package after core/playbooks are
   stable, or would that recreate the confusion this split is meant to remove?
-- What versioning scheme should tie `loom-core` and `loom-playbooks` together when
-  playbooks depend on core behavior?
+- What versioning scheme should tie `@z3z1ma/open-loom-core` and
+  `@z3z1ma/open-loom-playbooks` together when playbooks depend on core behavior?
 - Which harnesses can enforce package dependencies mechanically, and which must rely
   on docs and skill prose?
