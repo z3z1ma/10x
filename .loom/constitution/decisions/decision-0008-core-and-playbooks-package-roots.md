@@ -3,7 +3,7 @@ id: decision:0008
 kind: decision
 status: active
 created_at: 2026-05-07T21:35:47Z
-updated_at: 2026-05-07T21:43:18Z
+updated_at: 2026-05-07T23:20:14Z
 scope:
   kind: repository
   repositories:
@@ -23,6 +23,7 @@ links:
     - decision:0005
     - decision:0006
     - decision:0007
+    - decision:0009
   critique:
     - critique:core-playbooks-constitutional-decision-review
 ---
@@ -77,6 +78,11 @@ state the dependency clearly.
 Repository-level marketplace or catalog files may remain at the repository root
 when a harness uses them to discover multiple package roots. Those catalogs are
 discovery and transport surfaces only; they do not own Loom semantics.
+
+`decision:0009` narrows this rule for Gemini only: a repository-root
+`gemini-extension.json` may exist as a core-only compatibility shim because Gemini
+tooling and crawlers index root extension manifests. That shim must not include
+playbooks or become a general root product surface.
 
 # Why This Decision Exists
 
@@ -149,6 +155,8 @@ using-Loom preload once installed-plugin behavior is validated.
 - The package split does not authorize a monolithic Loom CLI, hidden runtime,
   fallback shell installer, top-level command-wrapper product surface, or external
   system as Loom truth owner.
+- `decision:0009` authorizes a Gemini-specific root core shim only; it does not
+  authorize root package surfaces for other harnesses or a full root bundle.
 - Existing self-contained skill guidance still applies inside each package root:
   skills should be understandable from their own `SKILL.md`, references, and
   templates rather than hidden inheritance.
@@ -188,3 +196,5 @@ root skill tree.
 This updates `decision:0007`'s product-surface wording. Positive skill guidance
 remains the writing standard, but it now applies to package-root skills under
 `loom-core/skills` and `loom-playbooks/skills`.
+
+This decision is narrowed by `decision:0009` for Gemini only.

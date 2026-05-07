@@ -153,42 +153,68 @@ This repository includes a Cursor plugin manifest at `.cursor-plugin/plugin.json
 
 ## Gemini CLI
 
-Install from the Git repository:
+Preferred full install: clone the repository and link both package roots:
+
+```bash
+git clone https://github.com/z3z1ma/agent-loom
+cd agent-loom
+gemini extensions link "$PWD/loom-core"
+gemini extensions link "$PWD/loom-playbooks"
+```
+
+Core-only install from a clone:
+
+```bash
+gemini extensions link /absolute/path/to/agent-loom/loom-core
+```
+
+Repository-root install is also supported as a Gemini-specific core-only shim:
 
 ```bash
 gemini extensions install https://github.com/z3z1ma/agent-loom
 ```
 
-Local development can link the repository instead:
+The root install exists because Gemini tooling and crawlers look for
+`gemini-extension.json` at the repository root. It installs Loom core only; it does
+not install `loom-playbooks` and does not prove that Gemini can install extension
+roots from repository subdirectories.
 
-```bash
-gemini extensions link /absolute/path/to/agent-loom
-```
+Choose either the root core shortcut or the `loom-core` package-root link for core,
+not both. They use the same Gemini extension name, `loom-core`.
 
-Validate the local extension structure:
+Validate the local extension structures:
 
 ```bash
 gemini extensions validate /absolute/path/to/agent-loom
+gemini extensions validate /absolute/path/to/agent-loom/loom-core
+gemini extensions validate /absolute/path/to/agent-loom/loom-playbooks
 ```
 
-This repository includes a Gemini CLI extension manifest at `gemini-extension.json`.
+This repository includes Gemini CLI extension manifests at `gemini-extension.json`,
+`loom-core/gemini-extension.json`, and `loom-playbooks/gemini-extension.json`.
 
-The extension exposes canonical `skills/` and uses `contextFileName` to load `gemini-bootstrap.md`, which imports the ordered `skills/using-loom/references/*.md` files with Gemini's native context import syntax.
+The repository-root manifest is a core-only shim. It uses `contextFileName` to load
+`gemini-bootstrap.md`, which imports the ordered
+`loom-core/skills/using-loom/references/*.md` files with Gemini's native context
+import syntax. The package-root core extension uses
+`loom-core/gemini-bootstrap.md` for the same static using-Loom preload.
 
-The context preload is a convenience. The canonical surface remains `skills/`, especially `skills/using-loom`.
+The context preload is a convenience. The canonical core surface is
+`loom-core/skills`, especially `loom-core/skills/using-loom`. Optional workflow
+playbooks live under `loom-playbooks/skills` and require core.
 
 ## Bootstrap references
 
 `using-loom` reads these references in order:
 
-1. `skills/using-loom/references/01-core-identity.md`
-2. `skills/using-loom/references/02-truth-and-authority.md`
-3. `skills/using-loom/references/03-outer-loop.md`
-4. `skills/using-loom/references/04-ralph-inner-loop.md`
-5. `skills/using-loom/references/05-critique-and-wiki.md`
-6. `skills/using-loom/references/06-filesystem-and-tooling.md`
-7. `skills/using-loom/references/07-validation-and-honesty.md`
-8. `skills/using-loom/references/08-trust-boundaries.md`
+1. `loom-core/skills/using-loom/references/01-core-identity.md`
+2. `loom-core/skills/using-loom/references/02-truth-and-authority.md`
+3. `loom-core/skills/using-loom/references/03-outer-loop.md`
+4. `loom-core/skills/using-loom/references/04-ralph-inner-loop.md`
+5. `loom-core/skills/using-loom/references/05-critique-and-wiki.md`
+6. `loom-core/skills/using-loom/references/06-filesystem-and-tooling.md`
+7. `loom-core/skills/using-loom/references/07-validation-and-honesty.md`
+8. `loom-core/skills/using-loom/references/08-trust-boundaries.md`
 
 If a native adapter preloads those references, the agent can proceed directly into Loom routing. Otherwise, use `using-loom` before work starts.
 

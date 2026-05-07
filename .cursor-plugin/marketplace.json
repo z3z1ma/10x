@@ -1,0 +1,62 @@
+{
+  "name": "agent-loom",
+  "owner": {
+    "name": "z3z1ma"
+  },
+  "metadata": {
+    "description": "Cursor marketplace catalog for the split Loom package roots.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "loom-core",
+      "source": "loom-core",
+      "description": "Core Loom Markdown-native protocol skills for Cursor.",
+      "version": "0.1.0",
+      "author": {
+        "name": "z3z1ma"
+      },
+      "homepage": "https://github.com/z3z1ma/agent-loom",
+      "repository": "https://github.com/z3z1ma/agent-loom",
+      "license": "MIT",
+      "keywords": [
+        "loom",
+        "ai-agents",
+        "agent-skills",
+        "markdown"
+      ],
+      "category": "Productivity",
+      "tags": [
+        "protocol",
+        "agents",
+        "skills"
+      ]
+    },
+    {
+      "name": "loom-playbooks",
+      "source": "loom-playbooks",
+      "description": "Optional Loom workflow playbook skills for Cursor; requires loom-core for using-Loom doctrine.",
+      "version": "0.1.0",
+      "author": {
+        "name": "z3z1ma"
+      },
+      "homepage": "https://github.com/z3z1ma/agent-loom",
+      "repository": "https://github.com/z3z1ma/agent-loom",
+      "license": "MIT",
+      "keywords": [
+        "loom",
+        "ai-agents",
+        "agent-skills",
+        "markdown",
+        "playbooks"
+      ],
+      "category": "Productivity",
+      "tags": [
+        "protocol",
+        "agents",
+        "skills",
+        "playbooks"
+      ]
+    }
+  ]
+}

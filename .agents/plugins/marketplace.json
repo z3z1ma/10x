@@ -5,10 +5,22 @@
   },
   "plugins": [
     {
-      "name": "loom",
+      "name": "loom-core",
       "source": {
-        "source": "url",
-        "url": "https://github.com/z3z1ma/agent-loom.git"
+        "source": "local",
+        "path": "./loom-core"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "loom-playbooks",
+      "source": {
+        "source": "local",
+        "path": "./loom-playbooks"
       },
       "policy": {
         "installation": "AVAILABLE",

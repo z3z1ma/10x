@@ -1,0 +1,33 @@
+{
+  "name": "loom-core",
+  "version": "0.1.0",
+  "description": "Core Loom Markdown-native AI work protocol skills for Codex.",
+  "author": {
+    "name": "z3z1ma"
+  },
+  "repository": "https://github.com/z3z1ma/agent-loom",
+  "license": "MIT",
+  "keywords": [
+    "loom",
+    "ai-agents",
+    "agent-skills",
+    "markdown"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Loom Core",
+    "shortDescription": "Core Markdown-native protocol skills for Codex.",
+    "longDescription": "Loom Core provides using-Loom doctrine and canonical record skills for recoverable AI knowledge work.",
+    "developerName": "z3z1ma",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use using-loom before any Loom work.",
+      "Use Loom Core to create and maintain canonical Loom records.",
+      "Treat Codex preload behavior as requiring separate runtime validation."
+    ]
+  }
+}

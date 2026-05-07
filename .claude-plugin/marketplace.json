@@ -4,14 +4,14 @@
     "name": "z3z1ma"
   },
   "metadata": {
-    "description": "Claude Code marketplace for the Loom Markdown-native AI work protocol.",
+    "description": "Claude Code marketplace catalog for the split Loom package roots.",
     "version": "0.1.0"
   },
   "plugins": [
     {
-      "name": "loom",
-      "source": "./",
-      "description": "Loom Markdown-native AI work protocol skills for Claude Code.",
+      "name": "loom-core",
+      "source": "./loom-core",
+      "description": "Core Loom Markdown-native protocol skills for Claude Code.",
       "version": "0.1.0",
       "author": {
         "name": "z3z1ma"
@@ -30,6 +30,32 @@
         "agents",
         "skills",
         "workflow"
+      ]
+    },
+    {
+      "name": "loom-playbooks",
+      "source": "./loom-playbooks",
+      "description": "Optional Loom workflow playbook skills for Claude Code; requires loom-core for using-Loom doctrine.",
+      "version": "0.1.0",
+      "author": {
+        "name": "z3z1ma"
+      },
+      "repository": "https://github.com/z3z1ma/agent-loom",
+      "license": "MIT",
+      "keywords": [
+        "loom",
+        "ai-agents",
+        "agent-skills",
+        "markdown",
+        "playbooks"
+      ],
+      "category": "productivity",
+      "tags": [
+        "protocol",
+        "agents",
+        "skills",
+        "workflow",
+        "playbooks"
       ]
     }
   ]

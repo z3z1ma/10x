@@ -1,0 +1,33 @@
+{
+  "name": "loom-playbooks",
+  "version": "0.1.0",
+  "description": "Optional Loom workflow playbook skills for Codex; requires loom-core for using-Loom doctrine.",
+  "author": {
+    "name": "z3z1ma"
+  },
+  "repository": "https://github.com/z3z1ma/agent-loom",
+  "license": "MIT",
+  "keywords": [
+    "loom",
+    "ai-agents",
+    "agent-skills",
+    "markdown",
+    "playbooks"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Loom Playbooks",
+    "shortDescription": "Optional Loom workflow playbook skills for Codex.",
+    "longDescription": "Loom Playbooks provides workflow coordinator skills and expects loom-core to supply using-Loom doctrine and canonical record skills.",
+    "developerName": "z3z1ma",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use loom-core for using-Loom doctrine and canonical record skills.",
+      "Use Loom Playbooks for optional workflow coordinator routes when installed."
+    ]
+  }
+}

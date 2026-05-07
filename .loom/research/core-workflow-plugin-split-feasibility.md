@@ -3,7 +3,7 @@ id: research:core-workflow-plugin-split-feasibility
 kind: research
 status: active
 created_at: 2026-05-07T20:42:59Z
-updated_at: 2026-05-07T21:51:37Z
+updated_at: 2026-05-07T23:02:24Z
 scope:
   kind: repository
   repositories:
@@ -18,6 +18,7 @@ links:
   ticket:
     - ticket:hi5e7nbr
   research:
+    - research:gemini-extension-subdirectory-feasibility
     - research:loom-install-distribution-methods
     - research:codex-plugin-distribution-surfaces
   decision:
@@ -216,6 +217,12 @@ workflow plugin or a project-provided equivalent.
 
 ## Harness Feasibility Matrix
 
+Gemini note: the Gemini row below has been narrowed by
+`research:gemini-extension-subdirectory-feasibility`. Gemini remains viable as a
+native extension format when the extension root is supplied directly, but the
+current docs and local CLI do not support seamless Git install of extension roots
+from this repository's `loom-core/` and `loom-playbooks/` subdirectories.
+
 | Harness | Split support assessment | How it would look | Key risk |
 | --- | --- | --- | --- |
 | Claude Code | Feasible. `plugin.json` appears single-plugin, but `.claude-plugin/marketplace.json` supports multiple plugin entries with relative sources. Plugin manifests can declare `skills` as a string or array. | A marketplace exposes `loom-core` and `loom-playbooks` plugin roots, each with its own `.claude-plugin/plugin.json` and self-contained skill root. Core plugin owns optional using-Loom `SessionStart` preload. | Plugin roots installed into cache cannot rely on paths outside themselves, so repo layout or release packaging must make each root self-contained. |
@@ -279,9 +286,10 @@ be self-contained or built into a self-contained release artifact.
    inside the core plugin, not merely as trusted project config. Runtime validation
    is still needed for installed-plugin skill discovery and hook loading.
 
-6. Gemini CLI is the least certain. Two extensions are conceptually supported,
-   but one Git-backed repo containing two installable extension roots needs more
-   validation or a packaging workaround.
+6. Gemini CLI is the least certain. `research:gemini-extension-subdirectory-feasibility`
+   now rejects the one-Git-repo subdirectory install path for current release
+   claims; Gemini needs explicit local package-root linking, separate
+   release/distribution packaging, or upstream subdirectory support.
 
 7. A core-only install requires content refactoring, not just packaging. The
    `using-loom`, `loom-workspace`, and `loom-records` surfaces currently teach or
@@ -319,9 +327,10 @@ be self-contained or built into a self-contained release artifact.
 5. Keep root-level marketplace/catalog files as repo-level discovery surfaces that
    list both package roots. Do not keep root `skills/` as a full bundle.
 
-6. Validate Gemini separately before promising a one-repo two-extension install.
-   If Gemini cannot install two extension roots from one Git repository cleanly,
-   use separate release packages or document two local/source installs.
+6. Resolve Gemini distribution separately before promising remote install support.
+   Use `research:gemini-extension-subdirectory-feasibility` as the current
+   evidence: document explicit local package-root linking, choose a separate
+   release/distribution route, or defer until upstream subdirectory support exists.
 
 7. After the architecture decision, create bounded tickets per harness for split
    manifests and validation rather than doing a single broad migration.

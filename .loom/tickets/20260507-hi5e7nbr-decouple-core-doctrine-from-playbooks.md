@@ -1,11 +1,11 @@
 ---
 id: ticket:hi5e7nbr
 kind: ticket
-status: ready
+status: closed
 change_class: protocol-authority
 risk_class: high
 created_at: 2026-05-07T21:51:37Z
-updated_at: 2026-05-07T21:52:48Z
+updated_at: 2026-05-07T22:07:40Z
 scope:
   kind: repository
   repositories:
@@ -23,6 +23,11 @@ links:
     - decision:0008
   critique:
     - critique:core-playbooks-package-contract-review
+    - critique:core-doctrine-playbook-decoupling-review
+  evidence:
+    - evidence:core-doctrine-playbook-decoupling-check
+  packet:
+    - packet:ralph-ticket-hi5e7nbr-20260507T215704Z
 external_refs: {}
 depends_on: []
 ---
@@ -107,9 +112,9 @@ Ticket-local criteria, only when no spec owns the reusable contract:
 
 Status rationale:
 
-Ready. The constitutional decision, behavior spec, split plan, and spec critique
-exist. The scope is bounded to core doctrine/prose decoupling and explicitly
-excludes moving directories or editing harness packages.
+Closed. Ralph iteration 01 completed the bounded doctrine/prose decoupling,
+evidence was recorded, mandatory critique completed, findings were dispositioned,
+and ticket-scoped acceptance is satisfied.
 
 Blockers:
 
@@ -132,26 +137,26 @@ structural evidence, then route to mandatory critique before any acceptance clai
 
 # Evidence
 
-Disposition: pending
+Disposition: sufficient
 
 Records:
 
-- None - no implementation evidence yet.
+- evidence:core-doctrine-playbook-decoupling-check — supports scoped
+  `spec:core-and-playbooks-package-contract#ACC-002` and `#ACC-007` for core
+  doctrine/operator prose only.
 
 Gaps / limits:
 
-- Need targeted search output for optional-playbook assumptions in scoped core
-  skill files.
-- Need diff review and `git diff --check` after edits.
-- Need explicit note of any remaining playbook mentions in core guidance and why
-  they are safe.
+- Evidence is intentionally scoped. It does not prove package-root creation,
+  public docs/manifests reconciliation, playbook fail-closed wording, or harness
+  install behavior.
 
 # Review And Follow-Through
 
 Critique policy: mandatory
 Critique rationale: High-risk protocol-authority change that affects how agents
 route work and understand the core/playbook product boundary.
-Critique disposition: pending
+Critique disposition: completed
 
 Required critique profiles:
 
@@ -161,27 +166,44 @@ Required critique profiles:
 
 Findings:
 
-- None - no implementation critique yet.
+- critique:core-doctrine-playbook-decoupling-review#FIND-001 — resolved; packet
+  status and parent merge notes updated, and this ticket now records evidence,
+  critique, findings, and acceptance truth.
+- critique:core-doctrine-playbook-decoupling-review#FIND-002 — resolved; evidence
+  amended with concrete before-state observations and final after-state path
+  search result.
+- critique:core-doctrine-playbook-decoupling-review#FIND-003 — resolved; routing
+  catalog wording clarified from shorthand to explicit optional playbook or
+  equivalent workflow phrasing.
 
-Promotion disposition: pending
-Promotion / deferral rationale: Non-trivial product-boundary work may need wiki or
-doc promotion after implementation and critique; decide before closure.
+Promotion disposition: not_required
+Promotion / deferral rationale: Reusable product-boundary truth is already owned
+by `decision:0008`, `spec:core-and-playbooks-package-contract`, and
+`plan:split-core-and-playbooks-packages`. Public docs/wiki promotion belongs to a
+later documentation ticket, not this scoped doctrine decoupling ticket.
 
 Promoted / deferred:
 
-- None yet.
+- None - no separate promotion artifact for this ticket.
 
-Wiki disposition: pending
+Wiki disposition: not_required - no accepted explanation page is needed for this
+scoped prose update beyond the existing decision/spec/plan records.
 
 # Acceptance Decision
 
 Required before closure when acceptance, accepted risk, or operator provenance
 needs to be explicit.
 
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
+Accepted by: OpenCode parent agent
+Accepted at: 2026-05-07T22:07:40Z
+Basis: Scoped diff changed only core skill prose inside the ticket write boundary;
+`evidence:core-doctrine-playbook-decoupling-check` records before/after targeted
+search observations and `git diff --check`; mandatory critique
+`critique:core-doctrine-playbook-decoupling-review` found no high-severity prose
+defect and all findings have ticket-owned `resolved` dispositions.
+Residual risks: This ticket does not satisfy full package-root acceptance,
+playbook dependency wording, public docs/manifests reconciliation, Codex/Gemini
+runtime gates, or actual `loom-core` / `loom-playbooks` directory migration.
 
 # Dependencies
 
@@ -196,3 +218,8 @@ linked as governing owner records, not live ticket dependencies.
 - 2026-05-07T21:51:37Z: Created ticket as the first implementation slice under
   `plan:split-core-and-playbooks-packages`, scoped to decoupling core doctrine
   from optional playbook assumptions before directory migration.
+- 2026-05-07T21:57:04Z: Moved ticket to active and prepared Ralph iteration 01
+  for bounded core doctrine/prose edits.
+- 2026-05-07T22:07:40Z: Reconciled Ralph iteration 01, recorded evidence and
+  mandatory critique, resolved critique findings, and closed the scoped doctrine
+  decoupling ticket.

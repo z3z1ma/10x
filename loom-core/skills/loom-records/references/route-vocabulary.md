@@ -1,0 +1,117 @@
+# Workflow Selection
+
+This reference keeps the old filename for compatibility, but it no longer defines
+a saved workflow-choice system.
+
+Loom operators should choose the next skill, owner layer, or workflow by reasoning
+over owner records, ticket state, blockers, evidence, critique, acceptance,
+plans, specs, and journals. Do not serialize that reasoning into `next route`,
+`Route`, `proposed next route`, or route-readiness fields in tickets,
+initiatives, plans, workspace snapshots, or support handoffs.
+
+## Core Rule
+
+The filesystem graph should contain enough facts for a fresh agent to decide what
+to do next. It should not contain a separate workflow-routing ledger.
+
+Use records this way:
+
+- tickets own live execution state, blockers, scoped acceptance, evidence
+  disposition, critique disposition, acceptance decisions, and journal history
+- plans own complex-change planning, decomposition, sequencing, and tranche strategy
+- specs own intended behavior and reusable acceptance contracts
+- research owns investigations, options, conclusions, and null results
+- evidence owns observed artifacts and support/challenge links
+- critique owns findings, verdicts, risks, and required follow-up
+- wiki owns accepted explanation
+- packets own bounded child-worker contracts
+
+If those records do not make the next action clear, improve the owner record that
+owns the missing fact. Do not patch the ambiguity with a saved workflow value.
+
+## Packet Exception
+
+Packets are the exception because they are bounded contracts for fresh-context
+work. A packet may serialize:
+
+- the exact task for this iteration or review/synthesis pass
+- read scope and write scope
+- source fingerprint and context budget
+- stop conditions for the child
+- output contract
+- child outcome vocabulary when the packet family defines it
+- parent merge expectations
+
+That packet grammar does not justify adding saved workflow fields to tickets or
+other owner records. After a packet returns, the parent reconciles facts into the
+ticket, evidence, critique, wiki, spec, plan, research, initiative, or
+constitution records that own them.
+
+## Skill Selection Cues
+
+These are reasoning cues, not values to save in a field:
+
+| If the missing or changing truth is... | Use or update... |
+| --- | --- |
+| project identity, durable principles, hard constraints, roadmap direction, or citable decisions | `loom-constitution` |
+| objective framing, success metrics, delegated autonomy, or cross-ticket outcome ownership | `loom-initiatives` |
+| evidence synthesis, tradeoffs, rejected paths, options, or null results | `loom-research` |
+| intended behavior, requirements, scenarios, or reusable acceptance criteria | `loom-specs` |
+| complex-change planning, decomposition, sequencing, dependency order, tranche strategy, or rollout | `loom-plans` |
+| live bounded execution state, blockers, scoped acceptance, critique/evidence disposition, or closure | `loom-tickets` |
+| one bounded implementation handoff needing explicit read/write scope and fresh context | `loom-ralph` packet |
+| observed outputs, validation artifacts, logs, screenshots, scans, or reproduction evidence | `loom-evidence` |
+| adversarial review, findings, verdicts, risk, or acceptance sufficiency review | `loom-critique` |
+| accepted explanation, workflow knowledge, architecture notes, or troubleshooting knowledge | `loom-wiki` |
+| accepted learning needs promotion or prevention before closure | `loom-retrospective` |
+| already-truthful work needs PR, release, merge, or handoff packaging | optional `loom-ship` or equivalent shipping workflow |
+| workspace structure, repository scope, owner-chain trust, or cold-start recovery is unclear | `loom-workspace` |
+| support-only retrieval cues, preferences, reminders, entities, or hot context | `loom-memory` support recall |
+
+When the user asks in ordinary coding-task language such as bug, feature,
+refactor, tests, dependency, performance, UI, API, release, or done/acceptance
+terms, use `skills/loom-workspace/references/task-routing-catalog.md` as a
+prompt-language companion to this owner-truth table.
+
+Use ordinary prose when explaining why you chose a skill. Do not create a route
+field just to make the choice look deterministic.
+
+## Vocabulary Boundaries
+
+Keep these categories distinct:
+
+| Category | Examples | Boundary rule |
+| --- | --- | --- |
+| Ticket execution states | `proposed`, `ready`, `active`, `blocked`, `review_required`, `complete_pending_acceptance`, `closed`, `cancelled` | Describe live ticket state. They are not workflow instructions. |
+| Record lifecycle statuses | `draft`, `active`, `accepted`, `recorded`, `superseded`, `abandoned` | Describe record lifecycle or support-surface state. They are not next-action commands. |
+| Ralph child outcomes | `continue`, `stop`, `blocked`, `escalate` | Child output for parent reconciliation inside the packet loop. It becomes ticket truth only after parent reconciliation. |
+| Critique-owned finding states | `open`, `withdrawn` | Live inside critique records and describe whether critique still stands behind a finding. |
+| Ticket-owned finding dispositions | `resolved`, `accepted_risk`, `superseded`, `converted_to_follow_up` | Live in the ticket's review/follow-through section for qualified findings. They do not name a next workflow. |
+| Support-memory surfaces | `memory`, `loom-memory`, retrieval cues, preferences, reminders, hot context | Support recall only. If the content becomes project truth, move it to the owner layer. |
+| Git support coordination | branch, worktree, baseline, diff provenance | Support behavior for isolation and provenance. Git does not own Loom truth or workflow ownership. |
+| Commands and adapters | slash commands, harness commands, MCPs, package wrappers | Invocation conveniences. They may transport work, but owner records and skills still own truth. |
+
+When the same word appears in multiple contexts, the field and owner decide the
+meaning. A Ralph child `outcome: continue` is packet output. A ticket
+`status: blocked` is live execution state. Neither should be converted into a
+saved workflow route.
+
+## Stopping, Asking, And Continuing
+
+Do not encode `stop`, `ask_user`, or `continue` as saved workflow values in owner
+records.
+
+Use the existing owner surface:
+
+- If a ticket is done, record the acceptance decision and close it.
+- If a ticket should not proceed, use `status: cancelled` with rationale, or
+  `blocked` when a real blocker remains.
+- If a human decision is needed, record the decision needed, unsafe-inference
+  reason, and owner record that will change in the relevant ticket, initiative,
+  spec, plan, or constitution record.
+- If work continues, the next action should be inferable from open blockers,
+  evidence gaps, critique disposition, acceptance gaps, plan strategy, and the
+  journal.
+
+The agent's reasoning is part of the protocol. Skills pair with that reasoning;
+they do not need every next choice serialized.

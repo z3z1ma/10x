@@ -3,7 +3,7 @@ id: spec:core-and-playbooks-package-contract
 kind: spec
 status: active
 created_at: 2026-05-07T21:41:42Z
-updated_at: 2026-05-07T21:51:37Z
+updated_at: 2026-05-07T23:20:14Z
 scope:
   kind: repository
   repositories:
@@ -15,14 +15,21 @@ links:
     - plan:split-core-and-playbooks-packages
   research:
     - research:core-workflow-plugin-split-feasibility
+    - research:gemini-extension-subdirectory-feasibility
     - research:loom-install-distribution-methods
   decision:
     - decision:0008
     - decision:0006
+    - decision:0009
   spec:
     - spec:opencode-plugin-install-contract
   ticket:
     - ticket:hi5e7nbr
+    - ticket:u9vtemj3
+    - ticket:7h8u6oxp
+    - ticket:xtt24452
+    - ticket:sbzmrvqv
+    - ticket:mbkqbkgq
   critique:
     - critique:core-playbooks-package-contract-review
 external_refs:
@@ -106,8 +113,10 @@ or skill prose implying that top-level `skills/` remains the product surface.
   relevant `skills/` root.
 - Bare `skills-core/` and `skills-workflows/`: rejected because supported harnesses
   need package roots with metadata, not only skill directories.
-- Retain root `skills/` as a compatibility bundle: rejected because it creates a
-  third product surface and drift risk.
+- Retain root `skills/` as a full compatibility bundle: rejected because it creates
+  a third product surface and drift risk.
+- Add a Gemini-only root core shim: accepted by `decision:0009` because Gemini
+  root manifest indexing is useful and can be scoped to core-only behavior.
 - Duplicate core inside playbooks: rejected because it creates competing copies of
   the kernel.
 
@@ -115,7 +124,9 @@ or skill prose implying that top-level `skills/` remains the product surface.
 
 - Do not add a monolithic `loom` CLI, daemon, MCP, dashboard, hidden router, or
   required installer runtime.
-- Do not preserve root `skills/` as a full compatibility product surface.
+- Do not preserve root `skills/` as a full compatibility product surface; a
+  Gemini-only core shim may expose core skills from `loom-core` when documented as
+  core-only transport.
 - Do not make `loom-playbooks` standalone by copying core skills.
 - Do not claim Gemini or Codex preload behavior without runtime evidence.
 - Do not redefine canonical layers, ticket ledger authority, packet semantics, or
@@ -131,8 +142,11 @@ or skill prose implying that top-level `skills/` remains the product surface.
   skills or doctrine.
 - Always: validate harness-specific claims before public docs present them as
   supported behavior.
-- Ask first: adding a third package, changing core/playbook membership, retaining a
-  root full bundle, or repurposing `open-loom` as a compatibility meta-package.
+- Accepted exception: `decision:0009` allows a Gemini-specific repository-root
+  core shim for `gemini-extension.json` indexing and core-only install.
+- Ask first: adding any other third package, changing core/playbook membership,
+  retaining a root full bundle, or repurposing `open-loom` as a compatibility
+  meta-package.
 - Never: let generated adapter files, marketplace catalogs, package metadata,
   examples, or external systems become Loom's ontology or ticket ledger.
 
@@ -148,7 +162,8 @@ or skill prose implying that top-level `skills/` remains the product surface.
   pretending the playbook package can define Loom truth by itself.
 - Validation boundary: package metadata can expose or point at skills and preload
   references; it cannot redefine Loom semantics.
-- Compatibility / deprecation: root `skills/` is retired as product surface;
+- Compatibility / deprecation: root `skills/` is retired as product surface except
+  for the Gemini-only core shim authorized by `decision:0009`;
   existing `open-loom` behavior is historical single-package behavior under
   superseded `spec:opencode-plugin-install-contract`; migration, deprecation, or
   replacement handling belongs in downstream OpenCode work before release claims
@@ -161,6 +176,8 @@ Positive examples:
 - A core-only user installs `loom-core` and sees `using-loom`, canonical owner-layer
   skills, `loom-records`, `loom-workspace`, `loom-memory`, `loom-ralph`, and
   `loom-retrospective`, with no `loom-debugging` or `loom-drive` skills present.
+- A Gemini user installs the repository root and gets core only, with docs clearly
+  pointing full users to clone and link both package roots.
 - A full user installs both packages. Playbook skills route durable truth back into
   core owner layers and cite core as a prerequisite.
 - A Claude/Codex/Cursor repo-level marketplace lists both package roots but does
@@ -172,6 +189,7 @@ Non-examples:
 
 - `loom-playbooks/skills/using-loom/` as a copied core skill.
 - Root `skills/` retained as the recommended full install.
+- Root Gemini install described as including playbooks.
 - A generated `AGENTS.md`, plugin hook, or marketplace description that becomes
   the only place a core requirement exists.
 - Docs that say Codex or Gemini preload works before runtime evidence exists.
@@ -179,6 +197,7 @@ Non-examples:
 # Constraints
 
 - `decision:0008` owns the package-root policy.
+- `decision:0009` owns the Gemini-specific root core shim exception.
 - `decision:0006` remains relevant only for the preserved rejection of fallback
   Makefile, shell installer, and top-level command-wrapper product surfaces.
 - Skills must remain self-contained inside their package root and use skill-local
@@ -208,7 +227,9 @@ Non-examples:
   doctrine, canonical owner-layer skills, record grammar, `using-loom`, Ralph, or
   retrospective.
 - REQ-006: Root `skills/` MUST be retired as a product surface and MUST NOT be kept
-  as a recommended full compatibility bundle.
+  as a recommended full compatibility bundle. A Gemini-only root core shim MAY
+  expose `loom-core/skills` for Gemini discovery when it is documented as core-only
+  transport.
 - REQ-007: Core package prose MUST remain coherent when playbooks are absent; any
   optional playbook route named by core must be framed as optional or replaceable
   by a user-provided workflow.
@@ -222,14 +243,23 @@ Non-examples:
   the new full-package answer without an explicit follow-up decision.
 - REQ-011: Codex package docs MUST NOT claim installed-plugin hook preload until a
   current runtime validation proves bundled core hooks load as expected.
-- REQ-012: Gemini package docs MUST NOT claim a one-repository two-extension install
-  path until current runtime validation proves the behavior or a release packaging
-  route is accepted.
+- REQ-012: Gemini package docs MUST NOT claim a one-repository subdirectory or
+  two-extension install path from this repository. Gemini docs may claim only
+  behavior backed by current evidence: explicit local package-root link/install,
+  repository-root core-only install through the Gemini shim, an accepted separate
+  release/distribution route, or an explicitly deferred upstream-support gap.
 - REQ-013: Public docs, AGENTS guidance, architecture notes, examples, and harness
   manifests MUST reference package-root paths after migration and MUST NOT treat
   retired root `skills/` as current product truth.
 - REQ-014: Implementation tickets MUST preserve or reconcile references when moving
   paths so future agents can search IDs and package paths without stale ambiguity.
+- REQ-015: After OpenCode split work, the repository root package MUST be
+  non-published workspace/repo metadata, while publishable OpenCode package
+  surfaces live only under `loom-core` and `loom-playbooks`.
+- REQ-016: The repository-root Gemini extension, if present, MUST install core only,
+  MUST preload using-Loom context from `loom-core`, MUST expose no playbook skills,
+  and MUST be documented as a Gemini-specific shim rather than the preferred full
+  install path.
 
 # Scenarios
 
@@ -275,14 +305,14 @@ AND the catalog does not contain the only copy of any Loom semantic requirement.
 
 ## SCN-005: OpenCode split packages
 
-Exercises: REQ-010, ACC-004, ACC-005
+Exercises: REQ-010, REQ-015, ACC-004, ACC-005
 
 GIVEN OpenCode package work has been implemented
 WHEN a user configures OpenCode with the split packages
 THEN `open-loom-core` exposes core using-Loom references and core skills
 AND `open-loom-playbooks` exposes playbook skills only
-AND any status of the legacy `open-loom` package is documented as migration or
-deprecation, not silent compatibility truth.
+AND the repository root package is private/non-published repo metadata rather than
+a third publishable `open-loom` package or compatibility meta-package.
 
 ## SCN-006: Evidence-gated Codex preload
 
@@ -295,12 +325,26 @@ load from the plugin path and add using-Loom context as expected.
 
 ## SCN-007: Evidence-gated Gemini extension packaging
 
-Exercises: REQ-012, ACC-006
+Exercises: REQ-012, REQ-016, ACC-006, ACC-009
 
-GIVEN Gemini package work wants to claim a one-repository two-extension install
-WHEN docs or acceptance claim that install shape works
-THEN current runtime evidence exists, or the docs state the accepted alternate
-release packaging route.
+GIVEN Gemini package work wants to claim install support
+WHEN docs or acceptance describe how Gemini users install Loom
+THEN the described route is one of: explicit local package-root link/install,
+repository-root core-only install through the Gemini shim, accepted separate
+release/distribution packaging, or explicitly deferred upstream support
+AND docs do not present this repository's subdirectories as a seamless remote
+extension install path
+AND docs do not imply repository-root Gemini install includes playbooks.
+
+## SCN-009: Gemini root core shim
+
+Exercises: REQ-006, REQ-012, REQ-016, ACC-006, ACC-009
+
+GIVEN a user installs the repository root as a Gemini extension
+WHEN Gemini extension discovery runs
+THEN `loom-core` using-Loom context and core skills are visible
+AND playbook skills are absent
+AND install docs prefer clone-and-link for full core plus playbooks installs.
 
 ## SCN-008: Stale root path rejection
 
@@ -310,7 +354,7 @@ GIVEN package-root migration is complete
 WHEN a future agent searches public docs, active owner records, and harness
 manifests
 THEN no active current-truth surface points to root `skills/` as the product
-surface
+surface, except the Gemini-only core shim authorized by `decision:0009`
 AND historical references are marked superseded, historical, or scoped to prior
 evidence.
 
@@ -318,22 +362,27 @@ evidence.
 
 - ACC-001: The repository contains `loom-core/skills` and `loom-playbooks/skills`
   with the membership defined by REQ-003 and REQ-004.
-- ACC-002: A core-only inspection shows core skills and using-Loom references are
-  available without playbook skills and without a root `skills/` dependency.
+- ACC-002: A core-only package-root inspection shows core skills and using-Loom
+  references are available without playbook skills and without a root `skills/`
+  dependency.
 - ACC-003: A playbook package inspection shows no duplicated core skill directories
   and clear dependency wording on `loom-core`.
 - ACC-004: Harness package metadata and root catalogs, where present, expose the
   two package roots as separate installable units.
 - ACC-005: OpenCode package checks demonstrate `open-loom-core` and
   `open-loom-playbooks` register the correct package-root skill paths and any core
-  preload paths.
+  preload paths, while the repository root package is private/non-published and
+  does not present a third publishable Loom package.
 - ACC-006: Codex and Gemini docs only claim behavior that has current runtime
   evidence or explicitly mark the behavior as unvalidated/deferred.
 - ACC-007: Public docs, active owner records, examples intended as current review
   fixtures, and harness manifests no longer present root `skills/` as current
-  product truth.
+  product truth except for the Gemini-only core shim authorized by `decision:0009`.
 - ACC-008: Final split critique records no open medium/high findings without
   ticket-owned disposition before release acceptance.
+- ACC-009: Gemini root install evidence shows the repository-root extension exposes
+  core context/skills only, and install docs state root install is core-only while
+  full Gemini installs should use explicit package-root links.
 
 Coverage:
 
@@ -343,10 +392,11 @@ Coverage:
 | ACC-002 | REQ-003, REQ-006, REQ-007 | SCN-001 | core-only package inspection and stale root path scan |
 | ACC-003 | REQ-005, REQ-008 | SCN-002, SCN-003 | duplicate-core scan and playbook dependency wording review |
 | ACC-004 | REQ-002, REQ-009, REQ-013 | SCN-004 | manifest/catalog syntax and path checks |
-| ACC-005 | REQ-010 | SCN-005 | OpenCode smoke checks and package dry-runs |
-| ACC-006 | REQ-011, REQ-012 | SCN-006, SCN-007 | Codex/Gemini runtime evidence or explicit deferral notes |
-| ACC-007 | REQ-006, REQ-013, REQ-014 | SCN-008 | grep for stale current-truth root `skills/` claims |
+| ACC-005 | REQ-010, REQ-015 | SCN-005 | OpenCode smoke checks, package dry-runs, and root private package inspection |
+| ACC-006 | REQ-011, REQ-012, REQ-016 | SCN-006, SCN-007, SCN-009 | Codex/Gemini runtime evidence or explicit deferral notes |
+| ACC-007 | REQ-006, REQ-013, REQ-014 | SCN-008 | grep for stale current-truth root `skills/` claims with Gemini shim exception |
 | ACC-008 | REQ-014 | SCN-008 | final critique and ticket-owned finding dispositions |
+| ACC-009 | REQ-006, REQ-012, REQ-016 | SCN-007, SCN-009 | Gemini root install/list evidence and install-doc review |
 
 # Evidence Plan
 
@@ -356,22 +406,24 @@ Coverage:
 | ACC-002 | package inspection | Evidence record showing core-only skill discovery or equivalent structural proof | Harness-specific discovery should be captured separately |
 | ACC-003 | targeted grep/review | Evidence record showing no duplicated core directories under playbooks and dependency wording present | Review should include playbook `SKILL.md` files |
 | ACC-004 | manifest/catalog validation | Evidence record with JSON checks and path checks | Runtime install may need harness-specific evidence |
-| ACC-005 | OpenCode smoke | Evidence record for `open-loom-core` and `open-loom-playbooks` checks | Existing `open-loom` migration remains separate |
+| ACC-005 | OpenCode smoke | Evidence record for `open-loom-core`, `open-loom-playbooks`, and root private package checks | Root package should remain repo metadata, not a third published package |
 | ACC-006 | runtime harness validation or deferral | Codex/Gemini evidence records or explicit ticket deferral | Do not infer from docs alone |
 | ACC-007 | stale reference scan | Evidence record with grep queries and review notes | Historical/superseded records may still mention root `skills/` |
 | ACC-008 | critique | Final critique record and ticket dispositions | Critique does not close tickets itself |
+| ACC-009 | Gemini runtime and docs review | Evidence record for root install/list behavior plus install-doc diff review | Does not validate remote playbook install |
 
 # Amendment Notes
 
-None - new spec.
+- 2026-05-07T23:20:14Z: Added `decision:0009` Gemini-only root core shim
+  exception, `REQ-016`, `SCN-009`, and `ACC-009`.
 
 # Contract Review
 
 - Completeness: covers package roots, membership, dependency, root `skills/`
-  retirement, harness catalog boundaries, OpenCode naming, Codex/Gemini evidence
-  gates, docs, and reference reconciliation.
-- Correctness: reflects `decision:0008`, the split feasibility research, and the
-  active split plan rather than the current unsplit source tree.
+  retirement with the Gemini shim exception, harness catalog boundaries, OpenCode
+  naming, Codex/Gemini evidence gates, docs, and reference reconciliation.
+- Correctness: reflects `decision:0008`, `decision:0009`, the split feasibility
+  research, and the active split plan rather than the current unsplit source tree.
 - Coherence: uses `core`, `playbooks`, `package roots`, and `product surface` as
   stable terms; distinguishes package metadata from semantic ownership.
 
@@ -382,13 +434,12 @@ None - new spec.
 | `loom-core` and `loom-playbooks` are the package names | yes | no | accepted by `decision:0008` |
 | `loom-playbooks` requires core instead of duplicating it | yes, but costly | yes for playbook packaging | accepted by `decision:0008` |
 | OpenCode uses two packages only | yes | yes for OpenCode package work | accepted for this contract; legacy `open-loom` migration remains follow-up |
+| Existing root `open-loom` package handling after split | yes | yes for OpenCode package work | root package becomes private/non-published repo metadata; no compatibility meta-package |
 | Codex installed-plugin hooks work for core preload | yes | no for package layout; yes for preload claims | requires runtime evidence |
-| Gemini can support two package roots cleanly | yes | no for package layout; yes for Gemini install claims | requires runtime evidence or packaging route |
+| Gemini can support two package roots cleanly | yes | no for package layout; yes for Gemini install claims | root install is accepted as core-only by `decision:0009`; playbooks still require local-link docs, accepted release/distribution route, or upstream support |
 
 # Open Questions
 
-- What exact deprecation or migration path should the published `open-loom` package
-  use after split packages exist?
 - Should future releases add a convenience meta-package after core/playbooks are
   stable, or would that recreate the confusion this split is meant to remove?
 - What versioning scheme should tie `loom-core` and `loom-playbooks` together when

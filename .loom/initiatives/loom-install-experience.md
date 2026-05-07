@@ -3,7 +3,7 @@ id: initiative:loom-install-experience
 kind: initiative
 status: active
 created_at: 2026-04-25T18:25:20Z
-updated_at: 2026-05-07T21:51:37Z
+updated_at: 2026-05-07T22:08:53Z
 scope:
   kind: repository
   repositories:
@@ -25,6 +25,7 @@ links:
     - wiki:harness-adapter-package-pattern
   ticket:
     - ticket:hi5e7nbr
+    - ticket:u9vtemj3
     - ticket:6uy1rx20
     - ticket:us1brnsv
     - ticket:q7h1d05q

@@ -1,0 +1,21 @@
+{
+  "name": "loom-playbooks",
+  "displayName": "Loom Playbooks",
+  "description": "Optional Loom workflow playbook skills for Cursor; requires loom-core for using-Loom doctrine.",
+  "version": "0.1.0",
+  "author": {
+    "name": "z3z1ma"
+  },
+  "homepage": "https://github.com/z3z1ma/agent-loom",
+  "repository": "https://github.com/z3z1ma/agent-loom",
+  "license": "MIT",
+  "keywords": [
+    "loom",
+    "ai-agents",
+    "agent-skills",
+    "markdown",
+    "playbooks"
+  ],
+  "skills": "./skills/",
+  "hooks": {}
+}

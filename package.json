@@ -1,23 +1,17 @@
 {
-  "name": "open-loom",
+  "name": "agent-loom-workspace",
   "version": "0.1.10",
-  "description": "OpenCode plugin for the Loom Markdown-native AI work protocol.",
+  "private": true,
+  "description": "Repository workspace for the Loom Markdown-native AI work protocol packages.",
   "type": "module",
-  "main": "./open-loom.mjs",
-  "exports": {
-    ".": "./open-loom.mjs",
-    "./open-loom": "./open-loom.mjs"
+  "scripts": {
+    "smoke:core": "node loom-core/open-loom-core.mjs --smoke",
+    "smoke:playbooks": "node loom-playbooks/open-loom-playbooks.mjs --smoke",
+    "smoke:packages": "npm run smoke:core && npm run smoke:playbooks",
+    "pack:check:core": "npm pack --dry-run ./loom-core",
+    "pack:check:playbooks": "npm pack --dry-run ./loom-playbooks",
+    "pack:check": "npm run smoke:packages && npm run pack:check:core && npm run pack:check:playbooks"
   },
-  "engines": {
-    "opencode": ">=1.14.22 <2"
-  },
-  "files": [
-    "open-loom.mjs",
-    "skills/",
-    "README.md",
-    "PROTOCOL.md",
-    "ARCHITECTURE.md"
-  ],
   "keywords": [
     "opencode",
     "loom",
@@ -34,13 +28,5 @@
   "bugs": {
     "url": "https://github.com/z3z1ma/agent-loom/issues"
   },
-  "homepage": "https://github.com/z3z1ma/agent-loom#readme",
-  "scripts": {
-    "smoke:open-loom": "node open-loom.mjs --smoke",
-    "pack:check": "npm run smoke:open-loom && npm pack --dry-run",
-    "version:patch": "npm version patch --no-git-tag-version",
-    "version:minor": "npm version minor --no-git-tag-version",
-    "version:major": "npm version major --no-git-tag-version",
-    "publish:npm": "npm run pack:check && npm publish --access public"
-  }
+  "homepage": "https://github.com/z3z1ma/agent-loom#readme"
 }

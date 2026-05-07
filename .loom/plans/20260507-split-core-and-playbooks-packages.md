@@ -3,7 +3,7 @@ id: plan:split-core-and-playbooks-packages
 kind: plan
 status: active
 created_at: 2026-05-07T21:31:17Z
-updated_at: 2026-05-07T21:51:37Z
+updated_at: 2026-05-07T23:20:14Z
 scope:
   kind: repository
   repositories:
@@ -15,8 +15,14 @@ links:
     - spec:core-and-playbooks-package-contract
   ticket:
     - ticket:hi5e7nbr
+    - ticket:u9vtemj3
+    - ticket:7h8u6oxp
+    - ticket:xtt24452
+    - ticket:sbzmrvqv
+    - ticket:mbkqbkgq
   research:
     - research:core-workflow-plugin-split-feasibility
+    - research:gemini-extension-subdirectory-feasibility
     - research:loom-install-distribution-methods
     - research:codex-plugin-distribution-surfaces
   decision:
@@ -24,6 +30,7 @@ links:
     - decision:0005
     - decision:0006
     - decision:0008
+    - decision:0009
   critique:
     - critique:core-playbooks-package-contract-review
     - critique:core-playbooks-constitutional-decision-review
@@ -263,7 +270,8 @@ bundle. That creates a third product surface and makes drift likely.
 - Source claim / input: authorized core package boundary and core skill membership.
 - Observable outcome: `loom-core/skills/` contains the core skills and no root
   `skills/` dependency is needed for core operation.
-- Likely ticket: proposed.
+- Likely ticket: ticket:u9vtemj3 covers this with the playbooks move as one
+  source-layout migration slice.
 - Likely write scope: move core skill directories into `loom-core/skills/`; update
   in-repo references that point to moved core paths; preserve history with normal
   Git moves where possible.
@@ -282,7 +290,8 @@ bundle. That creates a third product surface and makes drift likely.
 - Source claim / input: playbook skill membership and dependency-on-core decision.
 - Observable outcome: `loom-playbooks/skills/` contains playbook skills only, and
   playbook activation text clearly requires `loom-core`.
-- Likely ticket: proposed.
+- Likely ticket: ticket:u9vtemj3 covers this with the core move as one
+  source-layout migration slice.
 - Likely write scope: move playbook skill directories into
   `loom-playbooks/skills/`; add dependency notices in playbook skill guidance;
   update references to core skills as installed-package dependencies rather than
@@ -303,7 +312,8 @@ bundle. That creates a third product surface and makes drift likely.
 - Observable outcome: per-package plugin/extension metadata exists inside
   `loom-core/` and `loom-playbooks/`, and root-level marketplace/catalog files
   point at both package roots.
-- Likely ticket: proposed, likely split per harness after an initial skeleton.
+- Likely ticket: ticket:7h8u6oxp for the non-OpenCode initial skeleton, with
+  harness-specific follow-ups as needed.
 - Likely write scope: `loom-core/.claude-plugin/`,
   `loom-playbooks/.claude-plugin/`, `loom-core/.codex-plugin/`,
   `loom-playbooks/.codex-plugin/`, `loom-core/.cursor-plugin/`,
@@ -327,11 +337,13 @@ bundle. That creates a third product surface and makes drift likely.
   `open-loom-core` and `open-loom-playbooks`.
 - Observable outcome: each package root has its own OpenCode plugin module and
   package metadata; core registers using-Loom references and core skills, while
-  playbooks registers playbook skills and does not preload core doctrine.
-- Likely ticket: proposed.
+  playbooks registers playbook skills and does not preload core doctrine. The
+  repository root package becomes private/non-published repo metadata, not a third
+  publishable Loom package.
+- Likely ticket: ticket:xtt24452.
 - Likely write scope: `loom-core/package.json`, `loom-core/open-loom-core.mjs`,
   `loom-playbooks/package.json`, `loom-playbooks/open-loom-playbooks.mjs`, root
-  package metadata if retained for repo scripts, and install docs.
+  `package.json`, root `open-loom.mjs`, and install docs.
 - Dependencies / order reason: follows package-root migration and harness skeleton.
 - Verification / evidence target: per-package smoke command, package dry-run for
   each package, local file/path OpenCode config check, and stale `open-loom`
@@ -363,25 +375,32 @@ bundle. That creates a third product surface and makes drift likely.
 - Stop or loopback condition: if plugin-bundled hooks do not load, keep Codex core
   skill packaging but document preload as unsupported or separate.
 
-## Unit: Validate Gemini Two-Extension Path
+## Unit: Resolve Gemini Extension Distribution Route
 
-- Source claim / input: Gemini docs show one extension root per
-  `gemini-extension.json`, but do not prove a one-repo two-extension marketplace
-  shape.
-- Observable outcome: a Gemini validation record decides whether the repository can
-  support two top-level extension roots directly or needs separate release
-  packaging.
-- Likely ticket: proposed.
+- Source claim / input: `research:gemini-extension-subdirectory-feasibility`
+  concludes the current docs and local CLI do not support seamless Git install of
+  extension roots from repository subdirectories.
+- Observable outcome: a Gemini validation/research record selects a truthful
+  distribution route for `loom-core` and `loom-playbooks`: explicit local
+  package-root linking for developers, repository-root core-only Gemini shim,
+  separate release repositories, distribution branches, validated release archives,
+  or deferred upstream subdirectory support.
+- Likely ticket: `ticket:sbzmrvqv` for route disposition and `ticket:mbkqbkgq` for
+  the accepted root core shim.
 - Likely write scope: Gemini metadata under `loom-core/` and `loom-playbooks/`,
+  root Gemini core-shim metadata, packaging/release metadata if a route is chosen,
   evidence records, and Gemini install docs only after proof.
 - Dependencies / order reason: follows package skeleton.
-- Verification / evidence target: `gemini extensions validate` or equivalent local
-  link/install check, skill discovery observation, and context preload observation
-  for `loom-core`.
+- Verification / evidence target: real `gemini extensions install <source>` or
+  `gemini extensions link <path>` output for the chosen route, `gemini extensions
+  list` skill/context observation, and context preload observation for `loom-core`.
 - Critique posture: recommended because Gemini is the weakest harness evidence.
-- Non-goals: claiming Git one-repo two-extension support before validation.
-- Stop or loopback condition: if Gemini cannot install both roots from one repo,
-  route to release-packaging research or document two explicit source installs.
+- Non-goals: claiming Git one-repo subdirectory or two-extension support from this
+  repository without upstream support or accepted release packaging; making root
+  Gemini install include playbooks.
+- Stop or loopback condition: if the root Gemini core shim cannot expose core
+  without copied doctrine or confusing playbook claims, route back to
+  product-surface planning before public docs claim support.
 
 ## Unit: Update Public Documentation And Examples
 
@@ -462,7 +481,7 @@ Expected result: each supported harness has either a validated two-package path 
 an explicit documented evidence gap.
 
 Units / tickets: Rebuild Harness Package Surfaces; Split OpenCode Packages;
-Validate Codex Core Hooks; Validate Gemini Two-Extension Path.
+Validate Codex Core Hooks; Resolve Gemini Extension Distribution Route.
 
 Validation and evidence: manifest checks, package smoke checks, runtime harness
 checks where available, and evidence records for any unvalidated path.
@@ -502,7 +521,7 @@ evidence-first because the current research names specific runtime gaps.
 | Source claim / acceptance ID | Downstream ticket | Coverage expectation | Evidence / critique expectation | Notes |
 | --- | --- | --- | --- | --- |
 | `initiative:loom-install-experience` success metric: native package installs expose Loom skills without hidden ontology | proposed split package tickets | Core and playbooks install through native harness package surfaces | Manifest checks, harness smoke checks, evidence records | Existing initiative remains the strategic frame |
-| `decision:0008` product-surface doctrine | downstream package tickets | Implementation follows the authorized `loom-core` / `loom-playbooks` surface | Constitutional critique and package evidence | Supersedes the `decision:0006` top-level `skills/` surface |
+| `decision:0008` and `decision:0009` product-surface doctrine | downstream package tickets | Implementation follows the authorized `loom-core` / `loom-playbooks` surface plus the Gemini-only root core shim exception | Constitutional critique and package evidence | `decision:0009` narrows `decision:0008` only for Gemini |
 | `research:core-workflow-plugin-split-feasibility` conclusion: two roots feasible but harness-specific | proposed harness tickets | Each harness implements or explicitly defers its two-root path | Per-harness evidence and critique | Gemini and Codex require focused validation |
 | Core-only install requirement | proposed doctrine/package tickets | Core package works without playbook skills installed | Core-only membership and stale optional route scans | Playbooks can be optional only if core is coherent |
 | Playbooks require core | proposed playbook package ticket | Playbook package does not duplicate core and states dependency clearly | Duplicate-core scan and dependency wording review | Harness dependency enforcement may be documentation-only |
@@ -517,12 +536,15 @@ Expected validation by tranche:
 - skill membership scan for `loom-core/skills` and `loom-playbooks/skills`
 - skill frontmatter scan for all moved skills
 - stale path searches for root `skills/`, old manifest paths, `open-loom`, and
-  legacy workflow-package names
+  legacy workflow-package names, treating the Gemini root core shim as an explicit
+  exception rather than current full-product truth
 - JSON syntax checks for plugin and marketplace manifests
 - OpenCode per-package smoke checks for `open-loom-core` and
   `open-loom-playbooks`
 - Codex installed-plugin skill and hook validation before claiming core preload
-- Gemini extension validation before claiming one-repo two-extension install
+- Gemini distribution-route validation before claiming remote extension install;
+  current research rejects one-repo subdirectory install as unsupported, while
+  `decision:0009` allows repository-root install as core-only
 - mandatory critique for product authority, doctrine decoupling, harness package
   surfaces, and final release posture
 
@@ -565,7 +587,7 @@ should inspect linked tickets first, then this plan, then the research note.
 | --- | --- | --- | --- | --- |
 | Wave 1 | Authorization and core/playbook contract | Both are owner-record shaping, but authorization must be accepted before contract becomes final | Overlap on `.loom` records; run sequentially unless ticket scopes are separated carefully | Reconcile this plan and any new decision/spec links |
 | Wave 2 | Doctrine decoupling, core move, playbook move | Can split after contract is stable, but references overlap heavily | Avoid parallel edits to `using-loom`, `loom-records`, routing docs, and moved path references | Parent runs stale path and membership scans after both moves |
-| Wave 3 | Harness package surfaces by harness | Harness directories can be independent after package roots exist | Separate Claude/Codex/Cursor/Gemini/OpenCode package files; shared root catalogs require sequential reconciliation | Parent reconciles root catalogs and INSTALL docs |
+| Wave 3 | Harness package surfaces by harness | Harness directories can be independent after package roots exist | Separate Claude/Codex/Cursor/OpenCode package files; Gemini requires a route decision before remote install claims; shared root catalogs require sequential reconciliation | Parent reconciles root catalogs and INSTALL docs |
 | Wave 4 | Docs, final validation, critique | Final docs depend on validation evidence | Docs and final critique should run after package evidence | Parent updates tickets with evidence and finding dispositions |
 
 # Risks And Loopbacks
@@ -578,8 +600,10 @@ should inspect linked tickets first, then this plan, then the research note.
   split the reference reconciliation into smaller tickets.
 - If Codex installed-plugin hooks do not load as documented, keep skill packaging
   but remove or downgrade preload claims.
-- If Gemini cannot install two extension roots from one repo, route to release
-  packaging research or document explicit separate installs.
+- If Gemini cannot install two extension roots from one repo, do not keep trying to
+  validate the subdirectory path. Use `research:gemini-extension-subdirectory-feasibility`
+  and choose a separate release/distribution route, local explicit link docs, or
+  an explicit deferral.
 - If OpenCode package split collides with the published `open-loom` name, route to
   migration/deprecation work rather than changing the split concept.
 - If root `skills/` retirement breaks too much at once, stage the physical move and
@@ -593,6 +617,9 @@ should inspect linked tickets first, then this plan, then the research note.
   strategy.
 - `research:codex-plugin-distribution-surfaces` owns the existing Codex plugin
   evidence and earlier gap analysis.
+- `research:gemini-extension-subdirectory-feasibility` owns the current Gemini
+  subdirectory-extension null result, local-link evidence, and hooks/preload
+  assessment.
 - `decision:0004`, `decision:0006`, and `decision:0008` constrain
   self-contained skills, rejected fallback installers, and current product surface
   truth.
