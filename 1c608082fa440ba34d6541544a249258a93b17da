@@ -1,0 +1,558 @@
+skills/loom-plans/references/plan-shape.md
+  human 6,8,10,14-16,19,24-126,131-146,161-171,187-188
+.loom/evidence/20260507-execplan-plan-template-validation.md
+  human 1-162
+package.json
+  human 3
+.loom/evidence/20260507-grilling-boundary-correction-validation.md
+  human 1-181
+.loom/critique/20260507-grill-spec-plan-review.md
+  human 1-134
+skills/loom-plans/templates/plan.md
+  human 16-25,29-32,34-36,38-41,45-66,70-85,101,103-106,108-118,134,136-139,144-146,148-150
+skills/loom-research/SKILL.md
+  human 16-22,31
+.loom/critique/20260507-artifact-store-review.md
+  human 1-86
+.loom/tickets/20260507-execplan7-rebalance-plan-template.md
+  human 1-176
+skills/loom-plans/SKILL.md
+  human 3,12-49,54-55,57,77-80,89-90,98-108,123-124,127,132-137,140,146-151,159-161
+.loom/research/20260507-grill-diagnose-gap-analysis.md
+  human 1-101
+skills/loom-research/references/source-handling.md
+  human 80-107
+  human 31-50
+.loom/evidence/20260507-grill-spec-plan-validation.md
+  human 1-134
+skills/loom-debugging/references/systematic-debugging.md
+  human 8-12,19-20,24-28,33-37
+  human 35-40,87-92,130-134
+skills/loom-research/templates/research.md
+  human 46-56
+skills/loom-evidence/references/evidence-quality.md
+  human 23-49
+  human 39-53
+.loom/evidence/20260507-artifact-store-validation.md
+  human 1-174
+skills/loom-evidence/templates/evidence.md
+  human 34-44
+.loom/tickets/20260507-grill507-bake-grilling-into-spec-plan.md
+  human 1-200
+skills/loom-evidence/SKILL.md
+  human 25-32,41,91-96,104-106
+.loom/tickets/20260507-grfix507-correct-grilling-boundaries.md
+  human 1-185
+.loom/critique/20260507-execplan-plan-template-review.md
+  human 1-103
+skills/loom-constitution/SKILL.md
+  human 3
+skills/loom-debugging/SKILL.md
+  human 38,40-44,46-49,52-54
+skills/loom-plans/references/slicing.md
+  human 3-5,11,19-21,23-25,29-31
+  human 43-59
+skills/loom-specs/templates/spec.md
+  human 37,57,86,111,118
+  human 45-73
+skills/loom-specs/SKILL.md
+  human 3,22-24,37,39-40,48,51-75,86-88,101,111,117-118,121,126-127
+.gitignore
+  human 2-3
+.loom/tickets/20260507-artf507-add-artifact-stores.md
+  human 1-176
+skills/loom-records/references/naming-and-ids.md
+  human 103-124
+.loom/critique/20260507-grilling-boundary-correction-review.md
+  human 1-125
+skills/loom-specs/references/spec-shape.md
+  human 12,50-52,74-112,122-123,128,139,151,158-159,164-165
+  human 12-13,81-111,120-121
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 139,
+          "added_lines": 139,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "6,8,10,14-16,19,24-126,131-146,161-171,187-188",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-plans/references/plan-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 162,
+          "added_lines": 162,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-162",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/evidence/20260507-execplan-plan-template-validation.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "package.json"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 181,
+          "added_lines": 181,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-181",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/evidence/20260507-grilling-boundary-correction-validation.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 134,
+          "added_lines": 134,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-134",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/critique/20260507-grill-spec-plan-review.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 86,
+          "added_lines": 86,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "16-25,29-32,34-36,38-41,45-66,70-85,101,103-106,108-118,134,136-139,144-146,148-150",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-plans/templates/plan.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 8,
+          "added_lines": 8,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "16-22,31",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-research/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 86,
+          "added_lines": 86,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-86",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/critique/20260507-artifact-store-review.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 176,
+          "added_lines": 176,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-176",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/tickets/20260507-execplan7-rebalance-plan-template.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 78,
+          "added_lines": 78,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3,12-49,54-55,57,77-80,89-90,98-108,123-124,127,132-137,140,146-151,159-161",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-plans/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 101,
+          "added_lines": 101,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-101",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/research/20260507-grill-diagnose-gap-analysis.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 28,
+          "added_lines": 28,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "80-107",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 20,
+          "added_lines": 0,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "31-50",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-research/references/source-handling.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 134,
+          "added_lines": 134,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-134",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/evidence/20260507-grill-spec-plan-validation.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 17,
+          "added_lines": 17,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "8-12,19-20,24-28,33-37",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 17,
+          "added_lines": 0,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "35-40,87-92,130-134",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-debugging/references/systematic-debugging.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 11,
+          "added_lines": 11,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "46-56",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-research/templates/research.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 27,
+          "added_lines": 27,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "23-49",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 15,
+          "added_lines": 0,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "39-53",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-evidence/references/evidence-quality.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 174,
+          "added_lines": 174,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-174",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/evidence/20260507-artifact-store-validation.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 11,
+          "added_lines": 11,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "34-44",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-evidence/templates/evidence.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 200,
+          "added_lines": 200,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-200",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/tickets/20260507-grill507-bake-grilling-into-spec-plan.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 18,
+          "added_lines": 18,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "25-32,41,91-96,104-106",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-evidence/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 185,
+          "added_lines": 185,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-185",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/tickets/20260507-grfix507-correct-grilling-boundaries.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 103,
+          "added_lines": 103,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-103",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/critique/20260507-execplan-plan-template-review.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-constitution/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 13,
+          "added_lines": 13,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "38,40-44,46-49,52-54",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-debugging/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 13,
+          "added_lines": 13,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3-5,11,19-21,23-25,29-31",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 17,
+          "added_lines": 0,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "43-59",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-plans/references/slicing.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 5,
+          "added_lines": 5,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "37,57,86,111,118",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 28,
+          "added_lines": 0,
+          "deleted_lines": 1,
+          "hash": "human",
+          "lines": "45-73",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-specs/templates/spec.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 43,
+          "added_lines": 43,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3,22-24,37,39-40,48,51-75,86-88,101,111,117-118,121,126-127",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-specs/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "2-3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".gitignore"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 176,
+          "added_lines": 176,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-176",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/tickets/20260507-artf507-add-artifact-stores.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 22,
+          "added_lines": 22,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "103-124",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-records/references/naming-and-ids.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 125,
+          "added_lines": 125,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-125",
+          "overridden_lines": 0
+        }
+      ],
+      "file": ".loom/critique/20260507-grilling-boundary-correction-review.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 52,
+          "added_lines": 52,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "12,50-52,74-112,122-123,128,139,151,158-159,164-165",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 26,
+          "added_lines": 0,
+          "deleted_lines": 9,
+          "hash": "human",
+          "lines": "12-13,81-111,120-121",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "skills/loom-specs/references/spec-shape.md"
+    }
+  ],
+  "base_commit_sha": "d75d3a418936613dcfc8a7741953292589981d66",
+  "branch": "main",
+  "commit_sha": "1c608082fa440ba34d6541544a249258a93b17da",
+  "commit_time": "2026-05-07T11:11:56-07:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.2",
+  "prompts": {
+    "human": {
+      "accepted_lines": 2512,
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "messages": [],
+      "overriden_lines": 0,
+      "total_additions": 2512,
+      "total_deletions": 0
+    }
+  },
+  "repo": "https://github.com/z3z1ma/agent-loom.git",
+  "schema_version": "authorship/3.0.0"
+}
