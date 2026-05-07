@@ -100,6 +100,28 @@ parent wants a durable support artifact for reviewability, context recovery, or
 handoff audit. Saving a handoff does not make it a packet family and does not
 give it canonical truth ownership.
 
+## Raw Artifact Support Directories
+
+Evidence and research may use gitignored raw artifact directories for bulky or
+volatile source material:
+
+- `.loom/evidence/artifacts/<evidence-slug>/` for logs, traces, responses,
+  screenshots, command captures, reports, fixtures, and other raw observations
+- `.loom/research/artifacts/<research-slug>/` for articles, web fetches, PDFs,
+  papers, repository snapshots, exported notes, generated source analyses, and
+  other investigation inputs
+
+These directories are support caches. They do not have canonical IDs, do not need
+frontmatter, and do not create new owner layers merely because they sit under
+canonical owner directories. Records may cite paths inside them, but the evidence
+or research Markdown record remains the primary understanding. A future agent
+should check the store when the record points to it and the files exist, but must
+not require the store to exist in order to understand the record's claims,
+limitations, and conclusions.
+
+Projects should gitignore these stores by default. Intentionally tracked raw
+artifacts need explicit record-level rationale, sanitization, and retention notes.
+
 ## Packet Families And Route Ownership
 
 Packet records share `kind: packet` and are separated by `packet_kind` plus path:

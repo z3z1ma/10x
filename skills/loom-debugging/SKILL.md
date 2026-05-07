@@ -35,21 +35,23 @@ follow-through into the Loom records that own those facts.
 
 Follow:
 
-`feedback loop -> reproduce -> localize -> hypothesize -> fix -> evidence -> prevent`
+`orient -> feedback loop -> reproduce -> localize -> hypothesize -> fix -> evidence -> prevent`
 
-1. build or improve a fast feedback loop that can show the failure
-2. capture reproduction steps or current failing behavior as evidence
-3. investigate root cause before proposing a fix; create or update research if
+1. orient in the relevant domain language, code paths, decisions, and accepted
+   behavior before treating the symptom as the root cause
+2. build or improve a fast feedback loop that can show the failure
+3. capture reproduction steps or current failing behavior as evidence
+4. investigate root cause before proposing a fix; create or update research if
    the root cause is not known
-4. generate ranked, falsifiable hypotheses when cause is unclear
-5. update or create a spec if intended behavior is ambiguous
-6. create or tighten a ticket for the bounded fix
-7. choose local execution for a tiny, local, safe fix, or compile a Ralph packet when
+5. generate ranked, falsifiable hypotheses when cause is unclear
+6. update or create a spec if intended behavior is ambiguous
+7. create or tighten a ticket for the bounded fix
+8. choose local execution for a tiny, local, safe fix, or compile a Ralph packet when
    the fix needs fresh context, explicit child write scope, or packetized
    isolation; Ralph packets normally use `verification_posture: test-first`
-8. preserve red and green evidence
-9. run critique when risk warrants
-10. run retrospective if the lesson should prevent repeated mistakes
+9. preserve red and green evidence
+10. run critique when risk warrants
+11. run retrospective if the lesson should prevent repeated mistakes
 
 ## Artifact Routing
 

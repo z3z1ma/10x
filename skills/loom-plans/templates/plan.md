@@ -13,23 +13,76 @@ links: {}
 
 # Purpose
 
-Why this plan exists and what sequencing problem it solves.
+What someone gains when this plan succeeds, why the work matters, and how the
+result should become observable. State why this needs more than one bounded ticket
+or execution unit.
+
+# Context And Orientation
+
+Explain the current situation for a fresh agent. Link the governing initiative,
+spec, research, decision, wiki, or ticket records. Define non-obvious terms. Name
+important source areas, records, systems, interfaces, or constraints only when they
+shape execution strategy.
 
 # Strategy
 
-The overall route or approach. Explain the tradeoff, not just the order.
+The overall route. Explain why this decomposition and order fit the purpose,
+constraints, and risks. Include the main rejected route if it is likely to recur.
 
-# Strategy Snapshot
+# Planning Decisions
 
-Current strategic picture only. Do not use this as a progress log; live state belongs in tickets.
+Execution-strategy decisions that future tickets should inherit. Do not use this as
+a live decision log for implementation progress; ticket journals and owner records
+own live updates.
+
+- Decision:
+  - Rationale:
+  - Date / owner:
+  - Owner-layer route if this stops being plan truth:
 
 # Workstreams
 
-Major streams or phases of execution strategy.
+Optional conceptual grouping for large work. Write `None - reason` when the work is
+better understood directly as execution units. Workstreams are not tickets and not
+progress state.
+
+# Execution Units / Ticket Slices
+
+Each unit should be detailed enough to become one ticket or a short staged sequence
+of tickets. Prefer vertical slices that produce observable, reviewable progress.
+
+## Unit: <unit name>
+
+- Source claim / input:
+- Observable outcome:
+- Likely ticket: <ticket:<token> or proposed>
+- Likely write scope:
+- Dependencies / order reason:
+- Verification / evidence target:
+- Critique posture:
+- Non-goals:
+- Stop or loopback condition:
+
+Repeat one `Unit` block per ticket-ready slice.
 
 # Milestones
 
-Execution-sequencing checkpoints. Do not use these as ticket progress state.
+Narrative checkpoints across units. Each milestone should say what will exist at
+the end that did not exist before, which units/tickets it contains, how it will be
+validated, and what evidence or critique should be available. Do not use milestones
+as live progress state.
+
+## Milestone: <milestone name>
+
+Scope:
+
+Expected result:
+
+Units / tickets:
+
+Validation and evidence:
+
+Acceptance checkpoint:
 
 # Sequencing
 
@@ -45,13 +98,24 @@ and acceptance decisions.
 | --- | --- | --- | --- | --- |
 | <TBD or None - reason> | <ticket:<token> or proposed> | <what must be covered> | <expected evidence/review> | <notes> |
 
-# Ticket Slices
+# Validation And Acceptance Strategy
 
-Each slice should be small enough for one focused implementation/review loop.
+How downstream tickets should prove the plan is working. Name expected commands,
+manual observations, red/green checks, screenshots, traces, critique profiles, or
+evidence records when known. Tickets own live evidence sufficiency and acceptance
+decisions.
 
-| Ticket | Purpose | Likely write scope | Dependencies | Verification / critique posture |
-| --- | --- | --- | --- | --- |
-| <TBD> | <bounded outcome> | <paths or records> | <depends_on or none> | <test-first, observation-first, critique profiles> |
+# Interfaces And Dependencies
+
+External libraries, services, modules, schemas, APIs, records, migrations, data
+sets, flags, or environment assumptions that shape execution. State why each
+dependency matters and what downstream work should verify.
+
+# Idempotence And Recovery
+
+How this plan should remain safe to resume, retry, or partially roll back. Name
+stateful resources, migrations, generated files, lockfiles, caches, flags, cleanup
+routes, and where a fresh agent should look to recover current live state.
 
 # Execution Waves
 
@@ -62,33 +126,29 @@ waves need explicit dependency boundaries.
 | --- | --- | --- | --- | --- |
 | <TBD or None - no wave needed> | <tickets> | <non-overlap rationale> | <contention check> | <merge/validation path> |
 
-# Confidence Review
-
-Name the plan sections most likely to mislead downstream work. Fix them here or
-route them to the owner layer that can resolve them.
-
-- Requirements / claim trace:
-- Decision rationale / rejected alternatives:
-- File, record, test, evidence, and critique scope:
-- Cross-boundary risks:
-- Open questions that would change behavior, acceptance, or risk:
-
 # Risks And Loopbacks
 
 What could break or distort the plan, and which owner layer should receive new
 truth if execution discovers the plan is wrong.
 
-# Evidence Strategy
+# Supporting Artifacts And Notes
 
-How work under this plan should generally be evidenced, validated, and reviewed.
+Concise links or excerpts that help future tickets execute: research conclusions,
+evidence records, prototype notes, diagrams, command examples, or external sources.
+Do not dump raw logs here; preserve observations in evidence and synthesis in
+research or wiki.
 
 # Plan Readiness Review
 
 - Claim coverage:
-- Ticket-sized slices:
+- Execution units / ticket-sized slices:
+- Context and orientation:
+- Narrative milestones:
 - Likely write scopes:
+- Validation and acceptance strategy:
+- Interfaces and dependencies:
+- Idempotence and recovery:
 - Parallel / wave independence:
-- Evidence and critique expectations:
 - Stop / loopback conditions:
 
 # Exit Criteria

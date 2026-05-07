@@ -89,6 +89,9 @@ practical:
 - recurring operator confusion -> wiki workflow or reference page
 - repeated implementation pitfall -> research null result or wiki troubleshooting
 - repeated project-local technique -> project-local skill
+- stale feature flag, deprecated path, zombie code, or migration residue -> plan or
+  ticket follow-up, with evidence for usage/zero-usage claims and ship notes when
+  launch or rollback packaging is involved
 - support-only reminder -> support coordinator `loom-memory` after owner truth is
   promoted or ruled out; not project truth
 

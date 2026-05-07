@@ -41,15 +41,21 @@ observations into evidence.
 3. collect deterministic structure before synthesis: manifests, package files,
    build/test/CI entry points, source roots, tests, docs, recent commits, and
    relevant ownership or hotspot signals when the scope warrants it
-4. scan structure with native tools
-5. note architectural friction when mapping a module: shallow wrappers, unclear
+4. for edit-oriented orientation, read the target files, related tests, one nearby
+   example of the pattern to follow, and shared interfaces or types before
+   recommending an implementation route
+5. scan structure with native tools
+6. when dependency versions, official docs, project examples, or accepted owner
+   records disagree, preserve the conflict in research/spec/ticket instead of
+   silently choosing the convenient source
+7. note architectural friction when mapping a module: shallow wrappers, unclear
    seams, missing test surfaces, coupling that spreads one concept across many
    files, or repeated path rediscovery by packets
-6. write research when discovery, uncertainty, or rejected interpretations matter
-7. write evidence for scan commands, file lists, screenshots, or observations
-8. write or update wiki pages for accepted structure
-9. if generating path-local context adapters, make them point to Loom records only
-10. record last verified date and source records on every atlas page
+8. write research when discovery, uncertainty, or rejected interpretations matter
+9. write evidence for scan commands, file lists, screenshots, or observations
+10. write or update wiki pages for accepted structure
+11. if generating path-local context adapters, make them point to Loom records only
+12. record last verified date and source records on every atlas page
 
 Do not synthesize from a file-tree glance alone when the map will guide future
 execution. Deterministic collection keeps the atlas from becoming a confident but
@@ -91,6 +97,7 @@ Read:
 | --- | --- |
 | "A file tree dump is a code map." | A useful atlas explains structure, boundaries, and retrieval paths, with evidence when needed. |
 | "I can infer architecture from names." | First collect manifests, tests, docs, source roots, and current code paths; then synthesize. |
+| "I know this framework pattern from memory." | Detect project versions and inspect official docs or project examples when correctness depends on current framework behavior. |
 | "Uncertain interpretation can go straight into wiki." | Uncertainty belongs in research until accepted. Wiki explains settled structure. |
 | "Path-local instructions can teach local truth." | Path adapters may point to Loom owners; they do not own independent truth. |
 | "Structure is obvious, so no evidence is needed." | If the map will be reused, preserve enough scan/source context to know when it must be rechecked. |

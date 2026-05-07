@@ -34,13 +34,42 @@ Use only the rows that matter; write `None - reason` when the pressure check is 
 
 # Desired Behavior
 
-What the system should do, stated as observable behavior rather than implementation trivia.
+What the system should do, stated as observable behavior rather than delivery trivia.
 
 # Quality Bar
 
 What would make the result materially better than the current or baseline state.
 For UX/product work, name the primary user task, affordance, or quality delta a
 reviewer should be able to observe.
+
+# Options Considered
+
+Use when multiple behavior, API, UX, architecture, or workflow shapes could fit.
+Name two or three meaningful options, their tradeoffs, and why the chosen shape
+fits the problem. If not applicable, write `None - reason`.
+
+# Not Doing
+
+Explicit non-goals and attractive exclusions that keep this contract focused.
+
+# Boundary Tiers
+
+Use only when authority or delivery boundaries matter; otherwise write
+`None - reason`.
+
+- Always:
+- Ask first:
+- Never:
+
+# Interface / API Contract
+
+Use for shared or public surfaces; otherwise write `N/A`.
+
+- Inputs:
+- Outputs:
+- Error semantics:
+- Validation boundary:
+- Compatibility / deprecation:
 
 # Examples / Non-Examples
 
@@ -54,7 +83,7 @@ rules that shape acceptable solutions.
 
 # Requirements
 
-Concrete requirements the implementation must satisfy.
+Concrete requirements downstream work must satisfy.
 
 - REQ-001: <TBD: stable requirement before saving>
 
@@ -79,11 +108,11 @@ before/after artifacts, screenshots, smoke checks, or manual checks as applicabl
 Questions or assumptions whose answer would materially change behavior, UX,
 architecture, acceptance, or risk.
 
-| Assumption or question | Reversible? | Blocks implementation? | Disposition |
+| Assumption or question | Reversible? | Blocks downstream work? | Disposition |
 | --- | --- | --- | --- |
 | <TBD or None - no material assumptions> | <yes/no> | <yes/no> | <accepted, ask user, research, or spec follow-up> |
 
 # Open Questions
 
 Unresolved questions that do not yet block the current contract, or explicit
-blocking questions that must be routed before implementation.
+blocking questions that must be routed before downstream work.

@@ -35,6 +35,20 @@ The target type changes the evidence reviewed. It does not change the owner
 model: critique owns findings and verdicts, while tickets own live execution
 state.
 
+## Implementation Review Order
+
+For code or behavior changes, review the verification story before the
+implementation details when practical:
+
+1. tests, evidence, screenshots, performance numbers, or before/after observations
+2. ticket/spec scope and acceptance coverage
+3. implementation correctness, simplicity, architecture, security, and performance
+4. cleanup, generated files, dependency/tooling changes, and residual risks
+
+This order catches a common failure: an implementation that looks plausible but is
+only weakly evidenced, tests implementation details, or satisfies a nearby behavior
+instead of the requested claim.
+
 Use the family-appropriate `review_target` shape when recording that target:
 direct critique records keep a scalar, grep-friendly target handle in
 frontmatter, while critique packets use a structured mapping for target kind,
@@ -72,11 +86,15 @@ Profiles are lenses, not permanent agents or new layers.
 ### `code-change`
 
 - correctness against the ticket and spec
+- whether tests and observations verify behavior through public or shared
+  interfaces rather than implementation details
 - unintended side effects
 - error handling
 - edge cases
 - integration boundaries
 - maintainability of the changed code
+- whether feature work, refactors, formatting, dependency changes, generated files,
+  and cleanup were separated enough for honest review
 
 For code changes, the default review axes are correctness, readability/simplicity,
 architecture, security/trust boundary, and performance. Pick specialized profiles

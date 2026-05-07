@@ -35,6 +35,17 @@ they isolate a boundary the test is not about; they must not become the behavior
 being asserted. If the test mainly proves a mock exists or a test-only production
 method works, the child should revise the test before implementation proceeds.
 
+Use vertical tracer bullets for test-first work: one behavior, one failing check,
+one minimal implementation, then repeat. Do not write a batch of speculative tests
+for imagined behavior and then bulk-implement them. The next test should reflect
+what the previous red/green cycle taught about the real interface.
+
+Good test-first checks name observable behavior through a public or shared
+interface. Prefer state/output assertions over implementation interaction checks.
+Mock internal collaborators only when there is a real boundary or uncontrollable
+external dependency; otherwise the test is likely coupled to the implementation
+shape instead of the intended behavior.
+
 Use `test-first` when:
 
 - the spec or ticket names a behavioral outcome that can be exercised

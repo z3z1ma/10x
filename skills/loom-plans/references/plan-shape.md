@@ -3,29 +3,146 @@
 ## Core sections
 
 - Purpose
+- Context And Orientation
 - Strategy
-- Strategy Snapshot
+- Planning Decisions
 - Workstreams
+- Execution Units / Ticket Slices
 - Milestones
 - Sequencing
 - Claim / Acceptance Coverage
+- Validation And Acceptance Strategy
+- Interfaces And Dependencies
+- Idempotence And Recovery
 - Execution Waves
-- Confidence Review
 - Risks
-- Evidence Strategy
+- Supporting Artifacts And Notes
 - Plan Readiness Review
 - Exit Criteria
 - Completion Basis when `status: completed`
 
-## Notes
+## Center Of Gravity
 
-`Strategy Snapshot` in a plan is not the same as ticket execution truth.
+A plan's center of gravity is decomposition: turning high-level work, specs,
+research conclusions, initiatives, migrations, or refactors into units of
+execution that can become tickets. Sequencing, rollout, milestones, and waves are
+strategy around those units; they are not a substitute for the units.
 
-Use it for the current strategic picture, not line-by-line implementation
-journal entries.
+If the plan cannot name ticket-ready units yet, keep applying the planning
+procedure or route back to spec/research/initiative before creating broad execution
+tickets.
+
+## ExecPlan Adaptation For Loom
+
+OpenAI-style ExecPlans optimize for a single self-contained document a stateless
+agent can execute from start to finish. Loom keeps that novice-orientation and
+observable-proof bar, but routes live truth through owner layers instead of making
+the plan a second ledger.
+
+Map the durable concepts this way:
+
+- purpose / big picture -> plan `# Purpose`
+- context and orientation -> plan `# Context And Orientation`, with links to
+  owner records instead of duplicating their full contents
+- plan of work / concrete steps -> plan `# Execution Units / Ticket Slices`, then
+  downstream tickets and packets for live execution contracts
+- milestones -> plan `# Milestones`, as narrative checkpoints with expected proof,
+  not status checklists
+- validation and acceptance -> plan `# Validation And Acceptance Strategy`, while
+  tickets own live evidence sufficiency and acceptance decisions
+- interfaces and dependencies -> plan `# Interfaces And Dependencies`
+- idempotence and recovery -> plan `# Idempotence And Recovery`
+- artifacts and notes -> plan `# Supporting Artifacts And Notes`, with raw
+  observations preserved in evidence and reusable synthesis in research or wiki
+- progress -> tickets, not plans
+- surprises and discoveries -> evidence, research, ticket journal, or
+  retrospective depending on the truth being changed
+- decision log -> plan `# Planning Decisions` only for execution-strategy
+  decisions; behavior, policy, and live acceptance decisions route to their owners
+- outcomes and retrospective -> ticket closure, retrospective, wiki/research/spec
+  promotion, and plan `# Completion Basis` when the plan itself completes
+
+A good Loom plan is therefore self-orienting but not hermetic. It should tell a
+fresh agent enough to navigate the owner graph and draft or refine the next ticket
+without transcript context. It should not copy every source record or become a live
+progress log.
+
+## Execution Units / Ticket Slices
+
+Each execution unit is a proposed ticket or tight sequence of tickets. It should
+be detailed enough that a fresh agent can draft or refine the ticket without
+reconstructing the plan from chat.
+
+For each unit, name:
+
+- source claim, spec acceptance ID, research conclusion, or initiative objective
+- observable outcome or deliverable
+- likely write boundary, including records and source paths when known
+- explicit non-goals and scope exclusions
+- dependency or ordering reason
+- verification posture and evidence target
+- critique expectation when risk warrants it
+- stop or loopback condition if execution discovers missing behavior, evidence,
+  architecture, source, or sequencing truth
+
+Vertical slices are preferred for behavior work: a narrow path through the real
+user, API, data, or operator surface that produces observable value. Horizontal
+slices are acceptable only when the layer itself is the product of the ticket or a
+bounded prerequisite.
+
+## Context And Orientation
+
+Context should make the plan usable by a fresh agent. Include only what shapes the
+execution route:
+
+- governing initiative, spec, research, decision, wiki, or ticket links
+- terms of art that matter for this plan
+- relevant source areas, records, interfaces, or systems
+- current constraints or assumptions that affect decomposition
+
+Do not duplicate entire owner records. Link them, summarize the part that matters,
+and route changes back to the owner.
+
+## Milestones
+
+Milestones are narrative proof checkpoints across execution units. They should say:
+
+- what scope the milestone covers
+- what exists or works at the end that did not exist before
+- which units or tickets it contains
+- what validation, evidence, or critique should be available
+- what acceptance checkpoint or loopback follows
+
+Milestones do not own live progress. If execution state changes, update the ticket.
+
+## Strategy And Planning Decisions
+
+Planning decisions capture why the execution route is shaped this way. Record only
+decisions the plan owns: decomposition, ordering, risk sequencing, parallelization,
+or recovery strategy. Route behavior decisions to specs, durable policy decisions
+to constitution, evidence conclusions to research/evidence, and live acceptance
+decisions to tickets.
+
+Do not let planning decisions become a transcript log or progress journal.
 
 Plan milestones are execution-sequencing checkpoints. They are not roadmap
 commitments, initiative outcome metrics, or ticket progress state.
+
+## Validation, Acceptance, Recovery, And Interfaces
+
+Plans should name the proof shape for downstream work without claiming acceptance.
+Use `# Validation And Acceptance Strategy` to describe expected tests, manual
+observations, red/green evidence, screenshots, traces, or critique profiles. The
+ticket still owns whether the evidence is sufficient.
+
+Use `# Interfaces And Dependencies` for modules, APIs, services, schemas,
+migrations, feature flags, datasets, libraries, or environment assumptions that
+shape execution. This section should make hidden coupling visible before tickets are
+created.
+
+Use `# Idempotence And Recovery` when steps may be repeated, resumed, partially
+rolled back, or affected by stateful resources. A fresh agent should know where to
+look for current live state and what cleanup or rollback route is expected.
 
 ## Plan Readiness Review
 
@@ -41,6 +158,17 @@ Before a plan drives tickets or packets, review it for:
   "write tests later" steps that would make a worker guess
 - clear decomposition: each downstream slice can become one ticket or one short
   staged sequence of tickets
+- context and orientation: enough repository and owner-record context exists for a
+  fresh agent to navigate without transcript history
+- narrative milestones: checkpoints name scope, expected result, and proof
+- execution-unit detail: each proposed ticket has an outcome, source claim, likely
+  write scope, non-goal, verification target, and loopback condition
+- validation and acceptance strategy: downstream proof expectations are concrete
+  enough for tickets to inherit
+- interfaces and dependencies: important APIs, services, records, migrations,
+  data, flags, or environmental assumptions are visible
+- idempotence and recovery: retries, rollback, cleanup, and live-state recovery are
+  named when relevant
 - zero-context handoff quality: a fresh worker can infer the relevant files or
   records, owner constraints, verification target, stop conditions, and non-goals
   from the plan and linked records without transcript archaeology
@@ -56,33 +184,11 @@ Before a plan drives tickets or packets, review it for:
   downstream tickets should expect
 - stop and loopback conditions: ambiguity routes back to research, spec, plan, or
   ticket refinement instead of being forced through execution
+- supporting artifacts and notes: important source material is linked or excerpted
+  concisely, with raw observations routed to evidence or research
 - critical pre-execution review: broad or high-risk plans are read once as if by
   the downstream worker, and gaps that would make that worker guess are fixed or
   routed before execution starts
-
-## Confidence Review
-
-Before a plan drives tickets or packets, scan the plan for the few sections most
-likely to mislead downstream work. Do not run a huge review ritual by default; fix
-or route the top gaps that would change execution.
-
-High-value confidence gaps include:
-
-- requirements or source claims not traced into slices
-- decisions stated without rationale or rejected alternatives
-- implementation slices with vague file, record, test, evidence, or critique scope
-- missing cross-boundary impact for security, data, performance, API, or UI work
-- open questions incorrectly deferred to implementation even though they would
-  change product behavior, acceptance, or risk
-- parallel waves without non-overlap, shared-state, and parent-reconciliation
-  evidence
-
-Confidence review may strengthen a plan. It may also route back to research, spec,
-constitution, or ticket refinement. It must not add implementation code, command
-choreography, or live progress state to the plan.
-
-This review can be inline for low-risk plans. Use critique when a plan is broad,
-high risk, or likely to mislead downstream workers.
 
 ## Claim / Acceptance Coverage
 

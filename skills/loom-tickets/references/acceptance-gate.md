@@ -75,6 +75,10 @@ Acceptance Dossier =
 - For withdrawn findings, does the critique record provide withdrawal rationale,
   with any ticket citation limited to audit history rather than closure blocking?
 - Are finding references qualified, for example `critique:example-review#FIND-001`?
+- If human, external, subagent, PR, or model review feedback affects closure, has
+  each material comment been classified as required blocker, valid out-of-scope
+  follow-up, optional/nit, incorrect for this project, or unclear, with ticket-owned
+  disposition for closure-relevant items?
 - Is retrospective / promotion disposition resolved for closure as `completed`,
   `deferred`, or `not_required`, or does it remain `blocking` because required
   promotion or prevention follow-through is incomplete?

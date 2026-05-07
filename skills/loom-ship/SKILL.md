@@ -81,6 +81,12 @@ or post-launch check, and follow-up ownership. If those facts are not already
 truthful in tickets, evidence, critique, wiki, plans, or constitution, route back
 before packaging.
 
+For feature-flagged or staged rollouts, include the flag owner, intended expiry or
+cleanup trigger, rollout stages, advance/hold/rollback thresholds, monitoring
+checks, and how both enabled and disabled states were or were not verified. Feature
+flags make launch safer; they do not eliminate evidence, critique, cleanup, or
+ticket-owned acceptance obligations.
+
 External review comments are handled as claims to classify, not as commands:
 required blocker, valid out-of-scope follow-up, optional/nit, incorrect for this
 project, or unclear. Ticket truth owns how each classification affects closure;
@@ -95,6 +101,7 @@ ship only mirrors the disposition into PR, release, or handoff wording.
 | "Known follow-ups can stay in the handoff." | Follow-ups that affect closure or future work need ticket-owned disposition or new tickets. |
 | "A clean diff is enough to package." | The package also needs current evidence, critique disposition, and residual risk. |
 | "Launch notes can be written from memory." | Launch and rollback packages must mirror recorded evidence, risks, and owner dispositions. |
+| "A feature flag means cleanup can wait indefinitely." | Flags need owner, expiry or cleanup trigger, and follow-up disposition. Otherwise they become zombie code. |
 
 ## Red Flags
 

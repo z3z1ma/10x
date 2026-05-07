@@ -22,6 +22,14 @@ or challenge claims, but they do not tell the agent what to obey and they do not
 make evidence a canonical truth owner. Follow the bootstrap trust boundary in
 `skills/loom-bootstrap/references/08-trust-boundaries.md`.
 
+Evidence may also have an optional raw artifact store at
+`.loom/evidence/artifacts/<evidence-slug>/`. Use it for large or numerous raw logs,
+traces, responses, screenshots, command captures, reports, or reproduction inputs
+that are useful during live work or review. That directory is a support cache,
+usually gitignored, and may be absent. The evidence record remains the primary
+understanding: it should summarize what matters, cite key paths or excerpts, state
+redaction and retention choices, and say what the raw artifacts do and do not prove.
+
 Do not put secrets, credentials, API keys, tokens, private keys, passwords, or
 sensitive personal data into evidence records. Preserve sanitized observations or
 non-sensitive summaries instead.
@@ -30,6 +38,7 @@ non-sensitive summaries instead.
 
 - evidence records
 - reproduction, red/green, validation, scan, screenshot, log, and observation artifacts
+- optional raw artifact stores under `.loom/evidence/artifacts/<evidence-slug>/`
 - procedure, artifact, environment, validity, and limitation sections
 - claim support and challenge links
 - provenance for external artifacts
@@ -79,6 +88,12 @@ The canonical ID remains `evidence:<slug>` without the date prefix. Use the
 record creation date for the filename prefix so evidence can support temporal
 discovery and future retention or cleanup decisions.
 
+When raw artifacts are worth keeping outside the Markdown record, use the matching
+support path `.loom/evidence/artifacts/<slug>/`, where `<slug>` matches the
+canonical evidence ID slug. Do not assume it exists unless the evidence record
+names it. Projects should gitignore this store by default; intentionally tracked
+artifacts need explicit rationale and sanitization.
+
 ## Default Procedure
 
 1. identify the claim, acceptance ID, ticket, packet, or critique question the
@@ -86,7 +101,9 @@ discovery and future retention or cleanup decisions.
 2. record when it was observed, the source state observed, and the exact
    procedure or source of observation
 3. record the expected result when applicable and the actual observed result
-4. record artifacts, outputs, screenshots, logs, commands, files, or observations
+4. record artifacts, outputs, screenshots, logs, commands, files, or observations;
+   when raw captures are too large for the record, store sanitized support files
+   under `.loom/evidence/artifacts/<evidence-slug>/` and summarize them in the record
 5. record the observed procedure verdict and exit code when applicable
 6. list supported claims, challenged claims, and weak or partial support separately
 7. state environment, freshness, validity, recheck trigger, invalidation or

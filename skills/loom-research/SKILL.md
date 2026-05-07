@@ -13,6 +13,13 @@ Research owns reusable discovery.
 
 Use it when the work would benefit from not having to rediscover the same reasoning later.
 
+Research may use an optional source-material store at
+`.loom/research/artifacts/<research-slug>/` for articles, fetched web pages, PDFs,
+papers, repository snapshots, exported notes, model/advisor outputs, or other raw
+inputs that helped the investigation. That directory is support material, usually
+gitignored, and may be absent. The research record remains primary: it owns the
+synthesis, source evaluation, conclusions, limitations, and downstream route.
+
 ## What This Skill Owns
 
 - investigations
@@ -21,6 +28,7 @@ Use it when the work would benefit from not having to rediscover the same reason
 - spike and sketch conclusions as research variants when discovery should remain
   citable
 - evidence synthesis
+- optional source-material stores under `.loom/research/artifacts/<research-slug>/`
 - rejected options and null results worth preserving
 - deferred questions that are not yet ready for their own investigation
 - conclusions and recommendations grounded in evidence

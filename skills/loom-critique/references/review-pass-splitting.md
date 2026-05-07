@@ -36,6 +36,11 @@ Default passes:
 Each pass may produce its own critique record, or one consolidated critique
 record with clearly separated pass sections.
 
+When splitting into two broad passes, run acceptance/spec compliance before code
+quality. First decide whether the target built the right thing, stayed in scope,
+and has enough evidence. Then decide whether it is well-built. A polished
+implementation of the wrong behavior is still a finding, not a quality pass.
+
 ## Packet Use
 
 For packetized implementation review, compile one critique packet per pass when

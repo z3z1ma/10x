@@ -23,10 +23,14 @@ creating initiatives, specs, plans, or tickets.
 5. If a question can be answered by inspecting the workspace, inspect first
    instead of asking the operator to restate available facts.
 6. Check constitution, decisions, wiki, and prior research for precedent.
-7. Surface assumptions as accepted, to-be-confirmed, or contested.
-8. When the work is creative or behavior-shaping, present two or three viable
-   approaches with tradeoffs and a recommendation before narrowing.
-9. Route to the next owner layer or workflow.
+7. Check accepted shared language and relevant source/code paths when terminology,
+   behavior, or architecture claims could conflict with reality.
+8. Surface assumptions as accepted, to-be-confirmed, or contested.
+9. When source, records, or accepted language disagree, state the conflict and the
+   owner that can resolve it instead of normalizing it away in chat.
+10. When the work is creative or behavior-shaping, present two or three viable
+    approaches with tradeoffs and a recommendation before narrowing.
+11. Route to the next owner layer or workflow.
 
 Ask one material question at a time when operator input is needed. A bundle of
 questions is acceptable only when every answer is independent and low-friction;
@@ -81,6 +85,20 @@ than more prose. Use `loom-spike` sketch flow when mockups, diagrams, screenshot
 or side-by-side variants would make the choice clearer. Evidence owns the
 observed artifacts; specs and wiki own accepted behavior or explanation.
 
+## Decision Capture Threshold
+
+Do not create a durable decision record for every preference. Route to
+constitution decisions when the choice is hard to reverse, surprising without
+context, and the result of a real tradeoff. If only one or two of those are true,
+the decision may belong in a spec, plan, research note, ticket assumption, or wiki
+explanation instead.
+
+When a rejected option is likely to recur, preserve the durable reason in the
+owner that can maintain it: research for rejected options and null results,
+constitution for durable policy, wiki for accepted explanation, or a ticket for a
+ticket-local cancellation / wontfix disposition. Do not create a separate
+out-of-scope ledger unless the constitution later defines one.
+
 ## Routes
 
 - clear enough to sequence -> plan
@@ -100,6 +118,8 @@ observed artifacts; specs and wiki own accepted behavior or explanation.
   truth, or make an irreversible or high-risk decision.
 - Do not ask the user to answer questions the repository can answer through
   direct inspection.
+- Do not hide a code/record/terminology conflict by choosing the side that makes
+  implementation easiest.
 - Do not turn the first plausible approach into a spec or ticket before hidden
   assumptions, alternatives, and the smallest valuable shape have been checked
   when those facts would change the result.

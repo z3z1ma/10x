@@ -20,6 +20,33 @@ Then record the limited interpretation that follows from that observation.
 Inference is allowed only when it is labeled as interpretation and bounded by the
 artifact actually observed.
 
+## Raw Artifact Store
+
+Use `.loom/evidence/artifacts/<evidence-slug>/` when the raw observation is useful
+but too bulky, numerous, binary, or noisy for the evidence record itself. Examples
+include full test logs, browser traces, HAR files, HTTP responses, screenshots,
+screen recordings, profiler output, generated reports, fixture inputs, replay
+payloads, and command transcripts.
+
+The artifact store is support material, not a second evidence record:
+
+- it is usually gitignored and may not exist in another clone or handoff
+- it is useful to inspect during live work when the evidence record points to it,
+  but future agents must be able to understand the claim from the record even when
+  raw files are unavailable
+- the evidence record should name the path, list important files or patterns,
+  preserve key excerpts or checksums when useful, and state what the raw artifacts
+  support, challenge, or leave untested
+- do not store secrets, credentials, private data, or sensitive personal data; save
+  sanitized excerpts or metadata instead
+- if a raw artifact is intentionally tracked in Git, the evidence record should say
+  why that artifact is safe, durable, and worth keeping despite the default ignore
+  posture
+
+Do not turn the artifact store into a hidden validator, dashboard, queue, database,
+or canonical truth layer. The Markdown evidence record remains the primary
+understanding and the ticket or critique still decides sufficiency.
+
 ## Evidence Before Claims
 
 Evidence should make it hard to overclaim. For any completion, fixed, passing,
@@ -35,6 +62,21 @@ observation before the inference:
 A child report, green nearby check, or plausible diff is not enough by itself.
 Evidence records the observation that lets the ticket or critique decide whether
 the claim is supported.
+
+Use the claim gate before any completion, fixed, passing, ready-to-merge, or
+acceptance-support statement:
+
+1. identify the exact claim and the procedure that would prove or challenge it
+2. run the command, inspect the file, reproduce the behavior, or capture the
+   artifact from the current source/record state
+3. read the output, exit code, diff, screenshot, or observation completely enough
+   to catch failures and mismatches
+4. compare expected and actual results
+5. state only the support, partial support, challenge, or limitation that follows
+
+Do not rerun an already-successful check merely for reassurance when no relevant
+source, record, dependency, environment, or procedure changed. Repetition without a
+new source state is not fresher evidence; it is only duplicate output.
 
 Avoid writing evidence as if it directly decides project truth. Evidence may say
 "this output supports `ticket:abc123#ACC-001`" or "this observation challenges

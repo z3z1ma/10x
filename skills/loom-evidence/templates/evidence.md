@@ -31,6 +31,17 @@ Procedure verdict / exit code: <pass/fail/mixed/inconclusive and exit code when 
 Files, outputs, screenshots, logs, commands, paths, or observations that matter.
 Separate raw observations from later interpretation.
 
+# Raw Artifact Store
+
+Optional support cache for bulky raw observations. The evidence record remains the
+primary understanding and must stand on its own when this path is absent.
+
+- Path: `.loom/evidence/artifacts/<evidence-slug>/` or `None - reason`
+- Captured artifacts: <logs, traces, responses, screenshots, reports, fixtures, or None - reason>
+- Key excerpts / index: <important filenames, snippets, checksums, or summary>
+- Redaction / sensitivity: <sanitized, omitted, or safe-to-keep rationale>
+- Retention / tracking: <gitignored support cache by default, intentionally tracked with rationale, or prune condition>
+
 # Visual / Product Evidence
 
 Use for UI, UX, product-shape, or design-quality claims; otherwise write `N/A`.

@@ -1,6 +1,6 @@
 ---
 name: loom-constitution
-description: "Maintain durable project identity and constraints. Use when architecture policy, principles, roadmap direction, citable decisions, hard constraints, or long-lived project rules must change."
+description: "Maintain durable project identity and constraints. Use when architecture policy, principles, ADRs/decision records, roadmap direction or roadmap records, hard constraints, citable decisions, or long-lived project rules must change."
 compatibility: Markdown-native, script-free Loom protocol.
 metadata:
   skill_kind: owner-layer

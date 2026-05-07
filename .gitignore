@@ -1,4 +1,6 @@
 /.loom/memory/user
+/.loom/evidence/artifacts/
+/.loom/research/artifacts/
 /.venv/
 /uv.lock
 /.npmrc

@@ -1,12 +1,14 @@
 # Slicing
 
-A plan should produce bounded tickets.
+A plan should produce bounded tickets. This is the primary job of planning: tease
+high-level work into detailed execution units, then use sequencing and waves to
+organize those units.
 
 Use this question repeatedly:
 
 > what is the next smallest slice that can make meaningful progress without widening scope?
 
-A good ticket slice is:
+A good execution unit or ticket slice is:
 
 - independently legible
 - testable or reviewable
@@ -14,13 +16,19 @@ A good ticket slice is:
   instead of only building one horizontal layer
 - not secretly several tickets glued together
 - small enough for one Ralph iteration or a short sequence of Ralph iterations
+- names the source claim, spec acceptance ID, research conclusion, or initiative
+  objective it advances
+- states the observable outcome, not just an activity label
 - explicit about the likely write boundary and verification posture
-- names the source claim, likely affected files or records, and expected
-  test/evidence target without becoming a step-by-step implementation script
+- names likely affected files or records and expected test/evidence target without
+  becoming a step-by-step implementation script
+- names non-goals, dependencies, and stop / loopback conditions
 - able to stop cleanly if a dependency, behavior question, or evidence gap
   appears
 
-If the plan cannot yield slices like that, keep decomposing.
+If the plan cannot yield slices like that, keep grilling and decomposing. A phase
+name such as "backend work," "UI work," "polish," or "integration" is not yet a
+ticket-ready unit unless it has an outcome, boundary, evidence target, and loopback.
 
 Prefer tracer-bullet slices when possible: one narrow path through the real
 interfaces, data, validation, and user/operator surface. Horizontal slices are
@@ -39,6 +47,23 @@ Common slicing modes:
   surrounding work
 - cleanup-only: isolate behavior-preserving simplification or dead-code removal so
   review can distinguish it from new behavior
+
+## Slice Integrity
+
+Each slice should be one logical change with one primary reason to exist. Keep
+feature work, bug fixes, refactors, dependency/tooling changes, generated-file
+updates, and formatting-only churn separate unless the plan explicitly scopes the
+bundle and explains why review will still be clear.
+
+For user-facing or externally integrated work, prefer a narrow end-to-end path that
+can run or be observed, even if it is behind a flag or limited rollout. Feature
+flags are a way to keep incomplete behavior safe; they still need owner, expiry,
+test coverage for on/off states when applicable, and a cleanup route.
+
+Peer workflows often use commits as save points after each slice. Loom does not
+require commits unless the operator or project workflow asks for them. The
+Loom-native save point is a working, reviewable state with evidence and ticket
+truth current enough that the next agent can continue without transcript context.
 
 Each slice should leave a verifiable or reviewable state. If a slice cannot be
 verified independently, either make it smaller, change the evidence plan, or route
