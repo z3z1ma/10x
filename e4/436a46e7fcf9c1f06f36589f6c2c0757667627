@@ -1,0 +1,18 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.3",
+  "base_commit_sha": "e4436a46e7fcf9c1f06f36589f6c2c0757667627",
+  "commit_sha": "",
+  "commit_type": "rebase_interactive",
+  "prompts": {
+    "human": {
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "total_additions": 99,
+      "total_deletions": 0,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    }
+  }
+}
