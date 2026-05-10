@@ -1,0 +1,155 @@
+loom-core/loom-core.mjs
+  human 9
+  human 2,7-13,77-83
+loom-core/README.md
+  human 22,56,61
+  human 3,5-6,12,16-17,20-22,24-26,28,30,33-36,38-40,42,47-55,58-59,61-62,66-67,76-77,83,85-86,88-90
+loom-core/skills/loom-retrospective/SKILL.md
+  human 1-133
+loom-core/skills/using-loom/references/directory-structure.md
+  human 1-78
+loom-core/skills/using-loom/SKILL.md
+  human 43-47,78-80
+  human 25-26,29,31-32,74,79,81,85,94-95
+loom-core/skills/loom-retrospective/references/promotion-and-prevention.md
+  human 1-90
+loom-core/gemini-bootstrap.md
+  human 7-8
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "9",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 15,
+          "added_lines": 0,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "2,7-13,77-83",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/loom-core.mjs"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 3,
+          "added_lines": 3,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "22,56,61",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 44,
+          "added_lines": 0,
+          "deleted_lines": 1,
+          "hash": "human",
+          "lines": "3,5-6,12,16-17,20-22,24-26,28,30,33-36,38-40,42,47-55,58-59,61-62,66-67,76-77,83,85-86,88-90",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/README.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 133,
+          "added_lines": 133,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-133",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-retrospective/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 78,
+          "added_lines": 78,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-78",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/references/directory-structure.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 8,
+          "added_lines": 8,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "43-47,78-80",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 11,
+          "added_lines": 0,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "25-26,29,31-32,74,79,81,85,94-95",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 90,
+          "added_lines": 90,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-90",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-retrospective/references/promotion-and-prevention.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "7-8",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/gemini-bootstrap.md"
+    }
+  ],
+  "base_commit_sha": "23ffede56dedfc7446454d1969479360dd2d14bf",
+  "branch": "loom-humanization",
+  "commit_sha": "d5c1ebea238652cc1d3f09cf83fef73110d90b2a",
+  "commit_time": "2026-05-10T13:31:28-07:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.3",
+  "prompts": {
+    "human": {
+      "accepted_lines": 315,
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "overriden_lines": 0,
+      "total_additions": 315,
+      "total_deletions": 0
+    }
+  },
+  "repo": "https://github.com/z3z1ma/agent-loom.git",
+  "schema_version": "authorship/3.0.0"
+}
