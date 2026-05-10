@@ -1,0 +1,113 @@
+loom-core/skills/loom-research/references/research-shape.md
+  human 1-211
+loom-core/skills/loom-research/SKILL.md
+  human 1-161
+loom-core/skills/loom-research/templates/research.md
+  human 1-80
+loom-core/skills/loom-research/references/source-handling.md
+  human 1-109
+loom-core/skills/using-loom/SKILL.md
+  human 13,28-29
+loom-core/skills/using-loom/references/delegating-to-workers.md
+  human 10,36,86,88-89
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 211,
+          "added_lines": 211,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-211",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-research/references/research-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 161,
+          "added_lines": 161,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-161",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-research/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 80,
+          "added_lines": 80,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-80",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-research/templates/research.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 109,
+          "added_lines": 109,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-109",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-research/references/source-handling.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 3,
+          "added_lines": 3,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "13,28-29",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 5,
+          "added_lines": 5,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "10,36,86,88-89",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/references/delegating-to-workers.md"
+    }
+  ],
+  "base_commit_sha": "e8fe3a2d7a58c322a3378157d4f4a85853ece0de",
+  "branch": "loom-humanization",
+  "commit_sha": "f1a4143faca88b9f4ee80a197d496ecd1817c336",
+  "commit_time": "2026-05-10T00:26:15-07:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.3",
+  "prompts": {
+    "human": {
+      "accepted_lines": 569,
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "overriden_lines": 0,
+      "total_additions": 569,
+      "total_deletions": 0
+    }
+  },
+  "repo": "https://github.com/z3z1ma/agent-loom.git",
+  "schema_version": "authorship/3.0.0"
+}
