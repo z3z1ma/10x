@@ -1,0 +1,65 @@
+loom-core/skills/loom-research/references/source-handling.md
+  human 7-8,27-28,40,67-68,95-102
+loom-core/skills/loom-research/references/research-shape.md
+  human 5-10,14,23-24,38,49,104,138-139,164,185
+loom-core/skills/loom-research/SKILL.md
+  human 3,30,34-37,48,54,57-59,65-67,80,89-91,103-105,156-171
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 15,
+          "added_lines": 15,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "7-8,27-28,40,67-68,95-102",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-research/references/source-handling.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 16,
+          "added_lines": 16,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "5-10,14,23-24,38,49,104,138-139,164,185",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-research/references/research-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 37,
+          "added_lines": 37,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3,30,34-37,48,54,57-59,65-67,80,89-91,103-105,156-171",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-research/SKILL.md"
+    }
+  ],
+  "base_commit_sha": "7f1735d398db946ef2f72a344472a897b85ac6bb",
+  "commit_sha": "7f1735d398db946ef2f72a344472a897b85ac6bb",
+  "commit_type": "commit_amend",
+  "git_ai_version": "1.4.3",
+  "prompts": {
+    "human": {
+      "accepted_lines": 68,
+      "agent_id": null,
+      "human_author": null,
+      "overriden_lines": 0,
+      "total_additions": 68,
+      "total_deletions": 0
+    }
+  },
+  "schema_version": "authorship/3.0.0"
+}
