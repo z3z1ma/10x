@@ -1,0 +1,275 @@
+loom-core/skills/using-loom/references/shaping-with-humans.md
+  human 80
+loom-core/skills/loom-evidence/references/creating-evidence.md
+  human 1-130
+loom-core/skills/loom-constitution/SKILL.md
+  human 78,114
+loom-core/skills/using-loom/references/how-loom-thinks.md
+  human 92
+loom-core/skills/loom-tickets/references/ticket-shape.md
+  human 89,91
+loom-core/skills/loom-tickets/references/acting-on-tickets.md
+  human 74,118
+loom-core/skills/loom-constitution/references/principle-fragments.md
+  human 94
+loom-core/skills/loom-evidence/templates/observation.md
+  human 1-46
+loom-core/skills/loom-evidence/SKILL.md
+  human 1-147
+loom-core/skills/loom-constitution/templates/decision.md
+  human 40
+loom-core/skills/loom-evidence/templates/dossier.md
+  human 1-50
+loom-core/skills/loom-tickets/references/creating-tickets.md
+  human 47
+loom-core/skills/loom-tickets/templates/ticket.md
+  human 31
+loom-core/skills/loom-constitution/templates/roadmap.md
+  human 41
+loom-core/skills/loom-evidence/references/evidence-quality.md
+  human 1-115
+loom-core/skills/loom-constitution/templates/principle-fragment.md
+  human 36
+loom-core/skills/loom-constitution/references/decision-records.md
+  human 48
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "80",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/references/shaping-with-humans.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 130,
+          "added_lines": 130,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-130",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-evidence/references/creating-evidence.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "78,114",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-constitution/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "92",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/references/how-loom-thinks.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "89,91",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-tickets/references/ticket-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "74,118",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-tickets/references/acting-on-tickets.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "94",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-constitution/references/principle-fragments.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 46,
+          "added_lines": 46,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-46",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-evidence/templates/observation.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 147,
+          "added_lines": 147,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-147",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-evidence/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "40",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-constitution/templates/decision.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 50,
+          "added_lines": 50,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-50",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-evidence/templates/dossier.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "47",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-tickets/references/creating-tickets.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "31",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-tickets/templates/ticket.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "41",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-constitution/templates/roadmap.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 115,
+          "added_lines": 115,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-115",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-evidence/references/evidence-quality.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "36",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-constitution/templates/principle-fragment.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "48",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-constitution/references/decision-records.md"
+    }
+  ],
+  "base_commit_sha": "e8fe3a2d7a58c322a3378157d4f4a85853ece0de",
+  "commit_sha": "e8fe3a2d7a58c322a3378157d4f4a85853ece0de",
+  "commit_type": "commit_amend",
+  "git_ai_version": "1.4.3",
+  "prompts": {
+    "human": {
+      "accepted_lines": 503,
+      "agent_id": null,
+      "human_author": null,
+      "overriden_lines": 0,
+      "total_additions": 503,
+      "total_deletions": 0
+    }
+  },
+  "schema_version": "authorship/3.0.0"
+}
