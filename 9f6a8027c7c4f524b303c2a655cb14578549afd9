@@ -1,0 +1,266 @@
+loom-core/skills/using-loom/references/delegating-to-workers.md
+  human 95-99
+loom-core/skills/loom-tickets/SKILL.md
+  human 161,207-208,238
+loom-core/skills/loom-tickets/templates/ticket.md
+  human 44,48,52
+loom-core/skills/loom-plans/references/plan-shape.md
+  human 175-176
+loom-core/skills/using-loom/references/how-loom-thinks.md
+  human 30,100
+loom-core/skills/loom-audit/references/audit-shape.md
+  human 36,112-115
+  human 1-114,118-121,129
+loom-core/skills/loom-tickets/references/creating-tickets.md
+  human 17-18,77-80,92
+loom-core/skills/using-loom/references/proving-the-work.md
+  human 29,31-33,61
+loom-core/skills/using-loom/SKILL.md
+  human 25-29,32,69
+loom-core/skills/loom-plans/templates/plan.md
+  human 38-39
+loom-core/skills/using-loom/references/shaping-with-humans.md
+  human 86
+loom-core/skills/loom-tickets/references/ticket-shape.md
+  human 129-131,202
+loom-core/skills/loom-plans/SKILL.md
+  human 108,143,150,167
+loom-core/skills/loom-audit/SKILL.md
+  human 25-26,38-39
+  human 1-156,162
+loom-core/skills/loom-tickets/references/acting-on-tickets.md
+  human 128-130,139-140
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 5,
+          "added_lines": 5,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "95-99",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/references/delegating-to-workers.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 4,
+          "added_lines": 4,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "161,207-208,238",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-tickets/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 3,
+          "added_lines": 3,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "44,48,52",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-tickets/templates/ticket.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "175-176",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-plans/references/plan-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "30,100",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/references/how-loom-thinks.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 5,
+          "added_lines": 5,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "36,112-115",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 118,
+          "added_lines": 0,
+          "deleted_lines": 1,
+          "hash": "human",
+          "lines": "1-114,118-121,129",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-audit/references/audit-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 7,
+          "added_lines": 7,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "17-18,77-80,92",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-tickets/references/creating-tickets.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 5,
+          "added_lines": 5,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "29,31-33,61",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/references/proving-the-work.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 7,
+          "added_lines": 7,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "25-29,32,69",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "38-39",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-plans/templates/plan.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "86",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/using-loom/references/shaping-with-humans.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 4,
+          "added_lines": 4,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "129-131,202",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-tickets/references/ticket-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 4,
+          "added_lines": 4,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "108,143,150,167",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-plans/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 4,
+          "added_lines": 4,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "25-26,38-39",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 157,
+          "added_lines": 0,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-156,162",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-audit/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 5,
+          "added_lines": 5,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "128-130,139-140",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-tickets/references/acting-on-tickets.md"
+    }
+  ],
+  "base_commit_sha": "1285fecf9b3faedc2bcc2b608fd9e3aa78f4162c",
+  "branch": "loom-humanization",
+  "commit_sha": "9f6a8027c7c4f524b303c2a655cb14578549afd9",
+  "commit_time": "2026-05-10T01:42:39-07:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.3",
+  "prompts": {
+    "human": {
+      "accepted_lines": 60,
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "overriden_lines": 0,
+      "total_additions": 60,
+      "total_deletions": 0
+    }
+  },
+  "repo": "https://github.com/z3z1ma/agent-loom.git",
+  "schema_version": "authorship/3.0.0"
+}
