@@ -1,38 +1,37 @@
----
-id: constitution:main
-kind: constitution
-status: active
-created_at: <UTC timestamp>
-updated_at: <UTC timestamp>
-scope:
-  kind: workspace
-links: {}
----
+# <Project> Constitution
 
-# Vision
+ID: constitution:main
+Type: Constitution Core
+Status: active
+Created: <YYYY-MM-DD>
+Updated: <YYYY-MM-DD>
 
-What Loom or this project is fundamentally trying to become.
+## Starting Point
 
-# Principles
+Use this optional living record when the project needs one broad place for
+durable identity, principles, constraints, and current constitutional direction.
 
-The durable rules of judgment the project wants future work to inherit.
+## Project Judgment
 
-# Constraints
+What future agents should understand about what this project is, what it is not,
+and how work should be judged.
 
-Hard limits, refusal points, non-goals, and architecture boundaries.
+## Principles And Constraints
 
-# Strategic Direction
+Durable principles, hard limits, refusals, non-goals, or judgment boundaries that
+future work should inherit.
 
-The durable direction the project is moving toward.
+## Current Constitutional Direction
 
-# Current Focus
+Project-level direction that matters now. Keep live execution, task status,
+owners, blockers, and progress elsewhere.
 
-What matters now at a high level.
+## Open Questions
 
-# Open Constitutional Questions
+Unresolved questions that would change durable project judgment if answered.
 
-Questions that remain policy-relevant and unresolved.
+## Related
 
-# Change History
-
-A short log of meaningful constitutional shifts.
+Optional. Add decision, roadmap, principle, spec, plan, ticket, research,
+evidence, audit, knowledge, or code refs only when they help future agents
+navigate.

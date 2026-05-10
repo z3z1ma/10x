@@ -1,181 +1,166 @@
 ---
 name: loom-plans
-description: "Decompose high-level work into ticket-ready execution units and maintain execution strategy. Use when a feature, refactor, migration, architecture change, or multi-step objective needs detailed slices, ordered tickets, dependencies, tranches, or parallel execution waves."
-compatibility: Markdown-native, script-free Loom protocol.
-metadata:
-  skill_kind: owner-layer
-  owns_layer: plan
+description: "Manages Loom plans: creates, shapes, updates, reviews, completes, blocks, and cancels operator-shaped strategy for complex work spanning multiple ticket-ready execution units. Use when high-level work must be decomposed into multiple ticket-ready execution units, or when sequencing, dependencies, rollout, milestones, or recovery strategy matter."
 ---
 
 # loom-plans
 
-Plans own work decomposition and execution strategy.
+Plans are Loom's strategy and decomposition surface for complex codebase work.
 
-They tease high-level work into detailed units of execution that can become
-tickets. Sequencing, rollout, milestones, and waves organize those units; they do
-not replace ticket truth.
+A plan turns a larger change into ticket-ready execution units with a clear route,
+sequence, dependency shape, shared constraints, validation posture, and evidence
+expectations.
 
-Loom plans inherit the useful parts of self-orienting execution strategy: a fresh
-agent should understand the purpose, context, route, proof strategy, dependencies,
-and recovery posture. Loom does not turn plans into all-in-one execution ledgers:
-tickets own live progress, evidence owns observations, research owns discoveries,
-and retrospective/wiki/spec/constitution own promoted lessons.
-
-## Planning Procedure
-
-Before a plan drives tickets, grill the work until the decomposition is obvious
-enough for a fresh agent to act without transcript context.
-
-Use the grilling loop when the work still contains vague phases, overloaded terms,
-hidden dependencies, unclear ticket boundaries, or uncertain verification:
-
-- interview the operator relentlessly about every material branch of the plan until
-  the execution strategy is shared and precise
-- ask one material question at a time, waiting for the answer before moving to the
-  next dependent branch
-- when a question can be answered by inspecting existing records, source paths,
-  tests, architecture notes, or prior decisions, inspect first instead of asking
-  the operator to restate available facts
-- provide a recommended answer for each question, including the evidence or owner
-  record that makes the recommendation plausible
-- challenge terminology conflicts and fuzzy labels immediately; a phase name is not
-  a ticket slice until it has a concrete outcome, boundary, and verification target
-- invent concrete execution scenarios that probe the first valuable path, riskiest
-  path, failure path, migration path, rollback path, and review path when relevant
-- walk dependent decisions one by one until each branch is resolved, routed to the
-  right owner layer, or marked as a blocker
-- preserve only the resulting execution units, assumptions, dependencies, rejected
-  routes, and loopbacks in the plan; do not copy the interview transcript into the
-  plan record
-
-## What This Skill Owns
-
-- decomposition
-- detailed ticket-ready execution units
-- explicit route from initiative/spec/research into ticket work
-- sequencing
-- rollout strategy
-- milestones at the execution-strategy layer
-
-## Naming
-
-Create new plan records as `.loom/plans/<YYYYMMDD>-<slug>.md`.
-The canonical ID remains `plan:<slug>` without the date prefix. Use the record
-creation date for the filename prefix so plans support temporal discovery and
-future retention or cleanup decisions.
-
-## Milestone Boundary
-
-Plan milestones are execution-sequencing checkpoints.
-
-They are not constitutional roadmap direction, initiative outcome metrics, or
-ticket progress state. If a plan starts recording what happened today, move that
-truth into the ticket journal or evidence.
+A plan is not a progress log, ticket substitute, research note, spec, or parking
+lot for unresolved thought.
 
 ## Use This Skill When
 
-- high-level work is too large or vague for one ticket and needs decomposition
-- a spec, initiative, research conclusion, migration, or refactor needs detailed
-  ticket-ready units before execution
-- multiple tickets need one decomposition and sequencing owner
-- rollout order matters
-- dependencies need to be made visible
-- the project needs an execution strategy that should outlive one ticket
+Use this skill when:
 
-## Do Not Use This Skill When
+- work exceeds one bounded ticket
+- the operator is shaping a complex change across multiple units of work
+- sequencing, dependencies, or coordination matter
+- child tickets need one shared implementation strategy they can point back to
+- a spec, research conclusion, migration, refactor, or architecture change needs
+  ticket-ready execution units
+- an existing plan needs to be updated, reviewed, completed, blocked, or cancelled
 
-- the work is already one bounded ticket
-- the layer should really be initiative or spec
-- intended behavior is still unclear enough that a spec grilling pass must happen
-  before decomposition
-- you are tempted to use the plan as a progress log
+Use one ticket when one bounded ticket is enough.
 
-## Good Plan Questions
+When intended behavior, tradeoffs, feasibility, or durable policy are still too
+unclear, route those questions to specs, research, or constitution first.
 
-A strong plan answers:
+## Dispatch
 
-- what the overall route is
-- what user-visible, operator-visible, or system-visible result the plan exists to
-  make possible
-- what context and orientation a fresh agent needs before creating tickets
-- what high-level work is being decomposed and what owner records constrain it
-- which execution units should become tickets beneath it
-- what each unit is expected to change, observe, prove, and avoid
-- which interfaces, dependencies, data, flags, migrations, records, or environment
-  assumptions shape execution
-- how the work should be validated and what evidence/critique tickets should expect
-- how a future agent can retry, resume, or recover safely
-- which execution-strategy decisions were made and why
-- why the sequence is ordered this way
-- what milestones exist
-- what risks and dependencies shape the sequence
-- which tickets should exist beneath it
-- which slices are vertical enough to produce working, verifiable progress
-- which sections are thin on confidence, such as weak rationale, vague file or
-  record scope, missing test/evidence targets, or unresolved owner-layer gaps
-- where checkpoints or loopbacks should happen before continuing
+If creating or reshaping a plan:
 
-## Common Rationalizations
+- read `references/creating-plans.md`
+- read `references/slicing-work.md`
+- read `references/plan-shape.md`
+- inspect relevant records and source before asking the operator to repeat facts
+- create the child tickets once execution units are ticket-ready
+- ensure each child ticket links back to the plan in `## Related Records`
 
-- **"I'll figure out the order while implementing."** Reality: hidden sequencing
-  becomes rework. Plans exist when order, dependency, or parallelism matters.
-- **"The plan is mostly a list of phases."** Reality: a useful plan decomposes work
-  into ticket-ready execution units with outcomes, scope, evidence, and loopbacks.
-- **"Progress belongs in the plan because another planning style tracks it there."**
-  Reality: in Loom, tickets own live progress. Plans own route and decomposition;
-  they point to tickets for current state.
-- **"A complete plan should decompose everything."** Reality: decompose enough to
-  make the next safe tranche clear; do not manufacture roadmap theater.
-- **"Parallel work is faster."** Reality: parallel tickets are safe only when
-  dependencies and write scopes do not conflict.
-- **"The plan checklist can be the execution contract."** Reality: ticket acceptance
-  and packet task text own executable detail; plans name proof targets for tickets
-  and packets to validate.
+If updating, reviewing, completing, blocking, or cancelling a plan:
 
-## Red Flags
+- read the whole plan
+- inspect the child tickets named in `## Execution Units`
+- update Current State and Journal when the plan-level story would otherwise be stale
+- keep live execution truth in tickets, not in the plan
 
-- tasks are horizontal layers that cannot be verified independently
-- the plan names themes, phases, or waves but not ticket-ready units of execution
-- context is so thin that a fresh agent must reconstruct the route from transcript
-  history
-- validation, acceptance, interfaces, dependencies, or recovery are left implicit
-- ticket slices do not say what should change, where, how it will be verified, or
-  when to loop back
-- ticket slices are too large for one focused execution/review loop
-- execution waves lack write-scope or dependency checks
-- the plan is being used as a progress log
-- evidence or critique expectations are absent for risky tranches
+If only finding or summarizing plans:
 
-## Verification
+- inspect `.loom/plans/`
+- report state without mutating records unless the operator asked for a change
 
-- [ ] Claim/acceptance coverage maps to downstream tickets or explains why none applies.
-- [ ] Purpose, context, interfaces, validation, and recovery are explicit enough for
-      a fresh agent to orient.
-- [ ] High-level work has been decomposed into ticket-ready execution units, not
-      only phases or waves.
-- [ ] Ticket slices are small, ordered by dependency where order matters, and leave
-      reviewable checkpoints.
-- [ ] Plan confidence gaps have been fixed, routed outward, or recorded as explicit assumptions.
-- [ ] Parallel waves, if any, include non-overlap and parent reconciliation checks.
-- [ ] Risks name owner-layer loopbacks when execution discovers missing truth.
+## Finding Plans
+
+Plans live under `.loom/plans/`.
+
+Useful starting points:
+
+```bash
+find .loom/plans -name '*.md' -print | sort
+grep -R '^ID: plan:' .loom/plans || true
+grep -R '^Status:' .loom/plans || true
+grep -R '^Risk:' .loom/plans || true
+```
+
+When looking for a specific plan, prefer ID and filename matches before fuzzy
+search.
+
+## Plan IDs And Filenames
+
+Use `plan:YYYYMMDD-<slug>` IDs.
+
+Use matching filenames without the `plan:` prefix:
+
+```text
+.loom/plans/YYYYMMDD-<slug>.md
+```
+
+Use the actual current date. Do not copy example dates.
+
+If the slug would collide, choose a clearer slug or add a numeric suffix.
+
+## Required Top Labels
+
+Plans use plain body labels near the top:
+
+```text
+ID: plan:YYYYMMDD-<slug>
+Type: Plan
+Status: open
+Created: YYYY-MM-DD
+Updated: YYYY-MM-DD
+Risk: low|medium|high - reason
+```
+
+## Status Lifecycle
+
+Use this lifecycle:
+
+- `open`: strategy is accepted, execution units are ticket-ready, and child ticket
+  work has not materially started
+- `active`: at least one child ticket has started execution
+- `blocked`: a concrete plan-level blocker prevents safe progress across the plan
+- `review`: child tickets are resolved and final plan-level audit or review is next
+- `completed`: child tickets are resolved and the plan-level outcome is accepted
+- `cancelled`: the plan should not proceed, with the reason recorded
+
+Plans are not created as drafts.
+
+If material decomposition questions remain, keep shaping outside the plan or route
+to the owning Loom surface.
+
+## Plan Discipline
+
+Creating a plan is outer-loop work.
+
+Before saving a plan, shape the work until the route, slices, ticket set,
+milestones, validation posture, evidence expectations, audit expectations, and
+loopback conditions are clear enough to drive execution.
+
+A saved plan should be usable from the plan and its linked records without relying
+on chat history.
+
+The plan owns decomposition, sequencing, strategy, milestones, and plan-level
+coordination.
+
+Child tickets own executable detail, live state, evidence, and closure.
+
+## Template
+
+Use `templates/plan.md` as the default starting point. Preserve useful structure
+and remove empty sections.
+
+## Review And Completion
+
+Use `Status: review` when all child tickets are closed, cancelled, or otherwise
+resolved but plan-level audit or review is not yet complete.
+
+Complete a plan only when:
+
+- every execution unit has a concrete child ticket ID
+- every child ticket is closed, cancelled, or explicitly out of scope with reason
+- milestones are satisfied, revised, or explicitly not satisfied
+- plan-level audit or review has happened when the strategy story needs it
+- Current State summarizes the final plan-level story
+- Journal records the material route to completion
+- residual risks and follow-up work are named
+
+Set `Status: completed` only when the plan tells one truthful strategy story and
+the child tickets carry the live execution truth.
 
 ## Done Means
 
-- a future agent can see the intended route without reading transcript history
-- a future agent can create or refine the next tickets from the execution units
-  without guessing from transcript history
-- the plan decomposes and sequences the work without swallowing live execution state
+Plan work is done when:
 
-## Read In This Order
-
-Read immediately for normal plan creation or review:
-
-1. `references/plan-shape.md` when creating or reviewing a plan's structure.
-
-Then read conditionally:
-
-2. `references/slicing.md` when decomposing a plan into ticket-sized work.
-3. `skills/loom-workspace/references/problem-shaping.md` when the request is
-   still too fuzzy to become a plan.
-4. `templates/plan.md` only when creating or substantially reshaping a plan
-   record.
+- the plan decomposes complex work into concrete child tickets
+- the ticket set is created and linked back to the plan
+- the strategy explains why this route and order make sense
+- milestones describe meaningful checkpoints without becoming progress state
+- validation, evidence, risk, audit, and loopback expectations are visible
+- plan-level audit expectations are handled without duplicating child ticket truth
+- Current State and Journal make plan-level continuation possible without chat history

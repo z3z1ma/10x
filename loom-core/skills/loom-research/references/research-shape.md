@@ -1,114 +1,213 @@
 # Research Shape
 
-## Core sections
+Research creation is outer-loop work.
 
-- Question
-- Why This Matters
-- Scope
-- Method
-- Sources
-- Variant / Experiment Matrix when options, prototypes, sketches, or hypotheses are compared
-- Evidence Synthesis
-- Rejected Options
-- Null Results
-- Conclusions
-- Recommendations
-- Open Questions
-- Linked Work
+Create research when a question and its reasoning are durable enough that future
+work would be worse without the record.
 
-## Spike And Sketch Variants
+A research record gives a future agent the question, scope, grounding path,
+findings, tradeoffs, rejected paths, conclusions, limits, and downstream route.
 
-A spike is a bounded experiment recorded as research.
+## Shaping Standard
 
-A sketch is a bounded product or UI variant exploration recorded as research.
+Before writing research, shape the investigation until four things are true:
 
-Both variants should still preserve:
+- durable question: the investigation matters beyond the current chat
+- bounded scope: the record can say what is covered and excluded
+- grounding path: there is a plausible method, source set, experiment, or
+  inspection path
+- downstream consumer: a spec, ticket, plan, constitution record, evidence record,
+  audit, knowledge record, source area, or future agent can use the result
 
-- question
-- method
-- evidence
-- rejected options
-- null results
-- conclusions
-- downstream route
+Inspect source and records first. Ask one material question when operator input is
+needed. Offer a recommended answer when the tradeoff is clear.
 
-A useful variant matrix is compact and decision-oriented:
+## Create Research Only When
 
-```md
-- Variant / hypothesis: <name>
-  - Artifact or probe: <path, screenshot, command, or observation>
-  - Strength: <evidence-backed strength>
-  - Weakness: <risk or limit>
-  - Decision: <chosen, rejected, needs follow-up>
-```
+Create an `active` research record when all of these are true:
 
-The matrix should compare meaningfully different options. Three variants that
-only change color, wording, or naming are not a sketch; they are surface tweaks.
+- the question is clear enough to investigate
+- the scope is narrow enough to avoid becoming a parking lot
+- the likely sources or inspection path are known enough to begin
+- the likely downstream consumer is known
+- the investigation, rejection, null result, or conclusion should remain available
+  to future work
 
-Use optional `loom-spike` or an equivalent exploration workflow for procedural
-spike or sketch detail such as experiment matrices, variant framing, throwaway
-write-scope discipline, artifact capture, and downstream routing. Keep the
-canonical truth in research, evidence, specs, tickets, critique, and wiki.
+Create active research before conclusions when the investigation itself needs a
+durable home.
 
-## Writing standard
+## Route Elsewhere When
 
-Separate:
+Research informs other surfaces. It should not replace them.
 
-- evidence from inference
-- conclusions from hypotheses
-- rejected paths from chosen paths
-- null results from open questions
+Route instead:
 
-A good research note makes it easy for later work to inherit the thinking without inheriting confusion.
+- intended behavior, requirements, scenarios, interface expectations, or invariants to
+  specs
+- bounded executable work to tickets
+- complex multi-ticket strategy, sequencing, or decomposition to plans
+- durable policy, principles, architectural precedent, or roadmap direction to
+  constitution
+- observed validation artifacts to evidence when the observation itself must be
+  inspectable
+- adversarial review to audit
+- accepted reusable explanation to knowledge
 
-## Source Quality And Freshness
+## Core Sections
 
-When research depends on external documentation, peer repositories, generated
-summaries, model consultation, or tool output, classify source quality instead of
-treating every source equally:
+Use the default sections unless a research record has a strong reason to vary:
 
-- project-owned records and source code for current implementation reality
-- official documentation, specs, standards, changelogs, or release notes for
-  external API and version behavior
-- primary repository source for peer-practice evidence
-- reputable secondary explanation as context, not primary authority
-- model, forum, tutorial, or generated summary as untrusted support unless
-  verified against stronger sources
+- `## Summary`
+- `## Question`
+- `## Scope`
+- `## Method And Sources`
+- `## Findings`
+- `## Tradeoffs`
+- `## Rejected Paths And Null Results`
+- `## Conclusions`
+- `## Recommendations`
+- `## Open Questions`
+- `## Related Records`
 
-Record source state, observed date, version or commit when available, freshness
-risk, and recheck trigger. If official sources conflict with project practice,
-surface the conflict and route the decision to spec, ticket, or constitution
-instead of letting research silently pick a winner.
+Research does not use a journal by default. If investigation history matters, fold
+the material facts into Method, Findings, Rejected Paths, or Conclusions. Tickets
+and plans carry live execution journals.
 
-## Consultation And Debate
+## Summary
 
-External consultation, model debate, or multi-advisor synthesis can support
-research when the question benefits from adversarial perspectives. Keep it
-bounded:
+Summary should answer:
 
-- name the question and roles or lenses used
-- require claims to cite evidence or say they are conjecture
-- record concessions, disagreements, unresolved questions, and the parent verdict
-- preserve the conclusion in research and route accepted behavior, policy,
-  execution, or explanation to the owner layer that owns it
+- what was investigated
+- why the investigation matters
+- what conclusion or current state a future agent should notice first
 
-Consultation does not own project truth. It is evidence or analysis for the parent
-record to evaluate.
+Keep it short, but make the record understandable without chat history.
 
-## Rejected Options and Null Results
+## Question
 
-Capture the dead ends. An option that was considered and rejected, or an approach that was tried and failed, is durable knowledge if another agent would otherwise rediscover the same conclusion. For each, record:
+The question should be specific enough to investigate and specific enough to know
+when the record is done.
+
+Weak questions sound like:
+
+- research auth
+- compare options
+- see how migrations work
+- figure out best practice
+
+Better questions name the decision pressure:
+
+- Which validation route is strong enough for `ticket:YYYYMMDD-<slug>#ACC-001`?
+- Which migration strategy avoids breaking existing persisted records?
+- Which library API behavior applies to the version this repository actually uses?
+- Which implementation seam lets the next ticket stay bounded and reviewable?
+
+## Scope
+
+Scope should say what the research covers and excludes.
+
+Good scope names:
+
+- source paths, records, systems, versions, or environments inspected
+- options or hypotheses considered
+- scenarios intentionally excluded
+- assumptions the conclusion depends on
+- freshness or recheck triggers when obvious
+
+If the scope cannot be bounded, the research is not ready.
+
+## Method And Sources
+
+Method explains how the investigation was grounded.
+
+It can include code inspection, record review, command output, experiments,
+external documentation, source-material artifacts, operator input, model debate,
+or peer repository comparison.
+
+Keep method concise. Expand source quality, provenance, version, or freshness only
+when it materially affects trust.
+
+## Findings
+
+Findings are what the investigation found before the record claims what it means.
+
+Separate observed or sourced facts from conclusions. When a finding depends on an
+artifact that should survive independently, cite or create evidence.
+
+A useful finding names enough source context for a future agent to recheck it.
+
+## Tradeoffs
+
+Use Tradeoffs when options, variants, hypotheses, libraries, strategies, or
+implementation routes are compared.
+
+Compare meaningful differences, not cosmetic variants. A useful comparison names:
+
+- option or hypothesis
+- evidence-backed strength
+- risk, weakness, or limit
+- decision pressure or downstream consequence
+
+Remove the section if no real comparison exists.
+
+## Rejected Paths And Null Results
+
+Capture dead ends when future agents would otherwise rediscover them.
+
+For each useful rejection or null result, say:
 
 - what was considered or tried
-- what rejected it (evidence, constraint, conflict with another layer)
-- what the future reader should do instead
+- what rejected it
+- what a future agent should do instead, if known
 
-When a rejection or null result generalizes beyond this one decision, it is a candidate for promotion into the wiki so future agents encounter it before re-deriving it.
+## Conclusions
 
-## Deferred Questions
+Conclusions say what is justified by the findings.
 
-Sometimes an investigation surfaces questions that matter but are not yet heavy enough to justify a dedicated research record. Rather than lose them, keep them in the Open Questions section of the parent research record, or create a research record with `status: deferred_questions` that collects related open questions for a topic.
+Do not make conclusions stronger than the source quality supports. If the result
+depends on a version, environment, assumption, or unverified source, say so.
 
-Deferred questions are a subset of research, not a separate record kind. When a
-question matures, promote it into its own research record and name the source and
-successor in `links:` or body prose using the shared semantic link guidance.
+`Status: completed` means the conclusions and recommendations are bounded enough
+to cite. It does not mean the consuming ticket, spec, plan, constitution record,
+knowledge record, or audit automatically accepts them.
+
+## Recommendations
+
+Recommendations route the result.
+
+Good recommendations name the next owner:
+
+- create or update a spec for intended behavior
+- create a ticket for bounded executable work
+- create a plan for complex multi-ticket strategy
+- create or update constitution for durable judgment
+- create evidence for an observation that must be inspectable
+- route to audit for adversarial review
+- promote settled explanation into knowledge
+
+Research may recommend. The receiving surface owns the next truth change.
+
+## Open Questions
+
+Open questions are honest limits.
+
+Keep them short. Split into a new research record only when a question becomes an
+independently actionable investigation or would bloat the current record.
+
+Do not use open questions as a parking lot for vague future work.
+
+## Related Records
+
+Use Related Records when another record or source path materially helps a future
+agent interpret the research.
+
+Each entry should say why it matters. Add only records that materially constrain or
+explain the research.
+
+## Spike, Sketch, And Experiment Results
+
+A spike, sketch, prototype, or experiment belongs in research when its durable
+product is a conclusion, comparison, rejection, or null result.
+
+The research record should preserve the question, method, artifact pointers,
+findings, limits, and downstream route. Omit throwaway implementation steps.
