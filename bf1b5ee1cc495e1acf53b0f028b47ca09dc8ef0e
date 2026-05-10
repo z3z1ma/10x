@@ -1,0 +1,98 @@
+loom-core/skills/loom-plans/references/plan-shape.md
+  human 1-102
+loom-core/skills/loom-plans/references/creating-plans.md
+  human 1-82
+loom-core/skills/loom-plans/templates/plan.md
+  human 1-64
+loom-core/skills/loom-plans/SKILL.md
+  human 1-150
+loom-core/skills/loom-plans/references/slicing-work.md
+  human 1-70
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 102,
+          "added_lines": 102,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-102",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-plans/references/plan-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 82,
+          "added_lines": 82,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-82",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-plans/references/creating-plans.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 64,
+          "added_lines": 64,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-64",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-plans/templates/plan.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 150,
+          "added_lines": 150,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-150",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-plans/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 70,
+          "added_lines": 70,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-70",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-core/skills/loom-plans/references/slicing-work.md"
+    }
+  ],
+  "base_commit_sha": "c50123b592cfcb4ede14be25e81d1b19d4baa206",
+  "branch": "loom-humanization",
+  "commit_sha": "bf1b5ee1cc495e1acf53b0f028b47ca09dc8ef0e",
+  "commit_time": "2026-05-09T20:31:31-07:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.3",
+  "prompts": {
+    "human": {
+      "accepted_lines": 468,
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "overriden_lines": 0,
+      "total_additions": 468,
+      "total_deletions": 0
+    }
+  },
+  "repo": "https://github.com/z3z1ma/agent-loom.git",
+  "schema_version": "authorship/3.0.0"
+}
