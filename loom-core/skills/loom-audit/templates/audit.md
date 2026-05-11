@@ -1,6 +1,6 @@
 # <Audit Title>
 
-ID: audit:<YYYYMMDD-slug>
+ID: audit:YYYYMMDD-<slug>
 Type: Audit
 Status: recorded
 Created: <YYYY-MM-DD>

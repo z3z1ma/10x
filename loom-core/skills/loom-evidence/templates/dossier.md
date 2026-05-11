@@ -1,6 +1,6 @@
 # <Evidence Dossier Title>
 
-ID: evidence:<YYYYMMDD-slug>
+ID: evidence:YYYYMMDD-<slug>
 Type: Evidence Dossier
 Status: recorded
 Created: <YYYY-MM-DD>

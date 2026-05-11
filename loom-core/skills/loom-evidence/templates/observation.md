@@ -1,6 +1,6 @@
 # <Evidence Observation Title>
 
-ID: evidence:<YYYYMMDD-slug>
+ID: evidence:YYYYMMDD-<slug>
 Type: Evidence Observation
 Status: recorded
 Created: <YYYY-MM-DD>

@@ -66,7 +66,7 @@ surface, such as:
 - specs for intended behavior, requirements, scenarios, and interfaces
 - tickets for live execution state, finding disposition, and closure
 - plans for complex multi-ticket strategy and sequencing
-- evidence for observations
+- evidence for durable observations
 - audit for fresh-context review findings and verdicts
 - research for investigation, tradeoffs, and source synthesis
 

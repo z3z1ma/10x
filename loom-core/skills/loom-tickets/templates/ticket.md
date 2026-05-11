@@ -1,6 +1,6 @@
 # <Ticket Title>
 
-ID: ticket:<YYYYMMDD-slug>
+ID: ticket:YYYYMMDD-<slug>
 Type: Ticket
 Status: open
 Created: <YYYY-MM-DD>
@@ -11,7 +11,7 @@ Risk: <low|medium|high> - <reason>
 Add only when useful. Remove this comment before saving if unused.
 
 Priority: <low|medium|high> - <reason>
-Depends On: <ticket:YYYYMMDD-slug>
+Depends On: ticket:YYYYMMDD-<slug>
 -->
 
 ## Summary

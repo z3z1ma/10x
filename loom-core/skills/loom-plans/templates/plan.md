@@ -1,6 +1,6 @@
 # <Plan Title>
 
-ID: plan:<YYYYMMDD-slug>
+ID: plan:YYYYMMDD-<slug>
 Type: Plan
 Status: open
 Created: <YYYY-MM-DD>
@@ -32,7 +32,7 @@ detail and live state; this plan owns the decomposition and order.
 
 ### Unit: <Name>
 
-Ticket: ticket:<YYYYMMDD-child-slug>
+Ticket: ticket:YYYYMMDD-<child-slug>
 
 <Describe the outcome, scope boundary, order or dependency reason, validation and
 evidence expectations, child-ticket audit expectations, plan-level audit trigger
@@ -46,7 +46,7 @@ milestone is reached. Do not turn milestones into a live progress checklist.>
 
 ### Milestone: <Name>
 
-Child tickets: ticket:<YYYYMMDD-child-slug>, ticket:<YYYYMMDD-child-slug>
+Child tickets: ticket:YYYYMMDD-<child-slug>, ticket:YYYYMMDD-<child-slug>
 
 <What becomes true at this checkpoint and how the plan should know.>
 

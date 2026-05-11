@@ -112,7 +112,7 @@ Use the owning skill for details. The current Core lifecycles are:
 | evidence | `recorded` |
 | audit | `recorded` |
 | knowledge | `active` |
-| packets | `compiled`, `consumed`, `superseded`, `abandoned` |
+| packets | `compiled`, `running`, `consumed`, `superseded`, `abandoned` |
 
 Ticket status is the live execution state. Other statuses describe the record they
 belong to.

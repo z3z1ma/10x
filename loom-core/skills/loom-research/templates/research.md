@@ -1,6 +1,6 @@
 # <Research Title>
 
-ID: research:<YYYYMMDD-slug>
+ID: research:YYYYMMDD-<slug>
 Type: Research
 Status: active
 Created: <YYYY-MM-DD>

@@ -113,6 +113,9 @@ Updated: YYYY-MM-DD
 Observed: YYYY-MM-DD or YYYY-MM-DD HH:MM UTC
 ```
 
+For `Type: Evidence Dossier`, `Observed:` may be a date range when the dossier
+spans multiple observations.
+
 Use only `Status: recorded`.
 
 Record freshness, invalidation, limitations, and supersession in prose.

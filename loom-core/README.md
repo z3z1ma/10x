@@ -8,8 +8,9 @@ claims with fresh-context audit, hand bounded work to packets, and preserve usef
 lessons in knowledge.
 
 The operating loop is: shape with the human, route durable truth, slice into
-bounded tickets, launch worker runs from Ralph packets, preserve evidence, audit
-claims, and reconcile records.
+bounded tickets, execute those tickets in the current context or launch Ralph
+packets when delegation helps, preserve evidence, audit claims, and reconcile
+records.
 
 If a harness installs only one Loom package, install this one.
 

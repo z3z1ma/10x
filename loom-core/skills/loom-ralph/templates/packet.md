@@ -1,6 +1,6 @@
 # <Ralph Packet Title>
 
-ID: packet:<YYYYMMDDTHHMMSSZ-target-or-task-slug>
+ID: packet:YYYYMMDDTHHMMSSZ-<target-or-task-slug>
 Type: Packet
 Status: compiled
 Created: <YYYY-MM-DD HH:MM UTC>

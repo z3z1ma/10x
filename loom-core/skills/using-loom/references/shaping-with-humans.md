@@ -93,7 +93,7 @@ Use the surface that owns the truth:
 - specs for intended behavior, requirements, scenarios, interfaces, or invariants
 - plans for operator-shaped strategy across multiple tickets or execution units
 - tickets for bounded executable work
-- evidence for observations
+- evidence for durable observations
 - audit for fresh-context review
 - knowledge for preferences, procedures, reusable accepted understanding, and
   retrieval cues

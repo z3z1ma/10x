@@ -77,8 +77,8 @@ or packet requirements.
 
 When a workflow-specific skill is active, keep using the surface that owns each
 truth: specs for intended behavior, plans for multi-ticket strategy, tickets for
-live execution, packets for worker contracts, evidence for observations, and
-audit for fresh-context review.
+live execution, packets for worker contracts, evidence for durable observations,
+and audit for fresh-context review.
 
 If workflow guidance would execute before intent, scope, evidence, or ticket
 boundary is shaped, stay in the outer loop and route the missing truth first.
@@ -112,7 +112,8 @@ use research.
 If it needs operator-shaped strategy across more than one bounded ticket or
 execution unit, use plans.
 
-If it makes or checks an observation, use evidence.
+If an observation should remain available as proof, support, challenge, or future
+context, use evidence.
 
 If it needs fresh-context review, use audit.
 
