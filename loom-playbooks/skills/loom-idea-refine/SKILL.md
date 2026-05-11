@@ -11,10 +11,13 @@ next Loom move.
 It explores options, tests assumptions, chooses a direction, and routes durable
 results into Loom records.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-research`, `loom-specs`, `loom-plans`,
-`loom-tickets`, `loom-knowledge`, and `loom-constitution`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-research`, `loom-specs`, `loom-plans`, `loom-tickets`, `loom-knowledge`,
+and `loom-constitution`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target

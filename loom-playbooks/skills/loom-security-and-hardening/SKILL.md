@@ -10,10 +10,13 @@ Security and hardening is a risk-focused playbook.
 It turns security concerns into specs, tickets, evidence, audits, and prevention
 records instead of leaving them as informal caution.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-specs`, `loom-tickets`, `loom-evidence`,
-`loom-audit`, `loom-research`, `loom-constitution`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-specs`, `loom-tickets`, `loom-evidence`, `loom-audit`, `loom-research`,
+`loom-constitution`, `loom-retrospective`, and `loom-knowledge`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target

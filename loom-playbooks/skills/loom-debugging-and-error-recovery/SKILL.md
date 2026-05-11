@@ -10,10 +10,13 @@ Debugging is a recovery playbook.
 It preserves the failure, finds the root cause, fixes the scoped issue, guards
 against recurrence, and records what future work needs.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-evidence`, `loom-research`, `loom-tickets`,
-`loom-specs`, `loom-ralph`, `loom-audit`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-evidence`, `loom-research`, `loom-tickets`, `loom-specs`, `loom-ralph`,
+`loom-audit`, `loom-retrospective`, and `loom-knowledge`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -139,8 +142,8 @@ Fixing only where the error appears is usually a symptom patch. Fix at the sourc
 when the source can be identified.
 
 Add temporary diagnostics when manual tracing is unclear. Keep diagnostic output
-focused and remove or deliberately preserve it as evidence, logging, or guard code
-before closure.
+focused, then remove it before closure unless it is converted through a scoped
+ticket into intentional redacted logging, evidence, or guard behavior.
 
 ## Hypothesize
 
@@ -239,8 +242,8 @@ Record evidence for:
 - known residual risk
 
 Before declaring done, remove temporary instrumentation and throwaway debug
-prototypes or route them intentionally. Search for unique debug prefixes when you
-used them.
+prototypes unless they have been intentionally routed as scoped redacted logging,
+evidence, or guard behavior. Search for unique debug prefixes when you used them.
 
 Use `loom-audit` before closure when the fix is high-risk or the evidence story is
 easy to overstate.
@@ -267,4 +270,5 @@ The debug pass is done when:
 - a guard exists when recurrence is plausible
 - evidence supports the fixed claim
 - temporary diagnostics and prototypes are cleaned up or routed intentionally
-- follow-up and prevention records exist where useful
+- follow-up and prevention records exist when they prevent likely rediscovery,
+  support recovery, or capture a repeated trap

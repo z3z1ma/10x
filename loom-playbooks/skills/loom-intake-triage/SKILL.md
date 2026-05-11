@@ -11,11 +11,13 @@ It classifies reports, gathers enough context to decide the next route, and turn
 ready work into Loom tickets or records without letting external trackers become
 the live execution ledger.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-tickets`, `loom-evidence`, `loom-research`,
-`loom-specs`, `loom-knowledge`, `loom-constitution`, `loom-ralph`, and
-`loom-audit`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-tickets`, `loom-evidence`, `loom-research`, `loom-specs`,
+`loom-knowledge`, `loom-constitution`, `loom-ralph`, and `loom-audit`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -65,7 +67,7 @@ or tracker policy require it.
 
 ## Classify
 
-Classify by category and state.
+Classify by category and intake disposition.
 
 Useful categories:
 
@@ -77,7 +79,7 @@ Useful categories:
 - duplicate
 - out of scope
 
-Useful states:
+Useful intake dispositions, not Loom `Status:` values:
 
 - needs triage
 - needs info
@@ -86,6 +88,9 @@ Useful states:
 - blocked by decision
 - duplicate
 - rejected
+
+For Loom tickets, use Loom ticket statuses and record the intake disposition in
+the ticket body, journal, or external-tracker synchronization note.
 
 If external labels conflict, flag the conflict before changing anything.
 
@@ -177,7 +182,7 @@ External state should reflect Loom state, not redefine it.
 The intake triage pass is done when:
 
 - the report was read with prior context checked
-- category and state are explicit
+- category and intake disposition are explicit
 - reproduction or source investigation is proportionate to the claim
 - ready work has a ticket or packet-ready brief
 - unclear work has specific questions or a shaping route

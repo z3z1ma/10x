@@ -11,11 +11,13 @@ replacement.
 It decides whether change is warranted, specifies the target contract, plans the
 migration, executes bounded slices, proves adoption, audits risk, and cleans up.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-research`, `loom-specs`, `loom-plans`,
-`loom-tickets`, `loom-evidence`, `loom-audit`, `loom-constitution`,
-`loom-knowledge`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-research`, `loom-specs`, `loom-plans`, `loom-tickets`, `loom-evidence`,
+`loom-audit`, `loom-constitution`, `loom-knowledge`, and `loom-retrospective`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target

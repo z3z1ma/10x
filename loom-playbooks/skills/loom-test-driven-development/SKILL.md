@@ -11,10 +11,12 @@ It turns the intended behavior into a failing check, drives the smallest change 
 green, and preserves the red/green story as evidence when the ticket will rely on
 it.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-specs`, `loom-tickets`, `loom-ralph`,
-`loom-evidence`, and `loom-audit`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-specs`, `loom-tickets`, `loom-ralph`, `loom-evidence`, and `loom-audit`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target

@@ -10,10 +10,12 @@ Browser testing is a runtime evidence playbook.
 It uses browser observation tools such as Chrome DevTools MCP to reproduce,
 inspect, diagnose, and record what the browser actually did.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-evidence`, `loom-tickets`, `loom-specs`,
-`loom-audit`, and `loom-ralph`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-evidence`, `loom-tickets`, `loom-specs`, `loom-audit`, and `loom-ralph`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -30,7 +32,7 @@ Use this playbook when:
 - console errors or warnings matter
 - network requests, response shape, or CORS behavior matter
 - accessibility tree or keyboard behavior must be inspected
-- Core Web Vitals, traces, or rendering performance matter
+- LCP, INP, CLS, traces, or rendering performance matter
 - screenshots or before/after runtime observations support ticket closure
 
 Skip it for backend-only changes and code that does not run in a browser.

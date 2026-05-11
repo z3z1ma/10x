@@ -7,10 +7,10 @@ agents move through those surfaces when the task has a familiar shape: debug thi
 test this first, map this codebase, verify this UI, review this diff, migrate this
 safely, prepare this for release.
 
-Install [Loom Core](../loom-core/README.md) first. Playbooks assume the operating
-doctrine and record skills are already available.
+Install [loom-core](../loom-core/README.md) first. Playbooks assume the
+`using-loom` skill is already loaded.
 
-[Agent Loom](../README.md) / [Protocol](../PROTOCOL.md) / [Install](../INSTALL.md) / [Core](../loom-core/README.md)
+[Agent Loom](../README.md) / [Protocol](../PROTOCOL.md) / [Install](../INSTALL.md) / [loom-core](../loom-core/README.md)
 
 ## What Playbooks Add
 
@@ -97,7 +97,7 @@ The workflow can end. Loom records keep the result.
 
 ## Install Or Expose Playbooks
 
-Expose Core first, then Playbooks:
+Expose `loom-core` first, then Playbooks:
 
 ```text
 /absolute/path/to/agent-loom/loom-core
@@ -111,9 +111,10 @@ Or expose both skill trees:
 /absolute/path/to/agent-loom/loom-playbooks/skills
 ```
 
-OpenCode can load `loom-playbooks.mjs`. Claude Code, Codex, Cursor, and Gemini CLI
-use the native manifests in this package. Harness-specific commands live in
-[INSTALL.md](../INSTALL.md).
+OpenCode can load `loom-playbooks.mjs`. Git-based installs for Claude Code,
+Codex, Cursor, and Gemini CLI use the native manifests in this package. The npm
+package exposes the OpenCode entrypoint and `skills/` tree. Harness-specific
+commands live in [INSTALL.md](../INSTALL.md).
 
 ## Boundary
 

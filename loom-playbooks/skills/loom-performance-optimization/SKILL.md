@@ -10,10 +10,13 @@ Performance optimization is a measure-first playbook.
 It records a baseline, identifies the bottleneck, changes the smallest thing that
 can improve it, measures again, and preserves evidence and guards.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-evidence`, `loom-research`, `loom-specs`,
-`loom-tickets`, `loom-audit`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-evidence`, `loom-research`, `loom-specs`, `loom-tickets`, `loom-audit`,
+`loom-retrospective`, and `loom-knowledge`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -25,7 +28,7 @@ Use this playbook when:
 
 - a spec or ticket names a performance budget
 - users, monitoring, CI, or browser traces show slowness
-- Core Web Vitals, response time, memory, CPU, bundle size, or query count matters
+- LCP, INP, CLS, response time, memory, CPU, bundle size, or query count matters
 - a change may have introduced a regression
 - optimization could add complexity and needs evidence
 
@@ -58,7 +61,7 @@ Capture before-state evidence.
 
 Possible evidence:
 
-- browser trace and Core Web Vitals
+- browser trace and web vital metrics
 - Lighthouse or synthetic run
 - RUM metric
 - API timing
@@ -129,6 +132,10 @@ Add a guard when regression risk is real:
 - dashboard note
 - knowledge troubleshooting record
 
+Regression risk is real when the path is user-critical, previously regressed,
+hard to remeasure manually, or protected by a named budget. If no guard is added,
+record why the consuming surface can accept that risk.
+
 ## Audit
 
 Use `loom-audit` when optimization adds complexity, changes behavior, affects
@@ -142,5 +149,6 @@ The performance pass is done when:
 - baseline and after-state evidence are comparable
 - the bottleneck was identified before the fix
 - improvement and limitations are explicit
-- regression guard exists when useful
+- regression guard exists when risk is real, or the consuming surface records why
+  no guard was added
 - added complexity was reviewed or justified in the consuming surface

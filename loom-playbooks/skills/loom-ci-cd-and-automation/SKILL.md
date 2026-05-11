@@ -10,10 +10,13 @@ CI/CD and automation is a playbook for executable quality gates and release path
 It specifies pipeline behavior, implements it in scoped tickets, records observed
 pipeline results, and audits risky automation changes.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-specs`, `loom-plans`, `loom-tickets`,
-`loom-evidence`, `loom-audit`, `loom-research`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-specs`, `loom-plans`, `loom-tickets`, `loom-evidence`, `loom-audit`,
+`loom-research`, and `loom-retrospective`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -102,6 +105,11 @@ Record evidence for meaningful pipeline behavior:
 - local reproduction command and output
 - before/after behavior for a pipeline fix
 - skipped or unavailable checks
+
+Before preserving CI logs or artifacts as evidence, check for secrets and
+sensitive values. Redact or omit sensitive values before saving excerpts. If an
+artifact may contain sensitive data, link only to an access-controlled location
+and record the limitation instead of copying it into Loom.
 
 Use `loom-evidence` when a ticket or audit will rely on pipeline output.
 

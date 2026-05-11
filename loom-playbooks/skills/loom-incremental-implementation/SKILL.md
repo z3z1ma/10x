@@ -10,10 +10,13 @@ Incremental implementation is a playbook for executing one narrow slice at a tim
 It keeps each change bounded, verifiable, and recoverable through tickets, Ralph
 packets, evidence, audit, and retrospective follow-up.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-tickets`, `loom-ralph`, `loom-evidence`,
-`loom-audit`, `loom-plans`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-tickets`, `loom-ralph`, `loom-evidence`, `loom-audit`, `loom-plans`,
+`loom-retrospective`, and `loom-knowledge`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -110,8 +113,8 @@ material change. A previous passing check, a worker success report, or a plausib
 diff is not fresh evidence for the current source state.
 
 For delegated work, inspect the worker's changed files and evidence before moving
-to the next slice. Treat `done_with_concerns`, missing context, or blocked output as
-state to reconcile, not as background detail.
+to the next slice. Treat `blocked`, `escalate`, missing context, or
+concern-bearing `stop` output as state to reconcile, not as background detail.
 
 ## Record
 

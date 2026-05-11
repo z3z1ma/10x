@@ -10,10 +10,13 @@ Shipping and launch is a release-readiness playbook.
 It checks the graph, verifies the artifact, defines rollout and rollback, records
 launch evidence, and runs retrospective follow-up.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-plans`, `loom-tickets`, `loom-evidence`,
-`loom-audit`, `loom-specs`, `loom-knowledge`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-plans`, `loom-tickets`, `loom-evidence`, `loom-audit`, `loom-specs`,
+`loom-knowledge`, and `loom-retrospective`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -67,12 +70,13 @@ Use only checks relevant to the release risk:
 - security checks for auth, input, secrets, and dependencies
 - performance baseline or budget checks
 - migration dry run or backup plan
-- environment variables and secrets configured
+- environment variables and secrets present/configured, with values never recorded
 - logging, health checks, and error reporting
 - rollback command or flag-disable procedure
 - user-facing docs or release notes
 
-Record durable observations with `loom-evidence`.
+Record durable observations with `loom-evidence`. For secrets, record only
+redacted presence or configuration metadata.
 
 ## Rollout
 

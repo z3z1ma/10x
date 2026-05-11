@@ -10,10 +10,13 @@ Prototype and spike is an exploration playbook.
 It builds the smallest disposable artifact that answers a question, records the
 answer, and then deletes, absorbs, or routes the result.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-research`, `loom-evidence`, `loom-specs`,
-`loom-constitution`, `loom-knowledge`, `loom-tickets`, and `loom-audit`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-research`, `loom-evidence`, `loom-specs`, `loom-constitution`,
+`loom-knowledge`, `loom-tickets`, and `loom-audit`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -70,8 +73,8 @@ Common branches:
 - interface prototype: sample caller code and type shape for contract questions
 - integration spike: minimal request, adapter, or fixture for source compatibility
 
-State assumptions at the top of the prototype when the operator is not available
-to choose.
+State assumptions in the prototype header and/or linked research or evidence
+record, clearly marked temporary, when the operator is not available to choose.
 
 ## Build Throwaway
 
@@ -128,7 +131,8 @@ Choose one:
 - absorb through a scoped ticket with production-quality tests and review
 - keep temporarily with a ticketed expiration or cleanup owner
 
-If absorption happens, treat it as implementation work. Prototype code does not get
+If absorption happens, treat it as implementation work and move still-relevant
+assumptions into specs, research, or tickets. Prototype code does not get
 grandfathered into production quality.
 
 ## Done Means

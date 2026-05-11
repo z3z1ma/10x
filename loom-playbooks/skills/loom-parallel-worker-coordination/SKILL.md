@@ -11,10 +11,13 @@ It proves tasks are independent, dispatches bounded packets, integrates returned
 work deliberately, and records evidence and audit before trusting the combined
 result.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-plans`, `loom-tickets`, `loom-ralph`,
-`loom-evidence`, `loom-audit`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-plans`, `loom-tickets`, `loom-ralph`, `loom-evidence`, `loom-audit`,
+`loom-retrospective`, and `loom-knowledge`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -84,14 +87,19 @@ Each packet should include:
 - explicit files or records the worker may change
 - verification posture
 - stop conditions
-- expected output and status vocabulary
+- expected output using Ralph worker outcomes
 
-Useful worker statuses are:
+Use Ralph worker outcomes:
 
-- `done`: completed and verified within scope
-- `done_with_concerns`: completed but raised correctness, scope, evidence, or design concern
-- `needs_context`: requires missing information before safe progress
-- `blocked`: cannot proceed without replanning, stronger model, operator decision, or smaller task
+- `continue`: useful progress happened and another packet is likely
+- `stop`: this packet's work is complete
+- `blocked`: a concrete blocker prevents safe progress
+- `escalate`: the next move needs higher-level shaping, policy, review, or another
+  Loom surface
+
+Concern-bearing completion is still a `stop` outcome with explicit notes. Missing
+context is `blocked` when the packet can be completed with more information and
+`escalate` when the work needs reshaping or another surface.
 
 Do not ask workers to infer missing context from the parent transcript.
 

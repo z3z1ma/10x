@@ -8,13 +8,18 @@ description: "Use when a non-trivial in-flight claim needs a challenge posture b
 Doubt-driven development is an in-flight challenge playbook.
 
 It names the claim, extracts the smallest reviewable artifact and contract, runs a
-fresh-context challenge when useful, reconciles findings, and routes durable output
-through audit, evidence, tickets, specs, research, or constitution.
+fresh-context challenge when the claim risk warrants it, reconciles findings, and
+routes durable output through audit, evidence, tickets, specs, research, or
+constitution.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-ralph`, `loom-audit`, `loom-evidence`,
-`loom-tickets`, `loom-specs`, `loom-research`, and `loom-constitution`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-ralph`, `loom-audit`, `loom-evidence`, `loom-tickets`, `loom-specs`,
+`loom-research`, `loom-constitution`, `loom-retrospective`, and
+`loom-knowledge`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target

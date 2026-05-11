@@ -11,10 +11,13 @@ or authority-sensitive implementation.
 It detects the relevant stack, reads the strongest available sources, records what
 was verified, and routes durable conclusions through Loom records.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-research`, `loom-evidence`, `loom-specs`,
-`loom-tickets`, `loom-knowledge`, and `loom-audit`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-research`, `loom-evidence`, `loom-specs`, `loom-tickets`,
+`loom-knowledge`, `loom-audit`, and `loom-constitution`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target

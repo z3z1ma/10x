@@ -10,10 +10,13 @@ Codebase atlas is a zoom-out playbook.
 It maps a relevant code area in terms of domain language, modules, callers,
 interfaces, and decisions, then records accepted reusable context in knowledge.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-knowledge`, `loom-research`,
-`loom-constitution`, `loom-specs`, `loom-evidence`, and `loom-tickets`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-knowledge`, `loom-research`, `loom-constitution`, `loom-specs`,
+`loom-evidence`, and `loom-tickets`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -125,6 +128,7 @@ The atlas pass is done when:
 
 - the original zoom-out question is answered
 - relevant modules and callers are mapped at the right level
-- durable context is recorded when useful
+- durable context is recorded when it will prevent rediscovery, support recovery,
+  or guide future work in the mapped area
 - unknowns and risks are explicit
 - the next work route is clear

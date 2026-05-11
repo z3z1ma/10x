@@ -11,10 +11,12 @@ It detects the current Git/workspace state, chooses the least surprising isolati
 mechanism, verifies a clean baseline, and records provenance for later finish or
 cleanup.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-tickets`, `loom-plans`, `loom-ralph`,
-`loom-evidence`, and `loom-audit`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-tickets`, `loom-plans`, `loom-ralph`, `loom-evidence`, and `loom-audit`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -95,6 +97,10 @@ Run setup proportional to the project and ticket:
 - generated setup only when the project normally requires it
 - environment checks needed by the ticket
 - branch or upstream fetches needed to establish the base
+
+Run networked installs, downloads, or fetches only when project instructions or
+operator approval allow them. Prefer existing local setup when available, and
+record setup changes that affect later evidence or cleanup.
 
 Do not add setup churn to the ticket unless setup files are intentionally in scope.
 

@@ -11,10 +11,13 @@ behavior.
 It grounds the current behavior, scopes the simplification, changes incrementally,
 and records evidence that behavior did not change.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-tickets`, `loom-evidence`, `loom-audit`,
-`loom-research`, `loom-specs`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-tickets`, `loom-evidence`, `loom-audit`, `loom-research`, `loom-specs`,
+`loom-retrospective`, and `loom-knowledge`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -125,4 +128,6 @@ The simplification pass is done when:
 - evidence supports behavior preservation
 - the result is easier to read or maintain by a concrete criterion
 - ambiguous or risky removals were routed to operator, research, or audit
-- reusable simplification lessons were promoted through retrospective when useful
+- reusable simplification lessons were promoted through retrospective when they
+  prevent likely rediscovery, capture a repeated trap, or document an accepted
+  procedure

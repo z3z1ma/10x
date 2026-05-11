@@ -10,12 +10,14 @@ Architecture deepening is a refactoring-shaping playbook.
 It looks for places where a better module interface can hide more behavior, improve
 locality, and make tests and future agent work easier.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-codebase-atlas`,
-`loom-domain-language-and-decisions`, `loom-code-simplification`,
-`loom-api-and-interface-design`, `loom-specs`, `loom-plans`, `loom-tickets`,
-`loom-evidence`, and `loom-audit`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-codebase-atlas`, `loom-domain-language-and-decisions`,
+`loom-code-simplification`, `loom-api-and-interface-design`, `loom-specs`,
+`loom-plans`, `loom-tickets`, `loom-evidence`, and `loom-audit`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -42,7 +44,7 @@ Skip it for simple readability cleanup that `loom-code-simplification` can handl
 Use this route:
 
 ```text
-atlas -> candidates -> select -> design seams -> plan -> execute -> verify
+atlas -> candidates -> select -> design seams -> plan tickets -> execute via implementation -> verify
 ```
 
 ## Language
@@ -94,7 +96,9 @@ Use the deletion test: if deleting the module makes complexity vanish, it may be
 pass-through. If deleting it would push complexity into many callers, it may be
 earning its keep.
 
-Do not jump straight into implementation. Ask which candidate to explore.
+Do not jump straight into implementation. Ask which candidate to explore unless
+an active ticket, plan, or packet already selects one. If the operator is
+unavailable, record a recommendation and stop before implementation.
 
 ## Design Seams
 
@@ -133,7 +137,8 @@ why bundling is still reviewable.
 
 ## Execute And Verify
 
-Use `loom-incremental-implementation` or Ralph packets for execution.
+Do not execute directly from this shaping playbook. Use
+`loom-incremental-implementation` or Ralph packets for execution.
 
 Verification should prove:
 

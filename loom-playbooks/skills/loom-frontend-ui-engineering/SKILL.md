@@ -11,10 +11,13 @@ It turns design intent into specs, slices implementation through tickets and Ral
 packets, records browser evidence, and routes accessibility, performance, and
 visual risks through audit.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-specs`, `loom-tickets`, `loom-ralph`,
-`loom-evidence`, `loom-audit`, `loom-knowledge`, and `loom-retrospective`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-specs`, `loom-tickets`, `loom-ralph`, `loom-evidence`, `loom-audit`,
+`loom-knowledge`, and `loom-retrospective`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -108,7 +111,7 @@ Evidence may include:
 - network requests and payload shape
 - viewport checks at important breakpoints
 - keyboard navigation or focus observations
-- performance trace or Core Web Vitals when relevant
+- performance trace, LCP, INP, or CLS when relevant
 
 Record observations with `loom-evidence` when they support ticket closure or audit.
 
@@ -141,4 +144,5 @@ The UI pass is done when:
 - accessibility and keyboard expectations were checked when interactive UI changed
 - runtime browser observations exist when static code review is insufficient
 - evidence supports the exact UI claim
-- reusable UI patterns or traps are promoted through retrospective when useful
+- reusable UI patterns or traps are promoted through retrospective when they will
+  prevent likely rediscovery or document an accepted UI convention

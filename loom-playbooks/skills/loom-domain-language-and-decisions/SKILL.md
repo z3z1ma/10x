@@ -11,11 +11,13 @@ It challenges a proposed change against the project's current vocabulary,
 behavior, and decisions, then routes resolved language to knowledge and durable
 tradeoffs to constitution decisions.
 
-## Loom Surfaces
+## Loom Routing
 
-Route durable results through `loom-knowledge`, `loom-constitution`,
-`loom-research`, `loom-specs`, `loom-plans`, `loom-tickets`, and
-`loom-evidence`.
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-knowledge`, `loom-constitution`, `loom-research`, `loom-specs`,
+`loom-plans`, `loom-tickets`, and `loom-evidence`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
 
 When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
@@ -74,8 +76,8 @@ Challenge:
 - names that imply a broader behavior than the change actually supports
 - domain words that hide policy, ownership, lifecycle, or permission decisions
 
-Offer a recommended canonical term when useful. Name aliases to avoid when they
-would cause future confusion.
+Offer a recommended canonical term when it would reduce future confusion. Name
+aliases to avoid when they would cause future confusion.
 
 ## Test Scenarios
 

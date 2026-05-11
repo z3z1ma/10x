@@ -1,7 +1,7 @@
 {
   "name": "loom-playbooks",
   "displayName": "Loom Playbooks",
-  "description": "Optional Loom workflow playbook skills for Cursor; requires loom-core for using-Loom doctrine.",
+  "description": "Optional Loom workflow playbook skills for Cursor; requires loom-core for using-loom doctrine.",
   "version": "0.2.1",
   "author": {
     "name": "z3z1ma"
