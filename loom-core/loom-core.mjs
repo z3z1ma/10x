@@ -1,9 +1,17 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const PACKAGE_ROOT = dirname(fileURLToPath(import.meta.url));
 const PLUGIN_ID = "open-loom-core";
+const USING_LOOM_REFERENCE_ORDER = [
+  "how-loom-thinks.md",
+  "directory-structure.md",
+  "shaping-with-humans.md",
+  "delegating-to-workers.md",
+  "proving-the-work.md",
+  "staying-safe.md",
+];
 
 function posixPath(path) {
   return path.split("\\").join("/");
@@ -66,8 +74,17 @@ function surfaceOptions(options = {}) {
 
 export function readOrderedUsingLoomFiles(options = {}) {
   const { rootDir } = surfaceOptions(options);
+  const skillPath = join(rootDir, "skills", "using-loom", "SKILL.md");
   const referencesDir = join(rootDir, "skills", "using-loom", "references");
-  return markdownFilesIn(referencesDir).map((path) => ({
+  const referenceOrder = new Map(USING_LOOM_REFERENCE_ORDER.map((name, index) => [name, index]));
+  const references = markdownFilesIn(referencesDir).sort((a, b) => {
+    const aOrder = referenceOrder.get(basename(a)) ?? Number.MAX_SAFE_INTEGER;
+    const bOrder = referenceOrder.get(basename(b)) ?? Number.MAX_SAFE_INTEGER;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return a.localeCompare(b);
+  });
+  const files = fileExists(skillPath) ? [skillPath, ...references] : references;
+  return files.map((path) => ({
     path: posixPath(relative(rootDir, path)),
     absolutePath: path,
     text: readFileSync(path, "utf8").trimEnd(),
@@ -124,7 +141,7 @@ export function inspectLoomCoreBundle(options = {}) {
 
   return {
     usingLoom: {
-      result: "registered through config.instructions as ordered using-Loom references",
+      result: "registered through config.instructions as using-Loom skill and ordered references",
       files: usingLoomReferences.map((reference) => reference.path),
     },
     skills: {
@@ -159,10 +176,10 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes(
   console.log(JSON.stringify({
     ok: true,
     pluginId: PLUGIN_ID,
-    usingLoomReferenceCount: inspection.usingLoom.files.length,
-    usingLoomReferenceFiles: inspection.usingLoom.files,
-    firstUsingLoomReference: inspection.usingLoom.files[0],
-    lastUsingLoomReference: inspection.usingLoom.files.at(-1),
+    usingLoomFileCount: inspection.usingLoom.files.length,
+    usingLoomFiles: inspection.usingLoom.files,
+    firstUsingLoomFile: inspection.usingLoom.files[0],
+    lastUsingLoomFile: inspection.usingLoom.files.at(-1),
     instructionCount: config.instructions.length,
     instructionsAreDeduped: config.instructions.length === beforeInstructionCount,
     firstInstruction: config.instructions[0],

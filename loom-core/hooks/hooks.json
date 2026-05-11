@@ -1,5 +1,5 @@
 {
-  "description": "Emit Loom using-Loom references as per-reference Claude SessionStart hook context from the loom-core package root.",
+  "description": "Emit using-Loom skill and ordered references as Claude SessionStart hook context from the loom-core package root.",
   "hooks": {
     "SessionStart": [
       {
@@ -7,42 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "printf '===== USING_LOOM_REFERENCE 01-core-identity.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/01-core-identity.md\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "sleep 0.20; printf '===== USING_LOOM_REFERENCE 02-truth-and-authority.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/02-truth-and-authority.md\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "sleep 0.30; printf '===== USING_LOOM_REFERENCE 03-outer-loop.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/03-outer-loop.md\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "sleep 0.40; printf '===== USING_LOOM_REFERENCE 04-ralph-inner-loop.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/04-ralph-inner-loop.md\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "sleep 0.55; printf '===== USING_LOOM_REFERENCE 05-critique-and-wiki.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/05-critique-and-wiki.md\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "sleep 0.70; printf '===== USING_LOOM_REFERENCE 06-filesystem-and-tooling.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/06-filesystem-and-tooling.md\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "sleep 0.85; printf '===== USING_LOOM_REFERENCE 07-validation-and-honesty.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/07-validation-and-honesty.md\"",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "sleep 1.00; printf '===== USING_LOOM_REFERENCE 08-trust-boundaries.md =====\\n'; cat \"${CLAUDE_PLUGIN_ROOT}/skills/using-loom/references/08-trust-boundaries.md\"",
+            "command": "root=\"${CLAUDE_PLUGIN_ROOT:-${PLUGIN_ROOT:-}}\"; base=\"$root/skills/using-loom\"; printf '<mandatory-instructions>\\n' && cat \"$base/SKILL.md\" \"$base/references/how-loom-thinks.md\" \"$base/references/directory-structure.md\" \"$base/references/shaping-with-humans.md\" \"$base/references/delegating-to-workers.md\" \"$base/references/proving-the-work.md\" \"$base/references/staying-safe.md\" && printf '\\n</mandatory-instructions>\\n'",
             "timeout": 10
           }
         ]

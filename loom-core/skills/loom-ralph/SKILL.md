@@ -1,178 +1,212 @@
 ---
 name: loom-ralph
-description: "Run Ralph implementation packets. Use for larger feature, refactor, test, migration, or cleanup slices when a Ralph-ready ticket needs fresh context, explicit write scope, fingerprint, verification, and output contract."
-compatibility: Markdown-native, script-free Loom protocol.
-metadata:
-  skill_kind: inner-loop
+description: "Manages Loom Ralph packets: creates, launches, follows, updates, consumes, supersedes, and abandons bounded worker packets under .loom/packets. Use when Loom work needs a packetized subagent or harness run built from records, files, evidence, claims, or other bounded context."
 ---
 
 # loom-ralph
 
-Ralph is Loom's bounded execution loop.
+Ralph is Loom's packetized worker technique.
 
-This skill is for the parent agent that is preparing, launching, and reconciling one fresh-context iteration.
+A Ralph packet gathers the context for one bounded worker run, adds packet labels,
+names the target and launch transport, and gives the worker a clear mission, read
+scope, write scope, stop conditions, and output contract.
 
-## What This Skill Owns
+Most Ralph runs use a harness-native subagent. A Ralph packet can also be handed to
+a headless harness command or another transport that reads the packet and returns
+the required output.
 
-- Ralph packet creation
-- packet style selection
-- source fingerprint and freshness checks
-- context budget declaration
-- Git execution context binding for packetized implementation work
-- parent/child handshake
-- iteration outcome vocabulary
-- ticket reconciliation after return
-
-Ralph owns packetized implementation. Critique and wiki may reuse packet
-discipline, but their domain skills own critique packets and wiki packets.
-Ralph packets use `kind: packet`, `packet_kind: ralph`, and the
-`.loom/packets/ralph/` path. Critique packets use `packet_kind: critique` under
-`.loom/packets/critique/`; wiki packets use `packet_kind: wiki` under
-`.loom/packets/wiki/`.
+Ralph supplies packet mechanics. The consuming surface still records the judgment,
+state, or durable result it owns. Tickets may use Ralph for implementation, audit
+may use Ralph for fresh-context review, and other Loom surfaces may use Ralph when
+bounded worker execution improves the work.
 
 ## Use This Skill When
 
-- one exact ticket is Ralph-ready for one bounded implementation iteration
-- the work would benefit from fresh context
-- the write boundary should be explicit
-- the parent wants a durable packet contract
+Use this skill when:
 
-## Do Not Use This Skill When
+- creating a packet from Loom records, files, evidence, diffs, claims, or external
+  references
+- choosing live-reference, hermetic, or hybrid context packaging
+- launching a bounded subagent or harness run from a packet
+- defining read scope, write scope, stop conditions, or worker output
+- updating packet status or worker output
+- deciding whether packet context is fresh enough to run
+- finding or summarizing packet state
 
-- the work is still under-scoped
-- the ticket is too vague
-- the ticket data shows that the missing work is research, spec shaping, plan or
-  ticket refinement, debugging, spike, codemap, shipping, acceptance review, or
-  another non-implementation workflow; Ralph is only for bounded implementation
-  packets
-- the next move is critique or wiki; use that domain skill first
-- the task is tiny local execution that does not need a packet
+Shape the work before packetizing it. A Ralph packet should begin from a clear
+target, mission, context boundary, write boundary, and output expectation.
 
-## Parent Procedure
+## Dispatch
 
-1. read the governing ticket and upstream chain
-2. decide whether the next move is really Ralph
-3. choose packet style
-4. choose verification posture (`test-first`, `observation-first`, or `none`)
-5. decide write scope
-6. for Git-backed file changes, use an installed `loom-git` support coordinator or
-   project Git practice to choose branch/worktree isolation and refresh the
-   integration baseline
-7. declare source fingerprint, execution context, and context budget
-8. compile the packet from the template
-9. read it once as if you were the child
-10. check whether sources or write-scope files changed materially before launch
-11. launch the fresh worker through the available harness transport
-12. inspect and reconcile the result back into the ticket
-13. decide from the reconciled ticket data whether another packet, critique,
-    wiki, research, spec, plan, ticket update, debugging, spike, codemap, ship,
-    or acceptance review is needed; `ship` is packaging or handoff only and does
-    not close the ticket
+If creating a packet:
 
-## Strong Ralph Discipline
+- read `references/packet-shape.md`
+- read `references/running-packets.md`
+- read `references/verification-posture.md` when the packet needs implementation
+  or validation evidence
+- read the records and source material needed to bind the packet context
+- use `templates/packet.md`
+- write a packet narrow enough for one worker run
 
-A strong packet should make all of these explicit:
+If executing from a packet:
 
-- target ticket
-- bounded goal for this iteration
-- sources that matter
-- write scope
-- source fingerprint
-- Git integration ref, branch, worktree, and isolation mode when repository
-  files will change
-- context budget
-- verification targets when claim coverage exists
-- verification posture and what counts as evidence for this iteration
-- assumptions and decision triggers that could block the child
-- quality delta for user-facing, operator-facing, or behavior-changing work
-- stop conditions
-- output contract
-- what the parent will do after the child returns
+- read the whole packet before editing or reviewing
+- read live references or inlined context according to `Context Style:`
+- stay inside the declared read scope and write scope
+- update the records named by the packet when those updates are part of the worker
+  contract
+- stop when a stop condition applies
+- return the required worker output
 
-## Verification Posture
+If reading worker output after a packet:
 
-Packet style governs how much context is carried. Verification posture governs how the child evidences this iteration. The two are independent axes and both belong in the packet frontmatter.
+- read the packet, worker output, changed records, evidence, and changed files
+- update the consuming surface when additional judgment or routing is needed
+- decide whether the next move is another packet, audit, closure, shaping,
+  knowledge promotion, or another Loom surface
 
-This `verification_posture` field is Ralph packet grammar. Critique and wiki
-packets rely on their domain-specific review or synthesis evidence expectations
-unless their owning skill later defines its own posture field.
+If only finding or summarizing packets:
 
-Postures:
+- inspect `.loom/packets/`
+- report packet status, target, mode, context style, and visible next move without
+  changing records unless the operator asked for a change
 
-- `test-first` — the child must produce a failing check before any implementation change and drive it to green inside this iteration. This is Loom's native TDD shape.
-- `observation-first` — the child must capture inspectable evidence of current behavior, change it, and capture inspectable evidence of the new behavior.
-- `none` — no explicit verification beyond the normal output contract. Honest only for verification-neutral iterations such as non-semantic record hygiene, reference reconciliation, or packet compilation.
+## Finding Packets
 
-Choose per packet, not per ticket. A test-first ticket can still have a refactor-only iteration that is `none`.
+Ralph packets live under:
 
-See `references/verification-posture.md` for details.
+```text
+.loom/packets/ralph/
+```
 
-Do not choose `none` just because the file is Markdown. Protocol authority,
-operator guidance, acceptance, or behavior-contract edits can change how Loom
-behaves and usually need structural evidence plus critique.
+Useful starting points:
 
-## Common Rationalizations
+```bash
+find .loom/packets/ralph -name '*.md' -print | sort
+grep -R '^ID: packet:' .loom/packets/ralph || true
+grep -R '^Type: Packet' .loom/packets/ralph || true
+grep -R '^Status:' .loom/packets/ralph || true
+grep -R '^Target:' .loom/packets/ralph || true
+grep -R '^Mode:' .loom/packets/ralph || true
+grep -R '^Context Style:' .loom/packets/ralph || true
+```
 
-- **"The packet is detailed, so the ticket can be vague."**
-  - Reality: Ralph starts from a Ralph-ready ticket. Packets cannot outrank or repair ticket truth by themselves.
-- **"The child can decide the missing product direction."**
-  - Reality: Material assumptions belong in owner records or user decisions before launch.
-- **"Verification posture `none` is fine because this is Markdown."**
-  - Reality: Protocol, acceptance, routing, and operator guidance changes can alter behavior and usually need evidence plus critique.
-- **"The child returned `stop`, so the ticket is done."**
-  - Reality: Child outcome vocabulary is not ticket closure. The parent reconciles evidence, critique, and acceptance first.
+## Packet IDs And Filenames
 
-## Red Flags
+Packets use compact UTC timestamps; several may be created on the same day.
 
-- child write scope is broad, empty, or only implied by prose
-- source fingerprint is stale or says `unknown` without launch-safe rationale
-- the packet lacks quality delta for user-facing or operator-facing work
-- stop conditions do not tell the child when to fail closed
-- child output is treated as final truth before parent reconciliation
+Use this ID shape:
 
-## Verification
+```text
+packet:YYYYMMDDTHHMMSSZ-<target-or-task-slug>
+```
 
-- [ ] Ticket is Ralph-ready and matches the packet scope.
-- [ ] Source fingerprint and write-scope files are fresh enough.
-- [ ] Verification posture is justified and evidence expectations are concrete.
-- [ ] Assumptions and quality delta are explicit when material.
-- [ ] Parent merge scope names ticket and supporting reconciliation targets.
+Use matching filenames without the `packet:` prefix:
+
+```text
+.loom/packets/ralph/YYYYMMDDTHHMMSSZ-<target-or-task-slug>.md
+```
+
+Use the actual current UTC timestamp. Do not copy example timestamps.
+
+Choose a slug that helps future agents find the packet by target, task, or run
+purpose.
+
+## Required Top Labels
+
+Packets use plain body labels near the top:
+
+```text
+ID: packet:YYYYMMDDTHHMMSSZ-<target-or-task-slug>
+Type: Packet
+Status: compiled
+Created: YYYY-MM-DD HH:MM UTC
+Updated: YYYY-MM-DD HH:MM UTC
+Target: record ID, claim, path, diff, branch, package, or task slug
+Packet Kind: Ralph
+Mode: execution|review|research|synthesis|other
+Context Style: live-reference|hermetic|hybrid
+Worker: subagent|harness command|manual handoff
+Branch: branch name, none, or unknown - reason
+Worktree: path, none, or unknown - reason
+```
+
+Add only when useful:
+
+```text
+Iteration: positive integer or run label
+Risk: low|medium|high - reason
+Verification Posture: test-first|observation-first|none
+Review Lens: audit, code review, evidence sufficiency, or another lens
+Change Class: short label or prose
+```
+
+## Status Lifecycle
+
+Use this lifecycle:
+
+- `compiled`: packet is ready for launch or pending worker action
+- `consumed`: worker output was recorded and the packet has been used
+- `superseded`: target, context, scope, source state, or assumptions changed enough
+  that another packet replaces it
+- `abandoned`: packet will not be launched and no successor is intended
+
+Packet status describes the packet only. The consuming surface records its own
+execution state, findings, evidence sufficiency, acceptance, closure, or knowledge
+updates.
+
+## Context Styles
+
+Use one of these context styles:
+
+- `live-reference`: the packet names the records, files, evidence, diffs, or
+  external references the worker should read in the workspace
+- `hermetic`: the packet inlines the relevant record text, excerpts, diffs, or
+  artifacts needed for the run
+- `hybrid`: the packet inlines the critical context and also points at live sources
+  for inspection
+
+Live-reference packets are useful when current workspace state matters. Hermetic
+packets are useful when a fresh worker should review a frozen context bundle.
+
+## Worker Outcomes
+
+The worker returns one outcome:
+
+- `continue`: useful progress happened and another packet is likely
+- `stop`: this packet's work is complete
+- `blocked`: a concrete blocker prevents safe progress
+- `escalate`: the next move needs higher-level shaping, policy, review, or another
+  Loom surface
+
+Worker outcome is packet output. The consuming surface decides what that outcome
+means for its own record.
+
+## Packet Invariants
+
+Every Ralph packet should preserve these invariants:
+
+- explicit target or target set
+- one bounded worker run
+- context packaged as live references, hermetic content, or a deliberate hybrid
+- clear mission and output contract
+- explicit read scope and write scope
+- worker permission to update only the records and files named by the packet
+- branch and worktree named when repository files may change
+- evidence, review, or verification expectation appropriate to the mode
+- stop conditions that fail closed instead of widening scope
+- worker output sufficient for the next agent to continue, inspect, or review
+- no secret, credential, private key, token, password, or sensitive personal data
+- no stale packet used after the target, scope, context, or assumptions changed
 
 ## Done Means
 
-- a packet exists as a durable contract when the work is only packet compilation
-- launched work has returned child output when an iteration was run
-- the worker's outcome is classified honestly
-- packet status moved away from non-terminal `compiled` after reconciliation;
-  terminal packet statuses are `consumed`, `superseded`, and `abandoned`
-- the ticket tells the truth afterward
-- the ticket and packet parent merge notes make the post-iteration state legible
+Ralph work is done when:
 
-## Read In This Order
-
-Read immediately before compiling or launching a Ralph packet:
-
-1. `references/work-driver.md` when driving a ticket through execution and
-   parent reconciliation.
-2. `references/packet-contract.md` when compiling or reviewing the packet's
-   required fields and boundaries.
-
-Then read conditionally:
-
-3. `references/packet-styles.md` when choosing reference-first,
-   snapshot-first, or hermetic packet posture.
-4. `references/verification-posture.md` when deciding test-first,
-   observation-first, or verification-neutral execution.
-5. `loom-git`, when installed, or project Git practice when the iteration mutates
-   repository files, needs branch/worktree isolation, or participates in parallel
-   Ralph.
-6. `references/parent-child-handshake.md` when launching or reconciling a child
-   worker, especially parallel Ralph.
-7. `skills/loom-critique/SKILL.md` or `skills/loom-wiki/SKILL.md` when the next
-   packetized pass is review or synthesis rather than implementation.
-8. `skills/loom-records/references/route-vocabulary.md` when distinguishing
-   packet child outcomes from ticket states, support cues, commands, or workflow
-   choices.
-9. `references/harness-invocation.md` only when transport mechanics need to be
-   documented or chosen.
-10. `templates/ralph-packet.md` only when creating the packet.
+- the packet is compiled, consumed, superseded, or abandoned truthfully
+- the worker stayed inside the packet boundary or stopped when it could not
+- named record and evidence updates were made or explicitly reported as missing
+- worker output states what happened, what changed, what was observed, what remains
+  unverified, and what next move is recommended
+- the consuming surface can use the packet output without replaying the worker's
+  tool log

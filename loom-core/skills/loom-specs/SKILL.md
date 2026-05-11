@@ -1,231 +1,217 @@
 ---
 name: loom-specs
-description: "Define intended behavior and acceptance contracts. Use when building features, changing UX/API/domain behavior, requirements are fuzzy, a request needs grilling into a contract, acceptance is unclear, or future tickets need reusable behavior truth."
-compatibility: Markdown-native, script-free Loom protocol.
-metadata:
-  skill_kind: owner-layer
-  owns_layer: spec
+description: "Manages Loom specs: creates, shapes, updates, supersedes, and retires durable intended-behavior contracts under .loom/specs. Use when behavior, interfaces, invariants, requirements, or scenarios need a stable source before tickets, packets, evidence, or audit rely on them."
 ---
 
 # loom-specs
 
 Specs own intended behavior.
 
-They turn ambiguity into a durable contract.
+A spec says what a system, workflow, interface, product surface, command, data
+shape, permission boundary, error state, or record shape should do.
 
-## What This Skill Owns
+It turns fuzzy intent into requirements and scenarios that downstream tickets,
+packets, evidence, and audit can cite.
 
-- behavior contracts
-- requirements
-- scenarios
-- acceptance criteria
-- explicit constraints that shape downstream delivery
-- spec grilling that turns fuzzy language, domain boundaries, and operator answers
-  into intended behavior
-
-## Acceptance Boundary
-
-Specs own acceptance IDs, intended behavior, scenarios, and requirements.
-
-Tickets decide which acceptance IDs are in scope for live work and whether the
-evidence/critique dossier is sufficient for closure. Packets, evidence,
-critique, and wiki pages may cite spec acceptance IDs; they must not redefine
-them.
-
-## Requirement And Scenario Discipline
-
-Specs should make intended behavior easy to cite, test, review, and amend.
-
-- give behavior-bearing requirements stable `REQ-*` IDs when downstream tickets,
-  packets, evidence, or critique will need to cite them
-- use normative language for real requirements: `MUST` or `SHALL` for required
-  behavior, `SHOULD` only when exceptions are legitimate and named, and avoid
-  vague verbs such as "works", "supports", or "handles" without observable detail
-- keep each requirement focused on one behavior, invariant, interface guarantee,
-  error semantic, or quality constraint
-- pair each behavior-bearing requirement with at least one concrete scenario that
-  could drive a test, smoke check, screenshot, trace, or manual observation
-- write scenarios around observable state, trigger, and outcome; use GIVEN, WHEN,
-  THEN, and AND steps when they make the scenario clearer
-- include success, edge, failure, permission, compatibility, idempotency, and empty
-  states when those states would change implementation or acceptance
-- treat scenarios as evidence seeds: if no plausible evidence could prove the
-  scenario, sharpen the scenario or remove the claim
-
-Do not turn requirements into implementation plans. File names, helpers,
-libraries, migrations, and step order belong in plans, tickets, or packets unless
-the public/shared interface itself is the behavior being specified.
-
-## Progressive Rigor
-
-Use the lightest spec that still makes downstream work testable and reviewable.
-
-For routine, local, low-risk behavior, `templates/spec-lite.md` may be enough:
-problem, desired behavior, focused requirements, representative scenarios,
-acceptance IDs, and an evidence plan.
-
-Use `templates/spec.md` as the full copy target, or escalate from lite to full
-before downstream work depends on the spec, when any of these are present:
-
-- high risk
-- public/shared surface
-- multi-ticket scope
-- reusable acceptance
-- migration/security/privacy boundary
-- material ambiguity
-- mandatory critique
-
-Lite never means vague. Full never means verbose theater. The spec should contain
-the contract a future ticket, packet, evidence record, or critique pass actually
-needs.
-
-## Spec Amendment Discipline
-
-When changing an existing spec, identify what kind of behavior mutation is being
-made before editing:
-
-- **Added**: new behavior, scenario, constraint, or acceptance that does not change
-  an existing requirement
-- **Modified**: changed behavior for an existing requirement; update the complete
-  requirement, its affected scenarios, acceptance IDs, evidence plan, and decision
-  points together
-- **Removed**: behavior that is no longer intended; state the reason, successor,
-  compatibility, migration, or removal boundary when any downstream work may care
-- **Renamed**: terminology or heading changed while behavior is otherwise stable;
-  preserve or reconcile IDs and search for inbound references
-- **Superseded**: old IDs no longer own the active contract; point to successor IDs
-  when behavior splits, narrows, or changes enough that reuse would mislead
-
-Preserve stable IDs after downstream records cite them. If a requirement,
-scenario, or acceptance unit splits, mark the old ID as superseded in prose and
-introduce successor IDs instead of silently reusing the old one for a different
-contract.
-
-If the intent, beneficiary, or scope changes enough that the old spec would tell a
-confusing story, route the change outward: create or reshape the right spec,
-initiative, plan, or ticket instead of laundering a new objective into an old
-behavior contract.
+Specs do not own live execution state, implementation progress, evidence
+sufficiency, audit verdicts, or ticket closure. Tickets own scoped acceptance for
+a work unit and may cite spec requirements and scenarios.
 
 ## Use This Skill When
 
-- several solutions are plausible and the intended behavior matters
-- acceptance criteria are vague
-- a request, plan, domain term, or workflow idea needs grilling before tickets or
-  packets depend on it
-- a ticket or critique would otherwise keep redefining what "correct" means
-- a workflow or capability needs one stable behavioral source
+Use this skill when:
 
-## Do Not Use This Skill When
+- intended behavior is fuzzy, disputed, reusable, shared, or easy to misstate
+- interface, API, workflow, UX, permission, error, compatibility, or invariant
+  behavior needs a durable contract
+- a ticket, plan, audit, packet, or worker would otherwise redefine what correct
+  means
+- operator answers need to become behavior truth before execution
+- requirements or scenarios need to be added, modified, removed, renamed,
+  superseded, accepted, or retired
+- evidence or audit needs a stable behavior claim to evaluate
 
-- you are still only gathering evidence
-- you only need execution sequencing
-- you only need to decompose already-clear high-level work into ticket-ready units
-- you are writing a user-facing explanation page
+Do not use specs for execution sequencing, investigation notes, observed evidence,
+audit findings, implementation journals, or reusable explanation that does not own
+intended behavior.
 
-## Spec Creation Discipline
+## Dispatch
 
-Creating a spec is an active grilling pass, not a form fill.
+If creating or reshaping a spec:
 
-When the request is fuzzy enough that an answer could change behavior, UX, API,
-workflow, acceptance, or risk:
+- read `references/spec-shape.md`
+- inspect existing specs and related records before asking the operator to repeat
+  facts
+- inspect source reality when current behavior, interfaces, errors, or constraints
+  matter
+- shape fuzzy behavior until requirements, scenarios, boundaries, and open
+  questions are clear enough for downstream work
+- use `templates/spec.md`
+- write the smallest citable spec
 
-- interview the operator relentlessly about every material branch of the behavior
-  contract until the intended behavior, terms, boundaries, scenarios, and
-  acceptance criteria are shared and precise
-- ask one material question at a time, waiting for the answer before moving to the
-  next dependent branch
-- provide a recommended answer for each question, including the behavior, user,
-  product, risk, or owner-record reason that makes the recommendation coherent
-- challenge vague, overloaded, or conflicting terms immediately and propose a
-  precise canonical term or concept
-- invent concrete scenarios and edge cases that force boundaries between concepts,
-  roles, states, errors, permissions, invariants, and non-goals
-- keep walking the design tree until dependent decisions are resolved, routed, or
-  explicitly blocking
-- capture durable decisions in the right owner: spec for behavior, ticket for local
-  assumptions, research for tradeoffs/null results, wiki for accepted explanation,
-  and constitution decisions only when the choice is hard to reverse, surprising,
-  and tradeoff-backed
+If updating a spec:
 
-## Good Spec Questions
+- read the whole spec
+- search for inbound references to affected `REQ-*` and `SCN-*` IDs when behavior
+  changes
+- classify the amendment as added, modified, removed, renamed, or superseded
+- update requirements, scenarios, evidence expectations, and open questions
+  together
+- supersede old IDs when reuse would mislead downstream records
 
-A strong spec answers:
+If superseding or retiring a spec:
 
-- what problem is being solved
-- who or what exact user, operator, API, system, or maintenance surface benefits
-- what current workaround, pain, baseline behavior, or evidence shows the problem
-- what desired behavior is expected
-- what the smallest valuable shape is, especially when the request arrived as a
-  preferred solution
-- which existing spec, requirement IDs, scenario IDs, or acceptance IDs this
-  creates, changes, removes, or supersedes
-- which domain, product, owner-record, or accepted-language facts shaped the contract
-- which material decisions were resolved, routed, or left blocking
-- what terminology conflicts or concrete scenarios shaped the contract
-- what quality bar would make the result materially better
-- what examples and non-examples make fuzzy requirements concrete
-- what constraints matter
-- what scenarios matter
-- how acceptance should be judged
-- what evidence would prove the behavior and quality bar
-- what assumptions or decision points would materially change the contract
+- preserve the reason
+- name the successor when one exists
+- update `Status:`, `Updated:`, `Replaces:`, or `Superseded By:` as appropriate
+- repair or flag inbound refs when downstream records would otherwise cite stale
+  behavior
 
-## Common Rationalizations
+If only finding or summarizing specs:
 
-- **"The requirement is obvious."** Reality: obvious requirements still hide
-  assumptions. Specs exist to surface them before delivery.
-- **"The quality bar is subjective, so skip it."** Reality: subjective does not
-  mean unverifiable. Name observable probes, examples, non-examples, or
-  before/after evidence.
-- **"The ticket can define this later."** Reality: tickets scope live work.
-  Reusable intended behavior belongs in a spec before downstream work relies on
-  it.
-- **"A lite spec can skip scenarios."** Reality: lite means small, not vague.
-  Each behavior-bearing requirement still needs a concrete way to observe or
-  test it.
-- **"Implementation details make the spec clearer."** Reality: delivery
-  mechanics usually belong in plans, tickets, packets, or code. Specs own
-  observable behavior and shared contracts.
+- inspect `.loom/specs/`
+- report status, relevant requirements, scenarios, boundaries, and open questions
+- do not mutate records unless the operator asked for a change
 
-## Red Flags
+## Finding Specs
 
-- acceptance says "works" or "looks good" without observable criteria
-- requirements lack stable IDs even though downstream work needs to cite them
-- requirements lack scenarios, or scenarios are too abstract to test or observe
-- the spec inherits a requested solution shape without checking the underlying
-  problem, beneficiary, workaround, or smallest valuable form
-- UX/product claims lack examples, non-examples, or evidence plan
-- modifications to an existing spec quietly change behavior without naming what
-  was added, modified, removed, renamed, or superseded
-- open questions would materially change downstream work but are not marked blocking
-- a ticket or critique keeps redefining correctness because the spec is too vague
+Specs live under `.loom/specs/`.
 
-## Verification
+Useful starting points:
 
-- [ ] Requirements and acceptance IDs are stable and citable.
-- [ ] Behavior-bearing requirements use concrete normative language and avoid
-      implementation-plan trivia.
-- [ ] Each behavior-bearing requirement has at least one scenario that can be
-      tested, observed, or explicitly validated.
-- [ ] Any material spec grilling questions were answered, routed, or explicitly
-      marked blocking before downstream work depends on the contract.
-- [ ] New or changed behavior is classified as added, modified, removed, renamed,
-      or superseded when an existing spec is amended.
-- [ ] The quality bar names a baseline/current-state delta.
-- [ ] Examples or non-examples make ambiguous behavior concrete, or absence is justified.
-- [ ] Decision points say whether they block downstream work.
-- [ ] Evidence plan can prove the behavior and quality bar.
+```bash
+find .loom/specs -maxdepth 1 -name '*.md' -print | sort
+grep -R '^ID: spec:' .loom/specs || true
+grep -R '^Type: Spec' .loom/specs || true
+grep -R '^Status:' .loom/specs || true
+grep -R 'REQ-[0-9][0-9][0-9]' .loom/specs || true
+grep -R 'SCN-[0-9][0-9][0-9]' .loom/specs || true
+```
+
+Search by capability, domain term, interface name, user task, error state,
+requirement ID, scenario ID, related record ID, source path, command, API, or data
+shape.
+
+## Spec IDs And Filenames
+
+Use stable semantic IDs:
+
+```text
+spec:<slug>
+```
+
+Use matching filenames without the `spec:` prefix:
+
+```text
+.loom/specs/<slug>.md
+```
+
+Choose a slug future agents will search for.
+
+Do not use date prefixes for ordinary spec filenames.
+
+## Required Top Labels
+
+Specs use plain body labels near the top:
+
+```text
+ID: spec:<slug>
+Type: Spec
+Status: draft
+Created: YYYY-MM-DD
+Updated: YYYY-MM-DD
+```
+
+Add only when useful:
+
+```text
+Replaces: spec:<slug>
+Superseded By: spec:<slug>
+```
+
+## Status Lifecycle
+
+Use this lifecycle:
+
+- `draft`: the contract is being shaped and downstream work should not rely on it
+  unless the open risk is explicit
+- `active`: current working behavior truth, usable by downstream work with named
+  open questions and limits
+- `accepted`: reviewed enough that downstream tickets, packets, evidence, and
+  audit can rely on it as the behavior contract
+- `superseded`: replaced by a named successor
+- `retired`: intentionally no longer used
+
+Use `active` for current contracts that are useful but still evolving.
+
+Use `accepted` when the contract is stable enough for downstream records to rely on.
+
+## Requirements And Scenarios
+
+Every spec should include at least one requirement and one scenario unless the
+record is still an early `draft`.
+
+Requirements use stable local IDs:
+
+```text
+REQ-001
+```
+
+A requirement states one intended behavior, invariant, interface guarantee, error
+semantic, permission rule, compatibility promise, or quality constraint.
+
+Scenarios use stable local IDs:
+
+```text
+SCN-001
+```
+
+A scenario is an observable probe of behavior. It should describe state, trigger,
+and outcome clearly enough for tickets, evidence, and audit to use.
+
+Ticket acceptance owns closure criteria for scoped work and can cite
+`spec:<slug>#REQ-001` or `spec:<slug>#SCN-001` when useful.
+
+## Shaping Posture
+
+When operator input is needed:
+
+- ask one material question at a time
+- recommend an answer when the repository, records, risk, or product shape supports
+  one path
+- challenge vague or overloaded terms before they become requirements
+- test proposed wording against concrete scenarios
+- invent success, edge, failure, permission, empty-state, compatibility, and
+  idempotency scenarios when they reveal boundaries
+- route unresolved investigation to research, complex execution strategy to plans,
+  live work to tickets, durable judgment to constitution, and reusable explanation
+  to knowledge
+
+Stop shaping when remaining questions no longer change intended behavior or can be
+recorded as open questions with clear downstream limits.
+
+## Spec Invariants
+
+Every spec should preserve these invariants:
+
+- intended behavior is separated from implementation plan
+- requirements and scenarios are stable, citable, and observable
+- important boundaries, non-goals, constraints, and open questions are explicit
+- evidence expectations are concrete enough to guide tickets and audit
+- public or shared interfaces name inputs, outputs, errors, validation, and
+  compatibility expectations when those details matter
+- quality claims have examples, non-examples, probes, or evidence expectations when
+  they affect downstream work
+- cited `REQ-*` and `SCN-*` IDs are not silently reused for different behavior
+- specs do not claim ticket closure, evidence sufficiency, audit verdict, or
+  implementation progress
 
 ## Done Means
 
-- the behavior is explicit enough that tickets and critique can reference one contract
-- the spec is precise without becoming delivery trivia
+Spec work is done when:
 
-## Read In This Order
-
-Read immediately for normal spec creation or review:
-
-1. `references/spec-shape.md` when deciding what belongs in requirements,
-   scenarios, constraints, and acceptance.
-2. `templates/spec-lite.md` or `templates/spec.md` only when creating or
-   substantially reshaping a spec record; keep `spec.md` as the full copy target.
+- the spec has a truthful status
+- behavior-bearing requirements and scenarios are clear enough to cite
+- open questions and downstream limits are visible
+- related records that constrain the behavior are linked or named
+- tickets can cite the spec without redefining intended behavior

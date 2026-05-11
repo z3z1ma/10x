@@ -2,7 +2,7 @@
   "name": "loom-core",
   "displayName": "Loom Core",
   "description": "Core Loom Markdown-native AI work protocol skills for Cursor.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "z3z1ma"
   },
@@ -16,5 +16,5 @@
     "markdown"
   ],
   "skills": "./skills/",
-  "hooks": {}
+  "hooks": "./hooks/hooks-cursor.json"
 }

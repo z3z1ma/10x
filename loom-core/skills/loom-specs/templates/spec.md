@@ -1,180 +1,112 @@
----
-id: spec:<slug>
-kind: spec
-status: draft
-created_at: <UTC timestamp>
-updated_at: <UTC timestamp>
-scope:
-  kind: repository
-  repositories:
-    - repo:root
-links: {}
-external_refs: {}
----
+# <Spec Title>
 
-# Summary
+ID: spec:<slug>
+Type: Spec
+Status: draft
+Created: <YYYY-MM-DD>
+Updated: <YYYY-MM-DD>
 
-What this spec defines and who should use it.
+<!--
+Add only when useful. Remove this comment before saving if unused.
 
-# Rigor Level
+Replaces: spec:<slug>
+Superseded By: spec:<slug>
+-->
 
-Choose the lightest useful shape: `lite` for local, low-risk behavior, or `full`
-when public/shared interfaces, security/privacy, migrations, compatibility,
-multiple tickets, or high ambiguity require more detail.
+## Summary
 
-Rationale:
+<Describe what behavior this spec defines, who or what surface it affects, and
+which downstream work should cite it.>
 
-# Problem
+## Problem
 
-What ambiguity, user need, or quality gap requires a behavior contract.
+<State the ambiguity, user need, quality gap, interface contract, or owner-record
+mismatch this spec resolves. Include current behavior, baseline, or counterfactual
+when it matters.>
 
-# Problem Pressure Check
+## Desired Behavior
 
-Use only the lenses that matter; write `None - reason` when the pressure check is
-not applicable.
+<Describe the intended behavior in plain language. Keep implementation sequencing
+out unless the public interface or command shape is the behavior.>
 
-- Evidence / baseline:
-  - Current answer: <TBD or None - reason>
-  - Disposition: <accepted, blocks, research, or owner route>
-- Specific beneficiary or surface:
-  - Current answer: <TBD or None - reason>
-  - Disposition: <accepted, blocks, research, or owner route>
-- Current workaround / counterfactual:
-  - Current answer: <TBD or None - reason>
-  - Disposition: <accepted, blocks, research, or owner route>
-- Smallest valuable shape / solution attachment:
-  - Current answer: <TBD or None - reason>
-  - Disposition: <accepted, blocks, research, or owner route>
-- Durability risk:
-  - Current answer: <TBD or None - reason>
-  - Disposition: <accepted, blocks, research, or owner route>
+## Not Doing
 
-# Desired Behavior
+<Name attractive exclusions, non-goals, and boundaries that keep the contract
+focused.>
 
-What the system should do, stated as observable behavior rather than delivery trivia.
+## Requirements
 
-# Quality Bar
+Use stable `REQ-*` IDs. Each requirement should state one observable behavior,
+invariant, interface guarantee, error semantic, permission rule, compatibility
+promise, or quality constraint.
 
-What would make the result materially better than the current or baseline state.
-For UX/product work, name the primary user task, affordance, or quality delta a
-reviewer should be able to observe.
+- REQ-001: <MUST/SHOULD + actor or surface + condition + observable outcome>
 
-# Options Considered
+## Scenarios
 
-Use when multiple behavior, API, UX, architecture, or workflow shapes could fit.
-Name two or three meaningful options, their tradeoffs, and why the chosen shape
-fits the problem. If not applicable, write `None - reason`.
+Use stable `SCN-*` IDs. Each scenario should cite the requirements it exercises and
+be concrete enough to test, observe, or review.
 
-# Not Doing
+### SCN-001: <Scenario Name>
 
-Explicit non-goals and attractive exclusions that keep this contract focused.
-
-# Boundary Tiers
-
-Use only when authority or delivery boundaries matter; otherwise write
-`None - reason`.
-
-- Always:
-- Ask first:
-- Never:
-
-# Interface / API Contract
-
-Use for shared or public surfaces; otherwise write `N/A`.
-
-- Inputs:
-- Outputs:
-- Error semantics:
-- Validation boundary:
-- Compatibility / deprecation:
-
-# Examples / Non-Examples
-
-Positive examples, negative examples, screenshots, references, concrete traits,
-or anti-patterns. If none exist, write `None - reason`.
-
-# Constraints
-
-Boundaries, non-goals, compatibility requirements, safety limits, or design-system
-rules that shape acceptable solutions.
-
-# Requirements
-
-Concrete behavior requirements downstream work must satisfy. Use stable IDs when
-tickets, packets, evidence, critique, or wiki may cite the requirement. Keep each
-requirement focused on one behavior, invariant, interface guarantee, error
-semantic, or quality constraint.
-
-- REQ-001: <MUST/SHALL/SHOULD + actor/surface + condition + observable outcome>
-
-# Scenarios
-
-Representative usage, edge cases, and failure paths. Each behavior-bearing
-requirement should have at least one scenario that can be tested, observed, or
-explicitly validated.
-
-## SCN-001: <scenario name>
-
-Exercises: REQ-001, ACC-001
+Exercises: REQ-001
 
 GIVEN <initial observable state>
 WHEN <trigger or action>
 THEN <observable outcome>
 AND <additional outcome or invariant when useful>
 
-# Acceptance
+## Evidence Plan
 
-What will count as acceptable behavior. Criteria must be specific enough for
-tickets, evidence, and critique to cite.
+<Name the tests, commands, screenshots, observations, traces, manual checks, or
+evidence records that could prove the requirements and scenarios.>
 
-- ACC-001: <TBD: stable acceptance criterion before saving>
+- REQ-001 / SCN-001: <evidence type, expected artifact, and limits>
 
-Coverage:
+## Open Questions
 
-- ACC-001:
-  - Requirements: REQ-001
-  - Scenarios: SCN-001
-  - Evidence target: <test, observation, screenshot, trace, or manual check>
+<Name unresolved questions and whether they block downstream work. Remove this
+section only when no material questions remain.>
 
-# Evidence Plan
+- <question or None - current contract is ready>: <blocks downstream work? yes/no>
 
-What evidence would prove the behavior and quality bar. Name tests, observations,
-before/after artifacts, screenshots, smoke checks, or manual checks as applicable.
+## Quality Bar
 
-- ACC-001:
-  - Evidence type: <test, observation, screenshot, trace, manual check>
-  - Expected artifact: <path, command, evidence record, or TBD>
-  - Limits / notes: <limits or None>
+<Use for UI, UX, product, workflow, API ergonomics, developer experience, or other
+quality-sensitive behavior. Name what makes the result materially better than the
+baseline and how a reviewer could tell. Remove if not useful.>
 
-# Amendment Notes
+## Interface Contract
 
-Use when changing an existing spec. Otherwise write `None - new spec`.
+<Use for public APIs, module interfaces, component props, commands, data shapes,
+file formats, packets, or cross-worker contracts. Remove if not useful.>
 
-- <added, modified, removed, renamed, or superseded>:
-  - Affected IDs: <REQ/SCN/ACC IDs>
-  - Disposition / successor: <reason, successor, compatibility, or removal boundary>
-  - Reference reconciliation needed: <yes/no and target search>
+- Inputs:
+- Outputs:
+- Side effects:
+- Error semantics:
+- Validation boundary:
+- Compatibility or deprecation:
 
-# Contract Review
+## Examples And Non-Examples
 
-- Completeness: <material behavior, edge states, non-goals, constraints,
-  acceptance IDs, and evidence expectations covered or explicitly out of scope>
-- Correctness: <requirements reflect intended behavior and owner-record truth, not
-  only current implementation or a preferred solution shape>
-- Coherence: <requirements, scenarios, acceptance, interface details, and decision
-  points use stable terms and do not contradict one another>
+<Use examples, non-examples, screenshots, comparable flows, short prose examples,
+or anti-patterns when they make fuzzy behavior concrete. Remove if not useful.>
 
-# Assumptions / Decision Points
+## Constraints
 
-Questions or assumptions whose answer would materially change behavior, UX,
-architecture, acceptance, or risk.
+<Name constraints, compatibility requirements, safety limits, design-system rules,
+or authority boundaries that shape acceptable behavior. Remove if not useful.>
 
-- <TBD or None - no material assumptions>:
-  - Reversible: <yes/no>
-  - Blocks downstream work: <yes/no>
-  - Disposition: <accepted, ask user, research, or spec follow-up>
+## Amendment Notes
 
-# Open Questions
+<Use when changing an existing spec. Classify changes as added, modified, removed,
+renamed, or superseded. Name affected `REQ-*` and `SCN-*` IDs, successor IDs, and
+inbound reference checks. Remove for new specs.>
 
-Unresolved questions that do not yet block the current contract, or explicit
-blocking questions that must be routed before downstream work.
+## Related Records
+
+<List only records or paths that materially constrain or explain this spec. Say why
+each matters. Remove this section if none are useful.>
+
+- `<record-id or path>` - <why this record matters>

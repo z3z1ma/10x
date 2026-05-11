@@ -6,7 +6,7 @@ Agent Loom gives coding agents a graph of shaped work products. Playbooks help a
 
 Playbooks are optional. They do not replace [Loom Core](../loom-core/README.md).
 
-Core gives the owner layers. Playbooks give practiced routes through them.
+Core gives the record surfaces. Playbooks give practiced routes through them.
 
 [Agent Loom](../README.md) / [Protocol](../PROTOCOL.md) / [Install](../INSTALL.md) / [Loom Core](../loom-core/README.md)
 
@@ -20,13 +20,15 @@ The workflow happened.
 
 The work products did not compound.
 
-Playbooks fix that by adding workflow-specific pressure while keeping truth in Core's owner layers.
+Playbooks add workflow-specific pressure while routing durable facts back to Core
+records.
 
 ```text
-workflow route, not truth owner
+workflow route, not durable record
 ```
 
-A playbook can guide how the agent works. It cannot silently decide where project truth lives.
+A playbook can guide how the agent works. Durable project facts still belong in
+Core records.
 
 ## What They Add
 
@@ -38,61 +40,97 @@ They help agents remember to:
 - write or observe a failing check before claiming behavior changed
 - measure before optimizing
 - isolate Git scope before parallel work
-- preserve review findings in critique
+- preserve review findings in audit
 - route security-sensitive work through threat-aware review
 - keep migration cleanup tied to evidence and ticket disposition
 - verify UI changes in the browser when runtime behavior matters
 - ground framework or library choices in current source and official docs
-- make docs, release notes, and PR summaries mirror owner truth instead of inventing it
+- make docs, release notes, and PR summaries mirror Core records instead of
+  inventing claims
 
 Playbooks make the workflow path explicit, repeatable, and recoverable.
 
 ## The Playbook Set
 
-| Skill | What it helps with |
-| --- | --- |
-| `loom-debugging` | reproduce-first debugging and root-cause discipline |
-| `loom-tdd` | red/green behavior proof |
-| `loom-incremental-implementation` | small verified implementation slices |
-| `loom-code-review` | implementation review through critique and ticket disposition |
-| `loom-git` | branch, worktree, diff, commit, merge, and provenance discipline |
-| `loom-agent-orchestration` | safe worker partitioning and parent review |
-| `loom-context-engineering` | curated context for bounded agent work |
-| `loom-drive` | long-horizon objective driving through owner layers |
-| `loom-product-discovery` | shaping raw ideas into initiatives, research, specs, plans, or tickets |
-| `loom-spike` | bounded prototypes, sketches, and investigations |
-| `loom-codemap` | repository and module mapping through evidence, research, and wiki |
-| `loom-architecture` | seams, module boundaries, adapters, and testability |
-| `loom-simplification` | behavior-preserving cleanup and reduction |
-| `loom-migration` | staged migrations, deprecations, removals, usage proof, cleanup |
-| `loom-security` | auth, authorization, secrets, sensitive data, and hardening routes |
-| `loom-performance` | measure, optimize, and guard performance work |
-| `loom-ui-browser` | frontend and browser-runtime verification |
-| `loom-ci-cd` | automated quality gates, rollout, rollback, and pipeline repair |
-| `loom-source-grounding` | current-source and official-reference grounding |
-| `loom-docs-sync` | README, API, changelog, and operator-doc synchronization |
-| `loom-ship` | PR, release, handoff, risk, and follow-up packaging |
-| `loom-skill-authoring` | maintaining Loom-compatible skills and routing boundaries |
+The list is workflow-oriented. These are not new record layers.
 
-The list is intentionally workflow-oriented. These are not new record layers.
+- `loom-idea-refine` - turns rough concepts into the next core record move
+- `loom-incremental-implementation` - executes bounded slices through tickets,
+  Ralph, evidence, and audit
+- `loom-test-driven-development` - applies test-first verification and preserves
+  red/green evidence
+- `loom-source-driven-development` - grounds framework and library work in current
+  sources, research, and evidence
+- `loom-doubt-driven-development` - challenges non-trivial in-flight claims through
+  Ralph, audit, evidence, and follow-up routing
+- `loom-domain-language-and-decisions` - sharpens project vocabulary and routes
+  real tradeoffs to constitution decisions
+- `loom-codebase-atlas` - maps unfamiliar code areas into reusable knowledge
+- `loom-architecture-deepening` - finds higher-leverage module seams, interfaces,
+  and refactor routes
+- `loom-frontend-ui-engineering` - routes UI behavior, accessibility, visual
+  quality, browser observations, and audit
+- `loom-api-and-interface-design` - designs shared interfaces through specs,
+  compatibility checks, evidence, and audit
+- `loom-browser-testing-with-devtools` - captures browser runtime observations as
+  evidence
+- `loom-debugging-and-error-recovery` - preserves failures, finds root cause, fixes,
+  guards, and runs prevention follow-up
+- `loom-prototype-and-spike` - builds disposable artifacts to answer design,
+  logic, UI, interface, or integration questions
+- `loom-intake-triage` - classifies incoming reports and routes them to tickets,
+  evidence, specs, knowledge, or rejection rationale
+- `loom-git-workspace-isolation` - isolates branch or worktree execution and
+  records baseline provenance
+- `loom-parallel-worker-coordination` - dispatches independent Ralph packets and
+  reconciles combined output
+- `loom-code-review-and-quality` - reviews diffs as an audit-oriented quality route
+- `loom-review-response` - evaluates and acts on incoming review feedback
+- `loom-code-simplification` - simplifies code while preserving behavior and
+  evidence
+- `loom-security-and-hardening` - routes security-sensitive work through specs,
+  evidence, audit, and prevention
+- `loom-performance-optimization` - measures, optimizes, remeasures, and records
+  performance evidence
+- `loom-ci-cd-and-automation` - specifies and verifies CI/CD gates and deployment
+  automation
+- `loom-deprecation-and-migration` - plans and executes migrations, deprecations,
+  proof, cleanup, and prevention
+- `loom-branch-finish` - finishes development branches through merge, PR, keep,
+  discard, and cleanup decisions
+- `loom-shipping-and-launch` - coordinates readiness, rollout, observation,
+  rollback, communication, and cleanup
 
 ## How They Stay Loom
 
 Every playbook routes durable facts back to Core.
 
-- debugging may create evidence, research, a spec update, a ticket, critique, or wiki promotion
-- code review may create critique findings, but the ticket owns finding disposition and acceptance
+- debugging may create evidence, research, a spec update, a ticket, audit, or
+  knowledge promotion
+- domain language may create knowledge, specs, tickets, or constitution decisions,
+  but conversation does not become the durable record
+- architecture deepening may create plans, specs, tickets, evidence, and audit, but
+  refactor execution still closes through tickets
+- intake triage may mirror external issue state, but tickets remain the live
+  execution ledger
+- code review may create audit findings, but the ticket owns finding disposition
+  and acceptance
+- review response may update tickets, audit, specs, evidence, research,
+  constitution, or knowledge, but feedback itself is not authority
 - Git coordination may protect branches and worktrees, but the ticket still owns live execution state
-- docs sync may update README files, but owner records still own decisions, behavior, evidence, risk, and accepted explanation
+- docs sync may update README files, but Core records still carry decisions,
+  behavior, evidence, risk, and accepted explanation
 - ship may draft summaries, but the ticket and evidence decide what can honestly be claimed
 
-This keeps workflows from becoming shadow ledgers.
+This keeps workflows from becoming competing ledgers.
 
-The playbook is the route. The owner record is the truth.
+The playbook is the route. Core records carry the durable result.
 
 ## Installing Or Exposing Playbooks
 
-Install or expose Loom Core first. Playbooks expect Core to supply `using-loom`, the owner layers, record grammar, packet discipline, evidence, critique, and ticket acceptance rules.
+Install or expose Loom Core first. Playbooks expect Core to supply `using-loom`,
+record grammar, packet discipline, evidence, audit, knowledge, and ticket
+acceptance rules.
 
 The portable local setup exposes both package roots or both skill trees:
 
@@ -109,10 +147,12 @@ Harness-specific instructions live in [INSTALL.md](../INSTALL.md).
 
 ## Boundary
 
-Playbooks are not a second protocol, not a workflow engine, and not a replacement for tickets, evidence, critique, specs, research, plans, wiki, or constitution.
+Playbooks are not a second protocol, not a workflow engine, and not a replacement
+for tickets, evidence, audit, specs, research, plans, knowledge, or constitution.
 
 They are reusable workflow routes for coding agents.
 
-Use Core when the next owner-layer move is obvious. Add Playbooks when the workflow itself needs structure.
+Use Core when the next record move is obvious. Add Playbooks when the workflow
+itself needs structure.
 
-The workflow is disposable. The owner graph is not.
+The workflow is disposable. Core records are not.

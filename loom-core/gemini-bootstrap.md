@@ -1,17 +1,17 @@
-# Loom Core Gemini Bootstrap
+# Using Loom
 
-@./skills/using-loom/references/01-core-identity.md
+using-loom skill and references injected below
 
-@./skills/using-loom/references/02-truth-and-authority.md
+@./skills/using-loom/SKILL.md
 
-@./skills/using-loom/references/03-outer-loop.md
+@./skills/using-loom/references/how-loom-thinks.md
 
-@./skills/using-loom/references/04-ralph-inner-loop.md
+@./skills/using-loom/references/directory-structure.md
 
-@./skills/using-loom/references/05-critique-and-wiki.md
+@./skills/using-loom/references/shaping-with-humans.md
 
-@./skills/using-loom/references/06-filesystem-and-tooling.md
+@./skills/using-loom/references/delegating-to-workers.md
 
-@./skills/using-loom/references/07-validation-and-honesty.md
+@./skills/using-loom/references/proving-the-work.md
 
-@./skills/using-loom/references/08-trust-boundaries.md
+@./skills/using-loom/references/staying-safe.md

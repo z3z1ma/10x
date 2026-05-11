@@ -1,171 +1,174 @@
-# Architecture Notes
+# Architecture
 
-Loom is a Markdown-native control plane for AI knowledge work.
+Loom is boring by design.
 
-It is not a toolchain, runtime, daemon, model router, MCP, dashboard, or product
-CLI. Loom's product surface is the visible skills corpus: the mandatory
-`using-loom` skill, subsystem skills, templates, references, and ordinary
-filesystem operations.
+The product is a Markdown skill corpus. The runtime state is Markdown under
+`.loom/`. Package entrypoints, manifests, hooks, and extensions expose the corpus
+to different harnesses. They do not own the protocol.
 
-## Architectural Kernel
+Loom ships no hidden runtime, daemon, database, dashboard, required helper script,
+or product CLI.
 
-Loom has one central invariant: ownership-preserving mutation.
+## Product Boundary
 
-Every durable claim, behavior, observation, risk, decision, and explanation must
-land in the artifact layer that owns that kind of truth. Newer files do not win
-by recency. More detailed files do not win by confidence. The owner layer wins
-for the truth it owns.
+The product surface lives in two package roots:
 
-The transaction spine is:
+| Package | Job |
+| --- | --- |
+| `loom-core/` | mandatory `using-loom` doctrine and Core record skills |
+| `loom-playbooks/` | optional workflow routes that require Core |
+
+Inside each package, `skills/` is the source of behavior. The package root may add
+transport files for OpenCode, Claude Code, Codex, Cursor, or Gemini CLI.
+
+Content inside package `skills/` must stay self-contained. Use generic `.loom/...`
+runtime paths. Do not teach source-repo-only assumptions from this repository as
+Loom doctrine.
+
+## Runtime State
+
+A Loom workspace materializes records only when it needs them:
 
 ```text
-route -> shape -> ready -> execute -> reconcile -> verify -> accept -> promote -> close
+.loom/
+|-- constitution/
+|   |-- constitution.md
+|   |-- decisions/
+|   `-- roadmap/
+|-- tickets/
+|-- research/
+|   `-- artifacts/
+|-- specs/
+|-- plans/
+|-- evidence/
+|   `-- artifacts/
+|-- audit/
+|-- knowledge/
+`-- packets/
+    `-- ralph/
 ```
 
-This spine is the product architecture. Bootstrap doctrine, skills, packets,
-evidence, critique, and wiki exist to make those transitions explicit and
-recoverable.
+Missing empty directories are fine. A directory matters when the current work
+needs that surface.
 
-## Owner Graph
+## Core Surfaces
 
-Canonical owner layers own project truth:
+Each surface owns one kind of truth.
 
-- constitution owns durable identity, principles, constraints, precedent, and decisions
-- initiative owns strategic outcomes and success framing
-- research owns investigations, tradeoffs, conclusions, rejected paths, and null results
-- spec owns intended behavior, scenarios, requirements, and acceptance contracts
-- plan owns high-level complex-change planning, decomposition, sequencing,
-  rollout strategy, milestones, and execution waves
-- ticket owns live execution state, scoped coverage, blockers, acceptance disposition, and closure
-- evidence owns observed artifacts and validation outputs
-- critique owns adversarial findings, severities, verdicts, and residual risks
-- wiki owns accepted explanation and reusable understanding
+| Surface | Runtime Path | Owns |
+| --- | --- | --- |
+| constitution | `.loom/constitution/` | durable judgment, policy, principles, constraints, ADRs, roadmap direction |
+| tickets | `.loom/tickets/` | bounded executable work, live state, acceptance, closure |
+| research | `.loom/research/` | investigations, tradeoffs, rejected paths, null results, conclusions |
+| specs | `.loom/specs/` | intended behavior, requirements, scenarios, interfaces |
+| plans | `.loom/plans/` | strategy and decomposition for complex work |
+| evidence | `.loom/evidence/` | observations, outputs, reproductions, screenshots, logs, validation |
+| audit | `.loom/audit/` | fresh-context review, findings, verdicts, residual risk |
+| knowledge | `.loom/knowledge/` | preferences, procedures, accepted explanation, atlases, retrieval cues |
+| packets | `.loom/packets/ralph/` | bounded worker contracts |
 
-Durable support surfaces help operation without owning project truth:
+Retrospective is a promotion and prevention pass over existing surfaces. It has no
+record directory of its own.
 
-- packets own bounded child-worker contracts
-- memory owns optional support recall, retrieval cues, preferences, entities,
-  reminders, and hot context without owning project truth
-- optional, lazy-materialized `.loom/support/` artifacts, such as saved drive
-  handoffs, support recovery or handoff without owning objective state, live
-  ticket state, acceptance, evidence sufficiency, critique verdicts, wiki truth,
-  canonical truth, or packet lifecycle
-- workspace and harness records own scope or transport support only
+## Bootstrap
 
-## Loops
+`using-loom` is mandatory before Loom work unless the adapter has already loaded
+the same files with clear source markers.
 
-The outer loop makes work legible before execution. It chooses the owner layer,
-adds research or specs when evidence or behavior is fuzzy, uses plans when
-complex change needs high-level decomposition or sequencing, and creates or
-tightens the ticket that will own live execution.
+Load order:
 
-The inner loop is Ralph. Ralph advances one bounded implementation slice through
-one packet, one fresh worker, one output contract, and one parent reconciliation.
+1. `loom-core/skills/using-loom/SKILL.md`
+2. `loom-core/skills/using-loom/references/how-loom-thinks.md`
+3. `loom-core/skills/using-loom/references/directory-structure.md`
+4. `loom-core/skills/using-loom/references/shaping-with-humans.md`
+5. `loom-core/skills/using-loom/references/delegating-to-workers.md`
+6. `loom-core/skills/using-loom/references/proving-the-work.md`
+7. `loom-core/skills/using-loom/references/staying-safe.md`
 
-Critique and wiki may reuse packet discipline, but they are sibling routes, not
-Ralph-governed execution.
-They are sibling routes governed by their own domain skills.
+OpenCode registers those files through `config.instructions` and exposes
+`loom-core/skills` through `config.skills.paths`. Claude, Codex, Cursor, and
+Gemini use their native manifest, hook, or static context surfaces where those are
+available.
 
-## Packets
+Preload is convenience. If preload is absent, the agent loads `using-loom` from
+Core.
 
-Packets are explicit Markdown contracts. They declare:
+## Record Grammar
 
-- mission
-- governing context
-- source fingerprint
-- change class and risk posture
-- child read and write boundaries
-- verification posture
-- stop conditions
-- output contract
-- child output
-- parent merge notes
+Skills use frontmatter because harnesses expect it. Loom records use grepable body
+labels because humans and fresh agents can inspect and repair them without a
+parser.
 
-A packet is not project truth and not a transcript dump. It is a bounded handoff
-that lets a disposable worker mutate a narrow slice without guessing.
+```text
+ID: <typed-id>
+Type: <record type>
+Status: <status>
+Created: YYYY-MM-DD
+Updated: YYYY-MM-DD
+```
 
-## Evidence, Critique, Acceptance
+Templates stay small. They force the agent to name scope, evidence, risks,
+acceptance, and links without turning Markdown into a hidden schema engine.
 
-Evidence stores observations. It can support or challenge claims, but it does not
-own policy, behavior, sequencing, live execution state, or explanation.
+## The Two Loops
 
-Critique pressure-tests claims, implementation shape, and evidence sufficiency.
-It produces findings and verdicts; it does not close work.
+The outer loop shapes work with the operator. The agent inspects first, asks only
+material questions, and routes durable truth to the surface that owns it. Work
+stays in this loop while intent, scope, evidence, risk, or authority is unclear.
 
-Acceptance disposition belongs to the ticket. Commands, commits, packets, PRs,
-critique records, and child workers may inform acceptance, but the ticket owns
-whether scoped work may close.
+The inner loop executes bounded work. Tickets drive live execution. Ralph packets
+hand one bounded run to a worker. Evidence records what happened. Audit challenges
+important claims with fresh context. The parent reconciles the result into the
+owning surfaces.
 
-## Promotion
+This split is the core architecture. Coding harnesses can add transport, but they
+should not replace the outer-loop shaping or the inner-loop contract.
 
-Retrospective is the default promotion gate for non-trivial completed work. It
-assimilates durable learning into the owner layer that can maintain it:
+## Ralph And Audit
 
-- accepted explanation -> wiki
-- investigation results -> research
-- intended behavior clarifications -> spec
-- changed complex-change strategy, decomposition, sequencing, rollout, or waves -> plan
-- strategic framing -> initiative
-- principles or decisions -> constitution
-- observed validation artifacts -> evidence
-- support-only recall, preferences, and retrieval cues -> memory
+Ralph packets are contracts for one worker run. They name target, mission, context
+style, read scope, write scope, source snapshot, stop conditions, and output
+contract.
 
-Retrospective is a workflow, not a record kind and not a second ledger.
+A packet is not accepted project truth. After the worker returns, the parent reads
+the packet output, diffs, records, and evidence, then updates the consuming
+surface.
 
-## Skills And Templates
+Substantive audit requires fresh context. The same session can prepare the audit
+request and record the result, but the adversarial judgment must come from a fresh
+pass. Same-context inspection may help, but it should not be saved as `Type:
+Audit`.
 
-Skills are flat sibling subsystem playbooks. Each skill must be understandable
-from its own `SKILL.md`, references, and templates. Hidden inheritance, shipped
-helper scripts, and assembly-time behavior must not become the source of truth.
+## Adapter Rule
 
-`using-loom` is the mandatory package entry skill. It carries Loom's ordered
-operating doctrine as references. Harness adapters may preload those references as
-always-on context, but that preload is an optimization over the same skill package,
-not a separate doctrine surface.
+Adapters may preload doctrine, expose skills, validate package shape, or make
+installation easier. They must not define another ontology.
 
-Templates are executable prompts for future agents. A good template should force
-real IDs, explicit scope, owner boundaries, evidence expectations, and next
-routes instead of inviting placeholder graph edges or vague completion claims.
+Generated context files, external issue trackers, dashboards, MCPs, and local
+scripts may transport or mirror Loom work. The owning truth still lives in Core
+records unless a future constitutional record changes that boundary.
 
-## Native Adapters
+## Repository-Only Material
 
-Loom does not ship a command-wrapper surface or a cross-harness installer as the
-product. The product surface is `skills/`.
+This repo has support material that is not product doctrine:
 
-Harness adapters transport Loom into particular tools through native plugin,
-extension, or skill-package systems. They may preload `using-loom` references
-when the harness supports it cleanly, but they must not define Loom truth.
+- `examples/` contains internal fixtures and traces for maintainer review
+- `.loom/` contains dogfood records for this repo
+- `.opencode/` is a local consumption surface
+- `optional-utilities/` contains utility skills outside the default install
 
-## Examples
+Use those for review or dogfooding. Keep product behavior in `loom-core/skills`
+and `loom-playbooks/skills`.
 
-Examples are internal teaching fixtures, not product-surface guidance and not
-canonical project truth. They should remain minimal, internally consistent, and
-replayable by a cold reader. A good example shows the starting `.loom` slice,
-operator request, expected flow, expected artifacts, final state, and common
-wrong behavior.
+## Design Checks
 
-## Design Biases
+A Loom change should preserve these properties:
 
-Loom optimizes for:
-
-- legibility to a fresh agent
-- explicit truth ownership
-- bounded execution
-- grep-friendly traceability
-- adversarial review
-- evidence-backed completion
-- knowledge compounding
-- portability across harnesses
-
-Loom rejects:
-
-- hidden runtimes as the real protocol
-- helper scripts as a second ontology
-- one-command project management
-- fallback install scripts as product architecture
-- external systems as competing ledgers
-- generated context files as independent project truth
-- transcript memory as the execution record
-
-A future agent should be able to install the skill package, use `using-loom`,
-read the graph, and operate the protocol without hidden runtime magic.
+- a fresh agent can find the right record with filenames, IDs, labels, and grep
+- tickets remain the only live execution ledger
+- evidence records observations without deciding acceptance
+- audit records review without closing work
+- packets bound worker runs without becoming project state
+- knowledge stores accepted reusable understanding without replacing specs, evidence, audit, or tickets
+- playbooks route through Core instead of adding durable surfaces
+- helper code stays derivative of the Markdown protocol

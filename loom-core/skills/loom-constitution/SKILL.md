@@ -1,131 +1,163 @@
 ---
 name: loom-constitution
-description: "Maintain durable project identity and constraints. Use when architecture policy, principles, ADRs/decision records, roadmap direction or roadmap records, hard constraints, citable decisions, or long-lived project rules must change."
-compatibility: Markdown-native, script-free Loom protocol.
-metadata:
-  skill_kind: owner-layer
-  owns_layer: constitution
+description: "Use before work that may depend on or change durable project judgment, including identity, policy, principles, constraints, ADRs, roadmap direction, architectural precedent, or code changes where that judgment matters."
 ---
 
 # loom-constitution
 
-Constitution is Loom's highest project-facing owner layer.
+Constitution is Loom's durable judgment layer.
 
-Use it when the project needs to remember what it is and how it should judge future work.
+It holds project judgments future agents should inherit before they make or
+evaluate important changes.
 
-## What This Skill Owns
+## How To Read Constitution
 
-- `constitution:main`
-- constitutional decision records (ADRs)
-- roadmap records
-- durable principles and constraints
+Constitutional records live under `.loom/constitution/`.
 
-Decision records and roadmap records are first-class constitutional artifacts, not subtypes tucked under the main constitution file. Decision records are Loom's ADR layer: they capture durable architectural and policy choices and their rejected alternatives, so future agents inherit precedent instead of re-deriving it. Roadmap records live in the same subsystem because a roadmap is strategic direction made durable — sequencing at the policy layer, not sequencing at the execution layer.
+When this skill is loaded, inspect the constitutional surface directly:
 
-## Roadmap Boundary
+```bash
+find .loom/constitution -name '*.md' -print
+grep -R '^ID:' .loom/constitution
+grep -R '^Type:' .loom/constitution
+grep -R '^Status:' .loom/constitution
+```
 
-Roadmaps express durable strategic direction and policy-level milestones.
+If `.loom/constitution/` is absent or contains no Markdown files, no Loom
+constitutional guidance is currently present.
 
-They do not replace initiative success metrics, plan strategy milestones, or
-ticket execution state. If a roadmap starts tracking day-to-day progress, route
-that detail down into initiatives, plans, or tickets.
+Start with active top-level constitutional records:
 
-## Use This Skill When
+```bash
+find .loom/constitution -maxdepth 1 -name '*.md' -print
+grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null
+```
 
-- a principle should become durable policy
-- an architectural constraint should become explicit
-- a major choice should outlive the current ticket or plan
-- the project's strategic direction changed materially
-- a roadmap theme or milestone sequence deserves durable expression
-- an architectural or policy choice should be citable later as precedent (write a decision record)
+Read the active core constitution first when it exists:
 
-## Do Not Use This Skill When
+```bash
+grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null
+```
 
-- you are tracking live progress
-- you are describing one bounded implementation step
-- the change belongs to a spec, plan, or ticket instead of durable policy
-- you only need accepted explanation rather than policy authority
+Then read active top-level principle fragments when their filenames, IDs, titles,
+or visible content appear relevant to the current work.
 
-## Constitutional Posture
+Use filenames and slugs as semantic routing hints. Prefer focused lookup before
+reading nested constitutional records:
 
-Good constitutional writing is:
+```bash
+find .loom/constitution -name '*<keyword>*' -print
+grep -R -i -l '<keyword>' .loom/constitution
+grep -R -l '^Status: active' .loom/constitution/decisions/*.md 2>/dev/null
+grep -R -l '^Status: active' .loom/constitution/roadmap/*.md 2>/dev/null
+```
 
-- durable
-- explicit
-- constraining
-- useful as a judgment frame
-- not confused with day-to-day execution
+Read active decision records, roadmap records, and other nested records when they
+are relevant to the current work by slug, ID, title, topic, referenced subsystem,
+or grep result.
 
-A constitutional record should help a future agent decide, not merely admire the prose.
+Treat `superseded`, `retired`, and `completed` records as historical context.
+Read them only when active records point to them, when resolving precedent, or
+when the current work needs that history.
 
-## Read Constitution Before Deciding
+Create or edit constitutional records only when the operator asks for a
+constitutional change or the work clearly requires one.
 
-Before making a non-trivial architectural or policy choice, grep the constitution subsystem first. Decision records are precedent; the roadmap is strategic sequencing; `constitution:main` is current framing. A choice that re-derives a prior decision without citing it wastes work and risks contradicting accepted policy.
+## Record Shapes
 
-Useful starting queries:
+Constitution has four shapes:
 
-- `rg -n '^id:' .loom/constitution` — list every constitutional record
-- `find .loom/constitution/decisions -name '*.md' | sort` — scan precedent by filename
-- `rg -n '<topic>' .loom/constitution` — check whether this topic already has policy
+* Core constitution: optional broad project frame at `.loom/constitution/constitution.md`.
+* Decisions / ADRs: citable architectural or policy precedent under `.loom/constitution/decisions/`.
+* Roadmap records: durable strategic direction under `.loom/constitution/roadmap/`.
+* Principle fragments: small durable principle or constraint fragments as top-level files under `.loom/constitution/`.
 
-## Default Procedure
+Each record uses plain body labels near the top:
 
-1. decide whether the work belongs in `constitution:main`, a decision record, or a roadmap record
-2. check whether prior constitutional records already cover the topic before creating a new one
-3. copy the right template
-4. fill in the policy truth, not just abstract philosophy
-5. link downstream work where useful, except for `constitution:main`, which usually stays link-light
-6. when writing a decision record, state the rejected alternatives and their reasons so the record carries precedent value
-7. reconcile any plan/spec/wiki pages that are now out of date because the constitutional frame changed
+```text
+ID: decision:0001
+Type: Constitution Decision
+Status: active
+Created: 2026-05-08
+Updated: 2026-05-08
+```
 
-## Common Rationalizations
+Use these IDs by convention:
 
-- Rationalization: "This feels important, so it belongs in the constitution."
-  - Reality: Constitution owns durable policy and constraints, not every important fact.
-- Rationalization: "The decision is obvious, so rejected options are unnecessary."
-  - Reality: Rejected options are what make decision records useful precedent.
-- Rationalization: "A roadmap can track project progress."
-  - Reality: Roadmaps express durable direction; initiatives, plans, and tickets own execution detail.
-- Rationalization: "A wiki page can serve as policy."
-  - Reality: Wiki explains accepted understanding. Constitution owns policy authority.
+* `constitution:main` for the optional core constitution
+* `decision:0001`, `decision:0002`, ... for ADRs
+* `roadmap:<slug>` for roadmaps
+* `principle:<slug>` for lightweight principle fragments
 
-## Red Flags
+Use these statuses unless a record explains otherwise: `draft`, `active`,
+`completed`, `superseded`, and `retired`.
 
-- constitutional prose is aspirational but not constraining
-- decision record lacks alternatives, consequences, or downstream reconciliation
-- roadmap lists ticket tasks instead of policy-level direction
-- policy change silently contradicts existing constitution records
-- specs, plans, or wiki pages remain stale after a constitutional change
+Relationships can appear naturally in prose. Add a `## Related` section only when
+explicit links materially help future agents.
 
-## Verification
+## What Belongs Here
 
-- [ ] Existing constitutional records were checked for precedent.
-- [ ] The change belongs to policy, durable direction, or citable decision truth.
-- [ ] Decision records name accepted choice, rejected alternatives, and consequences.
-- [ ] Downstream records that conflict with the new frame were reconciled or marked pending.
+Use constitution for durable project judgment:
+
+* identity: what this project is and is not
+* principles: how future work should be judged
+* constraints: what future work must respect or refuse
+* decisions / ADRs: choices future agents should not re-litigate from scratch
+* roadmap direction: strategic sequencing above ordinary plans and tickets
+* principle fragments: small durable fragments that are not yet core-constitution or ADR shaped
+
+If the truth is live execution, it does not belong here. If the truth is intended
+behavior, it belongs in the behavior/spec layer when that exists. If the truth is
+accepted explanation, it belongs in knowledge. Constitution is for
+judgment that should shape future work.
+
+## When Records Change
+
+Before creating, updating, retiring, or superseding constitutional records:
+
+1. Inspect the constitutional surface.
+2. Read the active core constitution when it exists.
+3. Read active top-level principle fragments relevant to the change.
+4. Find and read active nested records relevant to the change by slug, ID, title,
+   topic, referenced subsystem, or grep result.
+5. Read superseded, retired, or completed records only when needed to understand
+   precedent or resolve a reference.
+6. Identify the constitutional shape being changed.
+7. Read the relevant shape reference.
+8. Summarize the existing durable judgment and the proposed change.
+9. Ask about the first material uncertainty before mutating files.
+
+Use these references:
+
+* `references/core-constitution.md` for `.loom/constitution/constitution.md`
+* `references/decision-records.md` for ADRs and citable decisions
+* `references/roadmap-records.md` for roadmap direction
+* `references/principle-fragments.md` for lightweight top-level principle fragments
+
+If the shape is unclear, route before writing. Do not guess and create a record.
+
+## Update Posture
+
+The core constitution is a living document when it exists. Amend it directly when
+the broad project frame changes.
+
+Decision records are historical precedent. If the decision changes materially,
+create a new decision and mark the old one `superseded`.
+
+Roadmaps are strategic records, not progress logs. Minor clarifications are fine;
+material strategic changes usually deserve a successor roadmap or an explicit
+supersession.
+
+Principle fragments can be edited while they remain small. If a fragment becomes
+broad project frame, fold it into the core constitution. If it becomes a concrete
+choice, promote it to a decision record.
 
 ## Done Means
 
-- the durable principle or direction is explicit
-- downstream work can now inherit the judgment
-- the record reads as policy, not as a ticket
-- a fresh agent would know how this should influence later work
-- a decision record names its rejected alternatives and the reason each was rejected
+Constitutional work is done when future agents can answer:
 
-## Read In This Order
-
-Read immediately for constitutional changes:
-
-1. `references/record-families.md` when deciding whether the change belongs in
-   `constitution:main`, a decision record, or a roadmap.
-2. `references/writing-standard.md` before accepting durable policy language or
-   when the prose risks becoming vague philosophy.
-
-Then read conditionally:
-
-3. `templates/constitution.md` only when creating or reshaping
-   `constitution:main`.
-4. `templates/decision.md` only when recording a citable architectural or
-   policy choice with rejected alternatives.
-5. `templates/roadmap.md` only when durable strategic sequencing belongs above
-   plans.
+* What judgment exists here?
+* What future work does it encourage, constrain, or rule out?
+* What alternative or failure mode should not be rediscovered?
+* What would make this judgment stale, superseded, completed, or retired?
+* Which downstream records or code areas may need to be revisited?

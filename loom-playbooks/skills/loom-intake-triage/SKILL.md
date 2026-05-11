@@ -1,0 +1,181 @@
+---
+name: loom-intake-triage
+description: "Use when incoming bugs, feature requests, or external issues need intake disposition before a ready Loom ticket exists: classification, reproduction, info request, worker/operator readiness, duplicate handling, or rejection rationale."
+---
+
+# loom-intake-triage
+
+Intake triage is a front-door playbook for incoming work.
+
+It classifies reports, gathers enough context to decide the next route, and turns
+ready work into Loom tickets or records without letting external trackers become
+the live execution ledger.
+
+## Core Dependency
+
+Use `loom-core` first. This playbook composes `loom-tickets`, `loom-evidence`,
+`loom-research`, `loom-specs`, `loom-knowledge`, `loom-constitution`,
+`loom-ralph`, and `loom-audit`.
+
+External issues, labels, and comments can transport work. Loom tickets carry live
+execution state.
+
+## Use This Playbook When
+
+Use this playbook when:
+
+- a bug report or feature request arrives
+- an external issue needs classification or response
+- a maintainer asks what needs attention
+- a report may be ready for a worker packet
+- an issue needs more information from the reporter
+- a request should be rejected with durable rationale
+- external labels or states need reconciliation with Loom tickets
+
+Skip it when the work already has a ready Loom ticket and no intake decision
+remains.
+
+## Route
+
+Use this route:
+
+```text
+collect -> classify -> investigate -> decide -> brief -> record -> synchronize
+```
+
+## Collect
+
+Read the full report before deciding.
+
+Collect:
+
+- reporter claim and desired outcome
+- current behavior and expected behavior
+- comments, attachments, logs, screenshots, or reproduction steps
+- existing labels, state, priority, and linked issues
+- similar prior tickets, knowledge, rejected requests, specs, and decisions
+- relevant code, tests, and records
+
+If posting to an external tracker, disclose AI-generated triage when project norms
+or tracker policy require it.
+
+## Classify
+
+Classify by category and state.
+
+Useful categories:
+
+- bug
+- enhancement
+- question
+- documentation
+- maintenance
+- duplicate
+- out of scope
+
+Useful states:
+
+- needs triage
+- needs info
+- ready for worker
+- ready for operator
+- blocked by decision
+- duplicate
+- rejected
+
+If external labels conflict, flag the conflict before changing anything.
+
+## Investigate
+
+Investigate enough to support the triage decision.
+
+For bugs:
+
+- attempt reproduction before marking ready
+- capture command, environment, and result
+- route confirmed or important failures to `loom-debugging-and-error-recovery`
+- create evidence when reproduction or failed reproduction matters
+
+For enhancements:
+
+- check specs, constitution decisions, knowledge, and prior rejected requests
+- identify whether behavior is already specified, out of scope, or ambiguous
+- route unclear behavior to `loom-specs` or `loom-domain-language-and-decisions`
+
+For worker readiness:
+
+- ensure current and desired behavior are clear
+- name key interfaces or concepts without relying on brittle line numbers
+- include acceptance criteria and out-of-scope boundaries
+- identify evidence expectations and stop conditions
+
+## Decide
+
+Choose a disposition:
+
+- create or update a Loom ticket
+- request more information
+- route to spec, research, plan, constitution, evidence, audit, or knowledge first
+- mark ready for Ralph packet or local implementation
+- mark ready for operator decision
+- reject or defer with rationale
+- close as duplicate with link to the owning record or issue
+
+Do not create executable tickets from vague requests. Shape first.
+
+## Brief
+
+When work is ready for a worker, write the ticket or packet brief in durable terms.
+
+Include:
+
+- category
+- summary
+- current behavior
+- desired behavior
+- key interfaces or concepts
+- acceptance criteria
+- evidence expectations
+- out-of-scope boundaries
+- related records and external links
+
+Prefer behavior and interfaces over file paths and line numbers. Paths are useful
+when they orient the worker, but brittle paths should not be the contract.
+
+## Record
+
+Route durable results:
+
+- ticket for executable work and live state
+- evidence for reproduction, screenshots, logs, or failed reproduction
+- specs for intended behavior
+- research for source uncertainty or investigation
+- knowledge for accepted recurring context, rejected-request rationale, or atlas
+- constitution for scope, policy, or precedent decisions
+
+Rejected enhancement rationale should be searchable. Use knowledge or constitution
+depending on whether the rejection is reusable context or durable policy.
+
+## Synchronize
+
+If an external tracker is involved, mirror only the useful summary back out:
+
+- link to the Loom ticket or record when appropriate
+- ask specific questions for `needs info`
+- state why an issue is ready for worker or operator
+- state rejection or duplicate rationale with links
+- avoid exposing internal-only notes that are not useful to the reporter
+
+External state should reflect Loom state, not redefine it.
+
+## Done Means
+
+The intake triage pass is done when:
+
+- the report was read with prior context checked
+- category and state are explicit
+- reproduction or source investigation is proportionate to the claim
+- ready work has a ticket or packet-ready brief
+- unclear work has specific questions or a shaping route
+- rejected or duplicate work has durable rationale
+- external tracker state, if used, mirrors the Loom decision

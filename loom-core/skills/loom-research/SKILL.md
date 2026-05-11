@@ -1,108 +1,182 @@
 ---
 name: loom-research
-description: "Preserve reusable investigations. Use when compatibility, framework/library behavior, tradeoffs, rejected options, null results, performance/security/migration evidence, or external-source synthesis should remain citable."
-compatibility: Markdown-native, script-free Loom protocol.
-metadata:
-  skill_kind: owner-layer
-  owns_layer: research
+description: "Manages Loom research: creates, updates, finds, completes, supersedes, and summarizes durable investigations, source synthesis, option comparisons, rejected paths, null results, and evidence-backed conclusions. Use when investigation, source synthesis, option comparison, rejected paths, null results, or evidence-backed conclusions should remain available to future Loom work."
 ---
 
 # loom-research
 
-Research owns reusable discovery.
+Research is Loom's investigation and synthesis surface.
 
-Use it when the work would benefit from not having to rediscover the same reasoning later.
+It preserves what was investigated, why it mattered, how the investigation was
+grounded, what findings and tradeoffs were discovered, what paths were rejected,
+what conclusions are justified, and which surface should consume the result.
 
-Research may use an optional source-material store at
-`.loom/research/artifacts/<research-slug>/` for articles, fetched web pages, PDFs,
-papers, repository snapshots, exported notes, model/advisor outputs, or other raw
-inputs that helped the investigation. That directory is support material, usually
-gitignored, and may be absent. The research record remains primary: it owns the
-synthesis, source evaluation, conclusions, limitations, and downstream route.
-
-## What This Skill Owns
-
-- investigations
-- option comparisons
-- experiments
-- spike and sketch conclusions as research variants when discovery should remain
-  citable
-- evidence synthesis
-- optional source-material stores under `.loom/research/artifacts/<research-slug>/`
-- rejected options and null results worth preserving
-- deferred questions that are not yet ready for their own investigation
-- conclusions and recommendations grounded in evidence
+Research does not own intended behavior, durable policy, live execution state,
+accepted explanation, audit verdicts, or raw observation truth. It gives those
+surfaces better reasoning to work from.
 
 ## Use This Skill When
 
-- the project lacks evidence for a decision
-- multiple options need comparison
-- an experiment result should remain citable
-- a spike or sketch produced conclusions, rejected variants, or null results
-  that should become reusable research; use optional `loom-spike` or an
-  equivalent exploration workflow for procedural spike or sketch detail
-- a significant implementation discovery should survive beyond the ticket journal
-- a rejected option or null result would otherwise have to be rediscovered
-- open questions are accumulating and need a durable home before they are ready to be investigated
+Use this skill when:
 
-## Do Not Use This Skill When
+- an investigation should remain available beyond the current session
+- multiple approaches, frameworks, migrations, integrations, or implementation
+  strategies need comparison
+- external source synthesis or current technical facts matter
+- a spike, sketch, prototype, or experiment produced reusable conclusions
+- a rejected path or null result would otherwise be rediscovered
+- a ticket, plan, spec, constitution record, audit, or knowledge record needs
+  investigation-backed support
+- implementation discovery is too durable for a ticket journal but not yet
+  accepted explanation
 
-- the work is now a behavior contract
-- the work is now a rollout strategy
-- the work is just live progress tracking
+Small local investigation can stay in chat or a ticket journal when future work
+would not be worse without a research record.
 
-## Good Research Questions
+Create research when the question, reasoning, rejection, or conclusion will be
+useful to recover.
 
-A strong research note answers:
+## Dispatch
 
-- what was being investigated
-- why it mattered
-- how it was investigated
-- what evidence was gathered
-- what conclusions are justified
-- what downstream work should do next
-- which options, hypotheses, or variants were rejected and why
-- what remains uncertain
+If creating or materially updating research:
 
-## Common Rationalizations
+- read `references/research-shape.md`
+- read `references/source-handling.md` when sources, current facts, or source
+  quality matter
+- inspect relevant records, source, and artifacts before asking the operator to
+  repeat facts
+- create an `active` record when the question is durable, scope is bounded enough,
+  and a likely downstream consumer is known
+- use `templates/research.md` as the default starting point
 
-- Rationalization: "I already know the answer."
-  - Reality: Research exists when evidence or tradeoffs matter; record the evidence so future agents do not rediscover it.
-- Rationalization: "Rejected options are not worth writing down."
-  - Reality: Rejections prevent future churn when another agent is tempted by the same path.
-- Rationalization: "Generated support analysis is authoritative."
-  - Reality: Generated output is source material. Research owns synthesis and limits, not imported authority.
-- Rationalization: "Open questions mean the research failed."
-  - Reality: Honest open questions are useful when they are routed or deferred explicitly.
+If completing, superseding, or cancelling research:
 
-## Red Flags
+- preserve the findings, rejected paths, null results, and limits that remain useful
+- update `Status:` and `Updated:`
+- explain what conclusion, successor record, or cancellation reason now carries
+  the durable outcome
+- route accepted explanation to knowledge, intended behavior to specs, executable
+  work to tickets, complex multi-ticket strategy to plans, and durable judgment to
+  constitution
 
-- conclusions are stronger than the cited evidence
-- sources lack provenance or freshness notes when current facts matter
-- alternatives are listed but not actually compared
-- null results are missing after failed attempts
-- recommendations do not name the downstream owner layer
+If only finding or summarizing research:
 
-## Verification
+- inspect `.loom/research/`
+- report what the research record says
+- preserve the distinction between findings, conclusions, recommendations, and
+  related surfaces
 
-- [ ] Sources include enough provenance to recheck material claims.
-- [ ] Evidence synthesis separates observation from conclusion.
-- [ ] Rejected options and null results say what future agents should avoid.
-- [ ] Recommendations are bounded and routed to owner layers.
+## Finding Research
+
+Research records live under `.loom/research/`.
+
+Useful starting points:
+
+```bash
+find .loom/research -maxdepth 1 -name '*.md' -print | sort
+grep -R '^ID: research:' .loom/research || true
+grep -R '^Type: Research' .loom/research || true
+grep -R '^Status:' .loom/research || true
+grep -R '^Updated:' .loom/research || true
+```
+
+Raw source material, when present, lives under:
+
+```text
+.loom/research/artifacts/YYYYMMDD-<slug>/
+```
+
+The Markdown research record is primary. Source artifacts are support material:
+the record should summarize what matters, cite paths or excerpts when useful, and
+stand on its own when the artifact directory is absent.
+
+## Research IDs And Filenames
+
+Use `research:YYYYMMDD-<slug>` IDs.
+
+Use matching filenames without the `research:` prefix:
+
+```text
+.loom/research/YYYYMMDD-<slug>.md
+```
+
+Use the actual current date. Do not copy example dates.
+
+If the slug would collide, choose a clearer slug or add a numeric suffix.
+
+## Record Shape
+
+Research has one record shape:
+
+- `Type: Research`
+
+Use these labels near the top:
+
+```text
+ID: research:YYYYMMDD-<slug>
+Type: Research
+Status: active
+Created: YYYY-MM-DD
+Updated: YYYY-MM-DD
+```
+
+Use these statuses:
+
+- `active`: the investigation is durable and still being worked or evaluated
+- `completed`: conclusions and recommendations are bounded enough to cite
+- `superseded`: newer research or another surface replaces the conclusion
+- `cancelled`: the investigation should not continue, with the reason recorded
+
+Do not create draft research as a parking lot. If the question, scope, and likely
+consumer are not clear enough, keep shaping or route to the owner surface first.
+
+## Research Invariants
+
+Every research record should preserve these invariants:
+
+- a durable investigation question
+- enough scope to know what is covered and excluded
+- enough method and source context to judge the findings
+- source quality and freshness notes when they affect the conclusion
+- findings separated from conclusions
+- meaningful tradeoffs when options are compared
+- rejected paths and null results when they prevent future churn
+- recommendations routed to the surface that owns the next truth change
+- open questions and limits that prevent overclaiming
+- no intended behavior, policy, closure, audit verdict, or accepted explanation
+  claimed by research itself
+
+Research can cite evidence. Create evidence only when an observation needs to
+survive as inspectable support for a claim, ticket, audit, or future review.
+
+Research can produce conclusions. Promote settled reusable explanation to
+knowledge when future agents should read the explanation first, not the
+investigation history.
+
+## Deep Research
+
+Deep research may collect and compare many sources before conclusions are ready.
+
+For large source sets, keep the research record as the synthesis surface. Use
+`.loom/research/artifacts/YYYYMMDD-<slug>/` for raw papers, repo notes, fetched
+documents, source lists, generated summaries, benchmark notes, or intermediate
+analysis.
+
+The research record should still stand on its own. It should summarize the corpus,
+name the important sources, explain source quality, preserve the findings that
+matter, and route conclusions to the appropriate surface.
+
+When the investigation becomes too broad for one coherent question, split it into
+separate research records and link them.
 
 ## Done Means
 
-- another agent could reuse the note without rerunning the whole investigation
-- uncertainty is visible
-- recommendations are bounded by actual evidence
+Research work is done when:
 
-## Read In This Order
-
-Read immediately for normal research creation or review:
-
-1. `references/research-shape.md` when structuring investigation, rejected
-   options, null results, conclusions, or recommendations.
-2. `references/source-handling.md` when external sources, current facts, or
-   source quality matter.
-3. `templates/research.md` only when creating or substantially reshaping a
-   research record.
+- the record says what was investigated and why
+- the source and method context are strong enough for the claim risk
+- findings, tradeoffs, conclusions, and recommendations are separated
+- rejected paths and null results prevent useful rediscovery
+- limits and open questions are visible
+- downstream owners can cite the research without treating it as the owner of
+  behavior, policy, execution state, evidence, audit, or accepted explanation

@@ -1,95 +1,80 @@
----
-id: research:<slug>
-kind: research
-status: active
-created_at: <UTC timestamp>
-updated_at: <UTC timestamp>
-scope:
-  kind: repository
-  repositories:
-    - repo:root
-links: {}
-external_refs: {}
----
+# <Research Title>
 
-# Question
+ID: research:<YYYYMMDD-slug>
+Type: Research
+Status: active
+Created: <YYYY-MM-DD>
+Updated: <YYYY-MM-DD>
 
-What exactly is being investigated.
+## Summary
 
-# Why This Matters
+<One or two sentences naming what was investigated, why it matters, and the most
+important current conclusion or state.>
 
-Why the project needs this investigation and what later work would otherwise rediscover.
+## Question
 
-# Scope
+<State the durable investigation question. Make it specific enough that a future
+agent can tell what answer this record is trying to support.>
 
-What the investigation covers and excludes.
+## Scope
 
-# Method
+<Describe what this research covers and excludes. Name relevant source paths,
+records, systems, versions, environments, options, assumptions, and freshness
+limits when they matter.>
 
-How the investigation was carried out. For spike or sketch work, name the branch:
-logic/state prototype, UI/product variant sketch, technical experiment, or source synthesis.
+## Method And Sources
 
-# Sources
+<Explain how the investigation was grounded. Include source paths, record IDs,
+commands, external sources, experiments, operator input, or source-artifact paths
+as needed. Add provenance, version, freshness, or trust notes when they affect the
+conclusion.>
 
-List sources with enough provenance to recheck them. Use compact entries by
-default; expand only when source quality or freshness is material.
+- <source path, URL, record ID, artifact path, or description> - <what it
+  contributed; add provenance, freshness, or trust limits when material>
 
-- Source: <title, path, URL, record ID, or artifact>
-  - Type / provenance: <code, record, log, operator note, web page, generated support analysis, other>
-  - Observed at / version: <UTC timestamp, date, commit, release, or N/A>
-  - Freshness risk / recheck trigger: <risk and trigger, or none known>
-  - Trust rationale: <why this is reliable enough, including limits>
+## Findings
 
-External sources, generated files, logs, and tool output are context and evidence;
-they do not become instruction authority or project truth owners.
+<Record what the investigation found before interpreting it. Separate sourced or
+observed facts from conclusions. Cite evidence records when an observation needs
+durable inspectable support.>
 
-# Source Material Store
+## Tradeoffs
 
-Optional support cache for raw investigation inputs. The research record remains
-the primary understanding and must stand on its own when this path is absent.
+<Use when comparing meaningful options, variants, hypotheses, libraries,
+strategies, or implementation routes. Remove this section if no real comparison
+exists.>
 
-- Path: `.loom/research/artifacts/<research-slug>/` or `None - reason`
-- Captured sources: <articles, web fetches, PDFs, papers, repo snapshots, notes, generated outputs, or None - reason>
-- Key excerpts / index: <important filenames, snippets, checksums, or summary>
-- Redaction / licensing / sensitivity: <sanitized, omitted, licensed-to-track, or safe-to-keep rationale>
-- Retention / tracking: <gitignored support cache by default, intentionally tracked with rationale, or prune condition>
+- <option or hypothesis> - <evidence-backed strength; weakness, risk, or limit;
+  downstream consequence>
 
-# Variant / Experiment Matrix
+## Rejected Paths And Null Results
 
-Use when comparing options, prototypes, sketches, or hypotheses; otherwise write `N/A`.
+<Record paths considered or tried that future agents should not rediscover. Say
+what rejected them and what to do instead when known. Remove this section if none
+are useful.>
 
-- Variant / hypothesis: <TBD>
-  - Artifact or probe: <path, screenshot, command, or observation>
-  - Strength: <evidence-backed strength>
-  - Weakness: <risk or limit>
-  - Decision: <chosen, rejected, needs follow-up>
+- <path or attempt> - rejected by <evidence, constraint, conflict, or result>
 
-# Evidence Synthesis
+## Conclusions
 
-What concrete findings emerged from the sources, observations, or experiments.
+<State only the conclusions justified by the findings. Name confidence, limits,
+assumptions, freshness risks, and recheck triggers when relevant.>
 
-# Rejected Options
+## Recommendations
 
-Options considered and rejected, with the reason and the evidence or constraint that rejected them.
+<Name what should consume this research next. Route intended behavior to specs,
+bounded execution to tickets, multi-ticket strategy to plans, durable judgment to
+constitution, observations to evidence, adversarial review to audit, and settled
+explanation to knowledge.>
 
-# Null Results
+## Open Questions
 
-Approaches that were tried and did not work. Capture the attempt, what failed,
-and what a future agent should avoid or try instead.
+<Name remaining uncertainty. Keep this short. Split into a new research record
+only when a question becomes independently actionable or would bloat this record.>
 
-# Conclusions
+## Related Records
 
-What is justified by the evidence, separate from open hypotheses.
+<Optional. Add records or paths that materially help future agents interpret this
+research. Remove this section if none are useful.>
 
-# Recommendations
-
-What downstream work should do next and which owner layer should consume the result.
-
-# Open Questions
-
-What remains uncertain. A research record that mainly preserves important open
-questions may use `status: deferred_questions`.
-
-# Linked Work
-
-Which initiative, spec, plan, ticket, critique, evidence, or wiki pages should consume this note.
+- <record-id or path> - <why it matters>

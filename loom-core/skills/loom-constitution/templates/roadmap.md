@@ -1,44 +1,42 @@
----
-id: roadmap:<slug>
-kind: roadmap
-status: active
-created_at: <UTC timestamp>
-updated_at: <UTC timestamp>
-scope:
-  kind: workspace
-links: {}
----
+# Roadmap: <Theme>
 
-# Strategic Theme
+ID: roadmap:<slug>
+Type: Constitution Roadmap
+Status: draft
+Created: <YYYY-MM-DD>
+Updated: <YYYY-MM-DD>
 
-Name the theme or long-running direction.
+## Starting Point
 
-# Why Now
+Use this for durable strategic direction above ordinary plans and tickets. A
+roadmap is not a progress log.
 
-Why this deserves focus in the current phase.
+## Direction
 
-# Focus Areas
+The strategic direction future agents should inherit.
 
-What domains or workstreams matter inside this theme.
+## Current Chapter
 
-# Milestones
+The chapter the project is in now and the judgment that should shape near-term
+work.
 
-Policy-level strategic checkpoints. Do not use roadmap milestones for initiative
-success tracking, plan strategy details, or ticket progress state.
+## Chapters Or Milestones
 
-# Sequencing Assumptions
+Strategic chapters, milestones, or signals that describe the arc. Do not turn
+these into ticket checklists.
 
-What ordering assumptions or preconditions shape the roadmap.
+## Bets, Tensions, And Non-Goals
 
-# Downstream Work
+Tradeoffs, sequencing assumptions, unresolved tensions, and tempting distractions
+that matter to the roadmap.
 
-Which initiatives, specs, plans, or tickets should exist beneath this roadmap.
+## Revisit Or Supersede If
 
-# Status Summary
+What would make this roadmap completed, stale, superseded, retired, split, or
+replaced.
 
-What is true about the roadmap right now.
+## Related
 
-# Completion Basis
-
-When `status: completed`, explain which milestones were reached and what
-roadmap, initiative, or plan owns the next chapter.
+Optional. Add refs to decisions, principle fragments, plans, specs, tickets,
+research, evidence, audit, knowledge, code areas, or docs when useful. Keep live
+progress elsewhere.

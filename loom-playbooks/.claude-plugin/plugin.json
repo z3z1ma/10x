@@ -1,6 +1,6 @@
 {
   "name": "loom-playbooks",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Optional Loom workflow playbook skills for Claude Code; requires loom-core for using-Loom doctrine.",
   "author": {
     "name": "z3z1ma"

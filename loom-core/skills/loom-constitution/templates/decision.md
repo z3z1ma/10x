@@ -1,37 +1,41 @@
----
-id: decision:<nnnn>
-kind: decision
-status: active
-created_at: <UTC timestamp>
-updated_at: <UTC timestamp>
-scope:
-  kind: repository
-  repositories:
-    - repo:root
-links: {}
----
+# Decision 0001: <Title>
 
-# Decision
+ID: decision:0001
+Type: Constitution Decision
+Status: draft
+Created: <YYYY-MM-DD>
+Updated: <YYYY-MM-DD>
 
-State the choice plainly.
+## Starting Point
 
-# Why This Decision Exists
+Use this for an architectural or policy choice future agents should cite instead
+of re-litigating from scratch.
 
-Why the project is making this choice now.
+## Context
 
-# Alternatives Considered
+Why this decision is needed now, what pressure created it, and what existing
+judgment or precedent it must respect.
 
-What other paths were considered and why they were not chosen.
+## Decision
 
-# Consequences
+The choice being made.
 
-What downstream records, workflows, or constraints this choice creates.
+## Alternatives
 
-# Revisit Conditions
+The real options considered and why they were not chosen.
 
-What new evidence, policy change, roadmap shift, or implementation discovery
-should cause this decision to be reopened, superseded, or retired.
+## Consequences
 
-# Supersession
+What future agents should do differently after this decision, including accepted
+costs, constraints, risks, and tradeoffs.
 
-What this replaces, narrows, or leaves open.
+## Revisit Or Supersede If
+
+Evidence, assumptions, project changes, or failure modes that would make this
+decision stale, wrong, superseded, or retired.
+
+## Related
+
+Optional. Add refs to related decisions, roadmap records, principle fragments,
+plans, specs, tickets, research, evidence, audit, knowledge, code areas, or docs
+when useful.

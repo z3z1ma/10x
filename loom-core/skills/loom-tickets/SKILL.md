@@ -1,202 +1,241 @@
 ---
 name: loom-tickets
-description: "Maintain bounded execution and acceptance. Use when adding or changing code, tests, docs, config, refactors, migrations, cleanup, blockers, evidence/review disposition, or any done/close/acceptance claim."
-compatibility: Markdown-native, script-free Loom protocol.
-metadata:
-  skill_kind: owner-layer
-  owns_layer: ticket
+description: "Manages Loom tickets: creates, scopes, resumes, executes from, updates, blocks, reviews, closes, and cancels self-contained bounded work units under .loom/tickets. Use whenever the user mentions tickets, scoping changes, implementing work, continuation from prior work, or closing/reviewing a scoped work item."
 ---
 
 # loom-tickets
 
-Tickets are where Loom records live execution state.
+Tickets are Loom's fundamental unit of executable work.
 
-That sentence is not metaphorical.
-If execution truth changed, the ticket should absorb it.
+A ticket scopes one bounded change, contains enough instruction and context to
+execute that change from the ticket and its linked records, tracks live execution
+state, names acceptance criteria, records material progress, points to evidence,
+and gives future agents a safe continuation point.
 
-## What This Skill Owns
-
-- ticket creation
-- ticket status transitions
-- execution notes
-- ticket-local acceptance criteria when no separate spec owns the contract
-- change class and its evidence / critique implications
-- claim coverage
-- dependencies
-- evidence / critique / retrospective / promotion disposition
-- journal updates
-- acceptance gate behavior
-- acceptance and closure decisions
+A ticket is not a vague issue, planning document, research note, scratchpad,
+transcript summary, or parking lot.
 
 ## Use This Skill When
 
-- new bounded work needs an owner
-- status changed
-- blockers changed
-- evidence changed
-- critique changed what the ticket should say
-- wiki or broader retrospective / promotion follow-through happened, was
-  deferred, or was not required
-- a Ralph run needs to be reconciled
-- acceptance or closure needs to be decided through the ticket-owned gate
+Use this skill when the task involves:
 
-## Do Not Use This Skill When
+- creating a ticket
+- deciding whether work is ready for a ticket
+- shaping executable work into a ticket
+- acting from an existing ticket
+- resuming ticket work
+- updating status, scope, acceptance, current state, blockers, or journal
+- moving work to review
+- closing or cancelling a ticket
+- summarizing or inspecting ticket state
 
-- the real work is still strategic framing
-- the work is still only a behavior contract
-- you are tempted to use a plan or wiki page as the live ledger
+Do not create a ticket to force premature execution.
 
-## The Ticket Standard
+If the work is mainly behavior discovery, sequencing, tradeoff analysis, durable
+policy, architectural judgment, ambiguous intent, or reusable knowledge, route it
+to the appropriate surface first.
 
-A good ticket should let a fresh agent answer:
+## Dispatch
 
-- what is this
-- why now
-- what is in scope
-- what is out of scope
-- what counts as done
-- which acceptance IDs it covers, when a spec names them
-- which ticket-local `ACC-*` IDs it owns, when no spec owns the acceptance
-  contract
-- what assumptions or decision triggers could change scope or acceptance
-- what evidence exists
-- what the blockers are
-- what remains open, blocked, under review, or ready for acceptance
-- which acceptance IDs are in scope, without redefining the spec contract
-- whether a claim matrix is actually needed, or whether inline coverage is enough
+If creating or shaping a ticket:
 
-## Dependency Model
+- read `references/creating-tickets.md`
+- read `references/ticket-shape.md`
+- inspect relevant records and source before asking the operator to repeat facts
+- create the ticket only when value, executable boundary, scope, context, and
+  acceptance are clear enough to act
+- include enough instruction and record links that the ticket can be executed from
+  the ticket and its linked documents without relying on chat history
 
-Use `depends_on` for hard upstream ticket prerequisites.
+If acting from, resuming, updating, blocking, reviewing, closing, or cancelling a
+ticket:
 
-Use `links:` for softer relationships such as critique, wiki, or related work.
+- read the whole ticket
+- read `references/acting-on-tickets.md`
+- read or already know the records named in `## Related Records`
+- keep work inside the ticket boundary
+- use `loom-ralph` when ticket work is handed to a bounded worker packet
+- update the ticket when future continuation would be worse without the update
 
-## Acceptance Boundary
+If only finding, listing, or summarizing tickets:
 
-Tickets own the live acceptance dossier: scoped acceptance IDs, evidence
-disposition, critique disposition, retrospective / promotion disposition, wiki
-disposition when applicable, accepted risk, blockers, and closure state.
+- inspect `.loom/tickets/`
+- report state without mutating records unless the operator asked for a change
 
-Specs own reusable acceptance contracts. Tickets may own ticket-local acceptance
-criteria only when no separate spec exists and the criteria are scoped to that
-ticket. When a ticket owns local acceptance criteria, write stable local IDs such
-as `ACC-001` in `# Acceptance` and cite them from other records as
-`ticket:<token>#ACC-001`.
+## Finding Tickets
 
-Optional commands, commits, PRs, packets, evidence, critique, and wiki pages may
-feed that dossier. They do not close work by themselves.
+Tickets live under `.loom/tickets/`.
 
-## Native Creation Pattern
-
-A common shell flow copies a ticket template from the installed Loom skill package
-path for the current harness. In this split source checkout, use the core package
-root; in a package-root install, the path may begin with `skills/`.
-
-Use `templates/ticket-lite.md` for a small local ticket when the lightweight
-ledger is enough. Use `templates/ticket.md` as the full copy target when the work
-needs the complete acceptance, review, and follow-through worksheet.
-
-Full-template use, or escalation from lite to full before downstream work depends
-on the ticket, is required when any of these are present:
-
-- high risk
-- public/shared surface
-- multi-ticket scope
-- reusable acceptance
-- migration/security/privacy boundary
-- material ambiguity
-- mandatory critique
-
-When none of those triggers apply, the lite template is acceptable only if it can
-still name scope, acceptance, evidence posture, live status/next move, blockers,
-and journal facts truthfully.
+Useful starting points:
 
 ```bash
-token="$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8)"
-stamp="$(date -u +%Y%m%d)"
-slug="${LOOM_TICKET_SLUG:-}"
-
-case "$slug" in
-  ""|*[!a-z0-9-]*)
-    printf 'Set LOOM_TICKET_SLUG to a lowercase slug before copying.\n' >&2
-    exit 1
-    ;;
-esac
-
-path=".loom/tickets/${stamp}-${token}-${slug}.md"
-template="${LOOM_TICKET_TEMPLATE:-ticket.md}"
-cp "loom-core/skills/loom-tickets/templates/${template}" "$path"
-# package-root install alternative:
-# cp "skills/loom-tickets/templates/${template}" "$path"
+find .loom/tickets -name '*.md' -print | sort
+grep -R '^ID: ticket:' .loom/tickets || true
+grep -R '^Status:' .loom/tickets || true
+grep -R '^Risk:' .loom/tickets || true
+grep -R '^Priority:' .loom/tickets || true
+grep -R '^Depends On:' .loom/tickets || true
 ```
 
-Set `LOOM_TICKET_TEMPLATE=ticket-lite.md` only after choosing the lite shape.
-Then replace the placeholders in the copied file.
+When looking for a specific ticket, prefer ID and filename matches before fuzzy
+search.
 
-## Common Rationalizations
+## Ticket IDs And Filenames
 
-- **"The child said done, so I can close the ticket."** Reality: child output is
-  input. Ticket-owned acceptance, evidence, critique, follow-through, and residual
-  risk decide closure.
-- **"This ticket is small, so evidence can stay in chat."** Reality: small tickets
-  can use small evidence, but acceptance claims still need inspectable support or
-  an explicit `not_required` rationale.
-- **"I'll keep a claim matrix for every ticket because it is safer."** Reality:
-  claim matrices are useful when coverage is complex. For simple tickets they add
-  noise; inline acceptance and evidence links are clearer.
-- **"The plan or packet says what happens next."** Reality: plans sequence and
-  packets bound child work. Tickets own live execution state and acceptance
-  disposition.
+Use `ticket:YYYYMMDD-<slug>` IDs.
 
-## Red Flags
+Use matching filenames without the `ticket:` prefix:
 
-- status says `closed` while evidence, critique, or promotion disposition is still pending
-- acceptance criteria are vague enough that two implementations could both claim success
-- assumptions that change behavior or UX are hidden in execution notes
-- claim matrix rows duplicate simple coverage without adding clarity
-- critique findings are listed without ticket-owned dispositions
+```text
+.loom/tickets/YYYYMMDD-<slug>.md
+```
 
-## Verification
+Use the actual current date. Do not copy example dates.
 
-- [ ] `# Acceptance` names the owner and real covered IDs or ticket-local criteria.
-- [ ] Evidence disposition says whether support is `sufficient`, `insufficient`, `challenged`, `stale`, `superseded`, `pending`, or `not_required`.
-- [ ] Required critique policy and finding dispositions are closure-compatible.
-- [ ] Assumptions or decision triggers are explicit, not silently converted into scope.
-- [ ] Closure, if claimed, cites the ticket-owned acceptance basis.
+If the slug would collide, choose a clearer slug or add a numeric suffix.
+
+## Required Top Labels
+
+Tickets use plain body labels near the top:
+
+```text
+ID: ticket:YYYYMMDD-<slug>
+Type: Ticket
+Status: open
+Created: YYYY-MM-DD
+Updated: YYYY-MM-DD
+Risk: low|medium|high - reason
+```
+
+Add only when useful:
+
+```text
+Priority: low|medium|high - reason
+Depends On: ticket:YYYYMMDD-<slug>
+```
+
+Use `Depends On:` only for hard prerequisites. Do not use it for loose relevance.
+
+Update `Updated:` whenever materially changing status, scope, acceptance, current
+state, blockers, evidence, review posture, or closure state.
+
+## Status Lifecycle
+
+Use this lifecycle:
+
+* `open`: ready to start
+* `active`: execution is underway
+* `blocked`: a concrete blocker prevents safe progress
+* `review`: audit, acceptance review, or final verification is the next honest move
+* `closed`: acceptance is satisfied and the ticket tells a truthful story
+* `cancelled`: the work should not proceed, with the reason recorded
+
+Tickets are not created as drafts.
+
+If material questions remain, keep shaping outside the ticket or route to the
+owning Loom surface.
+
+## Default Template
+
+Use `templates/ticket.md` as the default starting point. Keep the ticket bounded,
+self-contained, grepable, actionable, and safe for continuation.
+
+## Ticket Invariants
+
+Every ticket must preserve these invariants:
+
+* one bounded executable work unit
+* enough context, instruction, and linked records to execute without chat history
+* truthful `Status:`
+* explicit scope boundary
+* concrete `ACC-*` acceptance criteria
+* current state that reflects reality now
+* material progress recorded in the journal
+* evidence proportional to the closure claim
+* related records read before they are relied on
+* no unrelated cleanup
+* no opportunistic batching
+* no ambiguous asks disguised as executable work
+* no silent expansion of scope
+* no closure unless acceptance, evidence, and audit have been handled truthfully
+
+If any invariant stops holding, update the ticket, split the work, block the
+ticket, route back to shaping, or move it to the appropriate surface.
+
+## Working From A Ticket
+
+When executing from a ticket:
+
+* set `Status: active` when work materially begins
+* execute from the ticket and its linked records, not from unstated chat context
+* keep implementation inside the declared scope
+* update Current State when the next agent would otherwise be misled
+* append journal entries for material progress, blockers, decisions, evidence,
+  review, and closure
+* record evidence where the evidence surface expects it
+* do not rewrite acceptance criteria to match the implementation after the fact
+* do not close over unresolved risk by making the ticket prose vaguer
+
+Small edits do not require constant ticket churn. Update the ticket when the graph
+would otherwise stop telling the truth.
+
+## Blocking
+
+Use `Status: blocked` only for a concrete blocker.
+
+A blocked ticket should say:
+
+* what is blocked
+* why progress is unsafe or impossible
+* what is needed to unblock
+* who or what owns the next move, if known
+
+Do not use `blocked` for ordinary uncertainty that should instead return to
+shaping, research, specs, or planning.
+
+## Review And Closure
+
+Use `Status: review` when implementation may be complete but acceptance,
+verification, audit, or final judgment is still the next honest move.
+
+Close only when:
+
+* each `ACC-*` item is satisfied, revised with authority, or explicitly not
+  satisfied with the consequence recorded
+* evidence supports the closure claim
+* audit has happened, or the ticket explains why a separate audit would not add
+  useful trust
+* Current State reflects the final state
+* the Journal records closure
+* remaining risks or follow-ups are explicit
+
+Close when the ticket, evidence, audit state, and affected records tell one
+truthful story.
+
+## Cancelling
+
+Use `Status: cancelled` when the work should not proceed.
+
+A cancelled ticket should record:
+
+* why it was cancelled
+* what changed or was learned
+* whether any partial work remains
+* where the durable truth moved, if anywhere
+
+Cancellation is not failure. It is a truthful terminal state.
 
 ## Done Means
 
-- the ticket tells the truth about live execution
-- status matches reality
-- the current blockers, evidence gaps, review gaps, acceptance gaps, and journal
-  make continuation legible to a fresh agent without a serialized workflow field
-- evidence is linked, fresh enough for the acceptance claim, and explicit about
-  observed support, observed challenge, and limitations; missing evidence is
-  explicitly absent for a reason
-- critique and retrospective / promotion follow-through are linked or explicitly
-  pending, deferred, completed, or not required
-- closure, when claimed, is backed by the ticket-owned acceptance gate
+Ticket work is done when:
 
-## Read In This Order
-
-Read immediately for ticket creation or status updates:
-
-1. `references/state-machine.md` when setting, auditing, or explaining ticket
-   status.
-2. `references/readiness.md` when deciding whether a ticket can become `ready`.
-
-Then read conditionally:
-
-3. `references/dependencies.md` when modeling hard prerequisites or softer
-   links.
-4. `skills/loom-evidence/SKILL.md` when evidence artifacts need to be created,
-   checked, or linked into the acceptance dossier.
-5. `skills/loom-records/references/change-class.md` when selecting evidence,
-   critique profiles, or verification posture from the kind of mutation.
-6. `skills/loom-records/references/claim-coverage.md` when tying the ticket to
-   spec acceptance or critique findings.
-7. `references/local-execution.md` when one bounded code, test, docs, config,
-   refactor, migration, or cleanup change can be executed without a Ralph packet.
-8. `references/acceptance-gate.md` when deciding whether closure is honest.
-9. `templates/ticket-lite.md` or `templates/ticket.md` only when creating a
-   ticket; keep `ticket.md` as the full copy target.
+* the ticket still describes one bounded executable work unit
+* the ticket and its linked records contain enough context to execute or trust the
+  result without chat history
+* `Status:` matches reality
+* `ACC-*` acceptance criteria are satisfied, revised, or explicitly not satisfied
+* evidence and audit state are truthful
+* Current State says where the work stands now
+* the Journal records material progress, blockers, decisions, evidence, review,
+  and closure
+* a future agent can continue or trust closure from the graph

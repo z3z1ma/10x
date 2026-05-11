@@ -1,125 +1,69 @@
----
-id: ticket:<token>
-kind: ticket
-status: proposed
-change_class: "<TBD: choose one change class before saving>"
-risk_class: "<TBD: choose low, medium, or high before saving>"
-created_at: <UTC timestamp>
-updated_at: <UTC timestamp>
-scope:
-  kind: repository
-  repositories:
-    - repo:root
-links: {}
-external_refs: {}
-depends_on: []
----
+# <Ticket Title>
 
-# Summary
+ID: ticket:<YYYYMMDD-slug>
+Type: Ticket
+Status: open
+Created: <YYYY-MM-DD>
+Updated: <YYYY-MM-DD>
+Risk: <low|medium|high> - <reason>
 
-One or two sentences naming the bounded work and the outcome it should produce.
+<!--
+Add only when useful. Remove this comment before saving if unused.
 
-Save-ready rule: replace every placeholder before saving. Keep the gates below,
-but write `None - reason` when a gate is genuinely not applicable.
+Priority: <low|medium|high> - <reason>
+Depends On: <ticket:YYYYMMDD-slug>
+-->
 
-# Context
+## Summary
 
-Why this exists now. Cite upstream initiative, research, spec, or plan records
-when they constrain the work.
+<Describe the bounded executable work unit in plain language.
 
-# Scope
+Include enough context for an acting agent to understand what change is needed,
+why it matters, and what outcome should exist when the ticket is complete. The
+ticket should be executable from this record and its linked records without
+relying on chat history.>
 
-In:
+## Related Records
 
-- <TBD: what belongs in this ticket>
+<List only records an acting agent should read before work. Say why each matters.
+Remove this section if no related records materially constrain the ticket.>
 
-Out:
+- `<record-id or path>` - <why this record matters>
 
-- <TBD: what must not happen in this ticket>
+## Scope
 
-Assumptions / decision triggers:
+<Describe the executable boundary in prose.
 
-- <TBD or None - no material assumptions>:
-  - Reversible: <yes/no>
-  - Blocks execution: <yes/no>
-  - Disposition: <accepted, ask user, route to owner, or reason>
+Name what may change, what must not change, and any nearby work that should not be
+pulled into this ticket. Be specific enough that an acting agent can stay inside
+the boundary without asking what is in scope.>
 
-# Acceptance
+## Acceptance
 
-Owner: <TBD: spec-owned or ticket-local>
+Use stable acceptance IDs. Each criterion should be observable and should name
+the evidence and audit posture needed for closure.
 
-Criteria / covered IDs:
+- ACC-001: <observable condition that must be true>
+  - Evidence: <test, command, inspection, artifact, or explanation that will prove it>
+  - Audit: <target or lens for closure audit, or why separate audit would not add useful trust>
 
-- <TBD: spec:<slug>#ACC-001, initiative:<slug>#OBJ-001, or ticket:<token>#ACC-001>
+- ACC-002: <observable condition that must be true>
+  - Evidence: <test, command, inspection, artifact, or explanation that will prove it>
+  - Audit: <target or lens for closure audit, or why separate audit would not add useful trust>
 
-Ticket-local criteria, only when no spec owns the reusable contract:
+## Current State
 
-- ACC-001: <TBD: specific, testable ticket-local criterion, or remove>
+<Describe where the work stands now.
 
-Optional claim matrix: add a compact table only when several claims, evidence
-records, or critique findings make the coverage state hard to read inline. Use
-`skills/loom-records/references/claim-coverage.md` for status vocabulary.
+For a new ticket, say whether it is ready to start and name the first likely move.
+If anything prevents safe execution, set Status: blocked instead of open and
+describe the blocker here.>
 
-# Current State
+## Journal
 
-Status rationale:
+Append material updates at the bottom. Record progress, decisions, blockers,
+evidence, audit results, status changes, scope changes, acceptance changes, and
+closure.
 
-Blockers:
-
-Execution notes:
-
-Continuation note:
-
-Name the owner facts that make the next action obvious. Do not serialize a route
-token or let this note replace ticket status, blockers, evidence, or critique
-disposition.
-
-# Evidence
-
-Disposition: <TBD: pending, sufficient, insufficient, challenged, stale, superseded, or not_required>
-
-Records:
-
-- <TBD: evidence:<slug> — supports/challenges <claim IDs>, or None - no evidence yet>
-
-Gaps / limits:
-
-# Review And Follow-Through
-
-Critique policy: <TBD: optional, recommended, or mandatory>
-Critique rationale: <TBD: why this policy fits the change and risk, or why review is not required>
-Critique disposition: <TBD: pending, blocking, completed, deferred, or not_required>
-
-Required critique profiles:
-
-- <TBD: profile names, or None - reason>
-
-Findings:
-
-- <TBD: critique:<slug>#FIND-001 — ticket-owned disposition, or None - no critique yet>
-
-Promotion disposition: <TBD: pending, blocking, completed, deferred, or not_required>
-Promotion / deferral rationale: <TBD: what was promoted, why deferred, or why not required>
-
-Promoted / deferred:
-
-Wiki disposition: <TBD: N/A, wiki:<slug>, deferred, or not_required with reason>
-
-# Acceptance Decision
-
-Required before closure when acceptance, accepted risk, or operator provenance
-needs to be explicit.
-
-Accepted by:
-Accepted at:
-Basis:
-Residual risks:
-
-# Dependencies
-
-Hard prerequisites belong in frontmatter `depends_on`; explain important context
-here when useful.
-
-# Journal
-
-- <UTC timestamp>: <material update>
+- <YYYY-MM-DD>: Created ticket with Status `open`. <Briefly state the source of
+  the scope and the intended first move.>
