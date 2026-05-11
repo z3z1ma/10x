@@ -1,0 +1,434 @@
+loom-playbooks/skills/loom-frontend-ui-engineering/SKILL.md
+  human 3
+loom-playbooks/skills/loom-code-review-and-quality/SKILL.md
+  human 3
+loom-playbooks/skills/loom-code-simplification/SKILL.md
+  human 3
+loom-playbooks/skills/loom-test-driven-development/SKILL.md
+  human 3
+loom-playbooks/skills/loom-debugging-and-error-recovery/SKILL.md
+  human 3
+loom-playbooks/skills/loom-api-and-interface-design/SKILL.md
+  human 3
+loom-playbooks/skills/loom-prototype-and-spike/SKILL.md
+  human 3
+loom-playbooks/skills/loom-incremental-implementation/SKILL.md
+  human 3
+  ses_1fae66208ffeqgZwZROyRX1VSD 63,124,126
+loom-playbooks/skills/loom-domain-language-and-decisions/SKILL.md
+  human 3
+loom-playbooks/skills/loom-browser-testing-with-devtools/SKILL.md
+  human 3
+loom-playbooks/skills/loom-idea-refine/SKILL.md
+  human 3
+loom-playbooks/skills/loom-git-workspace-isolation/SKILL.md
+  human 3
+loom-playbooks/skills/loom-intake-triage/SKILL.md
+  human 3
+loom-playbooks/skills/loom-ci-cd-and-automation/SKILL.md
+  human 3
+loom-playbooks/skills/loom-deprecation-and-migration/SKILL.md
+  human 3
+loom-playbooks/skills/loom-doubt-driven-development/SKILL.md
+  human 3
+loom-playbooks/skills/loom-shipping-and-launch/SKILL.md
+  human 3
+loom-playbooks/skills/loom-parallel-worker-coordination/SKILL.md
+  human 3
+loom-playbooks/skills/loom-review-response/SKILL.md
+  human 3
+loom-playbooks/skills/loom-security-and-hardening/SKILL.md
+  human 3
+loom-playbooks/skills/loom-source-driven-development/SKILL.md
+  human 3
+loom-playbooks/skills/loom-performance-optimization/SKILL.md
+  human 3
+loom-playbooks/skills/loom-codebase-atlas/SKILL.md
+  human 3
+ARCHITECTURE.md
+  human 112-115
+loom-playbooks/skills/loom-architecture-deepening/SKILL.md
+  human 3
+loom-playbooks/skills/loom-branch-finish/SKILL.md
+  human 3
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-frontend-ui-engineering/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-code-review-and-quality/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-code-simplification/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-test-driven-development/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-debugging-and-error-recovery/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-api-and-interface-design/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-prototype-and-spike/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        },
+        {
+          "accepted_lines": 3,
+          "added_lines": 0,
+          "deleted_lines": 0,
+          "hash": "ses_1fae66208ffeqgZwZROyRX1VSD",
+          "lines": "63,124,126",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-incremental-implementation/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-domain-language-and-decisions/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-browser-testing-with-devtools/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-idea-refine/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-git-workspace-isolation/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-intake-triage/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-ci-cd-and-automation/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-deprecation-and-migration/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-doubt-driven-development/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-shipping-and-launch/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-parallel-worker-coordination/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-review-response/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-security-and-hardening/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-source-driven-development/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-performance-optimization/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-codebase-atlas/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 4,
+          "added_lines": 4,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "112-115",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "ARCHITECTURE.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-architecture-deepening/SKILL.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1,
+          "added_lines": 1,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "3",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "loom-playbooks/skills/loom-branch-finish/SKILL.md"
+    }
+  ],
+  "base_commit_sha": "211fd0b73821ad91f4140f3cbb336138734ccf45",
+  "branch": "loom-humanization",
+  "commit_sha": "a46501c5622ab5ee8e77178a819fde7cd38988b7",
+  "commit_time": "2026-05-10T18:01:01-07:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.3",
+  "prompts": {
+    "human": {
+      "accepted_lines": 29,
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "overriden_lines": 0,
+      "total_additions": 29,
+      "total_deletions": 0
+    },
+    "ses_1fae66208ffeqgZwZROyRX1VSD": {
+      "accepted_lines": 3,
+      "agent_id": {
+        "id": "ses_1fae66208ffeqgZwZROyRX1VSD",
+        "model": "openai/gpt-5.5",
+        "tool": "opencode"
+      },
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "overriden_lines": 0,
+      "total_additions": 3,
+      "total_deletions": 39
+    }
+  },
+  "repo": "https://github.com/z3z1ma/agent-loom.git",
+  "schema_version": "authorship/3.0.0"
+}
