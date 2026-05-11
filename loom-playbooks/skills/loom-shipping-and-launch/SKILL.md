@@ -10,11 +10,14 @@ Shipping and launch is a release-readiness playbook.
 It checks the graph, verifies the artifact, defines rollout and rollback, records
 launch evidence, and runs retrospective follow-up.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-plans`, `loom-tickets`,
-`loom-evidence`, `loom-audit`, `loom-specs`, `loom-knowledge`, and
-`loom-retrospective`.
+Route durable results through `loom-plans`, `loom-tickets`, `loom-evidence`,
+`loom-audit`, `loom-specs`, `loom-knowledge`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 ## Use This Playbook When
 
@@ -125,7 +128,7 @@ rollout risk, migration integrity, security, or user impact.
 ## Communicate
 
 Draft release notes, changelog entries, PR summaries, or operator updates from
-Core records and evidence.
+Loom records and evidence.
 
 Do not claim more than tickets, specs, evidence, and audit support.
 
@@ -150,5 +153,5 @@ The launch pass is done when:
 - readiness checks match the release risk
 - rollout and rollback paths are explicit
 - launch observations are recorded when durable claims depend on them
-- communication mirrors Core records and evidence
+- communication mirrors Loom records and evidence
 - follow-up, cleanup, and retrospective routes are visible

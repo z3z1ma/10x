@@ -11,13 +11,17 @@ It challenges a proposed change against the project's current vocabulary,
 behavior, and decisions, then routes resolved language to knowledge and durable
 tradeoffs to constitution decisions.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-knowledge`,
-`loom-constitution`, `loom-research`, `loom-specs`, `loom-plans`,
-`loom-tickets`, and `loom-evidence`.
+Route durable results through `loom-knowledge`, `loom-constitution`,
+`loom-research`, `loom-specs`, `loom-plans`, `loom-tickets`, and
+`loom-evidence`.
 
-It does not create a separate glossary or decision-record surface. Core records
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
+
+It does not create a separate glossary or decision-record surface. Loom records
 carry the durable results.
 
 ## Use This Playbook When

@@ -10,11 +10,14 @@ Debugging is a recovery playbook.
 It preserves the failure, finds the root cause, fixes the scoped issue, guards
 against recurrence, and records what future work needs.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-evidence`, `loom-research`,
-`loom-tickets`, `loom-specs`, `loom-ralph`, `loom-audit`, and
-`loom-retrospective`.
+Route durable results through `loom-evidence`, `loom-research`, `loom-tickets`,
+`loom-specs`, `loom-ralph`, `loom-audit`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 ## Use This Playbook When
 

@@ -36,7 +36,8 @@ Ticket: ticket:<YYYYMMDD-child-slug>
 
 <Describe the outcome, scope boundary, order or dependency reason, validation and
 evidence expectations, child-ticket audit expectations, plan-level audit trigger
-when relevant, and loopback or stop conditions.>
+when relevant, loopback or stop conditions, and the single closure claim the child
+ticket should carry.>
 
 ## Milestones
 

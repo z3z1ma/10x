@@ -10,10 +10,17 @@ Code review is an audit-oriented playbook for changed source and records.
 It reviews intent, tests, implementation, risk, and evidence, then routes durable
 findings into `loom-audit` or the consuming ticket.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-audit`, `loom-evidence`,
-`loom-tickets`, `loom-specs`, `loom-ralph`, and `loom-retrospective`.
+Route durable results through `loom-audit`, `loom-evidence`, `loom-tickets`,
+`loom-specs`, `loom-ralph`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
+
+When code review is delegated to a fresh or separate worker and will support
+ticket closure, audit, or durable findings, launch it from a Ralph packet.
 
 ## Use This Playbook When
 
@@ -74,12 +81,16 @@ Review across:
 - scope: unrelated cleanup, hidden behavior changes, generated churn, and follow-up
   work mixed into the change
 
-Use specialized playbooks for deeper passes: security, performance, browser, API,
-or simplification.
+Use specialized skills for deeper passes: security, performance, browser, API, or
+simplification.
 
 ## Findings
 
 Use `loom-audit` when findings or verdict should survive.
+
+Use `loom-ralph` to prepare the bounded review packet before invoking a
+fresh-context review worker. Keep the packet and any audit record linked so the
+handoff and verdict remain inspectable.
 
 Material findings should name:
 

@@ -3,6 +3,10 @@
 A packet should be small enough to run and complete enough that the worker can act
 from the packet and its named context.
 
+The packet is the durable handoff. Write it to `.loom/packets/ralph/` before the
+worker is launched so the parent, worker, and future agents share the same
+inspectable contract.
+
 ## Required Shape
 
 A useful packet says:

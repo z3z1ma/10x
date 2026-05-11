@@ -23,6 +23,26 @@ while keeping the relevant records truthful as it works.
 Use the Loom surfaces to preserve the shaped work, bounded execution, evidence,
 audit, and reusable knowledge that future agents need.
 
+## Loop Order
+
+Loom routing comes first. Use workflow-specific skills only after this doctrine
+has established whether the work is still outer-loop shaping or ready for bounded
+execution.
+
+The default sequence is:
+
+```text
+shape with the operator -> route durable truth -> slice executable work -> execute
+bounded tickets or packetized worker runs -> preserve evidence -> audit claims ->
+reconcile records
+```
+
+When product intent, success criteria, quality bar, scope, evidence posture, or
+ticket boundary is unclear, stay in the outer loop. A workflow-specific skill can
+add pressure, but it still moves through Loom surfaces and the same loop order.
+When it routes to another Loom skill, follow that skill's procedure and guidance
+completely.
+
 ## Session Start
 
 At the start of a Loom session, read this skill and all references below unless an
@@ -44,12 +64,12 @@ the task, path, tool, error, ticket, or domain makes it relevant.
 
 Then use the relevant Loom skill for the surface you are touching.
 
-## Core Surfaces
+## Loom Surfaces
 
 Loom records are Markdown files designed to be found, read, and connected with
 ordinary `find` and `grep` workflows.
 
-The core surfaces are:
+The Loom surfaces are:
 
 - constitution: durable project judgment, policy, principles, constraints, ADRs,
   and roadmap direction
@@ -75,8 +95,10 @@ follow-up may matter.
 
 Ask:
 
+- What must be shaped with the operator before execution is honest?
 - What surface owns the truth I am about to depend on or change?
 - Is this still a human-shaped outer-loop problem, or is it safe to execute?
+- What is the next smallest ticket-ready slice, and what makes it complete?
 - What packet bounds this worker handoff?
 - What evidence or audit would make the claim honest?
 - What knowledge should future agents load, retrieve, or not have to rediscover?

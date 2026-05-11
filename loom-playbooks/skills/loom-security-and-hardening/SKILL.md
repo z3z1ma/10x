@@ -10,11 +10,14 @@ Security and hardening is a risk-focused playbook.
 It turns security concerns into specs, tickets, evidence, audits, and prevention
 records instead of leaving them as informal caution.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-specs`, `loom-tickets`,
-`loom-evidence`, `loom-audit`, `loom-research`, `loom-constitution`, and
-`loom-retrospective`.
+Route durable results through `loom-specs`, `loom-tickets`, `loom-evidence`,
+`loom-audit`, `loom-research`, `loom-constitution`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 ## Use This Playbook When
 

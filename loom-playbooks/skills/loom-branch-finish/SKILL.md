@@ -11,10 +11,14 @@ It verifies the work, detects whether the workspace is normal, worktree-based, o
 harness-managed, presents bounded finish options, and records the chosen
 disposition in Loom records.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-tickets`, `loom-evidence`,
-`loom-audit`, `loom-retrospective`, and optionally `loom-shipping-and-launch`.
+Route durable results through `loom-tickets`, `loom-evidence`, `loom-audit`,
+`loom-retrospective`, and optionally `loom-shipping-and-launch`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 It does not replace ticket acceptance, PR review, release readiness, or operator
 approval for destructive cleanup.
@@ -71,7 +75,7 @@ harness provide an explicit safe path.
 
 ## Summarize
 
-Prepare a concise finish summary from Core records and source state:
+Prepare a concise finish summary from Loom records and source state:
 
 - tickets completed or still open
 - evidence and checks that support completion

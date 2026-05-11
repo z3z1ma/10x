@@ -7,6 +7,10 @@ goal, keep live work in tickets, prove claims with evidence, challenge important
 claims with fresh-context audit, hand bounded work to packets, and preserve useful
 lessons in knowledge.
 
+The operating loop is: shape with the human, route durable truth, slice into
+bounded tickets, launch worker runs from Ralph packets, preserve evidence, audit
+claims, and reconcile records.
+
 If a harness installs only one Loom package, install this one.
 
 [Agent Loom](../README.md) / [Protocol](../PROTOCOL.md) / [Install](../INSTALL.md) / [Playbooks](../loom-playbooks/README.md)
@@ -17,7 +21,7 @@ Core gives agents the operating doctrine and the record surfaces that make Loom
 work recoverable.
 
 - `using-loom` loads the posture every Loom session needs
-- Core skills tell the agent which surface owns each kind of truth
+- record skills tell the agent which surface owns each kind of truth
 - templates give records enough shape for continuation, proof, review, and handoff
 - references teach the protocol without requiring a hidden runtime
 
@@ -85,9 +89,9 @@ live in [INSTALL.md](../INSTALL.md).
 
 ## Boundary
 
-Core owns Loom bootstrap doctrine and canonical record behavior. It ships as a
-Markdown skill corpus, with no daemon, database, dashboard, product CLI, MCP
-server, or prompt dump.
+This package carries Loom bootstrap doctrine and canonical record behavior. It
+ships as a Markdown skill corpus, with no daemon, database, dashboard, product
+CLI, MCP server, or prompt dump.
 
 Optional workflow routes live in [Loom Playbooks](../loom-playbooks/README.md).
-Playbooks route through Core records. Core still owns durable project truth.
+Those routes use Loom records instead of adding another durable truth layer.

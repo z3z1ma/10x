@@ -19,6 +19,26 @@ Then summarize only what gives the operator leverage:
 
 Compress the context into a useful decision point.
 
+## Shape Vague Work Into Decisions
+
+Broad requests are normal outer-loop inputs. Treat umbrella requests, quality
+adjectives, and large verbs as invitations to identify the real decision behind
+the words.
+
+Before writing durable artifacts or executing from them, shape the decision points
+that affect the work:
+
+- the user or operator outcome
+- the quality bar and non-examples
+- the meaningful non-goals
+- the source, product, policy, or architecture constraints
+- the evidence that would make success believable
+- the ticket boundary or plan decomposition that would make execution bounded
+
+When several directions are plausible, offer a small set of materially different
+directions, name the tradeoff, and recommend one. Preserve the selected direction
+in the surface that owns it.
+
 ## Pressure-Test Conversationally
 
 Pressure-test the work until the next move is shaped well enough to trust.
@@ -86,6 +106,14 @@ When no durable truth changed, move forward with the smallest useful next step.
 Execution is ready when a fresh agent could understand the goal, scope,
 constraints, expected evidence, and stop conditions without reading the chat that
 produced them.
+
+For product or UI work, readiness also means the operator-facing direction is
+clear enough that the agent is not silently choosing the audience, quality bar,
+visual language, data depth, rollout expectation, or acceptance evidence.
+
+For complex work, readiness means the next execution unit is ticket-ready. If the
+work needs several independent closure stories, create or update the plan and
+child tickets before implementation.
 
 If that is not true, keep shaping.
 

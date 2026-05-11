@@ -9,6 +9,20 @@ cites.
 The packet exists to make one bounded worker run recoverable, reviewable, and safe
 to continue after the worker returns.
 
+## Packet Before Launch
+
+A Loom worker run is the packet file plus the launch that points to it. Compile the
+Ralph packet under `.loom/packets/ralph/` before invoking a harness-native
+subagent, headless harness command, or manual fresh-context handoff.
+
+Keep the launch wrapper thin: identify the packet path, tell the worker to read it
+first, and request the packet's output contract. The packet carries the mission,
+context, scope, stop conditions, evidence expectations, and allowed updates.
+
+When a worker result will support ticket state, audit, evidence, research,
+knowledge, or closure, keep the packet inspectable on disk so the parent and future
+agents can review the handoff without replaying tool logs.
+
 ## When To Use A Packet
 
 Use a packet when the next worker run can be bounded.

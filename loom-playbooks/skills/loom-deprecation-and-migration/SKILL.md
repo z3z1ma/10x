@@ -11,11 +11,15 @@ replacement.
 It decides whether change is warranted, specifies the target contract, plans the
 migration, executes bounded slices, proves adoption, audits risk, and cleans up.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-research`, `loom-specs`,
-`loom-plans`, `loom-tickets`, `loom-evidence`, `loom-audit`, `loom-constitution`,
+Route durable results through `loom-research`, `loom-specs`, `loom-plans`,
+`loom-tickets`, `loom-evidence`, `loom-audit`, `loom-constitution`,
 `loom-knowledge`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 ## Use This Playbook When
 

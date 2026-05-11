@@ -21,7 +21,10 @@ Depends On: <ticket:YYYYMMDD-slug>
 Include enough context for an acting agent to understand what change is needed,
 why it matters, and what outcome should exist when the ticket is complete. The
 ticket should be executable from this record and its linked records without
-relying on chat history.>
+relying on chat history.
+
+Make the single closure claim visible: what one bounded result will this ticket
+prove or deliver?>
 
 ## Related Records
 

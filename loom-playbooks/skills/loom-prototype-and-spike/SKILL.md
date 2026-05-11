@@ -10,11 +10,14 @@ Prototype and spike is an exploration playbook.
 It builds the smallest disposable artifact that answers a question, records the
 answer, and then deletes, absorbs, or routes the result.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-research`, `loom-evidence`,
-`loom-specs`, `loom-constitution`, `loom-knowledge`, `loom-tickets`, and
-`loom-audit`.
+Route durable results through `loom-research`, `loom-evidence`, `loom-specs`,
+`loom-constitution`, `loom-knowledge`, `loom-tickets`, and `loom-audit`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 Prototype code is not production work unless a later ticket deliberately absorbs
 it.
@@ -135,6 +138,6 @@ The prototype pass is done when:
 - the question was explicit
 - the artifact was scoped and marked as disposable
 - the observation or operator verdict was captured
-- durable learning moved to the right Core record
+- durable learning moved to the right Loom record
 - prototype code was deleted, absorbed through a ticket, or given an explicit
   cleanup route

@@ -36,6 +36,12 @@ material questions, and routes durable truth into the surface that owns it. Work
 stays there while intent, scope, risk, evidence, authority, or the ticket boundary
 is unclear.
 
+Record skills own Loom surfaces and their procedures. Workflow-specific skills
+add task-shaped pressure after Loom routing has decided whether the next move is
+shaping, research, spec, plan, ticket, evidence, audit, knowledge, or packetized
+handoff. When a workflow-specific skill routes to another Loom skill, follow the
+target skill's procedure and guidance completely.
+
 The inner loop executes bounded work. Tickets carry live state. Ralph packets hand
 one run to a fresh or separate worker. Evidence records observations. Audit
 challenges important claims. The parent reconciles the result.
@@ -50,7 +56,7 @@ Small tasks can skip records that add no recovery, trust, or future value.
 
 ## Core Surfaces
 
-Core surfaces live under `.loom/` and appear only when needed.
+Loom surfaces live under `.loom/` and appear only when needed.
 
 | Surface | Path | Owns |
 | --- | --- | --- |
@@ -137,6 +143,10 @@ A ticket must carry enough context, linked records, scope, acceptance criteria,
 current state, and journal history for another agent to continue without the chat
 that created it.
 
+One ticket should close around one coherent claim. When work has independent stack,
+data, UI, migration, review, or verification outcomes, use a plan with child
+tickets before execution.
+
 Close a ticket only when the ticket, evidence, audit state, and affected records
 tell one truthful story.
 
@@ -146,6 +156,10 @@ Ralph is Loom's bounded worker loop.
 
 A packet names target, mission, context style, read scope, write scope, source
 snapshot, stop conditions, verification expectations, and output contract.
+
+A Loom worker run is the packet file plus the launch that points to it. Compile
+the packet under `.loom/packets/ralph/` before invoking any worker transport. Keep
+launch wrappers thin; the packet carries the work contract.
 
 Packet status describes the packet only. The consuming surface decides what the
 worker output means for execution state, acceptance, evidence, audit, or knowledge.
@@ -160,7 +174,8 @@ Audit records fresh-context adversarial review. It should name the target, claim
 risks, context inspected, findings, verdict, required follow-up, and residual risk.
 
 Same-context review can be useful, but substantive `Type: Audit` records require a
-fresh-context pass.
+fresh-context pass. For Loom work, prepare that pass as a Ralph review packet and
+record the audit after the worker returns.
 
 ## Retrospective And Knowledge
 
@@ -201,4 +216,4 @@ or worker handoffs.
 
 Optional validators, package entrypoints, native adapters, hooks, dashboards, MCPs,
 and external trackers may project or transport Loom state. The Markdown protocol
-and Core records remain the source of Loom semantics.
+and Loom records remain the source of Loom semantics.

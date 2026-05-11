@@ -41,9 +41,14 @@ If execution starts, set `Status: active` and update `Updated:`.
 
 Stay inside the ticket boundary.
 
-When ticket work is handed to a worker, use `loom-ralph`. The packet should say
+When ticket work is handed to a worker, use `loom-ralph`. Compile the packet on
+disk before launch and point the worker at the packet path. The packet should say
 what files and records may change, what evidence is expected, and what ticket
 updates the worker should make.
+
+This applies to implementation workers, focused review workers, source-inspection
+helpers, and fresh-context audit workers when their output will affect ticket
+state, evidence, audit, or closure.
 
 Do not batch unrelated cleanup, opportunistic refactors, nearby fixes, unrelated
 record edits, or extra features into the ticket. If nearby work is valuable, create

@@ -10,11 +10,14 @@ API and interface design is a spec-first playbook for shared contracts.
 It defines the contract before implementation, checks compatibility and error
 semantics, and routes execution through tickets, evidence, and audit.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-specs`, `loom-research`,
-`loom-tickets`, `loom-evidence`, `loom-audit`, `loom-constitution`, and
-`loom-knowledge`.
+Route durable results through `loom-specs`, `loom-research`, `loom-tickets`,
+`loom-evidence`, `loom-audit`, `loom-constitution`, and `loom-knowledge`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 ## Use This Playbook When
 

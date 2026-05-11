@@ -8,8 +8,10 @@ risks.
 A meaningful audit needs a reviewer who did not share the shaping or
 implementation context.
 
-The parent context may prepare a bounded review request and record the result. The
-adversarial judgment itself must come from the fresh-context pass.
+The parent context may prepare a bounded review request and record the result. For
+substantive audit, that request should be a Ralph packet under
+`.loom/packets/ralph/`. The adversarial judgment itself must come from the
+fresh-context pass.
 
 Do not create `Type: Audit` for same-context self-review. When no fresh context is
 available, say audit was not performed and use another surface for local notes.
@@ -48,6 +50,11 @@ set, record ID, claim ID, or why the target needed audit.
 
 A good audit request gives the fresh context enough to review without inheriting
 the implementer's assumptions.
+
+Use a Ralph review packet for this request when audit is part of Loom work. The
+packet carries the review target, context, lenses, read scope, write scope, stop
+conditions, and output contract; the later audit record preserves the auditor's
+result.
 
 Include:
 

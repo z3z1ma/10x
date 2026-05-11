@@ -17,7 +17,10 @@ Use the transport the workspace supports:
 - manual fresh-context handoff
 - another documented transport
 
-Keep wrapper prompts short. The packet should carry the work contract.
+Keep launch wrappers short. Every transport should point the worker at the packet
+path, instruct the worker to read it first, and request the packet's output
+contract. Put the mission, scope, context, stop conditions, and evidence
+expectations in the packet itself.
 
 ## Before Launch
 
@@ -31,6 +34,8 @@ Before launching a worker, check:
 - evidence, review, or verification expectations are concrete
 - stop conditions are clear
 - placeholder text has been resolved where packet truth is required
+- the packet has been saved under `.loom/packets/ralph/` and the launch wrapper
+  points to that path
 
 If these checks fail, fix the packet before launch.
 

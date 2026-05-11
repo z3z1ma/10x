@@ -11,10 +11,14 @@ It proves tasks are independent, dispatches bounded packets, integrates returned
 work deliberately, and records evidence and audit before trusting the combined
 result.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-plans`, `loom-tickets`,
-`loom-ralph`, `loom-evidence`, `loom-audit`, and `loom-retrospective`.
+Route durable results through `loom-plans`, `loom-tickets`, `loom-ralph`,
+`loom-evidence`, `loom-audit`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 It coordinates packets. It does not make worker reports authoritative.
 
@@ -149,4 +153,4 @@ The parallel coordination pass is done when:
 - each worker had a bounded packet and write scope
 - worker output was inspected and reconciled
 - integrated changes have combined evidence
-- conflicts, concerns, blockers, and follow-up are visible in Core records
+- conflicts, concerns, blockers, and follow-up are visible in Loom records

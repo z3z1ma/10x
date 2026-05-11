@@ -44,6 +44,8 @@ If creating or shaping a ticket:
 - inspect relevant records and source before asking the operator to repeat facts
 - create the ticket only when value, executable boundary, scope, context, and
   acceptance are clear enough to act
+- use the single-closure-claim check: one ticket should produce one bounded result
+  with one coherent evidence and closure story
 - include enough instruction and record links that the ticket can be executed from
   the ticket and its linked documents without relying on chat history
 
@@ -145,6 +147,7 @@ self-contained, grepable, actionable, and safe for continuation.
 Every ticket must preserve these invariants:
 
 * one bounded executable work unit
+* one coherent closure claim
 * enough context, instruction, and linked records to execute without chat history
 * truthful `Status:`
 * explicit scope boundary

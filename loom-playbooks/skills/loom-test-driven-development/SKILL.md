@@ -11,10 +11,14 @@ It turns the intended behavior into a failing check, drives the smallest change 
 green, and preserves the red/green story as evidence when the ticket will rely on
 it.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-specs`, `loom-tickets`,
-`loom-ralph`, `loom-evidence`, and `loom-audit`.
+Route durable results through `loom-specs`, `loom-tickets`, `loom-ralph`,
+`loom-evidence`, and `loom-audit`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 TDD is usually expressed as `Verification Posture: test-first` in a Ralph packet.
 

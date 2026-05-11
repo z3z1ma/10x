@@ -10,11 +10,14 @@ Review response is a feedback-handling playbook.
 It turns incoming comments into checked technical work instead of blind acceptance,
 performative agreement, or untracked follow-up.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-tickets`, `loom-audit`,
-`loom-evidence`, `loom-specs`, `loom-research`, `loom-constitution`, and
-`loom-retrospective`.
+Route durable results through `loom-tickets`, `loom-audit`, `loom-evidence`,
+`loom-specs`, `loom-research`, `loom-constitution`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 Incoming feedback is input to judgment. It is not automatically a durable record
 fact.

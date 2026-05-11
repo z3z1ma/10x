@@ -10,12 +10,16 @@ Architecture deepening is a refactoring-shaping playbook.
 It looks for places where a better module interface can hide more behavior, improve
 locality, and make tests and future agent work easier.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-codebase-atlas`,
+Route durable results through `loom-codebase-atlas`,
 `loom-domain-language-and-decisions`, `loom-code-simplification`,
 `loom-api-and-interface-design`, `loom-specs`, `loom-plans`, `loom-tickets`,
 `loom-evidence`, and `loom-audit`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 It proposes and shapes refactors. Execution still belongs in tickets and evidence.
 
@@ -115,7 +119,7 @@ surface before choosing.
 
 ## Plan
 
-Route chosen architecture work to Core records:
+Route chosen architecture work to Loom records:
 
 - specs for durable behavior or interface contracts
 - constitution decisions for hard-to-reverse precedent

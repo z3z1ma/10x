@@ -10,12 +10,18 @@ Incremental implementation is a playbook for executing one narrow slice at a tim
 It keeps each change bounded, verifiable, and recoverable through tickets, Ralph
 packets, evidence, audit, and retrospective follow-up.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook depends on `loom-tickets`, `loom-ralph`,
-`loom-evidence`, `loom-audit`, `loom-plans`, and `loom-retrospective`.
+Route durable results through `loom-tickets`, `loom-ralph`, `loom-evidence`,
+`loom-audit`, `loom-plans`, and `loom-retrospective`.
 
-It does not replace ticket scope, packet scope, evidence, or audit.
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
+
+This workflow does not replace ticket scope, packet scope, evidence, or audit.
+Execute only ticket-ready slices, and use Ralph packets for delegated or
+fresh-context worker runs.
 
 ## Use This Playbook When
 
@@ -58,6 +64,9 @@ When a slice is too broad, route back to `loom-plans` or split the ticket.
 
 Use `loom-ralph` when handing work to a worker or when the execution contract needs
 fresh context.
+
+Compile the packet under `.loom/packets/ralph/` before launch. The worker prompt
+should point to the packet path; the packet carries the slice contract.
 
 The packet should name:
 

@@ -10,10 +10,14 @@ Performance optimization is a measure-first playbook.
 It records a baseline, identifies the bottleneck, changes the smallest thing that
 can improve it, measures again, and preserves evidence and guards.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-evidence`, `loom-research`,
-`loom-specs`, `loom-tickets`, `loom-audit`, and `loom-retrospective`.
+Route durable results through `loom-evidence`, `loom-research`, `loom-specs`,
+`loom-tickets`, `loom-audit`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 ## Use This Playbook When
 

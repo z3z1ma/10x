@@ -10,6 +10,10 @@ Use this question repeatedly:
 A slice is ticket-ready when it has an outcome, boundary, evidence target, and
 stop condition.
 
+Each slice should also have one closure claim. If the slice needs separate claims
+for setup, data behavior, UI structure, deep behavior, migration, review, or final
+verification, split those claims into separate child tickets.
+
 ## Good Slices
 
 A good execution unit is:
@@ -26,6 +30,8 @@ A good execution unit is:
   appears
 
 Each execution unit should have a concrete child ticket ID once the plan is saved.
+The child ticket is the execution handle; the plan is the strategy and sequencing
+handle.
 
 ## Prefer Vertical Slices
 
@@ -107,3 +113,15 @@ plan, or route back to shaping.
 
 If a slice cannot be executed from its child ticket and linked records, it is not
 ready.
+
+## Slicing Check
+
+Before creating or running a child ticket, answer:
+
+- What single closure claim will this ticket make?
+- What files, records, or surfaces form its likely write boundary?
+- What evidence can verify this slice without completing later slices?
+- What stop condition returns to shaping, research, specs, or the operator?
+- What later ticket can consume this result without relying on chat history?
+
+If any answer points at multiple independent work products, split the unit.

@@ -11,11 +11,15 @@ It classifies reports, gathers enough context to decide the next route, and turn
 ready work into Loom tickets or records without letting external trackers become
 the live execution ledger.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-tickets`, `loom-evidence`,
-`loom-research`, `loom-specs`, `loom-knowledge`, `loom-constitution`,
-`loom-ralph`, and `loom-audit`.
+Route durable results through `loom-tickets`, `loom-evidence`, `loom-research`,
+`loom-specs`, `loom-knowledge`, `loom-constitution`, `loom-ralph`, and
+`loom-audit`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 External issues, labels, and comments can transport work. Loom tickets carry live
 execution state.

@@ -15,8 +15,8 @@ The product surface lives in two package roots:
 
 | Package | Job |
 | --- | --- |
-| `loom-core/` | mandatory `using-loom` doctrine and Core record skills |
-| `loom-playbooks/` | optional workflow routes that require Core |
+| `loom-core/` | mandatory `using-loom` doctrine and record skills |
+| `loom-playbooks/` | optional workflow-specific skills that assume the required package is installed |
 
 Inside each package, `skills/` is the source of behavior. The package root may add
 transport files for OpenCode, Claude Code, Codex, Cursor, or Gemini CLI.
@@ -116,6 +116,12 @@ The outer loop shapes work with the operator. The agent inspects first, asks onl
 material questions, and routes durable truth to the surface that owns it. Work
 stays in this loop while intent, scope, evidence, risk, or authority is unclear.
 
+Record skills own Loom surfaces and their procedures. Workflow-specific skills
+run inside this architecture: they add guidance after Loom routing has identified
+the owning surface and whether the work is shaped enough to execute. When a
+workflow-specific skill routes to another Loom skill, the target skill's procedure
+and guidance still apply completely.
+
 The inner loop executes bounded work. Tickets drive live execution. Ralph packets
 hand one bounded run to a worker. Evidence records what happened. Audit challenges
 important claims with fresh context. The parent reconciles the result into the
@@ -130,14 +136,18 @@ Ralph packets are contracts for one worker run. They name target, mission, conte
 style, read scope, write scope, source snapshot, stop conditions, and output
 contract.
 
+The packet is written under `.loom/packets/ralph/` before the worker launch. The
+launch transport points to that packet so the handoff is recoverable from the
+Markdown graph, not only from harness logs.
+
 A packet is not accepted project truth. After the worker returns, the parent reads
 the packet output, diffs, records, and evidence, then updates the consuming
 surface.
 
 Substantive audit requires fresh context. The same session can prepare the audit
 request and record the result, but the adversarial judgment must come from a fresh
-pass. Same-context inspection may help, but it should not be saved as `Type:
-Audit`.
+pass. For Loom work, that request is a Ralph review packet; same-context
+inspection may help, but it should not be saved as `Type: Audit`.
 
 ## Adapter Rule
 
@@ -145,7 +155,7 @@ Adapters may preload doctrine, expose skills, validate package shape, or make
 installation easier. They must not define another ontology.
 
 Generated context files, external issue trackers, dashboards, MCPs, and local
-scripts may transport or mirror Loom work. The owning truth still lives in Core
+scripts may transport or mirror Loom work. The owning truth still lives in Loom
 records unless a future constitutional record changes that boundary.
 
 ## Repository-Only Material
@@ -170,5 +180,5 @@ A Loom change should preserve these properties:
 - audit records review without closing work
 - packets bound worker runs without becoming project state
 - knowledge stores accepted reusable understanding without replacing specs, evidence, audit, or tickets
-- playbooks route through Core instead of adding durable surfaces
+- workflow-specific skills route through Loom surfaces instead of adding durable surfaces
 - helper code stays derivative of the Markdown protocol

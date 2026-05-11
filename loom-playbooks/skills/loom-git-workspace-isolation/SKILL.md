@@ -11,10 +11,14 @@ It detects the current Git/workspace state, chooses the least surprising isolati
 mechanism, verifies a clean baseline, and records provenance for later finish or
 cleanup.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-tickets`, `loom-plans`,
-`loom-ralph`, `loom-evidence`, and `loom-audit`.
+Route durable results through `loom-tickets`, `loom-plans`, `loom-ralph`,
+`loom-evidence`, and `loom-audit`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 It does not replace ticket scope, branch policy, evidence, or operator approval.
 

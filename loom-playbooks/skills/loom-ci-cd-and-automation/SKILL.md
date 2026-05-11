@@ -10,11 +10,14 @@ CI/CD and automation is a playbook for executable quality gates and release path
 It specifies pipeline behavior, implements it in scoped tickets, records observed
 pipeline results, and audits risky automation changes.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-specs`, `loom-plans`,
-`loom-tickets`, `loom-evidence`, `loom-audit`, `loom-research`, and
-`loom-retrospective`.
+Route durable results through `loom-specs`, `loom-plans`, `loom-tickets`,
+`loom-evidence`, `loom-audit`, `loom-research`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 ## Use This Playbook When
 

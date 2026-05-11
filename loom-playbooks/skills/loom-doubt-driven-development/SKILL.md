@@ -11,11 +11,14 @@ It names the claim, extracts the smallest reviewable artifact and contract, runs
 fresh-context challenge when useful, reconciles findings, and routes durable output
 through audit, evidence, tickets, specs, research, or constitution.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-ralph`, `loom-audit`,
-`loom-evidence`, `loom-tickets`, `loom-specs`, `loom-research`, and
-`loom-constitution`.
+Route durable results through `loom-ralph`, `loom-audit`, `loom-evidence`,
+`loom-tickets`, `loom-specs`, `loom-research`, and `loom-constitution`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 Use this playbook for review posture. Use `loom-audit` when the challenge result
 should be recorded as an audit.
@@ -146,5 +149,5 @@ The doubt pass is done when:
 - the claim, artifact, and contract are explicit
 - challenge output was gathered or the lack of fresh context is visible
 - findings were classified rather than copied forward blindly
-- durable findings, evidence, or follow-up were routed to core records
+- durable findings, evidence, or follow-up were routed to Loom records
 - the next move is clear

@@ -82,6 +82,12 @@ Keep this bounded.>
 <Give the worker the exact task. Include non-goals and nearby work that should not
 be pulled into this run.>
 
+## Launch
+
+<Optional. Name the intended launch transport and the thin wrapper instruction,
+for example: read this packet first, stay inside it, and return the output
+contract. Remove when the transport is obvious from top labels.>
+
 ## Evidence, Review, Or Verification Expectations
 
 <State the concrete output expected for this mode. For implementation work, name

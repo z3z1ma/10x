@@ -41,6 +41,8 @@ If creating or reshaping a plan:
 - inspect relevant records and source before asking the operator to repeat facts
 - create the child tickets once execution units are ticket-ready
 - ensure each child ticket links back to the plan in `## Related Records`
+- keep execution in the outer loop until the saved plan names child tickets for
+  the execution units it expects agents to run
 
 If updating, reviewing, completing, blocking, or cancelling a plan:
 

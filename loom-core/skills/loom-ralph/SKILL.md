@@ -13,12 +13,18 @@ scope, write scope, stop conditions, and output contract.
 
 Most Ralph runs use a harness-native subagent. A Ralph packet can also be handed to
 a headless harness command or another transport that reads the packet and returns
-the required output.
+the required output. Regardless of transport, the launch points to the packet path
+and requests the packet's output contract.
 
 Ralph supplies packet mechanics. The consuming surface still records the judgment,
 state, or durable result it owns. Tickets may use Ralph for implementation, audit
 may use Ralph for fresh-context review, and other Loom surfaces may use Ralph when
 bounded worker execution improves the work.
+
+A Ralph run has two parts: an on-disk packet under `.loom/packets/ralph/` and the
+launch transport that points the worker at that packet. The packet is the worker
+contract. The launch wrapper should stay thin so future agents can inspect the
+handoff from the repository graph.
 
 ## Use This Skill When
 
@@ -47,6 +53,8 @@ If creating a packet:
 - read the records and source material needed to bind the packet context
 - use `templates/packet.md`
 - write a packet narrow enough for one worker run
+- when launching, point the worker at the packet path and the packet's output
+  contract
 
 If executing from a packet:
 

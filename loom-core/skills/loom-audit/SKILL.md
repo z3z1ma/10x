@@ -45,9 +45,9 @@ The context that shaped or implemented the target may prepare the audit request,
 gather bounded context, and record the result. The adversarial judgment itself
 must come from a fresh-context pass.
 
-Route the bounded review through `loom-ralph`.
-Audit records the adversarial judgment; Ralph supplies the bounded worker
-contract.
+Route the bounded review through an on-disk Ralph packet under
+`.loom/packets/ralph/`. The packet is the audit request and worker contract. Audit
+records the adversarial judgment after the fresh-context pass returns.
 
 When fresh context is unavailable, say audit was not performed. Same-context
 inspection may still be useful local review, but do not save it as `Type: Audit`.
@@ -65,6 +65,7 @@ If preparing or recording an audit:
 - gather only the context needed for a bounded fresh-context pass
 - prefer source records, diffs, evidence, and files over summaries when the source
   is needed for judgment
+- compile and launch a Ralph review packet for substantive fresh-context audit
 - after the fresh-context pass, record the result with `templates/audit.md`
 
 If consuming audit findings:

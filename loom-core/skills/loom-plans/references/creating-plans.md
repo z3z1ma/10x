@@ -9,6 +9,9 @@ across multiple execution units.
 A plan should make the route executable. It should preserve the decisions,
 constraints, decomposition, and child ticket links that shape execution.
 
+The saved plan should already name the child tickets an agent is expected to run.
+Execution starts from those tickets, not from an unsliced plan summary.
+
 ## Shaping Standard
 
 Before writing the plan, shape the work until four things are true:
@@ -140,6 +143,12 @@ Use this sequence as the default path, not as a form:
 
 If a child ticket cannot be written yet, the execution unit is not ticket-ready.
 Keep shaping or route the missing truth to the appropriate surface.
+
+Before execution, test each proposed unit with the single-closure-claim rule from
+`loom-tickets`: one child ticket should produce one bounded result with one
+coherent evidence and closure story. If a unit combines independent stack, data,
+UI, migration, feature, review, and verification outcomes, split it until each
+child ticket can close honestly on its own evidence.
 
 ## Creation Questions
 

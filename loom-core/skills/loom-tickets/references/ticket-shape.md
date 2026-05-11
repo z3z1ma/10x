@@ -73,6 +73,10 @@ Summary should answer:
 * what outcome should be true when complete
 * what context an acting agent needs before starting
 
+It should also make the single closure claim easy to see. If the Summary needs to
+bundle independent stack, data, UI, feature, migration, review, and verification
+outcomes, the work probably belongs in a plan with child tickets.
+
 Keep it short, but not empty-calorie. The Summary should make the ticket
 understandable without relying on chat history.
 

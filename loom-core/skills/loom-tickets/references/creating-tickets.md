@@ -19,12 +19,31 @@ Before writing the ticket, prove three things:
 If any of those are missing, keep shaping. Ask the operator, inspect the codebase,
 or route to research, specs, plans, or constitution before creating the ticket.
 
+## Single Closure Claim
+
+One ticket should close around one coherent claim.
+
+Before saving the ticket, say the closure claim in one sentence. If the sentence
+needs several independent outcomes, split or route to a plan.
+
+Ticket-sized claims name one result and one proof path. They usually have one
+primary write boundary and one evidence posture.
+
+Claims that usually need a plan or split combine independent results, such as
+choosing an architecture, changing dependencies, implementing user-visible
+behavior, adding broad variants, migrating old paths, and performing final
+verification in the same work unit.
+
+Use the ticket only after the result, boundary, evidence, and audit lens all belong
+to the same closure story.
+
 ## Create A Ticket Only When
 
 Create a ticket when all of these are true:
 
 - the work has an executable change boundary
 - the smallest useful slice is identifiable
+- the ticket has one coherent closure claim
 - likely affected files, records, systems, or artifacts are known enough to begin
 - acceptance can be written as observable criteria
 - the initial status can honestly be `open`

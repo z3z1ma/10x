@@ -30,6 +30,7 @@ scope so the verdict is not overread.>
 claims, or summaries the auditor inspected. Say when important context was missing
 or stale.>
 
+- Ralph packet: `<packet-id or .loom/packets/ralph/path>` - <bounded fresh-context review contract>
 - <record, evidence ID, path, diff, command result, screenshot, or claim> - <why it mattered>
 
 ## Findings

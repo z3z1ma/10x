@@ -1,6 +1,6 @@
 ---
 name: loom-idea-refine
-description: "Use when an operator's rough product, engineering, workflow, research, or opportunity idea lacks clear problem, audience, constraints, success criteria, direction, or next Core record move."
+description: "Use when an operator's rough product, engineering, workflow, research, or opportunity idea lacks clear problem, audience, constraints, success criteria, direction, or next Loom record move."
 ---
 
 # loom-idea-refine
@@ -9,13 +9,19 @@ Idea refinement is an outer-loop playbook for turning a rough concept into a cle
 next Loom move.
 
 It explores options, tests assumptions, chooses a direction, and routes durable
-results into core records.
+results into Loom records.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook assumes `using-loom` is loaded and routes
-durable results through core skills such as `loom-research`, `loom-specs`,
-`loom-plans`, `loom-tickets`, `loom-knowledge`, and `loom-constitution`.
+Route durable results through `loom-research`, `loom-specs`, `loom-plans`,
+`loom-tickets`, `loom-knowledge`, and `loom-constitution`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
+
+This playbook stays in the outer loop. It produces a routed next move: research,
+spec, plan, ticket, knowledge, constitution, or an explicit no-go.
 
 This playbook creates no separate idea ledger.
 
@@ -30,7 +36,7 @@ Use this playbook when:
 - an idea should become a spec, research record, plan, ticket, knowledge note, or
   constitutional question
 
-Skip this playbook when the next core record move is already clear.
+Skip this playbook when the next Loom record move is already clear.
 
 ## Route
 
@@ -105,10 +111,14 @@ Produce a short decision summary:
 - open questions
 - next Loom surface
 
-Do not save a free-floating one-pager unless the operator explicitly asks for that
-artifact. Prefer routing into core records.
+When the chosen direction still exceeds one ticket, route to `loom-plans` with
+ticket-ready execution units. When the next move is executable, route one bounded
+slice to `loom-tickets`.
 
-## Route To Core
+Do not save a free-floating one-pager unless the operator explicitly asks for that
+artifact. Prefer routing into Loom records.
+
+## Route To Loom Surfaces
 
 Route by shape:
 
@@ -132,4 +142,4 @@ The idea-refine pass is done when:
 - explored directions are materially different
 - assumptions and non-goals are visible
 - one recommended direction or explicit no-go result exists
-- durable follow-up is routed into core records
+- durable follow-up is routed into Loom records

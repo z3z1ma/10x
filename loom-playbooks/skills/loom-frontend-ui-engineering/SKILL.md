@@ -11,11 +11,18 @@ It turns design intent into specs, slices implementation through tickets and Ral
 packets, records browser evidence, and routes accessibility, performance, and
 visual risks through audit.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-specs`, `loom-tickets`,
-`loom-ralph`, `loom-evidence`, `loom-audit`, `loom-knowledge`, and
-`loom-retrospective`.
+Route durable results through `loom-specs`, `loom-tickets`, `loom-ralph`,
+`loom-evidence`, `loom-audit`, `loom-knowledge`, and `loom-retrospective`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
+
+Keep broad product or design intent in outer-loop shaping until the
+operator-facing direction, quality bar, evidence posture, and ticket boundary are
+clear enough to route.
 
 ## Use This Playbook When
 
@@ -50,6 +57,11 @@ Clarify:
 - performance or responsiveness constraints
 - non-goals and adjacent UI not being changed
 
+When the request is still a rough product idea, use `loom-idea-refine` or
+outer-loop shaping before writing the UI contract. Design adjectives become useful
+only when they resolve into direction, examples or non-examples, constraints, and
+evidence.
+
 Route durable intended behavior to `loom-specs` when it affects more than one
 ticket or future work.
 
@@ -68,13 +80,16 @@ Promote reusable UI conventions to `loom-knowledge`.
 
 ## Build
 
-Implement in thin slices:
+Implement from ticket-ready slices:
 
 - component structure before broad integration
 - one user path before all variants
 - data loading before interaction polish when the flow depends on data
 - accessibility and keyboard behavior with the component, not after it
 - responsive behavior before claiming visual completion
+
+Use a plan when the UI work has independent stack, data, shell, interaction,
+visual, browser-verification, or audit closure stories.
 
 Prefer composition over configuration-heavy components. Separate data loading from
 presentation when it improves clarity. Match the project's existing state and
@@ -113,6 +128,9 @@ Review UI against:
 
 Use `loom-audit` for fresh-context UI review when closure depends on subjective
 quality, accessibility, performance, or browser evidence.
+
+When that review is delegated to a fresh worker, compile a Ralph packet and launch
+the worker from the packet path.
 
 ## Done Means
 

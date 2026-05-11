@@ -2,24 +2,34 @@
 
 Optional workflow routes for Loom.
 
-Core gives agents the record surfaces. Playbooks help agents move through those
-surfaces when the task has a familiar shape: debug this, test this first, map this
-codebase, verify this UI, review this diff, migrate this safely, prepare this for
-release.
+The required package gives agents the record skills and surfaces. Playbooks help
+agents move through those surfaces when the task has a familiar shape: debug this,
+test this first, map this codebase, verify this UI, review this diff, migrate this
+safely, prepare this for release.
 
-Install [Loom Core](../loom-core/README.md) first. Playbooks depend on Core.
+Install [Loom Core](../loom-core/README.md) first. Playbooks assume the operating
+doctrine and record skills are already available.
 
 [Agent Loom](../README.md) / [Protocol](../PROTOCOL.md) / [Install](../INSTALL.md) / [Core](../loom-core/README.md)
 
 ## What Playbooks Add
 
-A playbook routes the work. Core records carry durable facts.
+A workflow-specific skill routes task-shaped work. A record skill owns a Loom
+surface and its procedure. Loom records carry durable facts.
 
-A playbook gives the agent workflow pressure while results still land in Core:
-reproduction evidence, research, specs, tickets, plans, audit findings, knowledge,
-or constitution decisions.
+A workflow-specific skill gives the agent workflow pressure while results still
+land in Loom records: reproduction evidence, research, specs, tickets, plans,
+audit findings, knowledge, or constitution decisions.
 
-Use Playbooks when generic Core routing is too thin for the work. Examples:
+When a workflow-specific skill routes results through another Loom skill, follow
+the target skill's procedure and guidance completely. The route is a required
+handoff, not a shortcut around the target skill.
+
+Vague work stays in outer-loop shaping until the next Loom surface is clear;
+complex work becomes ticket-ready slices; delegated worker runs use Ralph packets.
+
+Use workflow-specific skills when general Loom routing is too thin for the work.
+Examples:
 
 - debugging should preserve the failure before the fix
 - TDD should preserve red and green evidence
@@ -75,7 +85,7 @@ harness.
 
 ## How They Stay Loom
 
-Playbooks use Core's record layers.
+Playbooks use record skills and their procedures.
 
 - debugging can create evidence, research, specs, tickets, audit, and knowledge
 - architecture work can create specs, plans, tickets, evidence, and audit
@@ -83,7 +93,7 @@ Playbooks use Core's record layers.
 - Git coordination can protect branches and worktrees while tickets keep live execution state
 - shipping can draft communication while tickets and evidence control what can be claimed
 
-The workflow can end. Core records keep the result.
+The workflow can end. Loom records keep the result.
 
 ## Install Or Expose Playbooks
 
@@ -107,7 +117,8 @@ use the native manifests in this package. Harness-specific commands live in
 
 ## Boundary
 
-Playbooks are reusable routes for coding agents. Core remains the protocol.
+Playbooks are reusable routes for coding agents. They do not add durable surfaces
+or weaken record-skill procedure.
 
-Use Core when the next record move is clear. Add a playbook when the workflow
-itself needs pressure.
+Use a record skill when the next record move is clear. Add a playbook when the
+workflow itself needs pressure.

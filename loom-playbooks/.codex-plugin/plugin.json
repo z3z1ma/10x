@@ -1,6 +1,6 @@
 {
   "name": "loom-playbooks",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Optional Loom workflow playbook skills for Codex; requires loom-core for using-Loom doctrine.",
   "author": {
     "name": "z3z1ma"

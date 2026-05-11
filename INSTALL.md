@@ -4,7 +4,7 @@ Install Core first. Add Playbooks if you want workflow routes.
 
 | Package | Required | Provides |
 | --- | --- | --- |
-| `loom-core` | yes | `using-loom`, Core record skills, templates, references, optional preload hooks |
+| `loom-core` | yes | `using-loom`, record skills, templates, references, optional preload hooks |
 | `loom-playbooks` | no | workflow routes for debugging, TDD, review, migration, UI work, shipping, and similar tasks |
 
 Every install method exposes the same Markdown skills. Native manifests and hooks
@@ -47,9 +47,9 @@ If your harness has `AGENTS.md`, user rules, or a similar instruction file, keep
 the pointer short:
 
 ```md
-Loom is active here. Use `using-loom` before Loom work unless Core has already
-preloaded the same doctrine. Route durable facts through Loom Core records.
-Playbooks are optional routes over Core.
+Loom is active here. Use `using-loom` before Loom work unless the same doctrine is
+already preloaded. Route durable facts through Loom records. Optional workflow
+skills add routes without changing the owning surfaces.
 ```
 
 ## OpenCode
@@ -89,9 +89,10 @@ For a local clone, point at the package entrypoints:
 }
 ```
 
-`@z3z1ma/open-loom-core` registers Core skills and preloads the ordered
+`@z3z1ma/open-loom-core` registers record skills and preloads the ordered
 `using-loom` files through `config.instructions`. `@z3z1ma/open-loom-playbooks`
-adds optional playbook skills and expects Core to supply doctrine.
+adds optional workflow-specific skills and expects the operating doctrine to be
+available.
 
 OpenCode package engines currently require `>=1.14.22 <2`.
 
@@ -241,7 +242,7 @@ Use using-loom. Inspect this repository and create only the Loom records needed 
 Start a task:
 
 ```text
-Use using-loom. I want to work on: <goal>. Shape the next move with me if needed, then route durable facts through Core records.
+Use using-loom. I want to work on: <goal>. Shape the next move with me if needed, then route durable facts through Loom records.
 ```
 
 Delegate a bounded implementation pass:

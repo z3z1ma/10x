@@ -13,6 +13,10 @@ Agent Loom gives that work a repo-local shape. It turns a coding session into
 Markdown records: specs, tickets, research, evidence, audit, knowledge, and
 bounded worker packets.
 
+The loop is deliberate: shape vague work with the human, slice complex work into
+ticket-ready units, hand bounded worker runs through Ralph packets, and claim only
+what evidence and audit support.
+
 **The session is disposable. The work products compound.**
 
 [Install](INSTALL.md) / [Protocol](PROTOCOL.md) / [Architecture](ARCHITECTURE.md) / [Core](loom-core/README.md) / [Playbooks](loom-playbooks/README.md)
@@ -42,7 +46,7 @@ The forms are for the model. Humans get the trail.
 ```mermaid
 flowchart TB
   Goal["human goal"] --> Shape["shape with the agent"]
-  Shape --> Records["Core records"]
+  Shape --> Records["Loom records"]
   Records --> Ticket["ticket: live work"]
   Ticket --> Packet["Ralph packet when delegation helps"]
   Ticket --> Code["code change"]
@@ -170,11 +174,12 @@ Some adapters preload `using-loom`. If they do, continue straight into the work.
 
 | Package | Role |
 | --- | --- |
-| `loom-core/` | mandatory `using-loom` doctrine, Core skills, templates, references, and adapter surfaces |
-| `loom-playbooks/` | optional workflow playbooks that route through Core |
+| `loom-core/` | mandatory `using-loom` doctrine, record skills, templates, references, and adapter surfaces |
+| `loom-playbooks/` | optional workflow-specific skills that route through Loom surfaces |
 
-Core is the protocol. Playbooks are optional routes over Core for common software
-workflows.
+The required package carries the operating doctrine and record skills. Optional
+workflow-specific skills help after the agent has shaped the next move and knows
+which Loom surface owns it.
 
 There is no daemon, database, dashboard, required MCP server, product CLI, or
 hidden runtime. Markdown is the work surface because humans and agents can inspect

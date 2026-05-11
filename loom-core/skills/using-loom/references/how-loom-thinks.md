@@ -63,6 +63,26 @@ the reasoning.
 
 A record should help a future agent reason, recover, verify, or act.
 
+## Workflow-Specific Skills Move Through Record Skills
+
+A record skill owns a Loom surface and its procedure: constitution, research,
+specs, plans, tickets, evidence, audit, knowledge, or packets. A
+workflow-specific skill adds task-shaped pressure, such as debugging, testing,
+UI work, migration, review, or release. It does not own a durable surface.
+
+When a workflow-specific skill routes to a record skill or another Loom skill,
+follow the target skill's procedure and guidance completely. The routing skill
+narrows the work; it does not abbreviate record shape, evidence, audit, ticket,
+or packet requirements.
+
+When a workflow-specific skill is active, keep using the surface that owns each
+truth: specs for intended behavior, plans for multi-ticket strategy, tickets for
+live execution, packets for worker contracts, evidence for observations, and
+audit for fresh-context review.
+
+If workflow guidance would execute before intent, scope, evidence, or ticket
+boundary is shaped, stay in the outer loop and route the missing truth first.
+
 ## Record When It Helps
 
 Always route work through Loom. Create records when they help.

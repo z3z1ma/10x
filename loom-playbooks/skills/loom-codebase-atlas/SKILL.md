@@ -10,11 +10,14 @@ Codebase atlas is a zoom-out playbook.
 It maps a relevant code area in terms of domain language, modules, callers,
 interfaces, and decisions, then records accepted reusable context in knowledge.
 
-## Core Dependency
+## Loom Surfaces
 
-Use `loom-core` first. This playbook composes `loom-knowledge`,
-`loom-research`, `loom-constitution`, `loom-specs`, `loom-evidence`, and
-`loom-tickets`.
+Route durable results through `loom-knowledge`, `loom-research`,
+`loom-constitution`, `loom-specs`, `loom-evidence`, and `loom-tickets`.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
 
 It explains the codebase. It does not replace specs, tickets, evidence, or audit.
 
