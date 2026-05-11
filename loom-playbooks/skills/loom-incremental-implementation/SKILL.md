@@ -1,133 +1,139 @@
 ---
 name: loom-incremental-implementation
-description: "Implement changes in small verified slices. Use when a feature, refactor, migration, or bug fix touches multiple files, feels too large to land at once, needs feature flags, or should remain working after each increment."
-compatibility: Markdown-native, script-free Loom protocol.
-metadata:
-  skill_kind: workflow
+description: "Use when non-trivial ticket or plan execution needs bounded implementation slices, sequencing, multiple-file/record changes, feature flags, refactor/behavior separation, worker handoff, evidence, and continuation state."
 ---
 
 # loom-incremental-implementation
 
-Incremental implementation keeps every step understandable, testable, and reversible.
+Incremental implementation is a playbook for executing one narrow slice at a time.
 
-This playbook coordinates thin execution slices inside the ticket/Ralph loop. It
-does not replace ticket truth, packet scope, evidence, or Git provenance.
+It keeps each change bounded, verifiable, and recoverable through tickets, Ralph
+packets, evidence, audit, and retrospective follow-up.
 
 ## Core Dependency
 
-This playbook requires `loom-core`. If `using-loom` and the core owner-layer
-skills are not installed or preloaded, stop and load/install `loom-core` instead
-of treating this playbook as a substitute for Loom doctrine or record grammar.
+Use `loom-core` first. This playbook depends on `loom-tickets`, `loom-ralph`,
+`loom-evidence`, `loom-audit`, `loom-plans`, and `loom-retrospective`.
 
-## What This Workflow Coordinates
+It does not replace ticket scope, packet scope, evidence, or audit.
 
-- one-logical-change-at-a-time execution
-- vertical, contract-first, and risk-first implementation slices
-- scope discipline during multi-file edits
-- safe defaults, feature flags, and rollback-friendly increments
-- per-slice verification and evidence handoff
+## Use This Playbook When
 
-## What This Workflow Does Not Own
+Use this playbook when:
 
-- intended behavior or acceptance; use specs and tickets
-- live execution status or closure; use tickets
-- child authority; use Ralph packets
-- commit, branch, merge, or worktree policy; use `loom-git`
-- release packaging; use `loom-ship`
+- implementing a non-trivial ticket
+- a plan has child tickets that must land in a safe sequence
+- a change touches multiple files or records
+- a feature should be built behind a flag or safe default
+- refactor and behavior work need to stay separate
+- a worker packet needs a tight execution loop
 
-## Use This Skill When
+Skip it for a single obvious edit whose ticket already gives a bounded path.
 
-- implementing a feature or change across more than one file
-- tempted to write a large batch of code before testing
-- refactoring or cleanup needs several independent steps
-- incomplete work needs to be merged safely behind flags or disabled paths
-- a ticket can be advanced by one complete, verifiable slice
+## Route
 
-## Do Not Use This Skill When
+Use this route:
 
-- the task is a single obvious local edit
-- the work lacks a ready ticket or clear behavior owner
-- the next step is planning, discovery, spike, codemap, or debugging
-- slicing would hide a needed migration, architecture, or spec decision
+```text
+select slice -> bound packet -> change -> verify -> record -> continue
+```
 
-## Default Procedure
+## Select Slice
 
-1. Read the owning ticket, acceptance IDs, write boundary, relevant source files,
-   tests, and any plan sequence.
-2. Pick one slice: vertical when possible, contract-first when parallel work needs a
-   seam, risk-first when uncertainty could invalidate later work.
-3. State what is in scope and explicitly what nearby cleanup, refactor, or feature
-   work is not in scope.
-4. Implement the smallest complete behavior or structural step that leaves the
-   system coherent.
-5. Use `loom-tdd` for behavior changes when a failing check is practical; otherwise
-   use observation-first or structural verification.
-6. Run the relevant verification after the slice, read output, and preserve evidence
-   when ticket acceptance or later critique depends on it.
-7. Reassess before the next slice: if behavior, architecture, migration, security,
-   or performance scope changed, route outward instead of continuing blindly.
-8. Use `loom-git` for atomic commit/provenance work when commits are requested or
-   branch/worktree state matters.
-9. Keep a feature flag, adapter, or disabled path only with owner, expiry or cleanup
-   trigger, and ticket disposition.
+Start from one active ticket or one plan execution unit.
 
-## Slice Rules
+Prefer slices that:
 
-- One slice changes one logical concern.
-- The project should build or be explicitly marked in a known intermediate state
-  after the slice.
-- The slice should be independently reviewable and revertable.
-- Refactors and features should be separate unless the ticket explicitly scopes the
-  refactor as part of the behavior change.
-- Adjacent issues become notes or follow-up tickets, not drive-by edits.
+- change one logical thing
+- leave the workspace in a working state
+- exercise a real behavior path when possible
+- have concrete evidence expectations
+- can stop cleanly when behavior, risk, policy, or sequencing changes
+- keep feature work, refactor, dependency change, generated output, and formatting
+  separate unless the ticket explicitly binds them
 
-## Common Rationalizations
+When a slice is too broad, route back to `loom-plans` or split the ticket.
 
-- **Rationalization:** "It is faster to build everything first and test at the end."
-  **Reality:** Bugs compound across slices and become harder to localize.
-- **Rationalization:** "This nearby cleanup is small."
-  **Reality:** Nearby cleanup widens review and evidence scope. Record it or create a separate ticket.
-- **Rationalization:** "A flag means incomplete work is harmless."
-  **Reality:** Flags need owner, expiry/cleanup trigger, and verification of relevant states.
-- **Rationalization:** "I'll split commits later."
-  **Reality:** Split before review and evidence, not after a tangled diff exists.
+## Bound Packet
 
-## Red Flags
+Use `loom-ralph` when handing work to a worker or when the execution contract needs
+fresh context.
 
-- more than one feature, refactor, config, or migration concern in the same slice
-- tests/build broken between slices without explicit ticket rationale
-- large uncommitted or unreviewable diff accumulates
-- feature flag has no owner or cleanup trigger
-- implementation continues after discovering spec or architecture ambiguity
-- verification output is stale or repeated without source changes
+The packet should name:
 
-## Verification
+- target ticket or plan unit
+- mission for this slice
+- read scope and write scope
+- files and records allowed to change
+- verification posture
+- stop conditions
+- expected ticket, evidence, and packet updates
 
-- [ ] Slice scope and out-of-scope nearby work are explicit.
-- [ ] Verification ran after the slice or limitation is recorded.
-- [ ] Behavior changes have TDD or observation-first proof proportional to risk.
-- [ ] Feature flags/adapters have owner, expiry/cleanup trigger, and evidence plan.
-- [ ] Next slice is still justified by current owner records.
+## Change
+
+Implement the smallest complete change for the slice.
+
+Guidelines:
+
+- follow the spec, ticket, and source reality in that order
+- read nearby code before introducing patterns
+- prefer direct code until repetition or boundary pressure justifies abstraction
+- keep incomplete behavior behind safe defaults or feature flags
+- avoid drive-by cleanup outside the ticket
+- stop if the work reveals a new behavior, policy, sequencing, or risk question
+
+## Verify
+
+Use the packet or ticket evidence posture.
+
+Common options:
+
+- `test-first`: red check, implementation, green check
+- `observation-first`: before observation, change, after observation
+- existing regression suite when the slice depends on broad safety
+- manual or browser observation for UI/runtime behavior
+
+Do not repeat passing checks without intervening changes unless the source state or
+risk changed.
+
+Before claiming a slice is done, run or cite verification from after the last
+material change. A previous passing check, a worker success report, or a plausible
+diff is not fresh evidence for the current source state.
+
+For delegated work, inspect the worker's changed files and evidence before moving
+to the next slice. Treat `done_with_concerns`, missing context, or blocked output as
+state to reconcile, not as background detail.
+
+## Record
+
+Update the ticket when material state changes.
+
+Create or update evidence when an observation supports the closure claim.
+
+Use `Status: review` when implementation appears complete but audit, acceptance,
+or evidence review remains.
+
+Route reusable learning through `loom-retrospective` when the slice reveals a
+procedure, trap, rejected path, or prevention note.
+
+## Continue
+
+After each slice, choose one:
+
+- next Ralph packet
+- more evidence
+- fresh-context audit
+- ticket closure
+- replanning
+- spec/research/constitution/knowledge update
+- stop and ask the operator
 
 ## Done Means
 
-- the ticket advanced by one coherent, evidence-backed step
-- the system is working or any intermediate state is explicitly owned by the ticket
-- no unrelated cleanup or feature work is hidden in the slice
-- continuation can resume from ticket, evidence, and Git/packet provenance
+The implementation pass is done when:
 
-## Read In This Order
-
-Read immediately for multi-file execution:
-
-1. `references/thin-slice-execution.md` for slicing strategies, scope discipline,
-   safe defaults, feature flags, rollback, and per-slice checks.
-2. the core `loom-tickets` skill to confirm live execution state and acceptance.
-3. the core `loom-evidence` and `loom-tickets` skills before making success,
-   acceptance, or closure claims.
-
-Then read conditionally:
-
-4. `skills/loom-tdd/SKILL.md` for behavior changes.
-5. `skills/loom-git/SKILL.md` for branch, commit, worktree, and diff hygiene.
-6. `skills/loom-agent-orchestration/SKILL.md` when multiple independent slices may use fresh workers.
+- each completed slice has evidence proportional to its claim
+- ticket state, packet output, and changed files agree
+- unrelated work was left out or routed to follow-up
+- the next move is explicit
+- closure waits for audit or explains why separate audit would not add useful trust

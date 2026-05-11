@@ -118,10 +118,12 @@ Skills are flat sibling subsystem playbooks. Each skill must be understandable
 from its own `SKILL.md`, references, and templates. Hidden inheritance, shipped
 helper scripts, and assembly-time behavior must not become the source of truth.
 
-`using-loom` is the mandatory package entry skill. It carries Loom's ordered
-operating doctrine as references. Harness adapters may preload those references as
-always-on context, but that preload is an optimization over the same skill package,
-not a separate doctrine surface.
+They make common engineering paths explicit: idea refinement, incremental
+implementation, TDD, source-driven work, doubt checks, UI engineering, browser
+testing, API design, debugging, domain language, codebase atlases, architecture
+deepening, prototyping, intake triage, Git isolation, parallel workers, code
+review, review response, simplification, security, performance, CI/CD, migration,
+branch finish, and launch.
 
 Templates are executable prompts for future agents. A good template should force
 real IDs, explicit scope, owner boundaries, evidence expectations, and next
