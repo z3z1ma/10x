@@ -34,8 +34,8 @@ grep -R -i -l '<keyword>' .loom/constitution/decisions 2>/dev/null
 grep -R -l '^Status: active' .loom/constitution/decisions/*.md 2>/dev/null
 ```
 
-Read superseded, retired, or completed decisions only when active records point to
-them, when resolving precedent, or when the new choice needs that history.
+Read superseded or retired decisions only when active records point to them, when
+resolving precedent, or when the new choice needs that history.
 
 Then summarize to the operator:
 

@@ -165,7 +165,6 @@ This repo has support material that is not product doctrine:
 - `examples/` contains internal fixtures and traces for maintainer review
 - `.loom/` contains dogfood records for this repo
 - `.opencode/` is a local consumption surface
-- `optional-utilities/` contains utility skills outside the default install
 
 Use those for review or dogfooding. Keep product behavior in `loom-core/skills`
 and `loom-playbooks/skills`.

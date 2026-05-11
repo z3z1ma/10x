@@ -202,12 +202,11 @@ it with ordinary tools.
 |   |-- skills/
 |   |-- loom-playbooks.mjs
 |   `-- package.json
-|-- examples/
-|-- optional-utilities/
+|-- evals/
 `-- .loom/
 ```
 
-`examples/` holds internal review fixtures. `.loom/` holds dogfood records for
+`evals/` holds internal review fixtures. `.loom/` holds dogfood records for
 this repo. The product surface remains `loom-core/skills` and
 `loom-playbooks/skills`.
 

@@ -33,7 +33,6 @@
 - Playbooks smoke: `npm --prefix loom-playbooks run smoke`.
 - Core package check: `npm --prefix loom-core run pack:check`.
 - Playbooks package check: `npm --prefix loom-playbooks run pack:check`.
-- Avoid root `npm run smoke:*` and `npm run pack:check` until `package.json` is fixed; they currently point at missing `loom-*/open-loom-*.mjs` files.
 - For Markdown-only edits, run `git diff --check`.
 - After Claude plugin manifest changes, run `claude plugin validate "$PWD/loom-core"` and `claude plugin validate "$PWD/loom-playbooks"`.
 - After Gemini manifest or bootstrap changes, run `gemini extensions validate "$PWD"`, `gemini extensions validate "$PWD/loom-core"`, and `gemini extensions validate "$PWD/loom-playbooks"`.

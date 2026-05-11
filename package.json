@@ -5,12 +5,12 @@
   "description": "Repository workspace for the Loom Markdown-native AI work protocol packages.",
   "type": "module",
   "scripts": {
-    "smoke:core": "node loom-core/open-loom-core.mjs --smoke",
-    "smoke:playbooks": "node loom-playbooks/open-loom-playbooks.mjs --smoke",
+    "smoke:core": "npm --prefix loom-core run smoke",
+    "smoke:playbooks": "npm --prefix loom-playbooks run smoke",
     "smoke:packages": "npm run smoke:core && npm run smoke:playbooks",
-    "pack:check:core": "npm pack --dry-run ./loom-core",
-    "pack:check:playbooks": "npm pack --dry-run ./loom-playbooks",
-    "pack:check": "npm run smoke:packages && npm run pack:check:core && npm run pack:check:playbooks"
+    "pack:check:core": "npm --prefix loom-core run pack:check",
+    "pack:check:playbooks": "npm --prefix loom-playbooks run pack:check",
+    "pack:check": "npm run pack:check:core && npm run pack:check:playbooks"
   },
   "keywords": [
     "opencode",

@@ -16,6 +16,5 @@
     "markdown",
     "playbooks"
   ],
-  "skills": "./skills/",
-  "hooks": {}
+  "skills": "./skills/"
 }

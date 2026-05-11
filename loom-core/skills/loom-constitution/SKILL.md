@@ -56,9 +56,10 @@ Read active decision records, roadmap records, and other nested records when the
 are relevant to the current work by slug, ID, title, topic, referenced subsystem,
 or grep result.
 
-Treat `superseded`, `retired`, and `completed` records as historical context.
-Read them only when active records point to them, when resolving precedent, or
-when the current work needs that history.
+Treat `superseded` and `retired` records as historical context. Treat `completed`
+roadmap records as historical context. Read historical records only when active
+records point to them, when resolving precedent, or when the current work needs
+that history.
 
 Create or edit constitutional records only when the operator asks for a
 constitutional change or the work clearly requires one.
@@ -89,8 +90,12 @@ Use these IDs by convention:
 * `roadmap:<slug>` for roadmaps
 * `principle:<slug>` for lightweight principle fragments
 
-Use these statuses unless a record explains otherwise: `draft`, `active`,
-`completed`, `superseded`, and `retired`.
+Use subtype-specific statuses:
+
+* Core constitution: `draft`, `active`, `superseded`, `retired`
+* Decision records: `draft`, `active`, `superseded`, `retired`
+* Principle fragments: `draft`, `active`, `superseded`, `retired`
+* Roadmap records: `draft`, `active`, `completed`, `superseded`, `retired`
 
 Relationships can appear naturally in prose. Add a `## Related` section only when
 explicit links materially help future agents.
@@ -120,8 +125,9 @@ Before creating, updating, retiring, or superseding constitutional records:
 3. Read active top-level principle fragments relevant to the change.
 4. Find and read active nested records relevant to the change by slug, ID, title,
    topic, referenced subsystem, or grep result.
-5. Read superseded, retired, or completed records only when needed to understand
-   precedent or resolve a reference.
+5. Read superseded or retired records only when needed to understand precedent or
+   resolve a reference. Read completed roadmap records only when roadmap history
+   is relevant.
 6. Identify the constitutional shape being changed.
 7. Read the relevant shape reference.
 8. Summarize the existing durable judgment and the proposed change.
@@ -159,5 +165,6 @@ Constitutional work is done when future agents can answer:
 * What judgment exists here?
 * What future work does it encourage, constrain, or rule out?
 * What alternative or failure mode should not be rediscovered?
-* What would make this judgment stale, superseded, completed, or retired?
+* What would make this judgment stale, superseded, or retired? For roadmap
+  records, what would make the strategic arc completed?
 * Which downstream records or code areas may need to be revisited?

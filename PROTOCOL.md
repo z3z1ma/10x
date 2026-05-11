@@ -108,7 +108,7 @@ Use the owning skill for details. The current Core lifecycles are:
 | plans | `open`, `active`, `blocked`, `review`, `completed`, `cancelled` |
 | specs | `draft`, `active`, `accepted`, `superseded`, `retired` |
 | research | `active`, `completed`, `superseded`, `cancelled` |
-| constitution | `draft`, `active`, `completed`, `superseded`, `retired` |
+| constitution | core/principle/decision: `draft`, `active`, `superseded`, `retired`; roadmap also allows `completed` |
 | evidence | `recorded` |
 | audit | `recorded` |
 | knowledge | `active` |
