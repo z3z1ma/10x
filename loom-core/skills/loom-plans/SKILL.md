@@ -63,10 +63,10 @@ Plans live under `.loom/plans/`.
 Useful starting points:
 
 ```bash
-find .loom/plans -name '*.md' -print | sort
-grep -R '^ID: plan:' .loom/plans || true
-grep -R '^Status:' .loom/plans || true
-grep -R '^Risk:' .loom/plans || true
+find .loom/plans -name '*.md' -print 2>/dev/null | sort
+grep -R '^ID: plan:' .loom/plans 2>/dev/null || true
+grep -R '^Status:' .loom/plans 2>/dev/null || true
+grep -R '^Risk:' .loom/plans 2>/dev/null || true
 ```
 
 When looking for a specific plan, prefer ID and filename matches before fuzzy
@@ -146,7 +146,9 @@ Complete a plan only when:
 
 - every execution unit has a concrete child ticket ID
 - every child ticket is closed, cancelled, or explicitly out of scope with reason
-- milestones are satisfied, revised, or explicitly not satisfied
+- milestones are satisfied or revised with authority before completion
+- unsatisfied milestones are routed to continued review, cancellation, authorized
+  scope change, or follow-up work instead of hidden inside completion
 - plan-level audit or review has happened when the strategy story needs it
 - Current State summarizes the final plan-level story
 - Journal records the material route to completion

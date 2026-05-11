@@ -14,15 +14,15 @@ Inspect `.loom/constitution/` before creating or changing a decision record.
 Read the active core constitution when it exists:
 
 ```bash
-grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null
+grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null || true
 ```
 
 Read active top-level principle fragments when their filename, ID, title, or
 visible content is relevant to the choice:
 
 ```bash
-find .loom/constitution -maxdepth 1 -name '*.md' -print
-grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null
+find .loom/constitution -maxdepth 1 -name '*.md' -print 2>/dev/null
+grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null || true
 ```
 
 Search existing decisions by slug, ID, title, concept, module, subsystem, policy,
@@ -31,7 +31,7 @@ and tradeoff before creating a new record:
 ```bash
 find .loom/constitution/decisions -name '*<keyword>*' -print 2>/dev/null
 grep -R -i -l '<keyword>' .loom/constitution/decisions 2>/dev/null
-grep -R -l '^Status: active' .loom/constitution/decisions/*.md 2>/dev/null
+grep -R -l '^Status: active' .loom/constitution/decisions/*.md 2>/dev/null || true
 ```
 
 Read superseded or retired decisions only when active records point to them, when

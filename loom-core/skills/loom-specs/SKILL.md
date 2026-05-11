@@ -80,12 +80,12 @@ Specs live under `.loom/specs/`.
 Useful starting points:
 
 ```bash
-find .loom/specs -maxdepth 1 -name '*.md' -print | sort
-grep -R '^ID: spec:' .loom/specs || true
-grep -R '^Type: Spec' .loom/specs || true
-grep -R '^Status:' .loom/specs || true
-grep -R 'REQ-[0-9][0-9][0-9]' .loom/specs || true
-grep -R 'SCN-[0-9][0-9][0-9]' .loom/specs || true
+find .loom/specs -maxdepth 1 -name '*.md' -print 2>/dev/null | sort
+grep -R '^ID: spec:' .loom/specs 2>/dev/null || true
+grep -R '^Type: Spec' .loom/specs 2>/dev/null || true
+grep -R '^Status:' .loom/specs 2>/dev/null || true
+grep -R 'REQ-[0-9][0-9][0-9]' .loom/specs 2>/dev/null || true
+grep -R 'SCN-[0-9][0-9][0-9]' .loom/specs 2>/dev/null || true
 ```
 
 Search by capability, domain term, interface name, user task, error state,

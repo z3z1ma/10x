@@ -2,7 +2,7 @@
 
 ID: decision:0001
 Type: Constitution Decision
-Status: draft
+Status: active
 Created: <YYYY-MM-DD>
 Updated: <YYYY-MM-DD>
 

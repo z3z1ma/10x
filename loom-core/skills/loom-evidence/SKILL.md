@@ -63,11 +63,11 @@ Evidence records live under `.loom/evidence/`.
 Useful starting points:
 
 ```bash
-find .loom/evidence -maxdepth 1 -name '*.md' -print | sort
-grep -R '^ID: evidence:' .loom/evidence || true
-grep -R '^Type: Evidence' .loom/evidence || true
-grep -R '^Observed:' .loom/evidence || true
-grep -R 'ACC-[0-9][0-9][0-9]' .loom/evidence || true
+find .loom/evidence -maxdepth 1 -name '*.md' -print 2>/dev/null | sort
+grep -R '^ID: evidence:' .loom/evidence 2>/dev/null || true
+grep -R '^Type: Evidence' .loom/evidence 2>/dev/null || true
+grep -R '^Observed:' .loom/evidence 2>/dev/null || true
+grep -R 'ACC-[0-9][0-9][0-9]' .loom/evidence 2>/dev/null || true
 ```
 
 Raw artifacts, when present, live under:

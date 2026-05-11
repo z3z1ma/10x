@@ -13,16 +13,16 @@ Inspect `.loom/constitution/` before creating or changing a roadmap record.
 Read the active core constitution when it exists:
 
 ```bash
-grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null
+grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null || true
 ```
 
 Read active top-level principle fragments when their filename, ID, title, or
 visible content is relevant to the roadmap:
 
 ```bash
-find .loom/constitution -maxdepth 1 -name '*.md' -print
-grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null
-grep -R -i -l '<keyword>' .loom/constitution/*.md 2>/dev/null
+find .loom/constitution -maxdepth 1 -name '*.md' -print 2>/dev/null
+grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null || true
+grep -R -i -l '<keyword>' .loom/constitution/*.md 2>/dev/null || true
 ```
 
 Search existing roadmap records by slug, ID, title, theme, milestone, strategic
@@ -31,7 +31,7 @@ arc, and sequencing pressure before creating a new record:
 ```bash
 find .loom/constitution/roadmap -name '*<keyword>*' -print 2>/dev/null
 grep -R -i -l '<keyword>' .loom/constitution/roadmap 2>/dev/null
-grep -R -l '^Status: active' .loom/constitution/roadmap/*.md 2>/dev/null
+grep -R -l '^Status: active' .loom/constitution/roadmap/*.md 2>/dev/null || true
 ```
 
 Inspect relevant plans or work records when they can answer factual questions,

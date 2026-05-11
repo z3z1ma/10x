@@ -59,8 +59,10 @@ blockage without inventing a plan of its own.
 
 The worker operates inside the packet.
 
-The worker may update source or work files within scope, the records named by the
-packet, evidence needed to keep the graph truthful, and the packet's worker output.
+The worker may update source or work files within scope, the records or evidence
+artifacts named by the packet, and the packet's worker output. If new evidence is
+needed but not authorized by write scope, the worker should stop or report the
+needed evidence instead of widening scope.
 
 The worker should not directly change high-authority direction while executing.
 Escalate before changing constitution, specs, plans, or research synthesis.
@@ -105,8 +107,9 @@ evidence, route to audit, return to outer-loop shaping, update another surface, 
 promote learning into knowledge.
 
 When the result will support closure, acceptance, or durable reuse, route the claim
-through fresh-context audit before treating the work as trustworthy. The audit may
-be a narrow pass over the target records, evidence, and diff.
+through fresh-context audit before treating the work as trustworthy unless the
+consuming surface explicitly records why a separate audit would not add useful
+trust. The audit may be a narrow pass over the target records, evidence, and diff.
 
 ## Freshness
 

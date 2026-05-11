@@ -38,6 +38,9 @@ If running a retrospective pass:
   evidence, packet output, diff, or related records
 - separate durable lessons from one-time execution detail
 - route each lesson to the surface that can carry it
+- use the owning skill before changing specs, plans, constitution, or research
+  synthesis; pause for operator authority when the lesson changes intended
+  behavior, strategy, durable judgment, or conclusions
 - update the originating record when follow-through should be visible there
 
 If only checking whether retrospective is needed:
@@ -59,7 +62,8 @@ changed files, repeated questions, and operator corrections.
 
 Distill durable lessons separately from local execution details.
 
-Promote accepted lessons into existing Loom surfaces.
+Promote accepted lessons into existing Loom surfaces through the procedure and
+authority gates of the surface that owns the truth.
 
 Prevent repeated mistakes by choosing a useful follow-through artifact or recording
 that no durable action is needed.
@@ -126,6 +130,8 @@ Retrospective work is done when:
 
 - durable lessons are separated from one-time execution detail
 - accepted lessons are promoted into existing Loom surfaces
+- high-authority promotions used the owning skill and required operator authority
+  when they changed intended behavior, strategy, durable judgment, or conclusions
 - prevention follow-up exists where it helps
 - the originating record says what happened when that improves recovery or closure
 - no reusable lesson remains only in chat, packet output, or a hard-to-find journal

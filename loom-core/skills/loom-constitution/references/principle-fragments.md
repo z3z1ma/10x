@@ -14,26 +14,26 @@ Inspect `.loom/constitution/` before creating or changing a principle fragment.
 Read the active core constitution when it exists:
 
 ```bash
-grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null
+grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null || true
 ```
 
 Read active top-level principle fragments when their filename, ID, title, or
 visible content is relevant to the proposed principle:
 
 ```bash
-find .loom/constitution -maxdepth 1 -name '*.md' -print
-grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null
-grep -R -i -l '<keyword>' .loom/constitution/*.md 2>/dev/null
+find .loom/constitution -maxdepth 1 -name '*.md' -print 2>/dev/null
+grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null || true
+grep -R -i -l '<keyword>' .loom/constitution/*.md 2>/dev/null || true
 ```
 
 Find relevant active decisions and roadmaps by slug, ID, title, topic,
 referenced subsystem, or grep result:
 
 ```bash
-find .loom/constitution -name '*<keyword>*' -print
-grep -R -i -l '<keyword>' .loom/constitution
-grep -R -l '^Status: active' .loom/constitution/decisions/*.md 2>/dev/null
-grep -R -l '^Status: active' .loom/constitution/roadmap/*.md 2>/dev/null
+find .loom/constitution -name '*<keyword>*' -print 2>/dev/null
+grep -R -i -l '<keyword>' .loom/constitution 2>/dev/null || true
+grep -R -l '^Status: active' .loom/constitution/decisions/*.md 2>/dev/null || true
+grep -R -l '^Status: active' .loom/constitution/roadmap/*.md 2>/dev/null || true
 ```
 
 Read superseded or retired records only when active records point to them, when

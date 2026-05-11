@@ -113,6 +113,10 @@ The worker must update this packet or return output with:
 - blockers, risks, or assumptions discovered
 - recommended next move for the consuming surface
 
+If this run supports closure, acceptance, evidence, audit, research, knowledge, or
+future recovery, preserve this output in the packet or in a cited durable record;
+do not leave it only in transient launch output.
+
 ## Worker Output
 
 <Worker fills this section or returns equivalent output through the launch

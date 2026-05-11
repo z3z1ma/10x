@@ -94,7 +94,7 @@ Avoid:
 - `notes`
 - `misc`
 - `workflow`
-- `alex`
+- `person-name`
 - `new-thing`
 
 Rename when the slug is misleading, then repair refs with grep.

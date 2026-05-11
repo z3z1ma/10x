@@ -55,6 +55,11 @@ Create or update a ticket when the lesson is executable follow-up work.
 Use audit when a claim, risk, evidence gap, implementation shape, or closure story
 needs fresh-context challenge.
 
+Promotion identifies the owning surface; it does not bypass that surface's
+procedure or authority gate. Before changing specs, plans, constitution, or
+research synthesis, use the owning skill and pause for operator authority when the
+lesson changes intended behavior, strategy, durable judgment, or conclusions.
+
 ## Promotion Quality
 
 A good promotion is:

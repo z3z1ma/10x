@@ -90,10 +90,8 @@ Each entry should explain why the record matters, not only name the ID.
 Example:
 
 ```markdown
-- `spec:20260509-ticket-lifecycle` - defines the intended status semantics this
-  ticket must preserve.
-- `research:20260508-agent-skill-patterns` - records the tradeoffs behind the
-  chosen skill structure.
+- `<spec-id>` - defines the intended status semantics this ticket must preserve.
+- `<research-id>` - records the tradeoffs behind the chosen implementation route.
 ```
 
 Add only records that materially constrain or explain the ticket.
@@ -187,8 +185,8 @@ Append material entries for:
 Use short dated entries when helpful:
 
 ```markdown
-- 2026-05-09: Set status to active and inspected related records before editing.
-- 2026-05-09: Ran `pytest ...`; tests passed. ACC-001 and ACC-002 satisfied.
+- YYYY-MM-DD: Set status to active and inspected related records before editing.
+- YYYY-MM-DD: Ran `pytest ...`; tests passed. ACC-001 and ACC-002 satisfied.
 ```
 
 Do not rewrite history to make the work look cleaner. Correct errors when needed,

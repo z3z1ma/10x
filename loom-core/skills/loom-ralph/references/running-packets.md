@@ -39,6 +39,10 @@ Before launching a worker, check:
 
 If these checks fail, fix the packet before launch.
 
+When the packet file is writable, set `Status: running` immediately before or as
+part of launch so future agents can distinguish an unlaunched packet from an
+in-flight worker run.
+
 ## Worker Procedure
 
 The worker should:
@@ -51,8 +55,12 @@ The worker should:
 - gather the expected evidence, review findings, or validation output
 - create or update records and artifacts named by the packet
 - fill the packet Worker Output section when allowed by write scope
-- set packet status to `consumed` when output is recorded, or report output through
-  the launch transport when the packet file is not writable
+- set packet status to `consumed` when output is recorded
+
+When the packet file is not writable, return output through the launch transport
+and identify where the parent must preserve it. Runs that support closure,
+acceptance, evidence, audit, research, knowledge, or future recovery should leave
+durable packet output or a cited durable record, not transport-only output.
 
 The worker should not silently widen scope. When the safe next move is outside the
 packet, return `blocked` or `escalate`.

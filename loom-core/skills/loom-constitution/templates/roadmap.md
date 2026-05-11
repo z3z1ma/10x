@@ -2,7 +2,7 @@
 
 ID: roadmap:<slug>
 Type: Constitution Roadmap
-Status: draft
+Status: active
 Created: <YYYY-MM-DD>
 Updated: <YYYY-MM-DD>
 

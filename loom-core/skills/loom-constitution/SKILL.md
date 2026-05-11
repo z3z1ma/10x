@@ -17,10 +17,10 @@ Constitutional records live under `.loom/constitution/`.
 When this skill is loaded, inspect the constitutional surface directly:
 
 ```bash
-find .loom/constitution -name '*.md' -print
-grep -R '^ID:' .loom/constitution
-grep -R '^Type:' .loom/constitution
-grep -R '^Status:' .loom/constitution
+find .loom/constitution -name '*.md' -print 2>/dev/null
+grep -R '^ID:' .loom/constitution 2>/dev/null || true
+grep -R '^Type:' .loom/constitution 2>/dev/null || true
+grep -R '^Status:' .loom/constitution 2>/dev/null || true
 ```
 
 If `.loom/constitution/` is absent or contains no Markdown files, no Loom
@@ -29,14 +29,14 @@ constitutional guidance is currently present.
 Start with active top-level constitutional records:
 
 ```bash
-find .loom/constitution -maxdepth 1 -name '*.md' -print
-grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null
+find .loom/constitution -maxdepth 1 -name '*.md' -print 2>/dev/null
+grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null || true
 ```
 
 Read the active core constitution first when it exists:
 
 ```bash
-grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null
+grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null || true
 ```
 
 Then read active top-level principle fragments when their filenames, IDs, titles,
@@ -46,10 +46,10 @@ Use filenames and slugs as semantic routing hints. Prefer focused lookup before
 reading nested constitutional records:
 
 ```bash
-find .loom/constitution -name '*<keyword>*' -print
-grep -R -i -l '<keyword>' .loom/constitution
-grep -R -l '^Status: active' .loom/constitution/decisions/*.md 2>/dev/null
-grep -R -l '^Status: active' .loom/constitution/roadmap/*.md 2>/dev/null
+find .loom/constitution -name '*<keyword>*' -print 2>/dev/null
+grep -R -i -l '<keyword>' .loom/constitution 2>/dev/null || true
+grep -R -l '^Status: active' .loom/constitution/decisions/*.md 2>/dev/null || true
+grep -R -l '^Status: active' .loom/constitution/roadmap/*.md 2>/dev/null || true
 ```
 
 Read active decision records, roadmap records, and other nested records when they
@@ -79,8 +79,8 @@ Each record uses plain body labels near the top:
 ID: decision:0001
 Type: Constitution Decision
 Status: active
-Created: 2026-05-08
-Updated: 2026-05-08
+Created: YYYY-MM-DD
+Updated: YYYY-MM-DD
 ```
 
 Use these IDs by convention:
@@ -96,6 +96,9 @@ Use subtype-specific statuses:
 * Decision records: `draft`, `active`, `superseded`, `retired`
 * Principle fragments: `draft`, `active`, `superseded`, `retired`
 * Roadmap records: `draft`, `active`, `completed`, `superseded`, `retired`
+
+Use `draft` only for unresolved constitutional records that should not guide
+future work yet. Activate a record before downstream work relies on it.
 
 Relationships can appear naturally in prose. Add a `## Related` section only when
 explicit links materially help future agents.

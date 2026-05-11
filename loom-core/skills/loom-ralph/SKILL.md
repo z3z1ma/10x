@@ -90,13 +90,13 @@ Ralph packets live under:
 Useful starting points:
 
 ```bash
-find .loom/packets/ralph -name '*.md' -print | sort
-grep -R '^ID: packet:' .loom/packets/ralph || true
-grep -R '^Type: Packet' .loom/packets/ralph || true
-grep -R '^Status:' .loom/packets/ralph || true
-grep -R '^Target:' .loom/packets/ralph || true
-grep -R '^Mode:' .loom/packets/ralph || true
-grep -R '^Context Style:' .loom/packets/ralph || true
+find .loom/packets/ralph -name '*.md' -print 2>/dev/null | sort
+grep -R '^ID: packet:' .loom/packets/ralph 2>/dev/null || true
+grep -R '^Type: Packet' .loom/packets/ralph 2>/dev/null || true
+grep -R '^Status:' .loom/packets/ralph 2>/dev/null || true
+grep -R '^Target:' .loom/packets/ralph 2>/dev/null || true
+grep -R '^Mode:' .loom/packets/ralph 2>/dev/null || true
+grep -R '^Context Style:' .loom/packets/ralph 2>/dev/null || true
 ```
 
 ## Packet IDs And Filenames
@@ -153,7 +153,8 @@ Change Class: short label or prose
 
 Use this lifecycle:
 
-- `compiled`: packet is ready for launch or pending worker action
+- `compiled`: packet is ready for launch and no worker has started from it
+- `running`: a worker launch has started and output has not yet been recorded
 - `consumed`: worker output was recorded and the packet has been used
 - `superseded`: target, context, scope, source state, or assumptions changed enough
   that another packet replaces it
@@ -199,7 +200,10 @@ Every Ralph packet should preserve these invariants:
 - context packaged as live references, hermetic content, or a deliberate hybrid
 - clear mission and output contract
 - explicit read scope and write scope
-- worker permission to update only the records and files named by the packet
+- worker permission to update only the records, files, and evidence artifacts named
+  by the packet
+- worker output recorded durably when the result supports closure, acceptance,
+  evidence, audit, research, knowledge, or future recovery
 - branch and worktree named when repository files may change
 - evidence, review, or verification expectation appropriate to the mode
 - stop conditions that fail closed instead of widening scope

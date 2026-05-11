@@ -38,11 +38,11 @@ artifact needs them.
 - knowledge records live flat under `.loom/knowledge/`
 - Ralph packets live under `.loom/packets/ralph/`
 
-Raw evidence artifacts may live under `.loom/evidence/artifacts/<slug>/` when the
-evidence record points at them.
+Raw evidence artifacts may live under `.loom/evidence/artifacts/YYYYMMDD-<slug>/`
+when the evidence record points at them.
 
-Raw research artifacts may live under `.loom/research/artifacts/<slug>/` when the
-research record points at them.
+Raw research artifacts may live under `.loom/research/artifacts/YYYYMMDD-<slug>/`
+when the research record points at them.
 
 ## Bootstrap
 

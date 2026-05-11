@@ -91,12 +91,12 @@ Audit records live under `.loom/audit/`.
 Useful starting points:
 
 ```bash
-find .loom/audit -maxdepth 1 -name '*.md' -print | sort
-grep -R '^ID: audit:' .loom/audit || true
-grep -R '^Type: Audit' .loom/audit || true
-grep -R '^Status: recorded' .loom/audit || true
-grep -R '^Target:' .loom/audit || true
-grep -R 'FIND-[0-9][0-9][0-9]' .loom/audit || true
+find .loom/audit -maxdepth 1 -name '*.md' -print 2>/dev/null | sort
+grep -R '^ID: audit:' .loom/audit 2>/dev/null || true
+grep -R '^Type: Audit' .loom/audit 2>/dev/null || true
+grep -R '^Status: recorded' .loom/audit 2>/dev/null || true
+grep -R '^Target:' .loom/audit 2>/dev/null || true
+grep -R 'FIND-[0-9][0-9][0-9]' .loom/audit 2>/dev/null || true
 ```
 
 ## Audit IDs And Filenames

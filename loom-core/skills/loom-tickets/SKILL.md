@@ -71,12 +71,12 @@ Tickets live under `.loom/tickets/`.
 Useful starting points:
 
 ```bash
-find .loom/tickets -name '*.md' -print | sort
-grep -R '^ID: ticket:' .loom/tickets || true
-grep -R '^Status:' .loom/tickets || true
-grep -R '^Risk:' .loom/tickets || true
-grep -R '^Priority:' .loom/tickets || true
-grep -R '^Depends On:' .loom/tickets || true
+find .loom/tickets -name '*.md' -print 2>/dev/null | sort
+grep -R '^ID: ticket:' .loom/tickets 2>/dev/null || true
+grep -R '^Status:' .loom/tickets 2>/dev/null || true
+grep -R '^Risk:' .loom/tickets 2>/dev/null || true
+grep -R '^Priority:' .loom/tickets 2>/dev/null || true
+grep -R '^Depends On:' .loom/tickets 2>/dev/null || true
 ```
 
 When looking for a specific ticket, prefer ID and filename matches before fuzzy
@@ -203,8 +203,9 @@ verification, audit, or final judgment is still the next honest move.
 
 Close only when:
 
-* each `ACC-*` item is satisfied, revised with authority, or explicitly not
-  satisfied with the consequence recorded
+* each `ACC-*` item is satisfied or revised with authority before closure
+* any unsatisfied acceptance is handled by a non-closed status, cancellation,
+  authorized scope change, or follow-up work instead of hidden inside closure
 * evidence supports the closure claim
 * audit has happened, or the ticket explains why a separate audit would not add
   useful trust
@@ -236,7 +237,8 @@ Ticket work is done when:
 * the ticket and its linked records contain enough context to execute or trust the
   result without chat history
 * `Status:` matches reality
-* `ACC-*` acceptance criteria are satisfied, revised, or explicitly not satisfied
+* `ACC-*` acceptance criteria are satisfied or revised with authority before
+  closure
 * evidence and audit state are truthful
 * Current State says where the work stands now
 * the Journal records material progress, blockers, decisions, evidence, review,

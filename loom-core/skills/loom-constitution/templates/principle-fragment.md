@@ -2,7 +2,7 @@
 
 ID: principle:<slug>
 Type: Constitution Principle Fragment
-Status: draft
+Status: active
 Created: <YYYY-MM-DD>
 Updated: <YYYY-MM-DD>
 

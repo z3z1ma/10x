@@ -73,11 +73,11 @@ Research records live under `.loom/research/`.
 Useful starting points:
 
 ```bash
-find .loom/research -maxdepth 1 -name '*.md' -print | sort
-grep -R '^ID: research:' .loom/research || true
-grep -R '^Type: Research' .loom/research || true
-grep -R '^Status:' .loom/research || true
-grep -R '^Updated:' .loom/research || true
+find .loom/research -maxdepth 1 -name '*.md' -print 2>/dev/null | sort
+grep -R '^ID: research:' .loom/research 2>/dev/null || true
+grep -R '^Type: Research' .loom/research 2>/dev/null || true
+grep -R '^Status:' .loom/research 2>/dev/null || true
+grep -R '^Updated:' .loom/research 2>/dev/null || true
 ```
 
 Raw source material, when present, lives under:

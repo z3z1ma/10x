@@ -170,7 +170,9 @@ Before completion, the plan should show:
 
 - every execution unit has a concrete child ticket ID
 - every child ticket is closed, cancelled, or explicitly out of scope with reason
-- milestones are satisfied, revised, or explicitly not satisfied
+- milestones are satisfied or revised with authority before completion
+- unsatisfied milestones are routed to continued review, cancellation, authorized
+  scope change, or follow-up work instead of hidden inside completion
 - validation, evidence, and audit expectations were handled at the right level
 - plan-level audit or review happened when the strategy story needed independent
   pressure

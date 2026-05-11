@@ -142,7 +142,9 @@ the implementation context.
 
 Close only when:
 
-* every `ACC-*` criterion is satisfied, revised, or explicitly not satisfied
+* every `ACC-*` criterion is satisfied or revised with authority before closure
+* unsatisfied acceptance is handled by a non-closed status, cancellation,
+  authorized scope change, or follow-up work instead of hidden inside closure
 * evidence named in Acceptance exists or its absence is justified
 * audit has happened, or the ticket explains why a separate audit would not add
   useful trust

@@ -38,13 +38,13 @@ Read likely hits only when they can change the work.
 These are examples, not mandatory steps:
 
 ```bash
-find .loom/knowledge -maxdepth 1 -name '*.md' -print | sort
-grep -R '^Type: Knowledge Preference' .loom/knowledge || true
-grep -R '^Type: Knowledge Procedure' .loom/knowledge || true
-grep -R '^Type: Knowledge Troubleshooting' .loom/knowledge || true
-grep -R '^Triggers:.*<term>' .loom/knowledge || true
-grep -R '^Applies To:.*<path-or-tool>' .loom/knowledge || true
-grep -R '<task-term-or-error>' .loom/knowledge || true
+find .loom/knowledge -maxdepth 1 -name '*.md' -print 2>/dev/null | sort
+grep -R '^Type: Knowledge Preference' .loom/knowledge 2>/dev/null || true
+grep -R '^Type: Knowledge Procedure' .loom/knowledge 2>/dev/null || true
+grep -R '^Type: Knowledge Troubleshooting' .loom/knowledge 2>/dev/null || true
+grep -R '^Triggers:.*<term>' .loom/knowledge 2>/dev/null || true
+grep -R '^Applies To:.*<path-or-tool>' .loom/knowledge 2>/dev/null || true
+grep -R '<task-term-or-error>' .loom/knowledge 2>/dev/null || true
 ```
 
 Retrieve knowledge when a preference, procedure, concept, atlas, entity,

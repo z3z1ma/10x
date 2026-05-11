@@ -62,7 +62,8 @@ If pruning or correcting knowledge:
 - rename when the slug hurts retrieval, then repair refs with grep
 - merge records that serve the same retrieval job
 - split records that serve unrelated retrieval jobs
-- delete records that no longer help current work
+- delete records that no longer help future retrieval, current practice, or safe
+  reuse
 
 If only finding or summarizing knowledge:
 
@@ -77,12 +78,12 @@ Knowledge records live flat under `.loom/knowledge/`.
 Useful starting points:
 
 ```bash
-find .loom/knowledge -maxdepth 1 -name '*.md' -print | sort
-grep -R '^ID: knowledge:' .loom/knowledge || true
-grep -R '^Type: Knowledge' .loom/knowledge || true
-grep -R '^Type: Knowledge Preference' .loom/knowledge || true
-grep -R '^Triggers:' .loom/knowledge || true
-grep -R '^Applies To:' .loom/knowledge || true
+find .loom/knowledge -maxdepth 1 -name '*.md' -print 2>/dev/null | sort
+grep -R '^ID: knowledge:' .loom/knowledge 2>/dev/null || true
+grep -R '^Type: Knowledge' .loom/knowledge 2>/dev/null || true
+grep -R '^Type: Knowledge Preference' .loom/knowledge 2>/dev/null || true
+grep -R '^Triggers:' .loom/knowledge 2>/dev/null || true
+grep -R '^Applies To:' .loom/knowledge 2>/dev/null || true
 ```
 
 A good search combines filename slugs, titles, trigger words, path names, domain
@@ -117,7 +118,7 @@ Avoid:
 - `notes`
 - `misc`
 - `workflow`
-- `alex`
+- `person-name`
 - `new-thing`
 
 ## Record Shape
