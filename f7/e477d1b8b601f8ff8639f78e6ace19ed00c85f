@@ -1,0 +1,278 @@
+evals/dota2/with-loom/.loom/tickets/20260510-rts-meta-verification.md
+  human 1-69
+evals/dota2/with-loom/package.json
+  human 1-10
+evals/dota2/with-loom/.loom/audit/20260510-rts-meta-mvp.md
+  human 1-70
+evals/dota2/without-loom/package.json
+  human 1-10
+evals/dota2/with-loom/.loom/specs/opendota-rts-meta-explorer.md
+  human 1-80
+evals/dota2/without-loom/styles.css
+  human 1-1262
+evals/dota2/with-loom/.loom/tickets/20260510-static-rts-meta-explorer.md
+  human 1-83
+evals/dota2/without-loom/README.md
+  human 1-17
+evals/dota2/without-loom/index.html
+  human 1-190
+evals/dota2/with-loom/.loom/plans/20260510-rts-meta-explorer.md
+  human 1-61
+evals/dota2/with-loom/app.js
+  human 1-645
+evals/dota2/with-loom/styles.css
+  human 1-865
+evals/dota2/with-loom/README.md
+  human 1-25
+evals/dota2/with-loom/.loom/research/20260510-opendota-api-shape.md
+  human 1-94
+evals/dota2/with-loom/index.html
+  human 1-173
+evals/dota2/with-loom/.loom/evidence/20260510-rts-meta-mvp-checks.md
+  human 1-60
+evals/dota2/without-loom/app.js
+  human 1-609
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 69,
+          "added_lines": 69,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-69",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/.loom/tickets/20260510-rts-meta-verification.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 10,
+          "added_lines": 10,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-10",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/package.json"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 70,
+          "added_lines": 70,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-70",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/.loom/audit/20260510-rts-meta-mvp.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 10,
+          "added_lines": 10,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-10",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/without-loom/package.json"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 80,
+          "added_lines": 80,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-80",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/.loom/specs/opendota-rts-meta-explorer.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 1262,
+          "added_lines": 1262,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-1262",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/without-loom/styles.css"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 83,
+          "added_lines": 83,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-83",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/.loom/tickets/20260510-static-rts-meta-explorer.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 17,
+          "added_lines": 17,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-17",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/without-loom/README.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 190,
+          "added_lines": 190,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-190",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/without-loom/index.html"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 61,
+          "added_lines": 61,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-61",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/.loom/plans/20260510-rts-meta-explorer.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 645,
+          "added_lines": 645,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-645",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/app.js"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 865,
+          "added_lines": 865,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-865",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/styles.css"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 25,
+          "added_lines": 25,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-25",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/README.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 94,
+          "added_lines": 94,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-94",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/.loom/research/20260510-opendota-api-shape.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 173,
+          "added_lines": 173,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-173",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/index.html"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 60,
+          "added_lines": 60,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-60",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/with-loom/.loom/evidence/20260510-rts-meta-mvp-checks.md"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 609,
+          "added_lines": 609,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1-609",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "evals/dota2/without-loom/app.js"
+    }
+  ],
+  "base_commit_sha": "8f9cef2198b729644f843a1094f67957a0023373",
+  "branch": "main",
+  "commit_sha": "f7e477d1b8b601f8ff8639f78e6ace19ed00c85f",
+  "commit_time": "2026-05-10T21:54:41-07:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.3",
+  "prompts": {
+    "human": {
+      "accepted_lines": 4323,
+      "agent_id": null,
+      "human_author": "z3z1ma <butler.alex2010@gmail.com>",
+      "overriden_lines": 0,
+      "total_additions": 4323,
+      "total_deletions": 0
+    }
+  },
+  "repo": "https://github.com/z3z1ma/agent-loom.git",
+  "schema_version": "authorship/3.0.0"
+}
