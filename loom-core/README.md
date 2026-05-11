@@ -1,93 +1,93 @@
 # Agent Loom Core
 
-Markdown-native control plane for agent software work.
+The required Loom package.
 
-Loom Core gives agents the core skills for shaping, executing, reviewing, and
-preserving work through grepable Markdown records.
+Core teaches agents how to turn software work into `.loom/` records: shape the
+goal, keep live work in tickets, prove claims with evidence, challenge important
+claims with fresh-context audit, hand bounded work to packets, and preserve useful
+lessons in knowledge.
 
-[Agent Loom](../README.md) / [Protocol](../PROTOCOL.md) / [Install](../INSTALL.md) / [Loom Playbooks](../loom-playbooks/README.md)
+If a harness installs only one Loom package, install this one.
 
-## What Core Is For
+[Agent Loom](../README.md) / [Protocol](../PROTOCOL.md) / [Install](../INSTALL.md) / [Playbooks](../loom-playbooks/README.md)
 
-Core is the Loom package an agent needs before it can do Loom work.
+## What Core Does
 
-It teaches the operating posture:
+Core gives agents the operating doctrine and the record surfaces that make Loom
+work recoverable.
 
-- load `using-loom` before Loom work
-- choose the surface that fits the durable claim or task
-- keep live execution state in tickets
-- separate evidence from inference
-- use fresh-context audit before trusting closure claims
-- use packets for bounded worker handoff
-- run retrospective promotion after significant work
-- preserve reusable understanding in knowledge
+- `using-loom` loads the posture every Loom session needs
+- Core skills tell the agent which surface owns each kind of truth
+- templates give records enough shape for continuation, proof, review, and handoff
+- references teach the protocol without requiring a hidden runtime
 
-Core is portable. Claude Code, OpenCode, Codex, Cursor, Gemini CLI, a generic
-skills directory, or another harness may expose it differently. The harness is
-transport. The protocol is the skills corpus.
+The harness is transport. The protocol is this package's `skills/` corpus.
 
-## Core Surfaces
+## The Surfaces
 
-| Surface | Role |
+| Surface | Job |
 | --- | --- |
-| `constitution` | durable identity, principles, constraints, decisions, roadmap direction |
+| `constitution` | durable judgment, policy, constraints, ADRs, roadmap direction |
 | `tickets` | bounded executable work, live state, acceptance, closure |
 | `research` | investigations, tradeoffs, rejected paths, null results, conclusions |
 | `specs` | intended behavior, requirements, scenarios, interfaces |
-| `plans` | complex-change decomposition, sequencing, recovery |
-| `evidence` | observed artifacts and validation output |
+| `plans` | strategy for complex work that needs several ticket-ready units |
+| `evidence` | observations, outputs, reproductions, screenshots, logs, validation |
 | `audit` | fresh-context review, findings, verdicts, residual risk |
-| `knowledge` | preferences, procedures, reusable understanding, retrieval cues |
-| `packets` | bounded worker contracts |
+| `knowledge` | preferences, procedures, accepted explanations, atlases, retrieval cues |
+| `packets` | bounded worker contracts under `.loom/packets/ralph/` |
 
-## Skills
+Retrospective is a promotion pass over those surfaces. It has no directory of its
+own.
 
-| Skill | Role |
+## The Skills
+
+| Skill | Job |
 | --- | --- |
-| `using-loom` | entry doctrine and operating posture |
-| `loom-constitution` | durable judgment, constraints, decisions, roadmap direction |
-| `loom-tickets` | bounded executable work and closure |
-| `loom-specs` | intended behavior, requirements, scenarios, interface contracts |
-| `loom-plans` | complex-change planning and sequencing |
+| `using-loom` | entry doctrine and session posture |
+| `loom-constitution` | durable project judgment and precedent |
+| `loom-tickets` | executable work units and closure |
+| `loom-research` | investigation and synthesis |
+| `loom-specs` | intended behavior contracts |
+| `loom-plans` | multi-ticket strategy and sequencing |
 | `loom-evidence` | durable observations and artifacts |
-| `loom-research` | durable investigations and synthesis |
 | `loom-audit` | fresh-context review and findings |
-| `loom-knowledge` | reusable knowledge and retrieval |
-| `loom-ralph` | packet mechanics and bounded worker handoff |
+| `loom-knowledge` | reusable understanding and retrieval |
+| `loom-ralph` | packetized worker handoff |
 | `loom-retrospective` | promotion and prevention after significant work |
 
-## Route
+## The Route
 
 ```text
-prompt -> shape -> record -> packet -> evidence -> audit -> closure -> retrospective -> knowledge
+shape with the human -> route to the right surface -> execute bounded work -> evidence -> audit -> reconcile -> promote
 ```
 
-Not every task needs every surface. Durable claims should land where future agents
-can find, inspect, and continue them.
+Small tasks can stay small. Create records when they make the work easier to
+recover, trust, hand off, review, or reuse.
 
-## Installing Or Exposing Core
+## Install Or Expose Core
 
-Expose this directory's `skills/` tree, or expose the package root when the
-harness understands package roots.
-
-Common local surfaces:
+Expose the package root when your harness understands package roots:
 
 ```text
 /absolute/path/to/agent-loom/loom-core
+```
+
+Expose the skill tree when your harness wants raw skills:
+
+```text
 /absolute/path/to/agent-loom/loom-core/skills
 ```
 
-Some harnesses also consume adapter metadata or package-plugin entrypoints around
-the same skills.
-
-Harness-specific instructions live in [INSTALL.md](../INSTALL.md).
+OpenCode can load `loom-core.mjs`. Claude Code, Codex, Cursor, and Gemini CLI use
+the native manifests or bootstrap files in this package. Harness-specific commands
+live in [INSTALL.md](../INSTALL.md).
 
 ## Boundary
 
-Core owns the Loom bootstrap doctrine and canonical core skills.
-
-Core is not a runtime, service, daemon, MCP server, product CLI, hidden database,
-or prompt dump. It is a Markdown-native skill corpus.
+Core owns Loom bootstrap doctrine and canonical record behavior. It ships as a
+Markdown skill corpus, with no daemon, database, dashboard, product CLI, MCP
+server, or prompt dump.
 
 Optional workflow routes live in [Loom Playbooks](../loom-playbooks/README.md).
-Playbooks depend on Core; Core owns the graph those workflows route through.
+Playbooks route through Core records. Core still owns durable project truth.
