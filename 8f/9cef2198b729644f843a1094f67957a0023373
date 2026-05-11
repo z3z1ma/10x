@@ -1,0 +1,10 @@
+---
+{
+  "attestations": [],
+  "base_commit_sha": "8f9cef2198b729644f843a1094f67957a0023373",
+  "commit_sha": "8f9cef2198b729644f843a1094f67957a0023373",
+  "commit_type": "commit_amend",
+  "git_ai_version": "1.4.3",
+  "prompts": {},
+  "schema_version": "authorship/3.0.0"
+}
