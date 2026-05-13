@@ -126,7 +126,7 @@ At each stage, decide:
 - open follow-up ticket
 - request audit
 
-Use `loom-audit` when launch confidence depends on fresh review of evidence,
+Use `loom-audit` when launch confidence depends on Ralph-backed review of evidence,
 rollout risk, migration integrity, security, or user impact.
 
 ## Communicate

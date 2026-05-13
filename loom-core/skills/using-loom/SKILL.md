@@ -14,8 +14,8 @@ understood, bounded, and routed into the right durable surface. Those surfaces a
 Markdown records written for humans and agents, with directory names for `find` and
 stable words, headings, labels, IDs, and refs for `grep`.
 
-The inner loop uses bounded worker packets to run fresh-context or separate-context
-work, and fresh-context audit to challenge claims before records rely on them.
+The inner loop uses Ralph packets to execute bounded ticket slices, run workers,
+and perform substantive audit review before records rely on claims.
 Packets carry enough source-linked context, scope, constraints, stop conditions,
 and evidence expectations for the worker to act without relying on chat history,
 while keeping the relevant records truthful as it works.
@@ -33,7 +33,7 @@ The default sequence is:
 
 ```text
 shape with the operator -> route durable truth -> slice executable work -> execute
-bounded tickets or packetized worker runs -> preserve evidence -> audit claims ->
+ticket slices through Ralph packets -> preserve evidence -> audit claims ->
 reconcile records
 ```
 
@@ -81,7 +81,7 @@ The Loom surfaces are:
   ticket, including decomposition, dependencies, validation, and recovery
 - evidence: observed facts, outputs, reproductions, screenshots, logs, and
   validation
-- audit: fresh-context review of claims, risks, evidence, and implementation shape
+- audit: adversarial review findings and verdicts from Ralph review runs
 - knowledge: preferences, procedures, accepted explanation, reusable
   understanding, and retrieval cues
 - packets: bounded contracts for worker handoff
@@ -99,7 +99,7 @@ Ask:
 - What surface owns the truth I am about to depend on or change?
 - Is this still a human-shaped outer-loop problem, or is it safe to execute?
 - What is the next smallest ticket-ready slice, and what makes it complete?
-- What packet bounds this worker handoff?
+- What Ralph packet bounds this worker handoff?
 - What evidence or audit would make the claim honest?
 - What knowledge should future agents load, retrieve, or not have to rediscover?
 

@@ -84,7 +84,7 @@ Common routes:
 - observed artifact, validation output, reproduction, screenshot, log, scan, or
   command result -> `loom-evidence`
 - executable follow-up work -> `loom-tickets`
-- fresh-context challenge, risk review, missing-evidence concern, or closure doubt
+- Ralph-backed challenge, risk review, missing-evidence concern, or closure doubt
   -> `loom-audit`
 
 Knowledge is the usual home for reusable explanations and prevention notes. Use

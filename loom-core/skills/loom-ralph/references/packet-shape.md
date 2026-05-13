@@ -87,11 +87,11 @@ If either value is unknown, say `unknown - <reason>` and explain why the packet 
 still safe to run. Unknown branch or worktree is a launch smell for mutating work.
 
 The packet needs enough source state for the worker and next agent to understand
-where execution happened and whether a fresh packet is needed.
+where execution happened and whether a replacement packet is needed.
 
 ## Source Snapshot
 
-Source snapshot is the packet's freshness handle.
+Source snapshot is the packet's currency handle.
 
 It may include:
 
@@ -103,7 +103,7 @@ It may include:
 
 If target, context, scope, source state, or assumptions changed materially after
 compilation, update the packet before launch or mark it `superseded` and write a
-fresh one.
+new one.
 
 ## Worker Record Updates
 
@@ -120,7 +120,7 @@ The packet's Worker Output section should summarize outcome, changed files,
 records changed, evidence gathered, unverified claims, risks, blockers, and
 recommended next move.
 
-## Freshness
+## Packet Currency
 
 Use a packet only while its target, context, scope, source state, branch, worktree,
 and assumptions still match reality.

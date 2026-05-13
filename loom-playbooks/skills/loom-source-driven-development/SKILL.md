@@ -82,10 +82,10 @@ Prefer sources in this order:
 Avoid treating forum posts, tutorials, generated summaries, model recall, or old
 blog posts as primary authority.
 
-When source inspection is delegated to a fresh or separate worker and the result
-will support research, tickets, evidence, or audit, compile a Ralph packet first
-and launch the worker from the packet path. Preserve durable conclusions in the
-owning Loom surface, not only in the worker reply.
+When source inspection is delegated to a worker and the result will support
+research, tickets, evidence, or audit, compile a Ralph packet first and launch the
+worker from the packet path. Preserve durable conclusions in the owning Loom
+surface, not only in the worker reply.
 
 ## Compare
 

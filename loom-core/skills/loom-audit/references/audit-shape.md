@@ -1,20 +1,17 @@
 # Audit Shape
 
-Audit is fresh-context adversarial review of the target, evidence, scope, and
+Audit records Ralph-backed adversarial review of the target, evidence, scope, and
 risks.
 
-## The Fresh-Context Standard
+## The Ralph Review Standard
 
-A meaningful audit needs a reviewer who did not share the shaping or
-implementation context.
+A meaningful audit starts from a Ralph review packet that packages exactly what the
+reviewer should inspect, rather than from the shaping or implementation transcript.
 
 The parent context may prepare a bounded review request and record the result. For
 substantive audit, that request should be a Ralph packet under
-`.loom/packets/ralph/`. The adversarial judgment itself must come from the
-fresh-context pass.
-
-Do not create `Type: Audit` for same-context self-review. When no fresh context is
-available, say audit was not performed and use another surface for local notes.
+`.loom/packets/ralph/`. The adversarial judgment itself must come from the Ralph
+review run.
 
 ## Create Audit Only When
 
@@ -23,7 +20,7 @@ Create an audit record when all of these are true:
 - there is a concrete target to review
 - the claim, risk, acceptance question, or review concern is clear enough to
   challenge
-- a fresh-context pass inspected the target or returned bounded review output
+- a Ralph review run inspected the target or returned bounded review output
 - the result should remain available beyond the current session
 - a consuming ticket, plan, spec, research record, evidence record, constitution
   record, knowledge record, handoff, or future agent can use the result
@@ -48,8 +45,8 @@ set, record ID, claim ID, or why the target needed audit.
 
 ## Bounded Audit Request
 
-A good audit request gives the fresh context enough to review without inheriting
-the implementer's assumptions.
+A good audit request gives the Ralph worker enough to review without inheriting the
+implementer's assumptions.
 
 Use a Ralph review packet for this request when audit is part of Loom work. The
 packet carries the review target, context, lenses, read scope, write scope, stop
@@ -84,12 +81,12 @@ Use the default sections unless an audit has a strong reason to vary:
 
 Audit does not use a journal. It records a review pass.
 
-When another fresh-context pass is needed, create another audit record or clearly
+When another Ralph review pass is needed, create another audit record or clearly
 note supersession in prose.
 
 ## Context And Evidence
 
-An audit should name what the fresh context actually inspected.
+An audit should name what the Ralph worker actually inspected.
 
 Depending on target, this may include:
 
@@ -113,7 +110,7 @@ and closure. A ticket can cite `audit:YYYYMMDD-<slug>#FIND-001`, but the ticket
 must record whether the finding was fixed, accepted as risk, superseded, converted
 to follow-up work, or rejected with evidence.
 
-For ticket work, audit is usually the fresh-context pass between implementation
+For ticket work, audit is usually the Ralph review pass between implementation
 evidence and closure. Keep that pass narrow when the ticket is narrow: challenge
 the ticket, acceptance, evidence, and diff rather than reopening the whole project.
 

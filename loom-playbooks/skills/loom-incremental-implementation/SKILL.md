@@ -23,8 +23,7 @@ completely. This playbook adds workflow pressure; it does not shorten the target
 skill's requirements.
 
 This workflow does not replace ticket scope, packet scope, evidence, or audit.
-Execute only ticket-ready slices, and use Ralph packets for delegated or
-fresh-context worker runs.
+Execute only ticket-ready slices, and run those slices through Ralph packets.
 
 ## Use This Playbook When
 
@@ -65,8 +64,8 @@ When a slice is too broad, route back to `loom-plans` or split the ticket.
 
 ## Bound Packet
 
-Use `loom-ralph` when handing work to a worker or when the execution contract needs
-fresh context.
+Use `loom-ralph` before changing a ticket slice so the execution contract has a
+packet boundary.
 
 Compile the packet under `.loom/packets/ralph/` before launch. The worker prompt
 should point to the packet path; the packet carries the slice contract.
@@ -134,7 +133,7 @@ After each slice, choose one:
 
 - next Ralph packet
 - more evidence
-- fresh-context audit
+- Ralph-backed audit
 - ticket closure
 - replanning
 - spec/research/constitution/knowledge update

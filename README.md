@@ -33,7 +33,7 @@ Loom makes the agent externalize that work while it happens:
 - what is in scope
 - what was tried
 - what was observed
-- what a fresh reviewer challenged
+- what a Ralph reviewer challenged
 - what future agents should reuse
 
 Those records live in `.loom/`. The agent can read them, update them, link them,
@@ -48,12 +48,11 @@ flowchart TB
   Goal["human goal"] --> Shape["shape with the agent"]
   Shape --> Records["Loom records"]
   Records --> Ticket["ticket: live work"]
-  Ticket --> Packet["Ralph packet when delegation helps"]
-  Ticket --> Code["code change"]
-  Packet --> Worker["fresh worker"]
+  Ticket --> Packet["Ralph packet: execution slice"]
+  Packet --> Worker["Ralph worker"]
   Worker --> Code
   Code --> Evidence["evidence: observed output"]
-  Evidence --> Audit["audit: fresh-context review"]
+  Evidence --> Audit["audit: Ralph-backed review"]
   Audit --> Reconcile["reconcile records"]
   Reconcile --> Knowledge["promote reusable knowledge"]
   Reconcile --> Shape
@@ -69,8 +68,8 @@ Loom forces useful friction at the exact points where agents usually blur things
 - specs keep intended behavior out of implementation guesses
 - tickets keep live execution state and acceptance in one place
 - evidence keeps observations separate from model claims
-- audit gives important claims a fresh-context challenge
-- packets keep worker runs bounded
+- audit gives important claims a Ralph-backed challenge
+- packets keep ticket execution and worker runs bounded
 - knowledge keeps accepted lessons searchable
 
 Meaningful closure needs graph support: ticket state, evidence, audit, and the
@@ -93,7 +92,7 @@ You get the fix and the trace.
 | specs | intended behavior, requirements, scenarios, interfaces |
 | plans | strategy for complex work that needs several ticket-ready units |
 | evidence | observed facts, outputs, reproductions, screenshots, logs, validation |
-| audit | fresh-context review, findings, verdicts, residual risk |
+| audit | Ralph-backed review, findings, verdicts, residual risk |
 | knowledge | preferences, procedures, accepted explanations, atlases, retrieval cues |
 | packets | bounded worker contracts under `.loom/packets/ralph/` |
 
@@ -110,7 +109,7 @@ flowchart TB
   B -->|complex change, decomposition, sequence| P["plan"]
   B -->|live scoped work, acceptance| T["ticket"]
   B -->|observed output, test, log, screenshot| E["evidence"]
-  B -->|fresh-context review, residual risk| Q["audit"]
+  B -->|Ralph-backed review, residual risk| Q["audit"]
   B -->|accepted reusable explanation| K["knowledge"]
   B -->|bounded worker contract| PKT["packet"]
 

@@ -14,7 +14,7 @@ Use the transport the workspace supports:
 
 - harness-native subagent
 - headless harness command that reads the packet path
-- manual fresh-context handoff
+- manual Ralph handoff
 - another documented transport
 
 Keep launch wrappers short. Every transport should point the worker at the packet

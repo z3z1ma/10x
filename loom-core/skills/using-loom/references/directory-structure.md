@@ -23,6 +23,7 @@ artifact needs them.
 |-- audit/
 |-- knowledge/
 `-- packets/
+|   |-- audit/
     `-- ralph/
 ```
 

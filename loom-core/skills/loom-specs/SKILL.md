@@ -13,6 +13,11 @@ shape, permission boundary, error state, or record shape should do.
 It turns fuzzy intent into requirements and scenarios that downstream tickets,
 packets, evidence, and audit can cite.
 
+The current spec set, meaning specs with `Status: active` or `Status: accepted`,
+should define the current product surface well enough that a future agent could
+reconstruct the intended behavior from scratch without relying on chat history or
+the current implementation as the behavior source of truth.
+
 Specs do not own live execution state, implementation progress, evidence
 sufficiency, audit verdicts, or ticket closure. Tickets own scoped acceptance for
 a work unit and may cite spec requirements and scenarios.
@@ -44,6 +49,8 @@ If creating or reshaping a spec:
   facts
 - inspect source reality when current behavior, interfaces, errors, or constraints
   matter
+- choose one coherent product slice before writing requirements; split the work
+  when materially different product surfaces would otherwise share one spec
 - shape fuzzy behavior until requirements, scenarios, boundaries, and open
   questions are clear enough for downstream work
 - use `templates/spec.md`
@@ -54,6 +61,9 @@ If updating a spec:
 - read the whole spec
 - search for inbound references to affected `REQ-*` and `SCN-*` IDs when behavior
   changes
+- check whether the spec still represents the current product surface slice it
+  claims; if not, narrow it, split it, supersede it, or retire it before relying on
+  it
 - classify the amendment as added, modified, removed, renamed, or superseded
 - update requirements, scenarios, evidence expectations, and open questions
   together
@@ -135,16 +145,74 @@ Use this lifecycle:
 
 - `draft`: the contract is being shaped and downstream work should not rely on it
   unless the open risk is explicit
-- `active`: current working behavior truth, usable by downstream work with named
-  open questions and limits
+- `active`: current working behavior truth for the named product slice, usable by
+  downstream work with named open questions and limits
 - `accepted`: reviewed enough that downstream tickets, packets, evidence, and
-  audit can rely on it as the behavior contract
+  audit can rely on it as the current behavior contract for the named product
+  slice
 - `superseded`: replaced by a named successor
 - `retired`: intentionally no longer used
 
 Use `active` for current contracts that are useful but still evolving.
 
 Use `accepted` when the contract is stable enough for downstream records to rely on.
+
+An `active` or `accepted` spec must represent the current product surface slice it
+claims. If the product surface changed enough that the spec would mislead a
+ticket, packet, evidence plan, audit, or future agent, update the spec immediately
+or change its status to `superseded` or `retired`.
+
+Use `superseded` when a successor spec now owns the behavior. Use `retired` when
+the product surface, workflow, interface, or behavior no longer exists or should no
+longer guide work.
+
+## Current Spec Set
+
+Treat `active` and `accepted` specs as the current behavior map for the product
+surface. Their collective job is regeneration-grade coverage: a future agent should
+be able to rebuild the intended behaviors, interfaces, workflows, record shapes,
+permission boundaries, error states, and quality contracts they cover without
+mining chat history or guessing from implementation details.
+
+This is a collective goal, not permission to make broad specs. When regeneration
+would require unrelated behavior areas, create or update multiple coherent specs.
+Use related records, plans, research, or knowledge to connect them, but keep the
+behavior contracts sliced.
+
+When you discover a current product surface area that no `active` or `accepted`
+spec covers, create or shape the missing spec before downstream work depends on an
+implicit behavior claim. When a current spec points at behavior that no longer
+exists or no longer works that way, update it, supersede it, or retire it.
+
+## Slicing Specs
+
+A spec should cover one coherent product slice: a behavior, workflow, interface,
+record shape, permission boundary, error semantic, or quality contract whose
+requirements change together and whose scenarios can be reviewed together.
+
+Do not create an all-encompassing spec for a whole product, package, application,
+agent, UI, protocol, or broad product surface. Use related specs, plans, research,
+or knowledge records to connect separate surfaces instead of hiding them inside one
+umbrella contract.
+
+Split a spec, or create separate specs from the start, when any of these are true:
+
+- the requirements involve different primary actors, workflows, interfaces,
+  commands, record types, permission domains, or user jobs
+- the areas can ship, regress, be deprecated, or be validated independently
+- downstream tickets would cite disjoint subsets and should not need the rest of
+  the spec to understand their acceptance
+- the evidence plan needs unrelated test types, screenshots, logs, review methods,
+  environments, or audit questions
+- one part may become stale, superseded, retired, or accepted while another remains
+  current or draft
+- the title, summary, or requirements need broad words such as `entire`, `all`,
+  `platform`, `system`, `product`, or repeated `and` clauses to stay honest
+
+If a broad spec already exists, do not keep expanding it. Extract coherent product
+slices into successor specs, move cross-surface coordination to a plan or related
+records list, and mark the old umbrella spec `superseded` or narrow it so its
+status remains truthful.
 
 ## Requirements And Scenarios
 
@@ -194,6 +262,11 @@ recorded as open questions with clear downstream limits.
 
 Every spec should preserve these invariants:
 
+- the spec owns one coherent product slice, not the entire product surface
+- `active` and `accepted` specs describe the current product surface slice; stale
+  specs are updated, superseded, or retired
+- the current spec set can regenerate intended product behavior without relying on
+  chat history or implementation archaeology
 - intended behavior is separated from implementation plan
 - requirements and scenarios are stable, citable, and observable
 - important boundaries, non-goals, constraints, and open questions are explicit
@@ -211,6 +284,10 @@ Every spec should preserve these invariants:
 Spec work is done when:
 
 - the spec has a truthful status
+- the spec slice is narrow enough that materially different product surfaces are
+  not collapsed into one contract
+- gaps in the current spec set are visible when the work reveals product behavior
+  needed for regeneration-grade coverage
 - behavior-bearing requirements and scenarios are clear enough to cite
 - open questions and downstream limits are visible
 - related records that constrain the behavior are linked or named

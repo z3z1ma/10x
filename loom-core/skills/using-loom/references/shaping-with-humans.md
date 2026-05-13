@@ -75,7 +75,7 @@ Stay in the outer loop when any of these are unclear:
 
 Do not jump from a fuzzy request to the first plausible implementation.
 
-If the work cannot yet be handed to a fresh agent with clear scope, constraints,
+If the work cannot yet be handed to a future agent with clear scope, constraints,
 evidence expectations, and stop conditions, it is still outer-loop work.
 
 ## Shape Toward The Right Surface
@@ -94,7 +94,7 @@ Use the surface that owns the truth:
 - plans for operator-shaped strategy across multiple tickets or execution units
 - tickets for bounded executable work
 - evidence for durable observations
-- audit for fresh-context review
+- audit for Ralph-backed adversarial review
 - knowledge for preferences, procedures, reusable accepted understanding, and
   retrieval cues
 - packets for delegated worker execution
@@ -103,7 +103,7 @@ When no durable truth changed, move forward with the smallest useful next step.
 
 ## Ready To Execute
 
-Execution is ready when a fresh agent could understand the goal, scope,
+Execution is ready when a future agent could understand the goal, scope,
 constraints, expected evidence, and stop conditions without reading the chat that
 produced them.
 

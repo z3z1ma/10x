@@ -63,8 +63,8 @@ A polished implementation of the wrong behavior is still an audit finding.
 
 ## Splitting Passes
 
-Use multiple fresh-context audit passes when one pass would blur different kinds
-of judgment.
+Use multiple Ralph review passes when one pass would blur different kinds of
+judgment.
 
 Split when the target is broad, high risk, cross-surface, security-relevant,
 user-facing, or likely to hide one class of risk behind another.

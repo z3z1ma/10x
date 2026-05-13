@@ -129,11 +129,11 @@ Review UI against:
 - performance and unnecessary rerenders
 - consistency with existing component patterns
 
-Use `loom-audit` for fresh-context UI review when closure depends on subjective
+Use `loom-audit` for Ralph-backed UI review when closure depends on subjective
 quality, accessibility, performance, or browser evidence.
 
-When that review is delegated to a fresh worker, compile a Ralph packet and launch
-the worker from the packet path.
+When that review is delegated to a worker, compile a Ralph packet and launch the
+worker from the packet path.
 
 ## Done Means
 

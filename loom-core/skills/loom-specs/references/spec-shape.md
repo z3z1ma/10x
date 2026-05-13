@@ -5,11 +5,21 @@ A spec is a durable behavior contract.
 It should be as small as the behavior allows and as precise as downstream work
 needs.
 
+A spec is not a product-wide constitution. It should describe one coherent product
+slice, and its status must stay truthful for the current product surface area it
+claims to cover.
+
+The current spec set, meaning `active` and `accepted` specs together, should be
+complete enough to regenerate the intended product behavior from scratch without
+depending on chat history or treating the current implementation as the behavior
+contract.
+
 ## Required Shape
 
 A useful spec says:
 
 - what behavior or interface it defines
+- what product slice it owns and where that slice stops
 - what problem, ambiguity, or shared contract requires a spec
 - what the desired behavior is
 - what is out of scope
@@ -21,6 +31,62 @@ A useful spec says:
 Use optional sections when they clarify downstream work: quality bar, interface
 contract, examples and non-examples, constraints, amendment notes, or related
 records.
+
+## Product Slice
+
+Choose the slice before writing requirements.
+
+A good spec slice is one behavior, workflow, interface, record shape, permission
+boundary, error semantic, or quality contract whose requirements change together
+and whose scenarios can be reviewed together.
+
+Do not write one all-encompassing spec for a whole product, package, application,
+agent, UI, protocol, or broad product surface. Separate product surfaces should be
+separate specs connected through `## Related Records`, a plan, research synthesis,
+or knowledge when broader orientation is useful.
+
+Use these split heuristics:
+
+- split by actor or job when different users, agents, operators, maintainers, or
+  systems need different outcomes
+- split by workflow when behaviors can be started, completed, blocked, retried, or
+  accepted independently
+- split by interface when APIs, commands, records, components, packets, files, or
+  data shapes have different callers or compatibility promises
+- split by risk or permission boundary when one area has different authorization,
+  privacy, safety, migration, or rollback concerns
+- split by evidence when one evidence plan cannot honestly validate the whole
+  contract without unrelated checks
+- split by lifecycle when one area may become `active`, `accepted`, `superseded`,
+  or `retired` independently of another
+
+Broad wording is a smell. If the title or summary needs `entire`, `all`,
+`platform`, `system`, `product`, or several unrelated `and` clauses, narrow the
+slice or create multiple specs.
+
+When a broad spec already exists, do not keep adding unrelated requirements. Extract
+coherent product slices into successor specs, keep only the cross-links needed for
+navigation, and mark the umbrella record `superseded` or narrow its scope until its
+status is truthful.
+
+## Spec Set Coverage
+
+The current spec set should act like a rebuildable behavior map. If all
+implementation disappeared, the `active` and `accepted` specs should describe the
+observable product surface well enough for downstream agents to recreate intended
+behaviors, interfaces, workflows, record shapes, permission boundaries, error
+states, quality bars, and compatibility expectations.
+
+Use that goal to find missing specs, not to enlarge individual specs. When a
+surface area is missing from the current set, add or shape a focused spec for that
+area. When a surface area is too broad for one coherent contract, create several
+specs and connect them through `## Related Records`, a plan, research synthesis, or
+knowledge.
+
+Coverage does not mean every implementation detail belongs in specs. Specs should
+define intended behavior, externally meaningful interfaces, scenarios, constraints,
+and evidence expectations. Tickets, code, evidence, audit, research, plans, and
+knowledge keep their own responsibilities.
 
 ## Requirements
 
@@ -128,6 +194,29 @@ Useful boundaries include:
 
 Use non-goals to prevent likely scope creep or downstream misinterpretation.
 
+## Current Surface And Status
+
+An `active` or `accepted` spec must describe the current product surface slice it
+claims to own. A stale active spec is worse than no spec because downstream tickets,
+packets, evidence, and audit will treat it as behavior truth.
+
+Before relying on a spec, and whenever product behavior changes, check source
+reality and related records enough to decide whether the spec still matches the
+current surface.
+
+If it does not match:
+
+- update it in place only when the same product slice and same cited IDs still own
+  the behavior without misleading existing references
+- split it when independent product surfaces were collapsed into one record
+- mark it `superseded` and name the successor when a new spec owns the behavior
+- mark it `retired` when the product surface or behavior no longer exists and has
+  no successor
+
+Do not leave a stale spec as `active` or `accepted` for historical context. History
+belongs in amendment notes, related records, research, or the superseded/retired
+record itself.
+
 ## Shaping Behavior
 
 Before writing or accepting a spec, shape the behavior until four things are true:
@@ -136,10 +225,14 @@ Before writing or accepting a spec, shape the behavior until four things are tru
   or record shape being defined
 - bounded scope: the spec can say what is covered, what is excluded, and where the
   contract stops
+- coherent slice: materially different product surfaces have been split or
+  explicitly kept out of scope
 - observable scenarios: the behavior can be probed through concrete scenarios,
   examples, commands, UI states, API calls, records, or review checks
 - downstream use: tickets, packets, evidence, audit, or future agents can cite the
   requirements and scenarios without redefining them
+- spec-set coverage: the work either improves regeneration-grade coverage of the
+  current product surface or explicitly marks the remaining behavior gap
 
 Inspect existing specs, tickets, plans, research, constitution, evidence,
 knowledge, and source files that already constrain the behavior.
@@ -189,6 +282,10 @@ mislead, mark the old ID as superseded in prose and add successor IDs.
 When amending, update related requirements, scenarios, evidence expectations, open
 questions, and status together so the spec remains coherent.
 
+If an amendment reveals that the spec covers significantly different product
+surfaces, stop treating the record as one contract. Split or supersede it before
+adding more requirements.
+
 ## Routing
 
 Route truth to the owning surface:
@@ -199,7 +296,7 @@ Route truth to the owning surface:
   research
 - durable judgment, policy, principles, or architectural precedent to constitution
 - observations, logs, screenshots, reproductions, or validation outputs to evidence
-- fresh-context adversarial review to audit
+- Ralph-backed adversarial review to audit
 - accepted reusable explanation to knowledge
 
 ## Contract Review
@@ -210,9 +307,15 @@ Before downstream work relies on a spec, check:
   and evidence expectations are covered or explicitly out of scope
 - correctness: requirements describe intended behavior, not only current
   implementation or a preferred solution shape
+- currency: `active` and `accepted` specs still represent the current product
+  surface slice they claim to own
+- slice: the spec does not collapse materially different product surfaces into one
+  umbrella contract
+- coverage: the current spec set does not force downstream work to infer intended
+  behavior from chat history or implementation archaeology
 - coherence: requirements, scenarios, examples, constraints, and open questions do
   not contradict one another
 - citability: `REQ-*` and `SCN-*` IDs can be cited without requiring chat history
 
-This is a spec-quality pass. Audit is the fresh-context challenge when a claim
-needs adversarial review.
+This is a spec-quality pass. Audit is the Ralph-backed challenge when a claim needs
+adversarial review.

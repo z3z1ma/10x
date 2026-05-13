@@ -32,7 +32,7 @@ consuming ticket needs to cite them.
 
 An audit with no findings should say so explicitly.
 
-No findings means this fresh-context pass did not identify material blockers or
+No findings means this Ralph review pass did not identify material blockers or
 concerns within the audited scope. It does not mean the target is accepted, closed,
 or correct outside that scope.
 

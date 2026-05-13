@@ -1,16 +1,19 @@
 ---
 name: loom-tickets
-description: "Manages Loom tickets: creates, scopes, resumes, executes from, updates, blocks, reviews, closes, and cancels self-contained bounded work units under .loom/tickets. Use whenever the user mentions tickets, scoping changes, implementing work, continuation from prior work, or closing/reviewing a scoped work item."
+description: "Manages Loom tickets: creates, scopes, prepares Ralph execution, updates, blocks, reviews, closes, and cancels self-contained bounded work units under .loom/tickets. Use whenever the user mentions tickets, scoping changes, implementing work, continuation from prior work, or closing/reviewing a scoped work item."
 ---
 
 # loom-tickets
 
 Tickets are Loom's fundamental unit of executable work.
 
-A ticket scopes one bounded change, contains enough instruction and context to
-execute that change from the ticket and its linked records, tracks live execution
-state, names acceptance criteria, records material progress, points to evidence,
-and gives future agents a safe continuation point.
+A ticket owns one bounded change, live execution state, acceptance criteria,
+material progress, evidence links, review posture, and closure. Ralph packets own
+the bounded execution and review slices that act on the ticket.
+
+A ticket contains enough instruction and context to compile Ralph packets from the
+ticket and its linked records, then gives future agents a safe continuation point
+after those packets return.
 
 A ticket is not a vague issue, planning document, research note, scratchpad,
 transcript summary, or parking lot.
@@ -46,8 +49,8 @@ If creating or shaping a ticket:
   acceptance are clear enough to act
 - use the single-closure-claim check: one ticket should produce one bounded result
   with one coherent evidence and closure story
-- include enough instruction and record links that the ticket can be executed from
-  the ticket and its linked documents without relying on chat history
+- include enough instruction and record links that the first Ralph packet can be
+  compiled from the ticket and its linked documents without relying on chat history
 
 If acting from, resuming, updating, blocking, reviewing, closing, or cancelling a
 ticket:
@@ -56,7 +59,8 @@ ticket:
 - read `references/acting-on-tickets.md`
 - read or already know the records named in `## Related Records`
 - keep work inside the ticket boundary
-- use `loom-ralph` when ticket work is handed to a bounded worker packet
+- use `loom-ralph` for each bounded implementation, review, source-inspection, or
+  audit slice that acts on the ticket
 - update the ticket when future continuation would be worse without the update
 
 If only finding, listing, or summarizing tickets:
@@ -126,7 +130,8 @@ state, blockers, evidence, review posture, or closure state.
 Use this lifecycle:
 
 * `open`: ready to start
-* `active`: execution is underway
+* `active`: Ralph packet execution is underway or returned output is being
+  reconciled into the ticket
 * `blocked`: a concrete blocker prevents safe progress
 * `review`: audit, acceptance review, or final verification is the next honest move
 * `closed`: acceptance is satisfied and the ticket tells a truthful story
@@ -148,7 +153,8 @@ Every ticket must preserve these invariants:
 
 * one bounded executable work unit
 * one coherent closure claim
-* enough context, instruction, and linked records to execute without chat history
+* enough context, instruction, and linked records to compile Ralph packets without
+  chat history
 * truthful `Status:`
 * explicit scope boundary
 * concrete `ACC-*` acceptance criteria
@@ -170,7 +176,10 @@ ticket, route back to shaping, or move it to the appropriate surface.
 When executing from a ticket:
 
 * set `Status: active` when work materially begins
-* execute from the ticket and its linked records, not from unstated chat context
+* compile or consume a Ralph packet for the bounded ticket slice being implemented,
+  reviewed, inspected, or audited
+* execute from the Ralph packet, ticket, and linked records, not from unstated chat
+  context
 * keep implementation inside the declared scope
 * update Current State when the next agent would otherwise be misled
 * append journal entries for material progress, blockers, decisions, evidence,
@@ -234,8 +243,8 @@ Cancellation is not failure. It is a truthful terminal state.
 Ticket work is done when:
 
 * the ticket still describes one bounded executable work unit
-* the ticket and its linked records contain enough context to execute or trust the
-  result without chat history
+* the ticket and its linked records contain enough context to compile Ralph packets
+  or trust returned packet output without chat history
 * `Status:` matches reality
 * `ACC-*` acceptance criteria are satisfied or revised with authority before
   closure

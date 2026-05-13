@@ -2,9 +2,8 @@
 
 Use strict boundaries when the operator is temporarily out of the loop.
 
-When work is delegated to a fresh or separate worker, use a Ralph packet. A packet
-is a bounded contract for one worker run. It does not outrank the source records it
-cites.
+When ticket work is executed or delegated, use a Ralph packet. A packet is a
+bounded contract for one run. It does not outrank the source records it cites.
 
 The packet exists to make one bounded worker run recoverable, reviewable, and safe
 to continue after the worker returns.
@@ -13,7 +12,7 @@ to continue after the worker returns.
 
 A Loom worker run is the packet file plus the launch that points to it. Compile the
 Ralph packet under `.loom/packets/ralph/` before invoking a harness-native
-subagent, headless harness command, or manual fresh-context handoff.
+subagent, headless harness command, or manual worker handoff.
 
 Keep the launch wrapper thin: identify the packet path, tell the worker to read it
 first, and request the packet's output contract. The packet carries the mission,
@@ -107,14 +106,15 @@ evidence, route to audit, return to outer-loop shaping, update another surface, 
 promote learning into knowledge.
 
 When the result will support closure, acceptance, or durable reuse, route the claim
-through fresh-context audit before treating the work as trustworthy unless the
-consuming surface explicitly records why a separate audit would not add useful
-trust. The audit may be a narrow pass over the target records, evidence, and diff.
+through audit backed by a Ralph review packet before treating the work as
+trustworthy unless the consuming surface explicitly records why audit would not add
+useful trust. The audit may be a narrow pass over the target records, evidence, and
+diff.
 
-## Freshness
+## Packet Currency
 
 Use a packet only while its target, context, scope, and assumptions still match
 reality.
 
-If the work has materially changed, write a fresh packet instead of asking the
-worker to guess.
+If the work has materially changed, write a new packet instead of asking the worker
+to guess.

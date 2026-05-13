@@ -107,8 +107,8 @@ Record what was not tested.
 
 ## Audit
 
-Use `loom-audit` for fresh-context security review when the change handles
-sensitive data, auth, permissions, external input, external services, irreversible
+Use `loom-audit` for Ralph-backed security review when the change handles sensitive
+data, auth, permissions, external input, external services, irreversible
 operations, or high blast radius behavior.
 
 Audit lenses:
@@ -140,5 +140,5 @@ The security pass is done when:
 - controls are in specs or scoped tickets
 - implementation includes tests or observations for expected abuse cases
 - evidence is redacted and scoped
-- fresh-context audit happened for material security risk
+- Ralph-backed audit happened for material security risk
 - residual risk and follow-up are visible

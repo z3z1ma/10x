@@ -10,7 +10,7 @@ Target: <ticket ID, claim ID, path, PR, branch, commit, diff range, record ID, o
 
 ## Summary
 
-<One or two sentences naming what was audited, why fresh-context review was needed,
+<One or two sentences naming what was audited, why Ralph review was needed,
 and the most important result.>
 
 ## Target
@@ -21,7 +21,7 @@ review.>
 
 ## Audit Scope And Lenses
 
-<Name the scope of the fresh-context pass and the lenses used. Say what was out of
+<Name the scope of the Ralph review pass and the lenses used. Say what was out of
 scope so the verdict is not overread.>
 
 ## Context And Evidence Reviewed
@@ -30,7 +30,7 @@ scope so the verdict is not overread.>
 claims, or summaries the auditor inspected. Say when important context was missing
 or stale.>
 
-- Ralph packet: `<packet-id or .loom/packets/ralph/path>` - <bounded fresh-context review contract>
+- Ralph packet: `<packet-id or .loom/packets/ralph/path>` - <bounded review contract>
 - <record, evidence ID, path, diff, command result, screenshot, or claim> - <why it mattered>
 
 ## Findings

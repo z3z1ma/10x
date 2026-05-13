@@ -18,6 +18,19 @@ Superseded By: spec:<slug>
 <Describe what behavior this spec defines, who or what surface it affects, and
 which downstream work should cite it.>
 
+## Product Slice
+
+<Name the single product surface area this spec owns and where that slice stops.
+If the intended behavior spans materially different actors, workflows, interfaces,
+permissions, evidence plans, or lifecycles, split it into multiple specs instead of
+creating one umbrella contract.>
+
+## Spec Set Coverage
+
+<Say how this spec contributes to the current `active`/`accepted` spec set's goal
+of regenerating intended product behavior from scratch. Name adjacent behavior that
+needs separate specs or is intentionally out of scope.>
+
 ## Problem
 
 <State the ambiguity, user need, quality gap, interface contract, or owner-record
@@ -31,8 +44,8 @@ out unless the public interface or command shape is the behavior.>
 
 ## Not Doing
 
-<Name attractive exclusions, non-goals, and boundaries that keep the contract
-focused.>
+<Name adjacent product surfaces, attractive exclusions, non-goals, and boundaries
+that keep the contract focused.>
 
 ## Requirements
 
@@ -101,8 +114,9 @@ or authority boundaries that shape acceptable behavior. Remove if not useful.>
 ## Amendment Notes
 
 <Use when changing an existing spec. Classify changes as added, modified, removed,
-renamed, or superseded. Name affected `REQ-*` and `SCN-*` IDs, successor IDs, and
-inbound reference checks. Remove for new specs.>
+renamed, split, retired, or superseded. Name affected `REQ-*` and `SCN-*` IDs,
+successor IDs, inbound reference checks, and any status changes needed because the
+current product surface moved. Remove for new specs.>
 
 ## Related Records
 

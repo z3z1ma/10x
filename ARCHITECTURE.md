@@ -63,7 +63,7 @@ Each surface owns one kind of truth.
 | specs | `.loom/specs/` | intended behavior, requirements, scenarios, interfaces |
 | plans | `.loom/plans/` | strategy and decomposition for complex work |
 | evidence | `.loom/evidence/` | observations, outputs, reproductions, screenshots, logs, validation |
-| audit | `.loom/audit/` | fresh-context review, findings, verdicts, residual risk |
+| audit | `.loom/audit/` | Ralph-backed review, findings, verdicts, residual risk |
 | knowledge | `.loom/knowledge/` | preferences, procedures, accepted explanation, atlases, retrieval cues |
 | packets | `.loom/packets/ralph/` | bounded worker contracts |
 
@@ -96,7 +96,7 @@ Core.
 ## Record Grammar
 
 Skills use frontmatter because harnesses expect it. Loom records use grepable body
-labels because humans and fresh agents can inspect and repair them without a
+labels because humans and future agents can inspect and repair them without a
 parser.
 
 ```text
@@ -122,10 +122,10 @@ the owning surface and whether the work is shaped enough to execute. When a
 workflow-specific skill routes to another Loom skill, the target skill's procedure
 and guidance still apply completely.
 
-The inner loop executes bounded work. Tickets drive live execution. Ralph packets
-hand one bounded run to a worker. Evidence records what happened. Audit challenges
-important claims with fresh context. The parent reconciles the result into the
-owning surfaces.
+The inner loop executes bounded work. Tickets drive live execution state. Ralph
+packets execute bounded ticket slices and worker runs. Evidence records what
+happened. Audit records adversarial review returned from Ralph review packets. The
+parent reconciles the result into the owning surfaces.
 
 This split is the core architecture. Coding harnesses can add transport, but they
 should not replace the outer-loop shaping or the inner-loop contract.
@@ -144,10 +144,10 @@ A packet is not accepted project truth. After the worker returns, the parent rea
 the packet output, diffs, records, and evidence, then updates the consuming
 surface.
 
-Substantive audit requires fresh context. The same session can prepare the audit
-request and record the result, but the adversarial judgment must come from a fresh
-pass. For Loom work, that request is a Ralph review packet; same-context
-inspection may help, but it should not be saved as `Type: Audit`.
+Substantive audit requires a Ralph review packet. The same session can prepare the
+audit request and record the result, but the adversarial judgment must come from
+the Ralph review run. Local inspection may help, but it should not be saved as
+`Type: Audit`.
 
 ## Adapter Rule
 
@@ -173,7 +173,7 @@ and `loom-playbooks/skills`.
 
 A Loom change should preserve these properties:
 
-- a fresh agent can find the right record with filenames, IDs, labels, and grep
+- a future agent can find the right record with filenames, IDs, labels, and grep
 - tickets remain the only live execution ledger
 - evidence records observations without deciding acceptance
 - audit records review without closing work

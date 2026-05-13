@@ -18,7 +18,7 @@ and requests the packet's output contract.
 
 Ralph supplies packet mechanics. The consuming surface still records the judgment,
 state, or durable result it owns. Tickets may use Ralph for implementation, audit
-may use Ralph for fresh-context review, and other Loom surfaces may use Ralph when
+may use Ralph for adversarial review, and other Loom surfaces may use Ralph when
 bounded worker execution improves the work.
 
 A Ralph run has two parts: an on-disk packet under `.loom/packets/ralph/` and the
@@ -36,7 +36,7 @@ Use this skill when:
 - launching a bounded subagent or harness run from a packet
 - defining read scope, write scope, stop conditions, or worker output
 - updating packet status or worker output
-- deciding whether packet context is fresh enough to run
+- deciding whether packet context is current enough to run
 - finding or summarizing packet state
 
 Shape the work before packetizing it. A Ralph packet should begin from a clear
@@ -176,7 +176,7 @@ Use one of these context styles:
   for inspection
 
 Live-reference packets are useful when current workspace state matters. Hermetic
-packets are useful when a fresh worker should review a frozen context bundle.
+packets are useful when a worker should review a frozen context bundle.
 
 ## Worker Outcomes
 

@@ -4,6 +4,8 @@
 
 - This repo ships a Markdown skill corpus, not an app runtime. Do not add daemon, database, dashboard, CLI, or helper-script assumptions unless explicitly changing architecture.
 - Product behavior lives in `loom-core/skills/` and `loom-playbooks/skills/`; package entrypoints, manifests, hooks, and extensions only expose those trees.
+- Model-visible Loom doctrine lives only in the shipped skill directories: `loom-core/skills/` and `loom-playbooks/skills/`. `README.md`, `PROTOCOL.md`, `ARCHITECTURE.md`, package READMEs, manifests, and adapter docs are not in the consuming model's context window unless a harness explicitly injects them, which Loom must not assume.
+- Do not rely on README or protocol prose to teach model behavior. If models need to follow a rule, encode it in the relevant skill `SKILL.md`, `references/`, or `templates/` under the package skill directories; keep docs as human-facing restatements only.
 - `loom-core/` is required and owns `using-loom`, Core record skills, templates, and references.
 - `loom-playbooks/` is optional, requires Core, and must not duplicate or preload `using-loom` doctrine.
 - Root `skills` is a symlink to `loom-core/skills` for the repo-root Gemini extension shim; treat `loom-core/skills/` as the real Core package surface.
@@ -12,7 +14,7 @@
 ## Dogfooding
 
 - `.loom/` is this repo's dogfood workspace state for future Agent Loom development; it is not part of the shipped product surface.
-- Use `.loom/` records to coordinate work on this repo, but keep exported behavior in `loom-core/skills/`, `loom-playbooks/skills/`, package entrypoints, manifests, hooks, and docs.
+- Use `.loom/` records to coordinate work on this repo, but keep model-visible behavior in `loom-core/skills/` and `loom-playbooks/skills/`. Package entrypoints, manifests, hooks, and docs may expose, preload, or restate skills; they must not become a second source of model doctrine.
 - Raw evidence and research artifacts under `.loom/*/artifacts/` stay ignored except scaffold `.gitkeep` files.
 
 ## Entrypoints And Adapters

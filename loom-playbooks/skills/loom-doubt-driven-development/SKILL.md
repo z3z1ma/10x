@@ -8,7 +8,7 @@ description: "Use when a non-trivial in-flight claim needs a challenge posture b
 Doubt-driven development is an in-flight challenge playbook.
 
 It names the claim, extracts the smallest reviewable artifact and contract, runs a
-fresh-context challenge when the claim risk warrants it, reconciles findings, and
+Ralph-backed challenge when the claim risk warrants it, reconciles findings, and
 routes durable output through audit, evidence, tickets, specs, research, or
 constitution.
 
@@ -94,9 +94,10 @@ Do not pass a broad transcript. Use records, diffs, evidence, and source excerpt
 Choose the challenge shape:
 
 - failing test or reproduction when behavior can be disproved directly
-- Ralph packet with `Mode: review` for a fresh-context worker
+- Ralph packet with `Mode: review` for a review worker
 - `loom-audit` when the result should be durable review judgment
-- local self-check only for low-risk work where no fresh context is available
+- local self-check only for low-risk work where Ralph review is not warranted or
+  available
 
 The reviewer should look for:
 
@@ -152,7 +153,7 @@ Stop when:
 The doubt pass is done when:
 
 - the claim, artifact, and contract are explicit
-- challenge output was gathered or the lack of fresh context is visible
+- challenge output was gathered or the lack of Ralph review is visible
 - findings were classified rather than copied forward blindly
 - durable findings, evidence, or follow-up were routed to Loom records
 - the next move is clear

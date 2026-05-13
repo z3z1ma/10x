@@ -4,13 +4,12 @@ The required Loom package.
 
 Core teaches agents how to turn software work into `.loom/` records: shape the
 goal, keep live work in tickets, prove claims with evidence, challenge important
-claims with fresh-context audit, hand bounded work to packets, and preserve useful
+claims with Ralph-backed audit, hand bounded work to packets, and preserve useful
 lessons in knowledge.
 
 The operating loop is: shape with the human, route durable truth, slice into
-bounded tickets, execute those tickets in the current context or launch Ralph
-packets when delegation helps, preserve evidence, audit claims, and reconcile
-records.
+bounded tickets, execute ticket slices through Ralph packets, preserve evidence,
+audit claims, and reconcile records.
 
 If a harness installs only one Loom package, install this one.
 
@@ -38,9 +37,9 @@ The harness is transport. The protocol is this package's `skills/` corpus.
 | `specs` | intended behavior, requirements, scenarios, interfaces |
 | `plans` | strategy for complex work that needs several ticket-ready units |
 | `evidence` | observations, outputs, reproductions, screenshots, logs, validation |
-| `audit` | fresh-context review, findings, verdicts, residual risk |
+| `audit` | Ralph-backed review, findings, verdicts, residual risk |
 | `knowledge` | preferences, procedures, accepted explanations, atlases, retrieval cues |
-| `packets` | bounded worker contracts under `.loom/packets/ralph/` |
+| `packets` | bounded ticket execution and worker contracts under `.loom/packets/ralph/` |
 
 Retrospective is a promotion pass over those surfaces. It has no directory of its
 own.
@@ -56,7 +55,7 @@ own.
 | `loom-specs` | intended behavior contracts |
 | `loom-plans` | multi-ticket strategy and sequencing |
 | `loom-evidence` | durable observations and artifacts |
-| `loom-audit` | fresh-context review and findings |
+| `loom-audit` | Ralph-backed review and findings |
 | `loom-knowledge` | reusable understanding and retrieval |
 | `loom-ralph` | packetized worker handoff |
 | `loom-retrospective` | promotion and prevention after significant work |

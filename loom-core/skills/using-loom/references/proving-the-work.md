@@ -26,7 +26,7 @@ honestly. It becomes dangerous when treated as broader proof than it is.
 
 ## Audit
 
-Audit is fresh-context adversarial review.
+Audit records adversarial review, normally returned from a Ralph review packet.
 
 Use audit to turn implementation, evidence, and record claims into a reviewable
 closure story. Tickets normally reach closure through audit; plans and other

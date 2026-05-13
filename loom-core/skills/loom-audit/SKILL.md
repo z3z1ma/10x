@@ -1,11 +1,12 @@
 ---
 name: loom-audit
-description: "Manages Loom audits: prepares, records, finds, summarizes, and consumes fresh-context adversarial review of claims, code changes, Loom records, evidence, risks, acceptance, and follow-through. Use when claims, code changes, Loom records, evidence, risks, acceptance, or follow-through need fresh-context adversarial review before they can be trusted."
+description: "Manages Loom audits: prepares Ralph review packets, records returned adversarial judgments, and finds, summarizes, and consumes audit findings, verdicts, risks, acceptance, and follow-through. Use when claims, code changes, Loom records, evidence, risks, acceptance, or follow-through need Ralph-backed adversarial review before they can be trusted."
 ---
 
 # loom-audit
 
-Audit is Loom's fresh-context adversarial review surface.
+Audit is Loom's adversarial review record surface for Ralph-backed review
+judgments.
 
 It records what was reviewed, what claims or risks were challenged, what context
 and evidence were inspected, what findings were produced, what verdict the auditor
@@ -37,20 +38,20 @@ judgment would materially improve trust, acceptance, recovery, or follow-through
 Tickets are the most common audit consumer, but audit can target any Loom surface
 with claims worth challenging.
 
-## Fresh-Context Requirement
+## Ralph Review Requirement
 
-Substantive audit requires fresh context.
+Substantive audit requires a Ralph review packet.
 
 The context that shaped or implemented the target may prepare the audit request,
 gather bounded context, and record the result. The adversarial judgment itself
-must come from a fresh-context pass.
+must come from the Ralph review run.
 
 Route the bounded review through an on-disk Ralph packet under
 `.loom/packets/ralph/`. The packet is the audit request and worker contract. Audit
-records the adversarial judgment after the fresh-context pass returns.
+records the adversarial judgment after the Ralph review run returns.
 
-When fresh context is unavailable, say audit was not performed. Same-context
-inspection may still be useful local review, but do not save it as `Type: Audit`.
+When a Ralph review cannot be run, say audit was not performed. Local inspection
+may still be useful review, but do not save it as `Type: Audit`.
 
 ## Dispatch
 
@@ -62,11 +63,11 @@ If preparing or recording an audit:
 - identify the concrete target
 - identify the claims, risks, acceptance criteria, or review concerns being
   challenged
-- gather only the context needed for a bounded fresh-context pass
+- gather only the context needed for a bounded Ralph review packet
 - prefer source records, diffs, evidence, and files over summaries when the source
   is needed for judgment
-- compile and launch a Ralph review packet for substantive fresh-context audit
-- after the fresh-context pass, record the result with `templates/audit.md`
+- compile and launch a Ralph review packet for substantive audit
+- after the Ralph review run, record the result with `templates/audit.md`
 
 If consuming audit findings:
 
@@ -143,7 +144,7 @@ body.
 
 Every audit record should preserve these invariants:
 
-- fresh-context review was performed
+- Ralph review was performed
 - target is explicit and grepable
 - audited claims, risks, or review concerns are clear
 - reviewed context, files, records, diffs, claims, and evidence are named enough
@@ -160,7 +161,7 @@ Every audit record should preserve these invariants:
 
 Audit work is done when:
 
-- the target and fresh-context audit boundary are clear
+- the target and Ralph review boundary are clear
 - the audit says what was inspected and what was not inspected
 - findings are concrete enough to act on or intentionally absent
 - the verdict is bounded by the reviewed context and evidence

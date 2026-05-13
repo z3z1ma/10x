@@ -67,7 +67,7 @@ surface, such as:
 - tickets for live execution state, finding disposition, and closure
 - plans for complex multi-ticket strategy and sequencing
 - evidence for durable observations
-- audit for fresh-context review findings and verdicts
+- audit for Ralph review findings and verdicts
 - research for investigation, tradeoffs, and source synthesis
 
 When knowledge conflicts with another active record or with source reality, do not

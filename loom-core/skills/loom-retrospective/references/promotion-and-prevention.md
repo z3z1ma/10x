@@ -53,7 +53,7 @@ inspectable.
 Create or update a ticket when the lesson is executable follow-up work.
 
 Use audit when a claim, risk, evidence gap, implementation shape, or closure story
-needs fresh-context challenge.
+needs Ralph-backed challenge.
 
 Promotion identifies the owning surface; it does not bypass that surface's
 procedure or authority gate. Before changing specs, plans, constitution, or

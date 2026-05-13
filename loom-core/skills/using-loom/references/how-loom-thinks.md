@@ -25,11 +25,10 @@ Ask which surface can maintain the truth:
   tickets or execution units
 - evidence owns observations, outputs, reproductions, screenshots, logs, and
   validation
-- audit owns fresh-context review of claims, risks, evidence, and implementation
-  shape
+- audit owns adversarial review findings and verdicts from Ralph review runs
 - knowledge owns preferences, procedures, accepted explanation, reusable
   understanding, and retrieval cues
-- packets own bounded worker contracts for fresh or separate execution context
+- packets own bounded execution, review, and worker contracts for Ralph runs
 
 When truth is in the wrong place, move the durable version to the appropriate
 surface and simplify the accidental one.
@@ -78,7 +77,7 @@ or packet requirements.
 When a workflow-specific skill is active, keep using the surface that owns each
 truth: specs for intended behavior, plans for multi-ticket strategy, tickets for
 live execution, packets for worker contracts, evidence for durable observations,
-and audit for fresh-context review.
+and audit for Ralph review findings.
 
 If workflow guidance would execute before intent, scope, evidence, or ticket
 boundary is shaped, stay in the outer loop and route the missing truth first.
@@ -115,9 +114,9 @@ execution unit, use plans.
 If an observation should remain available as proof, support, challenge, or future
 context, use evidence.
 
-If it needs fresh-context review, use audit.
+If it needs adversarial review through Ralph, use audit.
 
 If it creates reusable accepted understanding, preference, procedure, or retrieval
 cue, use knowledge.
 
-If it delegates bounded work to a fresh or separate worker, use a Ralph packet.
+If it executes or reviews a bounded ticket slice, use a Ralph packet.

@@ -4,7 +4,7 @@ Loom is a Markdown protocol for AI software work.
 
 It makes agents externalize the parts of engineering that chat usually swallows:
 intent, scope, uncertainty, proof, review, handoff, and lessons learned. Those
-records create a repo-local graph that humans and fresh agents can read with
+records create a repo-local graph that humans and future agents can read with
 ordinary file tools.
 
 The shipped protocol lives in `loom-core/skills`.
@@ -42,9 +42,9 @@ shaping, research, spec, plan, ticket, evidence, audit, knowledge, or packetized
 handoff. When a workflow-specific skill routes to another Loom skill, follow the
 target skill's procedure and guidance completely.
 
-The inner loop executes bounded work. Tickets carry live state. Ralph packets hand
-one run to a fresh or separate worker. Evidence records observations. Audit
-challenges important claims. The parent reconciles the result.
+The inner loop executes bounded work. Tickets carry live state. Ralph packets are
+the execution contract for ticket slices and worker runs. Evidence records
+observations. Audit challenges important claims. The parent reconciles the result.
 
 That is the protocol spine:
 
@@ -66,7 +66,7 @@ Loom surfaces live under `.loom/` and appear only when needed.
 | specs | `.loom/specs/` | intended behavior, requirements, scenarios, interfaces |
 | plans | `.loom/plans/` | strategy and decomposition for complex work |
 | evidence | `.loom/evidence/` | observations, outputs, reproductions, screenshots, logs, validation |
-| audit | `.loom/audit/` | fresh-context review, findings, verdicts, residual risk |
+| audit | `.loom/audit/` | Ralph-backed review, findings, verdicts, residual risk |
 | knowledge | `.loom/knowledge/` | preferences, procedures, accepted explanation, atlases, retrieval cues |
 | packets | `.loom/packets/ralph/` | bounded worker contracts |
 
@@ -135,9 +135,23 @@ Specs define durable behavior. Tickets define acceptance for one bounded work
 unit. Evidence records what was observed. Audit records review. Closure happens in
 the ticket.
 
+Specs should be sliced by coherent product surface. Do not use one umbrella spec to
+cover an entire product, package, application, agent, UI, or protocol when separate
+actors, workflows, interfaces, permissions, evidence plans, or lifecycles are
+involved. `active` and `accepted` specs must represent the current product surface
+slice they claim; stale specs should be updated, `superseded`, or `retired` before
+downstream work relies on them.
+
+The current spec set, meaning `active` and `accepted` specs together, should be
+regeneration-grade: it should define the intended product behavior well enough that
+a future agent could rebuild the product surface from scratch without chat history
+or implementation archaeology. Use that goal to add missing focused specs, not to
+merge separate product areas into one all-encompassing spec.
+
 ## Tickets
 
-Tickets are Loom's executable work unit and live ledger.
+Tickets are Loom's executable work unit and live ledger. Ralph packets are the
+execution contract for bounded ticket slices.
 
 A ticket must carry enough context, linked records, scope, acceptance criteria,
 current state, and journal history for another agent to continue without the chat
@@ -170,12 +184,11 @@ Evidence records observations: commands, tests, reproductions, screenshots, logs
 scans, files inspected, or artifact pointers. It should say what was observed, how
 it was observed, what it supports or challenges, and what it does not show.
 
-Audit records fresh-context adversarial review. It should name the target, claims,
+Audit records Ralph-backed adversarial review. It should name the target, claims,
 risks, context inspected, findings, verdict, required follow-up, and residual risk.
 
-Same-context review can be useful, but substantive `Type: Audit` records require a
-fresh-context pass. For Loom work, prepare that pass as a Ralph review packet and
-record the audit after the worker returns.
+Local review can be useful, but substantive `Type: Audit` records require a Ralph
+review packet. Record the audit after the worker returns.
 
 ## Retrospective And Knowledge
 

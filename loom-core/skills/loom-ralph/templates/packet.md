@@ -74,8 +74,8 @@ Source Paths:
 ## Source Snapshot
 
 <Record the target state, branch/worktree state, relevant records or files
-inspected, and any known concurrent or dirty state that could affect freshness.
-Keep this bounded.>
+inspected, and any known concurrent or dirty state that could make the packet
+stale. Keep this bounded.>
 
 ## Task
 

@@ -49,7 +49,7 @@ Route content elsewhere when it is:
 - complex multi-ticket strategy or sequencing to plans
 - observation, output, screenshot, reproduction, log, or validation result to
   evidence
-- fresh-context review finding or verdict to audit
+- Ralph review finding or verdict to audit
 - investigation, tradeoff, source synthesis, rejected path, or null result to
   research
 
