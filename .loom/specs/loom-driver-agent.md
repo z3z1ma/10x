@@ -209,5 +209,5 @@ Changing `spec:*` requirements during execution to match worker output, or launc
 - `spec:loom-weaver-agent` - defines the complementary outer-loop agent persona and its no-packet boundary.
 - `ticket:20260515-loom-driver-orchestration-tightening` - follow-up ticket that amended this spec and prompt behavior.
 - `research:20260514-direct-interactive-agent-surfaces` - compares supported harness agent surfaces and invocation semantics that constrain how named agents can be exposed.
-- `loom-core/skills/using-loom/references/delegating-to-workers.md` - defines packet-before-launch and worker boundary doctrine that Driver must reinforce.
+- `loom-core/skills/using-loom/references/04-delegating-to-workers.md` - defines packet-before-launch and worker boundary doctrine that Driver must reinforce.
 - `loom-core/skills/loom-ralph/references/running-packets.md` - defines packet launch, worker output, stop conditions, and parallel packet constraints.

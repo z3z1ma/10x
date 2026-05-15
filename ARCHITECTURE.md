@@ -79,13 +79,13 @@ the same files with clear source markers.
 Load order:
 
 1. `loom-core/skills/using-loom/SKILL.md`
-2. `loom-core/skills/using-loom/references/how-loom-thinks.md`
-3. `loom-core/skills/using-loom/references/activation-discipline.md`
-4. `loom-core/skills/using-loom/references/directory-structure.md`
-5. `loom-core/skills/using-loom/references/shaping-with-humans.md`
-6. `loom-core/skills/using-loom/references/delegating-to-workers.md`
-7. `loom-core/skills/using-loom/references/proving-the-work.md`
-8. `loom-core/skills/using-loom/references/staying-safe.md`
+2. `loom-core/skills/using-loom/references/00-how-loom-thinks.md`
+3. `loom-core/skills/using-loom/references/01-activation-discipline.md`
+4. `loom-core/skills/using-loom/references/02-directory-structure.md`
+5. `loom-core/skills/using-loom/references/03-shaping-with-humans.md`
+6. `loom-core/skills/using-loom/references/04-delegating-to-workers.md`
+7. `loom-core/skills/using-loom/references/05-proving-the-work.md`
+8. `loom-core/skills/using-loom/references/06-staying-safe.md`
 
 OpenCode exposes `loom-core/skills` through `config.skills.paths` and injects the
 stripped `using-loom` doctrine plus ordered references into the first user message

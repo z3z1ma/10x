@@ -17,13 +17,13 @@ same doctrine.
 Load order:
 
 1. `skills/using-loom/SKILL.md`
-2. `skills/using-loom/references/how-loom-thinks.md`
-3. `skills/using-loom/references/activation-discipline.md`
-4. `skills/using-loom/references/directory-structure.md`
-5. `skills/using-loom/references/shaping-with-humans.md`
-6. `skills/using-loom/references/delegating-to-workers.md`
-7. `skills/using-loom/references/proving-the-work.md`
-8. `skills/using-loom/references/staying-safe.md`
+2. `skills/using-loom/references/00-how-loom-thinks.md`
+3. `skills/using-loom/references/01-activation-discipline.md`
+4. `skills/using-loom/references/02-directory-structure.md`
+5. `skills/using-loom/references/03-shaping-with-humans.md`
+6. `skills/using-loom/references/04-delegating-to-workers.md`
+7. `skills/using-loom/references/05-proving-the-work.md`
+8. `skills/using-loom/references/06-staying-safe.md`
 
 Adapters may preload those files. Preload is transport. The source doctrine stays
 in Core.

@@ -5,15 +5,6 @@ import { fileURLToPath } from "node:url";
 const PACKAGE_ROOT = dirname(fileURLToPath(import.meta.url));
 const PLUGIN_ID = "open-loom-core";
 const BOOTSTRAP_MARKER = "loom-core-using-loom-bootstrap";
-const USING_LOOM_REFERENCE_ORDER = [
-  "how-loom-thinks.md",
-  "activation-discipline.md",
-  "directory-structure.md",
-  "shaping-with-humans.md",
-  "delegating-to-workers.md",
-  "proving-the-work.md",
-  "staying-safe.md",
-];
 const TRIGGER_DESCRIPTION_PREFIXES = ["Always activate", "Use when", "Use before", "Use after"];
 const ACTIVATION_REQUIRED_PHRASES = [
   "Activation Discipline",
@@ -101,13 +92,7 @@ export function readOrderedUsingLoomFiles(options = {}) {
   const { rootDir } = surfaceOptions(options);
   const skillPath = join(rootDir, "skills", "using-loom", "SKILL.md");
   const referencesDir = join(rootDir, "skills", "using-loom", "references");
-  const referenceOrder = new Map(USING_LOOM_REFERENCE_ORDER.map((name, index) => [name, index]));
-  const references = markdownFilesIn(referencesDir).sort((a, b) => {
-    const aOrder = referenceOrder.get(basename(a)) ?? Number.MAX_SAFE_INTEGER;
-    const bOrder = referenceOrder.get(basename(b)) ?? Number.MAX_SAFE_INTEGER;
-    if (aOrder !== bOrder) return aOrder - bOrder;
-    return a.localeCompare(b);
-  });
+  const references = markdownFilesIn(referencesDir);
   const files = fileExists(skillPath) ? [skillPath, ...references] : references;
   return files.map((path) => ({
     path: posixPath(relative(rootDir, path)),
@@ -312,7 +297,7 @@ export function inspectActivationDiscipline(options = {}) {
     .filter((skill) => !TRIGGER_DESCRIPTION_PREFIXES.some((prefix) => skill.description.startsWith(prefix)))
     .map((skill) => ({ name: skill.name, description: skill.description }));
   const hasActivationReference = usingLoomReferences.some(
-    (reference) => reference.path === "skills/using-loom/references/activation-discipline.md",
+    (reference) => reference.path === "skills/using-loom/references/01-activation-discipline.md",
   );
 
   return {

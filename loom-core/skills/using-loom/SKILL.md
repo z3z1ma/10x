@@ -87,13 +87,13 @@ spend context twice when the doctrine is already present.
 
 Read in this order:
 
-1. `references/how-loom-thinks.md`
-2. `references/activation-discipline.md`
-3. `references/directory-structure.md`
-4. `references/shaping-with-humans.md`
-5. `references/delegating-to-workers.md`
-6. `references/proving-the-work.md`
-7. `references/staying-safe.md`
+1. `references/00-how-loom-thinks.md`
+2. `references/01-activation-discipline.md`
+3. `references/02-directory-structure.md`
+4. `references/03-shaping-with-humans.md`
+5. `references/04-delegating-to-workers.md`
+6. `references/05-proving-the-work.md`
+7. `references/06-staying-safe.md`
 
 After that, load active `Type: Knowledge Preference` records from
 `.loom/knowledge/` when that directory exists. Retrieve other knowledge only when
