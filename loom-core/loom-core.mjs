@@ -231,7 +231,8 @@ export function configureOpenCode(config, options = {}) {
       const permission = openCodeAgentPermission(agent.name);
       if (!permission) continue;
       config.agent ??= {};
-      config.agent[agent.name] ??= {
+      config.agent[agent.name] = {
+        ...config.agent[agent.name],
         description: agent.description,
         mode: "all",
         prompt: agent.content,
@@ -389,8 +390,16 @@ export default {
 if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes("--smoke")) {
   const inspection = inspectLoomCoreBundle();
   const config = configureOpenCode({});
+  const modelOnlyAgentConfig = configureOpenCode({
+    agent: {
+      "loom-weaver": { model: "test-model" },
+      "loom-driver": { model: "test-model" },
+    },
+  });
   const loomWeaverConfig = config.agent?.["loom-weaver"];
   const loomDriverConfig = config.agent?.["loom-driver"];
+  const modelOnlyLoomWeaverConfig = modelOnlyAgentConfig.agent?.["loom-weaver"];
+  const modelOnlyLoomDriverConfig = modelOnlyAgentConfig.agent?.["loom-driver"];
   const codexLoomWeaverAgent = readCodexLoomWeaverAgent();
   const codexLoomDriverAgent = readCodexLoomDriverAgent();
   const beforeSkillPathCount = config.skills?.paths?.length ?? 0;
@@ -425,7 +434,17 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes(
     && loomDriverConfig?.permission?.edit?.[".loom/packets/ralph/**"] === "allow"
     && loomDriverConfig?.permission?.edit?.[".loom/evidence/**"] === "allow"
     && loomDriverConfig?.permission?.edit?.[".loom/audit/**"] === "allow"
-    && loomDriverConfig?.permission?.task === "allow";
+    && loomDriverConfig?.permission?.task === "allow"
+    && modelOnlyLoomWeaverConfig?.model === "test-model"
+    && modelOnlyLoomDriverConfig?.model === "test-model"
+    && modelOnlyLoomWeaverConfig?.mode === "all"
+    && modelOnlyLoomDriverConfig?.mode === "all"
+    && Boolean(modelOnlyLoomWeaverConfig?.prompt?.includes("Write only inside `.loom/`"))
+    && Boolean(modelOnlyLoomDriverConfig?.prompt?.includes("direction-setting"))
+    && modelOnlyLoomWeaverConfig?.permission?.edit?.["*"] === "deny"
+    && modelOnlyLoomWeaverConfig?.permission?.edit?.[".loom/**"] === "allow"
+    && modelOnlyLoomDriverConfig?.permission?.edit?.["*"] === "deny"
+    && modelOnlyLoomDriverConfig?.permission?.edit?.[".loom/tickets/**"] === "allow";
 
   console.log(JSON.stringify({
     ok,
@@ -457,6 +476,12 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes(
     loomDriverOpenCodeMode: loomDriverConfig?.mode,
     loomWeaverPromptHasWriteBoundary: Boolean(loomWeaverConfig?.prompt?.includes("Write only inside `.loom/`")),
     loomDriverPromptHasDirectionRecordBoundary: Boolean(loomDriverConfig?.prompt?.includes("direction-setting")),
+    modelOnlyLoomWeaverPreservesModel: modelOnlyLoomWeaverConfig?.model === "test-model",
+    modelOnlyLoomDriverPreservesModel: modelOnlyLoomDriverConfig?.model === "test-model",
+    modelOnlyLoomWeaverPromptHasWriteBoundary: Boolean(modelOnlyLoomWeaverConfig?.prompt?.includes("Write only inside `.loom/`")),
+    modelOnlyLoomDriverPromptHasDirectionRecordBoundary: Boolean(modelOnlyLoomDriverConfig?.prompt?.includes("direction-setting")),
+    modelOnlyLoomWeaverEditPermission: modelOnlyLoomWeaverConfig?.permission?.edit,
+    modelOnlyLoomDriverEditPermission: modelOnlyLoomDriverConfig?.permission?.edit,
     loomWeaverEditPermission: loomWeaverConfig?.permission?.edit,
     loomDriverEditPermission: loomDriverConfig?.permission?.edit,
     loomDriverTaskPermission: loomDriverConfig?.permission?.task,
