@@ -80,7 +80,7 @@ Important requirements and scenarios:
 
 ## Implement
 
-Use scoped tickets and Ralph packets.
+Use scoped tickets and ticket-owned Ralph runs.
 
 Implementation guidance:
 

@@ -30,14 +30,14 @@ Core also ships optional explicit Loom personas:
 
 | Agent | Use |
 | --- | --- |
-| `loom-weaver` | Outer-loop shaping: challenge ideas, present options with recommendations, and create or update `.loom/` records before implementation. Loom Weaver writes only under `.loom/` and does not create Ralph packets. |
-| `loom-driver` | Inner-loop coordination: compile Ralph packets, coordinate workers, reconcile outputs, preserve evidence, route audit, and update ticket state. Source-changing work runs through packet-bounded workers; direction-setting Loom records remain read-only during Driver coordination. |
+| `loom-weaver` | Outer-loop shaping: challenge ideas, present options with recommendations, and create or update `.loom/` records before implementation. Loom Weaver writes only under `.loom/` and does not launch Ralph worker or review runs. |
+| `loom-driver` | Inner-loop coordination: coordinate ticket-owned Ralph worker and review runs, reconcile outputs, preserve evidence, route audit, and update ticket state. Source-changing work runs through ticket-scoped workers or another explicitly authorized execution context; direction-setting Loom records remain read-only during Driver coordination. |
 
 | Harness | Invocation |
 | --- | --- |
 | OpenCode | Switch to the `loom-weaver` or `loom-driver` primary agent with the agent switcher. If using one as a subagent, invoke `@loom-weaver` or `@loom-driver` where OpenCode subagent mentions are available. |
 | Claude Code | Use `/agents` to confirm installed plugin-scoped names. For a main session, use `claude --agent loom-core:loom-weaver` or `claude --agent loom-core:loom-driver` when that is the listed name; for one-shot use, invoke the listed agent with Claude's agent mention/typeahead. |
-| Codex | Install and enable the Core plugin, then install the optional custom agent TOML files into `~/.codex/agents/`. Ask in natural language such as `Use the loom-weaver custom agent to shape this before implementation` or `Use the loom-driver custom agent to coordinate this ticket through packets`. Codex docs do not document `@<agent>` custom-agent invocation. |
+| Codex | Install and enable the Core plugin, then install the optional custom agent TOML files into `~/.codex/agents/`. Ask in natural language such as `Use the loom-weaver custom agent to shape this before implementation` or `Use the loom-driver custom agent to coordinate this ticket through a bounded Ralph run`. Codex docs do not document `@<agent>` custom-agent invocation. |
 | Cursor | Invoke the Core plugin subagent as `/loom-weaver` or `/loom-driver`, or ask Cursor to use the named subagent in natural language. Do not use `@loom-weaver` or `@loom-driver` as custom-agent claims; Cursor documents `@` for rules/context, not subagent invocation. |
 | Gemini CLI | Core bundles `agents/loom-weaver.md` and `agents/loom-driver.md`; invoke `@loom-weaver <task>` or `@loom-driver <task>` to force the subagent. This is a delegated subagent call, not a primary-agent prompt switch. |
 
@@ -301,10 +301,10 @@ Start a task:
 Use using-loom. I want to work on: <goal>. Shape the next move with me if needed, then route durable facts through Loom records.
 ```
 
-Delegate a bounded implementation pass:
+Coordinate a bounded implementation pass:
 
 ```text
-Use using-loom and loom-ralph. Compile one Ralph packet with mission, context, read scope, write scope, stop conditions, verification posture, and output contract.
+Use using-loom and loom-ralph. Start from the ticket and linked records, keep durable scope and stop conditions in the ticket, launch a bounded Ralph worker run, and reconcile the result into tickets, evidence, audit, or knowledge as appropriate.
 ```
 
 ## Verify Package Changes

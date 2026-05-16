@@ -98,7 +98,7 @@ pass-through. If deleting it would push complexity into many callers, it may be
 earning its keep.
 
 Do not jump straight into implementation. Ask which candidate to explore unless
-an active ticket, plan, or packet already selects one. If the operator is
+an active ticket or plan already selects one. If the operator is
 unavailable, record a recommendation and stop before implementation.
 
 ## Design Seams
@@ -139,7 +139,7 @@ why bundling is still reviewable.
 ## Execute And Verify
 
 Do not execute directly from this shaping playbook. Use
-`loom-incremental-implementation` or Ralph packets for execution.
+`loom-incremental-implementation` or ticket-owned Ralph runs for execution.
 
 Verification should prove:
 
@@ -157,5 +157,5 @@ The architecture deepening pass is done when:
 - candidates were compared with leverage and locality in mind
 - chosen seams and interfaces are explicit
 - durable decisions and behavior contracts are recorded where needed
-- implementation is sliced into tickets or packets
+- implementation is sliced into tickets or ticket-defined sub-scopes
 - evidence and audit can support the refactor claim

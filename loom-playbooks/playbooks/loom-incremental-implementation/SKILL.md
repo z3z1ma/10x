@@ -8,8 +8,8 @@ disable-model-invocation: true
 
 Incremental implementation is a playbook for executing one narrow slice at a time.
 
-It keeps each change bounded, verifiable, and recoverable through tickets, Ralph
-packets, evidence, audit, and retrospective follow-up.
+It keeps each change bounded, verifiable, and recoverable through tickets,
+ticket-owned Ralph runs, evidence, audit, and retrospective follow-up.
 
 ## Loom Routing
 
@@ -23,8 +23,8 @@ When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
 skill's requirements.
 
-This workflow does not replace ticket scope, packet scope, evidence, or audit.
-Execute only ticket-ready slices, and run those slices through Ralph packets.
+This workflow does not replace ticket scope, evidence, or audit. Execute only
+ticket-ready slices, and run delegated slices through ticket-owned Ralph runs.
 
 Do not use this playbook to turn a fuzzy ask into implementation. If the current
 input is not an active ticket or a concrete plan execution unit, stop and return to
@@ -42,7 +42,7 @@ Use this playbook when:
 - a change touches multiple files or records
 - a feature should be built behind a flag or safe default
 - refactor and behavior work need to stay separate
-- a worker packet needs a tight execution loop
+- a ticket-owned worker run needs a tight execution loop
 
 Skip it for a single obvious edit whose ticket already gives a bounded path.
 
@@ -51,7 +51,7 @@ Skip it for a single obvious edit whose ticket already gives a bounded path.
 Use this route:
 
 ```text
-select slice -> bound packet -> change -> verify -> record -> continue
+select slice -> bound run -> change -> verify -> record -> continue
 ```
 
 ## Select Slice
@@ -70,15 +70,16 @@ Prefer slices that:
 
 When a slice is too broad, route back to `loom-plans` or split the ticket.
 
-## Bound Packet
+## Bound Run
 
-Use `loom-ralph` before changing a ticket slice so the execution contract has a
-packet boundary.
+Use `loom-ralph` before delegating a ticket slice so the worker run has a bounded
+ticket-owned scope.
 
-Compile the packet under `.loom/packets/ralph/` before launch. The worker prompt
-should point to the packet path; the packet carries the slice contract.
+The ticket and linked records carry the durable slice contract. The worker prompt
+is transient transport: point the worker at the ticket, name the immediate slice,
+and require returned output to be reconciled into tickets, evidence, or audit.
 
-The packet should name:
+The ticket or ticket-defined sub-scope should name:
 
 - target ticket or plan unit
 - mission for this slice
@@ -86,7 +87,7 @@ The packet should name:
 - files and records allowed to change
 - verification posture
 - stop conditions
-- expected ticket, evidence, and packet updates
+- expected ticket, evidence, and audit updates
 
 ## Change
 
@@ -103,7 +104,7 @@ Guidelines:
 
 ## Verify
 
-Use the packet or ticket evidence posture.
+Use the ticket evidence posture.
 
 Common options:
 
@@ -139,7 +140,7 @@ procedure, trap, rejected path, or prevention note.
 
 After each slice, choose one:
 
-- next Ralph packet
+- next ticket-owned Ralph run
 - more evidence
 - Ralph-backed audit
 - ticket closure
@@ -152,7 +153,7 @@ After each slice, choose one:
 The implementation pass is done when:
 
 - each completed slice has evidence proportional to its claim
-- ticket state, packet output, and changed files agree
+- ticket state, worker output, and changed files agree
 - unrelated work was left out or routed to follow-up
 - the next move is explicit
 - closure waits for audit or explains why separate audit would not add useful trust

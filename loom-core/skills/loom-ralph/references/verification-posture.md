@@ -1,16 +1,16 @@
 # Verification Posture
 
-Verification posture is a packet-level evidence contract for Ralph runs that
-change behavior, implementation, validation, or other checkable state.
+Verification posture is an evidence contract for Ralph runs that change behavior,
+implementation, validation, or other checkable state.
 
-Use one of these labels when a packet needs this contract:
+Use one of these labels when a run needs this contract:
 
 - `test-first`
 - `observation-first`
 - `none`
 
-Review and synthesis packets may instead use mode-specific labels such as `Review
-Lens:` or explicit evidence expectations in the packet body.
+Review and synthesis runs may instead use mode-specific labels such as review lens
+or explicit evidence expectations in the ticket, target record, or launch body.
 
 ## test-first
 
@@ -23,7 +23,7 @@ The worker should:
 - confirm it fails for the expected reason
 - make the smallest scoped change that drives it green
 - record red and green evidence
-- run broader regression checks when the packet asks for them or the change risk
+- run broader regression checks when the run asks for them or the change risk
   calls for them
 
 If the check passes before implementation, tighten the check, explain why the
@@ -46,21 +46,20 @@ reproductions, generated artifacts, diffs, or structured inspections.
 
 ## none
 
-Use `none` when the packet has no implementation or validation evidence obligation
+Use `none` when the run has no implementation or validation evidence obligation
 beyond its normal output contract.
 
 Examples:
 
-- packet compilation
 - non-semantic record cleanup
 - read-only review where findings, not red/green evidence, are the output
 - narrow prose cleanup that does not change behavior, protocol authority,
   acceptance, routing, or operator guidance
-- a refactor whose safety is already covered by existing checks named in the packet
+- a refactor whose safety is already covered by existing checks named in the run
 
 ## Evidence And Audit
 
-Packet verification is not audit.
+Ralph run verification is not audit.
 
 Verification produces observations for this worker run. Audit challenges claims,
 evidence, findings, risks, and implementation shape before another surface relies

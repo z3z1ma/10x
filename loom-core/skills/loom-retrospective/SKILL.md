@@ -18,7 +18,7 @@ durable lesson.
 Use this skill when:
 
 - a meaningful ticket is closing or moving through final review
-- an audit, Ralph packet, research pass, bug fix, spike, migration, or launch
+- an audit, Ralph run, research pass, bug fix, spike, migration, or launch
   produced reusable learning
 - the same explanation, mistake, question, or operator correction has appeared more
   than once
@@ -35,7 +35,7 @@ If running a retrospective pass:
 
 - read `references/promotion-and-prevention.md`
 - inspect the work being closed or assimilated: ticket, plan, research, audit,
-  evidence, packet output, diff, or related records
+  evidence, worker output, diff, or related records
 - separate durable lessons from one-time execution detail
 - route each lesson to the surface that can carry it
 - use the owning skill before changing specs, plans, constitution, or research
@@ -57,7 +57,7 @@ Use this loop:
 observe -> distill -> promote -> prevent
 ```
 
-Observe concrete signals from records, evidence, audit findings, packet output,
+Observe concrete signals from records, evidence, audit findings, worker output,
 changed files, repeated questions, and operator corrections.
 
 Distill durable lessons separately from local execution details.
@@ -110,7 +110,7 @@ summary when that improves recovery.
 
 ## Originating Record Updates
 
-Retrospective often starts from a ticket, plan, research record, audit, or packet
+Retrospective often starts from a ticket, plan, research record, audit, or worker
 output.
 
 Update the originating record when future continuation or closure would be worse
@@ -134,5 +134,5 @@ Retrospective work is done when:
   when they changed intended behavior, strategy, durable judgment, or conclusions
 - prevention follow-up exists where it helps
 - the originating record says what happened when that improves recovery or closure
-- no reusable lesson remains only in chat, packet output, or a hard-to-find journal
+- no reusable lesson remains only in chat, worker output, or a hard-to-find journal
 - follow-through is visible in existing surfaces

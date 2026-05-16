@@ -5,13 +5,14 @@ risks.
 
 ## The Ralph Review Standard
 
-A meaningful audit starts from a Ralph review packet that packages exactly what the
-reviewer should inspect, rather than from the shaping or implementation transcript.
+A meaningful audit starts from a bounded Ralph review run that names exactly what
+the reviewer should inspect, rather than from the shaping or implementation
+transcript.
 
 The parent context may prepare a bounded review request and record the result. For
-substantive audit, that request should be a Ralph packet under
-`.loom/packets/ralph/`. The adversarial judgment itself must come from the Ralph
-review run.
+substantive audit, that request should start from the ticket, evidence, diff, and
+linked records that define the target. The adversarial judgment itself must come
+from the Ralph review run.
 
 ## Create Audit Only When
 
@@ -48,10 +49,10 @@ set, record ID, claim ID, or why the target needed audit.
 A good audit request gives the Ralph worker enough to review without inheriting the
 implementer's assumptions.
 
-Use a Ralph review packet for this request when audit is part of Loom work. The
-packet carries the review target, context, lenses, read scope, write scope, stop
-conditions, and output contract; the later audit record preserves the auditor's
-result.
+Use a bounded Ralph review run for this request when audit is part of Loom work.
+The ticket or audit target carries the durable review target, context, lenses, read
+scope, write scope, stop conditions, and output contract; the later audit record
+preserves the auditor's result.
 
 Include:
 

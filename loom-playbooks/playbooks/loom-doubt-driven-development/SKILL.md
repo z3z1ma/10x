@@ -95,7 +95,7 @@ Do not pass a broad transcript. Use records, diffs, evidence, and source excerpt
 Choose the challenge shape:
 
 - failing test or reproduction when behavior can be disproved directly
-- Ralph packet with `Mode: review` for a review worker
+- ticket-owned Ralph review run for a review worker
 - `loom-audit` when the result should be durable review judgment
 - local self-check only for low-risk work where Ralph review is not warranted or
   available

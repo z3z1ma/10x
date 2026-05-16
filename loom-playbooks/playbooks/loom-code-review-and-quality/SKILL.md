@@ -25,7 +25,8 @@ completely. This playbook adds workflow pressure; it does not shorten the target
 skill's requirements.
 
 When code review is delegated to a worker and will support ticket closure, audit,
-or durable findings, launch it from a Ralph packet.
+or durable findings, launch it from the ticket and linked records as a bounded
+Ralph review run.
 
 ## Use This Playbook When
 
@@ -52,7 +53,7 @@ Start from the target record:
 - ticket scope and `ACC-*`
 - spec `REQ-*` and `SCN-*`
 - plan execution unit
-- packet mission and output
+- ticket scope and worker output
 - linked evidence and audit records
 
 Name what the change claims to accomplish before reading for style.
@@ -93,9 +94,9 @@ simplification.
 
 Use `loom-audit` when findings or verdict should survive.
 
-Use `loom-ralph` to prepare the bounded review packet before invoking a review
-worker. Keep the packet and any audit record linked so the handoff and verdict
-remain inspectable.
+Use `loom-ralph` to prepare a bounded review run before invoking a review worker.
+Keep durable context in the ticket and any verdict in an audit record so the
+handoff and verdict remain inspectable.
 
 Material findings should name:
 

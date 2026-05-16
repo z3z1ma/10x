@@ -45,9 +45,7 @@ A Loom workspace materializes records only when it needs them:
 |-- evidence/
 |   `-- artifacts/
 |-- audit/
-|-- knowledge/
-`-- packets/
-    `-- ralph/
+`-- knowledge/
 ```
 
 Missing empty directories are fine. A directory matters when the current work
@@ -67,7 +65,6 @@ Each surface owns one kind of truth.
 | evidence | `.loom/evidence/` | observations, outputs, reproductions, screenshots, logs, validation |
 | audit | `.loom/audit/` | Ralph-backed review, findings, verdicts, residual risk |
 | knowledge | `.loom/knowledge/` | preferences, procedures, accepted explanation, atlases, retrieval cues |
-| packets | `.loom/packets/ralph/` | bounded worker contracts |
 
 Retrospective is a promotion and prevention pass over existing surfaces. It has no
 record directory of its own.
@@ -126,7 +123,7 @@ The outer loop shapes work with the operator. The agent inspects first, asks onl
 material questions, and routes durable truth to the surface that owns it. Work
 stays in this loop while intent, scope, evidence, risk, or authority is unclear.
 
-That gate is mandatory. A fuzzy ask must not become a ticket, packet, or patch
+That gate is mandatory. A fuzzy ask must not become a ticket, worker run, or patch
 until the missing outcome, boundary, constraints, evidence posture, non-goals,
 system-shape, data-model or state implications, and design-coherence questions are
 shaped with the operator or the owning Loom surface.
@@ -138,32 +135,34 @@ after the operator deliberately invokes the Playbook. Ordinary natural prompts
 should not auto-load Playbooks. When a workflow lens routes to another Loom skill,
 the target skill's procedure and guidance still apply completely.
 
-The inner loop executes bounded work. Tickets drive live execution state. Ralph
-packets execute bounded ticket slices and worker runs. Evidence records what
-happened. Audit records adversarial review returned from Ralph review packets. The
-parent reconciles the result into the owning surfaces.
+The inner loop executes bounded work. Tickets drive live execution state and carry
+durable worker or review context. Ralph names the bounded worker and review
+discipline. Evidence records what happened. Audit records adversarial review
+returned from bounded Ralph review runs. The parent reconciles the result into the
+owning surfaces.
 
 This split is the core architecture. Coding harnesses can add transport, but they
 should not replace the outer-loop shaping or the inner-loop contract.
 
 ## Ralph And Audit
 
-Ralph packets are contracts for one worker run. They name target, mission, context
-style, read scope, write scope, source snapshot, stop conditions, and output
-contract.
+Tickets are the durable contracts for one bounded worker or review run. They name
+target, mission, linked records, read scope, write scope, constraints, stop
+conditions, evidence or review expectations, and output reconciliation target.
 
-The packet is written under `.loom/packets/ralph/` before the worker launch. The
-launch transport points to that packet so the handoff is recoverable from the
-Markdown graph, not only from harness logs.
-
-A packet is not accepted project truth. After the worker returns, the parent reads
-the packet output, diffs, records, and evidence, then updates the consuming
+Ralph is the discipline for running that bounded worker or review. The launch
+prompt is transient transport: it points at the ticket or review target, states the
+immediate objective, and asks for structured output. It is not a durable truth
 surface.
 
-Substantive audit requires a Ralph review packet. The same session can prepare the
-audit request and record the result, but the adversarial judgment must come from
-the Ralph review run. Local inspection may help, but it should not be saved as
-`Type: Audit`.
+After the worker returns, the parent reads the worker output, diffs, records, and
+evidence, then updates the consuming ticket, evidence, audit, or knowledge surface
+as appropriate.
+
+Substantive audit requires a bounded Ralph review run. The same session can
+prepare the audit request and record the result, but the adversarial judgment must
+come from the Ralph review worker. Local inspection may help, but it should not be
+saved as `Type: Audit`.
 
 ## Adapter Rule
 
@@ -193,7 +192,7 @@ A Loom change should preserve these properties:
 - tickets remain the only live execution ledger
 - evidence records observations without deciding acceptance
 - audit records review without closing work
-- packets bound worker runs without becoming project state
+- Ralph bounds worker and review runs while tickets own durable execution state
 - knowledge stores accepted reusable understanding without replacing specs, evidence, audit, or tickets
 - workflow-specific skills route through Loom surfaces instead of adding durable surfaces
 - helper code stays derivative of the Markdown protocol

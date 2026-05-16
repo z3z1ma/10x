@@ -25,7 +25,7 @@ OUTPUT_DIR="${LOOM_TEST_OUTPUT_DIR:-/tmp/loom-tests}/$TIMESTAMP/explicit-skill-r
 PROJECT_DIR="$OUTPUT_DIR/project"
 LOG_FILE="$OUTPUT_DIR/opencode-output.json"
 
-mkdir -p "$PROJECT_DIR/.loom/tickets" "$PROJECT_DIR/.loom/packets/ralph"
+mkdir -p "$PROJECT_DIR/.loom/tickets" "$PROJECT_DIR/.loom/evidence" "$PROJECT_DIR/.loom/audit"
 
 cat > "$PROJECT_DIR/opencode.json" <<EOF
 {

@@ -3,9 +3,9 @@
 A good ticket is prose-rich but not vague.
 
 It contains enough instruction, context, record links, scope, acceptance, current
-state, and work history for a future agent to compile Ralph packets, consume
-packet output, or continue the bounded work unit from the ticket and its linked
-records.
+state, worker context, and work history for a future agent to launch bounded Ralph
+runs, reconcile worker output, or continue the bounded work unit from the ticket
+and its linked records.
 
 A ticket is not a scratchpad, ambiguous ask, transcript summary, planning
 substitute, or research note.
@@ -72,7 +72,7 @@ Summary should answer:
 * what bounded executable work exists
 * why it matters
 * what outcome should be true when complete
-* what context an acting agent needs before compiling the first Ralph packet
+* what context an acting agent needs before launching the first bounded Ralph run
 
 It should also make the single closure claim easy to see. If the Summary needs to
 bundle independent stack, data, UI, feature, migration, review, and verification
@@ -97,9 +97,9 @@ Example:
 
 Add only records that materially constrain or explain the ticket.
 
-If a record is required to compile or run the ticket's Ralph packets safely,
-include it. If the ticket depends on context that exists only in chat, move the
-durable version into the ticket or the appropriate linked record.
+If a record is required to launch the ticket's Ralph runs safely, include it. If
+the ticket depends on context that exists only in chat or a transient prompt, move
+the durable version into the ticket or the appropriate linked record.
 
 ## Scope
 
@@ -122,8 +122,19 @@ leave out, which data model or state model should exist, or which abstraction
 should carry the work, the ticket is not ready. Shape that truth first or link the
 owning record.
 
-If the first Ralph packet boundary cannot be identified from the ticket and linked
+If the first Ralph run boundary cannot be identified from the ticket and linked
 records, the ticket is not ready.
+
+When worker or review handoff is likely, include durable run context in the ticket
+or linked records:
+
+* likely read scope
+* likely write scope
+* relevant constraints and non-goals
+* stop conditions
+* evidence posture
+* review or audit posture
+* expected worker output and where it should be reconciled
 
 ## Acceptance
 
@@ -171,7 +182,7 @@ Keep it current enough for a future agent to resume from the ticket and linked
 records.
 
 For a new ticket, Current State should usually say whether the ticket is ready to
-start and what the first likely Ralph packet is.
+start and what the first likely Ralph run is.
 
 Update it when the real state changes materially.
 

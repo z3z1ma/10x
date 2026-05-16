@@ -29,7 +29,8 @@ handoff, not a shortcut around the target skill.
 Vague work stays in outer-loop shaping until the next Loom surface is clear. A
 playbook must not turn ambiguity into an implementation shortcut; it should expose
 the missing scope, system-shape, data-model, state, evidence, and coherence choices.
-Complex work becomes ticket-ready slices; delegated worker runs use Ralph packets.
+Complex work becomes ticket-ready slices; delegated worker or review work uses
+ticket-owned Ralph runs.
 
 Use Playbook macros when general Loom routing is too thin for the work and the
 operator wants that lens.

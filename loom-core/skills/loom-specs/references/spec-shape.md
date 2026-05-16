@@ -53,8 +53,8 @@ Use these split heuristics:
   systems need different outcomes
 - split by workflow when behaviors can be started, completed, blocked, retried, or
   accepted independently
-- split by interface when APIs, commands, records, components, packets, files, or
-  data shapes have different callers or compatibility promises
+- split by interface when APIs, commands, records, components, files, worker-run
+  contracts, or data shapes have different callers or compatibility promises
 - split by risk or permission boundary when one area has different authorization,
   privacy, safety, migration, or rollback concerns
 - split by evidence when one evidence plan cannot honestly validate the whole
@@ -163,7 +163,8 @@ Quality bars should be observable enough for tickets and audit to evaluate.
 ## Interface Contract
 
 Use an interface contract for public APIs, module interfaces, component props,
-commands, data shapes, file formats, packets, records, or cross-worker contracts.
+commands, data shapes, file formats, records, worker-run contracts, or cross-worker
+contracts.
 
 Name inputs, outputs, side effects, ordering, idempotency, error semantics,
 validation boundary, compatibility, and deprecation expectations when they matter.
@@ -199,8 +200,8 @@ Use non-goals to prevent likely scope creep or downstream misinterpretation.
 ## Current Surface And Status
 
 An `active` or `accepted` spec must describe the current product surface slice it
-claims to own. A stale active spec is worse than no spec because downstream tickets,
-packets, evidence, and audit will treat it as behavior truth.
+claims to own. A stale active spec is worse than no spec because downstream
+tickets, worker runs, evidence, and audit will treat it as behavior truth.
 
 Before relying on a spec, and whenever product behavior changes, check source
 reality and related records enough to decide whether the spec still matches the
@@ -234,7 +235,7 @@ Before writing or accepting a spec, shape the behavior until these things are tr
   explicitly kept out of scope
 - observable scenarios: the behavior can be probed through concrete scenarios,
   examples, commands, UI states, API calls, records, or review checks
-- downstream use: tickets, packets, evidence, audit, or future agents can cite the
+- downstream use: tickets, worker runs, evidence, audit, or future agents can cite the
   requirements and scenarios without redefining them
 - spec-set coverage: the work either improves regeneration-grade coverage of the
   current product surface or explicitly marks the remaining behavior gap

@@ -20,8 +20,8 @@ Depends On: ticket:YYYYMMDD-<slug>
 
 Include enough context for an acting agent to understand what change is needed,
 why it matters, and what outcome should exist when the ticket is complete. The
-ticket should be enough to compile the first Ralph packet from this record and its
-linked records without relying on chat history.
+ticket should be enough to launch the first bounded Ralph run from this record and
+its linked records without relying on chat history.
 
 Make the single closure claim visible: what one bounded result will this ticket
 prove or deliver?>
@@ -39,7 +39,11 @@ Remove this section if no related records materially constrain the ticket.>
 
 Name what may change, what must not change, and any nearby work that should not be
 pulled into this ticket. Be specific enough that an acting agent can stay inside
-the boundary and compile a bounded Ralph packet without asking what is in scope.>
+the boundary and launch a bounded Ralph run without asking what is in scope.
+
+When worker or review handoff is likely, include durable context such as likely
+read scope, write scope, stop conditions, evidence posture, review posture, and
+where worker output should be reconciled.>
 
 ## Acceptance
 
@@ -59,8 +63,8 @@ the evidence and audit posture needed for closure.
 <Describe where the work stands now.
 
 For a new ticket, say whether it is ready to start and name the first likely Ralph
-packet.
-If anything prevents safe Ralph packet execution, set Status: blocked instead of open and
+run.
+If anything prevents safe Ralph execution, set Status: blocked instead of open and
 describe the blocker here.>
 
 ## Journal

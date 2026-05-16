@@ -2,7 +2,7 @@ description = "Explicit optional workflow macro for a non-trivial in-flight clai
 prompt = '''
 The user explicitly invoked this Loom Playbook as an optional workflow macro.
 
-Use it as a workflow lens only after Core Loom routing has identified the owning surface or after the operator has deliberately selected this lens. Preserve Core surface ownership, ticket shaping, evidence, audit, and Ralph packet boundaries. Do not treat this Playbook as automatic first-action activation from ordinary natural-language task text.
+Use it as a workflow lens only after Core Loom routing has identified the owning surface or after the operator has deliberately selected this lens. Preserve Core surface ownership, ticket shaping, evidence, audit, and ticket-owned Ralph worker/review discipline. Do not treat this Playbook as automatic first-action activation from ordinary natural-language task text.
 
 # loom-doubt-driven-development
 
@@ -95,7 +95,7 @@ Do not pass a broad transcript. Use records, diffs, evidence, and source excerpt
 Choose the challenge shape:
 
 - failing test or reproduction when behavior can be disproved directly
-- Ralph packet with `Mode: review` for a review worker
+- ticket-owned Ralph review run for a review worker
 - `loom-audit` when the result should be durable review judgment
 - local self-check only for low-risk work where Ralph review is not warranted or
   available

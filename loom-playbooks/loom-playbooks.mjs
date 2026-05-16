@@ -7,7 +7,7 @@ const PLUGIN_ID = "open-loom-playbooks";
 
 const PLAYBOOK_MACRO_PREAMBLE = `The user explicitly invoked this Loom Playbook as an optional workflow macro.
 
-Use it as a workflow lens only after Core Loom routing has identified the owning surface or after the operator has deliberately selected this lens. Preserve Core surface ownership, ticket shaping, evidence, audit, and Ralph packet boundaries. Do not treat this Playbook as automatic first-action activation from ordinary natural-language task text.`;
+Use it as a workflow lens only after Core Loom routing has identified the owning surface or after the operator has deliberately selected this lens. Preserve Core surface ownership, ticket shaping, evidence, audit, and ticket-owned Ralph worker/review discipline. Do not treat this Playbook as automatic first-action activation from ordinary natural-language task text.`;
 
 function posixPath(path) {
   return path.split("\\").join("/");

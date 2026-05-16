@@ -26,7 +26,8 @@ honestly. It becomes dangerous when treated as broader proof than it is.
 
 ## Audit
 
-Audit records adversarial review, normally returned from a Ralph review packet.
+Audit records adversarial review, normally returned from a bounded Ralph review
+run.
 
 Use audit to turn implementation, evidence, and record claims into a reviewable
 closure story. Tickets normally reach closure through audit; plans and other

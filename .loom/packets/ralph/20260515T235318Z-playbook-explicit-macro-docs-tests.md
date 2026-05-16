@@ -165,8 +165,8 @@ Evidence, review findings, validation output, or observations gathered:
 - Updated human-facing docs to describe Playbooks as explicit workflow macros or explicit-only skills per harness: OpenCode command entries, Gemini extension commands, Claude/Cursor explicit-only skills, and Codex explicit-only skills without custom slash-command claims.
 - Updated `tests/skill-triggering/run-test.sh` so natural-prompt runs can fail on forbidden Playbook tool invocations while still checking expected Core skill routing or visible Core routing for `none` cases.
 - Updated `tests/skill-triggering/run-all.sh` so representative natural prompts forbid implicit Playbook activation and the suite includes positive static OpenCode command coverage via `npm --prefix loom-playbooks run smoke`.
-- Source inspection: `rg --glob '!.loom/**' 'auto-triggers.*loom-idea-refine|then routes to\s+`loom-idea-refine`|skill descriptions are the activation surface|trigger-oriented skill descriptions|OpenCode playbook package for optional Loom workflow skills' .` produced no matches.
-- Source inspection: `rg --glob '!.loom/**' 'loom-playbooks/skills|skills/` tree' .` produced no matches.
+- Source inspection over active files outside `.loom/` found no stale `loom-idea-refine` natural-routing claim, trigger-description Playbook activation wording, or old optional workflow-skills package description.
+- Source inspection over active files outside `.loom/` found no stale `loom-playbooks/skills` or ``skills/` tree`` path references.
 - `bash -n tests/skill-triggering/run-test.sh` passed.
 - `bash -n tests/skill-triggering/run-all.sh` passed.
 - `npm --prefix loom-core run smoke` passed with `ok: true` and `activationChecks.ok: true`.

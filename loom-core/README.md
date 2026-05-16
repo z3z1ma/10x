@@ -3,8 +3,8 @@
 The required Loom package.
 
 Core teaches agents how to turn software work into `.loom/` records: shape the
-goal, keep live work in tickets, prove claims with evidence, challenge important
-claims with Ralph-backed audit, hand bounded work to packets, and preserve useful
+goal, keep live work and durable worker context in tickets, prove claims with
+evidence, challenge important claims with Ralph-backed audit, and preserve useful
 lessons in knowledge.
 
 Core also teaches activation discipline. `using-loom` is the first-action loop that
@@ -13,11 +13,11 @@ clarifying, inspecting, editing, creating tickets, or launching Ralph when Loom 
 apply.
 
 The operating loop is: shape with the human, route durable truth, slice into
-bounded tickets, execute ticket slices through Ralph packets, preserve evidence,
-audit claims, and reconcile records.
+bounded tickets, execute ticket-owned Ralph worker or review runs, preserve
+evidence, audit claims, and reconcile records.
 
 If the ask is not concrete enough for execution, Core keeps the agent in shaping
-instead of letting it infer tickets, packets, or patches from hidden product or
+instead of letting it infer tickets, worker runs, or patches from hidden product or
 system-shape choices.
 
 If a harness installs only one Loom package, install this one.
@@ -36,7 +36,7 @@ work recoverable.
 - references teach the protocol without requiring a hidden runtime
 - Loom Weaver provides an optional explicit outer-loop shaping persona
 - Loom Driver provides an optional explicit inner-loop coordination persona for
-  packets, worker runs, evidence, audit routing, and ticket reconciliation
+  ticket-owned Ralph runs, evidence, audit routing, and ticket reconciliation
 
 The harness is transport. The protocol is this package's `skills/` corpus.
 
@@ -52,7 +52,6 @@ The harness is transport. The protocol is this package's `skills/` corpus.
 | `evidence` | observations, outputs, reproductions, screenshots, logs, validation |
 | `audit` | Ralph-backed review, findings, verdicts, residual risk |
 | `knowledge` | preferences, procedures, accepted explanations, atlases, retrieval cues |
-| `packets` | bounded ticket execution and worker contracts under `.loom/packets/ralph/` |
 
 Retrospective is a promotion pass over those surfaces. It has no directory of its
 own.
@@ -70,7 +69,7 @@ own.
 | `loom-evidence` | durable observations and artifacts |
 | `loom-audit` | Ralph-backed review and findings |
 | `loom-knowledge` | reusable understanding and retrieval |
-| `loom-ralph` | packetized worker handoff |
+| `loom-ralph` | bounded worker and review handoff discipline |
 | `loom-retrospective` | promotion and prevention after significant work |
 
 ## The Route

@@ -21,10 +21,7 @@ artifact needs them.
 |-- evidence/
 |   `-- artifacts/
 |-- audit/
-|-- knowledge/
-`-- packets/
-|   |-- audit/
-    `-- ralph/
+`-- knowledge/
 ```
 
 ## Surface Paths
@@ -37,7 +34,6 @@ artifact needs them.
 - evidence records live under `.loom/evidence/`
 - audit records live under `.loom/audit/`
 - knowledge records live flat under `.loom/knowledge/`
-- Ralph packets live under `.loom/packets/ralph/`
 
 Raw evidence artifacts may live under `.loom/evidence/artifacts/YYYYMMDD-<slug>/`
 when the evidence record points at them.
@@ -59,8 +55,7 @@ mkdir -p \
   .loom/plans \
   .loom/evidence/artifacts \
   .loom/audit \
-  .loom/knowledge \
-  .loom/packets/ralph
+  .loom/knowledge
 ```
 
 Do not require empty directories to exist before using Loom. A missing directory is
@@ -72,8 +67,8 @@ Use the surface path that matches the record's job.
 
 Retrospective is a workflow over existing surfaces and has no directory of its own.
 
-Packets are bounded worker contracts. They do not replace the records, evidence,
-or audit they cite.
+Tickets hold durable context for bounded worker and review runs. Transient launch
+prompts do not replace the records, evidence, or audit they cite.
 
 Artifacts support evidence and research records. The Markdown record should remain
 understandable when an artifact directory is absent.

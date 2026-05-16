@@ -23,7 +23,8 @@ When routing to any named Loom skill, follow that skill's procedure and guidance
 completely. This playbook adds workflow pressure; it does not shorten the target
 skill's requirements.
 
-TDD is usually expressed as `Verification Posture: test-first` in a Ralph packet.
+TDD is usually expressed as `Verification Posture: test-first` in the ticket or
+ticket-owned Ralph worker run.
 
 ## Use This Playbook When
 
@@ -75,7 +76,7 @@ the fix, tighten the reproduction or reclassify the issue.
 
 Make the smallest change that passes the check.
 
-Keep the change inside the ticket or packet write scope. If passing the check
+Keep the change inside the ticket write scope. If passing the check
 requires broader behavior, update the ticket or route back to specs/plans before
 continuing.
 

@@ -25,11 +25,11 @@ understood, bounded, and routed into the right durable surface. Those surfaces a
 Markdown records written for humans and agents, with directory names for `find` and
 stable words, headings, labels, IDs, and refs for `grep`.
 
-The inner loop uses Ralph packets to execute bounded ticket slices, run workers,
-and perform substantive audit review before records rely on claims.
-Packets carry enough source-linked context, scope, constraints, stop conditions,
-and evidence expectations for the worker to act without relying on chat history,
-while keeping the relevant records truthful as it works.
+The inner loop uses ticket-owned Ralph runs to execute bounded slices, run workers,
+and perform substantive audit review before records rely on claims. Tickets and
+linked records carry the durable context, scope, constraints, stop conditions, and
+evidence expectations for the worker to act without relying on chat history, while
+transient launch prompts only transport the run.
 
 Use the Loom surfaces to preserve the shaped work, bounded execution, evidence,
 audit, and reusable knowledge that future agents need.
@@ -50,7 +50,7 @@ The default sequence is:
 
 ```text
 shape with the operator -> route durable truth -> slice executable work -> execute
-ticket slices through Ralph packets -> preserve evidence -> audit claims ->
+ticket slices through bounded Ralph runs -> preserve evidence -> audit claims ->
 reconcile records
 ```
 
@@ -73,7 +73,7 @@ functional. These are not implementation details to discover after coding starts
 If those choices are missing, unexamined, or silently inferred, execution is not
 ready.
 
-Do not turn a fuzzy request into a ticket, Ralph packet, or patch just to make
+Do not turn a fuzzy request into a ticket, Ralph run, or patch just to make
 progress. First inspect what the repository and Loom records can answer, pinpoint
 the material direction, boundary, system-shape, state, or proof ambiguity with the
 operator, and route the resolved truth into the owning Loom surface before
@@ -123,7 +123,6 @@ The Loom surfaces are:
 - audit: adversarial review findings and verdicts from Ralph review runs
 - knowledge: preferences, procedures, accepted explanation, reusable
   understanding, and retrieval cues
-- packets: bounded contracts for worker handoff
 
 Retrospective is a promotion pass after significant work: decide what learning
 should move into the right surface instead of leaving it in chat. Use
@@ -141,7 +140,7 @@ Ask:
 - What surface owns the truth I am about to depend on or change?
 - Is this still a human-shaped outer-loop problem, or is it safe to execute?
 - What is the next smallest ticket-ready slice, and what makes it complete?
-- What Ralph packet bounds this worker handoff?
+- What ticket-owned context bounds this Ralph worker or review run?
 - What evidence or audit would make the claim honest?
 - What knowledge should future agents load, retrieve, or not have to rediscover?
 
@@ -158,7 +157,7 @@ from habit:
 | "I need more context first" | Skill invocation comes before clarifying questions, code exploration, or quick checks. |
 | "I need to inspect first" | If inspection is part of a likely Loom workflow, invoke that workflow skill first. |
 | "I'll create the ticket after" | Ticket-worthy work needs the ticket before execution, not as a retroactive wrapper. |
-| "I'll ask the worker directly" | Worker handoff needs a Ralph packet before launch. |
+| "I'll ask the worker directly" | Worker handoff needs ticket-owned durable context and a bounded Ralph launch. |
 | "evidence can wait" | Evidence posture is part of honest execution, not cleanup. |
 | "audit is overkill" | Risk decides audit posture; convenience does not. |
 | "I remember the skill" | Skill text evolves. Load the current relevant skill. |

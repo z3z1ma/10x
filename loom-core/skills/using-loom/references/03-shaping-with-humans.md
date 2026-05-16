@@ -156,7 +156,6 @@ Use the surface that owns the truth:
 - audit for Ralph-backed adversarial review
 - knowledge for preferences, procedures, reusable accepted understanding, and
   retrieval cues
-- packets for delegated worker execution
 
 When no durable truth changed, move forward with the smallest useful next step.
 

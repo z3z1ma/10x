@@ -5,8 +5,8 @@ ticket.
 
 The ticket is the executable work unit and live state ledger. Treat it as the
 source of scope, acceptance, current state, related records, and journal truth.
-Use Ralph packets as the execution contract for bounded implementation, review,
-inspection, and audit slices that act on the ticket.
+Use ticket-owned Ralph runs for bounded implementation, review, inspection, and
+audit slices that act on the ticket.
 
 ## First Move
 
@@ -35,25 +35,25 @@ Before execution, check:
 * related records needed for execution have been read
 * evidence and audit expectations are understood
 * the likely write boundary is consistent with the ticket
-* the next Ralph packet can express the bounded execution or review slice
+* the next Ralph run can express the bounded execution or review slice from ticket
+  context
 
-Before compiling, launching, or consuming the first execution packet, set
-`Status: active` and update `Updated:`.
+Before launching or consuming the first worker run, set `Status: active` and
+update `Updated:`.
 
 ## During Work
 
 Stay inside the ticket boundary.
 
-Ticket execution uses Ralph packets. For each implementation, focused review,
-source-inspection, or audit slice, use `loom-ralph`. Compile the packet on disk
-before launch and point the worker at the packet path. The packet should say what
-files and records may change, what evidence is expected, and what ticket updates
-the worker should make.
+Ticket execution uses bounded Ralph runs. For each implementation, focused review,
+source-inspection, or audit slice, use `loom-ralph`. The ticket and linked records
+should already say what files and records may change, what evidence is expected,
+what stop conditions apply, and what output must be reconciled.
 
 When the current session performs the work instead of launching another worker,
-the current session is still acting from the Ralph packet. Keep the packet as the
-inspectable execution contract when the result will affect ticket state, evidence,
-audit, or closure.
+the current session is still acting inside the ticket-owned Ralph boundary. Keep
+the ticket inspectable as the durable execution contract when the result will
+affect ticket state, evidence, audit, or closure.
 
 Do not batch unrelated cleanup, opportunistic refactors, nearby fixes, unrelated
 record edits, or extra features into the ticket. If nearby work is valuable, create

@@ -28,12 +28,12 @@ Use this priority when more than one skill may apply:
 
 1. `using-loom` doctrine and safety.
 2. The owning record skill: constitution, specs, plans, tickets, research,
-   evidence, audit, knowledge, or Ralph packets.
+   evidence, audit, or knowledge.
 3. A workflow playbook, such as debugging, TDD, UI work, review, migration,
    security, performance, release, or branch finish.
 
 Record skills own durable truth. Playbooks add pressure to reach the right record,
-evidence, packet, or audit route.
+evidence, Ralph run, or audit route.
 
 ## Red Flags
 
@@ -47,7 +47,7 @@ These thoughts mean the agent is rationalizing around Loom:
 | "I need to inspect first." | If inspection is part of a likely Loom workflow, load that skill before inspection. |
 | "I can ask one quick clarifying question first." | If a shaping or record skill might apply, invoke it before the question. |
 | "I'll create the ticket after I understand the fix." | Ticket-worthy work needs scoped acceptance before implementation. |
-| "I'll just send the worker the instructions directly." | A worker run that affects Loom state needs a Ralph packet on disk first. |
+| "I'll just send the worker the instructions directly." | A worker run that affects Loom state needs ticket-owned durable context before launch. |
 | "Evidence can wait until the end." | Evidence posture is part of execution readiness and closure honesty. |
 | "Audit is overkill." | Audit posture follows claim risk, not convenience. |
 | "I know this skill already." | Skill text changes; load the current version. |

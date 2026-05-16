@@ -92,7 +92,8 @@ baseline and how a reviewer could tell. Remove if not useful.>
 ## Interface Contract
 
 <Use for public APIs, module interfaces, component props, commands, data shapes,
-file formats, packets, or cross-worker contracts. Remove if not useful.>
+file formats, records, worker-run contracts, or cross-worker contracts. Remove if
+not useful.>
 
 - Inputs:
 - Outputs:

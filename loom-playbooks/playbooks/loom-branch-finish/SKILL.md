@@ -32,7 +32,7 @@ approval for destructive cleanup.
 Use this playbook when:
 
 - implementation work on a branch or isolated workspace appears complete
-- all planned tickets or packets for a branch have returned
+- all planned tickets or ticket-defined worker scopes for a branch have returned
 - the operator needs a clear merge, PR, keep, or discard choice
 - a worktree may need cleanup after local integration
 - branch provenance and ticket closure need to agree

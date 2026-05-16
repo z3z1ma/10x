@@ -2,14 +2,14 @@ description = "Explicit optional workflow macro for user-facing UI engineering n
 prompt = '''
 The user explicitly invoked this Loom Playbook as an optional workflow macro.
 
-Use it as a workflow lens only after Core Loom routing has identified the owning surface or after the operator has deliberately selected this lens. Preserve Core surface ownership, ticket shaping, evidence, audit, and Ralph packet boundaries. Do not treat this Playbook as automatic first-action activation from ordinary natural-language task text.
+Use it as a workflow lens only after Core Loom routing has identified the owning surface or after the operator has deliberately selected this lens. Preserve Core surface ownership, ticket shaping, evidence, audit, and ticket-owned Ralph worker/review discipline. Do not treat this Playbook as automatic first-action activation from ordinary natural-language task text.
 
 # loom-frontend-ui-engineering
 
 Frontend UI engineering is a Loom playbook for user-facing interface work.
 
-It turns design intent into specs, slices implementation through tickets and Ralph
-packets, records browser evidence, and routes accessibility, performance, and
+It turns design intent into specs, slices implementation through tickets and
+ticket-owned Ralph runs, records browser evidence, and routes accessibility, performance, and
 visual risks through audit.
 
 ## Loom Routing
@@ -139,8 +139,8 @@ Review UI against:
 Use `loom-audit` for Ralph-backed UI review when closure depends on subjective
 quality, accessibility, performance, or browser evidence.
 
-When that review is delegated to a worker, compile a Ralph packet and launch the
-worker from the packet path.
+When that review is delegated to a worker, launch a bounded Ralph review run from
+the ticket, evidence, diffs, and linked records.
 
 ## Done Means
 

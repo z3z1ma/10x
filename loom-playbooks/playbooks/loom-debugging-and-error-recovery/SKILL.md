@@ -125,7 +125,7 @@ depends on unfamiliar library, platform, protocol, or version behavior.
 When multiple components are involved, instrument boundaries before proposing a
 fix. Capture what enters and exits each layer so evidence shows where the failure
 appears: UI to API, API to service, service to database, build step to signing,
-test harness to system under test, or worker packet to parent reconciliation.
+test harness to system under test, or worker output to ticket reconciliation.
 
 ## Trace
 
@@ -196,7 +196,7 @@ If reducing reveals the expected behavior is unspecified, route to `loom-specs`.
 
 ## Fix
 
-Fix the root cause inside the ticket or packet scope.
+Fix the root cause inside the ticket scope or ticket-defined worker sub-scope.
 
 If the fix requires broader behavior, migration, policy, or sequencing change,
 stop and route to specs, plans, constitution, or operator decision.

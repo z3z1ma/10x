@@ -8,8 +8,8 @@ disable-model-invocation: true
 
 Frontend UI engineering is a Loom playbook for user-facing interface work.
 
-It turns design intent into specs, slices implementation through tickets and Ralph
-packets, records browser evidence, and routes accessibility, performance, and
+It turns design intent into specs, slices implementation through tickets and
+ticket-owned Ralph runs, records browser evidence, and routes accessibility, performance, and
 visual risks through audit.
 
 ## Loom Routing
@@ -139,8 +139,8 @@ Review UI against:
 Use `loom-audit` for Ralph-backed UI review when closure depends on subjective
 quality, accessibility, performance, or browser evidence.
 
-When that review is delegated to a worker, compile a Ralph packet and launch the
-worker from the packet path.
+When that review is delegated to a worker, launch a bounded Ralph review run from
+the ticket, evidence, diffs, and linked records.
 
 ## Done Means
 

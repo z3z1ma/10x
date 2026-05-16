@@ -10,12 +10,11 @@ AI agents can write patches. The surrounding engineering work often stays in
 chat: intent, uncertainty, scope, evidence, review, handoff, and lessons learned.
 
 Agent Loom gives that work a repo-local shape. It turns a coding session into
-Markdown records: specs, tickets, research, evidence, audit, knowledge, and
-bounded worker packets.
+Markdown records: specs, tickets, research, evidence, audit, and knowledge.
 
 The loop is deliberate: shape vague work with the human before building, slice
-complex work into ticket-ready units, hand bounded worker runs through Ralph
-packets, and claim only what evidence and audit support.
+complex work into ticket-ready units, run bounded worker or review passes through
+Ralph from ticket-owned context, and claim only what evidence and audit support.
 
 Activation is deliberate too. `using-loom` is not just a file to preload; it is the
 first-action doctrine that makes the agent check the owning Loom surface or skill
@@ -57,8 +56,8 @@ flowchart TB
   Goal["human goal"] --> Shape["shape with the agent"]
   Shape --> Records["Loom records"]
   Records --> Ticket["ticket: live work"]
-  Ticket --> Packet["Ralph packet: execution slice"]
-  Packet --> Worker["Ralph worker"]
+  Ticket --> Ralph["Ralph run: bounded worker/review"]
+  Ralph --> Worker["worker output"]
   Worker --> Code
   Code --> Evidence["evidence: observed output"]
   Evidence --> Audit["audit: Ralph-backed review"]
@@ -76,10 +75,10 @@ Loom forces useful friction at the exact points where agents usually blur things
 
 - `using-loom` makes skill and surface routing the first action, not an afterthought
 - specs keep intended behavior out of implementation guesses
-- tickets keep live execution state and acceptance in one place
+- tickets keep live execution state, acceptance, and durable worker context in one place
 - evidence keeps observations separate from model claims
 - audit gives important claims a Ralph-backed challenge
-- packets keep ticket execution and worker runs bounded
+- Ralph keeps worker and review runs bounded while tickets carry the durable handoff
 - knowledge keeps accepted lessons searchable
 
 Meaningful closure needs graph support: ticket state, evidence, audit, and the
@@ -104,7 +103,6 @@ You get the fix and the trace.
 | evidence | observed facts, outputs, reproductions, screenshots, logs, validation |
 | audit | Ralph-backed review, findings, verdicts, residual risk |
 | knowledge | preferences, procedures, accepted explanations, atlases, retrieval cues |
-| packets | bounded worker contracts under `.loom/packets/ralph/` |
 
 Retrospective is a promotion pass over those surfaces. It has no directory of its
 own.
@@ -121,7 +119,7 @@ flowchart TB
   B -->|observed output, test, log, screenshot| E["evidence"]
   B -->|Ralph-backed review, residual risk| Q["audit"]
   B -->|accepted reusable explanation| K["knowledge"]
-  B -->|bounded worker contract| PKT["packet"]
+  B -->|worker/review coordination| RL["Ralph run"]
 
   C --> G["repo-local Loom graph"]
   R --> G
@@ -131,10 +129,10 @@ flowchart TB
   E --> G
   Q --> G
   K --> G
-  PKT --> G
+  RL --> G
 
-  G --> PKT
-  PKT --> W["worker run"]
+  G --> RL
+  RL --> W["worker/review run"]
   W --> E
   W --> T
   E --> T
@@ -181,10 +179,11 @@ Some adapters preload `using-loom`. If they do, continue straight into the work.
 
 Core also ships optional named agents. Use Loom Weaver for pre-implementation
 shaping, options, recommendations, and `.loom/` records without source edits. Use
-Loom Driver for packetized inner-loop coordination, worker runs, evidence, audit
-routing, and ticket reconciliation after work is shaped. These agents are not required,
-the skills are usually sufficient; but they offer stronger behavior conformance. See
-[INSTALL.md](INSTALL.md) for harness-specific invocation syntax.
+Loom Driver for ticket-owned inner-loop coordination: bounded Ralph worker or
+review runs, output reconciliation, evidence, audit routing, and ticket updates
+after work is shaped. These agents are not required; the skills are usually
+sufficient, but they offer stronger behavior conformance. See [INSTALL.md](INSTALL.md)
+for harness-specific invocation syntax.
 
 ## What Ships
 

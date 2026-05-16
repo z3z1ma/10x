@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # Test Loom routing with natural prompts that do not name skills or Playbooks.
-# Usage: bash tests/skill-triggering/run-test.sh <expected-core-skill|none> <prompt-file> [max-turns] [forbidden-playbook-csv]
+# Usage: bash tests/skill-triggering/run-test.sh <expected-core-skill|none> <prompt-file> [max-turns] [forbidden-playbook-csv|all|none]
 
 set -euo pipefail
 
 SKILL_NAME="${1:-}"
 PROMPT_FILE="${2:-}"
 MAX_TURNS="${3:-3}"
-FORBIDDEN_PLAYBOOKS="${4:-}"
+FORBIDDEN_PLAYBOOKS="${4:-all}"
 
 if [[ -z "$SKILL_NAME" || -z "$PROMPT_FILE" ]]; then
-  echo "Usage: $0 <expected-core-skill|none> <prompt-file> [max-turns] [forbidden-playbook-csv]" >&2
+  echo "Usage: $0 <expected-core-skill|none> <prompt-file> [max-turns] [forbidden-playbook-csv|all|none]" >&2
   exit 2
 fi
 
@@ -25,6 +25,20 @@ TIMESTAMP="$(date +%s)"
 OUTPUT_DIR="${LOOM_TEST_OUTPUT_DIR:-/tmp/loom-tests}/$TIMESTAMP/skill-triggering/$SKILL_NAME"
 PROJECT_DIR="$OUTPUT_DIR/project"
 LOG_FILE="$OUTPUT_DIR/opencode-output.json"
+
+FORBIDDEN_NAMES=()
+if [[ "$FORBIDDEN_PLAYBOOKS" == "all" ]]; then
+  for playbook_dir in "$REPO_ROOT"/loom-playbooks/playbooks/loom-*; do
+    [[ -d "$playbook_dir" ]] || continue
+    FORBIDDEN_NAMES+=("${playbook_dir##*/}")
+  done
+  if [[ ${#FORBIDDEN_NAMES[@]} -eq 0 ]]; then
+    echo "FAIL: no Playbook names found under loom-playbooks/playbooks" >&2
+    exit 1
+  fi
+elif [[ "$FORBIDDEN_PLAYBOOKS" != "none" && -n "$FORBIDDEN_PLAYBOOKS" ]]; then
+  IFS=',' read -r -a FORBIDDEN_NAMES <<< "$FORBIDDEN_PLAYBOOKS"
+fi
 
 mkdir -p "$PROJECT_DIR"
 
@@ -43,8 +57,8 @@ echo "=== Loom Routing Test ==="
 echo "Expected Core Skill: $SKILL_NAME"
 echo "Prompt: $PROMPT_FILE"
 echo "Max turns hint: $MAX_TURNS (OpenCode CLI currently uses timeout for this test)"
-if [[ -n "$FORBIDDEN_PLAYBOOKS" ]]; then
-  echo "Forbidden Playbooks: $FORBIDDEN_PLAYBOOKS"
+if [[ ${#FORBIDDEN_NAMES[@]} -gt 0 ]]; then
+  echo "Forbidden Playbooks: ${FORBIDDEN_PLAYBOOKS} (${#FORBIDDEN_NAMES[@]} names checked)"
 fi
 echo "Output: $LOG_FILE"
 
@@ -61,9 +75,8 @@ if [[ $EXIT_CODE -eq 124 ]]; then
   exit 1
 fi
 
-if [[ -n "$FORBIDDEN_PLAYBOOKS" ]]; then
-  IFS=',' read -r -a forbidden_names <<< "$FORBIDDEN_PLAYBOOKS"
-  for forbidden in "${forbidden_names[@]}"; do
+if [[ ${#FORBIDDEN_NAMES[@]} -gt 0 ]]; then
+  for forbidden in "${FORBIDDEN_NAMES[@]}"; do
     forbidden="${forbidden//[[:space:]]/}"
     [[ -z "$forbidden" ]] && continue
     forbidden_pattern='"skill":"([^"/:]+[/|:])?'"$forbidden"'"|"name":"'"$forbidden"'"|"input":\{"name":"'"$forbidden"'"\}'

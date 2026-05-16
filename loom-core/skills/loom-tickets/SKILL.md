@@ -8,12 +8,13 @@ description: "Use whenever the user mentions tickets, scoped implementation work
 Tickets are Loom's fundamental unit of executable work.
 
 A ticket owns one bounded change, live execution state, acceptance criteria,
-material progress, evidence links, review posture, and closure. Ralph packets own
-the bounded execution and review slices that act on the ticket.
+material progress, evidence links, review posture, durable worker context, and
+closure. Bounded Ralph worker and review runs act from the ticket and its linked
+records.
 
-A ticket contains enough instruction and context to compile Ralph packets from the
-ticket and its linked records, then gives future agents a safe continuation point
-after those packets return.
+A ticket contains enough instruction and context to launch bounded Ralph runs from
+the ticket and its linked records, then gives future agents a safe continuation
+point after worker output is reconciled.
 
 A ticket is not a vague issue, planning document, research note, scratchpad,
 transcript summary, or parking lot.
@@ -57,8 +58,8 @@ If creating or shaping a ticket:
   are either settled in the ticket or linked to owning records
 - use the single-closure-claim check: one ticket should produce one bounded result
   with one coherent evidence and closure story
-- include enough instruction and record links that the first Ralph packet can be
-  compiled from the ticket and its linked documents without relying on chat history
+- include enough instruction and record links that the first bounded Ralph run can
+  launch from the ticket and its linked documents without relying on chat history
 
 If acting from, resuming, updating, blocking, reviewing, closing, or cancelling a
 ticket:
@@ -138,7 +139,7 @@ state, blockers, evidence, review posture, or closure state.
 Use this lifecycle:
 
 * `open`: ready to start
-* `active`: Ralph packet execution is underway or returned output is being
+* `active`: bounded Ralph execution is underway or returned output is being
   reconciled into the ticket
 * `blocked`: a concrete blocker prevents safe progress
 * `review`: audit, acceptance review, or final verification is the next honest move
@@ -161,8 +162,11 @@ Every ticket must preserve these invariants:
 
 * one bounded executable work unit
 * one coherent closure claim
-* enough context, instruction, and linked records to compile Ralph packets without
-  chat history
+* enough context, instruction, and linked records to launch bounded Ralph runs
+  without chat history
+* likely read scope, write scope, stop conditions, evidence posture, review
+  posture, and worker-output reconciliation are durable when worker handoff is
+  expected
 * truthful `Status:`
 * explicit scope boundary
 * settled or linked scope, system-shape, data-model, state-modeling, and coherence
@@ -186,10 +190,10 @@ ticket, route back to shaping, or move it to the appropriate surface.
 When executing from a ticket:
 
 * set `Status: active` when work materially begins
-* compile or consume a Ralph packet for the bounded ticket slice being implemented,
-  reviewed, inspected, or audited
-* execute from the Ralph packet, ticket, and linked records, not from unstated chat
-  context
+* launch or consume output from a bounded Ralph run for the ticket slice being
+  implemented, reviewed, inspected, or audited
+* execute from the ticket and linked records, not from unstated chat context or a
+  transient launch prompt
 * keep implementation inside the declared scope
 * update Current State when the next agent would otherwise be misled
 * append journal entries for material progress, blockers, decisions, evidence,
@@ -253,8 +257,8 @@ Cancellation is not failure. It is a truthful terminal state.
 Ticket work is done when:
 
 * the ticket still describes one bounded executable work unit
-* the ticket and its linked records contain enough context to compile Ralph packets
-  or trust returned packet output without chat history
+* the ticket and its linked records contain enough context to launch bounded Ralph
+  runs or trust reconciled worker output without chat history
 * `Status:` matches reality
 * `ACC-*` acceptance criteria are satisfied or revised with authority before
   closure

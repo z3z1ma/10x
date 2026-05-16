@@ -54,7 +54,7 @@ Supported harnesses should use the strongest explicit surface they support:
 - Do not claim all harnesses support the same command syntax or packaging mechanism.
 - Do not claim Codex supports plugin-contributed custom prompt commands unless source-backed docs prove it.
 - Do not remove Core record skills or weaken their natural-language activation behavior.
-- Do not make Playbook macros a shortcut around Core routing, ticket shaping, evidence, audit, or Ralph packet discipline.
+- Do not make Playbook macros a shortcut around Core routing, ticket shaping, evidence, audit, or ticket-owned Ralph worker/review discipline.
 - Do not duplicate every Playbook into divergent harness-specific bodies when a shared source or generation path can prevent drift.
 - Do not make stale natural-prompt activation tests pass by expecting Playbooks to auto-trigger.
 
@@ -74,7 +74,7 @@ Supported harnesses should use the strongest explicit surface they support:
 
 - REQ-007: Claude Code and Cursor Playbooks MUST use commands or explicit-only skills. If either adapter uses skills, those skills must disable model invocation.
 
-- REQ-008: Playbook macro bodies MUST preserve Loom loop order. They may add workflow-specific pressure, but they must still route durable truth to Core surfaces and must not shorten required spec, plan, ticket, evidence, audit, or Ralph packet procedures.
+- REQ-008: Playbook macro bodies MUST preserve Loom loop order. They may add workflow-specific pressure, but they must still route durable truth to Core surfaces and must not shorten required spec, plan, ticket, evidence, audit, or ticket-owned Ralph worker/review procedures.
 
 - REQ-009: Playbook macro descriptions and docs MUST present Playbooks as optional explicit lenses. They must not teach agents that a broad natural-language task requires Playbook activation before Core routing.
 
@@ -102,7 +102,7 @@ Exercises: REQ-001, REQ-008, REQ-009, REQ-011
 GIVEN Playbooks are installed in a supported harness
 WHEN the user invokes a Playbook through the harness-specific explicit macro syntax
 THEN that Playbook's workflow guidance enters the conversation
-AND it preserves Core surface ownership, evidence posture, audit posture, and ticket or packet boundaries while adding the selected workflow lens.
+AND it preserves Core surface ownership, evidence posture, audit posture, ticket boundaries, and ticket-owned Ralph worker/review discipline while adding the selected workflow lens.
 
 ### SCN-003: Harness Uses Explicit-Only Skills
 
@@ -140,7 +140,7 @@ AND model-visible bodies remain free of contributor-only repository, package, sm
 - REQ-004 / SCN-003: Source inspection shows explicit-only flags in harnesses that route command behavior through skills.
 - REQ-005 / SCN-004: Source inspection shows Codex Playbooks use `policy.allow_implicit_invocation: false`, and docs avoid claiming unsupported custom slash commands.
 - REQ-007 / SCN-003: Source inspection shows Claude and Cursor command or explicit-only skill packaging follows the selected adapter route.
-- REQ-008 / SCN-002: Source inspection of representative macro bodies shows Playbooks preserve Core surface routing, evidence, audit, ticket, and Ralph packet discipline.
+- REQ-008 / SCN-002: Source inspection of representative macro bodies shows Playbooks preserve Core surface routing, evidence, audit, ticket, and ticket-owned Ralph worker/review discipline.
 - REQ-010 / SCN-005: Diff or generation checks show adapter-specific Playbook bodies are derived from a canonical source or otherwise synchronized.
 - REQ-011: Updated smoke or activation tests include both positive explicit invocation and negative natural-prompt cases.
 - REQ-012 / SCN-005: Grep checks over model-visible Playbook macro content show no contributor-facing package, smoke, adapter-mechanics, dogfood, or repository workflow leakage.
@@ -195,5 +195,6 @@ Registering `loom-playbooks/skills/` as a broad implicit model-visible skill pat
 - `research:20260514-direct-interactive-agent-surfaces` - prior supported-harness capability survey.
 - `spec:loom-weaver-agent` - defines the complementary explicit outer-loop shaping persona.
 - `spec:loom-driver-agent` - defines the complementary explicit inner-loop coordination persona.
+- `spec:ticket-owned-worker-handoffs` - defines the worker/review handoff model Playbooks must preserve when adding workflow pressure.
 - `loom-core/skills/using-loom/SKILL.md` - owns Core activation and routing doctrine.
 - `loom-playbooks/` - current package surface to convert.

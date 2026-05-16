@@ -34,7 +34,7 @@ Use this playbook when:
 - a bug report or feature request arrives
 - an external issue needs classification or response
 - a maintainer asks what needs attention
-- a report may be ready for a worker packet
+- a report may be ready for a ticket-owned worker run
 - an issue needs more information from the reporter
 - a request should be rejected with durable rationale
 - external labels or states need reconciliation with Loom tickets
@@ -126,7 +126,7 @@ Choose a disposition:
 - create or update a Loom ticket
 - request more information
 - route to spec, research, plan, constitution, evidence, audit, or knowledge first
-- mark ready for Ralph packet or local implementation
+- mark ready for a ticket-owned Ralph run or local implementation
 - mark ready for operator decision
 - reject or defer with rationale
 - close as duplicate with link to the owning record or issue
@@ -135,7 +135,7 @@ Do not create executable tickets from vague requests. Shape first.
 
 ## Brief
 
-When work is ready for a worker, write the ticket or packet brief in durable terms.
+When work is ready for a worker, write the ticket in durable terms.
 
 Include:
 
@@ -185,7 +185,7 @@ The intake triage pass is done when:
 - the report was read with prior context checked
 - category and intake disposition are explicit
 - reproduction or source investigation is proportionate to the claim
-- ready work has a ticket or packet-ready brief
+- ready work has a ticket or ticket-ready brief
 - unclear work has specific questions or a shaping route
 - rejected or duplicate work has durable rationale
 - external tracker state, if used, mirrors the Loom decision

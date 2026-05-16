@@ -40,15 +40,16 @@ with claims worth challenging.
 
 ## Ralph Review Requirement
 
-Substantive audit requires a Ralph review packet.
+Substantive audit requires a bounded Ralph review run.
 
 The context that shaped or implemented the target may prepare the audit request,
 gather bounded context, and record the result. The adversarial judgment itself
 must come from the Ralph review run.
 
-Route the bounded review through an on-disk Ralph packet under
-`.loom/packets/ralph/`. The packet is the audit request and worker contract. Audit
-records the adversarial judgment after the Ralph review run returns.
+Route the bounded review from the ticket, evidence, diff, and linked records that
+define the target. The ticket or audit target is the durable request and worker
+contract; the launch prompt is transport. Audit records the adversarial judgment
+after the Ralph review run returns.
 
 When a Ralph review cannot be run, say audit was not performed. Local inspection
 may still be useful review, but do not save it as `Type: Audit`.
@@ -63,10 +64,10 @@ If preparing or recording an audit:
 - identify the concrete target
 - identify the claims, risks, acceptance criteria, or review concerns being
   challenged
-- gather only the context needed for a bounded Ralph review packet
+- gather only the context needed for a bounded Ralph review run
 - prefer source records, diffs, evidence, and files over summaries when the source
   is needed for judgment
-- compile and launch a Ralph review packet for substantive audit
+- launch a bounded Ralph review run for substantive audit
 - after the Ralph review run, record the result with `templates/audit.md`
 
 If consuming audit findings:

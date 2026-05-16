@@ -200,7 +200,6 @@ function openCodeAgentPermission(agentName) {
         ".loom/plans/**": "deny",
         ".loom/research/**": "deny",
         ".loom/tickets/**": "allow",
-        ".loom/packets/ralph/**": "allow",
         ".loom/evidence/**": "allow",
         ".loom/audit/**": "allow",
       },
@@ -431,7 +430,6 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes(
     && Boolean(loomDriverConfig?.prompt?.includes("direction-setting"))
     && loomDriverConfig?.permission?.edit?.["*"] === "deny"
     && loomDriverConfig?.permission?.edit?.[".loom/tickets/**"] === "allow"
-    && loomDriverConfig?.permission?.edit?.[".loom/packets/ralph/**"] === "allow"
     && loomDriverConfig?.permission?.edit?.[".loom/evidence/**"] === "allow"
     && loomDriverConfig?.permission?.edit?.[".loom/audit/**"] === "allow"
     && loomDriverConfig?.permission?.task === "allow"

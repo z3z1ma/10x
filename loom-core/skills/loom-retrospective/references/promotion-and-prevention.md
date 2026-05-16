@@ -6,9 +6,9 @@ Retrospective preserves reusable learning and prevention follow-up.
 
 Inspect the smallest set that explains the work:
 
-- the originating ticket, plan, research, audit, packet, evidence, or changed record
+- the originating ticket, plan, research, audit, evidence, worker output, or changed record
 - acceptance criteria, findings, evidence, and residual risks
-- worker output and packet notes when a worker ran
+- worker output and reconciliation notes when a worker ran
 - changed files or diffs when implementation shape matters
 - repeated questions or operator corrections when they show reusable friction
 

@@ -1,6 +1,6 @@
 ---
 name: loom-specs
-description: "Use when behavior, interfaces, invariants, requirements, scenarios, or intended outcomes need a stable source before tickets, packets, evidence, or audit rely on them."
+description: "Use when behavior, interfaces, invariants, requirements, scenarios, or intended outcomes need a stable source before tickets, worker runs, evidence, or audit rely on them."
 ---
 
 # loom-specs
@@ -11,7 +11,7 @@ A spec says what a system, workflow, interface, product surface, command, data
 shape, permission boundary, error state, or record shape should do.
 
 It turns fuzzy intent into requirements, scenarios, boundaries, and quality bars
-that downstream tickets, packets, evidence, and audit can cite. Specs are one of
+that downstream tickets, worker runs, evidence, and audit can cite. Specs are one of
 the main places to preserve outer-loop design judgment when behavior, state shape,
 data shape, interface boundaries, or design coherence would otherwise be inferred
 during implementation.
@@ -34,7 +34,7 @@ Use this skill when:
   behavior needs a durable contract
 - product direction, state shape, data shape, abstraction boundary, or design
   coherence needs a stable behavior-level source before execution
-- a ticket, plan, audit, packet, or worker would otherwise redefine what correct
+- a ticket, plan, audit, or worker would otherwise redefine what correct
   means
 - operator answers need to become behavior truth before execution
 - requirements or scenarios need to be added, modified, removed, renamed,
@@ -154,7 +154,7 @@ Use this lifecycle:
   unless the open risk is explicit
 - `active`: current working behavior truth for the named product slice, usable by
   downstream work with named open questions and limits
-- `accepted`: reviewed enough that downstream tickets, packets, evidence, and
+- `accepted`: reviewed enough that downstream tickets, worker runs, evidence, and
   audit can rely on it as the current behavior contract for the named product
   slice
 - `superseded`: replaced by a named successor
@@ -166,7 +166,7 @@ Use `accepted` when the contract is stable enough for downstream records to rely
 
 An `active` or `accepted` spec must represent the current product surface slice it
 claims. If the product surface changed enough that the spec would mislead a
-ticket, packet, evidence plan, audit, or future agent, update the spec immediately
+ticket, worker run, evidence plan, audit, or future agent, update the spec immediately
 or change its status to `superseded` or `retired`.
 
 Use `superseded` when a successor spec now owns the behavior. Use `retired` when

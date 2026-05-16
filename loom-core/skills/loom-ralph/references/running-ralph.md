@@ -1,26 +1,27 @@
-# Running Packets
+# Running Ralph
 
 Ralph has two roles: launcher and worker.
 
-The launcher gathers context into a packet, chooses the context style and launch
+The launcher checks durable context, chooses the context style and launch
 transport, and starts the bounded run.
 
-The worker reads the packet, uses the named context, performs the bounded task,
-updates the records or artifacts the packet names, and returns the required output.
+The worker reads the named ticket or target records, uses the named context,
+performs the bounded task, updates allowed records or artifacts, and returns the
+required output.
 
 ## Launch Transports
 
 Use the transport the workspace supports:
 
 - harness-native subagent
-- headless harness command that reads the packet path
+- headless harness command that reads named records or inlined context
 - manual Ralph handoff
 - another documented transport
 
-Keep launch wrappers short. Every transport should point the worker at the packet
-path, instruct the worker to read it first, and request the packet's output
-contract. Put the mission, scope, context, stop conditions, and evidence
-expectations in the packet itself.
+Keep launch wrappers short. Every transport should point the worker at the ticket
+or target records, instruct the worker to read them first, and request the run's
+output contract. Put durable mission, scope, context, stop conditions, and evidence
+expectations in the ticket or owning records before launch.
 
 ## Before Launch
 
@@ -33,37 +34,27 @@ Before launching a worker, check:
 - branch and worktree are named when repository files may change
 - evidence, review, or verification expectations are concrete
 - stop conditions are clear
-- placeholder text has been resolved where packet truth is required
-- the packet has been saved under `.loom/packets/ralph/` and the launch wrapper
-  points to that path
+- placeholder text has been resolved where durable truth is required
+- the launch prompt points to the ticket or target records instead of becoming the
+  durable contract itself
 
-If these checks fail, fix the packet before launch.
-
-When the packet file is writable, set `Status: running` immediately before or as
-part of launch so future agents can distinguish an unlaunched packet from an
-in-flight worker run.
+If these checks fail, update or block the ticket or owning surface before launch.
 
 ## Worker Procedure
 
 The worker should:
 
-- read the whole packet
-- load live references or inlined context according to `Context Style:`
+- read the named ticket, target, and linked records
+- load live references or inlined context according to the context style
 - inspect the source files, records, evidence, claims, or artifacts named by read
   scope
 - make only changes allowed by write scope
 - gather the expected evidence, review findings, or validation output
-- create or update records and artifacts named by the packet
-- fill the packet Worker Output section when allowed by write scope
-- set packet status to `consumed` when output is recorded
-
-When the packet file is not writable, return output through the launch transport
-and identify where the parent must preserve it. Runs that support closure,
-acceptance, evidence, audit, research, knowledge, or future recovery should leave
-durable packet output or a cited durable record, not transport-only output.
+- create or update records and artifacts named by the ticket or launch
+- return the required output for reconciliation
 
 The worker should not silently widen scope. When the safe next move is outside the
-packet, return `blocked` or `escalate`.
+run, return `blocked` or `escalate`.
 
 ## Worker Output
 
@@ -77,14 +68,14 @@ Worker output should include:
 - blockers, risks, or assumptions discovered
 - recommended next move for the consuming surface
 
-The output should be precise enough that the next agent can read the packet,
+The output should be precise enough that the next agent can read the ticket,
 changed records, evidence, and diff without replaying the worker's tool log.
 
 ## After Worker Return
 
 After the worker returns, read:
 
-- the packet
+- the ticket or target record
 - worker output
 - changed records or artifacts
 - evidence named by the worker
@@ -92,7 +83,7 @@ After the worker returns, read:
 
 Then decide the next move:
 
-- launch another packet
+- launch another bounded Ralph run
 - request audit or another review pass
 - update the consuming surface
 - return to outer-loop shaping
@@ -103,7 +94,7 @@ Then decide the next move:
 
 Common stop conditions:
 
-- packet no longer matches the target or source state
+- ticket or target no longer matches the source state
 - needed context is missing
 - write scope is too narrow or ambiguous
 - work reveals a product, architecture, policy, sequencing, or scope decision
@@ -114,13 +105,14 @@ Common stop conditions:
 
 Stop when continuing would make the graph less truthful.
 
-## Parallel Packets
+## Parallel Ralph Runs
 
-Run packets in parallel only when their dependencies and write scopes do not
+Run workers in parallel only when their dependencies and write scopes do not
 overlap.
 
 Avoid parallel execution for shared migrations, generated files, lockfiles,
 stateful resources, broad formatting, or ambiguous ownership.
 
-Each parallel worker gets its own packet and records its own output. Read each
-result before depending on combined work.
+Independent closure stories need separate child tickets. When one ticket truly owns
+one closure claim, ticket-defined non-overlapping sub-scopes can coordinate
+parallel runs. Reconcile each result before depending on combined work.

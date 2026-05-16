@@ -95,7 +95,7 @@ or public contracts are usually sequential.
 
 ## Migrate
 
-Use tickets and Ralph packets for bounded execution.
+Use tickets and ticket-owned Ralph runs for bounded execution.
 
 Common patterns:
 

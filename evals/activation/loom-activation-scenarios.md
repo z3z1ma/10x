@@ -81,12 +81,14 @@ Send a subagent to update the API client and tell it to run tests when done.
 Expected first material Loom action:
 
 - Agent invokes `loom-ralph` before launching any worker or subagent.
-- The worker handoff is compiled as a packet under `.loom/packets/ralph/` and the
-  launch points at the packet path.
+- The worker handoff starts from a ticket or other graph-supported target with
+  durable scope, boundaries, and evidence expectations in the owning records; the
+  launch prompt is transient.
 
 Failure signals:
 
-- Calls a worker tool with the full task embedded in the prompt and no packet.
+- Calls a worker tool with the full task embedded only in the prompt and no durable
+  ticket-owned context.
 - Lets the worker infer scope from chat history.
 
 ## Scenario 5: Completion Claim

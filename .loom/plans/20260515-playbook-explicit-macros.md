@@ -2,9 +2,9 @@
 
 ID: plan:20260515-playbook-explicit-macros
 Type: Plan
-Status: open
+Status: completed
 Created: 2026-05-15
-Updated: 2026-05-15
+Updated: 2026-05-16
 Risk: medium - changes shipped package surfaces, adapter manifests, and activation expectations across supported harnesses.
 
 ## Summary
@@ -19,8 +19,9 @@ This needs more than one ticket because the work spans a shared Playbook content
 - `research:20260515-playbook-command-surfaces` - identifies each supported harness's command or explicit-only skill surface and the Codex limiting case.
 - `research:20260515-playbooks-core-activation-pressure` - explains why broad automatic Playbook activation should be replaced.
 - `evidence:20260515-playbook-activation-stacking` - preserves observed Playbook stacking and current test gaps.
+- `knowledge:playbook-activation-tests-procedure` - retrospective prevention note for future activation test changes.
 - `loom-playbooks/` - current package surface to convert.
-- `CLAUDE.md` and `tests/skill-triggering/` - current stale natural-prompt activation assumptions that must be revised.
+- `CLAUDE.md` and `tests/skill-triggering/` - formerly stale natural-prompt activation assumptions revised by the final docs/tests ticket.
 
 ## Strategy
 
@@ -104,7 +105,9 @@ Docs and tests no longer treat natural Playbook autoactivation as success. The v
 
 ## Current State
 
-Open with Gemini commands next. The shared macro contract, OpenCode command, native explicit-only, and skill-corpus relocation milestones are complete with clear audits. `ticket:20260515-gemini-playbook-commands` is now open because top-level `loom-playbooks/skills/` is absent from the Gemini extension root. The final docs/tests ticket remains blocked until Gemini commands close.
+Completed. All execution units are closed with Ralph-backed audits: macro catalog, OpenCode commands, native Claude/Cursor/Codex explicit-only surfaces, Playbook corpus relocation, Gemini commands, and final docs/tests validation. Playbooks now expose explicit OpenCode and Gemini command surfaces, explicit-only Claude/Cursor/Codex skill surfaces, and no longer keep a top-level `loom-playbooks/skills/` directory for Gemini auto-discovery. Docs and tests now reward Core-first natural routing and explicit Playbook invocation instead of natural Playbook autoactivation.
+
+Residual limits remain explicit in child tickets: live runtime invocation was not performed for OpenCode commands, Gemini commands, Claude/Cursor/Codex native surfaces, or natural-prompt OpenCode activation because those require harness-specific, credentialed, or interactive environments. Static/package validation passed where available, including Core smoke, Playbooks smoke, Playbooks pack check, Gemini Playbooks extension validation, Claude Playbooks plugin validation, and `git diff --check`.
 
 ## Journal
 
@@ -115,3 +118,7 @@ Open with Gemini commands next. The shared macro contract, OpenCode command, nat
 - 2026-05-15: Blocked `ticket:20260515-gemini-playbook-commands` after Gemini docs confirmed extension roots auto-discover top-level `skills/`. Need operator/package architecture decision: move shared skill corpus out of top-level `skills/`, or create a Gemini-specific command-only extension root.
 - 2026-05-15: Operator selected the corpus-move route. Recorded `decision:0001`, added `ticket:20260515-playbook-skill-corpus-relocation`, and made it the hard prerequisite for Gemini command implementation.
 - 2026-05-15: Closed `ticket:20260515-playbook-skill-corpus-relocation` after implementation, path-doc follow-up, and clear Ralph audit. Gemini command implementation is unblocked.
+- 2026-05-15: Closed `ticket:20260515-gemini-playbook-commands` after generating 25 Gemini command TOML files from the macro catalog, validating the Playbooks Gemini extension, and recording a clear Ralph audit.
+- 2026-05-16: Closed `ticket:20260515-playbook-explicit-macro-docs-tests` after docs/tests alignment, validation, a changes-needed audit finding, a follow-up fix that makes natural-prompt tests forbid all Playbooks, and a clear follow-up audit.
+- 2026-05-16: Marked plan completed. Child tickets now carry live execution truth, audit state, evidence, and residual limits.
+- 2026-05-16: Retrospective promotion created `knowledge:playbook-activation-tests-procedure` to preserve the all-Playbook negative-check lesson from the final audit loop.

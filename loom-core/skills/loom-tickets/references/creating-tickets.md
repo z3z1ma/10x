@@ -18,8 +18,8 @@ Before writing the ticket, prove these things:
   or process compliance
 - acceptance clarity: `ACC-*` criteria are specific enough that evidence can
   observe them and audit can challenge them
-- Ralph readiness: the first bounded execution or review packet can be compiled
-  from the ticket and linked records without chat history
+- Ralph readiness: the first bounded execution or review run can launch from the
+  ticket and linked records without chat history
 
 If any of those are missing, keep shaping. Ask the operator, inspect the codebase,
 or route to research, specs, plans, or constitution before creating the ticket.
@@ -58,8 +58,11 @@ Create a ticket when all of these are true:
 - the work has an executable change boundary
 - the smallest useful slice is identifiable
 - the ticket has one coherent closure claim
-- the first Ralph packet boundary is identifiable
+- the first Ralph run boundary is identifiable
 - likely affected files, records, systems, or artifacts are known enough to begin
+- likely read scope, write scope, stop conditions, evidence posture, review
+  posture, and worker-output reconciliation are known enough to preserve in the
+  ticket when handoff is expected
 - acceptance can be written as observable criteria
 - the initial status can honestly be `open`
 - unresolved questions do not materially change the scope or acceptance
@@ -113,7 +116,7 @@ Use this sequence:
 7. Define acceptance criteria with `ACC-*` IDs.
 8. Name evidence needed for each important closure claim.
 9. Name the audit target or lens expected before closure.
-10. Name the first likely Ralph packet boundary.
+10. Name the first likely Ralph run boundary.
 11. Assign risk with a reason.
 12. Add related records only when an acting agent should read them.
 13. Create the ticket using `templates/ticket.md`.
@@ -130,7 +133,7 @@ Good ticket-shaping questions include:
 - What coherence question would change the ticket if answered differently?
 - What existing record constrains this work?
 - What source, test, or artifact path is likely involved?
-- What first Ralph packet would execute or review this ticket?
+- What first Ralph run would execute or review this ticket?
 - What would count as evidence that the work succeeded?
 - What should audit challenge before this closes?
 - What would make this ticket blocked instead of executable?

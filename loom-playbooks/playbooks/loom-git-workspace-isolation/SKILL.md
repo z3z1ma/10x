@@ -30,7 +30,7 @@ It does not replace ticket scope, branch policy, evidence, or operator approval.
 Use this playbook when:
 
 - starting non-trivial implementation work
-- executing a plan with multiple tickets or worker packets
+- executing a plan with multiple tickets or ticket-defined worker scopes
 - the current branch contains unrelated work
 - a worker needs an isolated write scope
 - baseline tests or setup need to distinguish pre-existing failure from new failure
@@ -85,7 +85,7 @@ When using a Git worktree fallback:
 - prefer the project's existing worktree directory convention
 - verify project-local worktree directories are ignored before placing work there
 - avoid creating worktrees inside other worktrees
-- record the path and branch in the ticket or packet
+- record the path and branch in the ticket
 
 If sandbox permissions block worktree creation, state the limitation and continue
 only if in-place work is acceptable for the ticket risk.
@@ -138,8 +138,8 @@ Use `loom-evidence` when baseline output will support later closure or audit.
 After isolation and baseline, continue through the appropriate route:
 
 - `loom-incremental-implementation` for local execution
-- `loom-ralph` for one bounded worker packet
-- `loom-parallel-worker-coordination` for independent packets
+- `loom-ralph` for one bounded ticket-owned worker run
+- `loom-parallel-worker-coordination` for independent child tickets or ticket-defined sub-scopes
 - `loom-debugging-and-error-recovery` when baseline or setup fails
 - `loom-branch-finish` if the only remaining work is integration or cleanup
 

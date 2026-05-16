@@ -1,6 +1,6 @@
 ---
 name: loom-api-and-interface-design
-description: "Use when a shared interface needs consumer, compatibility, error, permission, or migration design before implementation, including REST, GraphQL, CLI, event, module, component, file-format, packet, worker, or cross-system contracts."
+description: "Use when a shared interface needs consumer, compatibility, error, permission, or migration design before implementation, including REST, GraphQL, CLI, event, module, component, file-format, worker, or cross-system contracts."
 disable-model-invocation: true
 ---
 
@@ -33,7 +33,7 @@ Use this playbook when designing or changing:
 - REST, GraphQL, RPC, event, webhook, or CLI interfaces
 - module boundaries or exported functions
 - component props or design-system contracts
-- data shapes, file formats, records, packets, or worker handoffs
+- data shapes, file formats, records, or worker handoffs
 - frontend/backend contracts
 - public behavior that consumers may depend on
 

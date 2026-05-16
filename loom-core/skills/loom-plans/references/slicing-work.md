@@ -114,8 +114,8 @@ If one slice needs several independent children, split it.
 If a slice cannot be verified independently, make it smaller, change the evidence
 plan, or route back to shaping.
 
-If a slice cannot be expressed as a Ralph packet from its child ticket and linked
-records, it is not ready.
+If a slice cannot be expressed as a bounded Ralph run from its child ticket and
+linked records, it is not ready.
 
 ## Slicing Check
 
