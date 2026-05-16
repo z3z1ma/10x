@@ -2,9 +2,9 @@
 
 ID: packet:20260515T235318Z-playbook-explicit-macro-docs-tests
 Type: Packet
-Status: running
+Status: consumed
 Created: 2026-05-15 23:53 UTC
-Updated: 2026-05-15 23:53 UTC
+Updated: 2026-05-16 00:07 UTC
 Target: ticket:20260515-playbook-explicit-macro-docs-tests
 Packet Kind: Ralph
 Mode: execution
@@ -141,4 +141,51 @@ The worker must update this packet and target ticket or return output with:
 
 ## Worker Output
 
-Pending worker output.
+Outcome: stop.
+
+Files changed:
+
+- `CLAUDE.md`
+- `README.md`
+- `INSTALL.md`
+- `ARCHITECTURE.md`
+- `loom-playbooks/README.md`
+- `loom-playbooks/package.json`
+- `tests/skill-triggering/run-test.sh`
+- `tests/skill-triggering/run-all.sh`
+
+Records changed:
+
+- `.loom/tickets/20260515-playbook-explicit-macro-docs-tests.md`
+- `.loom/packets/ralph/20260515T235318Z-playbook-explicit-macro-docs-tests.md`
+
+Evidence, review findings, validation output, or observations gathered:
+
+- Updated `CLAUDE.md` so the React todo natural-prompt acceptance test expects Core Loom routing or shaping and explicitly says Playbooks must not auto-load from that prompt.
+- Updated human-facing docs to describe Playbooks as explicit workflow macros or explicit-only skills per harness: OpenCode command entries, Gemini extension commands, Claude/Cursor explicit-only skills, and Codex explicit-only skills without custom slash-command claims.
+- Updated `tests/skill-triggering/run-test.sh` so natural-prompt runs can fail on forbidden Playbook tool invocations while still checking expected Core skill routing or visible Core routing for `none` cases.
+- Updated `tests/skill-triggering/run-all.sh` so representative natural prompts forbid implicit Playbook activation and the suite includes positive static OpenCode command coverage via `npm --prefix loom-playbooks run smoke`.
+- Source inspection: `rg --glob '!.loom/**' 'auto-triggers.*loom-idea-refine|then routes to\s+`loom-idea-refine`|skill descriptions are the activation surface|trigger-oriented skill descriptions|OpenCode playbook package for optional Loom workflow skills' .` produced no matches.
+- Source inspection: `rg --glob '!.loom/**' 'loom-playbooks/skills|skills/` tree' .` produced no matches.
+- `bash -n tests/skill-triggering/run-test.sh` passed.
+- `bash -n tests/skill-triggering/run-all.sh` passed.
+- `npm --prefix loom-core run smoke` passed with `ok: true` and `activationChecks.ok: true`.
+- `npm --prefix loom-playbooks run smoke` passed with `ok: true`, `commandCount: 25`, `macroCount: 25`, `registeredPlaybookSkillPaths: []`, and `playbookSkillPathsRegistered: false`.
+- `npm --prefix loom-playbooks run pack:check` passed and included the package entrypoint plus `playbooks/` corpus.
+- `gemini extensions validate "$PWD/loom-playbooks"` passed.
+- `claude plugin validate "$PWD/loom-playbooks"` passed.
+- `git diff --check` passed.
+
+What was not verified or reviewed:
+
+- Did not run live `opencode run` natural-prompt activation tests because claiming success from them would require networked, credentialed harness behavior, matching the packet stop condition.
+- Did not run root/Core Gemini validation because this packet did not change root/Core Gemini manifests or bootstrap files.
+- Did not create a final audit record; the target ticket now needs audit for ACC-005.
+
+Blockers, risks, or assumptions discovered:
+
+- Residual risk remains that live harness behavior can differ from static source/package validation. The updated tests are ready to check negative Playbook activation when a live OpenCode run is appropriate, but this packet does not claim that live result.
+
+Recommended next move for the consuming surface:
+
+- Run a bounded Ralph audit for `ticket:20260515-playbook-explicit-macro-docs-tests`, focused on ACC-001 through ACC-005 and especially whether static/package evidence plus the live-harness limitation is sufficient for the final activation-behavior claim.

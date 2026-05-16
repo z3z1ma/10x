@@ -2,9 +2,9 @@
 
 ID: ticket:20260515-playbook-explicit-macro-docs-tests
 Type: Ticket
-Status: active
+Status: review
 Created: 2026-05-15
-Updated: 2026-05-15
+Updated: 2026-05-16
 Risk: medium - rewrites validation expectations around Loom activation behavior and must avoid stale acceptance claims.
 Priority: medium - final alignment ticket after package surfaces change.
 Depends On: ticket:20260515-opencode-playbook-commands, ticket:20260515-native-playbook-explicit-surfaces, ticket:20260515-gemini-playbook-commands
@@ -57,9 +57,14 @@ Must not reopen implementation choices from the prior adapter tickets unless val
 
 ## Current State
 
-Active. Adapter implementation tickets are closed, including `ticket:20260515-gemini-playbook-commands` with clear audit. Ralph packet `packet:20260515T235318Z-playbook-explicit-macro-docs-tests` is running to update docs and activation tests, run available validation, and prepare this ticket for final audit.
+Review. Ralph packet `packet:20260515T235318Z-playbook-explicit-macro-docs-tests` returned `stop`: stale docs now describe Playbooks as explicit optional workflow macros or explicit-only skills, `CLAUDE.md` no longer expects `Let's make a react todo list` to route to `loom-idea-refine`, and activation tests now include negative natural-prompt Playbook checks plus positive OpenCode command-registration smoke coverage.
+
+Evidence gathered: active-doc grep outside `.loom/` found no stale `loom-idea-refine` natural-routing claim, trigger-description Playbook activation wording, old optional workflow-skills package description, or `loom-playbooks/skills` active path references; `bash -n tests/skill-triggering/run-test.sh` and `bash -n tests/skill-triggering/run-all.sh` passed; `npm --prefix loom-core run smoke` passed; `npm --prefix loom-playbooks run smoke` passed with `commandCount: 25`, `macroCount: 25`, `registeredPlaybookSkillPaths: []`, and `playbookSkillPathsRegistered: false`; `npm --prefix loom-playbooks run pack:check` passed; `gemini extensions validate "$PWD/loom-playbooks"` passed; `claude plugin validate "$PWD/loom-playbooks"` passed; `git diff --check` passed.
+
+Not verified: live natural-prompt `opencode run` activation was not executed because it would require networked, credentialed harness behavior, which the packet stop conditions excluded as a basis for claiming success. The next honest move is final audit for ACC-005, focused on whether the docs/tests evidence supports the activation-behavior claim.
 
 ## Journal
 
 - 2026-05-15: Created ticket from `plan:20260515-playbook-explicit-macros`; depends on adapter conversion tickets.
 - 2026-05-15: Set status to active after Gemini command ticket closure and launched `packet:20260515T235318Z-playbook-explicit-macro-docs-tests` for docs/tests/final validation implementation.
+- 2026-05-16: `packet:20260515T235318Z-playbook-explicit-macro-docs-tests` returned `stop`: updated stale docs, revised activation test scripts for negative natural-prompt Playbook checks and static explicit OpenCode command coverage, ran syntax/source inspections plus Core/Playbooks smoke, Playbooks pack dry-run, Gemini Playbooks extension validation, Claude Playbooks plugin validation, and `git diff --check`. Moved ticket to review for final audit; live OpenCode natural-prompt runs remain unverified due networked/credentialed harness behavior.
