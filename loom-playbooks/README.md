@@ -1,11 +1,11 @@
 # Agent Loom Playbooks
 
-Optional workflow routes for Loom.
+Optional explicit workflow macros for Loom.
 
-The required package gives agents the record skills and surfaces. Playbooks help
-agents move through those surfaces when the task has a familiar shape: debug this,
-test this first, map this codebase, verify this UI, review this diff, migrate this
-safely, prepare this for release.
+The required package gives agents the record skills and surfaces. Playbooks are
+explicit optional workflow lenses that help agents move through those surfaces when
+the task has a familiar shape: debug this, test this first, map this codebase,
+verify this UI, review this diff, migrate this safely, prepare this for release.
 
 Install [loom-core](../loom-core/README.md) first. Playbooks assume the
 `using-loom` skill is already loaded.
@@ -14,7 +14,8 @@ Install [loom-core](../loom-core/README.md) first. Playbooks assume the
 
 ## What Playbooks Add
 
-A workflow-specific skill routes task-shaped work. A record skill owns a Loom
+A workflow-specific Playbook routes task-shaped work after it is explicitly
+invoked or after Core routing recommends that lens. A record skill owns a Loom
 surface and its procedure. Loom records carry durable facts.
 
 A workflow-specific skill gives the agent workflow pressure while results still
@@ -30,7 +31,8 @@ playbook must not turn ambiguity into an implementation shortcut; it should expo
 the missing scope, system-shape, data-model, state, evidence, and coherence choices.
 Complex work becomes ticket-ready slices; delegated worker runs use Ralph packets.
 
-Use workflow-specific skills when general Loom routing is too thin for the work.
+Use Playbook macros when general Loom routing is too thin for the work and the
+operator wants that lens.
 Examples:
 
 - debugging should preserve the failure before the fix
@@ -82,9 +84,10 @@ Hardening and release:
 - `loom-deprecation-and-migration`
 - `loom-shipping-and-launch`
 
-The skill descriptions are the activation surface. Keep them visible to the
-harness, and keep them trigger-oriented so the model loads the skill body instead
-of treating the description as enough procedure.
+Playbooks are not the natural-language activation surface. OpenCode and Gemini
+expose them as explicit commands; Claude, Cursor, and Codex expose them as
+explicit-only skills where that is the supported harness surface. Do not treat a
+natural prompt as a reason to auto-load a Playbook.
 
 ## How They Stay Loom
 
@@ -107,22 +110,22 @@ Expose `loom-core` first, then Playbooks:
 /absolute/path/to/agent-loom/loom-playbooks
 ```
 
-Or expose both skill trees:
+Or expose the Core skill tree and the relocated Playbook corpus:
 
 ```text
 /absolute/path/to/agent-loom/loom-core/skills
-/absolute/path/to/agent-loom/loom-playbooks/skills
+/absolute/path/to/agent-loom/loom-playbooks/playbooks
 ```
 
 OpenCode can load `loom-playbooks.mjs`. Git-based installs for Claude Code,
 Codex, Cursor, and Gemini CLI use the native manifests in this package. The npm
-package exposes the OpenCode entrypoint and `skills/` tree. Harness-specific
+package exposes the OpenCode entrypoint and `playbooks/` tree. Harness-specific
 commands live in [INSTALL.md](../INSTALL.md).
 
 ## Boundary
 
-Playbooks are reusable routes for coding agents. They do not add durable surfaces
-or weaken record-skill procedure.
+Playbooks are reusable explicit routes for coding agents. They do not add durable
+surfaces or weaken record-skill procedure.
 
 Use a record skill when the next record move is clear. Add a playbook when the
 workflow itself needs pressure.

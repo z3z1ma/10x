@@ -165,8 +165,8 @@ Clone the repo:
 git clone https://github.com/z3z1ma/agent-loom.git
 ```
 
-Install Core first. Add Playbooks if you want routes for debugging, TDD, review,
-migrations, UI verification, shipping, and similar work.
+Install Core first. Add Playbooks if you want explicit workflow macros for
+debugging, TDD, review, migrations, UI verification, shipping, and similar work.
 
 See [INSTALL.md](INSTALL.md) for OpenCode, Claude Code, Codex, Cursor, Gemini CLI,
 and generic skill-directory setup.
@@ -191,11 +191,12 @@ the skills are usually sufficient; but they offer stronger behavior conformance.
 | Package | Role |
 | --- | --- |
 | `loom-core/` | mandatory `using-loom` doctrine, record skills, templates, references, optional named agents, and adapter surfaces |
-| `loom-playbooks/` | optional workflow-specific skills that route through Loom surfaces |
+| `loom-playbooks/` | optional explicit workflow macros or explicit-only skills that route through Loom surfaces |
 
 The required package carries the operating doctrine and record skills. Optional
-workflow-specific skills help after the agent has shaped the next move and knows
-which Loom surface owns it.
+Playbooks help after the agent has shaped the next move and the operator or Core
+routing deliberately selects the workflow lens; ordinary natural prompts should
+not auto-load Playbooks.
 
 There is no daemon, database, dashboard, required MCP server, product CLI, or
 hidden runtime. Markdown is the work surface because humans and agents can inspect
@@ -216,7 +217,7 @@ it with ordinary tools.
 |   |-- loom-core.mjs
 |   `-- package.json
 |-- loom-playbooks/
-|   |-- skills/
+|   |-- playbooks/
 |   |-- loom-playbooks.mjs
 |   `-- package.json
 |-- evals/
@@ -225,7 +226,7 @@ it with ordinary tools.
 
 `evals/` holds internal review fixtures. `.loom/` holds dogfood records for
 this repo. The product surface remains `loom-core/skills`, `loom-core/agents`,
-`loom-core/codex/agents`, and `loom-playbooks/skills`.
+`loom-core/codex/agents`, and `loom-playbooks/playbooks`.
 
 ## The Short Version
 

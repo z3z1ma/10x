@@ -1,11 +1,11 @@
 # Installing Loom
 
-Install Core first. Add Playbooks if you want workflow routes.
+Install Core first. Add Playbooks if you want explicit workflow macros.
 
 | Package | Required | Provides |
 | --- | --- | --- |
 | `loom-core` | yes | `using-loom`, record skills, templates, references, optional preload hooks |
-| `loom-playbooks` | no | workflow routes for debugging, TDD, review, migration, UI work, shipping, and similar tasks |
+| `loom-playbooks` | no | explicit workflow macros or explicit-only skills for debugging, TDD, review, migration, UI work, shipping, and similar tasks |
 
 Every install method exposes the same Markdown skills. Native manifests and hooks
 only help the harness find or preload them.
@@ -56,11 +56,11 @@ Expose Core to your harness:
 /absolute/path/to/agent-loom/loom-core/skills
 ```
 
-Expose Playbooks only if you want them:
+Expose Playbooks only if you want explicit workflow macros:
 
 ```text
 /absolute/path/to/agent-loom/loom-playbooks
-/absolute/path/to/agent-loom/loom-playbooks/skills
+/absolute/path/to/agent-loom/loom-playbooks/playbooks
 ```
 
 If your harness has `AGENTS.md`, user rules, or a similar instruction file, keep
@@ -112,8 +112,8 @@ For a local clone, point at the package entrypoints:
 `@z3z1ma/open-loom-core` registers record skills through `config.skills.paths` and
 injects stripped `using-loom` doctrine plus ordered references into the first user
 message with `experimental.chat.messages.transform`. `@z3z1ma/open-loom-playbooks`
-adds optional workflow-specific skills and expects the operating doctrine to be
-available.
+adds explicit OpenCode command entries for optional workflow macros and expects the
+operating doctrine to be available from Core.
 
 OpenCode package engines currently require `>=1.14.22 <2`.
 
@@ -151,8 +151,10 @@ claude plugin validate /absolute/path/to/agent-loom/loom-core
 claude plugin validate /absolute/path/to/agent-loom/loom-playbooks
 ```
 
-Claude reads skills from each package's `skills/` directory. If hook preload is
-unavailable in your environment, start with `using-loom`.
+Claude reads Core skills from `loom-core/skills/` and Playbook skills from
+`loom-playbooks/playbooks/`. Playbook skills are marked explicit-only for native
+Claude invocation. If hook preload is unavailable in your environment, start with
+`using-loom`.
 
 ## Codex
 
@@ -173,6 +175,10 @@ loom-playbooks/.codex-plugin/plugin.json
 Core declares `loom-core/hooks/hooks.json` for `using-loom` preload where Codex
 supports plugin hooks. Validate preload behavior in the target Codex environment.
 If it is unavailable, ask for `using-loom` before Loom work.
+
+Codex Playbooks are explicit-only skills with implicit invocation disabled. Invoke
+them through Codex's documented explicit skill or plugin invocation surfaces; do
+not expect plugin-contributed custom Playbook slash commands.
 
 Install the optional Loom Weaver and Loom Driver Codex custom agents:
 
@@ -217,8 +223,12 @@ loom-playbooks/.cursor-plugin/plugin.json
 
 Enable Core before Playbooks. Core points at `loom-core/hooks/hooks-cursor.json`
 for `using-loom` preload where Cursor supports hooks. If native plugin discovery
-or hooks are unavailable, expose the two `skills/` directories and start with
-`using-loom`.
+or hooks are unavailable, expose `loom-core/skills/` and
+`loom-playbooks/playbooks/`, then start with `using-loom`.
+
+Cursor Playbooks are explicit-only workflow skills. Invoke them deliberately when
+you want the workflow lens; ordinary natural prompts should continue through Core
+Loom routing first.
 
 ## Gemini CLI
 
@@ -257,6 +267,9 @@ gemini extensions validate /absolute/path/to/agent-loom/loom-playbooks
 
 Gemini loads `loom-core/gemini-bootstrap.md`, which imports `using-loom` and the
 ordered references with native context import syntax.
+
+Gemini Playbooks are extension commands under `loom-playbooks/commands/`, not
+model-activated extension skills. Invoke the wanted Playbook command explicitly.
 
 ## Bootstrap Files
 

@@ -1,0 +1,158 @@
+---
+name: loom-incremental-implementation
+description: "Use when non-trivial ticket or plan execution needs bounded implementation slices, sequencing, multiple-file/record changes, feature flags, refactor/behavior separation, worker handoff, evidence, and continuation state; not for unshaped asks with unresolved scope, system-shape, data-model, state, or coherence choices."
+disable-model-invocation: true
+---
+
+# loom-incremental-implementation
+
+Incremental implementation is a playbook for executing one narrow slice at a time.
+
+It keeps each change bounded, verifiable, and recoverable through tickets, Ralph
+packets, evidence, audit, and retrospective follow-up.
+
+## Loom Routing
+
+Common routes use these Loom skills for durable records or follow-up workflow:
+`loom-tickets`, `loom-ralph`, `loom-evidence`, `loom-audit`, `loom-plans`,
+`loom-retrospective`, and `loom-knowledge`.
+
+Ensure the `using-loom` skill is loaded before applying this workflow.
+
+When routing to any named Loom skill, follow that skill's procedure and guidance
+completely. This playbook adds workflow pressure; it does not shorten the target
+skill's requirements.
+
+This workflow does not replace ticket scope, packet scope, evidence, or audit.
+Execute only ticket-ready slices, and run those slices through Ralph packets.
+
+Do not use this playbook to turn a fuzzy ask into implementation. If the current
+input is not an active ticket or a concrete plan execution unit, stop and return to
+outer-loop shaping, `loom-idea-refine`, `loom-specs`, `loom-plans`, or
+`loom-tickets` before changing files. Implementation begins only after scope,
+system-shape, data-model, state, evidence, and coherence choices are concrete enough for
+the slice.
+
+## Use This Playbook When
+
+Use this playbook when:
+
+- implementing a non-trivial ticket
+- a plan has child tickets that must land in a safe sequence
+- a change touches multiple files or records
+- a feature should be built behind a flag or safe default
+- refactor and behavior work need to stay separate
+- a worker packet needs a tight execution loop
+
+Skip it for a single obvious edit whose ticket already gives a bounded path.
+
+## Route
+
+Use this route:
+
+```text
+select slice -> bound packet -> change -> verify -> record -> continue
+```
+
+## Select Slice
+
+Start from one active ticket or one plan execution unit.
+
+Prefer slices that:
+
+- change one logical thing
+- leave the workspace in a working state
+- exercise a real behavior path when possible
+- have concrete evidence expectations
+- can stop cleanly when behavior, risk, policy, or sequencing changes
+- keep feature work, refactor, dependency change, generated output, and formatting
+  separate unless the ticket explicitly binds them
+
+When a slice is too broad, route back to `loom-plans` or split the ticket.
+
+## Bound Packet
+
+Use `loom-ralph` before changing a ticket slice so the execution contract has a
+packet boundary.
+
+Compile the packet under `.loom/packets/ralph/` before launch. The worker prompt
+should point to the packet path; the packet carries the slice contract.
+
+The packet should name:
+
+- target ticket or plan unit
+- mission for this slice
+- read scope and write scope
+- files and records allowed to change
+- verification posture
+- stop conditions
+- expected ticket, evidence, and packet updates
+
+## Change
+
+Implement the smallest complete change for the slice.
+
+Guidelines:
+
+- follow the spec, ticket, and source reality in that order
+- read nearby code before introducing patterns
+- prefer direct code until repetition or boundary pressure justifies abstraction
+- keep incomplete behavior behind safe defaults or feature flags
+- avoid drive-by cleanup outside the ticket
+- stop if the work reveals a new behavior, policy, sequencing, or risk question
+
+## Verify
+
+Use the packet or ticket evidence posture.
+
+Common options:
+
+- `test-first`: red check, implementation, green check
+- `observation-first`: before observation, change, after observation
+- existing regression suite when the slice depends on broad safety
+- manual or browser observation for UI/runtime behavior
+
+Do not repeat passing checks without intervening changes unless the source state or
+risk changed.
+
+Before claiming a slice is done, run or cite verification from after the last
+material change. A previous passing check, a worker success report, or a plausible
+diff is not fresh evidence for the current source state.
+
+For delegated work, inspect the worker's changed files and evidence before moving
+to the next slice. Treat `blocked`, `escalate`, missing context, or
+concern-bearing `stop` output as state to reconcile, not as background detail.
+
+## Record
+
+Update the ticket when material state changes.
+
+Create or update evidence when an observation supports the closure claim.
+
+Use `Status: review` when implementation appears complete but audit, acceptance,
+or evidence review remains.
+
+Route reusable learning through `loom-retrospective` when the slice reveals a
+procedure, trap, rejected path, or prevention note.
+
+## Continue
+
+After each slice, choose one:
+
+- next Ralph packet
+- more evidence
+- Ralph-backed audit
+- ticket closure
+- replanning
+- spec/research/constitution/knowledge update
+- stop and ask the operator
+
+## Done Means
+
+The implementation pass is done when:
+
+- each completed slice has evidence proportional to its claim
+- ticket state, packet output, and changed files agree
+- unrelated work was left out or routed to follow-up
+- the next move is explicit
+- closure waits for audit or explains why separate audit would not add useful trust

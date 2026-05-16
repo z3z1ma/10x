@@ -16,15 +16,16 @@ The product surface lives in two package roots:
 | Package | Job |
 | --- | --- |
 | `loom-core/` | mandatory `using-loom` doctrine, record skills, and optional named agents |
-| `loom-playbooks/` | optional workflow-specific skills that assume the required package is installed |
+| `loom-playbooks/` | optional explicit workflow macros or explicit-only skills that assume the required package is installed |
 
-Inside each package, `skills/` and intentionally shipped agent prompt surfaces are
-the source of behavior. The package root may add transport files for OpenCode,
-Claude Code, Codex, Cursor, or Gemini CLI.
+Core skills, Playbook skills, and intentionally shipped agent prompt surfaces are
+the source of behavior. Core skills live under `loom-core/skills/`; Playbook
+skills live under `loom-playbooks/playbooks/`. The package root may add transport
+files for OpenCode, Claude Code, Codex, Cursor, or Gemini CLI.
 
-Content inside package `skills/` and agent prompt surfaces must stay self-contained.
-Use generic `.loom/...` runtime paths. Do not teach source-repo-only assumptions
-from this repository as Loom doctrine.
+Content inside package skill corpora and agent prompt surfaces must stay
+self-contained. Use generic `.loom/...` runtime paths. Do not teach
+source-repo-only assumptions from this repository as Loom doctrine.
 
 ## Runtime State
 
@@ -98,8 +99,9 @@ Core.
 Preload alone is not the behavior. `using-loom` contains the first-action routing
 loop that tells the agent to check likely Loom surfaces and skills before answering,
 asking clarifying questions, inspecting files, editing, creating tickets, or
-launching Ralph when Loom may apply. Static smoke checks guard that activation
-doctrine and trigger-oriented skill descriptions remain present.
+launching Ralph when Loom may apply. Static smoke checks guard that Core
+activation doctrine remains present, while Playbook package checks verify explicit
+macro registration rather than natural-prompt autoactivation.
 
 ## Record Grammar
 
@@ -129,11 +131,12 @@ until the missing outcome, boundary, constraints, evidence posture, non-goals,
 system-shape, data-model or state implications, and design-coherence questions are
 shaped with the operator or the owning Loom surface.
 
-Record skills own Loom surfaces and their procedures. Workflow-specific skills
-run inside this architecture: they add guidance after Loom routing has identified
-the owning surface and whether the work is shaped enough to execute. When a
-workflow-specific skill routes to another Loom skill, the target skill's procedure
-and guidance still apply completely.
+Record skills own Loom surfaces and their procedures. Playbooks run inside this
+architecture as explicit workflow lenses: they add guidance after Loom routing has
+identified the owning surface and whether the work is shaped enough to execute, or
+after the operator deliberately invokes the Playbook. Ordinary natural prompts
+should not auto-load Playbooks. When a workflow lens routes to another Loom skill,
+the target skill's procedure and guidance still apply completely.
 
 The inner loop executes bounded work. Tickets drive live execution state. Ralph
 packets execute bounded ticket slices and worker runs. Evidence records what
@@ -180,7 +183,7 @@ This repo has support material that is not product doctrine:
 - `.opencode/` is a local consumption surface
 
 Use those for review or dogfooding. Keep product behavior in `loom-core/skills`,
-`loom-core/agents`, `loom-core/codex/agents`, and `loom-playbooks/skills`.
+`loom-core/agents`, `loom-core/codex/agents`, and `loom-playbooks/playbooks`.
 
 ## Design Checks
 

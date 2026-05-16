@@ -1,7 +1,7 @@
 {
   "name": "loom-playbooks",
   "version": "0.2.1",
-  "description": "Optional Loom workflow playbook skills for Claude Code; requires loom-core for using-loom doctrine.",
+  "description": "Explicit-only Loom workflow playbook lenses for Claude Code; invoke them deliberately after loom-core routing.",
   "author": {
     "name": "z3z1ma"
   },
@@ -14,5 +14,5 @@
     "markdown",
     "playbooks"
   ],
-  "skills": "./skills/"
+  "skills": "./playbooks/"
 }
