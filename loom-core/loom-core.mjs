@@ -401,6 +401,20 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes(
   const modelOnlyLoomDriverConfig = modelOnlyAgentConfig.agent?.["loom-driver"];
   const codexLoomWeaverAgent = readCodexLoomWeaverAgent();
   const codexLoomDriverAgent = readCodexLoomDriverAgent();
+  const packageManifest = JSON.parse(readFileSync(join(PACKAGE_ROOT, "package.json"), "utf8"));
+  const piCoreExtensionPath = join(PACKAGE_ROOT, "pi", "loom-core.js");
+  const piCoreExtensionText = fileExists(piCoreExtensionPath) ? readFileSync(piCoreExtensionPath, "utf8") : "";
+  const piManifestOk = packageManifest.keywords?.includes("pi-package")
+    && packageManifest.pi?.extensions?.includes("./pi/loom-core.js")
+    && packageManifest.pi?.skills?.includes("./skills")
+    && packageManifest.files?.includes("pi/");
+  const piExtensionOk = piCoreExtensionText.includes("resources_discover")
+    && piCoreExtensionText.includes("before_agent_start")
+    && piCoreExtensionText.includes("Pi's native skill mechanism")
+    && piCoreExtensionText.includes("sessionHasBootstrap")
+    && piCoreExtensionText.includes("readPiAgentCommands")
+    && piCoreExtensionText.includes("loom-weaver")
+    && piCoreExtensionText.includes("loom-driver");
   const beforeSkillPathCount = config.skills?.paths?.length ?? 0;
   configureOpenCode(config);
   const plugin = await server({}, {});
@@ -442,11 +456,28 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes(
     && modelOnlyLoomWeaverConfig?.permission?.edit?.["*"] === "deny"
     && modelOnlyLoomWeaverConfig?.permission?.edit?.[".loom/**"] === "allow"
     && modelOnlyLoomDriverConfig?.permission?.edit?.["*"] === "deny"
-    && modelOnlyLoomDriverConfig?.permission?.edit?.[".loom/tickets/**"] === "allow";
+    && modelOnlyLoomDriverConfig?.permission?.edit?.[".loom/tickets/**"] === "allow"
+    && piManifestOk
+    && piExtensionOk;
 
   console.log(JSON.stringify({
     ok,
     pluginId: PLUGIN_ID,
+    piPackage: {
+      manifestOk: Boolean(piManifestOk),
+      extensions: packageManifest.pi?.extensions,
+      skills: packageManifest.pi?.skills,
+      filesIncludePi: packageManifest.files?.includes("pi/"),
+    },
+    piExtension: {
+      path: "pi/loom-core.js",
+      exists: fileExists(piCoreExtensionPath),
+      registersSkills: piCoreExtensionText.includes("resources_discover"),
+      injectsBootstrap: piCoreExtensionText.includes("before_agent_start"),
+      dedupesBootstrap: piCoreExtensionText.includes("sessionHasBootstrap"),
+      usesPiSkillWording: piCoreExtensionText.includes("Pi's native skill mechanism"),
+      registersNamedAgents: piCoreExtensionText.includes("readPiAgentCommands"),
+    },
     usingLoomFileCount: inspection.usingLoom.files.length,
     usingLoomFiles: inspection.usingLoom.files,
     firstUsingLoomFile: inspection.usingLoom.files[0],

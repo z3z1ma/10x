@@ -21,7 +21,7 @@ The product surface lives in two package roots:
 Core skills, Playbook skills, and intentionally shipped agent prompt surfaces are
 the source of behavior. Core skills live under `loom-core/skills/`; Playbook
 skills live under `loom-playbooks/playbooks/`. The package root may add transport
-files for OpenCode, Claude Code, Codex, Cursor, or Gemini CLI.
+files for OpenCode, Pi, Claude Code, Codex, Cursor, or Gemini CLI.
 
 Content inside package skill corpora and agent prompt surfaces must stay
 self-contained. Use generic `.loom/...` runtime paths. Do not teach
@@ -87,8 +87,10 @@ Load order:
 
 OpenCode exposes `loom-core/skills` through `config.skills.paths` and injects the
 stripped `using-loom` doctrine plus ordered references into the first user message
-with `experimental.chat.messages.transform`. Claude, Codex, Cursor, and Gemini use
-their native manifest, hook, or static context surfaces where those are available.
+with `experimental.chat.messages.transform`. Pi exposes `loom-core/skills` through
+package resources and injects the same bootstrap once per session with
+`before_agent_start`. Claude, Codex, Cursor, and Gemini use their native manifest,
+hook, or static context surfaces where those are available.
 
 Preload is convenience. If preload is absent, the agent loads `using-loom` from
 Core.

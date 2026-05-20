@@ -95,7 +95,8 @@ Expose the skill tree when your harness wants raw skills:
 /absolute/path/to/agent-loom/loom-core/skills
 ```
 
-OpenCode can load `loom-core.mjs`. Claude Code, Codex, Cursor, and Gemini CLI use
+OpenCode can load `loom-core.mjs`. Pi can load the package's `pi/` extension and
+`skills/` resource declarations. Claude Code, Codex, Cursor, and Gemini CLI use
 the native manifests or bootstrap files in this package. Harness-specific commands
 live in [INSTALL.md](../INSTALL.md).
 

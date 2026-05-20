@@ -36,6 +36,7 @@ Core also ships optional explicit Loom personas:
 | Harness | Invocation |
 | --- | --- |
 | OpenCode | Switch to the `loom-weaver` or `loom-driver` primary agent with the agent switcher. If using one as a subagent, invoke `@loom-weaver` or `@loom-driver` where OpenCode subagent mentions are available. |
+| Pi | Invoke `/loom-weaver <task>` or `/loom-driver <task>` after installing or enabling the Core Pi package. The command sends the bundled named-agent prompt as an explicit user turn. |
 | Claude Code | Use `/agents` to confirm installed plugin-scoped names. For a main session, use `claude --agent loom-core:loom-weaver` or `claude --agent loom-core:loom-driver` when that is the listed name; for one-shot use, invoke the listed agent with Claude's agent mention/typeahead. |
 | Codex | Install and enable the Core plugin, then install the optional custom agent TOML files into `~/.codex/agents/`. Ask in natural language such as `Use the loom-weaver custom agent to shape this before implementation` or `Use the loom-driver custom agent to coordinate this ticket through a bounded Ralph run`. Codex docs do not document `@<agent>` custom-agent invocation. |
 | Cursor | Invoke the Core plugin subagent as `/loom-weaver` or `/loom-driver`, or ask Cursor to use the named subagent in natural language. Do not use `@loom-weaver` or `@loom-driver` as custom-agent claims; Cursor documents `@` for rules/context, not subagent invocation. |
@@ -123,6 +124,37 @@ adds explicit OpenCode command entries for optional workflow macros and expects 
 operating doctrine to be available from Core.
 
 OpenCode package engines currently require `>=1.14.22 <2`.
+
+## Pi
+
+Install Core globally from npm:
+
+```bash
+pi install npm:@z3z1ma/open-loom-core
+```
+
+Install Core plus Playbooks:
+
+```bash
+pi install npm:@z3z1ma/open-loom-core
+pi install npm:@z3z1ma/open-loom-playbooks
+```
+
+For a local clone, install the package roots:
+
+```bash
+pi install /absolute/path/to/agent-loom/loom-core
+pi install /absolute/path/to/agent-loom/loom-playbooks
+```
+
+`@z3z1ma/open-loom-core` exposes `skills/` through Pi package resources and
+injects the stripped `using-loom` doctrine plus ordered references once per
+session with Pi's `before_agent_start` extension event. It also registers explicit
+`/loom-weaver` and `/loom-driver` commands from the bundled Core agent prompts.
+
+`@z3z1ma/open-loom-playbooks` registers Playbooks as explicit Pi slash commands.
+It intentionally does not expose `playbooks/` as ordinary Pi skills, preserving
+Playbooks as deliberate workflow lenses after Core routing.
 
 ## Claude Code
 

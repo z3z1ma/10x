@@ -216,13 +216,38 @@ if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes(
 } else if (process.argv[1] === fileURLToPath(import.meta.url) && process.argv.includes("--smoke")) {
   const inspection = inspectLoomPlaybooksBundle();
   const config = configureOpenCode({});
+  const packageManifest = JSON.parse(readFileSync(join(PACKAGE_ROOT, "package.json"), "utf8"));
+  const piPlaybooksExtensionPath = join(PACKAGE_ROOT, "pi", "loom-playbooks.js");
+  const piPlaybooksExtensionText = fileExists(piPlaybooksExtensionPath) ? readFileSync(piPlaybooksExtensionPath, "utf8") : "";
+  const piManifestOk = packageManifest.keywords?.includes("pi-package")
+    && packageManifest.pi?.extensions?.includes("./pi/loom-playbooks.js")
+    && packageManifest.files?.includes("pi/")
+    && !packageManifest.pi?.skills;
+  const piExtensionOk = piPlaybooksExtensionText.includes("readPiPlaybookCommands")
+    && piPlaybooksExtensionText.includes("readPlaybookMacroCatalog")
+    && piPlaybooksExtensionText.includes("registerCommand")
+    && piPlaybooksExtensionText.includes("Operator arguments")
+    && !piPlaybooksExtensionText.includes("resources_discover");
   const beforeCommandCount = Object.keys(config.command ?? {}).length;
   configureOpenCode(config);
-  const ok = inspection.commands.ok && inspection.macros.ok;
+  const ok = inspection.commands.ok && inspection.macros.ok && piManifestOk && piExtensionOk;
 
   console.log(JSON.stringify({
     ok,
     pluginId: PLUGIN_ID,
+    piPackage: {
+      manifestOk: Boolean(piManifestOk),
+      extensions: packageManifest.pi?.extensions,
+      hasNoSkillPaths: !packageManifest.pi?.skills,
+      filesIncludePi: packageManifest.files?.includes("pi/"),
+    },
+    piExtension: {
+      path: "pi/loom-playbooks.js",
+      exists: fileExists(piPlaybooksExtensionPath),
+      registersExplicitCommands: piPlaybooksExtensionText.includes("registerCommand"),
+      usesMacroCatalog: piPlaybooksExtensionText.includes("readPlaybookMacroCatalog"),
+      doesNotExposeSkillPaths: !piPlaybooksExtensionText.includes("resources_discover"),
+    },
     usingLoomReferenceCount: inspection.usingLoom.files.length,
     instructionCount: config.instructions?.length ?? 0,
     doesNotPreloadCoreDoctrine: (config.instructions?.length ?? 0) === 0,

@@ -85,8 +85,8 @@ Hardening and release:
 - `loom-deprecation-and-migration`
 - `loom-shipping-and-launch`
 
-Playbooks are not the natural-language activation surface. OpenCode and Gemini
-expose them as explicit commands; Claude, Cursor, and Codex expose them as
+Playbooks are not the natural-language activation surface. OpenCode, Pi, and
+Gemini expose them as explicit commands; Claude, Cursor, and Codex expose them as
 explicit-only skills where that is the supported harness surface. Do not treat a
 natural prompt as a reason to auto-load a Playbook.
 
@@ -124,9 +124,10 @@ that auto-loads every matching skill from natural prompts. In generic setups, Co
 is the natural-language routing surface; Playbooks should enter only through a
 supported explicit command, explicit-only skill, or deliberate invocation.
 
-OpenCode can load `loom-playbooks.mjs`. Git-based installs for Claude Code,
-Codex, Cursor, and Gemini CLI use the native manifests in this package. The npm
-package exposes the OpenCode entrypoint and `playbooks/` tree. Harness-specific
+OpenCode can load `loom-playbooks.mjs`. Pi can load the package's `pi/` extension
+for explicit slash commands. Git-based installs for Claude Code, Codex, Cursor,
+and Gemini CLI use the native manifests in this package. The npm package exposes
+the OpenCode entrypoint, Pi extension, and `playbooks/` tree. Harness-specific
 commands live in [INSTALL.md](../INSTALL.md).
 
 ## Boundary

@@ -166,8 +166,8 @@ git clone https://github.com/z3z1ma/agent-loom.git
 Install Core first. Add Playbooks if you want explicit workflow macros for
 debugging, TDD, review, migrations, UI verification, shipping, and similar work.
 
-See [INSTALL.md](INSTALL.md) for OpenCode, Claude Code, Codex, Cursor, Gemini CLI,
-and generic skill-directory setup.
+See [INSTALL.md](INSTALL.md) for OpenCode, Pi, Claude Code, Codex, Cursor,
+Gemini CLI, and generic skill-directory setup.
 
 Once Core is visible to your harness, start with a real task:
 
