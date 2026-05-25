@@ -6,6 +6,7 @@
   import HarnessConfig from './lib/HarnessConfig.svelte';
   import AndonAlert from './lib/AndonAlert.svelte';
   import IterationSummary from './lib/IterationSummary.svelte';
+  import ThemeToggle from './lib/ThemeToggle.svelte';
 
   onMount(() => {
     store.connect();
@@ -16,28 +17,30 @@
   });
 </script>
 
-<main class="flex h-screen flex-col bg-slate-950 text-slate-100 overflow-hidden">
-  <header class="flex items-center justify-between border-b border-slate-800 bg-slate-900/50 px-6 py-4">
-    <div class="flex items-center gap-4">
-      <h1 class="text-xl font-semibold tracking-tight text-cyan-100">Loom Mill</h1>
-      <span class="rounded bg-slate-800 px-2 py-1 text-xs font-medium uppercase tracking-widest text-slate-400">
+<main class="flex h-screen flex-col bg-bg-primary text-text-primary overflow-hidden font-sans">
+  <header class="flex items-center justify-between border-b border-border-default bg-bg-surface px-6 py-3">
+    <div class="flex items-center gap-3">
+      <h1 class="text-sm font-semibold tracking-tight text-text-primary">Loom Mill</h1>
+      <span class="rounded-full bg-bg-surface-active px-2 py-0.5 text-[10px] font-medium uppercase tracking-widest text-text-secondary border border-border-subtle">
         Factory Floor
       </span>
     </div>
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-2 text-sm">
-        <span class="relative flex h-2.5 w-2.5">
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2 text-xs font-medium">
+        <span class="relative flex h-2 w-2">
           {#if store.connected}
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-status-success-text opacity-75"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-status-success-text"></span>
           {:else}
-            <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-rose-500"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-status-error-text"></span>
           {/if}
         </span>
-        <span class={store.connected ? 'text-emerald-400' : 'text-rose-400'}>
+        <span class={store.connected ? 'text-status-success-text' : 'text-status-error-text'}>
           {store.connected ? 'Connected' : 'Disconnected'}
         </span>
       </div>
+      <div class="h-4 w-[1px] bg-border-default"></div>
+      <ThemeToggle />
     </div>
   </header>
 
@@ -51,11 +54,11 @@
       </div>
     </div>
     
-    <aside class="w-80 border-l border-slate-800 bg-slate-900/20 p-6 overflow-y-auto">
+    <aside class="w-80 border-l border-border-default bg-bg-surface p-6 overflow-y-auto flex flex-col gap-6">
       <HarnessConfig />
-      <div class="my-6 border-t border-slate-800"></div>
+      <div class="border-t border-border-default"></div>
       <IterationSummary workstations={store.state.workstations} />
-      <div class="my-6 border-t border-slate-800"></div>
+      <div class="border-t border-border-default"></div>
       <GitPanel git={store.state.git} />
     </aside>
   </div>

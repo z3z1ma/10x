@@ -70,35 +70,35 @@
 
 <section class="space-y-3">
   <div>
-    <h2 class="text-sm font-semibold uppercase tracking-wider text-cyan-100">Harness</h2>
-    <p class="mt-1 text-xs text-slate-500">Command and flags used when starting a ticket workstation.</p>
+    <h2 class="text-[11px] font-semibold uppercase tracking-wider text-text-secondary">Harness</h2>
+    <p class="mt-1 text-[10px] text-text-tertiary">Command and flags used when starting a ticket workstation.</p>
   </div>
 
-  <label class="block text-xs font-medium text-slate-400">
+  <label class="block text-[11px] font-medium text-text-secondary">
     Command
-    <input bind:value={command} class="mt-1 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-500" placeholder="opencode" />
+    <input bind:value={command} class="mt-1 w-full rounded-md border border-border-default bg-bg-primary px-2.5 py-1.5 text-xs text-text-primary outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-shadow" placeholder="opencode" />
   </label>
 
-  <label class="block text-xs font-medium text-slate-400">
+  <label class="block text-[11px] font-medium text-text-secondary">
     Arguments
-    <textarea bind:value={argsText} rows="5" class="mt-1 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-xs text-slate-100 outline-none focus:border-cyan-500" placeholder="One argument per line. Use &#123;ticket_path&#125; for the ticket file."></textarea>
+    <textarea bind:value={argsText} rows="3" class="mt-1 w-full rounded-md border border-border-default bg-bg-primary px-2.5 py-1.5 font-mono text-[10px] text-text-primary outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-shadow" placeholder="One argument per line. Use &#123;ticket_path&#125; for the ticket file."></textarea>
   </label>
 
-  <label class="block text-xs font-medium text-slate-400">
+  <label class="block text-[11px] font-medium text-text-secondary">
     Environment
-    <textarea bind:value={envText} rows="4" class="mt-1 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-xs text-slate-100 outline-none focus:border-cyan-500" placeholder="KEY=value"></textarea>
+    <textarea bind:value={envText} rows="2" class="mt-1 w-full rounded-md border border-border-default bg-bg-primary px-2.5 py-1.5 font-mono text-[10px] text-text-primary outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-shadow" placeholder="KEY=value"></textarea>
   </label>
 
-  <label class="block text-xs font-medium text-slate-400">
+  <label class="block text-[11px] font-medium text-text-secondary">
     Working directory
-    <input bind:value={cwd} class="mt-1 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-500" placeholder="Optional path inside worktree" />
+    <input bind:value={cwd} class="mt-1 w-full rounded-md border border-border-default bg-bg-primary px-2.5 py-1.5 text-xs text-text-primary outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-shadow" placeholder="Optional path inside worktree" />
   </label>
 
-  <button type="button" onclick={saveConfig} disabled={saving || !command.trim()} class="w-full rounded bg-cyan-500 px-3 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400">
+  <button type="button" onclick={saveConfig} disabled={saving || !command.trim()} class="w-full rounded-md bg-bg-surface-active px-3 py-1.5 text-[11px] font-medium text-text-primary ring-1 ring-border-default hover:bg-bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50 transition-colors">
     {saving ? 'Saving...' : 'Save Harness'}
   </button>
 
   {#if message}
-    <p class="text-xs {message.startsWith('Failed') ? 'text-rose-400' : 'text-emerald-400'}">{message}</p>
+    <p class="text-[10px] {message.startsWith('Failed') ? 'text-status-error-text' : 'text-status-success-text'}">{message}</p>
   {/if}
 </section>

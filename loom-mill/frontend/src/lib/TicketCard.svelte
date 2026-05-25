@@ -18,37 +18,37 @@
   let hasBackpressure = $derived(Boolean(workstation?.backpressure_signals?.length));
 </script>
 
-<div class="flex flex-col gap-2 rounded-lg border {hasAndon ? 'border-rose-500 bg-rose-950/30' : 'border-slate-800 bg-slate-900'} p-3 shadow-sm transition-colors hover:border-slate-700">
+<div class="flex flex-col gap-2 rounded-md border {hasAndon ? 'border-status-error-border bg-status-error-bg' : 'border-border-default bg-bg-surface-elevated'} p-3 shadow-sm transition-colors hover:border-border-strong">
   <div class="flex items-start justify-between gap-2">
-    <span class="text-xs font-mono text-slate-500">{id}</span>
+    <span class="text-[11px] font-mono text-text-tertiary">{id}</span>
     <div class="flex items-center gap-1.5">
       {#if hasAndon}
-        <span class="inline-flex items-center rounded-full bg-rose-500/20 px-2 py-0.5 text-xs font-semibold text-rose-200 ring-1 ring-inset ring-rose-400/40" title="Andon active">andon</span>
+        <span class="inline-flex items-center rounded-full bg-status-error-bg px-1.5 py-0.5 text-[10px] font-medium text-status-error-text ring-1 ring-inset ring-status-error-border" title="Andon active">andon</span>
       {:else if hasBackpressure}
-        <span class="inline-flex items-center rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-semibold text-amber-200 ring-1 ring-inset ring-amber-400/30" title="Backpressure warning">backpressure</span>
+        <span class="inline-flex items-center rounded-full bg-status-warning-bg px-1.5 py-0.5 text-[10px] font-medium text-status-warning-text ring-1 ring-inset ring-status-warning-border" title="Backpressure warning">backpressure</span>
       {/if}
-      <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset
-        {status === 'active' ? 'bg-cyan-400/10 text-cyan-400 ring-cyan-400/30' :
-         status === 'blocked' ? 'bg-rose-400/10 text-rose-400 ring-rose-400/30' :
-         status === 'review' ? 'bg-amber-400/10 text-amber-400 ring-amber-400/30' :
-         status === 'closed' ? 'bg-slate-400/10 text-slate-400 ring-slate-400/30' :
-         'bg-slate-400/10 text-slate-400 ring-slate-400/30'}">
+      <span class="inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium ring-1 ring-inset
+        {status === 'active' ? 'bg-status-info-bg text-status-info-text ring-status-info-border' :
+         status === 'blocked' ? 'bg-status-error-bg text-status-error-text ring-status-error-border' :
+         status === 'review' ? 'bg-status-warning-bg text-status-warning-text ring-status-warning-border' :
+         status === 'closed' ? 'bg-status-neutral-bg text-status-neutral-text ring-status-neutral-border' :
+         'bg-status-neutral-bg text-status-neutral-text ring-status-neutral-border'}">
         {status}
       </span>
     </div>
   </div>
   
-  <h3 class="text-sm font-medium text-slate-200 line-clamp-2">{title}</h3>
+  <h3 class="text-sm font-medium text-text-primary leading-tight line-clamp-2">{title}</h3>
 
   <WorkstationControls ticketId={id} workstation={workstation} />
 
-  <div class="mt-2 flex items-center justify-between text-xs text-slate-500">
+  <div class="mt-1 flex items-center justify-between text-[10px] text-text-tertiary">
     <div class="flex gap-1.5">
       {#if hasEvidence}
-        <span class="flex h-5 w-5 items-center justify-center rounded bg-indigo-500/20 text-indigo-300" title="Has Evidence">E</span>
+        <span class="flex h-4 w-4 items-center justify-center rounded bg-accent-subtle text-accent-text" title="Has Evidence">E</span>
       {/if}
       {#if hasAudit}
-        <span class="flex h-5 w-5 items-center justify-center rounded bg-fuchsia-500/20 text-fuchsia-300" title="Has Audit">A</span>
+        <span class="flex h-4 w-4 items-center justify-center rounded bg-accent-subtle text-accent-text" title="Has Audit">A</span>
       {/if}
     </div>
     {#if updated}

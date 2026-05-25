@@ -33,10 +33,10 @@
 
 <div class="flex h-full gap-4 overflow-x-auto pb-4">
   {#each columns as col}
-    <div class="flex w-80 shrink-0 flex-col gap-3 rounded-xl bg-slate-900/30 p-3">
+    <div class="flex w-80 shrink-0 flex-col gap-3 rounded-lg bg-bg-surface p-3 border border-border-subtle">
       <div class="flex items-center justify-between px-1">
-        <h2 class="text-sm font-medium text-slate-400 uppercase tracking-wider">{col}</h2>
-        <span class="rounded-full bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-400">
+        <h2 class="text-[11px] font-medium text-text-secondary uppercase tracking-wider">{col}</h2>
+        <span class="rounded-full bg-bg-surface-active px-2 py-0.5 text-[10px] font-medium text-text-secondary border border-border-subtle">
           {groupedTickets()[col].length}
         </span>
       </div>

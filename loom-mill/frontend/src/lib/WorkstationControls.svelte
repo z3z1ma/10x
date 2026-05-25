@@ -48,37 +48,37 @@
   }
 </script>
 
-<div class="space-y-2 rounded-md border border-slate-800 bg-slate-950/60 p-2">
-  <div class="flex items-center justify-between gap-2 text-xs">
-    <span class="font-medium text-slate-400">Workstation</span>
-    <span class="rounded-full px-2 py-0.5 font-medium ring-1 ring-inset
-      {status === 'running' ? 'bg-emerald-400/10 text-emerald-300 ring-emerald-400/30' :
-       status === 'paused' ? 'bg-amber-400/10 text-amber-300 ring-amber-400/30' :
-       status === 'stopped' ? 'bg-rose-400/10 text-rose-300 ring-rose-400/30' :
-       status === 'completed' ? 'bg-indigo-400/10 text-indigo-300 ring-indigo-400/30' :
-       'bg-slate-400/10 text-slate-300 ring-slate-400/30'}">
+<div class="space-y-2 rounded border border-border-subtle bg-bg-surface p-2">
+  <div class="flex items-center justify-between gap-2 text-[11px]">
+    <span class="font-medium text-text-secondary">Workstation</span>
+    <span class="rounded-full px-1.5 py-0.5 font-medium ring-1 ring-inset
+      {status === 'running' ? 'bg-status-success-bg text-status-success-text ring-status-success-border' :
+       status === 'paused' ? 'bg-status-warning-bg text-status-warning-text ring-status-warning-border' :
+       status === 'stopped' ? 'bg-status-error-bg text-status-error-text ring-status-error-border' :
+       status === 'completed' ? 'bg-accent-subtle text-accent-text ring-accent-subtle' :
+       'bg-status-neutral-bg text-status-neutral-text ring-status-neutral-border'}">
       {status}
     </span>
   </div>
 
   {#if workstation?.exit_code !== null && workstation?.exit_code !== undefined}
-    <p class="text-xs text-slate-500">Exit: {workstation.exit_code}</p>
+    <p class="text-[10px] text-text-tertiary">Exit: {workstation.exit_code}</p>
   {/if}
 
   <div class="grid grid-cols-3 gap-1.5">
-    <button type="button" onclick={start} disabled={busy || !canStart} class="rounded bg-emerald-500/15 px-2 py-1 text-xs font-medium text-emerald-300 ring-1 ring-emerald-500/30 hover:bg-emerald-500/25 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:ring-slate-700">Start</button>
-    <button type="button" onclick={pause} disabled={busy || !canPause} class="rounded bg-amber-500/15 px-2 py-1 text-xs font-medium text-amber-300 ring-1 ring-amber-500/30 hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:ring-slate-700">Pause</button>
-    <button type="button" onclick={stop} disabled={busy || !canStop} class="rounded bg-rose-500/15 px-2 py-1 text-xs font-medium text-rose-300 ring-1 ring-rose-500/30 hover:bg-rose-500/25 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:ring-slate-700">Stop</button>
+    <button type="button" onclick={start} disabled={busy || !canStart} class="rounded bg-bg-surface-active px-2 py-1 text-[10px] font-medium text-text-primary ring-1 ring-border-default hover:bg-bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50 transition-colors">Start</button>
+    <button type="button" onclick={pause} disabled={busy || !canPause} class="rounded bg-bg-surface-active px-2 py-1 text-[10px] font-medium text-text-primary ring-1 ring-border-default hover:bg-bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50 transition-colors">Pause</button>
+    <button type="button" onclick={stop} disabled={busy || !canStop} class="rounded bg-bg-surface-active px-2 py-1 text-[10px] font-medium text-text-primary ring-1 ring-border-default hover:bg-bg-surface-hover disabled:cursor-not-allowed disabled:opacity-50 transition-colors">Stop</button>
   </div>
 
   {#if canSteer}
     <div class="grid grid-cols-2 gap-1.5">
-      <button type="button" onclick={edit} disabled={busy} class="rounded bg-cyan-500/15 px-2 py-1 text-xs font-medium text-cyan-300 ring-1 ring-cyan-500/30 hover:bg-cyan-500/25 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:ring-slate-700">Edit</button>
-      <button type="button" onclick={resume} disabled={busy} class="rounded bg-indigo-500/15 px-2 py-1 text-xs font-medium text-indigo-300 ring-1 ring-indigo-500/30 hover:bg-indigo-500/25 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:ring-slate-700">Resume</button>
+      <button type="button" onclick={edit} disabled={busy} class="rounded bg-accent-subtle px-2 py-1 text-[10px] font-medium text-accent-text ring-1 ring-accent-subtle hover:bg-accent-hover hover:text-white disabled:cursor-not-allowed disabled:opacity-50 transition-colors">Edit</button>
+      <button type="button" onclick={resume} disabled={busy} class="rounded bg-accent-subtle px-2 py-1 text-[10px] font-medium text-accent-text ring-1 ring-accent-subtle hover:bg-accent-hover hover:text-white disabled:cursor-not-allowed disabled:opacity-50 transition-colors">Resume</button>
     </div>
   {/if}
 
   {#if error}
-    <p class="text-xs text-rose-400">{error}</p>
+    <p class="text-[10px] text-status-error-text">{error}</p>
   {/if}
 </div>
