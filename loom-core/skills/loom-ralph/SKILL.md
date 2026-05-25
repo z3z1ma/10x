@@ -7,130 +7,102 @@ description: "Use when Loom work needs a bounded Ralph subagent, harness run, im
 
 Ralph is Loom's bounded worker and review discipline.
 
-A Ralph run starts from durable Loom context, usually a ticket and its linked
-records, then uses a transient launch prompt to carry one bounded worker or review
-task. The durable context names the target, mission, read scope, write scope, stop
-conditions, evidence or review expectations, and output reconciliation target.
+A Ralph run has durable context in a ticket or owning surface and a thin transient
+launch transport. The durable context names the target, mission, read scope, write
+scope, stop conditions, evidence or review expectations, and where worker output
+will be reconciled. The launch prompt points at that context; it is not the durable
+contract.
 
-Most Ralph runs use a harness-native subagent. A Ralph run can also use a headless
-harness command, manual handoff, or another transport that reads the named durable
-records and returns the required output. Regardless of transport, the prompt stays
-thin and points the worker at the ticket, audit target, evidence request, or other
-bounded source of truth.
-
-Ralph supplies run discipline. The consuming surface still records the judgment,
-state, or durable result it owns. Tickets may use Ralph for implementation, audit
-may use Ralph for adversarial review, and other Loom surfaces may use Ralph when
-bounded worker execution improves the work.
-
-A Ralph run has two parts: durable context in the owning Loom surface and a
-transient launch transport. The durable context is the worker contract; the launch
-wrapper should stay thin so future agents can recover the handoff from the
-repository graph.
+Ralph can use a harness subagent, headless harness command, manual handoff, or
+other transport. The consuming surface still owns the resulting state or judgment:
+tickets own execution and closure, evidence owns observations, audit owns
+adversarial review records, and other records keep their own truths.
 
 ## Use This Skill When
 
-Use this skill when:
+Use this skill when preparing, launching, executing, or reconciling a bounded
+worker or review run from tickets, records, files, diffs, claims, evidence, or
+external references.
 
-- preparing a bounded worker or review run from Loom records, files, evidence,
-  diffs, claims, or external references
-- choosing live-reference, hermetic, or hybrid context style for a launch
-- launching a bounded subagent or harness run from a ticket or other durable target
-- defining read scope, write scope, stop conditions, or worker output
-- reconciling worker output into tickets, evidence, audit, knowledge, or another
-  owning surface
-- deciding whether durable run context is current enough to launch
+Also use it when defining read scope, write scope, stop conditions, worker output,
+context style, or whether run context is current enough to launch.
 
-Shape the work before launching it. A Ralph run should begin from a clear target,
-mission, context boundary, write boundary, and output expectation.
+Do not launch Ralph to resolve unshaped product intent, policy, architecture,
+scope, data/state modeling, or design-coherence choices. Shape or route those
+first.
 
 ## Dispatch
 
-If preparing or launching a Ralph run:
+If preparing or launching:
 
 - read `references/run-shape.md`
 - read `references/running-ralph.md`
-- read `references/verification-posture.md` when the run needs implementation
-  or validation evidence
-- read the records and source material needed to bind the run context
-- ensure durable context lives in the ticket or owning records before launch
-- write a launch prompt narrow enough for one worker run
-- when launching, point the worker at the ticket or target records and request the
-  run's output contract
+- read `references/verification-posture.md` when implementation or validation
+  evidence is expected
+- read records and source needed to bind the run
+- ensure durable context lives in the ticket or owning record before launch
+- write a short launch that points at the target records and asks for the output
+  contract
 
 If executing inside a Ralph run:
 
-- read the named ticket, target, or durable records before editing or reviewing
-- read live references or inlined context according to the requested context style
-- stay inside the declared read scope and write scope
-- update only records named by the ticket, owning surface, or launch when those
-  updates are part of the worker contract
+- read the named ticket, target, and linked records first
+- follow the requested context style: `live-reference`, `hermetic`, or `hybrid`
+- stay inside declared read and write scope
+- update only named records, files, or artifacts authorized by the ticket, owning
+  surface, or launch
 - stop when a stop condition applies
-- return the required worker output
+- return the required output
 
-If reading worker output after a Ralph run:
+If reconciling worker output:
 
-- read the ticket or target, worker output, changed records, evidence, and changed
-  files
-- update the consuming surface when additional judgment or routing is needed
-- decide whether the next move is another Ralph run, audit, closure, shaping,
-  knowledge promotion, or another Loom surface
+- inspect the ticket or target, worker output, changed records, evidence, and diff
+- treat worker output as claims until checked against scope and evidence
+- update the consuming surface when future recovery depends on it
+- choose the next move: another Ralph run, audit, closure, shaping, knowledge
+  promotion, or stop
 
 ## Context Styles
 
-Use one of these context styles:
+- `live-reference`: launch names records, files, evidence, diffs, or external
+  references the worker should read in the workspace
+- `hermetic`: launch inlines the relevant context bundle
+- `hybrid`: launch inlines critical context and points at live sources
 
-- `live-reference`: the launch names the records, files, evidence, diffs, or
-  external references the worker should read in the workspace
-- `hermetic`: the launch inlines the relevant record text, excerpts, diffs, or
-  artifacts needed for the run
-- `hybrid`: the launch inlines the critical context and also points at live sources
-  for inspection
-
-Live-reference runs are useful when current workspace state matters. Hermetic runs
-are useful when a worker should review a frozen context bundle.
+Use live-reference when current workspace state matters; hermetic when the review
+must use a frozen bundle.
 
 ## Worker Outcomes
 
-The worker returns one outcome:
+Worker output returns one outcome:
 
 - `continue`: useful progress happened and another run is likely
 - `stop`: this run's work is complete
 - `blocked`: a concrete blocker prevents safe progress
-- `escalate`: the next move needs higher-level shaping, policy, review, or another
-  Loom surface
+- `escalate`: the next move needs shaping, policy, review, or another Loom surface
 
-Worker outcome is run output. The consuming surface decides what that outcome
-means for its own record.
+The consuming surface decides what the run outcome means for its own state.
 
 ## Ralph Run Invariants
 
-Every Ralph run should preserve these invariants:
+Every Ralph run keeps:
 
-- explicit target or target set
-- one bounded worker run
-- context packaged as live references, hermetic content, or a deliberate hybrid
-- clear mission and output contract
-- explicit read scope and write scope
-- worker permission to update only the records, files, and evidence artifacts named
-  by the ticket, owning surface, or launch
-- worker output reconciled durably when the result supports closure, acceptance,
-  evidence, audit, research, knowledge, or future recovery
+- one bounded worker or review mission
+- explicit target, context style, read scope, and write scope
+- durable context in ticket or owning records, not only in the launch prompt
+- worker permission limited to named records, files, and artifacts
 - branch and worktree named when repository files may change
-- evidence, review, or verification expectation appropriate to the mode
+- evidence, review, or verification expectations appropriate to the mode
 - stop conditions that fail closed instead of widening scope
-- worker output sufficient for the next agent to continue, inspect, or review
-- no secret, credential, private key, token, password, or sensitive personal data
-- no stale run context used after the target, scope, context, or assumptions changed
+- output sufficient for continuation, inspection, or review
+- reconciliation of output when it supports closure, acceptance, evidence, audit,
+  research, knowledge, or future recovery
+- no secrets or sensitive values persisted
+- no stale run context used after target, scope, source state, or assumptions move
 
 ## Done Means
 
-Ralph work is done when:
-
-- the durable run context was sufficient and current before launch
-- the worker stayed inside the run boundary or stopped when it could not
-- named record and evidence updates were made or explicitly reported as missing
-- worker output states what happened, what changed, what was observed, what remains
-  unverified, and what next move is recommended
-- the consuming surface can use the reconciled worker output without replaying the
-  worker's tool log
+Ralph work is done when the worker contract was current, the run stayed in bounds
+or stopped, named records/evidence were updated or reported missing, worker output
+states changes, observations, unverified claims, risks, and next move, and the
+consuming surface can proceed without replaying the tool log.

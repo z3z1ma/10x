@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-record-skill-kernels
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: high - rewrites the Core record station skills that preserve graph truth, execution state, evidence, audit, and reusable knowledge.
@@ -66,8 +66,70 @@ Stop if a skill family reveals a behavior change rather than compression; split 
 
 ## Current State
 
-Ready after `ticket:20260525-session-kernel-compression` closes. The first run should use the compressed session vocabulary and avoid changing agent prompts or Playbooks.
+Closed. Dependency `ticket:20260525-session-kernel-compression` is closed. Three bounded Ralph worker runs compressed all Core record skill families: execution spine (`loom-tickets`, `loom-ralph`, `loom-evidence`, `loom-audit`), direction-setting (`loom-constitution`, `loom-specs`, `loom-plans`, `loom-research`), and reusable learning (`loom-knowledge`, `loom-retrospective`). Evidence is recorded at `evidence:20260525-execution-spine-record-skill-kernels-validation`, `evidence:20260525-direction-record-skill-kernels-validation`, and `evidence:20260525-reusable-learning-record-skill-kernels-validation`. Fresh-context audit is recorded at `audit:20260525-record-skill-kernels-audit` with verdict pass with non-blocking risks and no material findings. Residual risks are source-review limits, no live model-behavior simulation, and adjacent surfaces not audited by this ticket.
+
+Files changed in this run:
+
+- `loom-core/skills/loom-tickets/SKILL.md`
+- `loom-core/skills/loom-tickets/references/acting-on-tickets.md`
+- `loom-core/skills/loom-tickets/references/creating-tickets.md`
+- `loom-core/skills/loom-tickets/references/ticket-shape.md`
+- `loom-core/skills/loom-tickets/templates/ticket.md`
+- `loom-core/skills/loom-ralph/SKILL.md`
+- `loom-core/skills/loom-ralph/references/run-shape.md`
+- `loom-core/skills/loom-ralph/references/running-ralph.md`
+- `loom-core/skills/loom-ralph/references/verification-posture.md`
+- `loom-core/skills/loom-evidence/SKILL.md`
+- `loom-core/skills/loom-evidence/references/creating-evidence.md`
+- `loom-core/skills/loom-evidence/references/evidence-quality.md`
+- `loom-core/skills/loom-evidence/templates/dossier.md`
+- `loom-core/skills/loom-evidence/templates/observation.md`
+- `loom-core/skills/loom-audit/SKILL.md`
+- `loom-core/skills/loom-audit/references/audit-lenses.md`
+- `loom-core/skills/loom-audit/references/audit-shape.md`
+- `loom-core/skills/loom-audit/references/findings-and-verdicts.md`
+- `loom-core/skills/loom-audit/templates/audit.md`
+- `loom-core/skills/loom-constitution/SKILL.md`
+- `loom-core/skills/loom-constitution/references/core-constitution.md`
+- `loom-core/skills/loom-constitution/references/decision-records.md`
+- `loom-core/skills/loom-constitution/references/principle-fragments.md`
+- `loom-core/skills/loom-constitution/references/roadmap-records.md`
+- `loom-core/skills/loom-specs/SKILL.md`
+- `loom-core/skills/loom-specs/references/spec-shape.md`
+- `loom-core/skills/loom-plans/SKILL.md`
+- `loom-core/skills/loom-plans/references/creating-plans.md`
+- `loom-core/skills/loom-plans/references/plan-shape.md`
+- `loom-core/skills/loom-plans/references/slicing-work.md`
+- `loom-core/skills/loom-research/SKILL.md`
+- `loom-core/skills/loom-research/references/research-shape.md`
+- `loom-core/skills/loom-research/references/source-handling.md`
+- `loom-core/skills/loom-knowledge/SKILL.md`
+- `loom-core/skills/loom-knowledge/references/knowledge-shape.md`
+- `loom-core/skills/loom-knowledge/references/retrieval-and-loading.md`
+- `loom-core/skills/loom-knowledge/references/maintaining-knowledge.md`
+- `loom-core/skills/loom-knowledge/templates/atlas.md`
+- `loom-core/skills/loom-knowledge/templates/concept.md`
+- `loom-core/skills/loom-knowledge/templates/entity.md`
+- `loom-core/skills/loom-knowledge/templates/note.md`
+- `loom-core/skills/loom-knowledge/templates/preference.md`
+- `loom-core/skills/loom-knowledge/templates/procedure.md`
+- `loom-core/skills/loom-knowledge/templates/reference.md`
+- `loom-core/skills/loom-knowledge/templates/troubleshooting.md`
+- `loom-core/skills/loom-retrospective/SKILL.md`
+- `loom-core/skills/loom-retrospective/references/promotion-and-prevention.md`
+
+Validation passed for the execution-spine run: before/after line counts, `npm --prefix loom-core run smoke`, `npm --prefix loom-core run pack:check`, `git diff --check`, targeted behavior/source searches, packet-retirement search, reference-link search, and product-surface leakage search. The four touched families dropped from 2,372 to 1,358 lines.
+
+Validation passed for the direction-setting run: before/after line counts, `npm --prefix loom-core run smoke`, `npm --prefix loom-core run pack:check`, `git diff --check`, targeted behavior/source searches, reference-link search, and product-surface leakage search. `git diff --check` was rerun after evidence/ticket record updates. The four touched families dropped from 2,880 to 1,648 lines.
+
+Validation passed for the reusable-learning run: before/after line counts, `npm --prefix loom-core run smoke`, `npm --prefix loom-core run pack:check`, `git diff --check` before and after record updates, targeted behavior/source searches, reference-link search, and product-surface leakage search. The two touched families dropped from 1,047 to 846 lines. No uncompressed record skill families remain. Ticket is in `review`; closure still needs fresh-context audit.
 
 ## Journal
 
 - 2026-05-25: Created ticket with dependency on session kernel compression.
+- 2026-05-25: Set status to `active` after session-kernel compression closed.
+- 2026-05-25: Bounded execution-spine run compressed `loom-tickets`, `loom-ralph`, `loom-evidence`, and `loom-audit` within source scope. Line count changed from 2,372 to 1,358 lines across the 19 touched files. Validation passed: Core smoke, Core pack check, `git diff --check`, targeted behavior/source searches, packet-retirement search, reference-link search, and product-surface leakage search. Evidence recorded at `evidence:20260525-execution-spine-record-skill-kernels-validation`. Remaining record skill families are constitution, specs, plans, research, knowledge, and retrospective; ticket stays `active`.
+- 2026-05-25: Bounded direction-setting run compressed `loom-constitution`, `loom-specs`, `loom-plans`, and `loom-research` within source scope. Line count changed from 2,880 to 1,648 lines across the 21 touched files. Validation passed: Core smoke, Core pack check, `git diff --check` before and after record updates, targeted behavior/source searches, reference-link search, and product-surface leakage search. Evidence recorded at `evidence:20260525-direction-record-skill-kernels-validation`. Remaining record skill families are knowledge and retrospective; ticket stays `active`.
+- 2026-05-25: Bounded reusable-learning run compressed `loom-knowledge` and `loom-retrospective` within source scope. Line count changed from 1,047 to 846 lines across the 14 touched files. Validation passed: Core smoke, Core pack check, `git diff --check` before and after record updates, targeted behavior/source searches, reference-link search, and product-surface leakage search. Evidence recorded at `evidence:20260525-reusable-learning-record-skill-kernels-validation`. No uncompressed record skill families remain; ticket moved to `review` pending fresh-context audit.
+- 2026-05-25: Fresh-context audit recorded at `audit:20260525-record-skill-kernels-audit`. Verdict: pass with non-blocking risks; no material findings. Audit reran Core smoke, Core pack check, and `git diff --check`, challenged line counts, reference/template links, execution-spine preservation, product-surface leakage, and behavior loss. Ticket remains `review` for coordinator-owned closure disposition.
+- 2026-05-25: Coordinator closed ticket. ACC-001 through ACC-005 are supported by three evidence dossiers and fresh-context audit; no source follow-up required by audit.

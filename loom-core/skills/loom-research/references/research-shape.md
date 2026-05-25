@@ -1,61 +1,31 @@
 # Research Shape
 
-Research creation is outer-loop work.
+Research creation is outer-loop work. Create research when a question and its
+reasoning are durable enough that future work would be worse without the record.
 
-Create research when a question and its reasoning are durable enough that future
-work would be worse without the record.
+## Readiness
 
-A research record gives a future agent the question, scope, grounding path,
-findings, tradeoffs, rejected paths, conclusions, limits, and downstream route.
-
-## Shaping Standard
-
-Before writing research, shape the investigation until four things are true:
-
-- durable question: the investigation matters beyond the current chat
-- bounded scope: the record can say what is covered and excluded
-- grounding path: there is a plausible method, source set, experiment, or
-  inspection path
-- downstream consumer: a spec, ticket, plan, constitution record, evidence record,
-  audit, knowledge record, source area, or future agent can use the result
-
-Inspect source and records first. Ask one material question when operator input is
-needed. Offer a recommended answer when the tradeoff is clear.
-
-## Create Research Only When
-
-Create an `active` research record when all of these are true:
+Create an `active` research record only when:
 
 - the question is clear enough to investigate
-- the scope is narrow enough to avoid becoming a parking lot
-- the likely sources or inspection path are known enough to begin
-- the likely downstream consumer is known
+- scope is narrow enough to avoid a parking lot
+- likely sources, method, experiment, or inspection path are known
+- likely downstream consumer is known
 - the investigation, rejection, null result, or conclusion should remain available
-  to future work
 
-Create active research before conclusions when the investigation itself needs a
-durable home.
+If not, keep shaping or route to the owning surface.
 
-## Route Elsewhere When
+## Route Elsewhere
 
-Research informs other surfaces. It should not replace them.
+Research informs other surfaces. It does not replace them.
 
-Route instead:
-
-- intended behavior, requirements, scenarios, interface expectations, or invariants to
-  specs
-- bounded executable work to tickets
-- complex multi-ticket strategy, sequencing, or decomposition to plans
-- durable policy, principles, architectural precedent, or roadmap direction to
-  constitution
-- observed validation artifacts to evidence when the observation itself must be
-  inspectable
-- adversarial review to audit
-- accepted reusable explanation to knowledge
+Route intended behavior to specs, executable work to tickets, multi-ticket
+strategy to plans, durable judgment to constitution, observations to evidence,
+adversarial review to audit, and accepted reusable explanation to knowledge.
 
 ## Core Sections
 
-Use the default sections unless a research record has a strong reason to vary:
+Use these unless the record has a strong reason to vary:
 
 - `## Summary`
 - `## Question`
@@ -69,145 +39,50 @@ Use the default sections unless a research record has a strong reason to vary:
 - `## Open Questions`
 - `## Related Records`
 
-Research does not use a journal by default. If investigation history matters, fold
-the material facts into Method, Findings, Rejected Paths, or Conclusions. Tickets
-and plans carry live execution journals.
+Research does not use a journal by default. Fold material history into Method,
+Findings, Rejected Paths, or Conclusions.
 
-## Summary
+## Section Duties
 
-Summary should answer:
+Summary names what was investigated, why it matters, and the most important
+current conclusion or state.
 
-- what was investigated
-- why the investigation matters
-- what conclusion or current state a future agent should notice first
+Question names the decision pressure clearly enough to know when the record is
+done.
 
-Keep it short, but make the record understandable without chat history.
+Scope says what is covered and excluded: paths, records, systems, versions,
+environments, options, assumptions, and freshness or recheck triggers when they
+matter.
 
-## Question
+Method And Sources explains code inspection, record review, commands,
+experiments, external docs, artifacts, operator input, model debate, or peer
+comparison. Add provenance or freshness only when it affects trust.
 
-The question should be specific enough to investigate and specific enough to know
-when the record is done.
+Findings are observed or sourced facts before interpretation. Cite or create
+evidence when an observation must survive independently.
 
-Weak questions sound like:
+Tradeoffs compare meaningful options, strengths, risks, limits, and downstream
+consequences. Remove the section if no real comparison exists.
 
-- research auth
-- compare options
-- see how migrations work
-- figure out best practice
+Rejected Paths And Null Results capture dead ends future agents would otherwise
+rediscover.
 
-Better questions name the decision pressure:
+Conclusions state only what the findings justify. Name confidence, assumptions,
+versions, environment limits, and recheck triggers when relevant. `completed`
+means conclusions are bounded enough to cite; it does not make another surface
+accept them.
 
-- Which validation route is strong enough for `ticket:YYYYMMDD-<slug>#ACC-001`?
-- Which migration strategy avoids breaking existing persisted records?
-- Which library API behavior applies to the version this repository actually uses?
-- Which implementation seam lets the next ticket stay bounded and reviewable?
+Recommendations name the next owner: spec, ticket, plan, constitution, evidence,
+audit, or knowledge.
 
-## Scope
+Open Questions are honest limits, not a parking lot.
 
-Scope should say what the research covers and excludes.
+Related Records lists only records or paths that materially constrain or explain
+the research.
 
-Good scope names:
-
-- source paths, records, systems, versions, or environments inspected
-- options or hypotheses considered
-- scenarios intentionally excluded
-- assumptions the conclusion depends on
-- freshness or recheck triggers when obvious
-
-If the scope cannot be bounded, the research is not ready.
-
-## Method And Sources
-
-Method explains how the investigation was grounded.
-
-It can include code inspection, record review, command output, experiments,
-external documentation, source-material artifacts, operator input, model debate,
-or peer repository comparison.
-
-Keep method concise. Expand source quality, provenance, version, or freshness only
-when it materially affects trust.
-
-## Findings
-
-Findings are what the investigation found before the record claims what it means.
-
-Separate observed or sourced facts from conclusions. When a finding depends on an
-artifact that should survive independently, cite or create evidence.
-
-A useful finding names enough source context for a future agent to recheck it.
-
-## Tradeoffs
-
-Use Tradeoffs when options, variants, hypotheses, libraries, strategies, or
-implementation routes are compared.
-
-Compare meaningful differences, not cosmetic variants. A useful comparison names:
-
-- option or hypothesis
-- evidence-backed strength
-- risk, weakness, or limit
-- decision pressure or downstream consequence
-
-Remove the section if no real comparison exists.
-
-## Rejected Paths And Null Results
-
-Capture dead ends when future agents would otherwise rediscover them.
-
-For each useful rejection or null result, say:
-
-- what was considered or tried
-- what rejected it
-- what a future agent should do instead, if known
-
-## Conclusions
-
-Conclusions say what is justified by the findings.
-
-Do not make conclusions stronger than the source quality supports. If the result
-depends on a version, environment, assumption, or unverified source, say so.
-
-`Status: completed` means the conclusions and recommendations are bounded enough
-to cite. It does not mean the consuming ticket, spec, plan, constitution record,
-knowledge record, or audit automatically accepts them.
-
-## Recommendations
-
-Recommendations route the result.
-
-Good recommendations name the next owner:
-
-- create or update a spec for intended behavior
-- create a ticket for bounded executable work
-- create a plan for complex multi-ticket strategy
-- create or update constitution for durable judgment
-- create evidence for an observation that must be inspectable
-- route to audit for adversarial review
-- promote settled explanation into knowledge
-
-Research may recommend. The receiving surface owns the next truth change.
-
-## Open Questions
-
-Open questions are honest limits.
-
-Keep them short. Split into a new research record only when a question becomes an
-independently actionable investigation or would bloat the current record.
-
-Do not use open questions as a parking lot for vague future work.
-
-## Related Records
-
-Use Related Records when another record or source path materially helps a future
-agent interpret the research.
-
-Each entry should say why it matters. Add only records that materially constrain or
-explain the research.
-
-## Spike, Sketch, And Experiment Results
+## Spike, Sketch, Experiment
 
 A spike, sketch, prototype, or experiment belongs in research when its durable
-product is a conclusion, comparison, rejection, or null result.
-
-The research record should preserve the question, method, artifact pointers,
-findings, limits, and downstream route. Omit throwaway implementation steps.
+product is a conclusion, comparison, rejection, or null result. Preserve the
+question, method, artifact pointers, findings, limits, and downstream route. Omit
+throwaway implementation steps.

@@ -2,7 +2,7 @@ description = "Use when incoming bugs, feature requests, or external issues need
 prompt = '''
 The user explicitly invoked this Loom Playbook as an optional workflow macro.
 
-Use it as a workflow lens only after Core Loom routing has identified the owning surface or after the operator has deliberately selected this lens. Preserve Core surface ownership, ticket shaping, evidence, audit, and ticket-owned Ralph worker/review discipline. Do not treat this Playbook as automatic first-action activation from ordinary natural-language task text.
+Use it as a workflow lens after Core routing or deliberate operator selection. Preserve Core surface ownership, ticket shaping, evidence, audit, and ticket-owned Ralph worker/review discipline. Do not treat this Playbook as natural-prompt activation.
 
 # loom-intake-triage
 
@@ -18,11 +18,8 @@ Common routes use these Loom skills for durable records or follow-up workflow:
 `loom-tickets`, `loom-evidence`, `loom-research`, `loom-specs`,
 `loom-knowledge`, `loom-constitution`, `loom-ralph`, and `loom-audit`.
 
-Ensure the `using-loom` skill is loaded before applying this workflow.
-
-When routing to any named Loom skill, follow that skill's procedure and guidance
-completely. This playbook adds workflow pressure; it does not shorten the target
-skill's requirements.
+Follow any named Loom skill fully. This playbook adds workflow pressure; it does
+not shorten target-skill requirements.
 
 External issues, labels, and comments can transport work. Loom tickets carry live
 execution state.

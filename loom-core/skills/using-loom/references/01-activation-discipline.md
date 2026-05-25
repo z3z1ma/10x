@@ -1,6 +1,6 @@
 # Activation Discipline
 
-Activation is the first behavior Loom needs from an agent.
+Activation is the first Loom behavior.
 
 If you think there is even a 1% chance a skill might apply, you ABSOLUTELY MUST
 invoke the skill.
@@ -11,16 +11,15 @@ IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 
 Before the first response or action for a user message, run this loop:
 
-1. Confirm this doctrine is loaded. If it is already loaded with clear source
-   markers, do not spend context reloading it.
+1. Confirm this doctrine is loaded. If clear source markers show it is preloaded,
+   do not reload it.
 2. Ask which Loom surface or skill could materially own the next move.
 3. If any material chance exists, invoke the relevant Loom skill before responding,
    before asking clarifying questions, before code exploration, before quick checks,
    before editing files, before creating tickets, and before launching Ralph.
 4. If the skill proves it is not the right route, return to Loom routing and choose
-   the next surface or proceed lightly when no durable Loom work is needed.
-5. Follow the active skill completely when it routes to another Loom skill. A
-   workflow-specific skill does not shorten record-skill procedure.
+   another surface, or proceed lightly when no durable Loom work is needed.
+5. Follow the active skill completely when it routes to another Loom skill.
 
 ## Priority
 
@@ -32,8 +31,7 @@ Use this priority when more than one skill may apply:
 3. A workflow playbook, such as debugging, TDD, UI work, review, migration,
    security, performance, release, or branch finish.
 
-Record skills own durable truth. Playbooks add pressure to reach the right record,
-evidence, Ralph run, or audit route.
+Record skills own durable truth. Playbooks add task pressure.
 
 ## Red Flags
 
@@ -52,4 +50,4 @@ These thoughts mean the agent is rationalizing around Loom:
 | "Audit is overkill." | Audit posture follows claim risk, not convenience. |
 | "I know this skill already." | Skill text changes; load the current version. |
 | "I'll just do this one thing first." | One un-routed action is enough to lose the graph. Check the skill first. |
-| "This feels faster." | Fast unbounded work is how Loom loses the recovery graph. |
+| "This feels faster." | Fast unbounded work loses the recovery graph. |

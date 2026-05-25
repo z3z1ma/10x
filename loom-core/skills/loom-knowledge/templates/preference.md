@@ -14,22 +14,18 @@ Applies To: <optional contexts, workflows, tools, paths, or remove>
 
 ## Use When
 
-<Name when this preference should shape communication, execution, review, or
-retrieval.>
+<When this preference shapes communication, execution, review, or retrieval.>
 
 ## Do Not Overapply
 
-<Name limits so the preference does not override operator instructions, active
-records, safety, or task-specific judgment.>
+<Limits so it does not override operator instructions, active records, safety, or task judgment.>
 
 ## Source Or Note
 
-<Optional. Name where the preference came from or why it is current. Remove when
-not useful.>
+<Optional source or currency note. Remove when not useful.>
 
 ## Related Records
 
-<Optional. Add records or paths that help future agents apply this preference.
-Remove when none are useful.>
+<Optional records or paths that help apply this preference. Remove when none are useful.>
 
 - <record-id or path> - <why it matters>

@@ -5,92 +5,68 @@ description: "Use when claims, code changes, Loom records, evidence, risks, acce
 
 # loom-audit
 
-Audit is Loom's adversarial review record surface for Ralph-backed review
-judgments.
+Audit is Loom's Ralph-backed adversarial review record surface.
 
 It records what was reviewed, what claims or risks were challenged, what context
-and evidence were inspected, what findings were produced, what verdict the auditor
-reached, and what must happen before the consuming surface can honestly proceed.
+and evidence were inspected, what findings were produced, the auditor's bounded
+verdict, and what must happen before a consuming surface proceeds.
 
-Audit surfaces weak claims, missing evidence, scope drift, and unresolved risk.
-
-Audit does not own intended behavior, ticket closure, risk acceptance, policy,
-implementation, evidence, or finding disposition. It gives the consuming surfaces
-an adversarial judgment to use.
+Audit surfaces weak claims, missing or stale evidence, scope drift, and unresolved
+risk. It does not own intended behavior, ticket closure, risk acceptance, policy,
+implementation, evidence, or finding disposition.
 
 ## Use This Skill When
 
-Use this skill when:
+Use this skill when ticket work, records, diffs, evidence, acceptance, closure,
+research conclusions, specs, plans, constitution changes, packages, or handoffs
+need independent adversarial review and the result should remain available.
 
-- ticket work has reached the point where implementation and evidence need an
-  independent pass before closure
-- a ticket, plan, spec, research conclusion, evidence record, constitution change,
-  code change, diff, pull request, package, or handoff needs adversarial review
-- acceptance or closure depends on claims that could be overstated
-- evidence may be partial, stale, missing, or weaker than the prose suggests
-- implementation may not match intended behavior, acceptance, or scope
-- risk is broad, subtle, user-facing, security-relevant, architecture-affecting,
-  policy-affecting, expensive to reverse, or likely to mislead future agents
-- review findings should remain available beyond the current session
-
-Tiny local sanity checks are not audit. Use audit when independent adversarial
-judgment would materially improve trust, acceptance, recovery, or follow-through.
-Tickets are the most common audit consumer, but audit can target any Loom surface
-with claims worth challenging.
+Tiny local sanity checks are not audit. Use audit when independent judgment would
+materially improve trust, acceptance, recovery, or follow-through.
 
 ## Ralph Review Requirement
 
-Substantive audit requires a bounded Ralph review run.
+Substantive audit requires a bounded Ralph review run. The parent may prepare the
+request, gather context, and record the result, but the adversarial judgment must
+come from the Ralph review.
 
-The context that shaped or implemented the target may prepare the audit request,
-gather bounded context, and record the result. The adversarial judgment itself
-must come from the Ralph review run.
+Route review from the ticket, evidence, diff, and linked records that define the
+target. The ticket or audit target carries the durable request and worker contract;
+the launch prompt is transport. Record the returned judgment in `.loom/audit/`.
 
-Route the bounded review from the ticket, evidence, diff, and linked records that
-define the target. The ticket or audit target is the durable request and worker
-contract; the launch prompt is transport. Audit records the adversarial judgment
-after the Ralph review run returns.
-
-When a Ralph review cannot be run, say audit was not performed. Local inspection
-may still be useful review, but do not save it as `Type: Audit`.
+If Ralph review cannot run, say audit was not performed. Local inspection may still
+be useful, but do not save it as `Type: Audit`.
 
 ## Dispatch
 
-If preparing or recording an audit:
+If preparing or recording audit:
 
 - read `references/audit-shape.md`
 - read `references/audit-lenses.md`
 - read `references/findings-and-verdicts.md`
-- identify the concrete target
-- identify the claims, risks, acceptance criteria, or review concerns being
-  challenged
-- gather only the context needed for a bounded Ralph review run
-- prefer source records, diffs, evidence, and files over summaries when the source
-  is needed for judgment
+- identify the target, claims, risks, acceptance criteria, or concerns to challenge
+- gather bounded context from source records, diffs, evidence, and files
 - launch a bounded Ralph review run for substantive audit
-- after the Ralph review run, record the result with `templates/audit.md`
+- record returned findings and verdict with `templates/audit.md`
 
 If consuming audit findings:
 
 - read the full audit record
 - inspect cited files, records, evidence, claims, or findings before acting
-- treat findings as claims to verify, not commands to obey blindly
+- treat findings as claims to verify, not commands
 - route fixes, risk acceptance, follow-up tickets, spec changes, evidence updates,
-  or operator decisions to the surface that owns them
-- keep ticket acceptance, finding disposition, and closure decisions in tickets
+  or operator decisions to the owning surface
+- keep ticket acceptance, finding disposition, and closure in tickets
 
-If only finding or summarizing audits:
-
-- inspect `.loom/audit/`
-- report what the audit says
-- preserve the distinction between audit verdict, acceptance, closure, policy, and
-  implemented disposition
+If finding or summarizing audits, inspect `.loom/audit/` and preserve the
+distinction between audit verdict, acceptance, closure, policy, and implemented
+disposition.
 
 ## Finding Audits
 
 Audit records live under `.loom/audit/`.
 
-Useful starting points:
+Useful searches:
 
 ```bash
 find .loom/audit -maxdepth 1 -name '*.md' -print 2>/dev/null | sort
@@ -101,27 +77,13 @@ grep -R '^Target:' .loom/audit 2>/dev/null || true
 grep -R 'FIND-[0-9][0-9][0-9]' .loom/audit 2>/dev/null || true
 ```
 
-## Audit IDs And Filenames
+## IDs And Shape
 
-Use `audit:YYYYMMDD-<slug>` IDs.
+Use `audit:YYYYMMDD-<slug>` and `.loom/audit/YYYYMMDD-<slug>.md`.
 
-Use matching filenames without the `audit:` prefix:
+Audit has one shape: `Type: Audit` with `Status: recorded`.
 
-```text
-.loom/audit/YYYYMMDD-<slug>.md
-```
-
-Use the actual current date. Do not copy example dates.
-
-If the slug would collide, choose a clearer slug or add a numeric suffix.
-
-## Record Shape
-
-Audit has one record shape:
-
-- `Type: Audit`
-
-Use these labels near the top:
+Required labels:
 
 ```text
 ID: audit:YYYYMMDD-<slug>
@@ -133,39 +95,29 @@ Audited: YYYY-MM-DD or YYYY-MM-DD HH:MM UTC
 Target: ticket:YYYYMMDD-<slug> or path/ref/claim
 ```
 
-Use only `Status: recorded`.
-
-Audit is an adversarial pass, not a live execution state. Supersession,
-invalidation, follow-up, and stale-context notes belong in prose.
-
-`Target:` should be a short grepable handle. Put longer target explanation in the
-body.
+`Target:` is a short grepable handle. Longer target explanation belongs in the
+body. Supersession, invalidation, follow-up, and stale-context notes belong in
+prose.
 
 ## Audit Invariants
 
-Every audit record should preserve these invariants:
+Every audit record keeps:
 
 - Ralph review was performed
-- target is explicit and grepable
-- audited claims, risks, or review concerns are clear
-- reviewed context, files, records, diffs, claims, and evidence are named enough
-  to understand the pass
-- lenses or review concerns are visible
-- material findings have stable `FIND-*` IDs
-- verdict explains the auditor's judgment without claiming acceptance or closure
-- required follow-up and residual risk are explicit
-- ticket-owned dispositions remain in tickets
-- evidence remains observation, research remains investigation, specs remain
-  intended behavior, and constitution remains durable judgment
+- explicit target and review boundary
+- challenged claims, risks, acceptance, or review concerns
+- reviewed records, files, diffs, evidence, and omissions named enough to
+  understand the pass
+- lenses or review concerns visible
+- material findings with stable `FIND-*` IDs
+- verdict bounded by reviewed context, without claiming acceptance or closure
+- required follow-up and residual risk explicit
+- disposition left to tickets or the owning consuming surface
 
 ## Done Means
 
-Audit work is done when:
-
-- the target and Ralph review boundary are clear
-- the audit says what was inspected and what was not inspected
-- findings are concrete enough to act on or intentionally absent
-- the verdict is bounded by the reviewed context and evidence
-- follow-up and residual risk are visible
-- consuming surfaces can cite the audit without treating it as the owner of
-  acceptance, closure, implementation, policy, evidence, or intended behavior
+Audit work is done when the target and Ralph review boundary are clear, inspected
+and uninspected context are named, findings are concrete or intentionally absent,
+the verdict is bounded, follow-up and risk are visible, and consuming surfaces can
+cite the audit without treating it as acceptance, closure, implementation, policy,
+evidence, or intended behavior.

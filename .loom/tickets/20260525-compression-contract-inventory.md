@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-compression-contract-inventory
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: medium - establishes the shared contract and baseline that all compression work will rely on.
@@ -47,8 +47,11 @@ First Ralph boundary: inspect the model-visible surface inventory, compare it to
 
 ## Current State
 
-Ready to start. The first run should inspect the source inventory and record baseline line counts before any source compression begins.
+Closed. Inventory/baseline acceptance is satisfied without source compression. Evidence is recorded at `evidence:20260525-compression-inventory-baseline` with the model-visible surface list, corrected baseline counts, contract consistency check, and limitations. No contradiction was found between `spec:loom-protocol-compression`, `constitution:main`, `roadmap:loom-mill`, `research:20260524-loom-mill-software-factory`, active adjacent specs, or observed source reality. No plan/spec update was needed: the plan already covers Core skills, session preload/hooks, Core agents, Codex agent copies, Playbooks, generated commands, docs, tests, package checks, and final validation/audit. Separate audit for this inventory slice would not add useful trust beyond the final compression audit planned in `ticket:20260525-compression-validation-audit`; that final audit remains required before plan completion.
 
 ## Journal
 
 - 2026-05-25: Created ticket from the protocol compression plan. First move is inventory and baseline, not source rewriting.
+- 2026-05-25: Set status to `active` and launched first bounded inventory/baseline run.
+- 2026-05-25: Completed bounded inventory/baseline run. Recorded `evidence:20260525-compression-inventory-baseline`; corrected baseline total is 18,000 lines across 132 inventory-relevant files. ACC-001 through ACC-003 appear satisfied from source/record inspection. Moved status to `review` because final compression audit remains deferred to `ticket:20260525-compression-validation-audit` rather than completed in this inventory slice.
+- 2026-05-25: Coordinator review closed ticket. Closure relies on the inventory evidence above; separate inventory-only audit is intentionally deferred to the final compression audit because this ticket made no source changes.

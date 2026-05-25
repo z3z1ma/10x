@@ -26,7 +26,6 @@ Applies To: <optional paths, tools, domains, workflows, or remove>
 
 ## Related Records
 
-<Optional. Add records or paths that help future agents verify or apply this
-reference. Remove when none are useful.>
+<Optional records or paths that help verify or apply this reference. Remove when none are useful.>
 
 - <record-id or path> - <why it matters>

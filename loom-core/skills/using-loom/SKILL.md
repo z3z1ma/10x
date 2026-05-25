@@ -1,6 +1,6 @@
 ---
 name: using-loom
-description: "Always activate at session start in Loom workspaces before any response or action, unless an adapter has already preloaded this doctrine and references."
+description: "Always activate at session start before any response or action, unless this doctrine and references are already preloaded."
 ---
 
 # using-loom
@@ -11,40 +11,21 @@ invoke the skill.
 
 IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
 
-This is not optional. This is not a style preference. This is how Loom prevents
-silent scope invention, retroactive tickets, unbounded worker prompts, unsupported
-closure claims, and lost recovery context.
+This prevents silent scope invention, retroactive tickets, unbounded workers,
+unsupported closure claims, and lost recovery context.
 </EXTREMELY-IMPORTANT>
 
-Loom is a human-agent control plane for AI-driven software engineering.
-
-Loom works through two connected loops.
-
-The outer loop keeps the agent and operator shaping the work until the next move is
-understood, bounded, and routed into the right durable surface. Those surfaces are
-Markdown records written for humans and agents, with directory names for `find` and
-stable words, headings, labels, IDs, and refs for `grep`.
-
-The inner loop uses ticket-owned Ralph runs to execute bounded slices, run workers,
-and perform substantive audit review before records rely on claims. Tickets and
-linked records carry the durable context, scope, constraints, stop conditions, and
-evidence expectations for the worker to act without relying on chat history, while
-transient launch prompts only transport the run.
-
-Use the Loom surfaces to preserve the shaped work, bounded execution, evidence,
-audit, and reusable knowledge that future agents need.
+Loom is a human-agent control plane. Its durable state is the `.loom/` graph:
+Markdown records for judgment, bounded execution, evidence, audit, and reusable
+knowledge. Chat shapes the next move; records preserve what future agents need.
 
 ## Loop Order
 
-Loom routing comes first. Use workflow-specific skills only after this doctrine
-has established whether the work is still outer-loop shaping or ready for bounded
-execution.
-
-Activation is part of routing. If there is any material chance a Loom skill or
-surface applies to the operator's message, invoke the relevant skill before
-responding, asking clarifying questions, code exploration, quick checks, editing,
-creating tickets, or launching Ralph. The skill may confirm that a lighter path is
-enough; skipping the check because the work feels obvious is not allowed.
+Loom routing comes first. Activation is part of routing: if any Loom skill or
+surface might own the next move, invoke the relevant skill before responding,
+before asking clarifying questions, before code exploration, before quick checks,
+before editing files, before creating tickets, and before launching Ralph. Use
+workflow playbooks only after routing identifies the owning surface.
 
 The default sequence is:
 
@@ -54,36 +35,17 @@ ticket slices through bounded Ralph runs -> preserve evidence -> audit claims ->
 reconcile records
 ```
 
-When product intent, success criteria, quality bar, scope, evidence posture, or
-ticket boundary is unclear, stay in the outer loop. A workflow-specific skill can
-add pressure, but it still moves through Loom surfaces and the same loop order.
-When it routes to another Loom skill, follow that skill's procedure and guidance
-completely.
-
-Ambiguity defaults to shaping, not implementation. Treat an ask as ready for
-execution only when the operator's desired outcome, scope boundary, relevant
-constraints, success criteria, evidence posture, and material non-goals are clear
-enough that an agent can act without silently choosing product direction. Anything
-less stays in the outer loop.
-
-The outer loop is where Loom does front-loaded engineering judgment: selecting a
-direction, drawing boundaries, identifying system seams, data models, and state
-relationships, and deciding what would make the result coherent rather than merely
-functional. These are not implementation details to discover after coding starts.
-If those choices are missing, unexamined, or silently inferred, execution is not
-ready.
-
-Do not turn a fuzzy request into a ticket, Ralph run, or patch just to make
-progress. First inspect what the repository and Loom records can answer, pinpoint
-the material direction, boundary, system-shape, state, or proof ambiguity with the
-operator, and route the resolved truth into the owning Loom surface before
-execution.
+Ambiguity defaults to shaping, not implementation. Execute only when outcome,
+scope, constraints, success criteria, evidence posture, non-goals, and material
+system-shape or state implications are clear enough to avoid hidden product or
+architecture choices. Otherwise inspect source and records, name the ambiguity,
+shape it with the operator, and route the resolved truth before patching,
+ticketing, or launching Ralph.
 
 ## Session Start
 
-At the start of a Loom session, read this skill and all references below unless an
-adapter has already preloaded the same doctrine with clear source markers. Do not
-spend context twice when the doctrine is already present.
+At session start, read this skill and ordered references unless they are already
+preloaded with clear source markers.
 
 Read in this order:
 
@@ -100,49 +62,36 @@ After that, load active `Type: Knowledge Preference` records from
 the task, path, tool, error, ticket, or domain makes it relevant.
 
 Then use the relevant Loom skill for the surface you are touching. If multiple
-skills may apply, prefer the owning record skill first, then any workflow playbook
-that adds task-shaped pressure.
+skills may apply, prefer the owning record skill, then any workflow playbook.
 
 ## Loom Surfaces
 
-Loom records are Markdown files designed to be found, read, and connected with
-ordinary `find` and `grep` workflows.
-
 The Loom surfaces are:
 
-- constitution: durable project judgment, policy, principles, constraints, ADRs,
-  and roadmap direction
-- tickets: the fundamental work unit where executable change is scoped, driven,
-  and tracked
-- research: investigations, tradeoffs, synthesis, rejected paths, and conclusions
-- specs: intended behavior, requirements, scenarios, and interfaces
-- plans: operator-shaped strategy for complex changes that exceed one bounded
-  ticket, including decomposition, dependencies, validation, and recovery
-- evidence: observed facts, outputs, reproductions, screenshots, logs, and
-  validation
+- constitution: durable project judgment, policy, principles, constraints, ADRs, roadmap
+- tickets: bounded executable work, live state, acceptance, closure posture
+- research: investigation, tradeoffs, rejected paths, null results, synthesis
+- specs: intended behavior, requirements, scenarios, interfaces, invariants
+- plans: multi-ticket strategy, sequencing, rollout, validation, recovery
+- evidence: observations, command outputs, reproductions, screenshots, logs, validation
 - audit: adversarial review findings and verdicts from Ralph review runs
-- knowledge: preferences, procedures, accepted explanation, reusable
-  understanding, and retrieval cues
+- knowledge: preferences, procedures, accepted explanations, reusable understanding
 
-Retrospective is a promotion pass after significant work: decide what learning
-should move into the right surface instead of leaving it in chat. Use
-`loom-retrospective` for that pass when the work is non-trivial or prevention
-follow-up may matter.
+Retrospective is a promotion pass, not a surface. Use `loom-retrospective` after
+significant work when learning, prevention notes, or reusable context should move
+from chat or tickets into the right surface.
 
 ## Working Posture
 
 Ask:
 
 - What must be shaped with the operator before execution is honest?
-- Is the operator's ask concrete enough, or am I inferring scope, system-shape,
-  data-model, state-model, or coherence choices?
-- What ambiguity would make a different implementation correct?
-- What surface owns the truth I am about to depend on or change?
-- Is this still a human-shaped outer-loop problem, or is it safe to execute?
-- What is the next smallest ticket-ready slice, and what makes it complete?
+- Am I inferring scope, system-shape, data-model, state-model, or coherence choices?
+- Which surface owns the truth I am about to use or change?
+- Is the next move still shaping, or is it ticket-ready execution?
 - What ticket-owned context bounds this Ralph worker or review run?
-- What evidence or audit would make the claim honest?
-- What knowledge should future agents load, retrieve, or not have to rediscover?
+- What evidence or audit makes the claim honest?
+- What should future agents not have to rediscover?
 
 Tiny, obvious, low-risk work can stay light. Create or update records when they
 materially improve future recovery, judgment, execution, review, or reuse.

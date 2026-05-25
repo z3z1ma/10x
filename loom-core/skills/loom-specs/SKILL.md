@@ -5,96 +5,27 @@ description: "Use when behavior, interfaces, invariants, requirements, scenarios
 
 # loom-specs
 
-Specs own intended behavior.
+Specs own intended behavior: requirements, scenarios, interfaces, invariants,
+boundaries, quality bars, and evidence expectations for one coherent product
+slice.
 
-A spec says what a system, workflow, interface, product surface, command, data
-shape, permission boundary, error state, or record shape should do.
-
-It turns fuzzy intent into requirements, scenarios, boundaries, and quality bars
-that downstream tickets, worker runs, evidence, and audit can cite. Specs are one of
-the main places to preserve outer-loop design judgment when behavior, state shape,
-data shape, interface boundaries, or design coherence would otherwise be inferred
-during implementation.
-
-The current spec set, meaning specs with `Status: active` or `Status: accepted`,
-should define the current product surface well enough that a future agent could
-reconstruct the intended behavior from scratch without relying on chat history or
-the current implementation as the behavior source of truth.
-
-Specs do not own live execution state, implementation progress, evidence
-sufficiency, audit verdicts, or ticket closure. Tickets own scoped acceptance for
-a work unit and may cite spec requirements and scenarios.
+Specs do not own sequencing, investigation notes, live execution, implementation
+progress, evidence sufficiency, audit verdicts, ticket closure, durable policy, or
+accepted reusable explanation.
 
 ## Use This Skill When
 
-Use this skill when:
+Use it when:
 
-- intended behavior is fuzzy, disputed, reusable, shared, or easy to misstate
-- interface, API, workflow, UX, permission, error, compatibility, or invariant
-  behavior needs a durable contract
-- product direction, state shape, data shape, abstraction boundary, or design
-  coherence needs a stable behavior-level source before execution
-- a ticket, plan, audit, or worker would otherwise redefine what correct
-  means
-- operator answers need to become behavior truth before execution
-- requirements or scenarios need to be added, modified, removed, renamed,
-  superseded, accepted, or retired
-- evidence or audit needs a stable behavior claim to evaluate
+- intended behavior is fuzzy, disputed, shared, reusable, or easy to misstate
+- an interface, command, workflow, UX, permission, data shape, record shape, error, compatibility promise, or invariant needs a contract
+- product direction, state shape, data shape, abstraction boundary, or design coherence needs a behavior-level source before execution
+- a ticket, plan, worker, evidence record, or audit would otherwise redefine what correct means
+- requirements or scenarios need to be added, changed, superseded, accepted, retired, or referenced
 
-Do not use specs for execution sequencing, investigation notes, observed evidence,
-audit findings, implementation journals, or reusable explanation that does not own
-intended behavior.
-
-## Dispatch
-
-If creating or reshaping a spec:
-
-- read `references/spec-shape.md`
-- inspect existing specs and related records before asking the operator to repeat
-  facts
-- inspect source reality when current behavior, interfaces, errors, or constraints
-  matter
-- choose one coherent product slice before writing requirements; split the work
-  when materially different product surfaces would otherwise share one spec
-- shape fuzzy behavior until requirements, scenarios, boundaries, and open
-  questions are clear enough for downstream work
-- use examples, non-examples, data shapes, and interface boundaries to prevent
-  downstream agents from inventing design direction
-- use `templates/spec.md`
-- write the smallest citable spec
-
-If updating a spec:
-
-- read the whole spec
-- search for inbound references to affected `REQ-*` and `SCN-*` IDs when behavior
-  changes
-- check whether the spec still represents the current product surface slice it
-  claims; if not, narrow it, split it, supersede it, or retire it before relying on
-  it
-- classify the amendment as added, modified, removed, renamed, or superseded
-- update requirements, scenarios, evidence expectations, and open questions
-  together
-- supersede old IDs when reuse would mislead downstream records
-
-If superseding or retiring a spec:
-
-- preserve the reason
-- name the successor when one exists
-- update `Status:`, `Updated:`, `Replaces:`, or `Superseded By:` as appropriate
-- repair or flag inbound refs when downstream records would otherwise cite stale
-  behavior
-
-If only finding or summarizing specs:
-
-- inspect `.loom/specs/`
-- report status, relevant requirements, scenarios, boundaries, and open questions
-- do not mutate records unless the operator asked for a change
-
-## Finding Specs
+## Inspect
 
 Specs live under `.loom/specs/`.
-
-Useful starting points:
 
 ```bash
 find .loom/specs -maxdepth 1 -name '*.md' -print 2>/dev/null | sort
@@ -105,31 +36,23 @@ grep -R 'REQ-[0-9][0-9][0-9]' .loom/specs 2>/dev/null || true
 grep -R 'SCN-[0-9][0-9][0-9]' .loom/specs 2>/dev/null || true
 ```
 
-Search by capability, domain term, interface name, user task, error state,
-requirement ID, scenario ID, related record ID, source path, command, API, or data
-shape.
+Search by capability, domain term, interface, actor, error state, requirement ID,
+scenario ID, related record, source path, command, API, or data shape.
 
-## Spec IDs And Filenames
+Treat `active` and `accepted` specs as the current behavior map. If the current
+surface no longer matches a spec, update, split, supersede, or retire it before
+downstream work relies on it.
 
-Use stable semantic IDs:
+## Record Shape
 
-```text
-spec:<slug>
-```
-
-Use matching filenames without the `spec:` prefix:
+Use stable semantic IDs and matching filenames:
 
 ```text
+ID: spec:<slug>
 .loom/specs/<slug>.md
 ```
 
-Choose a slug future agents will search for.
-
-Do not use date prefixes for ordinary spec filenames.
-
-## Required Top Labels
-
-Specs use plain body labels near the top:
+Required labels:
 
 ```text
 ID: spec:<slug>
@@ -139,163 +62,73 @@ Created: YYYY-MM-DD
 Updated: YYYY-MM-DD
 ```
 
-Add only when useful:
+Optional links:
 
 ```text
 Replaces: spec:<slug>
 Superseded By: spec:<slug>
 ```
 
-## Status Lifecycle
+Statuses:
 
-Use this lifecycle:
+- `draft`: contract is still being shaped; downstream reliance must name the risk.
+- `active`: current working behavior truth with named open questions and limits.
+- `accepted`: stable enough for downstream records to rely on as current behavior truth.
+- `superseded`: replaced by a named successor.
+- `retired`: product surface or behavior no longer guides work.
 
-- `draft`: the contract is being shaped and downstream work should not rely on it
-  unless the open risk is explicit
-- `active`: current working behavior truth for the named product slice, usable by
-  downstream work with named open questions and limits
-- `accepted`: reviewed enough that downstream tickets, worker runs, evidence, and
-  audit can rely on it as the current behavior contract for the named product
-  slice
-- `superseded`: replaced by a named successor
-- `retired`: intentionally no longer used
+Requirements use stable `REQ-*` IDs. Scenarios use stable `SCN-*` IDs. Do not
+reuse IDs for different behavior; supersede old IDs when reuse would mislead.
 
-Use `active` for current contracts that are useful but still evolving.
+## Write Or Update
 
-Use `accepted` when the contract is stable enough for downstream records to rely on.
+Read `references/spec-shape.md` before creating or materially reshaping a spec.
+Use `templates/spec.md`.
 
-An `active` or `accepted` spec must represent the current product surface slice it
-claims. If the product surface changed enough that the spec would mislead a
-ticket, worker run, evidence plan, audit, or future agent, update the spec immediately
-or change its status to `superseded` or `retired`.
+When creating or reshaping:
 
-Use `superseded` when a successor spec now owns the behavior. Use `retired` when
-the product surface, workflow, interface, or behavior no longer exists or should no
-longer guide work.
+- inspect existing specs, related records, and source reality that constrain behavior
+- choose one coherent product slice before writing requirements
+- split separate actors, workflows, interfaces, permissions, evidence plans, or lifecycles
+- shape requirements, scenarios, boundaries, non-goals, evidence expectations, and open questions together
+- use examples, non-examples, data shapes, and interface boundaries when they prevent invented design direction
+
+When updating:
+
+- read the whole spec
+- search inbound references before changing cited `REQ-*` or `SCN-*` IDs
+- classify changes as added, modified, removed, renamed, split, retired, or superseded
+- update requirements, scenarios, evidence expectations, open questions, and status together
+
+When superseding or retiring:
+
+- preserve the reason
+- name the successor when one exists
+- update `Status:`, `Updated:`, `Replaces:`, and `Superseded By:` as appropriate
+- repair or flag inbound refs that would otherwise cite stale behavior
 
 ## Current Spec Set
 
-Treat `active` and `accepted` specs as the current behavior map for the product
-surface. Their collective job is regeneration-grade coverage: a future agent should
-be able to rebuild the intended behaviors, interfaces, workflows, record shapes,
-permission boundaries, error states, and quality contracts they cover without
-mining chat history or guessing from implementation details.
+The `active` and `accepted` spec set should be strong enough for a future agent to
+rebuild intended product behavior without chat history or implementation
+archaeology. This is a coverage goal, not permission to write umbrella specs.
 
-This is a collective goal, not permission to make broad specs. When regeneration
-would require unrelated behavior areas, create or update multiple coherent specs.
-Use related records, plans, research, or knowledge to connect them, but keep the
-behavior contracts sliced.
+Create or shape missing focused specs when downstream work depends on implicit
+behavior. Split broad specs instead of expanding them.
 
-When you discover a current product surface area that no `active` or `accepted`
-spec covers, create or shape the missing spec before downstream work depends on an
-implicit behavior claim. When a current spec points at behavior that no longer
-exists or no longer works that way, update it, supersede it, or retire it.
+## Stop Conditions
 
-## Slicing Specs
+Stop and route before writing when:
 
-A spec should cover one coherent product slice: a behavior, workflow, interface,
-record shape, permission boundary, error semantic, or quality contract whose
-requirements change together and whose scenarios can be reviewed together.
-
-Do not create an all-encompassing spec for a whole product, package, application,
-agent, UI, protocol, or broad product surface. Use related specs, plans, research,
-or knowledge records to connect separate surfaces instead of hiding them inside one
-umbrella contract.
-
-Split a spec, or create separate specs from the start, when any of these are true:
-
-- the requirements involve different primary actors, workflows, interfaces,
-  commands, record types, permission domains, or user jobs
-- the areas can ship, regress, be deprecated, or be validated independently
-- downstream tickets would cite disjoint subsets and should not need the rest of
-  the spec to understand their acceptance
-- the evidence plan needs unrelated test types, screenshots, logs, review methods,
-  environments, or audit questions
-- one part may become stale, superseded, retired, or accepted while another remains
-  current or draft
-- the title, summary, or requirements need broad words such as `entire`, `all`,
-  `platform`, `system`, `product`, or repeated `and` clauses to stay honest
-
-If a broad spec already exists, do not keep expanding it. Extract coherent product
-slices into successor specs, move cross-surface coordination to a plan or related
-records list, and mark the old umbrella spec `superseded` or narrow it so its
-status remains truthful.
-
-## Requirements And Scenarios
-
-Every spec should include at least one requirement and one scenario unless the
-record is still an early `draft`.
-
-Requirements use stable local IDs:
-
-```text
-REQ-001
-```
-
-A requirement states one intended behavior, invariant, interface guarantee, error
-semantic, permission rule, compatibility promise, or quality constraint.
-
-Scenarios use stable local IDs:
-
-```text
-SCN-001
-```
-
-A scenario is an observable probe of behavior. It should describe state, trigger,
-and outcome clearly enough for tickets, evidence, and audit to use.
-
-Ticket acceptance owns closure criteria for scoped work and can cite
-`spec:<slug>#REQ-001` or `spec:<slug>#SCN-001` when useful.
-
-## Shaping Posture
-
-When operator input is needed:
-
-- ask one material question at a time
-- recommend an answer when the repository, records, risk, or product shape supports
-  one path
-- challenge vague or overloaded terms before they become requirements
-- test proposed wording against concrete scenarios
-- invent success, edge, failure, permission, empty-state, compatibility, and
-  idempotency scenarios when they reveal boundaries
-- route unresolved investigation to research, complex execution strategy to plans,
-  live work to tickets, durable judgment to constitution, and reusable explanation
-  to knowledge
-
-Stop shaping when remaining questions no longer change intended behavior or can be
-recorded as open questions with clear downstream limits.
-
-## Spec Invariants
-
-Every spec should preserve these invariants:
-
-- the spec owns one coherent product slice, not the entire product surface
-- `active` and `accepted` specs describe the current product surface slice; stale
-  specs are updated, superseded, or retired
-- the current spec set can regenerate intended product behavior without relying on
-  chat history or implementation archaeology
-- intended behavior is separated from implementation plan
-- requirements and scenarios are stable, citable, and observable
-- important boundaries, non-goals, constraints, and open questions are explicit
-- evidence expectations are concrete enough to guide tickets and audit
-- public or shared interfaces name inputs, outputs, errors, validation, and
-  compatibility expectations when those details matter
-- quality claims have examples, non-examples, probes, or evidence expectations when
-  they affect downstream work
-- cited `REQ-*` and `SCN-*` IDs are not silently reused for different behavior
-- specs do not claim ticket closure, evidence sufficiency, audit verdict, or
-  implementation progress
+- the slice collapses materially different product surfaces
+- behavior depends on unresolved product, data, state, interface, permission, compatibility, or coherence choices
+- evidence expectations are too vague to guide tickets or audit
+- the work is sequencing, live execution, investigation, durable policy, observation, audit, or knowledge rather than intended behavior
+- current implementation and intended behavior conflict and the operator or owning record has not resolved which should win
 
 ## Done Means
 
-Spec work is done when:
-
-- the spec has a truthful status
-- the spec slice is narrow enough that materially different product surfaces are
-  not collapsed into one contract
-- gaps in the current spec set are visible when the work reveals product behavior
-  needed for regeneration-grade coverage
-- behavior-bearing requirements and scenarios are clear enough to cite
-- open questions and downstream limits are visible
-- related records that constrain the behavior are linked or named
-- tickets can cite the spec without redefining intended behavior
+The spec has a truthful status, owns one coherent slice, names current behavior,
+requirements, scenarios, boundaries, evidence expectations, and open questions,
+keeps stale IDs from misleading downstream work, and can be cited by tickets
+without redefining behavior.

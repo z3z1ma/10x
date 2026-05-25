@@ -1,18 +1,11 @@
 # Plan Shape
 
-A good plan is prose-rich but not vague.
-
-It tells a future agent what complex work is being decomposed, why the route
-exists, which records constrain it, which child tickets carry execution, what
-milestones matter, what the current plan-level state is, and what has happened so
-far.
-
-A plan is not a scratchpad, research note, spec, progress log, ticket substitute,
-or parking lot for unresolved thought.
+A plan is prose-rich strategy, not a progress log. It tells future agents what
+complex work is being decomposed, why the route exists, which records constrain
+it, which child tickets carry execution, what milestones matter, where the plan
+stands, and what materially changed.
 
 ## Top Labels
-
-Use these labels near the top:
 
 ```text
 ID: plan:YYYYMMDD-<slug>
@@ -23,22 +16,14 @@ Updated: YYYY-MM-DD
 Risk: low|medium|high - reason
 ```
 
-Risk must include a reason.
-
-Use:
-
-- `low` when the plan coordinates narrow, reversible, easy-to-verify work
-- `medium` when the plan coordinates meaningful behavior, shared records,
-  integration points, migration steps, or cross-cutting implementation
-- `high` when the plan affects core architecture, safety, data integrity,
-  migration behavior, public contracts, or hard-to-reverse decisions
-
+Risk must include a reason. Use `high` for core architecture, safety, data
+integrity, migration behavior, public contracts, or hard-to-reverse decisions.
 Raise risk when sequencing errors, weak evidence, or expensive failure would make
 the plan hard to trust.
 
 ## Core Sections
 
-Use the default sections unless a plan has a strong reason to vary:
+Use these unless the plan has a strong reason to vary:
 
 - `## Summary`
 - `## Related Records`
@@ -48,142 +33,49 @@ Use the default sections unless a plan has a strong reason to vary:
 - `## Current State`
 - `## Journal`
 
-`## Journal` stays last so agents and tools can append to the bottom.
+Keep `## Journal` last.
 
-## Summary
+## Section Duties
 
-Summary should answer:
+Summary answers what is being decomposed, why it matters, why it needs more than
+one ticket, and what completion produces.
 
-- what complex work is being decomposed
-- why it matters
-- why it needs more than one ticket
-- what outcome should exist when the plan completes
+Related Records lists only records or paths that materially constrain or explain
+the plan. Move chat-only context into the plan or an owning record.
 
-Keep it short, but make the plan understandable without relying on chat history.
+Strategy explains what belongs in the plan, what is left out, why the
+decomposition and order make sense, what system-shape/data/state/abstraction
+constraints matter, what risks shape the route, what can run independently, what
+must be sequential, what validation posture child tickets inherit, and what
+triggers replanning. Keep live progress out.
 
-## Related Records
+Execution Units point to concrete child ticket IDs. Each unit names outcome,
+scope boundary, relevant design constraints, order/dependency reason, validation,
+evidence, audit expectations, and loopback/stop conditions. If a unit cannot be
+one bounded child ticket, split it or keep shaping.
 
-List records an acting agent should understand before using the plan.
+Milestones are meaningful checkpoints across child tickets. They say what becomes
+true and which child tickets contribute. They are not progress checklists.
 
-Each entry should explain why the record matters.
+Current State is a concise plan-level snapshot: strategy state, milestone state,
+plan blockers, residual risks, useful child-ticket rollup, and next plan move.
+Update it when the plan story would otherwise be stale.
 
-Plans often relate to specs, research, constitution records, tickets, evidence,
-audit, knowledge, source paths, or external references.
-
-Add only records that materially constrain or explain the plan.
-
-If the plan depends on context that exists only in chat, move the durable version
-into the plan or the appropriate linked record.
-
-## Strategy
-
-Strategy explains the route.
-
-Include:
-
-- what belongs in the plan and what is deliberately left out
-- why this decomposition makes sense
-- why this order makes sense
-- which system-shape, data-modeling, state-modeling, abstraction, or coherence
-  choices shape the route
-- what risks shape the route
-- what can run independently
-- what must be sequential
-- what validation posture downstream tickets should inherit
-- what should trigger replanning
-
-Keep live progress out of Strategy.
-
-## Execution Units
-
-Execution units are prose-first, but each unit should point to a concrete child
-ticket ID.
-
-Each unit should make clear:
-
-- the child ticket ID
-- the outcome the ticket should produce
-- the likely scope boundary
-- the design, system-shape, data, or state constraint the ticket must preserve when
-  it matters
-- the order or dependency reason
-- validation, evidence, and audit expectations
-- loopback or stop conditions
-
-The ticket owns executable detail and live state.
-
-The plan owns decomposition, strategy, sequencing, milestone shape, and plan-level
-coordination.
-
-If an execution unit cannot be made into one bounded child ticket, split it or
-keep shaping.
-
-## Milestones
-
-Milestones are meaningful checkpoints across child tickets.
-
-They should say what will be true when the milestone is reached and which child
-tickets contribute to it.
-
-Milestones are not progress checklists.
-
-Do not duplicate every child ticket state.
-
-## Current State
-
-Current State is a concise plan-level snapshot.
-
-It can summarize:
-
-- strategy state
-- milestone state
-- plan-level blockers
-- residual risks
-- child ticket state when useful
-- next plan-level move
-
-Do not duplicate every ticket journal entry.
-
-Update Current State when the plan-level story would otherwise be stale or
-misleading.
-
-## Journal
-
-The journal is append-friendly and stays at the bottom.
-
-Append material entries for:
-
-- plan creation
-- child ticket creation
-- strategy changes
-- milestone movement
-- blockers
-- review
-- completion
-- cancellation
-
-Do not turn the journal into a transcript.
-
-Do not rewrite history to make the route look cleaner. Correct errors when
-needed, but preserve the material path.
+Journal records material creation, child ticket creation, strategy changes,
+milestone movement, blockers, review, completion, and cancellation. Do not turn it
+into a transcript or rewrite history for neatness.
 
 ## Completion Shape
 
-A completed plan should make the strategy story cheap to trust.
-
-Before completion, the plan should show:
+Before `Status: completed`, the plan should show:
 
 - every execution unit has a concrete child ticket ID
 - every child ticket is closed, cancelled, or explicitly out of scope with reason
-- milestones are satisfied or revised with authority before completion
-- unsatisfied milestones are routed to continued review, cancellation, authorized
-  scope change, or follow-up work instead of hidden inside completion
+- milestones are satisfied or revised with authority
+- unsatisfied milestones are routed to review, cancellation, authorized scope change, or follow-up
 - validation, evidence, and audit expectations were handled at the right level
-- plan-level audit or review happened when the strategy story needed independent
-  pressure
-- Current State summarizes the final plan-level story
-- Journal records the material route to completion
-- residual risks and follow-up work are named
+- plan-level audit or review happened when strategy needed independent pressure
+- final Current State, Journal, residual risks, and follow-ups are clear
 
-Set `Status: completed` only when the plan tells one truthful strategy story and
-the child tickets carry the live execution truth.
+Complete only when the plan tells one truthful strategy story and child tickets
+carry the live execution truth.

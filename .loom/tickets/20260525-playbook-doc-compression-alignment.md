@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-playbook-doc-compression-alignment
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: medium - aligns optional Playbook and documentation surfaces with compressed Core protocol without changing Core behavior.
@@ -56,8 +56,24 @@ Stop if alignment requires changing Playbook behavior beyond `spec:playbook-expl
 
 ## Current State
 
-Ready after `ticket:20260525-agent-prompt-kernels` closes. The first run should treat Playbooks and docs as consumers of Core compression, not drivers of protocol changes.
+Closed. First bounded run aligned Playbook source, generated command surfaces, and human docs as consumers of Core compression. Evidence is recorded at `evidence:20260525-playbook-doc-compression-alignment-validation`. Fresh-context audit is recorded at `audit:20260525-playbook-doc-compression-alignment-audit` with a pass-with-non-blocking-risks verdict and no material findings. Residual risk: static/generation checks do not prove live natural-prompt behavior in every supported harness.
+
+Files changed in this run:
+
+- `loom-playbooks/playbooks/*/SKILL.md`
+- `loom-playbooks/commands/*.toml`
+- `loom-playbooks/loom-playbooks.mjs`
+- `PROTOCOL.md`
+- `ARCHITECTURE.md`
+- `.loom/evidence/20260525-playbook-doc-compression-alignment-validation.md`
+- `.loom/tickets/20260525-playbook-doc-compression-alignment.md`
+
+Validation passed: before/after line counts, command regeneration, targeted source/generated command comparison, `npm --prefix loom-playbooks run smoke`, `npm --prefix loom-playbooks run pack:check`, `git diff --check`, targeted stale-doctrine/explicitness searches, and targeted product-surface leakage search. Core checks were not run because Core was not touched.
 
 ## Journal
 
 - 2026-05-25: Created ticket with dependency on agent prompt compression.
+- 2026-05-25: Set status to `active` after agent prompt compression closed.
+- 2026-05-25: Bounded Playbook/doc alignment run compressed repeated Playbook routing prose, shortened generated macro preamble language, regenerated all 25 command TOML files, and trimmed full Core bootstrap file lists from human docs. Line count changed from 8,846 to 8,661 total lines across targeted Playbooks/docs/generated commands. Evidence recorded at `evidence:20260525-playbook-doc-compression-alignment-validation`; ticket moved to `review` pending fresh-context audit.
+- 2026-05-25: Fresh-context audit recorded at `audit:20260525-playbook-doc-compression-alignment-audit`. Verdict: pass with non-blocking risks; no material findings; residual risk is limited to live harness natural-prompt behavior not being exercised by this ticket's static/generation evidence.
+- 2026-05-25: Coordinator closed ticket. ACC-001 through ACC-005 are supported by validation evidence and fresh-context audit; no source follow-up required by audit.

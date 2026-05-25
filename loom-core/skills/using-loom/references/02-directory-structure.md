@@ -1,9 +1,7 @@
 # Directory Structure
 
-Loom work lives under `.loom/`.
-
-The tree is lazily materialized: empty directories may be absent until a record or
-artifact needs them.
+Loom work lives under `.loom/`. The tree is lazy: missing empty directories are
+fine until the current work needs that surface.
 
 ## Canonical Tree
 
@@ -26,20 +24,18 @@ artifact needs them.
 
 ## Surface Paths
 
-- constitution records live under `.loom/constitution/`
-- tickets live under `.loom/tickets/`
-- research records live under `.loom/research/`
-- specs live under `.loom/specs/`
-- plans live under `.loom/plans/`
-- evidence records live under `.loom/evidence/`
-- audit records live under `.loom/audit/`
-- knowledge records live flat under `.loom/knowledge/`
+- constitution: `.loom/constitution/`
+- tickets: `.loom/tickets/`
+- research: `.loom/research/`
+- specs: `.loom/specs/`
+- plans: `.loom/plans/`
+- evidence: `.loom/evidence/`
+- audit: `.loom/audit/`
+- knowledge: `.loom/knowledge/`
 
 Raw evidence artifacts may live under `.loom/evidence/artifacts/YYYYMMDD-<slug>/`
-when the evidence record points at them.
-
-Raw research artifacts may live under `.loom/research/artifacts/YYYYMMDD-<slug>/`
-when the research record points at them.
+and raw research artifacts under `.loom/research/artifacts/YYYYMMDD-<slug>/` when
+the owning Markdown record points at them.
 
 ## Bootstrap
 
@@ -58,17 +54,13 @@ mkdir -p \
   .loom/knowledge
 ```
 
-Do not require empty directories to exist before using Loom. A missing directory is
-only a problem when the current work needs that surface.
-
 ## Directory Discipline
 
-Use the surface path that matches the record's job.
-
-Retrospective is a workflow over existing surfaces and has no directory of its own.
+Use the surface path that matches the record's job. Retrospective is a workflow
+over existing surfaces and has no directory of its own.
 
 Tickets hold durable context for bounded worker and review runs. Transient launch
 prompts do not replace the records, evidence, or audit they cite.
 
-Artifacts support evidence and research records. The Markdown record should remain
-understandable when an artifact directory is absent.
+Artifacts support evidence and research. The Markdown record should remain
+understandable even if an artifact directory is absent.

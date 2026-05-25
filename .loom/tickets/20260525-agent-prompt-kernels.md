@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-agent-prompt-kernels
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: medium - changes model-visible Driver and Weaver prompts plus adapter copies, but should preserve accepted behavior.
@@ -57,8 +57,23 @@ Stop if factory-role wording would change Weaver or Driver authority, write scop
 
 ## Current State
 
-Ready after `ticket:20260525-record-skill-kernels` closes. The first run should align prompts to compressed Core vocabulary and avoid changing workflow behavior.
+Closed. Driver and Weaver prompts were compressed around Factory Floor and Design Office roles, with canonical Markdown and Codex TOML prompt bodies aligned. Evidence is recorded at `evidence:20260525-agent-prompt-kernels-validation`. Fresh-context audit is recorded at `audit:20260525-agent-prompt-kernels-audit` with a pass verdict and no material findings. Residual risk is limited to live model behavior not being tested in a fresh harness session, Playbooks being out of scope for this ticket, and unrelated compression-ticket changes not being inspected by this ticket.
+
+Files changed in this run:
+
+- `loom-core/agents/loom-driver.md`
+- `loom-core/agents/loom-weaver.md`
+- `loom-core/codex/agents/loom-driver.toml`
+- `loom-core/codex/agents/loom-weaver.toml`
+- `.loom/evidence/20260525-agent-prompt-kernels-validation.md`
+- `.loom/tickets/20260525-agent-prompt-kernels.md`
+
+Validation passed: before/after line counts, canonical/Codex prompt-body alignment check, `npm --prefix loom-core run smoke`, `npm --prefix loom-core run pack:check`, `git diff --check`, targeted source inspection for Driver/Weaver role and behavior guardrails, and targeted product-surface leakage search. An initial smoke/pack attempt failed because compressed wording dropped exact smoke-checked phrases for Weaver's write boundary and Driver's direction-record boundary; the prompts were tightened to retain those guardrails, then validation passed.
 
 ## Journal
 
 - 2026-05-25: Created ticket with dependency on record skill compression.
+- 2026-05-25: Set status to `active` after record skill compression closed.
+- 2026-05-25: Bounded agent-prompt run compressed Driver and Weaver prompt surfaces around Factory Floor and Design Office roles. Line count changed from 890 to 372 total lines across canonical Markdown and Codex TOML agent files. Canonical/Codex prompt bodies are aligned. Validation passed: Core smoke, Core pack check, `git diff --check`, targeted role/guardrail source inspection, and product-surface leakage search. Evidence recorded at `evidence:20260525-agent-prompt-kernels-validation`; ticket moved to `review` pending fresh-context audit.
+- 2026-05-25: Fresh-context audit recorded at `audit:20260525-agent-prompt-kernels-audit`. Verdict: pass, with no material findings. Residual risk is limited to live model behavior not being tested in a fresh harness session, Playbooks being out of scope, and unrelated dirty worktree changes from other compression tickets not being inspected.
+- 2026-05-25: Coordinator closed ticket. ACC-001 through ACC-005 are supported by validation evidence and fresh-context audit; no source follow-up required by audit.

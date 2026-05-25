@@ -18,8 +18,7 @@ Applies To: <optional domains, workflows, paths, or remove>
 
 ## Boundaries
 
-<What this concept does not mean, what it should not override, and what to inspect
-when precision matters.>
+<What this concept does not mean, what it should not override, and what to inspect when precision matters.>
 
 ## Examples
 
@@ -27,7 +26,6 @@ when precision matters.>
 
 ## Related Records
 
-<Optional. Add records or paths that ground or neighbor this concept. Remove when
-none are useful.>
+<Optional records or paths that ground or neighbor this concept. Remove when none are useful.>
 
 - <record-id or path> - <why it matters>

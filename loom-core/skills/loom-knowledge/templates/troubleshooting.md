@@ -18,22 +18,18 @@ Applies To: <optional paths, tools, systems, environments, or remove>
 
 ## Checks
 
-<How to narrow the issue. Include commands, files, records, or observations when
-useful.>
+<How to narrow the issue. Include useful commands, files, records, or observations.>
 
 ## Fix Or Route
 
-<Known fixes, records to update, or when to create tickets, evidence, research,
-audit, or ask the operator.>
+<Known fixes, records to update, or when to create tickets, evidence, research, audit, or ask.>
 
 ## Boundaries Or Sources
 
-<Optional. Name versions, source records, evidence, or limits when useful. Remove
-when not useful.>
+<Optional versions, source records, evidence, or limits. Remove when not useful.>
 
 ## Related Records
 
-<Optional. Add records or paths that help future agents troubleshoot. Remove when
-none are useful.>
+<Optional records or paths that help troubleshooting. Remove when none are useful.>
 
 - <record-id or path> - <why it matters>

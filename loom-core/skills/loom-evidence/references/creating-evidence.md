@@ -1,130 +1,48 @@
 # Creating Evidence
 
 Evidence can be created during shaping, execution, audit, research, or standalone
-observation.
+observation. The invariant is observation before inference.
 
-The invariant is observation before inference.
+## Choose Shape
 
-Record what was observed. If the observation reveals ambiguity, record the
-limitation or route the ambiguity to the surface that can resolve it.
+Use an Evidence Observation for one command result, test run, screenshot,
+reproduction attempt, manual inspection, scan, log excerpt, artifact capture, or
+external artifact snapshot.
 
-## Choose The Shape
-
-Use an Evidence Observation when the record preserves one observation:
-
-- one command result
-- one test run
-- one screenshot or screenshot pair
-- one reproduction attempt
-- one manual inspection
-- one scan result
-- one log excerpt or artifact capture
-- one external artifact snapshot
-
-Use an Evidence Dossier when multiple observations compose one validation story:
-
-- final ticket acceptance evidence from several checks
-- migration validation composed from multiple observations
-- audit-support evidence that gathers several artifacts
-- a linked chain of evidence records summarized for one review question
-
-A dossier is a finite validation story, not a live progress log.
+Use an Evidence Dossier when multiple observations compose one validation story,
+such as final ticket acceptance evidence, migration validation, audit-support
+evidence, or a linked chain of evidence records summarized for one review question.
+A dossier is not a live progress log.
 
 ## Creation Procedure
 
-Use this sequence as the default path, not as a form:
-
 1. Decide why the observation should remain available.
-2. Choose Evidence Observation or Evidence Dossier.
-3. Record the source state or record state being observed.
+2. Choose Observation or Dossier.
+3. Record source or record state.
 4. Record the procedure that produced the observation.
-5. Record what was observed before writing what it means.
-6. Capture artifact paths and key excerpts or summaries.
-7. If the evidence supports or challenges a claim, cite stable claim IDs.
-8. If the expected result or claim scope is unclear, record that limitation.
+5. Record what was observed before interpretation.
+6. Capture artifact paths, key excerpts, or summaries.
+7. Cite stable claim IDs when supporting or challenging a claim.
+8. Record unclear expected results or claim limits.
 9. Record what the evidence does not show.
 10. Link related records only when useful.
 
-Use enough detail for a future agent to understand the observation without chat
-history.
-
-## Source And Procedure Context
-
-Evidence is easier to trust when the source and procedure are legible.
-
-Include relevant context such as:
-
-- ticket, spec, audit, research, plan, or knowledge IDs
-- source paths, record paths, or artifact paths
-- command run, working directory, and meaningful arguments
-- test, scan, reproduction, or inspection procedure
-- environment details when they affect interpretation
-- timestamp or source state when freshness matters
-
-Do not over-document routine checks. Match detail to claim risk.
+Match detail to claim risk. Include ticket/spec/audit IDs, paths, commands,
+working directory, test or inspection procedure, environment details, and timestamp
+only when they affect interpretation.
 
 ## Claim-Linked Evidence
 
-When evidence supports or challenges a ticket, spec, plan, audit, research, or
-other stable claim, name the claim ID.
+Claim-linked evidence names the stable claim, source state, procedure, actual
+observation, support or challenge boundary, and what remains untested. Use IDs such
+as `ticket:YYYYMMDD-<slug>#ACC-001`.
 
-Claim-linked evidence should include enough source state and procedure detail for
-a future agent to judge whether the observation is still useful.
-
-Good claim-linked evidence answers:
-
-- What claim was checked?
-- What source or record state was observed?
-- What procedure, command, inspection, or artifact produced the observation?
-- What was actually seen?
-- Which part of the claim is supported, challenged, or partially supported?
-- What remains untested or uncertain?
-
-Use stable IDs such as ticket acceptance IDs when they exist:
-
-```text
-ticket:YYYYMMDD-<slug>#ACC-001
-```
-
-## Standalone Evidence
-
-Standalone evidence is allowed when an observation is worth preserving but is not
-yet tied to a stable claim ID.
-
-In that case, make the observation useful on its own. Describe what was observed,
-how, where, and why the observation may matter.
-
-Use `## Related Records` only when another record or path materially helps
-interpretation.
-
-## Dossiers
-
-A dossier composes multiple observations into one validation story.
-
-A good dossier names:
-
-- the validation question
-- the observations or artifacts included
-- which claims each observation supports or challenges
-- mixed results or limitations
-- what still requires separate judgment by the consuming ticket, audit, or review
-
-A dossier may link to separate evidence observation records or summarize multiple
-observations directly when that is clearer.
+Standalone evidence is allowed when useful without a stable claim ID. Make it
+legible on its own; do not pretend it supports a claim.
 
 ## Raw Artifacts
 
-Use `.loom/evidence/artifacts/YYYYMMDD-<slug>/` for bulky or numerous artifacts
-such as full logs, traces, screenshots, generated reports, fixtures, or command
-captures.
-
-The Markdown record must still stand on its own enough for a future agent to know:
-
-- which artifact path matters
-- what key excerpt or summary matters
-- what the artifacts show
-- what they do not show
-- whether anything was omitted or redacted
-
-Prefer concise excerpts and artifact pointers over dumping raw logs into the
-Markdown record.
+Use `.loom/evidence/artifacts/YYYYMMDD-<slug>/` for bulky logs, screenshots,
+reports, fixtures, or command captures. The Markdown record must still stand on its
+own with artifact pointers, key excerpts or summaries, what the artifacts show,
+what they do not show, and what was omitted or redacted.

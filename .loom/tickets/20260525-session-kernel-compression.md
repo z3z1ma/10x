@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-session-kernel-compression
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: high - changes the session-start doctrine and preload surfaces that govern all Loom routing.
@@ -53,8 +53,25 @@ Stop if compression would weaken first-action skill activation, active knowledge
 
 ## Current State
 
-Ready after `ticket:20260525-compression-contract-inventory` closes. The first run should not begin until the inventory and baseline are recorded.
+Closed. The bounded source-edit run compressed `using-loom` and ordered references while preserving the existing preload topology. No preload mirror files required edits because `loom-core/loom-core.mjs`, hooks, and Gemini bootstrap still include the same ordered files dynamically. Fresh-context audit is recorded at `audit:20260525-session-kernel-compression-audit` with verdict: pass with non-blocking risks and no material findings. Residual risks are limited to external harness runtime behavior not covered by local Core smoke/pack, no behavioral simulation across multiple ambiguous tasks, and downstream compression slices not yet complete.
+
+Files changed:
+
+- `loom-core/skills/using-loom/SKILL.md`
+- `loom-core/skills/using-loom/references/00-how-loom-thinks.md`
+- `loom-core/skills/using-loom/references/01-activation-discipline.md`
+- `loom-core/skills/using-loom/references/02-directory-structure.md`
+- `loom-core/skills/using-loom/references/03-shaping-with-humans.md`
+- `loom-core/skills/using-loom/references/04-delegating-to-workers.md`
+- `loom-core/skills/using-loom/references/05-proving-the-work.md`
+- `loom-core/skills/using-loom/references/06-staying-safe.md`
+
+Validation evidence: `evidence:20260525-session-kernel-compression-validation` records before/after line counts, Core smoke, Core pack check, `git diff --check`, targeted behavior searches, and product-surface leakage search. Acceptance is satisfied by implementation evidence and fresh-context audit.
 
 ## Journal
 
 - 2026-05-25: Created ticket with dependency on compression contract and inventory.
+- 2026-05-25: Set status to `active` after inventory ticket closed. Launched first session-kernel compression run.
+- 2026-05-25: Bounded source-edit run compressed `using-loom` from 955 to 722 lines and the requested preload set from 1494 to 1261 lines. Validation passed: Core smoke, Core pack check, `git diff --check`, targeted behavior/source searches, and product-surface leakage search. Recorded evidence at `evidence:20260525-session-kernel-compression-validation`; moved ticket to `review` pending fresh-context audit.
+- 2026-05-25: Fresh-context audit recorded at `audit:20260525-session-kernel-compression-audit`. Verdict: pass with non-blocking risks; no material findings. Audit reran Core smoke, Core pack check, and `git diff --check`, inspected the compressed source, preload surfaces, validation evidence, and product-surface leakage searches.
+- 2026-05-25: Coordinator closed ticket. ACC-001 through ACC-004 are supported by validation evidence and audit; no source follow-up required by audit.

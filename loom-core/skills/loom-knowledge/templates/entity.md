@@ -14,8 +14,7 @@ Applies To: <optional domains, paths, workflows, or remove>
 
 ## Aliases Or Search Terms
 
-<Names, abbreviations, nearby terms, package names, services, or labels future
-agents may search.>
+<Names, abbreviations, nearby terms, packages, services, or labels future agents may search.>
 
 ## Useful Context
 
@@ -23,12 +22,10 @@ agents may search.>
 
 ## Boundaries Or Sources
 
-<Optional. Name related records, code paths, source context, or limits when useful.
-Remove when not useful.>
+<Optional related records, code paths, source context, or limits. Remove when not useful.>
 
 ## Related Records
 
-<Optional. Add records or paths that help future agents orient around this entity.
-Remove when none are useful.>
+<Optional records or paths that help orient around this entity. Remove when none are useful.>
 
 - <record-id or path> - <why it matters>

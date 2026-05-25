@@ -2,132 +2,59 @@
 
 Plans exist to produce child tickets.
 
-Use this question repeatedly:
+Ask repeatedly: what is the next smallest ticket-ready slice that makes meaningful
+progress without widening scope?
 
-> What is the next smallest ticket-ready slice that makes meaningful progress
-> without widening scope?
-
-A slice is ticket-ready when it has an outcome, boundary, evidence target, stop
-condition, and settled or linked design constraints.
-
-Each slice should also have one closure claim. If the slice needs separate claims
-for setup, data behavior, UI structure, deep behavior, migration, review, or final
-verification, split those claims into separate child tickets.
+A slice is ticket-ready when it has one outcome, one boundary, one evidence target,
+one stop condition, and settled or linked design constraints.
 
 ## Good Slices
 
-A good execution unit is:
+A good execution unit is independently legible, small enough to become one ticket,
+grounded in a source record/code path/interface/migration/operator goal, explicit
+about write boundary and design constraints, clear about order or dependency,
+clear about validation and evidence, and able to stop cleanly when a behavior,
+evidence, policy, or sequencing question appears.
 
-- independently legible
-- small enough to become one ticket
-- vertical enough to produce observable value when possible
-- grounded in a source record, code path, interface, migration, or clear operator
-  goal
-- explicit about the likely scope boundary
-- explicit about the system-shape, data-model, state, abstraction, or coherence
-  constraint it preserves or changes when that matters
-- clear about the order reason or dependency
-- clear about validation and evidence expectations
-- able to stop cleanly if a behavior, evidence, policy, or sequencing question
-  appears
+Prefer vertical slices: one narrow path through real behavior, interface, data,
+validation, and user or operator value. Examples include proving one end-to-end
+path, migrating one representative case, implementing one contract-backed
+behavior, or wiring one integration path.
 
-Each execution unit should have a concrete child ticket ID once the plan is saved.
-The child ticket is the execution handle; the plan is the strategy and sequencing
-handle.
+Use horizontal slices only when the layer itself is valuable or a bounded
+prerequisite: migration preparation, compatibility support, validation harness,
+integration seam, behavior-preserving refactor, or contract tightening.
 
-## Prefer Vertical Slices
+## Slicing Modes
 
-Prefer a narrow path through real behavior, interface, data, validation, and user
-or operator value.
+Use a mode only when it clarifies strategy:
 
-A vertical slice can be smaller than the whole feature. It should produce a real,
-observable step through the system.
-
-Examples:
-
-- prove one end-to-end path before broadening coverage
-- migrate one representative case before generalizing the migration
-- implement one contract-backed behavior before expanding variants
-- wire one adapter path before adding every integration
-
-## Use Horizontal Slices Carefully
-
-Horizontal slices are useful when the layer itself is valuable or is a bounded
-prerequisite.
-
-Good horizontal slices include:
-
-- migration preparation
-- compatibility support
-- shared validation harness
-- adapter seam
-- behavior-preserving refactor prerequisite
-- contract or interface tightening before multiple tickets rely on it
-
-A horizontal slice still needs an outcome, boundary, evidence target, and stop
-condition.
-
-## Common Slicing Modes
-
-Use these when they help explain the route:
-
-- tracer bullet: one narrow end-to-end path through the real system
-- contract-first: define or tighten a shared behavior or interface before other
-  tickets rely on it
-- risk-first: prove the riskiest assumption or integration early
-- migration-first: establish compatibility or data movement before dependent
-  changes
-- evidence-first: create or repair validation before implementation would be hard
-  to trust
-- cleanup-only: isolate behavior-preserving simplification so review can separate
-  it from feature work
-
-Use the mode only when it clarifies the strategy.
+- tracer bullet: one narrow end-to-end path
+- contract-first: define or tighten a shared behavior or interface
+- risk-first: prove the riskiest assumption early
+- migration-first: establish safe compatibility or data movement
+- evidence-first: create or repair validation before expansion
+- cleanup-only: isolate behavior-preserving simplification
 
 ## Bad Slices
 
-These are usually not ticket-ready:
+These are not ticket-ready by themselves: backend work, frontend work,
+integration, polish, cleanup, finish remaining items, add tests later, handle edge
+cases, update docs, wire everything together.
 
-- backend work
-- frontend work
-- integration
-- polish
-- cleanup
-- finish remaining items
-- add tests later
-- handle edge cases
-- update docs
-- wire everything together
+They become ticket-ready only when they name outcome, boundary, evidence target,
+stop condition, and design constraints.
 
-They become ticket-ready when they name an outcome, boundary, evidence target,
-stop condition, and the design constraints needed to execute without inventing
-direction.
-
-## Slice Integrity
-
-Keep feature work, bug fixes, refactors, dependency changes, generated-file
-churn, and formatting-only cleanup separate unless the plan explains why bundling
-them is still reviewable.
-
-If one slice needs several independent children, split it.
-
-If a slice cannot be verified independently, make it smaller, change the evidence
-plan, or route back to shaping.
-
-If a slice cannot be expressed as a bounded Ralph run from its child ticket and
-linked records, it is not ready.
-
-## Slicing Check
+## Integrity Check
 
 Before creating or running a child ticket, answer:
 
 - What single closure claim will this ticket make?
-- What should this slice leave out?
-- What files, records, or surfaces form its likely write boundary?
-- What system-shape, data-model, state, abstraction, or coherence constraint must
-  it preserve or change?
-- What evidence can verify this slice without completing later slices?
+- What is excluded?
+- What files, records, or surfaces form the likely write boundary?
+- What system-shape, data-model, state, abstraction, or coherence constraint matters?
+- What evidence verifies this slice without completing later slices?
 - What stop condition returns to shaping, research, specs, or the operator?
-- What later ticket can consume this result without relying on chat history?
+- What later ticket can consume this result without chat history?
 
-If any answer points at multiple independent work products, split the unit.
+Split any slice whose answer points at multiple independent work products.

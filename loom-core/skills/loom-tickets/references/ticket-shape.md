@@ -1,18 +1,12 @@
 # Ticket Shape
 
-A good ticket is prose-rich but not vague.
-
-It contains enough instruction, context, record links, scope, acceptance, current
-state, worker context, and work history for a future agent to launch bounded Ralph
-runs, reconcile worker output, or continue the bounded work unit from the ticket
-and its linked records.
-
-A ticket is not a scratchpad, ambiguous ask, transcript summary, planning
-substitute, or research note.
+A good ticket is prose-rich, bounded, grepable, and actionable. It contains enough
+context for a future agent to launch Ralph, reconcile worker output, or continue
+without chat history.
 
 ## Top Labels
 
-Use these labels near the top:
+Required:
 
 ```text
 ID: ticket:YYYYMMDD-<slug>
@@ -23,206 +17,70 @@ Updated: YYYY-MM-DD
 Risk: low|medium|high - reason
 ```
 
-Add only when useful:
+Optional:
 
 ```text
 Priority: low|medium|high - reason
 Depends On: ticket:YYYYMMDD-<slug>
 ```
 
-`Priority:` is for sequencing pressure, not importance theater.
+`Priority:` is sequencing pressure. `Depends On:` is only for hard prerequisites;
+use `## Related Records` for relevance.
 
-`Depends On:` is for hard prerequisites only. Loose relevance belongs in
-`## Related Records`.
-
-## Risk
-
-Risk must include a reason.
-
-Use:
-
-* `low` when the change is narrow, reversible, and easy to verify
-* `medium` when the change touches meaningful behavior, shared records, important
-  workflow semantics, or non-trivial integration points
-* `high` when the change affects core architecture, safety, data integrity,
-  migration behavior, public contracts, or hard-to-reverse decisions
-
-Raise risk when evidence is hard to gather or failure would be expensive.
+Risk must include a reason: `low` for narrow, reversible, easy checks; `medium` for
+meaningful shared behavior or integration; `high` for core architecture, safety,
+data integrity, public contracts, or hard-to-reverse decisions.
 
 ## Core Sections
 
-Use the default sections unless a ticket has a strong reason to vary:
+Default sections:
 
-* `## Summary`
-* `## Related Records`
-* `## Scope`
-* `## Acceptance`
-* `## Current State`
-* `## Journal`
+- `## Summary`
+- `## Related Records`
+- `## Scope`
+- `## Acceptance`
+- `## Current State`
+- `## Journal`
 
-Remove `## Related Records` only when no existing records materially constrain or
-inform the work.
+Remove `## Related Records` only when no existing record constrains the work.
+`## Journal` stays last.
 
-`## Journal` stays last so agents and tools can append to the bottom.
+## Section Contracts
 
-## Summary
+Summary names the bounded work, why it matters, the intended outcome, context an
+acting agent needs, and the single closure claim.
 
-Summary should answer:
+Related Records lists only records an acting agent should read, with a reason for
+each. Move any durable context that exists only in chat or a prompt into the ticket
+or another owning record.
 
-* what bounded executable work exists
-* why it matters
-* what outcome should be true when complete
-* what context an acting agent needs before launching the first bounded Ralph run
+Scope names what may change, what must not change, likely files/records/systems,
+assumptions, non-goals, and any system-shape, data-model, state, abstraction, or
+coherence constraints. If the first Ralph boundary cannot be identified, the ticket
+is not ready.
 
-It should also make the single closure claim easy to see. If the Summary needs to
-bundle independent stack, data, UI, feature, migration, review, and verification
-outcomes, the work probably belongs in a plan with child tickets.
+For worker or review handoff, durable scope should include likely read scope,
+write scope, constraints, stop conditions, evidence posture, review/audit posture,
+expected worker output, and where that output will be reconciled.
 
-Keep it short, but not empty-calorie. The Summary should make the ticket
-understandable without relying on chat history.
+Acceptance uses observable `ACC-001`, `ACC-002`, ... criteria. Each criterion
+should say what must be true, how evidence will show it, and what audit should
+challenge or why separate audit is not useful. Avoid vague criteria like `works`,
+`cleaned up`, `aligned`, or `handled` unless made observable.
 
-## Related Records
+Current State is the current narrative snapshot: progress, blockers, evidence,
+audit state, residual risk, open decisions, and next likely move. Keep it current
+enough for continuation.
 
-Use `## Related Records` when an acting agent should read specific records before
-work.
-
-Each entry should explain why the record matters, not only name the ID.
-
-Example:
-
-```markdown
-- `<spec-id>` - defines the intended status semantics this ticket must preserve.
-- `<research-id>` - records the tradeoffs behind the chosen implementation route.
-```
-
-Add only records that materially constrain or explain the ticket.
-
-If a record is required to launch the ticket's Ralph runs safely, include it. If
-the ticket depends on context that exists only in chat or a transient prompt, move
-the durable version into the ticket or the appropriate linked record.
-
-## Scope
-
-Scope can be prose, but it needs a real boundary.
-
-Good scope names:
-
-* what may be changed
-* what must not be changed
-* likely files, records, directories, commands, or interfaces involved
-* assumptions the acting agent may rely on
-* non-goals that would otherwise invite scope creep
-* system-shape, data-modeling, state-modeling, abstraction, or coherence
-  constraints that bound the change
-
-If the scope cannot be bounded, the ticket is not ready.
-
-If the ticket would require the acting agent to decide what the design is, what to
-leave out, which data model or state model should exist, or which abstraction
-should carry the work, the ticket is not ready. Shape that truth first or link the
-owning record.
-
-If the first Ralph run boundary cannot be identified from the ticket and linked
-records, the ticket is not ready.
-
-When worker or review handoff is likely, include durable run context in the ticket
-or linked records:
-
-* likely read scope
-* likely write scope
-* relevant constraints and non-goals
-* stop conditions
-* evidence posture
-* review or audit posture
-* expected worker output and where it should be reconciled
-
-## Acceptance
-
-Every ticket has acceptance IDs.
-
-Use `ACC-001`, `ACC-002`, and so on. Cite them outside the ticket as:
-
-```text
-ticket:YYYYMMDD-<slug>#ACC-001
-```
-
-Acceptance criteria should be observable. They should include the evidence needed
-for closure and the audit target, lens, or explicit reason a separate audit would
-not add useful trust.
-
-Good acceptance criteria say what must be true and how that truth will be known.
-
-Avoid vague criteria like:
-
-* works
-* looks good
-* cleaned up
-* improved
-* aligned
-* handled
-* finalized
-
-Those are acceptable only when made observable.
-
-## Current State
-
-Current State is a narrative snapshot of where the work stands now.
-
-It can mention:
-
-* progress
-* blockers
-* evidence
-* audit state
-* residual risk
-* open decisions
-* next likely move
-
-Keep it current enough for a future agent to resume from the ticket and linked
-records.
-
-For a new ticket, Current State should usually say whether the ticket is ready to
-start and what the first likely Ralph run is.
-
-Update it when the real state changes materially.
-
-## Journal
-
-The journal is append-friendly and stays at the bottom.
-
-Append material entries for:
-
-* progress
-* decisions
-* blockers
-* evidence
-* audit results
-* status changes
-* scope or acceptance changes
-* closure or cancellation
-
-Use short dated entries when helpful:
-
-```markdown
-- YYYY-MM-DD: Set status to active and inspected related records before editing.
-- YYYY-MM-DD: Ran `pytest ...`; tests passed. ACC-001 and ACC-002 satisfied.
-```
-
-Do not rewrite history to make the work look cleaner. Correct errors when needed,
-but preserve the material path.
+Journal is append-friendly. Add dated entries for material progress, decisions,
+blockers, evidence, audit, status changes, scope or acceptance changes, and closure
+or cancellation. Do not rewrite history to look cleaner.
 
 ## Closure Shape
 
-A closed ticket should make trust cheap.
+A closed ticket should show what changed, why acceptance is satisfied, what
+evidence exists, what audit happened or why it was not useful, residual risk, and
+why `Status: closed` is truthful.
 
-Before closure, the ticket should show:
-
-* what changed
-* why the change satisfies acceptance
-* what evidence exists
-* what audit happened, or why a separate audit was intentionally not useful
-* what residual risk remains, if any
-* why `Status: closed` is truthful
-
-Close when the ticket, linked records, evidence, and audit state support the
-closure claim.
+Close only when the ticket, linked records, evidence, and audit state support the
+one closure claim.

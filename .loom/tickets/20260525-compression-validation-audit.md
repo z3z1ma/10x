@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-compression-validation-audit
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: medium - validates high-risk protocol compression and may need to route findings back to earlier tickets.
@@ -54,8 +54,11 @@ Stop if audit finds behavior loss, unsupported evidence, product-surface leakage
 
 ## Current State
 
-Ready after `ticket:20260525-playbook-doc-compression-alignment` closes. This is the final proof and audit station for the compression plan.
+Closed. Final validation evidence is recorded at `evidence:20260525-protocol-compression-final-validation`; final audit is recorded at `audit:20260525-protocol-compression-final-audit` with a clear verdict and no material findings. Required validation passed: Core smoke, Core pack check, Playbooks smoke, Playbooks pack check, `git diff --check`, current inventory line-count comparison, targeted behavior/leakage searches, Playbook command sync check, and canonical/Codex agent alignment check. ACC-001 through ACC-004 are satisfied within the recorded limits. Residual risk is limited to live harness/model behavior not exercised by this final source-and-record validation, targeted leakage search limits, and Playbook explicit-only behavior being statically validated rather than live natural-prompt tested.
 
 ## Journal
 
 - 2026-05-25: Created ticket as final validation and audit slice for protocol compression.
+- 2026-05-25: Set status to `active` after Playbook/doc alignment closed.
+- 2026-05-25: Ran final validation. Required commands passed: `npm --prefix loom-core run smoke`, `npm --prefix loom-core run pack:check`, `npm --prefix loom-playbooks run smoke`, `npm --prefix loom-playbooks run pack:check`, and `git diff --check`. Current inventory category count is 14,617 lines across 132 files versus 18,000 baseline, a net reduction of 3,383 lines. Targeted behavior/leakage searches, Playbook command sync, and canonical/Codex agent alignment passed within recorded limits. Evidence recorded at `evidence:20260525-protocol-compression-final-validation`.
+- 2026-05-25: Recorded final audit at `audit:20260525-protocol-compression-final-audit`. Verdict clear within audited scope; no material findings or blocking follow-up. Closed ticket with residual risks explicit.

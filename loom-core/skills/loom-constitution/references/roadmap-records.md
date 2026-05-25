@@ -1,67 +1,32 @@
-# Roadmap Record Process
+# Roadmap Records
 
 Use a roadmap record for durable strategic direction above ordinary plans,
 tickets, and day-to-day progress.
 
-A roadmap records strategic arc, current chapter, and work that should not be
-pulled forward yet.
+A roadmap records strategic arc, current chapter, deferred work, assumptions,
+tensions, and completion or supersession conditions.
 
-## Before You Write
+## Before Writing
 
-Inspect `.loom/constitution/` before creating or changing a roadmap record.
+Inspect `.loom/constitution/`, then read:
 
-Read the active core constitution when it exists:
+- active `constitution:main`, when present
+- relevant active principle fragments
+- existing roadmap records by slug, ID, title, theme, milestone, strategic arc, or sequencing pressure
+- relevant plans or tickets for facts only, not roadmap authority
+- historical roadmap records only for cited strategy, completion history, or needed context
 
-```bash
-grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null || true
-```
+Summarize:
 
-Read active top-level principle fragments when their filename, ID, title, or
-visible content is relevant to the roadmap:
-
-```bash
-find .loom/constitution -maxdepth 1 -name '*.md' -print 2>/dev/null
-grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null || true
-grep -R -i -l '<keyword>' .loom/constitution/*.md 2>/dev/null || true
-```
-
-Search existing roadmap records by slug, ID, title, theme, milestone, strategic
-arc, and sequencing pressure before creating a new record:
-
-```bash
-find .loom/constitution/roadmap -name '*<keyword>*' -print 2>/dev/null
-grep -R -i -l '<keyword>' .loom/constitution/roadmap 2>/dev/null
-grep -R -l '^Status: active' .loom/constitution/roadmap/*.md 2>/dev/null || true
-```
-
-Inspect relevant plans or work records when they can answer factual questions,
-but do not let them own roadmap judgment.
-
-Read superseded, retired, or completed records only when active records point to
-them, when resolving strategic history, or when the roadmap change needs that
-history.
-
-Then summarize to the operator:
-
-- the current strategic direction already recorded
+- current strategic direction
 - the new theme, chapter, or sequencing pressure
-- what appears to be above ordinary planning
-- what might be better handled as a plan, ticket, decision record, spec, or
-  principle fragment
+- what is above ordinary planning
+- what might belong in a plan, ticket, decision, spec, or principle instead
 - whether an existing roadmap should be completed, retired, or superseded
 
-Ask about the first material uncertainty before writing.
+Ask the first material uncertainty before writing.
 
-Good pressure questions:
-
-- What strategic direction should future agents inherit?
-- What chapter are we in now?
-- What should explicitly not be pulled forward yet?
-- Which milestones are strategic signals rather than task completions?
-- What assumption would reorder or invalidate this roadmap?
-- When should this roadmap be completed, superseded, or retired?
-
-## How To Write
+## Shape
 
 Create roadmap records under `.loom/constitution/roadmap/`:
 
@@ -69,10 +34,9 @@ Create roadmap records under `.loom/constitution/roadmap/`:
 .loom/constitution/roadmap/<slug>.md
 ```
 
-Use a slug that encodes the strategic theme clearly enough to support future
-lookup by filename.
+Use `templates/roadmap.md`.
 
-Use plain body labels:
+Required labels:
 
 ```text
 ID: roadmap:<slug>
@@ -82,41 +46,22 @@ Created: <YYYY-MM-DD>
 Updated: <YYYY-MM-DD>
 ```
 
-Write strategic judgment, not execution state.
+Write strategic judgment, not execution state. Useful content: strategic frame,
+current chapter, milestones as signals, bets, assumptions, tensions, non-goals,
+and completion/retirement/supersession conditions.
 
-Useful roadmap sections include:
+## Update Rules
 
-- strategic frame
-- current chapter
-- milestones as strategic signals
-- bets and assumptions
-- tensions
-- non-goals / not yet
-- completion, retirement, or supersession conditions
+- Minor clarifications can be edited in place.
+- Material strategic changes usually need a successor roadmap or explicit supersession.
+- Use `completed` when the strategic arc was fulfilled and remains useful as history.
+- Use `superseded` when a new roadmap changes the strategic arc.
+- Use `retired` when the roadmap no longer applies.
 
-Keep live sequencing, owners, blockers, task status, and progress in plans,
-tickets, or other work records.
-
-## How To Update
-
-Minor clarifications can be edited in place.
-
-Material strategic changes usually deserve a successor roadmap or explicit
-supersession.
-
-Use `completed` when the roadmap's strategic arc has been fulfilled and remains
-useful as history.
-
-Use `superseded` when a new roadmap changes the strategic arc.
-
-Use `retired` when the roadmap no longer applies and should not guide future
-work.
-
-## Short Guardrails
+## Guardrails
 
 - Do not make roadmap milestones into ticket checklists.
-- Do not track day-to-day progress here.
+- Do not track owners, blockers, task status, or day-to-day progress here.
 - Do not use roadmap to avoid writing a concrete plan.
-- Do not silently rewrite strategy after the project changes direction.
+- Do not silently rewrite strategy after direction changes.
 - Do not pull speculative future chapters into active direction.
-- Do not store implementation details unless they define strategic constraints.

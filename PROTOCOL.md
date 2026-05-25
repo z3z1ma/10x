@@ -11,22 +11,9 @@ The shipped protocol lives in `loom-core/skills`.
 
 ## Bootstrap
 
-Loom work starts with `using-loom` unless the active adapter has already loaded the
-same doctrine.
-
-Load order:
-
-1. `skills/using-loom/SKILL.md`
-2. `skills/using-loom/references/00-how-loom-thinks.md`
-3. `skills/using-loom/references/01-activation-discipline.md`
-4. `skills/using-loom/references/02-directory-structure.md`
-5. `skills/using-loom/references/03-shaping-with-humans.md`
-6. `skills/using-loom/references/04-delegating-to-workers.md`
-7. `skills/using-loom/references/05-proving-the-work.md`
-8. `skills/using-loom/references/06-staying-safe.md`
-
-Adapters may preload those files. Preload is transport. The source doctrine stays
-in Core.
+Loom work starts with Core's `using-loom` session kernel unless the active adapter
+has already loaded the same doctrine. Adapters may preload Core files, but preload
+is transport; the source doctrine stays in Core.
 
 Activation is part of the protocol, not just installation. When any material
 chance exists that a Loom surface or skill applies, the agent checks and invokes
@@ -53,9 +40,6 @@ add task-shaped pressure after Loom routing has decided whether the next move is
 shaping, research, spec, plan, ticket, evidence, audit, knowledge, or bounded
 Ralph handoff. When a workflow-specific skill routes to another Loom skill,
 follow the target skill's procedure and guidance completely.
-
-Skill descriptions are the activation surface. They should name triggering
-conditions, not summarize enough workflow that the model can skip the skill body.
 
 The inner loop executes bounded work. Tickets carry live state, durable worker or
 review context, read and write boundaries, stop conditions, and output

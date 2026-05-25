@@ -1,20 +1,16 @@
 # Shaping With Humans
 
-Before execution, the agent and operator shape the work until the next move is
-small, clear, bounded, and honest. This outer loop is the core premise of Loom,
-not a prelude to skip when implementation looks available.
-
-Unless the operator's ask is concrete enough to act without hidden design choices,
-the required first goal is to pinpoint ambiguity with the human. Do not skip this
-because a patch or ticket looks easy to infer.
+Before execution, shape the work until the next move is small, clear, bounded,
+and honest. If the ask is not concrete enough to act without hidden design
+choices, pinpoint the ambiguity with the operator before patching, ticketing, or
+launching Ralph.
 
 ## Concrete Ask Gate
 
-A fuzzy ask is not an implementation brief. Do not collapse broad, aspirational,
-or under-specified requests into execution before the shaping work is done.
+A fuzzy ask is not an implementation brief.
 
-Treat a request as concrete only when these are already clear enough to act on
-without choosing direction silently:
+Treat a request as concrete only when these are clear enough to act without
+choosing direction silently:
 
 - operator or user outcome
 - target surface, code area, workflow, or artifact
@@ -25,8 +21,8 @@ without choosing direction silently:
 - evidence posture or observable proof path
 - ticket, plan, spec, research, or other next Loom surface
 
-If any of those are missing and would materially change what gets built, the next
-move is mandatory shaping:
+If any of those are missing and would materially change what gets built, mandatory
+shaping is next:
 
 - inspect source and Loom records before asking what they already answer
 - name the specific ambiguity or hidden choice
@@ -34,17 +30,15 @@ move is mandatory shaping:
 - recommend a path when the tradeoff is clear
 - preserve the resolved truth in the surface that owns it
 
-Concrete enough does not mean the operator supplied every implementation detail.
-It means the remaining choices are local execution choices inside an accepted
-direction, not hidden direction, system-shape, data-model, state, or coherence
-decisions.
+Concrete enough means the remaining choices are local execution choices inside an
+accepted direction.
 
 ## Outer Loop Posture
 
 Inspect first. Do not ask the operator to restate what the repository or Loom
 records can answer.
 
-Then summarize only what gives the operator leverage:
+Then summarize only leverage:
 
 - what you found
 - what you think the real problem is
@@ -53,17 +47,10 @@ Then summarize only what gives the operator leverage:
 - what options exist
 - which path you recommend and why
 
-Compress the context into a useful decision point.
-
 ## Shape Vague Work Into Decisions
 
-Broad requests are normal outer-loop inputs. Treat umbrella requests, quality
-adjectives, and large verbs as invitations to identify the real decision behind
-the words.
-
-The objective is not to collect enough text to justify immediate implementation.
-The objective is to locate the product, behavior, system-shape, workflow,
-evidence, or scope ambiguity that would make an implementation guess unsafe.
+Broad requests are outer-loop inputs. Locate the product, behavior, system-shape,
+workflow, evidence, or scope ambiguity that would make implementation a guess.
 
 Shape the hard parts explicitly:
 
@@ -74,29 +61,15 @@ Shape the hard parts explicitly:
 - what would make the design incoherent even if the code runs
 - which surface should own each resulting decision before execution depends on it
 
-Before writing durable artifacts or executing from them, shape the decision points
-that affect the work:
-
-- the user or operator outcome
-- the quality bar and non-examples
-- the meaningful non-goals
-- the source, product, policy, or system constraints
-- the domain model, data relationships, state relationships, and abstraction boundaries
-- the evidence that would make success believable
-- the ticket boundary or plan decomposition that would make execution bounded
-
 When several directions are plausible, offer a small set of materially different
-directions, name the tradeoff, and recommend one. Preserve the selected direction
-in the surface that owns it.
+directions, name the tradeoff, recommend one, and preserve the selected direction
+in its owning surface.
 
 ## Pressure-Test Conversationally
 
-Pressure-test the work until the next move is shaped well enough to trust.
-
-Ask one material question when one answer would unblock good work.
-
-Offer two or three materially different options when the choice is not obvious.
-Name the tradeoff. Recommend a path.
+Ask one material question when one answer would unblock good work. Offer two or
+three materially different options when the choice is not obvious. Name the
+tradeoff. Recommend a path.
 
 Good pressure questions sound like:
 
@@ -131,33 +104,26 @@ Stay in the outer loop when any of these are unclear:
 - operator authority for a consequential choice
 - what `better`, `done`, `simple`, or similar shorthand excludes
 
-Do not jump from a fuzzy request to implementation before the direction-setting
-choices are shaped.
-
 If the work cannot yet be handed to a future agent with clear scope, constraints,
 evidence expectations, and stop conditions, it is still outer-loop work.
 
 ## Shape Toward The Right Surface
-
-The outer loop should end by routing the durable truth.
 
 If the operator makes a durable decision, preserve it in the surface that can
 maintain it. Do not leave the real decision only in chat.
 
 Use the surface that owns the truth:
 
-- constitution for durable project judgment, policy, principle, constraint,
-  precedent, ADR shape, or roadmap direction
+- constitution for durable project judgment, policy, principle, constraint, precedent, ADR shape, or roadmap direction
 - research for investigation, comparison, synthesis, rejected paths, or null results
 - specs for intended behavior, requirements, scenarios, interfaces, or invariants
 - plans for operator-shaped strategy across multiple tickets or execution units
 - tickets for bounded executable work
 - evidence for durable observations
 - audit for Ralph-backed adversarial review
-- knowledge for preferences, procedures, reusable accepted understanding, and
-  retrieval cues
+- knowledge for preferences, procedures, reusable accepted understanding, and retrieval cues
 
-When no durable truth changed, move forward with the smallest useful next step.
+When no durable truth changed, take the smallest useful next step.
 
 ## Ready To Execute
 
@@ -173,7 +139,5 @@ For complex work, readiness means the next execution unit is ticket-ready. If th
 work needs several independent closure stories, create or update the plan and
 child tickets before implementation.
 
-If that is not true, keep shaping.
-
-When it is true, stop shaping and route the work into the appropriate surface or
-skill.
+If that is not true, keep shaping. When it is true, route to the appropriate
+surface or skill and execute within that boundary.

@@ -1,65 +1,32 @@
-# Decision Record Process
+# Decision Records
 
-Use a decision record for an architectural or policy choice that future agents
-should cite as precedent.
+Use a decision record for an architectural or policy choice future agents should
+cite as precedent.
 
-Decision records are Loom's ADR shape. They preserve architectural and policy
-choices with rejected alternatives, consequences, accepted risks, and revisit
-conditions.
+Decision records are Loom's ADRs. They preserve context, the chosen path,
+rejected alternatives, consequences, accepted risks, and revisit conditions.
 
-## Before You Write
+## Before Writing
 
-Inspect `.loom/constitution/` before creating or changing a decision record.
+Inspect `.loom/constitution/`, then read:
 
-Read the active core constitution when it exists:
+- active `constitution:main`, when present
+- relevant active principle fragments
+- existing decisions by slug, ID, title, concept, module, subsystem, policy, or tradeoff
+- historical decisions only for cited precedent or needed history
 
-```bash
-grep -R -l '^ID: constitution:main' .loom/constitution/*.md 2>/dev/null || true
-```
+Summarize:
 
-Read active top-level principle fragments when their filename, ID, title, or
-visible content is relevant to the choice:
+- active precedent
+- the choice being made
+- real alternatives
+- accepted consequences or tradeoffs
+- why this is an ADR instead of a note, spec, plan, ticket, roadmap, principle, or core amendment
+- whether an existing decision should be superseded
 
-```bash
-find .loom/constitution -maxdepth 1 -name '*.md' -print 2>/dev/null
-grep -R -l '^Status: active' .loom/constitution/*.md 2>/dev/null || true
-```
+Ask the first material uncertainty before writing.
 
-Search existing decisions by slug, ID, title, concept, module, subsystem, policy,
-and tradeoff before creating a new record:
-
-```bash
-find .loom/constitution/decisions -name '*<keyword>*' -print 2>/dev/null
-grep -R -i -l '<keyword>' .loom/constitution/decisions 2>/dev/null
-grep -R -l '^Status: active' .loom/constitution/decisions/*.md 2>/dev/null || true
-```
-
-Read superseded or retired decisions only when active records point to them, when
-resolving precedent, or when the new choice needs that history.
-
-Then summarize to the operator:
-
-- the active precedent that already exists
-- the choice that appears to be needed
-- the real alternatives
-- the consequence or tradeoff being accepted
-- why this deserves a decision record rather than a note, spec, plan, ticket,
-  knowledge record, roadmap, principle fragment, or core amendment
-- whether an existing decision should be superseded instead of edited
-
-Ask about the first material uncertainty before writing.
-
-Good pressure questions:
-
-- What choice are we actually making?
-- What alternatives were genuinely tempting?
-- Why is the chosen path better enough to become precedent?
-- What consequence are we accepting?
-- What future agent mistake should this prevent?
-- What new evidence would make us supersede this decision?
-- Is this intended behavior rather than constitutional precedent?
-
-## How To Write
+## Shape
 
 Create records under `.loom/constitution/decisions/` with numbered filenames:
 
@@ -67,10 +34,9 @@ Create records under `.loom/constitution/decisions/` with numbered filenames:
 .loom/constitution/decisions/decision-0001-<slug>.md
 ```
 
-Use the next available number. Use a slug that encodes the decision topic clearly
-enough to support future lookup by filename.
+Use the next available number and `templates/decision.md`.
 
-Use plain body labels:
+Required labels:
 
 ```text
 ID: decision:0001
@@ -80,35 +46,20 @@ Created: <YYYY-MM-DD>
 Updated: <YYYY-MM-DD>
 ```
 
-The record must make these clear enough for a future agent to inherit the
-decision without chat history:
+The record must make context, decision, rejected alternatives, consequences,
+accepted risks, and supersession conditions clear enough to inherit without chat
+history.
 
-- context
-- decision
-- rejected alternatives
-- consequences
-- accepted risks
-- revisit or supersession conditions
+## Update Rules
 
-Add `## Related` only when explicit links materially help future agents.
+- Fix typos, broken links, and clarification errors in place.
+- If the actual choice changes, create a new decision and mark the old one `superseded` with the successor.
+- Do not rewrite old decisions to pretend the project always believed the new thing.
 
-## How To Update
+## Guardrails
 
-Decision records are historical precedent.
-
-Fix typos, broken references, and clarification errors in place.
-
-If the actual choice changes, create a new decision record and mark the old record
-`superseded` with a pointer to the successor.
-
-Do not rewrite an old decision to pretend the project always believed the new
-thing.
-
-## Short Guardrails
-
-- Do not write an ADR for every preference.
+- Do not write ADRs for every preference.
 - Do not omit rejected alternatives.
 - Do not use decisions for intended behavior that belongs in specs.
 - Do not let README docs, code comments, specs, plans, or tickets act as ADRs.
 - Do not bury unresolved disagreement in confident prose.
-- Do not edit historical decisions when supersession is the honest shape.

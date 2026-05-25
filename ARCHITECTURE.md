@@ -72,32 +72,13 @@ record directory of its own.
 ## Bootstrap
 
 `using-loom` is mandatory before Loom work unless the adapter has already loaded
-the same files with clear source markers.
-
-Load order:
-
-1. `loom-core/skills/using-loom/SKILL.md`
-2. `loom-core/skills/using-loom/references/00-how-loom-thinks.md`
-3. `loom-core/skills/using-loom/references/01-activation-discipline.md`
-4. `loom-core/skills/using-loom/references/02-directory-structure.md`
-5. `loom-core/skills/using-loom/references/03-shaping-with-humans.md`
-6. `loom-core/skills/using-loom/references/04-delegating-to-workers.md`
-7. `loom-core/skills/using-loom/references/05-proving-the-work.md`
-8. `loom-core/skills/using-loom/references/06-staying-safe.md`
-
-OpenCode exposes `loom-core/skills` through `config.skills.paths` and injects the
-stripped `using-loom` doctrine plus ordered references into the first user message
-with `experimental.chat.messages.transform`. Claude, Codex, Cursor, and Gemini use
-their native manifest, hook, or static context surfaces where those are available.
-
-Preload is convenience. If preload is absent, the agent loads `using-loom` from
+the same Core session kernel with clear source markers. Adapter preload is
+convenience and transport; if preload is absent, the agent loads `using-loom` from
 Core.
 
-Preload alone is not the behavior. `using-loom` contains the first-action routing
-loop that tells the agent to check likely Loom surfaces and skills before answering,
-asking clarifying questions, inspecting files, editing, creating tickets, or
-launching Ralph when Loom may apply. Static smoke checks guard that Core
-activation doctrine remains present, while Playbook package checks verify explicit
+Preload alone is not the behavior. Core owns the first-action routing loop that
+checks likely Loom surfaces and skills before questions, inspection, edits,
+tickets, or Ralph when Loom may apply. Playbook package checks verify explicit
 macro registration rather than natural-prompt autoactivation.
 
 ## Record Grammar

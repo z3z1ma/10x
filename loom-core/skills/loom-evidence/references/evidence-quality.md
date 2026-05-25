@@ -1,115 +1,51 @@
 # Evidence Quality
 
-Good evidence makes claims harder to overstate.
-
-It records what was observed, how it was observed, which stable claims it supports
-or challenges when applicable, and what the observation does not establish.
+Good evidence makes overclaiming harder. It records what was observed, how, what
+stable claim it supports or challenges when applicable, and what it does not show.
 
 ## Observation Before Inference
 
-Write the observation first:
-
-- command output
-- test result
-- file diff or structural scan
-- screenshot or visual artifact
-- log excerpt
-- reproduction result
-- manual inspection result
-- external artifact
+Write the observation first: command output, test result, diff or structural scan,
+screenshot, log excerpt, reproduction result, manual inspection, or artifact.
 
 Then write only the bounded support or challenge justified by that observation.
-
-Evidence may say an observation supports or challenges a claim. It does not say
-the ticket is accepted, audit passes, behavior changed, or policy is decided.
+Evidence may support or challenge a claim; it does not accept a ticket, pass audit,
+decide behavior, or set policy.
 
 ## Claim Scope
 
-Evidence is claim-scoped.
-
-A passing unit test supports the behavior covered by that test. A successful
+Evidence is claim-scoped. A passing unit test supports the covered behavior. A
 manual reproduction supports that reproduction. A clean typecheck supports type
-correctness. A screenshot supports what is visible in that screenshot.
+correctness. A screenshot supports what is visible. Name the boundary.
 
-Good evidence names the boundary of support rather than letting a future agent
-infer it.
+Use stable IDs in `## What This Shows`. Say whether each claim is supported,
+challenged, or partially supported and which observation produced that judgment. If
+no stable claim exists, omit claim language or call it standalone.
 
-## What This Shows
+## Limits And Freshness
 
-Use stable IDs when evidence supports or challenges claims.
+`## What This Does Not Show` should name missing scenarios, environments,
+unverified claims, unclear expected results, and recheck triggers.
 
-Good entries say:
-
-- the claim ID
-- what part of the claim was observed
-- whether the observation supports, challenges, or partially supports it
-- which artifact or procedure produced that support or challenge
-
-If no stable claim ID exists, omit claim language or state that the record is a
-standalone observation.
-
-## What This Does Not Show
-
-Limitations are part of evidence quality.
-
-Name what was not checked, what the procedure cannot prove, which environments or
-scenarios are absent, and what would require rechecking.
-
-When the expected result or claim scope is unclear, record that limitation rather
-than inventing a cleaner conclusion.
-
-## Freshness
-
-Freshness is relationship to the source, records, environment, dependency state,
-and procedure observed.
-
-For claim-linked evidence, name enough source state and procedure detail that a
-future agent can decide whether the observation still applies.
-
-Common recheck triggers:
-
-- source files or records cited by the evidence changed
-- dependencies, environment, or harness behavior changed
-- ticket, spec, audit, or acceptance scope changed
-- newer evidence observed the same claim from a later source state
-- audit challenged the observation or its interpretation
-
-Avoid rerunning successful checks when nothing relevant has changed. Duplicate
-output is not fresher evidence.
+Evidence freshness depends on the source, records, environment, dependency state,
+and procedure observed. Recheck when cited source or record state changes,
+environment or harness behavior changes, acceptance scope changes, newer evidence
+exists, or audit challenges the observation.
 
 ## Dossiers
 
-An Evidence Dossier composes multiple observations.
-
-The dossier should keep mixed results visible. If one observation supports a claim
-and another challenges or limits it, say both.
-
-The consuming ticket, audit, review, or other surface decides sufficiency.
-
-Use dossiers for validation stories, not live progress logs.
+A dossier composes multiple observations and keeps mixed results visible. The
+consuming ticket, audit, or review decides sufficiency.
 
 ## Sensitive Data
 
-Do not place secrets, credentials, tokens, private keys, passwords, sensitive
-personal data, or raw customer data into evidence records or artifact stores.
-
-When sensitive material matters, record the non-sensitive fact and omit or redact
-the value.
-
-Good examples:
-
-- `credential-dependent behavior reproduced; secret value redacted`
-- `API key was present in local environment; value not persisted`
-- `customer-specific value omitted from artifact excerpt`
-- `raw customer payload excluded; structural property summarized`
+Do not put secrets, credentials, tokens, private keys, passwords, sensitive
+personal data, or raw customer data in evidence or artifacts. Record the
+non-sensitive fact and omit or redact the value.
 
 ## Quality Checks
 
-Before relying on evidence, ask:
-
-- Is the observation clearly separated from inference?
-- Is the artifact path or excerpt enough to interpret it?
-- Are claim links stable when support or challenge is claimed?
-- Does `## What This Does Not Show` prevent overclaiming?
-- Is the source or procedure detail strong enough for the claim risk?
-- Would a future agent know when to recheck it?
+Before relying on evidence, ask: is observation separate from inference; are
+artifact paths or excerpts sufficient; are claim links stable; do limits prevent
+overclaiming; is source/procedure detail proportional; would a future agent know
+when to recheck?

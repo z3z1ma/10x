@@ -22,17 +22,14 @@ Applies To: <paths, modules, services, packages, or domains>
 
 ## Validation And Risk
 
-<Relevant checks, risky areas, coupling, generated files, persistence boundaries,
-or audit/evidence expectations.>
+<Relevant checks, risks, coupling, generated files, persistence boundaries, or audit/evidence expectations.>
 
 ## Boundaries Or Sources
 
-<Optional. Name source records, last inspection context, or limits when useful.
-Remove when not useful.>
+<Optional source records, last inspection context, or limits. Remove when not useful.>
 
 ## Related Records
 
-<Optional. Add records or paths that help future agents navigate this area. Remove
-when none are useful.>
+<Optional records or paths that help navigate this area. Remove when none are useful.>
 
 - <record-id or path> - <why it matters>

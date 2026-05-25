@@ -22,17 +22,14 @@ Applies To: <optional paths, tools, domains, workflows, or remove>
 
 ## Stop Or Escalate When
 
-<Conditions that mean the procedure should stop, route to another Loom surface, or
-ask the operator.>
+<When to stop, route to another Loom surface, or ask the operator.>
 
 ## Boundaries Or Sources
 
-<Optional. Name related records, code paths, evidence, audit, research, or other
-grounding when useful. Remove when not useful.>
+<Optional records, code paths, evidence, audit, research, or grounding. Remove when not useful.>
 
 ## Related Records
 
-<Optional. Add records or paths that help future agents use this procedure. Remove
-when none are useful.>
+<Optional records or paths that help use this procedure. Remove when none are useful.>
 
 - <record-id or path> - <why it matters>

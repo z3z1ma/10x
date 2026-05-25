@@ -17,11 +17,8 @@ Common routes use these Loom skills for durable records or follow-up workflow:
 `loom-tickets`, `loom-ralph`, `loom-evidence`, `loom-audit`, `loom-plans`,
 `loom-retrospective`, and `loom-knowledge`.
 
-Ensure the `using-loom` skill is loaded before applying this workflow.
-
-When routing to any named Loom skill, follow that skill's procedure and guidance
-completely. This playbook adds workflow pressure; it does not shorten the target
-skill's requirements.
+Follow any named Loom skill fully. This playbook adds workflow pressure; it does
+not shorten target-skill requirements.
 
 This workflow does not replace ticket scope, evidence, or audit. Execute only
 ticket-ready slices, and run delegated slices through ticket-owned Ralph runs.

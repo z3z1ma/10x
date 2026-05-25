@@ -5,77 +5,67 @@ description: "Use when reusable understanding, preferences, procedures, concepts
 
 # loom-knowledge
 
-Knowledge is Loom's reusable understanding and retrieval surface.
-
-It preserves current preferences, procedures, concepts, references,
-troubleshooting patterns, codebase atlases, entity notes, and other knowledge
-future agents should be able to find quickly.
+Knowledge is Loom's reusable understanding and retrieval station: current
+preferences, procedures, concepts, references, troubleshooting, atlases, entities,
+and notes future agents should find and apply quickly.
 
 ## Use This Skill When
 
-Use this skill when:
+Use this skill when any of these should survive the session:
 
-- a preference should shape future collaboration
-- a repeatable procedure should be easy to reuse
-- accepted explanation should be easier to read than its source records
-- a troubleshooting pattern should prevent repeated diagnosis
-- a codebase, module, tool, service, package, person, or recurring topic needs a
-  retrieval record
-- a small cue should help future agents find relevant records, code, tools, or
-  domain context
-- a knowledge record is outdated, duplicated, misleading, too broad, poorly named,
-  or no longer useful
+- a preference should shape future collaboration, execution, or review
+- a repeatable procedure, accepted explanation, troubleshooting path, atlas,
+  reference, entity note, or retrieval cue should survive the session
+- a future agent will likely search by task, path, tool, error, workflow, domain
+  term, or record ID
+- existing knowledge is stale, duplicated, misleading, too broad, badly named, or
+  no longer useful
 
-Create knowledge when future retrieval, reuse, orientation, diagnosis, or
-collaboration would be materially better with a current record.
-
-Small one-off notes, chat residue, live execution details, and unresolved
-investigations belong elsewhere or nowhere.
+Knowledge must improve future retrieval, reuse, orientation, diagnosis, or
+collaboration. Do not store one-off notes, chat residue, live state, unresolved
+investigation, raw evidence, audit verdicts, behavior contracts, or secrets here.
 
 ## Dispatch
 
-If creating or materially updating knowledge:
+Create or materially update:
 
 - read `references/knowledge-shape.md`
 - read `references/retrieval-and-loading.md`
 - read `references/maintaining-knowledge.md`
 - search existing knowledge before creating a new record
-- choose a keyword-rich slug that future agents are likely to search
+- choose a keyword-rich slug, title, and `Triggers:` future agents are likely to
+  search
 - choose the narrowest useful `Type: Knowledge <Subtype>`
-- include `Triggers:` that match likely task words
-- include `Applies To:` when path, domain, tool, or workflow scope matters
+- include `Applies To:` when path, domain, tool, workflow, or context scope matters
 - use the matching template from `templates/`
 
-If loading knowledge for a session or task:
+Load:
 
-- after `using-loom` doctrine, load active `Type: Knowledge Preference` records
-- for task-specific work, search slugs, titles, `Triggers:`, `Applies To:`, and
-  body text using words from the task, ticket, paths, tools, errors, and domain
-  concepts
+- after `using-loom` doctrine, eagerly load active `Type: Knowledge Preference`
+  records; this type label is the loading signal
+- for task work, search slugs, titles, `Triggers:`, `Applies To:`, and body text
+  using words from the task, ticket, paths, tools, errors, and domain concepts
 - read likely hits only when they can change the work
 - follow related records or code paths when they are needed to apply the knowledge
   safely
 
-If pruning or correcting knowledge:
+Maintain:
 
 - update in place when the same topic remains useful
 - rename when the slug hurts retrieval, then repair refs with grep
 - merge records that serve the same retrieval job
 - split records that serve unrelated retrieval jobs
-- delete records that no longer help future retrieval, current practice, or safe
-  reuse
+- delete obsolete, misleading, duplicate, unverifiable, or low-value records
 
-If only finding or summarizing knowledge:
+Find or summarize:
 
 - inspect `.loom/knowledge/`
 - report what the knowledge record says
 - preserve the scope and limits the knowledge record states
 
-## Finding Knowledge
+## Finding
 
-Knowledge records live flat under `.loom/knowledge/`.
-
-Useful starting points:
+Knowledge records live flat under `.loom/knowledge/`. Useful queries:
 
 ```bash
 find .loom/knowledge -maxdepth 1 -name '*.md' -print 2>/dev/null | sort
@@ -86,44 +76,20 @@ grep -R '^Triggers:' .loom/knowledge 2>/dev/null || true
 grep -R '^Applies To:' .loom/knowledge 2>/dev/null || true
 ```
 
-A good search combines filename slugs, titles, trigger words, path names, domain
-terms, tool names, error text, and known record IDs.
+Search with slugs, titles, triggers, path names, domain terms, tool names, error
+text, and record IDs.
 
-## Knowledge IDs And Filenames
+## IDs And Shape
 
-Use stable, keyword-rich IDs:
+Use stable, keyword-rich IDs and matching filenames:
 
 ```text
 knowledge:<keyword-rich-slug>
-```
-
-Use matching filenames without the `knowledge:` prefix:
-
-```text
 .loom/knowledge/<keyword-rich-slug>.md
 ```
 
-Slugs are retrieval tools, not just identifiers. Choose words future agents are
-likely to search.
-
-Prefer:
-
-- `operator-preferences-review-style`
-- `ticket-closure-audit-procedure`
-- `react-query-cache-invalidation-reference`
-- `checkout-timeout-troubleshooting`
-
-Avoid:
-
-- `notes`
-- `misc`
-- `workflow`
-- `person-name`
-- `new-thing`
-
-## Record Shape
-
-Knowledge uses plain body labels near the top:
+Slugs are retrieval tools. Prefer likely search words, not `notes`, `misc`,
+`workflow`, `person-name`, or `new-thing`. Top labels:
 
 ```text
 ID: knowledge:<keyword-rich-slug>
@@ -135,28 +101,15 @@ Triggers: comma-separated retrieval words and task cues
 Applies To: optional paths, domains, tools, workflows, or contexts
 ```
 
-Use only `Status: active`.
+Use only `Status: active`; otherwise update, rename with refs repaired, merge,
+split, or delete. Starter types: `Knowledge Preference`, `Knowledge Procedure`,
+`Knowledge Concept`, `Knowledge Reference`, `Knowledge Troubleshooting`,
+`Knowledge Atlas`, `Knowledge Entity`, and `Knowledge Note`. New subtypes are
+allowed only when they improve retrieval or use.
 
-If a knowledge record is no longer active, update it, rename it with refs
-repaired, merge it into a better record, or delete it.
+## Invariants
 
-Starter types:
-
-- `Knowledge Preference`
-- `Knowledge Procedure`
-- `Knowledge Concept`
-- `Knowledge Reference`
-- `Knowledge Troubleshooting`
-- `Knowledge Atlas`
-- `Knowledge Entity`
-- `Knowledge Note`
-
-New `Knowledge <Subtype>` labels are allowed when they have a real retrieval job.
-Use `Knowledge Note` when no sharper subtype improves retrieval or use.
-
-## Knowledge Invariants
-
-Every knowledge record should preserve these invariants:
+Every record should be:
 
 - current enough to use
 - topic-sized rather than sprawling
@@ -164,18 +117,33 @@ Every knowledge record should preserve these invariants:
 - `Type:` specific enough to guide loading and use
 - optional `Applies To:` when path, domain, tool, or workflow scope matters
 - provenance, boundary, or related-record notes when they make use safer
-- no secrets, credentials, private keys, tokens, passwords, or sensitive personal
-  data
+- free of secrets, credentials, private keys, tokens, passwords, and sensitive
+  personal data
 
 Preferences are the eager-loaded knowledge type. Other knowledge is retrieved when
 the task, path, tool, error, record, or domain makes it relevant.
+
+## Stop Conditions
+
+Stop or route elsewhere when the proposed record would really change:
+
+- policy, principle, decision, or hard constraint -> constitution
+- intended behavior, requirement, scenario, interface, or invariant -> specs
+- live execution state, blocker, finding disposition, or closure -> tickets
+- multi-ticket sequencing, rollout, or recovery strategy -> plans
+- observation, output, reproduction, log, screenshot, or validation result -> evidence
+- Ralph review finding or verdict -> audit
+- investigation, tradeoff, source synthesis, rejected path, or null result -> research
+
+If knowledge conflicts with source reality or another active record, inspect enough
+context to identify the stale artifact. Do not smooth over the conflict.
 
 ## Done Means
 
 Knowledge work is done when:
 
 - the record can be found by likely task words
-- the type, triggers, slug, and title make retrieval cheaper
+- the slug, title, type, `Triggers:`, and `Applies To:` make retrieval cheaper
 - the prose is useful on its own
 - applicability and limits are clear enough to prevent overclaiming
 - outdated or duplicate knowledge was updated, merged, renamed with refs repaired,

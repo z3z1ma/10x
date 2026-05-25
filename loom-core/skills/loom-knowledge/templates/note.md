@@ -22,12 +22,10 @@ Applies To: <optional paths, domains, tools, workflows, or remove>
 
 ## Boundaries Or Sources
 
-<Optional. Name related records, limits, code paths, or source context when useful. Remove when
-not useful.>
+<Optional related records, limits, code paths, or source context. Remove when not useful.>
 
 ## Related Records
 
-<Optional. Add records or paths that materially help future agents use this note.
-Remove when none are useful.>
+<Optional records or paths that materially help use this note. Remove when none are useful.>
 
 - <record-id or path> - <why it matters>

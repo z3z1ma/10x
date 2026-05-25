@@ -2,7 +2,7 @@
 
 ID: plan:20260525-loom-protocol-compression
 Type: Plan
-Status: open
+Status: completed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: high - compresses core model-visible doctrine that controls routing, execution, evidence, audit, and future Loom behavior across adapters.
@@ -146,8 +146,14 @@ Validation evidence and fresh-context audit support the compression closure clai
 
 ## Current State
 
-Open. The compression contract spec and child tickets have been created. Next move is `ticket:20260525-compression-contract-inventory`, which should confirm the inventory and baseline before source compression begins.
+Completed. All child tickets are closed: inventory, session kernel, record skill kernels, agent prompt kernels, Playbook/doc alignment, and final validation/audit. Final evidence is recorded at `evidence:20260525-protocol-compression-final-validation`; final audit is recorded at `audit:20260525-protocol-compression-final-audit` with a clear verdict and no material findings. The compression reduced the baseline inventory-category corpus from 18,000 to 14,617 lines across the same 132-file category set while preserving required protocol behaviors within the validated source/record scope. Residual risks remain explicit: live harness/model behavior was not exhaustively simulated, targeted leakage searches are not semantic proof, and Playbook explicit-only behavior was statically validated rather than live natural-prompt tested.
 
 ## Journal
 
 - 2026-05-25: Created plan from `constitution:main`, `roadmap:loom-mill`, `research:20260524-loom-mill-software-factory`, and `spec:loom-protocol-compression` with six child execution units.
+- 2026-05-25: Closed inventory baseline ticket and activated session-kernel compression.
+- 2026-05-25: Closed session-kernel compression after validation and audit; activated record skill kernels.
+- 2026-05-25: Closed record skill kernels after three bounded compression runs, validation evidence, and audit; activated agent prompt kernels.
+- 2026-05-25: Closed agent prompt kernels after validation and audit; activated Playbook/doc compression alignment.
+- 2026-05-25: Closed Playbook/doc compression alignment after validation and audit; activated final validation/audit.
+- 2026-05-25: Completed final validation and audit. Evidence `evidence:20260525-protocol-compression-final-validation` records required command results, final line counts, scoped diff, behavior/leakage searches, generated command sync, and agent alignment checks. Audit `audit:20260525-protocol-compression-final-audit` records a clear verdict with no material findings. Marked plan completed with residual risks explicit.
