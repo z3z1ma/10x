@@ -81,7 +81,7 @@
 
   <label class="block text-xs font-medium text-slate-400">
     Arguments
-    <textarea bind:value={argsText} rows="5" class="mt-1 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-xs text-slate-100 outline-none focus:border-cyan-500" placeholder="One argument per line. Use {ticket_path} for the ticket file."></textarea>
+    <textarea bind:value={argsText} rows="5" class="mt-1 w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-xs text-slate-100 outline-none focus:border-cyan-500" placeholder="One argument per line. Use &#123;ticket_path&#125; for the ticket file."></textarea>
   </label>
 
   <label class="block text-xs font-medium text-slate-400">
