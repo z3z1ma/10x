@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
+import shlex
+import sys
 from dataclasses import asdict
 from pathlib import Path
 
@@ -121,8 +124,54 @@ async def pause_workstation(request: Request) -> JSONResponse:
     return await _control_workstation(request, request.path_params["ticket_id"], WorkstationStatus.PAUSED)
 
 
+async def resume_workstation(request: Request) -> JSONResponse:
+    ticket_id = request.path_params["ticket_id"].removeprefix("ticket:")
+    engine = request.app.state.workstations.get(ticket_id)
+    if engine is None:
+        return JSONResponse({"error": "workstation not found"}, status_code=404)
+    if engine.state.status != WorkstationStatus.PAUSED:
+        return JSONResponse({"error": "workstation is not paused"}, status_code=409)
+
+    try:
+        state = await engine.resume()
+    except RuntimeError as error:
+        return JSONResponse({"error": str(error)}, status_code=409)
+
+    await _publish_workstation(request, ticket_id, state)
+    task = asyncio.create_task(_monitor_workstation(request.app.state.store, ticket_id, engine))
+    request.app.state.workstation_tasks[ticket_id] = task
+    return JSONResponse(_state_payload(state))
+
+
 async def stop_workstation(request: Request) -> JSONResponse:
     return await _control_workstation(request, request.path_params["ticket_id"], WorkstationStatus.STOPPED)
+
+
+async def edit_workstation_ticket(request: Request) -> JSONResponse:
+    ticket_id = request.path_params["ticket_id"].removeprefix("ticket:")
+    ticket_path = _ticket_path(request, ticket_id)
+    if not ticket_path.exists():
+        return JSONResponse({"error": "ticket not found"}, status_code=404)
+
+    editor = os.environ.get("EDITOR")
+    if editor:
+        command = [*shlex.split(editor), str(ticket_path)]
+    elif sys.platform == "darwin":
+        command = ["open", str(ticket_path)]
+    else:
+        return JSONResponse({"error": "EDITOR is not configured"}, status_code=409)
+
+    try:
+        await asyncio.create_subprocess_exec(
+            *command,
+            cwd=_workspace_root(request),
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+    except OSError as error:
+        return JSONResponse({"error": f"failed to open editor: {error}"}, status_code=500)
+
+    return JSONResponse({"path": str(ticket_path)})
 
 
 async def _control_workstation(request: Request, ticket_id: str, target_status: WorkstationStatus) -> JSONResponse:

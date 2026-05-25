@@ -8,7 +8,15 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 from starlette.routing import Route, WebSocketRoute
 
-from loom_mill.api.workstation import get_harness_config, pause_workstation, put_harness_config, start_workstation, stop_workstation
+from loom_mill.api.workstation import (
+    edit_workstation_ticket,
+    get_harness_config,
+    pause_workstation,
+    put_harness_config,
+    resume_workstation,
+    start_workstation,
+    stop_workstation,
+)
 from loom_mill.api.ws import MillWebSocket
 from loom_mill.state import MillStateStore
 from loom_mill.watcher import LoomWatcher
@@ -49,7 +57,9 @@ def create_app() -> Starlette:
             Route("/api/config/harness", get_harness_config, methods=["GET"]),
             Route("/api/config/harness", put_harness_config, methods=["PUT"]),
             Route("/api/workstation/start", start_workstation, methods=["POST"]),
+            Route("/api/workstation/{ticket_id}/edit", edit_workstation_ticket, methods=["POST"]),
             Route("/api/workstation/{ticket_id}/pause", pause_workstation, methods=["POST"]),
+            Route("/api/workstation/{ticket_id}/resume", resume_workstation, methods=["POST"]),
             Route("/api/workstation/{ticket_id}/stop", stop_workstation, methods=["POST"]),
             WebSocketRoute("/ws", MillWebSocket),
         ],

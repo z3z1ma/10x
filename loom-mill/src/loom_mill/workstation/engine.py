@@ -37,6 +37,21 @@ class WorkstationEngine:
         worktree_path = self.workspace_root / ".mill" / "worktrees" / self._ticket_slug()
         worktree_path.parent.mkdir(parents=True, exist_ok=True)
         await self._run_git("worktree", "add", "--detach", str(worktree_path), "HEAD")
+        return await self._launch(worktree_path)
+
+    async def resume(self) -> WorkstationState:
+        if self.state.status != WorkstationStatus.PAUSED:
+            raise RuntimeError(f"cannot resume workstation from {self.state.status}")
+        if self.state.worktree_path is None:
+            raise RuntimeError("cannot resume workstation without a worktree")
+        if self._wait_task is not None:
+            await self._wait_task
+
+        return await self._launch(self.state.worktree_path)
+
+    async def _launch(self, worktree_path: Path) -> WorkstationState:
+        if not worktree_path.exists():
+            raise RuntimeError("cannot launch workstation without an existing worktree")
 
         env = os.environ.copy()
         if self.harness.env:
@@ -53,6 +68,7 @@ class WorkstationEngine:
         self.state.status = WorkstationStatus.RUNNING
         self.state.worktree_path = worktree_path
         self.state.process_id = process.pid
+        self.state.exit_code = None
         self._capture_tasks = [
             asyncio.create_task(self._capture_stream("stdout", process.stdout)),
             asyncio.create_task(self._capture_stream("stderr", process.stderr)),

@@ -6,9 +6,10 @@
   let busy = $state(false);
   let error = $state('');
   let status = $derived(workstation?.status || 'idle');
-  let canStart = $derived(status === 'idle' || status === 'paused' || status === 'stopped' || status === 'completed');
+  let canStart = $derived(status === 'idle' || status === 'stopped' || status === 'completed');
   let canPause = $derived(status === 'running');
   let canStop = $derived(status === 'running' || status === 'paused');
+  let canSteer = $derived(status === 'paused');
   const apiBase = `${window.location.protocol}//${window.location.hostname}:8765`;
 
   async function command(path: string, body?: unknown) {
@@ -37,6 +38,14 @@
   function stop() {
     return command(`/api/workstation/${ticketId}/stop`);
   }
+
+  function edit() {
+    return command(`/api/workstation/${ticketId}/edit`);
+  }
+
+  function resume() {
+    return command(`/api/workstation/${ticketId}/resume`);
+  }
 </script>
 
 <div class="space-y-2 rounded-md border border-slate-800 bg-slate-950/60 p-2">
@@ -61,6 +70,13 @@
     <button type="button" onclick={pause} disabled={busy || !canPause} class="rounded bg-amber-500/15 px-2 py-1 text-xs font-medium text-amber-300 ring-1 ring-amber-500/30 hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:ring-slate-700">Pause</button>
     <button type="button" onclick={stop} disabled={busy || !canStop} class="rounded bg-rose-500/15 px-2 py-1 text-xs font-medium text-rose-300 ring-1 ring-rose-500/30 hover:bg-rose-500/25 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:ring-slate-700">Stop</button>
   </div>
+
+  {#if canSteer}
+    <div class="grid grid-cols-2 gap-1.5">
+      <button type="button" onclick={edit} disabled={busy} class="rounded bg-cyan-500/15 px-2 py-1 text-xs font-medium text-cyan-300 ring-1 ring-cyan-500/30 hover:bg-cyan-500/25 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:ring-slate-700">Edit</button>
+      <button type="button" onclick={resume} disabled={busy} class="rounded bg-indigo-500/15 px-2 py-1 text-xs font-medium text-indigo-300 ring-1 ring-indigo-500/30 hover:bg-indigo-500/25 disabled:cursor-not-allowed disabled:bg-slate-800 disabled:text-slate-500 disabled:ring-slate-700">Resume</button>
+    </div>
+  {/if}
 
   {#if error}
     <p class="text-xs text-rose-400">{error}</p>

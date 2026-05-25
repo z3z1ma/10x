@@ -136,6 +136,32 @@ async def test_workstation_pause_records_paused_state(git_workspace: Path) -> No
 
 
 @pytest.mark.asyncio
+async def test_workstation_resume_starts_fresh_process_with_updated_ticket(git_workspace: Path) -> None:
+    ticket_path = git_workspace / ".loom" / "tickets" / "example-ticket.md"
+    engine = WorkstationEngine(
+        git_workspace,
+        ticket_path,
+        HarnessConfig(command="python", args=["-c", "import pathlib,sys; print(pathlib.Path(sys.argv[1]).read_text())", "{ticket_path}"]),
+        stop_timeout=1,
+    )
+
+    await engine.start()
+    first_pid = engine.state.process_id
+    await engine.pause()
+    ticket_path.write_text("# Example Ticket\n\nConstraint: updated during pause\n", encoding="utf-8")
+
+    await engine.resume()
+    second_pid = engine.state.process_id
+    await engine.wait()
+
+    assert engine.state.status == WorkstationStatus.COMPLETED
+    assert second_pid is not None
+    assert second_pid != first_pid
+    stdout = "".join(event.data for event in engine.state.output if event.stream == "stdout")
+    assert "Constraint: updated during pause" in stdout
+
+
+@pytest.mark.asyncio
 async def test_workstation_uses_relative_cwd_override(git_workspace: Path) -> None:
     ticket_path = git_workspace / ".loom" / "tickets" / "example-ticket.md"
     (git_workspace / "nested").mkdir()
