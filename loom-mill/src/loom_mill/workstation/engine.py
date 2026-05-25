@@ -1,11 +1,17 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 import re
 import shutil
 import signal
+import time
+from dataclasses import asdict
 from pathlib import Path
+
+from loom_mill.processes import summarize_iteration
+from loom_mill.processes.backpressure import IterationRecord, detect_backpressure
 
 from .config import HarnessConfig
 from .models import OutputEvent, WorkstationState, WorkstationStatus
@@ -29,6 +35,8 @@ class WorkstationEngine:
         self._process: asyncio.subprocess.Process | None = None
         self._capture_tasks: list[asyncio.Task[None]] = []
         self._wait_task: asyncio.Task[int] | None = None
+        self._iteration = 0
+        self._iteration_started_at: float | None = None
 
     async def start(self) -> WorkstationState:
         if self.state.status != WorkstationStatus.IDLE:
@@ -47,7 +55,14 @@ class WorkstationEngine:
         if self._wait_task is not None:
             await self._wait_task
 
+        self.state.andon.active = False
+        self.state.andon.signals = []
         return await self._launch(self.state.worktree_path)
+
+    def acknowledge_andon(self) -> WorkstationState:
+        self.state.andon.active = False
+        self.state.andon.signals = []
+        return self.state
 
     async def _launch(self, worktree_path: Path) -> WorkstationState:
         if not worktree_path.exists():
@@ -65,10 +80,14 @@ class WorkstationEngine:
             stderr=asyncio.subprocess.PIPE,
         )
         self._process = process
+        self._iteration += 1
+        self._iteration_started_at = time.monotonic()
         self.state.status = WorkstationStatus.RUNNING
         self.state.worktree_path = worktree_path
         self.state.process_id = process.pid
         self.state.exit_code = None
+        self.state.iteration_summary = None
+        self.state.backpressure_signals = []
         self._capture_tasks = [
             asyncio.create_task(self._capture_stream("stdout", process.stdout)),
             asyncio.create_task(self._capture_stream("stderr", process.stderr)),
@@ -115,6 +134,7 @@ class WorkstationEngine:
 
         await asyncio.gather(*self._capture_tasks)
         self.state.exit_code = process.returncode
+        await self._summarize_exit()
         return self.state
 
     async def _wait_for_exit(self) -> int:
@@ -125,6 +145,8 @@ class WorkstationEngine:
         self.state.exit_code = exit_code
         if self.state.status == WorkstationStatus.RUNNING:
             self.state.status = WorkstationStatus.COMPLETED
+            await self._check_backpressure(exit_code)
+        await self._summarize_exit()
         return exit_code
 
     async def _capture_stream(
@@ -151,6 +173,76 @@ class WorkstationEngine:
         if process.returncode != 0:
             message = stderr.decode(errors="replace").strip()
             raise RuntimeError(f"git {' '.join(args)} failed: {message}")
+
+    async def _git_output(self, cwd: Path, *args: str) -> str:
+        process = await asyncio.create_subprocess_exec(
+            "git",
+            *args,
+            cwd=cwd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, stderr = await process.communicate()
+        if process.returncode != 0:
+            message = stderr.decode(errors="replace").strip()
+            raise RuntimeError(f"git {' '.join(args)} failed: {message}")
+        return stdout.decode(errors="replace")
+
+    async def _check_backpressure(self, exit_code: int) -> None:
+        if self.state.worktree_path is None:
+            return
+
+        started_at = self._iteration_started_at or time.monotonic()
+        duration_seconds = time.monotonic() - started_at
+        history = self._load_iteration_history()
+        output_tail = "".join(event.data for event in self.state.output)[-4000:]
+        loom_changed = bool((await self._git_output(self.state.worktree_path, "status", "--porcelain", "--", ".loom")).strip())
+        history.append(
+            IterationRecord(
+                exit_code=exit_code,
+                duration_seconds=duration_seconds,
+                loom_changed=loom_changed,
+                output_tail=output_tail,
+            )
+        )
+        self._save_iteration_history(history)
+        signals = detect_backpressure(history)
+        self.state.backpressure_signals = signals
+        alerts = [signal for signal in signals if signal.severity == "alert"]
+        if alerts:
+            self.state.andon.active = True
+            self.state.andon.signals = alerts
+            self.state.status = WorkstationStatus.PAUSED
+
+    async def _summarize_exit(self) -> None:
+        if self.state.iteration_summary is not None:
+            return
+        if self.state.worktree_path is None or self._iteration_started_at is None:
+            return
+        duration = time.monotonic() - self._iteration_started_at
+        self.state.iteration_summary = await summarize_iteration(
+            workspace_root=self.workspace_root,
+            worktree_path=self.state.worktree_path,
+            ticket_slug=self._ticket_slug(),
+            iteration=self._iteration,
+            exit_code=self.state.exit_code,
+            duration_seconds=duration,
+        )
+
+    def _pattern_path(self) -> Path:
+        return self.workspace_root / ".mill" / "patterns" / f"{self._ticket_slug()}.json"
+
+    def _load_iteration_history(self) -> list[IterationRecord]:
+        path = self._pattern_path()
+        if not path.exists():
+            return []
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return [IterationRecord(**item) for item in data]
+
+    def _save_iteration_history(self, history: list[IterationRecord]) -> None:
+        path = self._pattern_path()
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps([asdict(record) for record in history], indent=2) + "\n", encoding="utf-8")
 
     def _process_cwd(self, worktree_path: Path) -> Path:
         if self.harness.cwd is None:

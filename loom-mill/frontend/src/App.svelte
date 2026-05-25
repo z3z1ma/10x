@@ -4,6 +4,8 @@
   import Pipeline from './lib/Pipeline.svelte';
   import GitPanel from './lib/GitPanel.svelte';
   import HarnessConfig from './lib/HarnessConfig.svelte';
+  import AndonAlert from './lib/AndonAlert.svelte';
+  import IterationSummary from './lib/IterationSummary.svelte';
 
   onMount(() => {
     store.connect();
@@ -41,11 +43,18 @@
 
   <div class="flex flex-1 overflow-hidden">
     <div class="flex-1 overflow-hidden p-6">
-      <Pipeline records={store.state.records} workstations={store.state.workstations} />
+      <div class="flex h-full flex-col gap-4">
+        <AndonAlert records={store.state.records} workstations={store.state.workstations} />
+        <div class="min-h-0 flex-1 overflow-hidden">
+          <Pipeline records={store.state.records} workstations={store.state.workstations} />
+        </div>
+      </div>
     </div>
     
     <aside class="w-80 border-l border-slate-800 bg-slate-900/20 p-6 overflow-y-auto">
       <HarnessConfig />
+      <div class="my-6 border-t border-slate-800"></div>
+      <IterationSummary workstations={store.state.workstations} />
       <div class="my-6 border-t border-slate-800"></div>
       <GitPanel git={store.state.git} />
     </aside>

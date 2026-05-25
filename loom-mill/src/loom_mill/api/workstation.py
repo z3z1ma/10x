@@ -108,6 +108,8 @@ async def start_workstation(request: Request) -> JSONResponse:
         return JSONResponse({"error": "ticket not found"}, status_code=404)
 
     previous = engines.get(ticket_id)
+    if previous is not None and previous.state.andon.active:
+        return JSONResponse({"error": "andon is active; acknowledge or resume before starting again"}, status_code=409)
     if previous is not None and previous.state.status != WorkstationStatus.RUNNING:
         await previous.teardown()
 
@@ -140,6 +142,17 @@ async def resume_workstation(request: Request) -> JSONResponse:
     await _publish_workstation(request, ticket_id, state)
     task = asyncio.create_task(_monitor_workstation(request.app.state.store, ticket_id, engine))
     request.app.state.workstation_tasks[ticket_id] = task
+    return JSONResponse(_state_payload(state))
+
+
+async def acknowledge_andon(request: Request) -> JSONResponse:
+    ticket_id = request.path_params["ticket_id"].removeprefix("ticket:")
+    engine = request.app.state.workstations.get(ticket_id)
+    if engine is None:
+        return JSONResponse({"error": "workstation not found"}, status_code=404)
+
+    state = engine.acknowledge_andon()
+    await _publish_workstation(request, ticket_id, state)
     return JSONResponse(_state_payload(state))
 
 

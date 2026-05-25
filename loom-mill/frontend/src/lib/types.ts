@@ -33,12 +33,53 @@ export interface OutputEvent {
   data: string;
 }
 
+export interface BackpressureSignal {
+  kind: 'repeated_failure' | 'long_iteration' | 'no_record_change' | 'crash_loop';
+  severity: 'alert' | 'warning';
+  message: string;
+  iteration_index: number;
+  exit_code: number | null;
+  duration_seconds: number | null;
+  output_tail: string;
+}
+
+export interface AndonState {
+  active: boolean;
+  signals: BackpressureSignal[];
+}
+
+export interface FileChangeSummary {
+  count: number;
+  paths: string[];
+  stat: string;
+}
+
+export interface ChangedRecord {
+  path: string;
+  record_id: string | null;
+  changed_fields: string[];
+}
+
+export interface IterationSummary {
+  label: string;
+  ticket_slug: string;
+  iteration: number;
+  exit_code: number | null;
+  duration_seconds: number;
+  files_changed: FileChangeSummary;
+  records_changed: ChangedRecord[];
+  storage_path: string;
+}
+
 export interface WorkstationState {
   status: WorkstationStatus;
   worktree_path: string | null;
   process_id: number | null;
   exit_code: number | null;
   output: OutputEvent[];
+  iteration_summary: IterationSummary | null;
+  backpressure_signals: BackpressureSignal[];
+  andon: AndonState;
 }
 
 export interface HarnessConfig {
@@ -52,4 +93,5 @@ export interface MillState {
   records: LoomRecord[];
   git: GitState;
   workstations: Record<string, WorkstationState>;
+  backpressure_signals: Record<string, BackpressureSignal[]>;
 }

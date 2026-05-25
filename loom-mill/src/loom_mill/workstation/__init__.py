@@ -2,10 +2,11 @@
 
 from .config import HarnessConfig
 from .engine import WorkstationEngine
-from .models import OutputEvent, WorkstationState, WorkstationStatus
+from .models import AndonState, OutputEvent, WorkstationState, WorkstationStatus
 
 __all__ = [
     "HarnessConfig",
+    "AndonState",
     "OutputEvent",
     "WorkstationEngine",
     "WorkstationState",

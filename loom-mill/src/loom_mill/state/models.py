@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from loom_mill.parser import LoomRecord
+from loom_mill.processes.backpressure import BackpressureSignal
 from loom_mill.workstation import WorkstationState
 
 
@@ -18,6 +19,7 @@ class MillState:
     records: tuple[LoomRecord, ...] = ()
     git: GitState = field(default_factory=GitState)
     workstations: dict[str, WorkstationState] = field(default_factory=dict)
+    backpressure_signals: dict[str, tuple[BackpressureSignal, ...]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

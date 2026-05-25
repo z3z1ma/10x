@@ -9,6 +9,7 @@ from starlette.responses import JSONResponse
 from starlette.routing import Route, WebSocketRoute
 
 from loom_mill.api.workstation import (
+    acknowledge_andon,
     edit_workstation_ticket,
     get_harness_config,
     pause_workstation,
@@ -58,6 +59,7 @@ def create_app() -> Starlette:
             Route("/api/config/harness", put_harness_config, methods=["PUT"]),
             Route("/api/workstation/start", start_workstation, methods=["POST"]),
             Route("/api/workstation/{ticket_id}/edit", edit_workstation_ticket, methods=["POST"]),
+            Route("/api/workstation/{ticket_id}/acknowledge-andon", acknowledge_andon, methods=["POST"]),
             Route("/api/workstation/{ticket_id}/pause", pause_workstation, methods=["POST"]),
             Route("/api/workstation/{ticket_id}/resume", resume_workstation, methods=["POST"]),
             Route("/api/workstation/{ticket_id}/stop", stop_workstation, methods=["POST"]),

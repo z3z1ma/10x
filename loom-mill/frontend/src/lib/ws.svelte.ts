@@ -4,7 +4,8 @@ export class MillStore {
   state = $state<MillState>({
     records: [],
     git: { current_branch: null, recent_commits: [], dirty: false },
-    workstations: {}
+    workstations: {},
+    backpressure_signals: {}
   });
   connected = $state(false);
 
@@ -44,6 +45,7 @@ export class MillStore {
         this.state.records = data.records;
         this.state.git = data.git;
         this.state.workstations = data.workstations || {};
+        this.state.backpressure_signals = data.backpressure_signals || {};
         break;
       case 'RecordAdded':
         this.state.records.push(data.record);
@@ -64,6 +66,11 @@ export class MillStore {
         break;
       case 'WorkstationStateChanged':
         this.state.workstations[data.ticket_id] = data.workstation;
+        if (data.workstation.backpressure_signals?.length) {
+          this.state.backpressure_signals[data.ticket_id] = data.workstation.backpressure_signals;
+        } else {
+          delete this.state.backpressure_signals[data.ticket_id];
+        }
         break;
     }
   }

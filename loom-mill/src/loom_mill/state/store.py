@@ -38,6 +38,11 @@ class MillStateStore:
                 records=tuple(self._records[path] for path in sorted(self._records)),
                 git=self._git,
                 workstations=dict(self._workstations),
+                backpressure_signals={
+                    ticket_id: tuple(workstation.backpressure_signals)
+                    for ticket_id, workstation in self._workstations.items()
+                    if workstation.backpressure_signals
+                },
             )
 
     async def record(self, path: str) -> LoomRecord | None:
