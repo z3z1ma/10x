@@ -14,6 +14,9 @@ dependencies = [
   "watchfiles>=0.22,<2"
 ]
 
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio"]
+
 [project.scripts]
 loom-mill-dev = "loom_mill.dev:main"
 
