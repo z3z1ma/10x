@@ -2,7 +2,7 @@
 
 ID: ticket:20260526-mill-dr-selection-editor
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: low - CSS fix with clear root cause

@@ -2,7 +2,7 @@
 
 ID: plan:20260526-mill-dr-perfection
 Type: Plan
-Status: open
+Status: completed
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: low - targeted fixes with clear root causes identified
