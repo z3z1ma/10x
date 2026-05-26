@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-mill-ticket-lifecycle-panel
 Type: Ticket
-Status: review
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-26
 Risk: medium - redesigns the left panel from workstation-centric to ticket-centric; touches WorkstationList, StatusBar, and filtering logic.
@@ -16,7 +16,7 @@ This resolves two problems:
 1. The Ready section shows "No tickets" despite "Shaped 2" in the StatusBar (filtering bug).
 2. Tickets executing outside Mill (status=active but no workstation) are invisible. The operator has no way to see which tickets are in flight without checking `.loom/` manually.
 
-Closure claim: The left panel shows the complete ticket lifecycle with all status categories, external execution is visible, the StatusBar pills are interactive, and the filtering bug is fixed.
+Closure claim: The left panel shows the complete ticket lifecycle with all status categories, external execution is visible, the StatusBar pills are interactive, and the filtering bug is fixed. Audit confirmed acceptance.
 
 ## Related Records
 
@@ -26,6 +26,7 @@ Closure claim: The left panel shows the complete ticket lifecycle with all statu
 - `loom-mill/frontend/src/lib/ReadyTicketRow.svelte` - keep for Ready section
 - `loom-mill/frontend/src/lib/WorkstationRow.svelte` - keep for workstation entries
 - `loom-mill/frontend/src/lib/ws.svelte.ts` - data source for records + workstations
+- `audit:20260526-mill-ticket-lifecycle-panel-audit` - closure audit
 
 ## Scope
 
@@ -252,6 +253,7 @@ No tickets are currently in progress, ready, or under review.
 ## Current State
 
 - 2026-05-26: Implemented the full ticket lifecycle panel. Fixed the filtering bug by normalizing ticket IDs. Added `TicketRow.svelte` for non-workstation tickets. Updated `DetailPanel.svelte` to show a minimal view for non-workstation tickets. Made `StatusBar.svelte` pills clickable to scroll to sections. Verified with Playwright screenshots. Moving to `review` status.
+- 2026-05-26: Audit completed and accepted. Closing ticket.
 
 ## Journal
 
