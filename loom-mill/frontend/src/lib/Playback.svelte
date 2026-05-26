@@ -4,7 +4,7 @@
   import DiffViewer from './DiffViewer.svelte';
   import { store } from './ws.svelte';
 
-  let { workstationId, onClose }: { workstationId: string; onClose: () => void } = $props();
+  let { workstationId, onClose, embedded = false }: { workstationId: string; onClose: () => void; embedded?: boolean } = $props();
 
   let iterations = $state<IterationRecord[]>([]);
   let currentStep = $state<number>(-1); // -1 means aggregate view
@@ -103,9 +103,10 @@
   });
 </script>
 
-<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6">
-  <div class="flex h-full w-full max-w-6xl flex-col overflow-hidden rounded-lg border border-border-strong bg-bg-primary shadow-2xl">
+<div class={embedded ? "flex h-full w-full flex-col overflow-hidden bg-bg-primary" : "fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6"}>
+  <div class={embedded ? "flex h-full w-full flex-col overflow-hidden" : "flex h-full w-full max-w-6xl flex-col overflow-hidden rounded-lg border border-border-strong bg-bg-primary shadow-2xl"}>
     <!-- Header -->
+    {#if !embedded}
     <div class="flex items-center justify-between border-b border-border-default bg-bg-surface px-4 py-3">
       <div class="flex items-center gap-3">
         <h2 class="text-sm font-semibold text-text-primary">Playback: {workstationId}</h2>
@@ -121,6 +122,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
+    {/if}
 
     <!-- Timeline Scrubber -->
     <div class="border-b border-border-default bg-bg-surface-elevated px-4 py-3">

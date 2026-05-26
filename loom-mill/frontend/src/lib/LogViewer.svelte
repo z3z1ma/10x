@@ -41,7 +41,7 @@
   }
 </script>
 
-<div class="flex flex-col h-full border border-border-default bg-bg-surface rounded-md overflow-hidden">
+<div class="flex flex-col h-full bg-bg-surface overflow-hidden">
   <div class="flex items-center justify-between px-3 py-1.5 border-b border-border-default bg-bg-surface-elevated">
     <span class="text-[11px] font-medium text-text-secondary">Logs</span>
     <label class="flex items-center gap-1.5 text-[10px] text-text-tertiary cursor-pointer">
