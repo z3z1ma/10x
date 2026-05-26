@@ -8,6 +8,7 @@ import shutil
 import signal
 import time
 from dataclasses import asdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 from loom_mill.processes import summarize_iteration
@@ -24,13 +25,17 @@ class WorkstationEngine:
         ticket_path: Path,
         harness: HarnessConfig,
         *,
+        workstation_id: str | None = None,
+        ticket_id: str | None = None,
         stop_timeout: float = 5.0,
     ) -> None:
         self.workspace_root = workspace_root.resolve()
         self.ticket_path = ticket_path.resolve()
+        self.workstation_id = workstation_id or self._ticket_slug()
+        self.ticket_id = ticket_id or self._ticket_slug()
         self.harness = harness
         self.stop_timeout = stop_timeout
-        self.state = WorkstationState()
+        self.state = WorkstationState(id=self.workstation_id, ticket_id=self.ticket_id)
         self.output_queue: asyncio.Queue[OutputEvent] = asyncio.Queue()
         self._process: asyncio.subprocess.Process | None = None
         self._capture_tasks: list[asyncio.Task[None]] = []
@@ -42,7 +47,7 @@ class WorkstationEngine:
         if self.state.status != WorkstationStatus.IDLE:
             raise RuntimeError(f"cannot start workstation from {self.state.status}")
 
-        worktree_path = self.workspace_root / ".mill" / "worktrees" / self._ticket_slug()
+        worktree_path = self.workspace_root / ".mill" / "worktrees" / self.workstation_id
         worktree_path.parent.mkdir(parents=True, exist_ok=True)
         await self._run_git("worktree", "add", "--detach", str(worktree_path), "HEAD")
         return await self._launch(worktree_path)
@@ -82,8 +87,12 @@ class WorkstationEngine:
         self._process = process
         self._iteration += 1
         self._iteration_started_at = time.monotonic()
+        now = self._utc_now()
         self.state.status = WorkstationStatus.RUNNING
         self.state.worktree_path = worktree_path
+        self.state.started_at = self.state.started_at or now
+        self.state.iteration_count = self._iteration
+        self.state.last_event_at = now
         self.state.process_id = process.pid
         self.state.exit_code = None
         self.state.iteration_summary = None
@@ -134,6 +143,7 @@ class WorkstationEngine:
 
         await asyncio.gather(*self._capture_tasks)
         self.state.exit_code = process.returncode
+        self._process = None
         await self._summarize_exit()
         return self.state
 
@@ -143,6 +153,7 @@ class WorkstationEngine:
         exit_code = await self._process.wait()
         await asyncio.gather(*self._capture_tasks)
         self.state.exit_code = exit_code
+        self._process = None
         if self.state.status == WorkstationStatus.RUNNING:
             self.state.status = WorkstationStatus.COMPLETED
             await self._check_backpressure(exit_code)
@@ -159,6 +170,7 @@ class WorkstationEngine:
         while chunk := await reader.read(4096):
             event = OutputEvent(stream=stream, data=chunk.decode(errors="replace"))
             self.state.output.append(event)
+            self.state.last_event_at = self._utc_now()
             await self.output_queue.put(event)
 
     async def _run_git(self, *args: str) -> None:
@@ -254,3 +266,6 @@ class WorkstationEngine:
         stem = self.ticket_path.stem.lower()
         slug = re.sub(r"[^a-z0-9._-]+", "-", stem).strip("-._")
         return slug or "workstation"
+
+    def _utc_now(self) -> str:
+        return datetime.now(timezone.utc).isoformat()

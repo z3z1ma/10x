@@ -1,6 +1,6 @@
-import asyncio
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
@@ -10,9 +10,14 @@ from starlette.routing import Route, WebSocketRoute
 
 from loom_mill.api.workstation import (
     acknowledge_andon,
+    delete_workstation,
     edit_workstation_ticket,
+    get_config,
     get_harness_config,
+    get_workstation,
+    list_workstations,
     pause_workstation,
+    put_config,
     put_harness_config,
     resume_workstation,
     start_workstation,
@@ -21,6 +26,8 @@ from loom_mill.api.workstation import (
 from loom_mill.api.ws import MillWebSocket
 from loom_mill.state import MillStateStore
 from loom_mill.watcher import LoomWatcher
+from loom_mill.workstation.manager import WorkstationManager
+from loom_mill.api.workstation import load_factory_config
 
 
 async def health(request):
@@ -31,22 +38,20 @@ async def health(request):
 async def lifespan(app: Starlette):
     store = MillStateStore()
     app.state.store = store
-    app.state.workstations = {}
-    app.state.workstation_tasks = {}
 
     workspace_root = os.environ.get("LOOM_WORKSPACE_ROOT", ".")
     app.state.workspace_root = os.path.abspath(workspace_root)
+    app.state.workstation_manager = WorkstationManager(
+        Path(app.state.workspace_root),
+        store,
+        load_factory_config(Path(app.state.workspace_root) / ".mill" / "config.json"),
+    )
     watcher = LoomWatcher(workspace_root, store=store)
     await watcher.start()
     
     yield
     
-    for engine in app.state.workstations.values():
-        if engine.state.status == "running":
-            await engine.stop()
-    for task in app.state.workstation_tasks.values():
-        task.cancel()
-    await asyncio.gather(*app.state.workstation_tasks.values(), return_exceptions=True)
+    await app.state.workstation_manager.shutdown()
     await watcher.stop()
 
 
@@ -57,6 +62,14 @@ def create_app() -> Starlette:
             Route("/health", health),
             Route("/api/config/harness", get_harness_config, methods=["GET"]),
             Route("/api/config/harness", put_harness_config, methods=["PUT"]),
+            Route("/config", get_config, methods=["GET"]),
+            Route("/config", put_config, methods=["PUT"]),
+            Route("/workstations", list_workstations, methods=["GET"]),
+            Route("/workstations", start_workstation, methods=["POST"]),
+            Route("/workstations/{workstation_id}", get_workstation, methods=["GET"]),
+            Route("/workstations/{workstation_id}", delete_workstation, methods=["DELETE"]),
+            Route("/workstations/{workstation_id}/pause", pause_workstation, methods=["POST"]),
+            Route("/workstations/{workstation_id}/resume", resume_workstation, methods=["POST"]),
             Route("/api/workstation/start", start_workstation, methods=["POST"]),
             Route("/api/workstation/{ticket_id}/edit", edit_workstation_ticket, methods=["POST"]),
             Route("/api/workstation/{ticket_id}/acknowledge-andon", acknowledge_andon, methods=["POST"]),
@@ -69,7 +82,7 @@ def create_app() -> Starlette:
             Middleware(
                 CORSMiddleware,
                 allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-                allow_methods=["GET", "PUT", "POST"],
+                allow_methods=["GET", "PUT", "POST", "DELETE"],
                 allow_headers=["Content-Type"],
             )
         ],

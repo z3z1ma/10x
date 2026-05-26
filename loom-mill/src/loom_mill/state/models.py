@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 from loom_mill.parser import LoomRecord
 from loom_mill.processes.backpressure import BackpressureSignal
-from loom_mill.workstation import WorkstationState
+from loom_mill.workstation.models import OutputEvent, WorkstationState
 
 
 @dataclass(frozen=True)
@@ -49,8 +49,14 @@ class GitStateChanged:
 
 @dataclass(frozen=True)
 class WorkstationStateChanged:
-    ticket_id: str
+    workstation_id: str
     workstation: WorkstationState
 
 
-MillEvent = RecordAdded | RecordChanged | RecordRemoved | GitStateChanged | WorkstationStateChanged
+@dataclass(frozen=True)
+class WorkstationOutput:
+    workstation_id: str
+    output: OutputEvent
+
+
+MillEvent = RecordAdded | RecordChanged | RecordRemoved | GitStateChanged | WorkstationStateChanged | WorkstationOutput

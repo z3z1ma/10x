@@ -14,6 +14,8 @@ class WorkstationStatus(StrEnum):
     PAUSED = "paused"
     STOPPED = "stopped"
     COMPLETED = "completed"
+    FINISHED = "finished"
+    CONFLICT = "conflict"
 
 
 @dataclass(frozen=True)
@@ -24,8 +26,13 @@ class OutputEvent:
 
 @dataclass
 class WorkstationState:
+    id: str | None = None
+    ticket_id: str | None = None
     status: WorkstationStatus = WorkstationStatus.IDLE
     worktree_path: Path | None = None
+    started_at: str | None = None
+    iteration_count: int = 0
+    last_event_at: str | None = None
     process_id: int | None = None
     exit_code: int | None = None
     output: list[OutputEvent] = field(default_factory=list)

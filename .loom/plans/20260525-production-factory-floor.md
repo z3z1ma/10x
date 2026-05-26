@@ -2,7 +2,7 @@
 
 ID: plan:20260525-production-factory-floor
 Type: Plan
-Status: open
+Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: medium - significant backend concurrency work (N workstations, worktree management, subprocess multiplexing) plus LLM integration for SPC. Mitigated by: MVP architecture is sound, each unit is independently testable, and the work is additive to existing code.

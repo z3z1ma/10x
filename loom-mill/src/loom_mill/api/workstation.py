@@ -11,11 +11,12 @@ from pathlib import Path
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from loom_mill.state import MillStateStore, WorkstationStateChanged
-from loom_mill.workstation import HarnessConfig, WorkstationEngine, WorkstationState, WorkstationStatus
+from loom_mill.state import WorkstationStateChanged
+from loom_mill.workstation import FactoryConfig, HarnessConfig, WorkstationState, WorkstationStatus
+from loom_mill.workstation.manager import WorkstationManager
 
 
-DEFAULT_HARNESS = HarnessConfig(command="opencode", args=["run", "--model", "gpt-5.5", "{ticket_path}"])
+DEFAULT_CONFIG = FactoryConfig()
 
 
 def _workspace_root(request: Request) -> Path:
@@ -31,6 +32,10 @@ def _ticket_path(request: Request, ticket_id: str) -> Path:
     return _workspace_root(request) / ".loom" / "tickets" / f"{slug}.md"
 
 
+def _manager(request: Request) -> WorkstationManager:
+    return request.app.state.workstation_manager
+
+
 def _state_payload(state: WorkstationState) -> dict:
     payload = asdict(state)
     if state.worktree_path is not None:
@@ -38,12 +43,19 @@ def _state_payload(state: WorkstationState) -> dict:
     return payload
 
 
-def _config_payload(config: HarnessConfig) -> dict:
+def _harness_payload(config: HarnessConfig) -> dict:
     return {
         "command": config.command,
         "args": config.args,
         "env": config.env or {},
         "cwd": config.cwd,
+    }
+
+
+def _config_payload(config: FactoryConfig) -> dict:
+    return {
+        "max_workstations": config.max_workstations,
+        "harness": _harness_payload(config.harness),
     }
 
 
@@ -67,20 +79,33 @@ def _parse_config(data: dict) -> HarnessConfig:
     return HarnessConfig(command=command, args=args, env=env, cwd=cwd)
 
 
-def load_harness_config(config_path: Path) -> HarnessConfig:
+def load_factory_config(config_path: Path) -> FactoryConfig:
     if not config_path.exists():
-        return DEFAULT_HARNESS
+        return DEFAULT_CONFIG
     data = json.loads(config_path.read_text(encoding="utf-8"))
-    return _parse_config(data.get("harness", data))
+    harness = _parse_config(data.get("harness", data))
+    max_workstations = int(data.get("max_workstations", 1))
+    if max_workstations < 1:
+        raise ValueError("max_workstations must be at least 1")
+    return FactoryConfig(max_workstations=max_workstations, harness=harness)
+
+
+def load_harness_config(config_path: Path) -> HarnessConfig:
+    return load_factory_config(config_path).harness
+
+
+def save_factory_config(config_path: Path, config: FactoryConfig) -> None:
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    config_path.write_text(json.dumps(_config_payload(config), indent=2) + "\n", encoding="utf-8")
 
 
 def save_harness_config(config_path: Path, config: HarnessConfig) -> None:
-    config_path.parent.mkdir(parents=True, exist_ok=True)
-    config_path.write_text(json.dumps({"harness": _config_payload(config)}, indent=2) + "\n", encoding="utf-8")
+    existing = load_factory_config(config_path)
+    save_factory_config(config_path, FactoryConfig(max_workstations=existing.max_workstations, harness=config))
 
 
 async def get_harness_config(request: Request) -> JSONResponse:
-    return JSONResponse(_config_payload(load_harness_config(_config_path(request))))
+    return JSONResponse(_harness_payload(load_harness_config(_config_path(request))))
 
 
 async def put_harness_config(request: Request) -> JSONResponse:
@@ -89,6 +114,27 @@ async def put_harness_config(request: Request) -> JSONResponse:
     except (json.JSONDecodeError, ValueError) as error:
         return JSONResponse({"error": str(error)}, status_code=400)
     save_harness_config(_config_path(request), config)
+    _manager(request).update_config(load_factory_config(_config_path(request)))
+    return JSONResponse(_harness_payload(config))
+
+
+async def get_config(request: Request) -> JSONResponse:
+    return JSONResponse(_config_payload(load_factory_config(_config_path(request))))
+
+
+async def put_config(request: Request) -> JSONResponse:
+    try:
+        data = await request.json()
+        existing = load_factory_config(_config_path(request))
+        harness = _parse_config(data["harness"]) if isinstance(data.get("harness"), dict) else existing.harness
+        max_workstations = int(data.get("max_workstations", existing.max_workstations))
+        if max_workstations < 1:
+            raise ValueError("max_workstations must be at least 1")
+    except (json.JSONDecodeError, TypeError, ValueError) as error:
+        return JSONResponse({"error": str(error)}, status_code=400)
+    config = FactoryConfig(max_workstations=max_workstations, harness=harness)
+    save_factory_config(_config_path(request), config)
+    _manager(request).update_config(config)
     return JSONResponse(_config_payload(config))
 
 
@@ -98,66 +144,72 @@ async def start_workstation(request: Request) -> JSONResponse:
     if not ticket_id:
         return JSONResponse({"error": "ticket_id is required"}, status_code=400)
 
-    engines: dict[str, WorkstationEngine] = request.app.state.workstations
-    for engine_ticket_id, engine in engines.items():
-        if engine.state.status == WorkstationStatus.RUNNING:
-            return JSONResponse({"error": f"workstation already running for {engine_ticket_id}"}, status_code=409)
-
     ticket_path = _ticket_path(request, ticket_id)
     if not ticket_path.exists():
         return JSONResponse({"error": "ticket not found"}, status_code=404)
 
-    previous = engines.get(ticket_id)
-    if previous is not None and previous.state.andon.active:
-        return JSONResponse({"error": "andon is active; acknowledge or resume before starting again"}, status_code=409)
-    if previous is not None and previous.state.status != WorkstationStatus.RUNNING:
-        await previous.teardown()
+    try:
+        harness = _parse_config(data["harness"]) if isinstance(data.get("harness"), dict) else None
+        engine = await _manager(request).start(ticket_path, ticket_id, harness=harness)
+    except (RuntimeError, ValueError) as error:
+        return JSONResponse({"error": str(error)}, status_code=409)
+    state = engine.state
+    return JSONResponse(_state_payload(state))
 
-    engine = WorkstationEngine(_workspace_root(request), ticket_path, load_harness_config(_config_path(request)))
-    engines[ticket_id] = engine
-    state = await engine.start()
-    await _publish_workstation(request, ticket_id, state)
-    task = asyncio.create_task(_monitor_workstation(request.app.state.store, ticket_id, engine))
-    request.app.state.workstation_tasks[ticket_id] = task
+
+async def list_workstations(request: Request) -> JSONResponse:
+    return JSONResponse([_state_payload(state) for state in _manager(request).list()])
+
+
+async def get_workstation(request: Request) -> JSONResponse:
+    engine = _manager(request).get(request.path_params["workstation_id"])
+    if engine is None:
+        return JSONResponse({"error": "workstation not found"}, status_code=404)
+    return JSONResponse(_state_payload(engine.state))
+
+
+async def delete_workstation(request: Request) -> JSONResponse:
+    workstation_id = request.path_params["workstation_id"]
+    try:
+        state = await _manager(request).stop(workstation_id, remove=True)
+    except KeyError:
+        return JSONResponse({"error": "workstation not found"}, status_code=404)
     return JSONResponse(_state_payload(state))
 
 
 async def pause_workstation(request: Request) -> JSONResponse:
-    return await _control_workstation(request, request.path_params["ticket_id"], WorkstationStatus.PAUSED)
+    return await _control_workstation(request, request.path_params.get("workstation_id") or request.path_params["ticket_id"], WorkstationStatus.PAUSED)
 
 
 async def resume_workstation(request: Request) -> JSONResponse:
-    ticket_id = request.path_params["ticket_id"].removeprefix("ticket:")
-    engine = request.app.state.workstations.get(ticket_id)
+    workstation_id = request.path_params.get("workstation_id") or request.path_params["ticket_id"]
+    engine = _get_engine_by_route_param(request, workstation_id)
     if engine is None:
         return JSONResponse({"error": "workstation not found"}, status_code=404)
     if engine.state.status != WorkstationStatus.PAUSED:
         return JSONResponse({"error": "workstation is not paused"}, status_code=409)
 
     try:
-        state = await engine.resume()
+        state = await _manager(request).resume(engine.workstation_id)
     except RuntimeError as error:
         return JSONResponse({"error": str(error)}, status_code=409)
-
-    await _publish_workstation(request, ticket_id, state)
-    task = asyncio.create_task(_monitor_workstation(request.app.state.store, ticket_id, engine))
-    request.app.state.workstation_tasks[ticket_id] = task
     return JSONResponse(_state_payload(state))
 
 
 async def acknowledge_andon(request: Request) -> JSONResponse:
     ticket_id = request.path_params["ticket_id"].removeprefix("ticket:")
-    engine = request.app.state.workstations.get(ticket_id)
+    engine = _manager(request).get_by_ticket(ticket_id)
     if engine is None:
         return JSONResponse({"error": "workstation not found"}, status_code=404)
 
     state = engine.acknowledge_andon()
-    await _publish_workstation(request, ticket_id, state)
+    await request.app.state.store.replace_workstation_state(engine.workstation_id, state)
+    await request.app.state.store.publish(WorkstationStateChanged(workstation_id=engine.workstation_id, workstation=state))
     return JSONResponse(_state_payload(state))
 
 
 async def stop_workstation(request: Request) -> JSONResponse:
-    return await _control_workstation(request, request.path_params["ticket_id"], WorkstationStatus.STOPPED)
+    return await _control_workstation(request, request.path_params.get("workstation_id") or request.path_params["ticket_id"], WorkstationStatus.STOPPED)
 
 
 async def edit_workstation_ticket(request: Request) -> JSONResponse:
@@ -188,25 +240,21 @@ async def edit_workstation_ticket(request: Request) -> JSONResponse:
 
 
 async def _control_workstation(request: Request, ticket_id: str, target_status: WorkstationStatus) -> JSONResponse:
-    ticket_id = ticket_id.removeprefix("ticket:")
-    engine = request.app.state.workstations.get(ticket_id)
+    engine = _get_engine_by_route_param(request, ticket_id)
     if engine is None:
         return JSONResponse({"error": "workstation not found"}, status_code=404)
 
-    state = await (engine.pause() if target_status == WorkstationStatus.PAUSED else engine.stop())
-    await _publish_workstation(request, ticket_id, state)
-    if target_status == WorkstationStatus.STOPPED:
-        await engine.teardown()
+    try:
+        state = await (
+            _manager(request).pause(engine.workstation_id)
+            if target_status == WorkstationStatus.PAUSED
+            else _manager(request).stop(engine.workstation_id, remove=target_status == WorkstationStatus.STOPPED)
+        )
+    except RuntimeError as error:
+        return JSONResponse({"error": str(error)}, status_code=409)
     return JSONResponse(_state_payload(state))
 
 
-async def _publish_workstation(request: Request, ticket_id: str, state: WorkstationState) -> None:
-    store: MillStateStore = request.app.state.store
-    await store.replace_workstation_state(ticket_id, state)
-    await store.publish(WorkstationStateChanged(ticket_id=ticket_id, workstation=state))
-
-
-async def _monitor_workstation(store: MillStateStore, ticket_id: str, engine: WorkstationEngine) -> None:
-    await engine.wait()
-    await store.replace_workstation_state(ticket_id, engine.state)
-    await store.publish(WorkstationStateChanged(ticket_id=ticket_id, workstation=engine.state))
+def _get_engine_by_route_param(request: Request, value: str):
+    manager = _manager(request)
+    return manager.get(value) or manager.get_by_ticket(value)

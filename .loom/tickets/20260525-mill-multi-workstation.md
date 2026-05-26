@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-mill-multi-workstation
 Type: Ticket
-Status: open
+Status: review
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: medium - core concurrency change to the workstation engine; asyncio subprocess management at scale needs careful design.
@@ -69,8 +69,9 @@ Stop conditions:
 
 ## Current State
 
-Ready to start. The existing single-workstation engine in `loom-mill/src/loom_mill/workstation/` provides the base to generalize from.
+Implementation worker run completed. The engine now supports manager-owned N-concurrent workstations with stable IDs, per-workstation worktrees/subprocesses, workstation-keyed state, multiplexed WebSocket event payloads, WIP limit enforcement, and new REST workstation/config endpoints. Verification passed with `uv run --project loom-mill --extra dev python -m pytest loom-mill/tests -q` (`23 passed in 14.59s`, with three asyncio subprocess transport warnings) and `git diff --check`. Next honest move is audit/code review before closure.
 
 ## Journal
 
 - 2026-05-25: Created ticket. Source: `plan:20260525-production-factory-floor` Unit 1. First move: read existing workstation engine, design N-concurrent architecture, implement.
+- 2026-05-25: Worker implementation completed multi-workstation manager/API/state refactor and added concurrent workstation, WIP limit, lifecycle independence, WebSocket payload, and REST endpoint tests. Evidence: `uv run --project loom-mill --extra dev python -m pytest loom-mill/tests -q` -> `23 passed in 14.59s` with three asyncio subprocess transport warnings; `git diff --check` clean. Status moved to review for audit.

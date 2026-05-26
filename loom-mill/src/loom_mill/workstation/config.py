@@ -17,3 +17,11 @@ class HarnessConfig:
             self.command,
             *[arg.replace("{ticket_path}", rendered_ticket_path) for arg in self.args],
         ]
+
+
+@dataclass(frozen=True)
+class FactoryConfig:
+    max_workstations: int = 1
+    harness: HarnessConfig = field(
+        default_factory=lambda: HarnessConfig(command="opencode", args=["run", "--model", "gpt-5.5", "{ticket_path}"])
+    )

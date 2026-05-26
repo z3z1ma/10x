@@ -4,7 +4,7 @@ import asyncio
 
 from loom_mill.parser import LoomRecord
 
-from loom_mill.workstation import WorkstationState
+from loom_mill.workstation.models import WorkstationState
 
 from .models import GitState, MillEvent, MillState
 
@@ -77,11 +77,15 @@ class MillStateStore:
             self._git = git
             return previous
 
-    async def replace_workstation_state(self, ticket_id: str, workstation: WorkstationState) -> WorkstationState | None:
+    async def replace_workstation_state(self, workstation_id: str, workstation: WorkstationState) -> WorkstationState | None:
         async with self._lock:
-            previous = self._workstations.get(ticket_id)
-            self._workstations[ticket_id] = workstation
+            previous = self._workstations.get(workstation_id)
+            self._workstations[workstation_id] = workstation
             return previous
+
+    async def remove_workstation_state(self, workstation_id: str) -> WorkstationState | None:
+        async with self._lock:
+            return self._workstations.pop(workstation_id, None)
 
     async def publish(self, event: MillEvent) -> None:
         for queue in tuple(self._subscribers):

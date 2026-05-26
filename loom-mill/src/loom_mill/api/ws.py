@@ -7,7 +7,7 @@ from pathlib import Path
 from starlette.endpoints import WebSocketEndpoint
 from starlette.websockets import WebSocket
 
-from loom_mill.state import MillStateStore
+from loom_mill.state import MillStateStore, WorkstationOutput, WorkstationStateChanged
 
 
 def _json_default(obj):
@@ -39,8 +39,7 @@ class MillWebSocket(WebSocketEndpoint):
     async def _pump_events(self, websocket: WebSocket, subscription) -> None:
         try:
             async for event in subscription:
-                event_type = type(event).__name__
-                await websocket.send_text(json.dumps({"type": event_type, "data": asdict(event)}, default=_json_default))
+                await websocket.send_text(json.dumps(_event_payload(event), default=_json_default))
         except asyncio.CancelledError:
             pass
 
@@ -51,3 +50,19 @@ class MillWebSocket(WebSocketEndpoint):
         task = websocket.scope.get("subscription_task")
         if task:
             task.cancel()
+
+
+def _event_payload(event) -> dict:
+    if isinstance(event, WorkstationStateChanged):
+        return {
+            "workstation_id": event.workstation_id,
+            "event": "state_change",
+            "payload": asdict(event.workstation),
+        }
+    if isinstance(event, WorkstationOutput):
+        return {
+            "workstation_id": event.workstation_id,
+            "event": "log",
+            "payload": asdict(event.output),
+        }
+    return {"type": type(event).__name__, "data": asdict(event)}
