@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-mill-iteration-history
 Type: Ticket
-Status: active
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: low - straightforward git diff capture and JSON persistence; main concern is race conditions between commit detection and subprocess activity.

@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-mill-scheduling-agent
 Type: Ticket
-Status: active
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: medium - dependency resolution from semi-structured records requires robust parsing; LLM heijunka advisory adds external dependency.
