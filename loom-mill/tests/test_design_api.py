@@ -149,9 +149,11 @@ async def test_send_chat_message_builds_prompt_persists_messages_and_broadcasts(
     )
     session_id = _body(create_response)["session_id"]
     prompts: list[str] = []
+    user_messages: list[str | None] = []
 
-    async def fake_run_harness(command, prompt, session_id_arg, broadcast):
+    async def fake_run_harness(command, prompt, session_id_arg, broadcast, *, user_message=None):
         prompts.append(prompt)
+        user_messages.append(user_message)
         await broadcast({"event": "chat_stream", "data": {"session_id": session_id_arg, "delta": "hello", "done": False}})
         await broadcast(
             {
@@ -188,6 +190,7 @@ async def test_send_chat_message_builds_prompt_persists_messages_and_broadcasts(
     assert "Current document (tickets/example.md)" in prompts[0]
     assert "ID: ticket:example" in prompts[0]
     assert "Operator: shape this" in prompts[0]
+    assert user_messages == ["shape this"]
 
     session_response = await design.get_chat_session(Request(tmp_path, store, path_params={"session_id": session_id}))
     messages = _body(session_response)["messages"]

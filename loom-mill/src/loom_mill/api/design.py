@@ -229,7 +229,7 @@ async def send_chat_message(request: Request) -> JSONResponse:
         await request.app.state.store.publish(ChatEvent(event=message["event"], data=message["data"]))
 
     try:
-        response_text = await run_harness(session.harness_command, prompt, session_id, broadcast)
+        response_text = await run_harness(session.harness_command, prompt, session_id, broadcast, user_message=content)
     except Exception as error:
         await broadcast({"event": "chat_error", "data": {"session_id": session_id, "error": str(error)}})
         return JSONResponse({"error": str(error)}, status_code=500)

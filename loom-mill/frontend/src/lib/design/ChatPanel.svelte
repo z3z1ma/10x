@@ -193,33 +193,32 @@
 </script>
 
 <div class="flex flex-col h-full w-full bg-bg-surface">
-  <!-- Harness Config Header -->
-  <div class="flex items-center gap-2 px-3 py-1.5 border-b border-border-subtle text-[10px]">
-    <span class="text-text-tertiary">Harness:</span>
-    <select bind:value={harnessCommand} on:change={saveHarnessConfig}
-      class="bg-transparent border border-border-default rounded px-1 py-0.5 text-text-secondary text-[10px] focus:outline-none focus:border-border-hover">
-      <option value="echo">echo (test)</option>
-      <option value="opencode run">opencode run</option>
-      <option value="claude -p">claude -p</option>
-      <option value="codex exec">codex exec</option>
-    </select>
-    <button on:click={testConnection} class="ml-auto px-2 py-0.5 rounded text-[9px] bg-bg-surface-active hover:bg-accent-primary/10 text-text-tertiary hover:text-accent-primary transition-colors">
-      {#if testStatus === 'testing'}
-        Testing...
-      {:else if testStatus === 'success'}
-        <span class="text-status-success-text">✓ Connected</span>
-      {:else if testStatus === 'error'}
-        <span class="text-status-error-text">✗ Failed</span>
-      {:else}
-        Test
-      {/if}
-    </button>
-  </div>
-
   <!-- Header -->
   <div class="flex items-center justify-between h-10 px-4 border-b border-border-default shrink-0">
     <div class="flex flex-col">
-      <div class="text-[11px] font-medium text-text-secondary">Chat</div>
+      <div class="flex items-center gap-1.5 text-[11px] font-medium text-text-secondary">
+        <span>Chat</span>
+        <span class="text-text-tertiary">·</span>
+        <select bind:value={harnessCommand} on:change={saveHarnessConfig}
+          class="max-w-24 bg-transparent text-text-secondary text-[10px] focus:outline-none focus:text-text-primary">
+          <option value="echo">echo</option>
+          <option value="opencode run">opencode run</option>
+          <option value="claude -p">claude -p</option>
+          <option value="codex exec">codex exec</option>
+        </select>
+        <span class="text-text-tertiary">·</span>
+        <button on:click={testConnection} class="text-[9px] text-text-tertiary hover:text-accent-primary transition-colors">
+          {#if testStatus === 'testing'}
+            Testing...
+          {:else if testStatus === 'success'}
+            <span class="text-status-success-text">Connected</span>
+          {:else if testStatus === 'error'}
+            <span class="text-status-error-text">Failed</span>
+          {:else}
+            Test
+          {/if}
+        </button>
+      </div>
       {#if store.chatSession.id}
         <div class="text-[9px] text-text-tertiary">
           Session · {store.chatSession.messages.length} messages
@@ -234,7 +233,7 @@
       on:click={createSession}
       disabled={isCreatingSession || store.chatSession.streaming}
     >
-      New Session
+      New
     </button>
   </div>
 
@@ -262,6 +261,17 @@
       {/if}
     {/if}
   </div>
+
+  {#if store.chatSession.streaming && !store.chatSession.streamingContent}
+    <div class="flex items-center gap-2 px-4 py-3 text-[11px] text-text-tertiary animate-pulse">
+      <span class="flex gap-0.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent-primary opacity-60"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-accent-primary opacity-40"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-accent-primary opacity-20"></span>
+      </span>
+      <span>Generating response...</span>
+    </div>
+  {/if}
 
   <!-- Input Area -->
   <ChatInput 

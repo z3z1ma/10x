@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { EditorView, keymap, lineNumbers, highlightActiveLine, drawSelection } from '@codemirror/view';
+  import { EditorView, keymap, lineNumbers, highlightActiveLine } from '@codemirror/view';
   import { EditorState } from '@codemirror/state';
   import { markdown } from '@codemirror/lang-markdown';
   import { defaultKeymap, indentWithTab, history, historyKeymap } from '@codemirror/commands';
@@ -94,6 +94,11 @@
     if (view) {
       view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: content } });
       updateHeadings(content);
+      setTimeout(() => {
+        if (view) {
+          view.scrollDOM.scrollTop = 0;
+        }
+      }, 0);
     }
   }
 
@@ -144,7 +149,6 @@
         extensions: [
           lineNumbers(),
           highlightActiveLine(),
-          drawSelection(),
           highlightSelectionMatches(),
           markdown(),
           millTheme,

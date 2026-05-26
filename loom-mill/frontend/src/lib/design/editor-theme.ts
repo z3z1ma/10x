@@ -23,6 +23,14 @@ export const millTheme = EditorView.theme({
   '&.cm-focused .cm-selectionBackground': {
     backgroundColor: 'rgba(99, 102, 241, 0.35) !important'
   },
+  '.cm-content ::selection': {
+    backgroundColor: 'rgba(99, 102, 241, 0.35) !important',
+    color: 'inherit',
+  },
+  '.cm-content ::-moz-selection': {
+    backgroundColor: 'rgba(99, 102, 241, 0.35) !important',
+    color: 'inherit',
+  },
   '&.cm-focused .cm-cursor': { borderLeftColor: 'var(--color-accent-primary)' },
   '.cm-line': { padding: '0 16px' },
   '.cm-loom-ref': {

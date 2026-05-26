@@ -11,6 +11,8 @@ async def run_harness(
     prompt: str,
     session_id: str,
     broadcast_fn: Callable[[dict], Awaitable[None]],
+    *,
+    user_message: str | None = None,
 ) -> str:
     """Spawn harness, stream output via broadcast_fn, and return the full response."""
     args = shlex.split(command)
@@ -19,7 +21,7 @@ async def run_harness(
 
     # Special echo test mode - no subprocess needed
     if args[0] == "echo":
-        response = f"[echo] {prompt[:500]}"
+        response = user_message or "No message provided"
         await broadcast_fn(
             {"event": "chat_stream", "data": {"session_id": session_id, "delta": response, "done": False}}
         )

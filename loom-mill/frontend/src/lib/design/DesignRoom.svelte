@@ -128,7 +128,14 @@
         documentPath={selectedDocumentId} 
         onSave={handleSaveDocument} 
         onAttachContext={handleAttachContext}
-        onNavigate={(id) => selectedDocumentId = id}
+        onNavigate={(id) => {
+          const record = store.state.records.find(r => r.metadata.id === id || r.path === id);
+          if (record) {
+            selectedDocumentId = record.path;
+          } else {
+            selectedDocumentId = id;
+          }
+        }}
       />
 
       {#if !showChat}

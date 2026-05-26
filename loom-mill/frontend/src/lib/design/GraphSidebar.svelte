@@ -16,7 +16,7 @@
   } = $props();
 
   let searchQuery = $state('');
-  let expandedSections = $state<Set<string>>(new Set(['specs', 'plans', 'tickets', 'research', 'knowledge', 'evidence', 'audit', 'constitution']));
+  let expandedSections = $state<Set<string>>(new Set(['specs']));
 
   function toggleSection(id: string) {
     const newSet = new Set(expandedSections);
@@ -52,10 +52,38 @@
 
   const surfaceOrder = ['specs', 'plans', 'tickets', 'research', 'knowledge', 'evidence', 'audit', 'constitution'];
 
+  const TEMPORAL_SURFACES = new Set(['tickets', 'plans', 'research', 'evidence', 'audit']);
+  const SHOW_LIMIT = 10;
+
+  let showAll = $state<Record<string, boolean>>({});
+
   interface TreeNode {
     record: LoomRecord;
     children: TreeNode[];
     depth: number;
+  }
+
+  function getVisibleNodes(surface: string, nodes: TreeNode[]) {
+    // Sort temporal surfaces by date (newest first)
+    if (TEMPORAL_SURFACES.has(surface)) {
+      nodes = [...nodes].sort((a, b) => {
+        const dateA = (a.record?.path || a.record?.metadata?.id || '').match(/(\d{8})/)?.[1] || '0';
+        const dateB = (b.record?.path || b.record?.metadata?.id || '').match(/(\d{8})/)?.[1] || '0';
+        return dateB.localeCompare(dateA);
+      });
+    } else {
+      // Non-temporal: sort alphabetically by title
+      nodes = [...nodes].sort((a, b) => {
+        const titleA = a.record?.headings?.[0]?.[1] || a.record?.metadata?.id || '';
+        const titleB = b.record?.headings?.[0]?.[1] || b.record?.metadata?.id || '';
+        return titleA.localeCompare(titleB);
+      });
+    }
+    
+    if (TEMPORAL_SURFACES.has(surface) && !showAll[surface] && nodes.length > SHOW_LIMIT) {
+      return nodes.slice(0, SHOW_LIMIT);
+    }
+    return nodes;
   }
 
   function getTitle(record: LoomRecord): string {
@@ -150,9 +178,15 @@
           
           {#if expandedSections.has(surface)}
             <div class="flex flex-col gap-0.5 pl-1">
-              {#each nodes as node}
+              {#each getVisibleNodes(surface, nodes) as node}
                 <TreeNodeComponent {node} {selectedId} {onSelect} allRecords={records} />
               {/each}
+              {#if TEMPORAL_SURFACES.has(surface) && !showAll[surface] && nodes.length > SHOW_LIMIT}
+                <button onclick={() => showAll = {...showAll, [surface]: true}}
+                  class="w-full py-1.5 text-[10px] text-center text-accent-primary hover:text-accent-primary-hover hover:bg-bg-surface-active rounded">
+                  Show {nodes.length - SHOW_LIMIT} more
+                </button>
+              {/if}
             </div>
           {/if}
         </div>
