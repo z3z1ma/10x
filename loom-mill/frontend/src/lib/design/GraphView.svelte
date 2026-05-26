@@ -23,8 +23,7 @@
   }
 
   type GraphMode = 'connected' | 'hierarchy';
-  type HierarchyScope = 'workspace' | 'subtree';
-
+  
   let containerEl: HTMLDivElement;
   let width = $state(600);
   let height = $state(400);
@@ -32,8 +31,7 @@
   let graphEdges = $state<GraphEdge[]>([]);
   let hoveredNode = $state<GraphNode | null>(null);
   let mode = $state<GraphMode>('connected');
-  let hierarchyScope = $state<HierarchyScope>('workspace');
-  let simulation: Simulation<GraphNode, GraphEdge> | null = null;
+    let simulation: Simulation<GraphNode, GraphEdge> | null = null;
   let draggingNode: GraphNode | null = null;
 
   onMount(() => {
@@ -55,11 +53,6 @@
     const records = store.state.records;
     const currentRecord = documentId ? records.find((record) => record.metadata.id === documentId || record.path === documentId) : null;
 
-    if (hierarchyScope === 'subtree' && currentRecord?.surface !== 'plans') {
-      hierarchyScope = 'workspace';
-      return;
-    }
-
     if (mode === 'connected') {
       if (!documentId) {
         simulation?.stop();
@@ -72,8 +65,13 @@
       runSimulation(graph.nodes, graph.edges);
     } else {
       simulation?.stop();
-      const graph = computeDag(records, documentId, hierarchyScope);
-      layoutDag(graph.nodes);
+      if (!documentId) {
+        graphNodes = [];
+        graphEdges = [];
+        return;
+      }
+      const graph = computeDag(documentId, records);
+      layoutDag(graph.nodes, graph.edges);
       graphNodes = [...graph.nodes];
       graphEdges = [...graph.edges];
     }
@@ -143,89 +141,35 @@
     return { nodes, edges };
   }
 
-  function computeDag(records: LoomRecord[], currentRecordId: string | null, scope: HierarchyScope) {
-    const currentRecord = currentRecordId ? records.find((record) => record.metadata.id === currentRecordId || record.path === currentRecordId) : null;
-    const scopedRecords = scope === 'subtree' && currentRecord?.surface === 'plans' ? currentSubtree(records, currentRecord) : records;
-    const recordIds = new Set(scopedRecords.map(getRecordId));
-    const nodes = scopedRecords.map((record) => ({
-      id: getRecordId(record),
-      label: getLabel(record),
-      path: record.path,
-      surface: record.surface,
-      status: record.metadata.status,
-      isCurrent: currentRecord ? matchesRecordRef(record, getRecordId(currentRecord)) : false,
-      layer: getLayer(record.surface),
-      fx: null,
-      fy: null,
-    }));
-    const edges: GraphEdge[] = [];
-    const edgeIds = new Set<string>();
-
-    for (const record of scopedRecords) {
-      const childId = getRecordId(record);
-      const childLayer = getLayer(record.surface);
-
-      for (const ref of record.references || []) {
-        const parent = findRecord(scopedRecords, ref);
-        if (!parent) continue;
-
-        const parentId = getRecordId(parent);
-        const parentLayer = getLayer(parent.surface);
-        if (parentLayer <= childLayer) addDagEdge(parentId, childId, 'hierarchy');
-      }
-
-      for (const dep of record.metadata.depends_on || []) {
-        const target = findRecord(scopedRecords, dep);
-        const targetId = target ? getRecordId(target) : dep;
-        if (recordIds.has(targetId)) addDagEdge(childId, targetId, 'depends_on');
-      }
+  function computeDag(currentRecordId: string, records: LoomRecord[]) {
+    const { nodes, edges } = computeGraph(currentRecordId, records);
+    
+    for (const node of nodes) {
+      node.layer = getLayer(node.surface);
     }
 
-    function addDagEdge(sourceId: string, targetId: string, type: GraphEdge['type']) {
-      if (sourceId === targetId) return;
-      const edgeId = `${sourceId}->${targetId}:${type}`;
-      if (edgeIds.has(edgeId)) return;
-      edges.push({ source: sourceId, target: targetId, type });
-      edgeIds.add(edgeId);
+    const dagEdges: GraphEdge[] = [];
+    for (const edge of edges) {
+      const sourceNode = nodes.find(n => n.id === edge.source);
+      const targetNode = nodes.find(n => n.id === edge.target);
+      if (!sourceNode || !targetNode) continue;
+      
+      if (edge.type === 'references') {
+         if ((targetNode.layer ?? 0) <= (sourceNode.layer ?? 0)) {
+           dagEdges.push({ source: targetNode.id, target: sourceNode.id, type: 'hierarchy' });
+         } else {
+           dagEdges.push({ source: sourceNode.id, target: targetNode.id, type: 'hierarchy' });
+         }
+      } else if (edge.type === 'depends_on') {
+         dagEdges.push({ source: edge.source, target: edge.target, type: 'depends_on' });
+      }
     }
-
-    return { nodes, edges };
+    
+    return { nodes, edges: dagEdges };
   }
 
-  function currentSubtree(records: LoomRecord[], root: LoomRecord) {
-    const included = new Set([getRecordId(root)]);
-    let changed = true;
-
-    while (changed) {
-      changed = false;
-      for (const record of records) {
-        const recordId = getRecordId(record);
-        if (included.has(recordId)) continue;
-
-        const referencesIncludedParent = (record.references || []).some((ref) => {
-          const parent = findRecord(records, ref);
-          return parent && included.has(getRecordId(parent)) && getLayer(parent.surface) <= getLayer(record.surface);
-        });
-
-        if (referencesIncludedParent) {
-          included.add(recordId);
-          changed = true;
-        }
-      }
-    }
-
-    for (const record of records) {
-      if (!included.has(getRecordId(record))) continue;
-      for (const dep of record.metadata.depends_on || []) {
-        const target = findRecord(records, dep);
-        if (target) included.add(getRecordId(target));
-      }
-    }
-
-    return records.filter((record) => included.has(getRecordId(record)));
-  }
-
-  function layoutDag(nodes: GraphNode[]) {
+  
+  function layoutDag(nodes: GraphNode[], edges: GraphEdge[]) {
     const layers = new Map<number, GraphNode[]>();
     for (const node of nodes) {
       const layer = node.layer ?? getLayer(node.surface);
@@ -234,6 +178,50 @@
     }
 
     const sortedLayers = [...layers.keys()].sort((a, b) => a - b);
+    if (sortedLayers.length === 0) return;
+
+    for (let pass = 0; pass < 4; pass++) {
+      for (let i = 1; i < sortedLayers.length; i++) {
+        const currentLayer = sortedLayers[i];
+        const prevLayer = sortedLayers[i - 1];
+        const currentNodes = layers.get(currentLayer)!;
+        
+        for (const node of currentNodes) {
+          const parents = edges
+            .filter(e => e.target === node.id && nodes.find(n => n.id === e.source)?.layer === prevLayer)
+            .map(e => layers.get(prevLayer)!.findIndex(n => n.id === e.source))
+            .filter(idx => idx !== -1);
+            
+          if (parents.length > 0) {
+            (node as any)._barycenter = parents.reduce((a, b) => a + b, 0) / parents.length;
+          } else {
+            (node as any)._barycenter = currentNodes.indexOf(node);
+          }
+        }
+        currentNodes.sort((a, b) => (a as any)._barycenter - (b as any)._barycenter);
+      }
+      
+      for (let i = sortedLayers.length - 2; i >= 0; i--) {
+        const currentLayer = sortedLayers[i];
+        const nextLayer = sortedLayers[i + 1];
+        const currentNodes = layers.get(currentLayer)!;
+        
+        for (const node of currentNodes) {
+          const children = edges
+            .filter(e => e.source === node.id && nodes.find(n => n.id === e.target)?.layer === nextLayer)
+            .map(e => layers.get(nextLayer)!.findIndex(n => n.id === e.target))
+            .filter(idx => idx !== -1);
+            
+          if (children.length > 0) {
+            (node as any)._barycenter = children.reduce((a, b) => a + b, 0) / children.length;
+          } else {
+            (node as any)._barycenter = currentNodes.indexOf(node);
+          }
+        }
+        currentNodes.sort((a, b) => (a as any)._barycenter - (b as any)._barycenter);
+      }
+    }
+
     const layerHeight = height / (sortedLayers.length + 1);
     const usableWidth = Math.max(240, width - 120);
     const xOffset = width > 520 ? 80 : 24;
@@ -304,15 +292,15 @@
 
   function getLayer(surface: string | null): number {
     switch (surface) {
-      case 'plans':
-      case 'constitution': return 0;
-      case 'specs': return 1;
-      case 'tickets': return 2;
+      case 'research': return 0;
+      case 'constitution':
+      case 'knowledge': return 1;
+      case 'specs': return 2;
+      case 'plans': return 3;
+      case 'tickets': return 4;
       case 'evidence':
-      case 'audit':
-      case 'knowledge':
-      case 'research': return 3;
-      default: return 2;
+      case 'audit': return 5;
+      default: return 4;
     }
   }
 
@@ -344,10 +332,12 @@
 
   function layerLabel(layer: number) {
     switch (layer) {
-      case 0: return 'Plans';
-      case 1: return 'Specs';
-      case 2: return 'Tickets';
-      case 3: return 'Evidence';
+      case 0: return 'Research';
+      case 1: return 'Knowledge';
+      case 2: return 'Specs';
+      case 3: return 'Plans';
+      case 4: return 'Tickets';
+      case 5: return 'Evidence';
       default: return 'Other';
     }
   }
@@ -361,11 +351,7 @@
     return [...labels.entries()].sort(([a], [b]) => a - b).map(([layer, y]) => ({ layer, y, label: layerLabel(layer) }));
   }
 
-  function isCurrentPlan() {
-    const record = documentId ? store.state.records.find((item) => item.metadata.id === documentId || item.path === documentId) : null;
-    return record?.surface === 'plans';
-  }
-
+  
   function handlePointerDown(event: PointerEvent, node: GraphNode) {
     draggingNode = node;
     if (mode === 'connected') {
@@ -418,17 +404,7 @@
       </button>
     </div>
 
-    {#if mode === 'hierarchy'}
-      <select
-        class="h-6 rounded border border-border-subtle bg-bg-primary px-2 text-[10px] text-text-secondary outline-none disabled:opacity-50"
-        bind:value={hierarchyScope}
-        disabled={!isCurrentPlan()}
-        title={isCurrentPlan() ? 'Hierarchy scope' : 'Current subtree is available for plan records'}
-      >
-        <option value="workspace">Full workspace</option>
-        <option value="subtree">Current subtree</option>
-      </select>
-    {/if}
+    
   </div>
 
   {#if graphNodes.length > 0}
@@ -463,17 +439,29 @@
           {@const source = edgeNode(edge.source)}
           {@const target = edgeNode(edge.target)}
           {#if source && target}
-            <line
-              x1={source.x}
-              y1={source.y}
-              x2={target.x}
-              y2={target.y}
-              stroke={edge.type === 'depends_on' ? 'var(--accent-primary)' : 'var(--border-subtle)'}
-              stroke-width={edge.type === 'depends_on' ? 1.4 : 1}
-              stroke-opacity={edge.type === 'depends_on' ? 0.55 : 0.72}
-              stroke-dasharray={edge.type === 'depends_on' ? '4 3' : undefined}
-              marker-end="url(#graph-arrow)"
-            />
+            {#if mode === 'hierarchy'}
+              <path
+                d="M {source.x ?? 0} {source.y ?? 0} C {source.x ?? 0} {((source.y ?? 0) + (target.y ?? 0)) / 2}, {target.x ?? 0} {((source.y ?? 0) + (target.y ?? 0)) / 2}, {target.x ?? 0} {target.y ?? 0}"
+                fill="none"
+                stroke={edge.type === 'depends_on' ? 'var(--accent-primary)' : 'var(--border-subtle)'}
+                stroke-width={edge.type === 'depends_on' ? 1.4 : 1}
+                stroke-opacity={edge.type === 'depends_on' ? 0.55 : 0.72}
+                stroke-dasharray={edge.type === 'depends_on' ? '4 3' : undefined}
+                marker-end="url(#graph-arrow)"
+              />
+            {:else}
+              <line
+                x1={source.x}
+                y1={source.y}
+                x2={target.x}
+                y2={target.y}
+                stroke={edge.type === 'depends_on' ? 'var(--accent-primary)' : 'var(--border-subtle)'}
+                stroke-width={edge.type === 'depends_on' ? 1.4 : 1}
+                stroke-opacity={edge.type === 'depends_on' ? 0.55 : 0.72}
+                stroke-dasharray={edge.type === 'depends_on' ? '4 3' : undefined}
+                marker-end="url(#graph-arrow)"
+              />
+            {/if}
           {/if}
         {/each}
       </g>
