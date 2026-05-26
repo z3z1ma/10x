@@ -2,9 +2,10 @@
 
 ID: spec:loom-mill-factory-floor-mvp
 Type: Spec
-Status: draft
+Status: superseded
 Created: 2026-05-25
 Updated: 2026-05-25
+Superseded By: spec:mill-factory-floor
 
 ## Summary
 
