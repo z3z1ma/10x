@@ -2,7 +2,7 @@
 
 ID: ticket:20260526-mill-dr-critical-fixes
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: medium - harness subprocess invocation is the root cause of the chat failure

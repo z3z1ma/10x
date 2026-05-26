@@ -2,7 +2,7 @@
 
 ID: plan:20260526-mill-design-room-polish
 Type: Plan
-Status: open
+Status: completed
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: medium - harness fix requires testing with real subprocess; CodeMirror extensions are well-documented

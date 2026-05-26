@@ -2,7 +2,7 @@
 
 ID: ticket:20260526-mill-dr-chat-hardening
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: low - UI polish on working chat foundation
