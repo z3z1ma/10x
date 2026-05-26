@@ -3,8 +3,14 @@
   import { apiUrl } from '../api';
   import GraphSidebar from './GraphSidebar.svelte';
   import DocumentEditor from './DocumentEditor.svelte';
+  import ChatPanel from './ChatPanel.svelte';
 
   let selectedDocumentId = $state<string | null>(null);
+  let chatContext = $state<any>(null);
+
+  function handleAttachContext(context: { path: string, selected_text: string, line_range: [number, number] }) {
+    chatContext = context;
+  }
 
   async function handleCreateRecord(surface: string) {
     try {
@@ -66,16 +72,16 @@
     <DocumentEditor 
       documentPath={selectedDocumentId} 
       onSave={handleSaveDocument} 
+      onAttachContext={handleAttachContext}
     />
   </div>
   
   <!-- Right: Chat panel -->
   <div class="w-[360px] shrink-0 border-l border-border-default flex flex-col bg-bg-surface">
-    <div class="flex items-center h-8 px-4 border-b border-border-default text-[11px] font-medium text-text-secondary">
-      Chat
-    </div>
-    <div class="flex-1 flex items-center justify-center text-[12px] text-text-tertiary p-4">
-      <p>Chat panel will connect to your AI harness for shaping work.</p>
-    </div>
+    <ChatPanel 
+      documentPath={selectedDocumentId} 
+      attachedContext={chatContext}
+      onClearContext={() => chatContext = null}
+    />
   </div>
 </div>

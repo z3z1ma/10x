@@ -9,7 +9,7 @@
   import { apiUrl } from '../api';
   import { store } from '../ws.svelte';
   
-  let { documentPath, onSave }: { documentPath: string | null; onSave: (content: string) => void } = $props();
+  let { documentPath, onSave, onAttachContext }: { documentPath: string | null; onSave: (content: string) => void; onAttachContext?: (context: any) => void } = $props();
   
   let view: EditorView | null = null;
   let modified = $state(false);
@@ -74,6 +74,23 @@
     }
   }
 
+  function handleAttachContext() {
+    if (!view || !documentPath || !onAttachContext) return;
+    
+    const selection = view.state.selection.main;
+    if (selection.empty) return;
+    
+    const selectedText = view.state.sliceDoc(selection.from, selection.to);
+    const startLine = view.state.doc.lineAt(selection.from).number;
+    const endLine = view.state.doc.lineAt(selection.to).number;
+    
+    onAttachContext({
+      path: documentPath,
+      selected_text: selectedText,
+      line_range: [startLine, endLine]
+    });
+  }
+
   function initEditor(node: HTMLDivElement) {
     const saveKeymap = keymap.of([{ key: 'Mod-s', run: () => { handleSave(); return true; } }]);
     
@@ -131,6 +148,17 @@
       {#if conflict}
         <span class="ml-2 text-status-warning-text">File changed externally</span>
         <button class="ml-1 text-[10px] underline" onclick={() => fetchContent(documentPath!)}>Reload</button>
+      {/if}
+      <div class="flex-1"></div>
+      {#if onAttachContext}
+        <button 
+          class="text-text-tertiary hover:text-text-primary transition-colors flex items-center gap-1"
+          onclick={handleAttachContext}
+          title="Select text and click to attach to chat"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          Attach
+        </button>
       {/if}
     {:else}
       <span class="text-text-tertiary">No document open</span>

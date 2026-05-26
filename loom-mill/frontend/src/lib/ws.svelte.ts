@@ -16,6 +16,13 @@ export class MillStore {
   error = $state<string | null>(null);
   maxReconnectAttempts = 10;
 
+  chatSession = $state<{
+    id: string | null;
+    messages: Array<{ role: string; content: string; context?: any; timestamp: string }>;
+    streaming: boolean;
+    streamingContent: string;
+  }>({ id: null, messages: [], streaming: false, streamingContent: '' });
+
   private ws: WebSocket | null = null;
   private reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -152,6 +159,20 @@ export class MillStore {
         break;
       case 'GitStateChanged':
         this.state.git = data.git;
+        break;
+      case 'chat_stream':
+        this.chatSession.streaming = true;
+        this.chatSession.streamingContent += data.delta;
+        break;
+      case 'chat_complete':
+        this.chatSession.streaming = false;
+        this.chatSession.messages.push(data.message);
+        this.chatSession.streamingContent = '';
+        break;
+      case 'chat_error':
+        this.chatSession.streaming = false;
+        this.chatSession.messages.push({ role: 'system', content: `Error: ${data.error}`, timestamp: new Date().toISOString() });
+        this.chatSession.streamingContent = '';
         break;
     }
   }
