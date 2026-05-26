@@ -2,9 +2,9 @@
 
 ID: plan:20260525-factory-floor-mvp
 Type: Plan
-Status: open
+Status: completed
 Created: 2026-05-25
-Updated: 2026-05-25
+Updated: 2026-05-26
 Risk: medium - new application layer with subprocess management, worktree isolation, and real-time state push; architecture change to a repo that currently ships only a Markdown skill corpus.
 
 ## Summary
@@ -151,8 +151,9 @@ What becomes true: the operator gets automatic summaries between iterations and 
 
 ## Current State
 
-Plan created with nine child tickets spanning three milestones. No execution has started. The first parallel work is Units 1 (scaffold), which unblocks both tracks. After scaffold, Units 2-4 (visibility track) and Unit 5 (execution track) can proceed in parallel.
+Completed. The nine planned execution units have concrete child tickets, and each child ticket is now in a terminal `closed` state. The Visible Graph, Core Factory Loop, and Quality Signals milestones are accepted as complete for this MVP planning surface. Execution details, acceptance, and any follow-up truth remain owned by the child tickets and later follow-up Mill records; no separate plan-level audit record was found during closure.
 
 ## Journal
 
 - 2026-05-25: Created plan from `spec:loom-mill-factory-floor-mvp` with all blocking open questions resolved. Nine execution units, three milestones, two parallel tracks converging at operator controls.
+- 2026-05-26: Closed plan after operator confirmed the work is done. Verified all nine child ticket records are `Status: closed`; plan-level closure records the strategy completion without duplicating child-ticket execution detail.
