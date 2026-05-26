@@ -3,10 +3,13 @@ from __future__ import annotations
 import asyncio
 import re
 import uuid
+from dataclasses import asdict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from loom_mill.state.models import WorkstationIterationCompleted, WorkstationOutput, WorkstationStateChanged, WorkstationTakt
+from loom_mill.iterations import IterationStore
+from loom_mill.processes import SPCEngine, SPCSignal
+from loom_mill.state.models import WorkstationAndon, WorkstationIterationCompleted, WorkstationOutput, WorkstationStateChanged, WorkstationTakt
 
 from .config import FactoryConfig, HarnessConfig
 from .engine import WorkstationEngine
@@ -21,12 +24,14 @@ class WorkstationManager:
         self.workspace_root = workspace_root.resolve()
         self.store = store
         self.config = config
+        self.spc_engine = SPCEngine(config)
         self.workstations: dict[str, WorkstationEngine] = {}
         self._tasks: dict[str, set[asyncio.Task[None]]] = {}
         self._lock = asyncio.Lock()
 
     def update_config(self, config: FactoryConfig) -> None:
         self.config = config
+        self.spc_engine = SPCEngine(config)
 
     def list(self) -> list[WorkstationState]:
         return [engine.state for engine in self.workstations.values()]
@@ -138,6 +143,7 @@ class WorkstationManager:
                 if engine.state.status != WorkstationStatus.RUNNING and engine.iteration_queue.empty() and self._engine_wait_done(engine):
                     break
                 continue
+            iteration = await self._run_spc(engine, iteration)
             await self.store.publish(WorkstationIterationCompleted(workstation_id=engine.workstation_id, iteration=iteration))
             await self.store.publish(
                 WorkstationTakt(
@@ -146,6 +152,22 @@ class WorkstationManager:
                     duration_seconds=iteration.duration_seconds,
                 )
             )
+
+    async def _run_spc(self, engine: WorkstationEngine, iteration):
+        store = IterationStore(self.workspace_root, engine.workstation_id)
+        signal = await self.spc_engine.analyze(engine.workstation_id, [asdict(record) for record in store.list()])
+        iteration = store.save_spc_signal(iteration.iteration, asdict(signal))
+        if signal.signal in {"alert", "stop"}:
+            await self._publish_andon(engine, signal)
+        if signal.signal == "stop" and engine.state.status == WorkstationStatus.RUNNING:
+            await self.pause(engine.workstation_id)
+        return iteration
+
+    async def _publish_andon(self, engine: WorkstationEngine, signal: SPCSignal) -> None:
+        engine.state.andon.active = True
+        engine.state.andon.signals = [signal]
+        await self._publish_state(engine)
+        await self.store.publish(WorkstationAndon(workstation_id=engine.workstation_id, signal=signal))
 
     def _engine_wait_done(self, engine: WorkstationEngine) -> bool:
         return engine.wait_done()

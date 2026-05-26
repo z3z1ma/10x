@@ -6,6 +6,7 @@ from pathlib import Path
 
 from loom_mill.processes import IterationSummary
 from loom_mill.processes.backpressure import BackpressureSignal
+from loom_mill.processes.spc import SPCSignal
 
 
 class WorkstationStatus(StrEnum):
@@ -49,4 +50,4 @@ class WorkstationState:
 @dataclass
 class AndonState:
     active: bool = False
-    signals: list[BackpressureSignal] = field(default_factory=list)
+    signals: list[BackpressureSignal | SPCSignal] = field(default_factory=list)

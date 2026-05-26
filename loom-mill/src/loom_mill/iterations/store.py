@@ -18,6 +18,7 @@ class IterationRecord:
     lines_removed: int
     diff_stat: str
     previous_commit_sha: str | None = None
+    spc_signal: dict | None = None
 
 
 class IterationStore:
@@ -56,6 +57,13 @@ class IterationStore:
         self.root.mkdir(parents=True, exist_ok=True)
         self._json_path(record.iteration).write_text(json.dumps(asdict(record), indent=2) + "\n", encoding="utf-8")
         self._diff_path(record.iteration).write_text(diff, encoding="utf-8")
+
+    def save_spc_signal(self, iteration: int, signal: dict) -> IterationRecord:
+        from dataclasses import replace
+
+        record = replace(self.get(iteration), spc_signal=signal)
+        self._json_path(iteration).write_text(json.dumps(asdict(record), indent=2) + "\n", encoding="utf-8")
+        return record
 
     def aggregate_diff(self) -> str:
         diffs = []

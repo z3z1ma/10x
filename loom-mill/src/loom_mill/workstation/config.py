@@ -32,4 +32,14 @@ class FactoryConfig:
     ready_to_ship_statuses: list[str] = field(default_factory=lambda: ["review", "closed"])
     scheduling_enabled: bool = False
     ready_ticket_statuses: list[str] = field(default_factory=lambda: ["open"])
-    spc_model: str | None = None
+    spc_enabled: bool = True
+    spc_model: str = ""
+    spc_thresholds: dict = field(
+        default_factory=lambda: {
+            "repetition_count": 3,
+            "churn_count": 3,
+            "escalation_count": 3,
+            "stall_count": 2,
+        }
+    )
+    spc_timeout_seconds: float = 5.0

@@ -6,6 +6,7 @@ from typing import Literal
 from loom_mill.parser import LoomRecord
 from loom_mill.iterations import IterationRecord
 from loom_mill.processes.backpressure import BackpressureSignal
+from loom_mill.processes.spc import SPCSignal
 from loom_mill.workstation.models import OutputEvent, WorkstationState
 
 
@@ -75,6 +76,12 @@ class WorkstationTakt:
 
 
 @dataclass(frozen=True)
+class WorkstationAndon:
+    workstation_id: str
+    signal: SPCSignal
+
+
+@dataclass(frozen=True)
 class ShippingEvent:
     workstation_id: str
     ticket_id: str
@@ -94,5 +101,6 @@ MillEvent = (
     | WorkstationOutput
     | WorkstationIterationCompleted
     | WorkstationTakt
+    | WorkstationAndon
     | ShippingEvent
 )

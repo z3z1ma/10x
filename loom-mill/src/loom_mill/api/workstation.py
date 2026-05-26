@@ -68,7 +68,10 @@ def _config_payload(config: FactoryConfig) -> dict:
         "ready_to_ship_statuses": config.ready_to_ship_statuses,
         "scheduling_enabled": config.scheduling_enabled,
         "ready_ticket_statuses": config.ready_ticket_statuses,
+        "spc_enabled": config.spc_enabled,
         "spc_model": config.spc_model,
+        "spc_thresholds": config.spc_thresholds,
+        "spc_timeout_seconds": config.spc_timeout_seconds,
     }
 
 
@@ -118,7 +121,10 @@ def load_factory_config(config_path: Path) -> FactoryConfig:
         ready_to_ship_statuses=[str(status) for status in statuses],
         scheduling_enabled=bool(data.get("scheduling_enabled", DEFAULT_CONFIG.scheduling_enabled)),
         ready_ticket_statuses=[str(status) for status in ready_ticket_statuses],
-        spc_model=str(data["spc_model"]) if data.get("spc_model") else None,
+        spc_enabled=bool(data.get("spc_enabled", DEFAULT_CONFIG.spc_enabled)),
+        spc_model=str(data.get("spc_model") or ""),
+        spc_thresholds=dict(data.get("spc_thresholds", DEFAULT_CONFIG.spc_thresholds)),
+        spc_timeout_seconds=float(data.get("spc_timeout_seconds", DEFAULT_CONFIG.spc_timeout_seconds)),
     )
 
 
@@ -144,7 +150,10 @@ def save_harness_config(config_path: Path, config: HarnessConfig) -> None:
             ready_to_ship_statuses=existing.ready_to_ship_statuses,
             scheduling_enabled=existing.scheduling_enabled,
             ready_ticket_statuses=existing.ready_ticket_statuses,
+            spc_enabled=existing.spc_enabled,
             spc_model=existing.spc_model,
+            spc_thresholds=existing.spc_thresholds,
+            spc_timeout_seconds=existing.spc_timeout_seconds,
         ),
     )
 
@@ -184,6 +193,9 @@ async def put_config(request: Request) -> JSONResponse:
         ready_ticket_statuses = data.get("ready_ticket_statuses", existing.ready_ticket_statuses)
         if not isinstance(ready_ticket_statuses, list):
             raise ValueError("ready_ticket_statuses must be a list")
+        spc_thresholds = data.get("spc_thresholds", existing.spc_thresholds)
+        if not isinstance(spc_thresholds, dict):
+            raise ValueError("spc_thresholds must be an object")
     except (json.JSONDecodeError, TypeError, ValueError) as error:
         return JSONResponse({"error": str(error)}, status_code=400)
     config = FactoryConfig(
@@ -195,7 +207,10 @@ async def put_config(request: Request) -> JSONResponse:
         ready_to_ship_statuses=[str(status) for status in statuses],
         scheduling_enabled=bool(data.get("scheduling_enabled", existing.scheduling_enabled)),
         ready_ticket_statuses=[str(status) for status in ready_ticket_statuses],
-        spc_model=str(data["spc_model"]) if data.get("spc_model") else None,
+        spc_enabled=bool(data.get("spc_enabled", existing.spc_enabled)),
+        spc_model=str(data.get("spc_model") or ""),
+        spc_thresholds=spc_thresholds,
+        spc_timeout_seconds=float(data.get("spc_timeout_seconds", existing.spc_timeout_seconds)),
     )
     save_factory_config(_config_path(request), config)
     _manager(request).update_config(config)
