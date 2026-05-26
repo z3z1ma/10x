@@ -1,6 +1,10 @@
 <script lang="ts">
   import type { LoomRecord, WorkstationState } from './types';
+  import ReadyTicketRow from './ReadyTicketRow.svelte';
   import WorkstationRow from './WorkstationRow.svelte';
+
+  const WIP_LIMIT = 3;
+  const READY_STATUSES = new Set(['open', 'shaped', 'todo']);
 
   let { 
     records, 
@@ -14,7 +18,8 @@
     onSelect: (id: string) => void;
   } = $props();
 
-  let expanded = $state(false);
+  let readyExpanded = $state(true);
+  let completedExpanded = $state(false);
 
   let activeWorkstations = $derived(() => {
     const active: { id: string; record?: LoomRecord; state: WorkstationState }[] = [];
@@ -38,6 +43,33 @@
     return completed;
   });
 
+  let activeTicketIds = $derived(() => {
+    const ids = new Set<string>();
+    for (const state of Object.values(workstations)) {
+      if (state.status !== 'completed' && state.status !== 'finished' && state.ticket_id) {
+        ids.add(state.ticket_id.replace(/^ticket:/, ''));
+      }
+    }
+    return ids;
+  });
+
+  let readyTickets = $derived(() => {
+    return records
+      .filter((record) => {
+        const isTicket = record.metadata.type === 'Ticket' || record.path.includes('/tickets/');
+        const status = record.metadata.status || '';
+        const ticketId = (record.metadata.id || record.path.split('/').pop()?.replace(/\.md$/, '') || '').replace(/^ticket:/, '');
+        return isTicket && READY_STATUSES.has(status) && !activeTicketIds().has(ticketId);
+      })
+      .sort((a, b) => {
+        const titleA = a.headings[0]?.[1] || a.metadata.id || a.path;
+        const titleB = b.headings[0]?.[1] || b.metadata.id || b.path;
+        return titleA.localeCompare(titleB);
+      });
+  });
+
+  let atWipLimit = $derived(activeWorkstations().length >= WIP_LIMIT);
+
   async function clearAllCompleted(e: Event) {
     e.stopPropagation();
     const apiBase = `${window.location.protocol}//${window.location.hostname}:8765`;
@@ -56,16 +88,40 @@
   <!-- List header with WIP indicator -->
   <div class="flex items-center justify-between px-3 py-2 border-b border-border-default shrink-0">
     <span class="text-[11px] font-medium text-text-secondary uppercase tracking-wider">Workstations</span>
-    <span class="text-[10px] text-text-tertiary">{activeWorkstations().length}/3 WIP</span>
+    <span class="text-[10px] text-text-tertiary">{activeWorkstations().length}/{WIP_LIMIT} WIP</span>
   </div>
   
   <div class="flex-1 overflow-y-auto">
+    <!-- Ready tickets -->
+    {#if readyTickets().length > 0}
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <div class="flex items-center justify-between px-3 py-1.5 border-b border-border-subtle cursor-pointer hover:bg-bg-surface-elevated transition-colors" onclick={() => readyExpanded = !readyExpanded}>
+        <div class="flex items-center gap-2">
+          <span class="text-[9px] font-medium text-text-tertiary uppercase tracking-widest">Ready</span>
+          <span class="text-[9px] text-text-tertiary">({readyTickets().length})</span>
+        </div>
+        <span class="text-[10px] text-text-tertiary">{readyExpanded ? '▾' : '▸'}</span>
+      </div>
+      {#if readyExpanded}
+        {#each readyTickets() as record (record.path)}
+          <ReadyTicketRow {record} {atWipLimit} />
+        {/each}
+      {/if}
+    {/if}
+
     <!-- Active workstations -->
-    {#if activeWorkstations().length === 0 && completedWorkstations().length === 0}
+    {#if activeWorkstations().length === 0 && completedWorkstations().length === 0 && readyTickets().length === 0}
       <div class="m-4 flex items-center justify-center rounded-lg border border-dashed border-border-default p-6 text-center">
-        <span class="text-[12px] text-text-tertiary">No workstations running. Start one from the pipeline status bar.</span>
+        <p class="text-[12px] text-text-tertiary">No tickets ready for execution.</p>
+        <p class="mt-1 text-[11px] text-text-tertiary opacity-70">Tickets with status "open" in .loom/tickets/ will appear here.</p>
       </div>
     {:else}
+      {#if activeWorkstations().length > 0}
+        <div class="flex items-center px-3 py-1 border-t border-border-subtle">
+          <span class="text-[9px] font-medium text-text-tertiary uppercase tracking-widest">Active</span>
+        </div>
+      {/if}
       {#each activeWorkstations() as ws (ws.id)}
         <WorkstationRow
           workstationId={ws.id}
@@ -82,14 +138,14 @@
     {#if completedWorkstations().length > 0}
       <!-- svelte-ignore a11y_click_events_have_key_events -->
       <!-- svelte-ignore a11y_no_static_element_interactions -->
-      <div class="flex items-center justify-between px-3 py-1.5 border-t border-border-subtle hover:bg-bg-surface-elevated transition-colors cursor-pointer" onclick={() => expanded = !expanded}>
+      <div class="flex items-center justify-between px-3 py-1.5 border-t border-border-subtle hover:bg-bg-surface-elevated transition-colors cursor-pointer" onclick={() => completedExpanded = !completedExpanded}>
         <div class="flex items-center gap-2">
           <span class="text-[10px] text-text-tertiary">Completed ({completedWorkstations().length})</span>
-          <span class="text-[10px] text-text-tertiary">{expanded ? '▾' : '▸'}</span>
+          <span class="text-[10px] text-text-tertiary">{completedExpanded ? '▾' : '▸'}</span>
         </div>
         <button class="text-[10px] text-text-tertiary hover:text-text-secondary underline" onclick={clearAllCompleted}>Clear all</button>
       </div>
-      {#if expanded}
+      {#if completedExpanded}
         {#each completedWorkstations() as ws (ws.id)}
           <WorkstationRow 
             workstationId={ws.id}

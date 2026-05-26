@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-mill-ticket-queue-start
 Type: Ticket
-Status: open
+Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: low - frontend component addition with one existing backend call (POST /workstations).
@@ -205,8 +205,9 @@ But for now, the scheduling agent is code-complete but not visually surfaced. Ma
 
 ## Current State
 
-Ready to start. The backend endpoint exists, the WorkstationList component exists, this is adding a new section to it.
+Implementation run completed for the scoped frontend files. `ReadyTicketRow.svelte` was added, `WorkstationList.svelte` now renders Ready, Active, and Completed sections, and the requested frontend build passed. Remaining ticket acceptance still needs UI/runtime evidence for filtering, Start POST behavior, WIP-limit disabling, and visual hierarchy before closure.
 
 ## Journal
 
 - 2026-05-25: Created ticket. Source: operator identified that the layout overhaul removed the only way to start workstations and the empty state references non-existent UI.
+- 2026-05-25: Bounded Ralph implementation run added `loom-mill/frontend/src/lib/ReadyTicketRow.svelte` and updated `loom-mill/frontend/src/lib/WorkstationList.svelte`. Build evidence recorded in `evidence:20260525-mill-ticket-queue-start-build`.
