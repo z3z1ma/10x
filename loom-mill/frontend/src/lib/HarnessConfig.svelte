@@ -10,6 +10,7 @@
   let saving = $state(false);
   let message = $state('');
   let testing = $state(false);
+  let loading = $state(false);
   let testResult = $state<{success: boolean, output?: string, error?: string} | null>(null);
 
   function applyConfig(config: HarnessConfig) {
@@ -35,32 +36,53 @@
   }
 
   async function loadConfig() {
-    const response = await fetch(apiUrl('/api/config/harness'));
-    if (response.ok) {
-      applyConfig(await response.json());
+    loading = true;
+    try {
+      const response = await fetch(apiUrl('/api/config/harness'));
+      if (response.ok) {
+        applyConfig(await response.json());
+      } else {
+        throw new Error(`${response.status}: ${response.statusText}`);
+      }
+    } catch (err) {
+      message = err instanceof Error ? err.message : 'Failed to load config';
+      setTimeout(() => message = '', 5000);
+    } finally {
+      loading = false;
     }
   }
 
   async function saveConfig() {
     saving = true;
     message = '';
-    const response = await fetch(apiUrl('/api/config/harness'), {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        command,
-        args: argsText.split('\n').map(arg => arg.trim()).filter(Boolean),
-        env: parseEnv(),
-        cwd: cwd.trim() || null
-      })
-    });
-    saving = false;
-    if (response.ok) {
-      applyConfig(await response.json());
-      message = 'Saved harness config';
-    } else {
-      const data = await response.json();
-      message = data.error || 'Failed to save harness config';
+    try {
+      const response = await fetch(apiUrl('/api/config/harness'), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          command,
+          args: argsText.split('\n').map(arg => arg.trim()).filter(Boolean),
+          env: parseEnv(),
+          cwd: cwd.trim() || null
+        })
+      });
+      if (response.ok) {
+        applyConfig(await response.json());
+        message = 'Saved harness config';
+        setTimeout(() => message = '', 5000);
+      } else {
+        let msg = `${response.status}: ${response.statusText}`;
+        try {
+          const data = await response.json();
+          if (data.error) msg = data.error;
+        } catch (e) {}
+        throw new Error(msg);
+      }
+    } catch (err) {
+      message = err instanceof Error ? err.message : 'Failed to save harness config';
+      setTimeout(() => message = '', 5000);
+    } finally {
+      saving = false;
     }
   }
 

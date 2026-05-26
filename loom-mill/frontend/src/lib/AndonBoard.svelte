@@ -2,6 +2,7 @@
   import type { LoomRecord, WorkstationState, AndonEventPayload } from './types';
   import { formatRelativeTime } from './utils';
   import { apiUrl } from './api';
+  import { store } from './ws.svelte';
 
   let { records, workstations, andonEvents }: { 
     records: LoomRecord[]; 
@@ -44,24 +45,33 @@
     return alerts.sort((a, b) => new Date(b.event.timestamp).getTime() - new Date(a.event.timestamp).getTime());
   });
 
+  let error = $state<Record<string, string>>({});
+
   async function acknowledge(ticketId: string) {
     busy[ticketId] = true;
+    error[ticketId] = '';
     try {
-      await fetch(apiUrl(`/api/workstation/${ticketId}/acknowledge-andon`), { method: 'POST' });
+      const response = await fetch(apiUrl(`/api/workstation/${ticketId}/acknowledge-andon`), { method: 'POST' });
+      if (!response.ok) {
+        let msg = `${response.status}: ${response.statusText}`;
+        try {
+          const body = await response.json();
+          if (body.error) msg = body.error;
+        } catch (e) {}
+        throw new Error(msg);
+      }
+    } catch (err) {
+      error[ticketId] = err instanceof Error ? err.message : 'Failed to acknowledge';
+      setTimeout(() => error[ticketId] = '', 5000);
     } finally {
       busy[ticketId] = false;
     }
   }
 
   function clearResolved() {
-    // In a real app we might want to clear the events from the store,
-    // but since we don't have a store mutation for this, we'll just rely on the derived state
-    // filtering out inactive ones if we change the logic.
-    // Actually, the requirement says "Clear resolved button to dismiss entries for workstations that have resumed"
-    // We can just clear the local andonEvents for those workstations.
     for (const alert of activeAlerts()) {
       if (!alert.isActive) {
-        andonEvents[alert.workstationId] = [];
+        store.clearAndonEvents(alert.workstationId);
       }
     }
   }
@@ -121,7 +131,7 @@
             <button 
               class="text-[11px] font-medium text-text-secondary hover:text-text-primary transition-colors"
               onclick={() => {
-                const event = new CustomEvent('open-playback', { detail: { workstationId: alert.workstationId } });
+                const event = new CustomEvent('open-playback', { detail: { workstationId: alert.workstationId, source: 'andon' } });
                 window.dispatchEvent(event);
               }}
             >
@@ -129,14 +139,19 @@
             </button>
             
             {#if alert.isActive && alert.event.signal === 'stop'}
-              <button 
-                type="button" 
-                onclick={() => acknowledge(alert.ticketId)} 
-                disabled={busy[alert.ticketId]} 
-                class="rounded bg-status-error-text px-2 py-1 text-[10px] font-medium text-white hover:opacity-90 disabled:opacity-50 transition-opacity"
-              >
-                Acknowledge
-              </button>
+              <div class="flex items-center gap-2">
+                {#if error[alert.ticketId]}
+                  <span class="text-[10px] text-status-error-text">{error[alert.ticketId]}</span>
+                {/if}
+                <button 
+                  type="button" 
+                  onclick={() => acknowledge(alert.ticketId)} 
+                  disabled={busy[alert.ticketId]} 
+                  class="rounded bg-status-error-text px-2 py-1 text-[10px] font-medium text-white hover:opacity-90 disabled:opacity-50 transition-opacity"
+                >
+                  Acknowledge
+                </button>
+              </div>
             {/if}
           </div>
         </div>

@@ -64,20 +64,39 @@
     return formatDuration(liveDuration);
   });
 
+  let error = $state('');
+  let busy = $state(false);
+
   async function handleAction(action: string, e: Event) {
     e.stopPropagation();
+    if (busy) return;
+    busy = true;
+    error = '';
     try {
+      let response;
       if (action === 'dismiss') {
-        await fetch(apiUrl(`/workstations/${workstationId}`), { method: 'DELETE' });
+        response = await fetch(apiUrl(`/workstations/${workstationId}`), { method: 'DELETE' });
       } else if (action === 'stop') {
-        await fetch(apiUrl(`/api/workstation/${workstationId}/stop`), { method: 'POST' });
+        response = await fetch(apiUrl(`/api/workstation/${workstationId}/stop`), { method: 'POST' });
       } else if (action === 'resolve' || action === 'abort') {
-        await fetch(apiUrl(`/shipping/${workstationId}/${action}`), { method: 'POST' });
+        response = await fetch(apiUrl(`/shipping/${workstationId}/${action}`), { method: 'POST' });
       } else {
-        await fetch(apiUrl(`/workstations/${workstationId}/${action}`), { method: 'POST' });
+        response = await fetch(apiUrl(`/workstations/${workstationId}/${action}`), { method: 'POST' });
+      }
+      
+      if (!response.ok) {
+        let msg = `${response.status}: ${response.statusText}`;
+        try {
+          const body = await response.json();
+          if (body.error) msg = body.error;
+        } catch (e) {}
+        throw new Error(msg);
       }
     } catch (err) {
-      console.error(`Failed to ${action} workstation:`, err);
+      error = err instanceof Error ? err.message : `Failed to ${action}`;
+      setTimeout(() => error = '', 5000);
+    } finally {
+      busy = false;
     }
   }
 </script>
@@ -109,27 +128,29 @@
     <!-- Hover actions (appear on group hover) -->
     <div class="hidden group-hover:flex items-center gap-1">
       {#if hasError}
-        <button title="Dismiss" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary" onclick={(e) => handleAction('dismiss', e)}>✕</button>
+        <button disabled={busy} title="Dismiss" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary disabled:opacity-50" onclick={(e) => handleAction('dismiss', e)}>✕</button>
       {:else if status === 'running'}
-        <button title="Pause" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary" onclick={(e) => handleAction('pause', e)}>⏸</button>
-        <button title="Stop" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-status-error-text" onclick={(e) => handleAction('stop', e)}>■</button>
+        <button disabled={busy} title="Pause" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary disabled:opacity-50" onclick={(e) => handleAction('pause', e)}>⏸</button>
+        <button disabled={busy} title="Stop" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-status-error-text disabled:opacity-50" onclick={(e) => handleAction('stop', e)}>■</button>
       {:else if status === 'paused'}
-        <button title="Resume" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary" onclick={(e) => handleAction('resume', e)}>▶</button>
-        <button title="Stop" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-status-error-text" onclick={(e) => handleAction('stop', e)}>■</button>
+        <button disabled={busy} title="Resume" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary disabled:opacity-50" onclick={(e) => handleAction('resume', e)}>▶</button>
+        <button disabled={busy} title="Stop" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-status-error-text disabled:opacity-50" onclick={(e) => handleAction('stop', e)}>■</button>
       {:else if status === 'stopped'}
-        <button title="Resume" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary" onclick={(e) => handleAction('resume', e)}>▶</button>
-        <button title="Dismiss" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary" onclick={(e) => handleAction('dismiss', e)}>✕</button>
+        <button disabled={busy} title="Resume" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary disabled:opacity-50" onclick={(e) => handleAction('resume', e)}>▶</button>
+        <button disabled={busy} title="Dismiss" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary disabled:opacity-50" onclick={(e) => handleAction('dismiss', e)}>✕</button>
       {:else if status === 'completed' || status === 'finished'}
-        <button title="View Summary" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary" onclick={(e) => { e.stopPropagation(); onSelect(); }}>▣</button>
-        <button title="Dismiss" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary" onclick={(e) => handleAction('dismiss', e)}>✕</button>
+        <button disabled={busy} title="View Summary" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary disabled:opacity-50" onclick={(e) => { e.stopPropagation(); onSelect(); }}>▣</button>
+        <button disabled={busy} title="Dismiss" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary disabled:opacity-50" onclick={(e) => handleAction('dismiss', e)}>✕</button>
       {:else if status === 'conflict'}
-        <button title="Resolve" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary" onclick={(e) => handleAction('resolve', e)}>✓</button>
-        <button title="Abort" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-status-error-text" onclick={(e) => handleAction('abort', e)}>✕</button>
+        <button disabled={busy} title="Resolve" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-text-primary disabled:opacity-50" onclick={(e) => handleAction('resolve', e)}>✓</button>
+        <button disabled={busy} title="Abort" class="p-0.5 rounded hover:bg-bg-surface-active text-text-tertiary hover:text-status-error-text disabled:opacity-50" onclick={(e) => handleAction('abort', e)}>✕</button>
       {/if}
     </div>
   </div>
 
-  {#if !record}
+  {#if error}
+    <div class="text-[10px] text-status-error-text mt-1 ml-4 truncate" title={error}>{error}</div>
+  {:else if !record}
     <div class="text-[10px] text-status-error-text mt-1 ml-4 truncate" title="Ticket not found">Ticket not found</div>
   {/if}
 </div>

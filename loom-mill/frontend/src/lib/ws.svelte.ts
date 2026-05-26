@@ -67,6 +67,12 @@ export class MillStore {
     this.connect();
   }
 
+  clearAndonEvents(workstationId: string) {
+    if (this.state.andon_events[workstationId]) {
+      this.state.andon_events[workstationId] = [];
+    }
+  }
+
   private handleMessage(message: any) {
     const { type, data, workstation_id, event, payload } = message;
 

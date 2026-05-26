@@ -7,9 +7,11 @@
   import ThemeToggle from './lib/ThemeToggle.svelte';
   import SettingsDrawer from './lib/SettingsDrawer.svelte';
   import Toast from './lib/Toast.svelte';
+  import ConnectionBanner from './lib/ConnectionBanner.svelte';
   import { formatDuration } from './lib/utils';
 
   let selectedWorkstationId = $state<string | null>(null);
+  let activeTab = $state<'logs' | 'iterations' | 'playback'>('logs');
   let settingsOpen = $state(false);
   let toastRef = $state<Toast>();
 
@@ -17,6 +19,26 @@
 
   onMount(() => {
     store.connect();
+    
+    const handleOpenPlayback = (e: Event) => {
+      const customEvent = e as CustomEvent<{ workstationId: string, source?: string }>;
+      if (customEvent.detail?.workstationId) {
+        selectedWorkstationId = customEvent.detail.workstationId;
+        if (customEvent.detail.source === 'andon') {
+          activeTab = 'logs';
+          settingsOpen = false;
+        } else if (customEvent.detail.source === 'controls') {
+          activeTab = 'iterations';
+        } else {
+          activeTab = 'iterations';
+        }
+      }
+    };
+    
+    window.addEventListener('open-playback', handleOpenPlayback);
+    return () => {
+      window.removeEventListener('open-playback', handleOpenPlayback);
+    };
   });
 
   $effect(() => {
@@ -127,6 +149,8 @@
     </div>
   </header>
 
+  <ConnectionBanner />
+
   <!-- Main: flex row -->
   <div class="flex flex-1 overflow-hidden">
     <div class="w-80 shrink-0 border-r border-border-default">
@@ -142,6 +166,7 @@
         selectedId={selectedWorkstationId}
         workstation={selectedWorkstationId ? store.state.workstations[selectedWorkstationId] : undefined}
         record={selectedRecord()}
+        bind:activeTab
       />
     </div>
   </div>

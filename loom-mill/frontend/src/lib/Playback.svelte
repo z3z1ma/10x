@@ -15,6 +15,8 @@
   let error = $state('');
 
   async function fetchIterations() {
+    loading = true;
+    error = '';
     try {
       const res = await fetch(apiUrl(`/workstations/${workstationId}/iterations`));
       if (!res.ok) throw new Error('Failed to fetch iterations');
@@ -22,11 +24,10 @@
       if (iterations.length > 0) {
         // Default to aggregate view
         await loadDiff(-1);
-      } else {
-        loading = false;
       }
     } catch (err: any) {
       error = err.message;
+    } finally {
       loading = false;
     }
   }
@@ -201,8 +202,9 @@
           </div>
         </div>
       {:else if error}
-        <div class="rounded border border-status-error-border bg-status-error-bg p-4 text-status-error-text">
-          {error}
+        <div class="rounded border border-status-error-border bg-status-error-bg p-4 text-status-error-text flex items-center justify-between">
+          <span>{error}</span>
+          <button onclick={() => currentStep === -1 ? fetchIterations() : loadDiff(currentStep)} class="px-3 py-1 rounded bg-status-error-text text-white hover:opacity-90 transition-opacity text-xs font-medium">Retry</button>
         </div>
       {:else if iterations.length === 0}
         <div class="flex h-full items-center justify-center text-text-tertiary">

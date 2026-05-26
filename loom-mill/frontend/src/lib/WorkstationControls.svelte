@@ -15,15 +15,25 @@
   async function command(path: string, body?: unknown) {
     busy = true;
     error = '';
-    const response = await fetch(apiUrl(path), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: body ? JSON.stringify(body) : undefined
-    });
-    busy = false;
-    if (!response.ok) {
-      const data = await response.json();
-      error = data.error || 'Command failed';
+    try {
+      const response = await fetch(apiUrl(path), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined
+      });
+      if (!response.ok) {
+        let msg = `${response.status}: ${response.statusText}`;
+        try {
+          const data = await response.json();
+          if (data.error) msg = data.error;
+        } catch (e) {}
+        throw new Error(msg);
+      }
+    } catch (err) {
+      error = err instanceof Error ? err.message : 'Request failed';
+      setTimeout(() => error = '', 5000);
+    } finally {
+      busy = false;
     }
   }
 
@@ -48,7 +58,7 @@
   }
 
   function viewHistory() {
-    window.dispatchEvent(new CustomEvent('open-playback', { detail: { workstationId: ticketId } }));
+    window.dispatchEvent(new CustomEvent('open-playback', { detail: { workstationId: ticketId, source: 'controls' } }));
   }
 </script>
 

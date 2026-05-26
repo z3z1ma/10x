@@ -36,7 +36,10 @@
   {#if loading}
     <div class="text-[12px] text-text-tertiary">Loading iterations...</div>
   {:else if error}
-    <div class="text-[12px] text-status-error-text">{error}</div>
+    <div class="text-[12px] text-status-error-text flex items-center gap-2">
+      <span>{error}</span>
+      <button onclick={loadIterations} class="px-2 py-0.5 rounded bg-status-error-bg/20 hover:bg-status-error-bg/40 transition-colors">Retry</button>
+    </div>
   {:else if iterations.length === 0}
     <div class="text-[12px] text-text-tertiary">No iterations recorded yet. Iterations are detected from git commits.</div>
   {:else}

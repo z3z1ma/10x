@@ -11,14 +11,14 @@
   let { 
     selectedId, 
     workstation,
-    record
+    record,
+    activeTab = $bindable('logs')
   }: { 
     selectedId: string | null; 
     workstation: WorkstationState | undefined;
     record?: LoomRecord | undefined;
+    activeTab?: 'logs' | 'iterations' | 'playback';
   } = $props();
-
-  let activeTab = $state<'logs' | 'iterations' | 'playback'>('logs');
 
   // Auto-switch default tab based on status
   $effect(() => {
