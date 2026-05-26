@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { LoomRecord, WorkstationState, AndonEventPayload, ShippingEvent } from './types';
+  import { formatDuration } from './utils';
 
   let { records, workstations, andonEvents, shippingEvents }: { 
     records: LoomRecord[]; 
@@ -19,9 +20,7 @@
     // Average iteration duration
     const totalDuration = workstationsWithTakt.reduce((sum, ws) => sum + (ws.takt?.duration_seconds || 0), 0);
     const avgDurationSecs = workstationsWithTakt.length ? Math.round(totalDuration / workstationsWithTakt.length) : 0;
-    const avgDurationStr = avgDurationSecs > 60 
-      ? `${Math.floor(avgDurationSecs / 60)}m ${avgDurationSecs % 60}s`
-      : `${avgDurationSecs}s`;
+    const avgDurationStr = formatDuration(avgDurationSecs);
 
     // SPC stop count
     let spcStops = 0;

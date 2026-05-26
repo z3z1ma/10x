@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { LoomRecord, WorkstationState } from './types';
   import WorkstationControls from './WorkstationControls.svelte';
+  import { formatRelativeTime } from './utils';
 
   let { record, workstation }: { record: LoomRecord; workstation?: WorkstationState } = $props();
 
@@ -23,11 +24,11 @@
     <span class="text-[11px] font-mono text-text-tertiary">{id}</span>
     <div class="flex items-center gap-1.5">
       {#if hasAndon}
-        <span class="inline-flex items-center rounded-full bg-status-error-bg px-1.5 py-0.5 text-[10px] font-medium text-status-error-text ring-1 ring-inset ring-status-error-border" title="Andon active">andon</span>
+        <span class="badge bg-status-error-bg text-status-error-text ring-1 ring-inset ring-status-error-border" title="Andon active">andon</span>
       {:else if hasBackpressure}
-        <span class="inline-flex items-center rounded-full bg-status-warning-bg px-1.5 py-0.5 text-[10px] font-medium text-status-warning-text ring-1 ring-inset ring-status-warning-border" title="Backpressure warning">backpressure</span>
+        <span class="badge bg-status-warning-bg text-status-warning-text ring-1 ring-inset ring-status-warning-border" title="Backpressure warning">backpressure</span>
       {/if}
-      <span class="inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium ring-1 ring-inset
+      <span class="badge ring-1 ring-inset
         {status === 'active' ? 'bg-status-info-bg text-status-info-text ring-status-info-border' :
          status === 'blocked' ? 'bg-status-error-bg text-status-error-text ring-status-error-border' :
          status === 'review' ? 'bg-status-warning-bg text-status-warning-text ring-status-warning-border' :
@@ -52,7 +53,7 @@
       {/if}
     </div>
     {#if updated}
-      <span>{updated}</span>
+      <span title={updated}>{formatRelativeTime(updated)}</span>
     {/if}
   </div>
 </div>

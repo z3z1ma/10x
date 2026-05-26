@@ -3,6 +3,7 @@
   import type { IterationRecord } from './types';
   import DiffViewer from './DiffViewer.svelte';
   import { store } from './ws.svelte';
+  import { formatDuration } from './utils';
 
   let { workstationId, onClose, embedded = false }: { workstationId: string; onClose: () => void; embedded?: boolean } = $props();
 
@@ -110,7 +111,7 @@
     <div class="flex items-center justify-between border-b border-border-default bg-bg-surface px-4 py-3">
       <div class="flex items-center gap-3">
         <h2 class="text-sm font-semibold text-text-primary">Playback: {workstationId}</h2>
-        <span class="rounded-full bg-bg-surface-active px-2 py-0.5 text-[10px] font-medium text-text-secondary border border-border-subtle">
+        <span class="badge bg-bg-surface-active text-text-secondary border border-border-subtle">
           {iterations.length} iterations
         </span>
       </div>
@@ -153,7 +154,7 @@
           {@const it = iterations[currentStep]}
           {@const signal = currentSignal()}
           <div class="flex items-center gap-4 text-xs">
-            <span class="text-text-tertiary">Duration: <span class="text-text-primary font-mono">{it.duration_seconds}s</span></span>
+            <span class="text-text-tertiary">Duration: <span class="text-text-primary font-mono">{formatDuration(it.duration_seconds)}</span></span>
             <span class="text-text-tertiary">Exit: <span class="text-text-primary font-mono">{it.exit_code ?? 'unknown'}</span></span>
             <span class="text-text-tertiary">Files: <span class="text-text-primary font-mono">{it.files_changed.length}</span></span>
             <span class="text-text-tertiary">Lines: <span class="text-status-success-text font-mono">+{it.lines_added}</span> <span class="text-status-error-text font-mono">-{it.lines_removed}</span></span>
@@ -161,7 +162,7 @@
               <span class="text-text-tertiary">Commit: <span class="text-text-primary font-mono">{it.commit_sha.substring(0, 7)}</span></span>
             {/if}
             {#if signal}
-              <span class="rounded bg-status-warning-bg px-1.5 py-0.5 text-[10px] font-medium text-status-warning-text ring-1 ring-inset ring-status-warning-border" title={signal.message}>
+              <span class="badge bg-status-warning-bg text-status-warning-text ring-1 ring-inset ring-status-warning-border" title={signal.message}>
                 SPC: {signal.kind}
               </span>
             {/if}

@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import type { IterationRecord } from './types';
   import DiffViewer from './DiffViewer.svelte';
+  import { formatDuration, formatRelativeTime } from './utils';
 
   let { workstationId }: { workstationId: string } = $props();
 
@@ -29,12 +30,6 @@
       loading = false;
     }
   }
-
-  function formatDuration(s: number) {
-    if (s < 60) return `${Math.floor(s)}s`;
-    if (s < 3600) return `${Math.floor(s / 60)}m ${Math.floor(s % 60)}s`;
-    return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
-  }
 </script>
 
 <div class="flex flex-col h-full overflow-y-auto p-4 bg-bg-primary">
@@ -43,7 +38,7 @@
   {:else if error}
     <div class="text-[12px] text-status-error-text">{error}</div>
   {:else if iterations.length === 0}
-    <div class="text-[12px] text-text-tertiary">No iterations recorded yet.</div>
+    <div class="text-[12px] text-text-tertiary">No iterations recorded yet. Iterations are detected from git commits.</div>
   {:else}
     <div class="flex flex-col gap-6">
       {#each iterations as iter}
@@ -58,8 +53,8 @@
                 </span>
               {/if}
             </div>
-            <div class="text-[11px] text-text-tertiary">
-              {new Date(iter.started_at).toLocaleTimeString()}
+            <div class="text-[11px] text-text-tertiary" title={iter.started_at}>
+              {formatRelativeTime(iter.started_at)}
             </div>
           </div>
           

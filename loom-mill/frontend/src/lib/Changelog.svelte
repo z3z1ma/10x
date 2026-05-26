@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ShippingEvent, LoomRecord } from './types';
+  import { formatRelativeTime } from './utils';
 
   let { shippingEvents, records }: { 
     shippingEvents: ShippingEvent[];
@@ -25,7 +26,7 @@
   
   {#if shippedTickets().length === 0}
     <div class="flex flex-1 items-center justify-center rounded border border-dashed border-border-subtle min-h-[100px]">
-      <p class="text-xs text-text-muted">No tickets shipped yet</p>
+      <p class="text-xs text-text-tertiary">No tickets shipped this session.</p>
     </div>
   {:else}
     <div class="flex flex-col gap-3 overflow-y-auto pr-1">
@@ -33,15 +34,15 @@
         <div class="flex flex-col gap-2 rounded-md border border-border-subtle bg-bg-primary p-3">
           <div class="flex items-start justify-between gap-2">
             <div class="flex items-center gap-2">
-              <span class="rounded-full bg-status-success-bg px-1.5 py-0.5 text-[10px] font-medium text-status-success-text border border-status-success-border">
+              <span class="badge bg-status-success-bg text-status-success-text border border-status-success-border">
                 Shipped
               </span>
               <span class="text-xs font-medium text-text-primary">
                 {item.record?.headings[0]?.[1] || item.event.ticket_id}
               </span>
             </div>
-            <span class="text-[10px] text-text-tertiary">
-              {new Date(item.event.timestamp).toLocaleTimeString()}
+            <span class="text-[10px] text-text-tertiary" title={item.event.timestamp}>
+              {formatRelativeTime(item.event.timestamp)}
             </span>
           </div>
           

@@ -3,6 +3,7 @@
   import LogViewer from './LogViewer.svelte';
   import IterationsTab from './IterationsTab.svelte';
   import Playback from './Playback.svelte';
+  import { formatDuration } from './utils';
 
   let { 
     selectedId, 
@@ -52,11 +53,19 @@
   });
 
   let formattedTotalDuration = $derived(() => {
-    const s = liveDuration;
-    if (s === 0) return '0s';
-    if (s < 60) return `${Math.floor(s)}s`;
-    if (s < 3600) return `${Math.floor(s / 60)}m ${Math.floor(s % 60)}s`;
-    return `${Math.floor(s / 3600)}h ${Math.floor((s % 3600) / 60)}m`;
+    return formatDuration(liveDuration);
+  });
+
+  let statusMessage = $derived(() => {
+    switch (workstation?.status) {
+      case 'running': return 'Running now. Logs update live while the workstation works.';
+      case 'paused': return 'Paused for operator intervention. Resume after steering the record or dismiss if this run should be cleared.';
+      case 'stopped': return 'Stopped before completion. Iteration history remains available for review.';
+      case 'completed': return 'Completed. Review the iteration summary, playback, or dismiss it from the workstation list.';
+      case 'finished': return 'Finished. Review the iteration summary, playback, or dismiss it from the workstation list.';
+      case 'conflict': return 'Conflict requires operator resolution before this workstation can proceed.';
+      default: return 'Idle workstation.';
+    }
   });
 </script>
 
@@ -64,7 +73,10 @@
   {#if !selectedId || !workstation}
     <!-- Empty state -->
     <div class="flex flex-1 items-center justify-center">
-      <p class="text-[13px] text-text-tertiary">Select a workstation to view details</p>
+      <div class="flex flex-col items-center gap-2 text-text-tertiary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <p class="text-[13px]">Select a workstation from the left panel to view details.</p>
+      </div>
     </div>
   {:else}
     <!-- Tab bar -->
@@ -89,7 +101,12 @@
     </div>
     
     <!-- Tab content -->
-    <div class="flex-1 min-h-0 overflow-hidden relative">
+    <div class="flex-1 min-h-0 overflow-hidden relative transition-opacity duration-100 ease-in-out">
+      {#if workstation.status !== 'running'}
+        <div class="border-b border-border-subtle bg-bg-surface px-4 py-2 text-[11px] {workstation.status === 'conflict' ? 'text-status-error-text' : 'text-text-tertiary'}">
+          {statusMessage()}
+        </div>
+      {/if}
       {#if activeTab === 'logs'}
         <LogViewer logs={workstation.output || []} />
       {:else if activeTab === 'iterations'}

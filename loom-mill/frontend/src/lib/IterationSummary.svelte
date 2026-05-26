@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { WorkstationState } from './types';
+  import { formatDuration } from './utils';
 
   let { workstations }: { workstations: Record<string, WorkstationState> } = $props();
 
@@ -26,7 +27,7 @@
         {@const summary = workstation.iteration_summary}
         <details class="rounded-md border border-border-subtle bg-bg-surface p-2">
           <summary class="cursor-pointer text-[11px] font-medium text-text-secondary hover:text-text-primary transition-colors">
-            {ticketId} - iteration {summary.iteration} - exit {summary.exit_code ?? 'unknown'} - {summary.duration_seconds}s
+            {ticketId} - iteration {summary.iteration} - exit {summary.exit_code ?? 'unknown'} - {formatDuration(summary.duration_seconds)}
           </summary>
 
           <div class="mt-2 space-y-3 text-[10px] text-text-tertiary">

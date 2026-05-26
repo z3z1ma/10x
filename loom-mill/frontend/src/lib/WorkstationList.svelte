@@ -19,7 +19,7 @@
   let activeWorkstations = $derived(() => {
     const active: { id: string; record?: LoomRecord; state: WorkstationState }[] = [];
     for (const [id, state] of Object.entries(workstations)) {
-      if (state.status === 'running' || state.status === 'paused' || state.status === 'idle' || state.status === 'conflict') {
+      if (state.status === 'running' || state.status === 'paused' || state.status === 'idle' || state.status === 'stopped' || state.status === 'conflict') {
         const record = records.find(r => r.metadata.id === `ticket:${state.ticket_id}`);
         active.push({ id, record, state });
       }
@@ -30,7 +30,7 @@
   let completedWorkstations = $derived(() => {
     const completed: { id: string; record?: LoomRecord; state: WorkstationState }[] = [];
     for (const [id, state] of Object.entries(workstations)) {
-      if (state.status === 'completed' || state.status === 'stopped') {
+      if (state.status === 'completed' || state.status === 'finished') {
         const record = records.find(r => r.metadata.id === `ticket:${state.ticket_id}`);
         completed.push({ id, record, state });
       }
@@ -61,15 +61,22 @@
   
   <div class="flex-1 overflow-y-auto">
     <!-- Active workstations -->
-    {#each activeWorkstations() as ws (ws.id)}
-      <WorkstationRow 
-        ticketId={ws.id} 
-        record={ws.record} 
-        workstation={ws.state} 
-        selected={selectedId === ws.id} 
-        onSelect={() => onSelect(ws.id)} 
-      />
-    {/each}
+    {#if activeWorkstations().length === 0 && completedWorkstations().length === 0}
+      <div class="m-4 flex items-center justify-center rounded-lg border border-dashed border-border-default p-6 text-center">
+        <span class="text-[12px] text-text-tertiary">No workstations running. Start one from the pipeline status bar.</span>
+      </div>
+    {:else}
+      {#each activeWorkstations() as ws (ws.id)}
+        <WorkstationRow
+          workstationId={ws.id}
+          record={ws.record}
+          workstation={ws.state}
+          selected={selectedId === ws.id}
+          dimmed={ws.state.status === 'stopped'}
+          onSelect={() => onSelect(ws.id)}
+        />
+      {/each}
+    {/if}
     
     <!-- Completed section (collapsible) -->
     {#if completedWorkstations().length > 0}
@@ -85,7 +92,7 @@
       {#if expanded}
         {#each completedWorkstations() as ws (ws.id)}
           <WorkstationRow 
-            ticketId={ws.id} 
+            workstationId={ws.id}
             record={ws.record} 
             workstation={ws.state} 
             selected={selectedId === ws.id} 

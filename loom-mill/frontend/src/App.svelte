@@ -6,9 +6,14 @@
   import DetailPanel from './lib/DetailPanel.svelte';
   import ThemeToggle from './lib/ThemeToggle.svelte';
   import SettingsDrawer from './lib/SettingsDrawer.svelte';
+  import Toast from './lib/Toast.svelte';
+  import { formatDuration } from './lib/utils';
 
   let selectedWorkstationId = $state<string | null>(null);
   let settingsOpen = $state(false);
+  let toastRef = $state<Toast>();
+
+  let prevWorkstations: Record<string, { status: string, andonCount: number }> = {};
 
   onMount(() => {
     store.connect();
@@ -16,6 +21,39 @@
 
   $effect(() => {
     document.title = `Loom Mill - ${store.connected ? 'Connected' : 'Disconnected'}`;
+  });
+
+  $effect(() => {
+    if (!toastRef) return;
+    
+    for (const [id, ws] of Object.entries(store.state.workstations)) {
+      const prev = prevWorkstations[id];
+      if (!prev) {
+        if (ws.status === 'running') {
+          toastRef.show(`▶ Started: ${ws.ticket_slug}`, 'info');
+        }
+      } else if (prev.status !== ws.status) {
+        if (ws.status === 'completed') {
+          const duration = ws.iteration_summary?.duration_seconds ? ` (${formatDuration(ws.iteration_summary.duration_seconds)})` : '';
+          toastRef.show(`✓ Completed: ${ws.ticket_slug}${duration}`, 'info');
+        } else if (ws.status === 'stopped') {
+          toastRef.show(`⛔ Stopped: ${ws.ticket_slug}`, 'error');
+        }
+      }
+    }
+    
+    for (const [id, events] of Object.entries(store.state.andon_events)) {
+      const prevCount = prevWorkstations[id]?.andonCount || 0;
+      if (events.length > prevCount) {
+        const latest = events[events.length - 1];
+        toastRef.show(`⚠ Alert on ${store.state.workstations[id]?.ticket_slug || id}: ${latest.reasoning}`, 'warning');
+      }
+    }
+
+    prevWorkstations = {};
+    for (const [id, ws] of Object.entries(store.state.workstations)) {
+      prevWorkstations[id] = { status: ws.status, andonCount: store.state.andon_events[id]?.length || 0 };
+    }
   });
 
   let activeCount = $derived(Object.values(store.state.workstations).filter(ws => ws.status === 'running' || ws.status === 'paused').length);
@@ -39,13 +77,12 @@
       }
     }
     if (count === 0) return '—';
-    const avg = total / count;
-    if (avg < 60) return `${Math.floor(avg)}s`;
-    return `${Math.floor(avg / 60)}m ${Math.floor(avg % 60)}s`;
+    return formatDuration(total / count);
   });
 </script>
 
 <main class="flex h-screen flex-col bg-bg-primary text-text-primary overflow-hidden font-sans">
+  <Toast bind:this={toastRef} />
   <!-- Header: 48px -->
   <header class="flex items-center justify-between h-12 border-b border-border-default bg-bg-surface px-4 shrink-0">
     <div class="flex items-center gap-2">

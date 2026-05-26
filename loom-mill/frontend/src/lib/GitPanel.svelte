@@ -10,11 +10,11 @@
   <div class="flex items-center justify-between">
     <h2 class="text-[11px] font-medium text-text-secondary uppercase tracking-wider">Git State</h2>
     {#if git.dirty}
-      <span class="inline-flex items-center rounded-full bg-status-warning-bg px-1.5 py-0.5 text-[10px] font-medium text-status-warning-text ring-1 ring-inset ring-status-warning-border">
+      <span class="badge bg-status-warning-bg text-status-warning-text ring-1 ring-inset ring-status-warning-border">
         Dirty
       </span>
     {:else}
-      <span class="inline-flex items-center rounded-full bg-status-success-bg px-1.5 py-0.5 text-[10px] font-medium text-status-success-text ring-1 ring-inset ring-status-success-border">
+      <span class="badge bg-status-success-bg text-status-success-text ring-1 ring-inset ring-status-success-border">
         Clean
       </span>
     {/if}

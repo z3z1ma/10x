@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { LoomRecord, WorkstationState, AndonEventPayload } from './types';
+  import { formatRelativeTime } from './utils';
 
   let { records, workstations, andonEvents }: { 
     records: LoomRecord[]; 
@@ -81,7 +82,10 @@
 
   {#if activeAlerts().length === 0}
     <div class="flex h-20 items-center justify-center rounded border border-dashed border-border-subtle">
-      <p class="text-xs text-text-muted">No active alerts</p>
+      <div class="flex items-center gap-2 text-text-tertiary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-status-success-text"><path d="M20 6 9 17l-5-5"/></svg>
+        <p class="text-xs">All clear.</p>
+      </div>
     </div>
   {:else}
     <div class="flex flex-col gap-3 max-h-64 overflow-y-auto pr-1">
@@ -89,15 +93,15 @@
         <div class="flex flex-col gap-2 rounded-md border p-3 {alert.event.signal === 'stop' ? 'border-status-error-border bg-status-error-bg/30' : 'border-status-warning-border bg-status-warning-bg/30'} {alert.isActive ? '' : 'opacity-60'}">
           <div class="flex items-start justify-between gap-2">
             <div class="flex items-center gap-2">
-              <span class="rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider {alert.event.signal === 'stop' ? 'bg-status-error-text text-white' : 'bg-status-warning-text text-white'}">
+              <span class="badge {alert.event.signal === 'stop' ? 'bg-status-error-text text-white' : 'bg-status-warning-text text-white'}">
                 {alert.event.signal}
               </span>
               <span class="text-xs font-medium text-text-primary">
                 {alert.record?.headings[0]?.[1] || alert.ticketId}
               </span>
             </div>
-            <span class="text-[10px] text-text-tertiary">
-              {new Date(alert.event.timestamp).toLocaleTimeString()}
+            <span class="text-[10px] text-text-tertiary" title={alert.event.timestamp}>
+              {formatRelativeTime(alert.event.timestamp)}
             </span>
           </div>
           
