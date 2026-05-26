@@ -3,7 +3,7 @@
   import { EditorView, keymap, lineNumbers, highlightActiveLine, drawSelection } from '@codemirror/view';
   import { EditorState } from '@codemirror/state';
   import { markdown } from '@codemirror/lang-markdown';
-  import { defaultKeymap, indentWithTab } from '@codemirror/commands';
+  import { defaultKeymap, indentWithTab, history, historyKeymap } from '@codemirror/commands';
   import { searchKeymap, highlightSelectionMatches } from '@codemirror/search';
   import { millTheme, millHighlighting } from './editor-theme';
   import { apiUrl } from '../api';
@@ -121,7 +121,9 @@
           markdown(),
           millTheme,
           millHighlighting,
-          keymap.of([...defaultKeymap, ...searchKeymap, indentWithTab]),
+          history(),
+          EditorView.lineWrapping,
+          keymap.of([...defaultKeymap, ...historyKeymap, ...searchKeymap, indentWithTab]),
           saveKeymap,
           EditorView.updateListener.of((update) => {
             if (update.docChanged) {

@@ -17,7 +17,12 @@ export const millTheme = EditorView.theme({
     borderRight: '1px solid var(--color-border-default)',
   },
   '.cm-activeLine': { backgroundColor: 'var(--color-bg-surface-active)' },
-  '.cm-selectionBackground': { backgroundColor: 'var(--color-accent-primary-muted, rgba(99,102,241,0.15))' },
+  '.cm-selectionBackground': { 
+    backgroundColor: 'rgba(99, 102, 241, 0.25) !important'
+  },
+  '&.cm-focused .cm-selectionBackground': {
+    backgroundColor: 'rgba(99, 102, 241, 0.35) !important'
+  },
   '&.cm-focused .cm-cursor': { borderLeftColor: 'var(--color-accent-primary)' },
   '.cm-line': { padding: '0 16px' },
 });

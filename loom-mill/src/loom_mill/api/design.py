@@ -163,7 +163,7 @@ async def create_chat_session(request: Request) -> JSONResponse:
         body = await _json_body(request)
     except ValueError as error:
         return JSONResponse({"error": str(error)}, status_code=400)
-    harness_command = str(body.get("harness_command") or "opencode run")
+    harness_command = str(body.get("harness_command") or "echo")
     session = _session_store(request).create(harness_command, body.get("document_path"))
     return JSONResponse({"session_id": session.id, "created_at": session.created_at, "session": _payload(session)})
 
