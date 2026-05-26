@@ -29,6 +29,7 @@ from loom_mill.api.workstation import (
     resume_workstation,
     start_workstation,
     stop_workstation,
+    test_harness,
 )
 from loom_mill.api.ws import MillWebSocket
 from loom_mill.state import MillStateStore
@@ -69,6 +70,7 @@ def create_app() -> Starlette:
             Route("/health", health),
             Route("/api/config/harness", get_harness_config, methods=["GET"]),
             Route("/api/config/harness", put_harness_config, methods=["PUT"]),
+            Route("/harness/test", test_harness, methods=["POST"]),
             Route("/config", get_config, methods=["GET"]),
             Route("/config", put_config, methods=["PUT"]),
             Route("/workstations", list_workstations, methods=["GET"]),

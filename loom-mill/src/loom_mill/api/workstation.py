@@ -172,6 +172,29 @@ async def put_harness_config(request: Request) -> JSONResponse:
     return JSONResponse(_harness_payload(config))
 
 
+async def test_harness(request: Request) -> JSONResponse:
+    """Run configured harness command with --version to verify it works."""
+    config = load_harness_config(_config_path(request))
+    cmd = [config.command, "--version"]
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=5.0)
+        output = stdout.decode(errors="replace").strip()[:500]
+        if not output:
+            output = stderr.decode(errors="replace").strip()[:500]
+        return JSONResponse({"success": proc.returncode == 0, "output": output})
+    except FileNotFoundError:
+        return JSONResponse({"success": False, "error": f"Command not found: {cmd[0]}"})
+    except asyncio.TimeoutError:
+        return JSONResponse({"success": False, "error": "Command timed out (5s)"})
+    except Exception as error:
+        return JSONResponse({"success": False, "error": str(error)})
+
+
 async def get_config(request: Request) -> JSONResponse:
     return JSONResponse(_config_payload(load_factory_config(_config_path(request))))
 

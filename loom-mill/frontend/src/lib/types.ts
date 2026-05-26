@@ -29,8 +29,9 @@ export interface GitState {
 export type WorkstationStatus = 'idle' | 'running' | 'paused' | 'stopped' | 'completed';
 
 export interface OutputEvent {
-  stream: string;
-  data: string;
+  stream: 'stdout' | 'stderr';
+  line: string;
+  timestamp: string;
 }
 
 export interface BackpressureSignal {

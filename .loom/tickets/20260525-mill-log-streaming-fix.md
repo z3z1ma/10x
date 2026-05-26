@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-mill-log-streaming-fix
 Type: Ticket
-Status: open
+Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: medium - requires investigating how `opencode run` writes to stdout/stderr when piped; may need PTY workaround.
