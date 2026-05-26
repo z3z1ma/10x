@@ -2,7 +2,7 @@
 
 ID: ticket:20260525-mill-workstation-lifecycle-ux
 Type: Ticket
-Status: review
+Status: closed
 Created: 2026-05-25
 Updated: 2026-05-25
 Risk: low - frontend-only behavioral improvements with minor backend endpoint addition.
