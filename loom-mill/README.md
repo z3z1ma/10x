@@ -1,6 +1,8 @@
 # Loom Mill
 
-Minimal Factory Floor scaffold for the Loom Mill MVP.
+Local Loom workspace UI and backend for browsing and editing `.loom` records,
+working in the Design Room, and coordinating ticket-owned workstations through
+factory, scheduling, and shipping views.
 
 ## Development
 

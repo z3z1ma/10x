@@ -87,6 +87,76 @@ async def test_commit_boundary_persists_iteration_metadata_and_diff(git_workspac
 
 
 @pytest.mark.asyncio
+async def test_exit_boundary_records_uncommitted_working_tree_diff_and_auto_commit(git_workspace: Path) -> None:
+    ticket_path = git_workspace / ".loom" / "tickets" / "example-ticket.md"
+    engine = WorkstationEngine(
+        git_workspace,
+        ticket_path,
+        HarnessConfig(
+            command=sys.executable,
+            args=[
+                "-c",
+                "from pathlib import Path; "
+                "Path('README.md').write_text('test repo\\nchanged without commit\\n'); "
+                "Path('notes.txt').write_text('new note\\n')",
+            ],
+        ),
+        commit_poll_interval=0.05,
+    )
+
+    await engine.start()
+    await engine.wait()
+
+    records = IterationStore(git_workspace, engine.workstation_id).list()
+    assert len(records) == 1
+    assert records[0].files_changed == ["README.md", "notes.txt"]
+    assert records[0].lines_added == 2
+    assert records[0].lines_removed == 0
+    assert records[0].commit_sha
+    assert records[0].previous_commit_sha != records[0].commit_sha
+    diff = (git_workspace / ".mill" / "workstations" / engine.workstation_id / "iterations" / "1.diff").read_text(encoding="utf-8")
+    assert "changed without commit" in diff
+    assert "notes.txt" in diff
+    assert "[mill] iteration 1 auto-commit" in await _run(["git", "log", "-1", "--pretty=%s"], engine.state.worktree_path)
+    assert (await _run(["git", "status", "--porcelain"], engine.state.worktree_path)).strip() == ""
+
+
+@pytest.mark.asyncio
+async def test_exit_boundary_combines_committed_and_uncommitted_changes(git_workspace: Path) -> None:
+    ticket_path = git_workspace / ".loom" / "tickets" / "example-ticket.md"
+    engine = WorkstationEngine(
+        git_workspace,
+        ticket_path,
+        HarnessConfig(
+            command=sys.executable,
+            args=[
+                "-c",
+                "from pathlib import Path; import subprocess; "
+                "Path('README.md').write_text('test repo\\ncommitted change\\n'); "
+                "subprocess.run(['git', 'add', 'README.md'], check=True); "
+                "subprocess.run(['git', 'commit', '-m', 'iteration'], check=True); "
+                "Path('notes.txt').write_text('left uncommitted\\n')",
+            ],
+        ),
+        commit_poll_interval=60,
+    )
+
+    await engine.start()
+    await engine.wait()
+
+    records = IterationStore(git_workspace, engine.workstation_id).list()
+    assert len(records) == 1
+    assert records[0].files_changed == ["README.md", "notes.txt"]
+    assert records[0].lines_added == 2
+    assert records[0].lines_removed == 0
+    assert records[0].commit_sha
+    diff = (git_workspace / ".mill" / "workstations" / engine.workstation_id / "iterations" / "1.diff").read_text(encoding="utf-8")
+    assert "committed change" in diff
+    assert "left uncommitted" in diff
+    assert "[mill] iteration 1 auto-commit" in await _run(["git", "log", "-1", "--pretty=%s"], engine.state.worktree_path)
+
+
+@pytest.mark.asyncio
 async def test_exit_boundary_records_exit_code_and_survives_reload(git_workspace: Path) -> None:
     ticket_path = git_workspace / ".loom" / "tickets" / "example-ticket.md"
     engine = WorkstationEngine(

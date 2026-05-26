@@ -49,6 +49,10 @@ def _iteration_store(request: Request, workstation_id: str) -> IterationStore:
     return IterationStore(_workspace_root(request), workstation_id)
 
 
+def _workstation_log_path(request: Request, workstation_id: str, stream: str) -> Path:
+    return _workspace_root(request) / ".mill" / "workstations" / workstation_id / "logs" / f"{stream}.log"
+
+
 def _harness_payload(config: HarnessConfig) -> dict:
     return {
         "command": config.command,
@@ -302,13 +306,12 @@ async def get_aggregate_diff(request: Request) -> Response:
 
 
 async def get_workstation_logs(request: Request) -> JSONResponse:
-    engine = _manager(request).get(request.path_params["workstation_id"])
-    if engine is None:
-        return JSONResponse({"error": "workstation not found"}, status_code=404)
+    workstation_id = request.path_params["workstation_id"]
+    engine = _manager(request).get(workstation_id)
 
     stream = str(request.query_params.get("stream", "stdout"))
-    if stream not in {"stdout", "stderr"}:
-        return JSONResponse({"error": "stream must be stdout or stderr"}, status_code=400)
+    if stream not in {"stdout", "stderr", "combined"}:
+        return JSONResponse({"error": "stream must be stdout, stderr, or combined"}, status_code=400)
 
     try:
         tail = int(request.query_params.get("tail", "100"))
@@ -317,13 +320,17 @@ async def get_workstation_logs(request: Request) -> JSONResponse:
     if tail < 0:
         return JSONResponse({"error": "tail must be non-negative"}, status_code=400)
 
-    log_path = engine.log_path(stream)
     lines: deque[str] = deque(maxlen=tail)
-    if log_path.exists() and tail > 0:
-        with log_path.open(encoding="utf-8") as log_file:
-            for line in log_file:
-                lines.append(line.rstrip("\r\n"))
-    return JSONResponse({"workstation_id": engine.workstation_id, "stream": stream, "lines": list(lines)})
+    streams = ["stdout", "stderr"] if stream == "combined" else [stream]
+    log_paths = [engine.log_path(value) if engine is not None else _workstation_log_path(request, workstation_id, value) for value in streams]
+    for log_path in log_paths:
+        if log_path.exists() and tail > 0:
+            with log_path.open(encoding="utf-8") as log_file:
+                for line in log_file:
+                    lines.append(line.rstrip("\r\n"))
+    if engine is None and not any(log_path.exists() for log_path in log_paths):
+        return JSONResponse({"error": "workstation not found"}, status_code=404)
+    return JSONResponse({"workstation_id": workstation_id, "stream": stream, "lines": list(lines)})
 
 
 async def delete_workstation(request: Request) -> JSONResponse:

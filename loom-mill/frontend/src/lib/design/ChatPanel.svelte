@@ -96,7 +96,8 @@
           id: data.session_id,
           messages: [],
           streaming: false,
-          streamingContent: ''
+          streamingContent: '',
+          lastExitCode: null
         };
       } else {
         console.error('Failed to create chat session:', await response.text());
@@ -144,6 +145,7 @@
       ...store.chatSession,
       messages: [...store.chatSession.messages, userMessage],
       streaming: true,
+      lastExitCode: null,
       streamingContent: ''
     };
 
@@ -178,6 +180,7 @@
             store.chatSession = {
               ...store.chatSession,
               streaming: false,
+              lastExitCode: data.exit_code ?? 0,
               streamingContent: '',
               messages: [...store.chatSession.messages, data.message]
             };
@@ -185,6 +188,7 @@
             store.chatSession = {
               ...store.chatSession,
               streaming: false,
+              lastExitCode: data.exit_code ?? 0,
               streamingContent: ''
             };
           }
@@ -298,6 +302,16 @@
       {#each store.chatSession.messages as message}
         <ChatMessage {message} onRetry={handleRetry} />
       {/each}
+
+      {#if !store.chatSession.streaming && store.chatSession.lastExitCode !== null && store.chatSession.messages[store.chatSession.messages.length - 1]?.role === 'assistant'}
+        <div class="flex items-center gap-2 px-4 py-2 opacity-70">
+          <div class="flex-1 h-px bg-border-subtle"></div>
+          <span class="text-[10px] font-mono {store.chatSession.lastExitCode === 0 ? 'text-status-success-text' : 'text-status-error-text'}">
+            {store.chatSession.lastExitCode === 0 ? '✓' : '✗'} Exit: {store.chatSession.lastExitCode}
+          </span>
+          <div class="flex-1 h-px bg-border-subtle"></div>
+        </div>
+      {/if}
       
       {#if store.chatSession.streamingContent}
         <ChatMessage 

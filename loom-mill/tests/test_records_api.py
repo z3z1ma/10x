@@ -1,3 +1,4 @@
+import hashlib
 from pathlib import Path
 import json
 from types import SimpleNamespace
@@ -15,9 +16,10 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _request(store: MillStateStore, workspace_root: Path, record_id: str):
+def _request(store: MillStateStore, workspace_root: Path, record_id: str, headers=None):
     return SimpleNamespace(
         path_params={"record_id": record_id},
+        headers=headers or {},
         app=SimpleNamespace(state=SimpleNamespace(store=store, workspace_root=str(workspace_root))),
     )
 
@@ -46,6 +48,7 @@ Updated: 2026-05-26
     record = parse_record(record_path, root=loom)
     store = MillStateStore()
     await store.replace_all_records((record,))
+    content_hash = hashlib.sha256(content.encode()).hexdigest()[:16]
 
     response = await get_record_content(_request(store, tmp_path, "ticket:20260526-example"))
 
@@ -54,7 +57,16 @@ Updated: 2026-05-26
         "id": "ticket:20260526-example",
         "path": "tickets/20260526-example.md",
         "content": content,
+        "hash": content_hash,
     }
+    assert response.headers["etag"] == f'"{content_hash}"'
+
+    response = await get_record_content(
+        _request(store, tmp_path, "ticket:20260526-example", {"if-none-match": f'"{content_hash}"'})
+    )
+
+    assert response.status_code == 304
+    assert response.body == b""
 
 
 @pytest.mark.asyncio

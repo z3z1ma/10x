@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import os
 import re
 import shutil
@@ -19,6 +20,7 @@ from .config import HarnessConfig
 from .models import OutputEvent, WorkstationState, WorkstationStatus
 
 MAX_LOG_LINE_BYTES = 10_000
+logger = logging.getLogger(__name__)
 
 
 class WorkstationEngine:
@@ -268,6 +270,13 @@ class WorkstationEngine:
             duration_seconds = time.monotonic() - self._iteration_started_at
             diff = await self._diff(previous_sha, head)
             files_changed, lines_added, lines_removed = await self._diff_numstat(previous_sha, head)
+            working_diff, working_files, working_added, working_removed = await self._working_tree_diff(self.state.worktree_path)
+            if working_diff:
+                diff = f"{diff}\n{working_diff}" if diff else working_diff
+                files_changed = list(dict.fromkeys(files_changed + working_files))
+                lines_added += working_added
+                lines_removed += working_removed
+                head = await self._auto_commit_working_changes(self.state.worktree_path, self._iteration)
             record = IterationRecord(
                 iteration=self._iteration,
                 started_at=self._format_time(self._iteration_started_wall),
@@ -295,22 +304,65 @@ class WorkstationEngine:
     async def _diff(self, previous_sha: str | None, head: str) -> str:
         if previous_sha is None or previous_sha == head:
             return ""
-        return await self._git_output(self.state.worktree_path, "diff", f"{previous_sha}..{head}")
+        try:
+            return await self._git_output(self.state.worktree_path, "diff", f"{previous_sha}..{head}")
+        except RuntimeError as exc:
+            logger.warning("failed to capture committed diff for %s..%s: %s", previous_sha, head, exc)
+            return ""
 
     async def _diff_numstat(self, previous_sha: str | None, head: str) -> tuple[list[str], int, int]:
         if previous_sha is None or previous_sha == head:
             return [], 0, 0
-        output = await self._git_output(self.state.worktree_path, "diff", "--numstat", f"{previous_sha}..{head}")
+        try:
+            output = await self._git_output(self.state.worktree_path, "diff", "--numstat", f"{previous_sha}..{head}")
+            return self._parse_numstat(output)
+        except RuntimeError as exc:
+            logger.warning("failed to capture committed numstat for %s..%s: %s", previous_sha, head, exc)
+            return [], 0, 0
+
+    async def _working_tree_diff(self, worktree: Path) -> tuple[str, list[str], int, int]:
+        """Stage and diff all uncommitted worktree changes against HEAD."""
+        try:
+            status = await self._git_output(worktree, "status", "--porcelain")
+            if not status.strip():
+                return "", [], 0, 0
+            await self._git_output(worktree, "add", "-A")
+            diff = await self._git_output(worktree, "diff", "--cached", "HEAD")
+            files_changed, lines_added, lines_removed = await self._working_tree_numstat(worktree)
+            return diff, files_changed, lines_added, lines_removed
+        except RuntimeError as exc:
+            logger.warning("failed to capture working-tree diff for %s: %s", worktree, exc)
+            try:
+                await self._git_output(worktree, "reset")
+            except RuntimeError as reset_exc:
+                logger.warning("failed to reset index after working-tree diff failure for %s: %s", worktree, reset_exc)
+            return "", [], 0, 0
+
+    async def _working_tree_numstat(self, worktree: Path) -> tuple[list[str], int, int]:
+        """Get numstat for the staged working-tree snapshot against HEAD."""
+        output = await self._git_output(worktree, "diff", "--numstat", "--cached", "HEAD")
+        return self._parse_numstat(output)
+
+    async def _auto_commit_working_changes(self, worktree: Path, iteration: int) -> str:
+        try:
+            await self._git_output(worktree, "commit", "-m", f"[mill] iteration {iteration} auto-commit")
+        except RuntimeError as exc:
+            logger.warning("failed to auto-commit working-tree changes for %s: %s", worktree, exc)
+        return (await self._git_output(worktree, "rev-parse", "HEAD")).strip()
+
+    def _parse_numstat(self, output: str) -> tuple[list[str], int, int]:
         files_changed: list[str] = []
         lines_added = 0
         lines_removed = 0
         for line in output.splitlines():
-            added, removed, path = line.split("\t", 2)
-            files_changed.append(path)
-            if added.isdigit():
-                lines_added += int(added)
-            if removed.isdigit():
-                lines_removed += int(removed)
+            parts = line.split("\t", 2)
+            if len(parts) == 3:
+                added, removed, path = parts
+                files_changed.append(path)
+                if added.isdigit():
+                    lines_added += int(added)
+                if removed.isdigit():
+                    lines_removed += int(removed)
         return files_changed, lines_added, lines_removed
 
     def _diff_stat(self, lines_added: int, lines_removed: int, file_count: int) -> str:

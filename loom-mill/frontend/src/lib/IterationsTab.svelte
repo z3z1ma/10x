@@ -1,11 +1,9 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import type { IterationRecord } from './types';
-  import DiffViewer from './DiffViewer.svelte';
   import { formatDuration, formatRelativeTime } from './utils';
   import { apiUrl } from './api';
 
-  let { workstationId }: { workstationId: string } = $props();
+  let { workstationId, onViewDiff }: { workstationId: string; onViewDiff?: (iterationIndex: number) => void } = $props();
 
   let iterations = $state<IterationRecord[]>([]);
   let loading = $state(true);
@@ -43,9 +41,13 @@
   {:else if iterations.length === 0}
     <div class="text-[12px] text-text-tertiary">No iterations recorded yet. Iterations are detected from git commits.</div>
   {:else}
-    <div class="flex flex-col gap-6">
-      {#each iterations as iter}
-        <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-3">
+      {#each iterations as iter, i}
+        <button
+          type="button"
+          class="w-full text-left flex flex-col gap-2 p-3 rounded-lg border border-transparent hover:bg-bg-surface-elevated hover:border-border-subtle transition-all duration-150 group cursor-pointer"
+          onclick={() => onViewDiff?.(i)}
+        >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="text-[13px] font-semibold text-text-primary">Iteration {iter.iteration}</span>
@@ -56,8 +58,13 @@
                 </span>
               {/if}
             </div>
-            <div class="text-[11px] text-text-tertiary" title={iter.started_at}>
-              {formatRelativeTime(iter.started_at)}
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] text-accent-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                View diff →
+              </span>
+              <span class="text-[11px] text-text-tertiary" title={iter.started_at}>
+                {formatRelativeTime(iter.started_at)}
+              </span>
             </div>
           </div>
           
@@ -77,7 +84,7 @@
               </ul>
             </div>
           {/if}
-        </div>
+        </button>
       {/each}
     </div>
   {/if}

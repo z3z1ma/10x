@@ -28,7 +28,7 @@ async def run_harness(
         await broadcast_fn(
             {
                 "event": "chat_complete",
-                "data": {"session_id": session_id, "message": {"role": "assistant", "content": response}},
+                "data": {"session_id": session_id, "exit_code": 0, "message": {"role": "assistant", "content": response}},
             }
         )
         return response
@@ -77,7 +77,11 @@ async def run_harness(
     await broadcast_fn(
         {
             "event": "chat_complete",
-            "data": {"session_id": session_id, "message": {"role": "assistant", "content": response_text}},
+            "data": {
+                "session_id": session_id,
+                "exit_code": proc.returncode,
+                "message": {"role": "assistant", "content": response_text},
+            },
         }
     )
     return response_text

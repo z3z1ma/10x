@@ -1,9 +1,15 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import type { OutputEvent } from './types';
+  import type { OutputEvent, WorkstationStatus } from './types';
   import { formatTime, stripAnsi } from './utils';
 
-  let { logs = [] }: { logs: OutputEvent[] } = $props();
+  let { logs = [], status = 'idle', loading = false }: { logs: OutputEvent[]; status?: WorkstationStatus; loading?: boolean } = $props();
+
+  let emptyMessage = $derived(() => {
+    if (status === 'running') return 'Connecting to live output...';
+    if (loading) return 'Loading logs...';
+    return 'No output was produced during this run.';
+  });
 
   let container: HTMLDivElement;
   let autoScroll = $state(true);
@@ -43,7 +49,7 @@
           <span class="w-1.5 h-1.5 rounded-full bg-text-tertiary"></span>
           <span class="w-1.5 h-1.5 rounded-full bg-text-tertiary animation-delay-150"></span>
           <span class="w-1.5 h-1.5 rounded-full bg-text-tertiary animation-delay-300"></span>
-          <span class="ml-2 italic">Waiting for output...</span>
+          <span class="ml-2 italic">{emptyMessage()}</span>
         </div>
       </div>
     {:else}

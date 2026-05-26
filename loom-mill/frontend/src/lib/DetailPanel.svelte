@@ -7,6 +7,7 @@
   import RecordRenderer from './RecordRenderer.svelte';
   import MetadataBadges from './MetadataBadges.svelte';
   import { apiUrl } from './api';
+  import { store } from './ws.svelte';
 
   let { 
     selectedId, 
@@ -65,6 +66,42 @@
     return formatDuration(liveDuration);
   });
 
+  let playbackInitialStep = $state<number | undefined>(undefined);
+
+  function handleViewIterationDiff(iterationIndex: number) {
+    playbackInitialStep = iterationIndex;
+    activeTab = 'playback';
+  }
+
+  function handleTabClick(tabId: 'logs' | 'iterations' | 'playback') {
+    if (tabId !== 'playback') playbackInitialStep = undefined;
+    activeTab = tabId;
+  }
+
+  let lastPlaybackWorkstationId = $state<string | null>(null);
+
+  $effect(() => {
+    if (selectedId !== lastPlaybackWorkstationId) {
+      playbackInitialStep = undefined;
+      lastPlaybackWorkstationId = selectedId;
+    }
+  });
+
+  let hydratingLogs = $state(false);
+  let hydratedEmptyLogs = new Set<string>();
+
+  $effect(() => {
+    const id = selectedId;
+    if (!id || !workstation || workstation.output?.length || workstation.status === 'running') return;
+    if (hydratedEmptyLogs.has(id)) return;
+
+    hydratingLogs = true;
+    store.hydrateWorkstationLogs(id).finally(() => {
+      hydratedEmptyLogs.add(id);
+      hydratingLogs = false;
+    });
+  });
+
   let statusMessage = $derived(() => {
     switch (workstation?.status) {
       case 'running': return 'Running now. Logs update live while the workstation works.';
@@ -121,12 +158,12 @@
     if (e.key === 'ArrowRight') {
       e.preventDefault();
       const nextIndex = (currentIndex + 1) % tabs.length;
-      activeTab = tabs[nextIndex].id;
+      handleTabClick(tabs[nextIndex].id);
       document.getElementById(`tab-${tabs[nextIndex].id}`)?.focus();
     } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
       const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length;
-      activeTab = tabs[prevIndex].id;
+      handleTabClick(tabs[prevIndex].id);
       document.getElementById(`tab-${tabs[prevIndex].id}`)?.focus();
     }
   }
@@ -200,7 +237,7 @@
           tabindex={activeTab === tab.id ? 0 : -1}
           class="px-3 py-2 text-[11px] font-medium border-b-2 transition-colors
           {activeTab === tab.id ? 'border-accent-primary text-text-primary' : 'border-transparent text-text-tertiary hover:text-text-secondary'}"
-          onclick={() => activeTab = tab.id}>
+          onclick={() => handleTabClick(tab.id)}>
           {tab.label}
         </button>
       {/each}
@@ -224,11 +261,11 @@
         </div>
       {/if}
       {#if activeTab === 'logs'}
-        <LogViewer logs={workstation.output || []} />
+        <LogViewer logs={workstation.output || []} status={workstation.status} loading={hydratingLogs} />
       {:else if activeTab === 'iterations'}
-        <IterationsTab workstationId={selectedId} />
+        <IterationsTab workstationId={selectedId} onViewDiff={handleViewIterationDiff} />
       {:else if activeTab === 'playback'}
-        <Playback workstationId={selectedId} onClose={() => {}} embedded={true} />
+        <Playback workstationId={selectedId} onClose={() => {}} embedded={true} initialStep={playbackInitialStep} />
       {/if}
     </div>
   {/if}

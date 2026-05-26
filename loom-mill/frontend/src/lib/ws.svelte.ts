@@ -1,5 +1,5 @@
 import { type MillState, type LoomRecord, type GitState } from './types';
-import { wsUrl } from './api';
+import { apiUrl, wsUrl } from './api';
 
 export class MillStore {
   state = $state<MillState>({
@@ -21,10 +21,12 @@ export class MillStore {
     messages: Array<{ role: string; content: string; context?: any; timestamp: string }>;
     streaming: boolean;
     streamingContent: string;
-  }>({ id: null, messages: [], streaming: false, streamingContent: '' });
+    lastExitCode: number | null;
+  }>({ id: null, messages: [], streaming: false, streamingContent: '', lastExitCode: null });
 
   private ws: WebSocket | null = null;
   private reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
+  private logHydrationRequests = new Set<string>();
 
   connect() {
     if (this.ws) return;
@@ -77,6 +79,26 @@ export class MillStore {
   clearAndonEvents(workstationId: string) {
     if (this.state.andon_events[workstationId]) {
       this.state.andon_events[workstationId] = [];
+    }
+  }
+
+  async hydrateWorkstationLogs(workstationId: string) {
+    const workstation = this.state.workstations[workstationId];
+    if (!workstation || workstation.output?.length || this.logHydrationRequests.has(workstationId)) return;
+
+    this.logHydrationRequests.add(workstationId);
+    try {
+      const response = await fetch(apiUrl(`/workstations/${workstationId}/logs?stream=stdout&tail=500`));
+      if (!response.ok) return;
+      const data = await response.json();
+      const lines = Array.isArray(data.lines) ? data.lines : [];
+      const current = this.state.workstations[workstationId];
+      if (!current || current.output?.length) return;
+      current.output = lines.map((line: string) => ({ stream: 'stdout', line, timestamp: '' }));
+    } catch (err) {
+      console.error('Failed to hydrate workstation logs:', err);
+    } finally {
+      this.logHydrationRequests.delete(workstationId);
     }
   }
 
@@ -175,6 +197,7 @@ export class MillStore {
           this.chatSession = {
             ...this.chatSession,
             streaming: false,
+            lastExitCode: data.exit_code ?? null,
             messages: [...this.chatSession.messages, data.message],
             streamingContent: ''
           };
@@ -185,6 +208,7 @@ export class MillStore {
           this.chatSession = {
             ...this.chatSession,
             streaming: false,
+            lastExitCode: null,
             messages: [...this.chatSession.messages, { role: 'system', content: `Error: ${data.error}`, timestamp: new Date().toISOString() }],
             streamingContent: ''
           };

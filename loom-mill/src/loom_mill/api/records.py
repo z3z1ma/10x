@@ -1,6 +1,7 @@
+import hashlib
 from pathlib import Path
 
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 from loom_mill.state import MillStateStore
 
@@ -20,4 +21,12 @@ async def get_record_content(request):
     except OSError:
         return JSONResponse({"detail": "Record not found"}, status_code=404)
 
-    return JSONResponse({"id": record_id, "path": record.path, "content": content})
+    content_hash = hashlib.sha256(content.encode()).hexdigest()[:16]
+    if_none_match = getattr(request, "headers", {}).get("if-none-match")
+    if if_none_match and if_none_match.strip('"') == content_hash:
+        return Response(status_code=304)
+
+    return JSONResponse(
+        {"id": record_id, "path": record.path, "content": content, "hash": content_hash},
+        headers={"ETag": f'"{content_hash}"'},
+    )

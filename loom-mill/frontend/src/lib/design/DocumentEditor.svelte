@@ -16,8 +16,11 @@
   let view = $state<EditorView | null>(null);
   let modified = $state(false);
   let lastSavedContent = '';
+  let lastKnownHash = $state('');
   let loading = $state(false);
   let conflict = $state(false);
+  let conflictContent = $state<string | null>(null);
+  let pollTimer: ReturnType<typeof setInterval> | undefined;
   let editorContainer: HTMLDivElement;
 
   let selectionAction = $state<{ top: number; left: number; text: string; lineRange: [number, number] } | null>(null);
@@ -59,18 +62,30 @@
     }
   });
 
-  // Watch for external file changes
+  // Poll the open document for content-only external changes.
   $effect(() => {
-    // When store records change and matches our document, check for external update
-    const record = store.state.records.find(r => r.metadata.id === documentPath || r.path === documentPath);
-    if (record && !modified && view) {
-      // Re-fetch to see if content changed externally
-      // (The RecordChanged event means the file was modified)
-      // We only re-fetch if we don't have local modifications to avoid overwriting user's work
-      fetchContent(documentPath!);
-    } else if (record && modified && view) {
-      // If we have local modifications and the file changed externally, it's a conflict
-      conflict = true;
+    if (documentPath) {
+      clearInterval(pollTimer);
+      pollTimer = setInterval(pollForChanges, 1000);
+    } else {
+      clearInterval(pollTimer);
+      pollTimer = undefined;
+    }
+
+    return () => {
+      clearInterval(pollTimer);
+      pollTimer = undefined;
+    };
+  });
+
+  // Keep record deletion handling separate from content synchronization.
+  $effect(() => {
+    if (documentPath) {
+      const record = store.state.records.find(r => r.metadata.id === documentPath || r.path === documentPath);
+      if (!record) {
+        conflict = false;
+        conflictContent = null;
+      }
     }
   });
 
@@ -80,23 +95,58 @@
       const res = await fetch(apiUrl(`/records/${encodeURIComponent(path)}/content`));
       if (res.ok) {
         const data = await res.json();
-        setContent(data.content);
         lastSavedContent = data.content;
+        lastKnownHash = data.hash || '';
+        setContent(data.content);
         modified = false;
         conflict = false;
+        conflictContent = null;
       }
     } finally {
       loading = false;
     }
   }
 
-  function setContent(content: string) {
+  async function pollForChanges() {
+    if (!documentPath || loading) return;
+
+    try {
+      const headers: Record<string, string> = {};
+      if (lastKnownHash) {
+        headers['If-None-Match'] = `"${lastKnownHash}"`;
+      }
+
+      const res = await fetch(apiUrl(`/records/${encodeURIComponent(documentPath)}/content`), { headers });
+
+      if (res.status === 304) return;
+      if (!res.ok) return;
+
+      const data = await res.json();
+      lastKnownHash = data.hash || '';
+
+      if (data.content === lastSavedContent) return;
+
+      if (!modified) {
+        lastSavedContent = data.content;
+        setContent(data.content, true);
+        modified = false;
+      } else {
+        conflict = true;
+        conflictContent = data.content;
+      }
+    } catch {
+      // Network errors are transient; try again on the next poll tick.
+    }
+  }
+
+  function setContent(content: string, preserveScroll = false) {
     if (view) {
+      const scrollTop = view.scrollDOM.scrollTop;
       view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: content } });
       updateHeadings(content);
       setTimeout(() => {
         if (view) {
-          view.scrollDOM.scrollTop = 0;
+          view.scrollDOM.scrollTop = preserveScroll ? scrollTop : 0;
         }
       }, 0);
     }
@@ -107,9 +157,26 @@
       const content = view.state.doc.toString();
       onSave(content);
       lastSavedContent = content;
+      lastKnownHash = '';
       modified = false;
       conflict = false;
+      conflictContent = null;
     }
+  }
+
+  function acceptExternalChanges() {
+    if (conflictContent !== null) {
+      lastSavedContent = conflictContent;
+      setContent(conflictContent, true);
+      modified = false;
+      conflict = false;
+      conflictContent = null;
+    }
+  }
+
+  function keepLocalChanges() {
+    conflict = false;
+    conflictContent = null;
   }
 
   function handleAttachContext() {
@@ -246,10 +313,6 @@
       {#if modified}
         <span class="ml-2 w-2 h-2 rounded-full bg-accent-primary" title="Unsaved changes"></span>
       {/if}
-      {#if conflict}
-        <span class="ml-2 text-status-warning-text">File changed externally</span>
-        <button class="ml-1 text-[10px] underline" onclick={() => fetchContent(documentPath!)}>Reload</button>
-      {/if}
       <div class="flex-1"></div>
       {#if onAttachContext}
         <button 
@@ -265,7 +328,29 @@
       <span class="text-text-tertiary">No document open</span>
     {/if}
   </div>
-  
+
+  {#if conflict}
+    <div class="flex items-center gap-2 px-3 py-2 bg-status-warning-bg/30 border-b border-status-warning-border text-[11px]">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-status-warning-text shrink-0">
+        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+        <path d="M12 9v4"/><path d="M12 17h.01"/>
+      </svg>
+      <span class="text-status-warning-text flex-1">File changed externally. You have unsaved edits.</span>
+      <button
+        onclick={acceptExternalChanges}
+        class="px-2 py-0.5 rounded text-[10px] font-medium bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20 transition-colors"
+      >
+        Accept external
+      </button>
+      <button
+        onclick={keepLocalChanges}
+        class="px-2 py-0.5 rounded text-[10px] font-medium bg-bg-surface-active text-text-secondary hover:bg-bg-surface-hover transition-colors"
+      >
+        Keep mine
+      </button>
+    </div>
+  {/if}
+
   <!-- Editor body -->
   <div bind:this={editorContainer} class="flex-1 min-h-0 overflow-auto relative {documentPath ? 'block' : 'hidden'}">
     {#if selectionAction}

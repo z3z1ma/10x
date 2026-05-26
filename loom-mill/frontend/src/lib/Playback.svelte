@@ -6,7 +6,7 @@
   import { formatDuration } from './utils';
   import { apiUrl } from './api';
 
-  let { workstationId, onClose, embedded = false }: { workstationId: string; onClose: () => void; embedded?: boolean } = $props();
+  let { workstationId, onClose, embedded = false, initialStep }: { workstationId: string; onClose: () => void; embedded?: boolean; initialStep?: number } = $props();
 
   let iterations = $state<IterationRecord[]>([]);
   let currentStep = $state<number>(-1); // -1 means aggregate view
@@ -22,8 +22,11 @@
       if (!res.ok) throw new Error('Failed to fetch iterations');
       iterations = await res.json();
       if (iterations.length > 0) {
-        // Default to aggregate view
-        await loadDiff(-1);
+        if (initialStep !== undefined && initialStep >= 0 && initialStep < iterations.length) {
+          await loadDiff(initialStep);
+        } else {
+          await loadDiff(-1);
+        }
       }
     } catch (err: any) {
       error = err.message;
@@ -65,6 +68,12 @@
 
   onMount(() => {
     fetchIterations();
+  });
+
+  $effect(() => {
+    if (initialStep !== undefined && iterations.length > 0 && initialStep >= 0 && initialStep < iterations.length && currentStep !== initialStep) {
+      loadDiff(initialStep);
+    }
   });
 
   function next() {

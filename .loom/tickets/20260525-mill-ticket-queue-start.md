@@ -2,9 +2,9 @@
 
 ID: ticket:20260525-mill-ticket-queue-start
 Type: Ticket
-Status: active
+Status: closed
 Created: 2026-05-25
-Updated: 2026-05-25
+Updated: 2026-05-26
 Risk: low - frontend component addition with one existing backend call (POST /workstations).
 Priority: high - currently there is NO way to start a workstation from the UI.
 
@@ -211,3 +211,4 @@ Implementation run completed for the scoped frontend files. `ReadyTicketRow.svel
 
 - 2026-05-25: Created ticket. Source: operator identified that the layout overhaul removed the only way to start workstations and the empty state references non-existent UI.
 - 2026-05-25: Bounded Ralph implementation run added `loom-mill/frontend/src/lib/ReadyTicketRow.svelte` and updated `loom-mill/frontend/src/lib/WorkstationList.svelte`. Build evidence recorded in `evidence:20260525-mill-ticket-queue-start-build`.
+- 2026-05-26: Closed. Operator confirmed feature is working: ready tickets appear, start buttons function, workstations launch successfully from the UI. First genuine workstation run completed through the queue flow.
