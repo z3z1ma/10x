@@ -2,7 +2,7 @@
 
 ID: ticket:20260526-mill-accessibility-keyboard
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: medium - keyboard handling is easy to regress; ARIA requires careful testing

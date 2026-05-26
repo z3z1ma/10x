@@ -2,7 +2,7 @@
 
 ID: ticket:20260526-mill-foundation-fixes
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: medium - type changes touch every component; WebSocket changes affect real-time state

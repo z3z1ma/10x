@@ -2,7 +2,7 @@
 
 ID: ticket:20260526-mill-record-rendering
 Type: Ticket
-Status: active
+Status: closed
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: medium - rendering arbitrary Markdown requires careful sanitization and styling
