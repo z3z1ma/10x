@@ -14,22 +14,27 @@
 
   import { onMount } from 'svelte';
 
+  function toSessionState(data: any) {
+    return data.state ?? data;
+  }
+
   onMount(async () => {
     if (sessionId && !store.shapingSession) {
       try {
         const response = await fetch(apiUrl(`/shaping/sessions/${sessionId}`));
         if (response.ok) {
           const data = await response.json();
-          if (data.state) {
+          const state = toSessionState(data);
+          if (state) {
             store.shapingSession = {
               id: sessionId,
-              phase: data.state.phase,
-              nodes: data.state.nodes || {},
-              edges: data.state.edges || [],
-              stagedRecords: data.state.staged_records || [],
-              activeBranch: data.state.active_branch || 'main',
-              branches: data.state.branches || ['main'],
-              activeExplorations: data.state.active_explorations || []
+              phase: state.phase,
+              nodes: state.nodes || {},
+              edges: state.edges || [],
+              stagedRecords: state.staged_records || [],
+              activeBranch: state.active_branch || 'main',
+              branches: state.branches || ['main'],
+              activeExplorations: state.active_explorations || []
             };
           }
         } else {
@@ -55,16 +60,17 @@
       if (response.ok) {
         const data = await response.json();
         sessionId = data.session_id || data.id;
-        if (data.state) {
+        const state = toSessionState(data);
+        if (state) {
           store.shapingSession = {
             id: sessionId,
-            phase: data.state.phase,
-            nodes: data.state.nodes || {},
-            edges: data.state.edges || [],
-            stagedRecords: data.state.staged_records || [],
-            activeBranch: data.state.active_branch || 'main',
-            branches: data.state.branches || ['main'],
-            activeExplorations: data.state.active_explorations || []
+            phase: state.phase,
+            nodes: state.nodes || {},
+            edges: state.edges || [],
+            stagedRecords: state.staged_records || [],
+            activeBranch: state.active_branch || 'main',
+            branches: state.branches || ['main'],
+            activeExplorations: state.active_explorations || []
           };
         }
         // Trigger the engine to start the shaping conversation

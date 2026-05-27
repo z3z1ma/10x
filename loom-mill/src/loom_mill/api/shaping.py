@@ -365,30 +365,32 @@ async def explore_shaping_session(request: Request) -> JSONResponse:
 
 
 async def advance_shaping_session(request: Request) -> JSONResponse:
-    try:
-        session = _load_session(request)
-    except KeyError:
-        return JSONResponse({"detail": "Session not found"}, status_code=404)
-    if session.state.ended_at is not None:
-        return JSONResponse({"error": "Session has ended"}, status_code=409)
+    session_id = request.path_params["session_id"]
+    async with _session_lock(request, session_id):
+        try:
+            session = _load_session(request)
+        except KeyError:
+            return JSONResponse({"detail": "Session not found"}, status_code=404)
+        if session.state.ended_at is not None:
+            return JSONResponse({"error": "Session has ended"}, status_code=409)
 
-    engine = ShapingEngine(session, _orchestrator(request, session), request.app.state.store)
-    try:
-        nodes = await engine.advance()
-    except Exception as error:
-        node = CanvasNode(
-            id=str(uuid4()),
-            type=CanvasNodeType.OBSERVATION,
-            parent_id=None,
-            status=NodeStatus.ACTIVE,
-            content={"message": f"Shaping advance failed: {error}"},
-            position=None,
-            timestamp=utc_now(),
-        )
-        session.add_node(node)
-        await request.app.state.store.publish(ShapingEvent(session_id=session.session_id, event="node_added", data={"node": asdict(node)}))
-        nodes = [node]
-    return JSONResponse({"session_id": session.session_id, "nodes": [asdict(node) for node in nodes]})
+        engine = ShapingEngine(session, _orchestrator(request, session), request.app.state.store)
+        try:
+            nodes = await engine.advance()
+        except Exception as error:
+            node = CanvasNode(
+                id=str(uuid4()),
+                type=CanvasNodeType.OBSERVATION,
+                parent_id=None,
+                status=NodeStatus.ACTIVE,
+                content={"message": f"Shaping advance failed: {error}"},
+                position=None,
+                timestamp=utc_now(),
+            )
+            session.add_node(node)
+            await request.app.state.store.publish(ShapingEvent(session_id=session.session_id, event="node_added", data={"node": asdict(node)}))
+            nodes = [node]
+        return JSONResponse({"session_id": session.session_id, "nodes": [asdict(node) for node in nodes]})
 
 
 async def create_staged_record(request: Request) -> JSONResponse:

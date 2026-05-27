@@ -52,14 +52,15 @@
   }
 
   function applySessionState(data: any) {
-    if (!data.state || !store.shapingSession) return;
-    store.shapingSession.phase = data.state.phase;
-    store.shapingSession.nodes = data.state.nodes || {};
-    store.shapingSession.edges = data.state.edges || [];
-    store.shapingSession.stagedRecords = data.state.staged_records || [];
-    store.shapingSession.activeBranch = data.state.active_branch || 'main';
-    store.shapingSession.branches = data.state.branches || ['main'];
-    store.shapingSession.activeExplorations = data.state.active_explorations || [];
+    const state = data.state ?? data;
+    if (!state || !store.shapingSession) return;
+    store.shapingSession.phase = state.phase;
+    store.shapingSession.nodes = state.nodes || {};
+    store.shapingSession.edges = state.edges || [];
+    store.shapingSession.stagedRecords = state.staged_records || [];
+    store.shapingSession.activeBranch = state.active_branch || 'main';
+    store.shapingSession.branches = state.branches || ['main'];
+    store.shapingSession.activeExplorations = state.active_explorations || [];
   }
 
   async function refetchSessionState() {

@@ -4,6 +4,7 @@
   let { node, position, connections = [] } = $props();
   
   let expanded = $state(false);
+  let text = $derived(node.content.observation || node.content.message || node.content.summary || 'No content');
 </script>
 
 <Node id={node.id} {position} let:selected>
@@ -18,10 +19,10 @@
     </div>
     
     <div class="text-[12px] text-text-secondary whitespace-pre-wrap break-words {expanded ? '' : 'line-clamp-4'}">
-      {node.content.observation}
+      {text}
     </div>
     
-    {#if node.content.observation.length > 150 || node.content.evidence}
+    {#if text.length > 150 || node.content.evidence}
       <button 
         class="text-[10px] text-text-tertiary hover:text-text-primary mt-2 flex items-center gap-1"
         onclick={() => expanded = !expanded}

@@ -87,6 +87,9 @@ async def test_commit_writes_records_resolves_temp_ids_creates_knowledge_and_git
     ticket = session.staging.propose("tickets", "Auth Fix", "# Auth Fix\n\nID: temp:tickets:auth-fix\nDepends On: temp:specs:auth-spec\n")
     spec = session.staging.propose("specs", "Auth Spec", f"# Auth Spec\n\nRelated: {ticket.temp_id}\n")
     plan = session.staging.propose("plans", "Auth Plan", f"# Auth Plan\n\nIncludes {ticket.temp_id} and {spec.temp_id}\n")
+    session.staging.accept(ticket.temp_id)
+    session.staging.accept(spec.temp_id)
+    session.staging.accept(plan.temp_id)
     store = MillStateStore()
     subscription = store.subscribe()
     try:
@@ -118,6 +121,28 @@ async def test_commit_writes_records_resolves_temp_ids_creates_knowledge_and_git
 
 
 @pytest.mark.asyncio
+async def test_commit_only_writes_accepted_records(tmp_path: Path) -> None:
+    _init_git(tmp_path)
+    session = ShapingSession.create(tmp_path, "shape accepted only")
+    accepted = session.staging.propose("tickets", "Accepted Ticket", "# Accepted Ticket\n")
+    pending = session.staging.propose("specs", "Pending Spec", "# Pending Spec\n")
+    session.staging.accept(accepted.temp_id)
+    store = MillStateStore()
+
+    result = await CommitFlow(session, tmp_path, store).commit()
+
+    accepted_id = generate_real_id("tickets", "Accepted Ticket")
+    pending_id = generate_real_id("specs", "Pending Spec")
+    accepted_path = tmp_path / ".loom" / "tickets" / f"{accepted_id.split(':')[1]}.md"
+    pending_path = tmp_path / ".loom" / "specs" / f"{pending_id.split(':')[1]}.md"
+
+    assert result.records_created == 1
+    assert accepted_path.exists()
+    assert not pending_path.exists()
+    assert all("pending-spec" not in path for path in result.paths)
+
+
+@pytest.mark.asyncio
 async def test_atomic_write_rolls_back_partial_files_on_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     first = StagedRecord("temp:tickets:first", "tickets", "First", "one", "main", "proposed", "now")
     second = StagedRecord("temp:specs:second", "specs", "Second", "two", "main", "proposed", "now")
@@ -142,7 +167,8 @@ async def test_atomic_write_rolls_back_partial_files_on_failure(tmp_path: Path, 
 async def test_commit_failure_resets_index_and_deletes_written_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _init_git(tmp_path)
     session = ShapingSession.create(tmp_path, "shape rollback")
-    session.staging.propose("tickets", "Rollback Ticket", "# Rollback Ticket\n")
+    record = session.staging.propose("tickets", "Rollback Ticket", "# Rollback Ticket\n")
+    session.staging.accept(record.temp_id)
     store = MillStateStore()
     flow = CommitFlow(session, tmp_path, store)
     original_run_git = flow._run_git

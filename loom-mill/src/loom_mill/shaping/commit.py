@@ -44,19 +44,19 @@ class CommitFlow:
         self.store = store
 
     async def commit(self) -> CommitResult:
-        active_records = self.session.staging.list_branch(self.session.state.active_branch)
-        if not active_records:
+        records = [record for record in self.session.staging.list_branch(self.session.state.active_branch) if record.status == "accepted"]
+        if not records:
             raise ValueError("Nothing to commit")
 
-        id_map = {record.temp_id: generate_real_id(record.surface, record.title) for record in active_records}
-        resolved_records = resolve_references(active_records, id_map)
+        id_map = {record.temp_id: generate_real_id(record.surface, record.title) for record in records}
+        resolved_records = resolve_references(records, id_map)
         path_map = {record.temp_id: self._record_path(record) for record in resolved_records}
         session_record = self._session_record(resolved_records, id_map)
         path_map[session_record.temp_id] = self.workspace_root / ".loom" / "knowledge" / f"{session_record.temp_id.split(':', 2)[2]}.md"
 
         written_paths = await atomic_write_all([*resolved_records, session_record], path_map, self.workspace_root)
         relative_paths = [str(path.relative_to(self.workspace_root)) for path in written_paths]
-        commit_message = self._generate_commit_message(active_records)
+        commit_message = self._generate_commit_message(records)
         try:
             self._run_git(["add", *relative_paths])
             self._run_git(["commit", "-m", commit_message])
@@ -71,11 +71,11 @@ class CommitFlow:
             ShapingEvent(
                 session_id=self.session.session_id,
                 event="session_ended",
-                data={"reason": "committed", "records_created": len(active_records)},
+                data={"reason": "committed", "records_created": len(records)},
             )
         )
         return CommitResult(
-            records_created=len(active_records),
+            records_created=len(records),
             paths=relative_paths,
             commit_message=commit_message,
             session_record_path=str(path_map[session_record.temp_id].relative_to(self.workspace_root)),

@@ -85,6 +85,10 @@ async def test_full_shaping_session_lifecycle(tmp_path: Path) -> None:
         )
     )
     assert _body(staged)["record"]["temp_id"] == "temp:tickets:backend-validation-fix"
+    accept = await shaping.accept_staged_record(
+        Request(tmp_path, store, path_params={"session_id": session_id, "temp_id": "temp:tickets:backend-validation-fix"}, harness_config=harness)
+    )
+    assert _body(accept)["record"]["status"] == "accepted"
 
     commit = await shaping.commit_shaping_session(Request(tmp_path, store, path_params={"session_id": session_id}, harness_config=harness))
     commit_payload = _body(commit)
