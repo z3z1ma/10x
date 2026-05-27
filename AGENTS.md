@@ -108,6 +108,43 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - After Claude plugin manifest changes, run `claude plugin validate "$PWD/loom-core"` and `claude plugin validate "$PWD/loom-playbooks"`.
 - After Gemini manifest or bootstrap changes, run `gemini extensions validate "$PWD"`, `gemini extensions validate "$PWD/loom-core"`, and `gemini extensions validate "$PWD/loom-playbooks"`.
 
+## Loom Mill Dev Servers
+
+CRITICAL: When starting Mill dev servers, ALWAYS use nohup with full stdout/stderr
+redirection. Never use bare `&` backgrounding — it hangs because the shell waits
+for stdout. Never forget to kill servers after verification.
+
+CRITICAL: Before starting ANY server, ALWAYS kill existing processes on that port
+first. Multiple subagents may be running in parallel and will fight over ports if
+you don't check. Stale processes from prior runs WILL exist.
+
+Start backend (ALWAYS do the kill first):
+```bash
+lsof -ti:8765 | xargs kill 2>/dev/null; sleep 1
+nohup uv run python -m uvicorn loom_mill.app:app --host 127.0.0.1 --port 8765 > /tmp/loom-mill-backend.log 2>&1 < /dev/null &
+```
+(Run from `loom-mill/` directory)
+
+Start frontend (ALWAYS do the kill first):
+```bash
+lsof -ti:5173 | xargs kill 2>/dev/null; sleep 1
+nohup npm run dev > /tmp/loom-mill-vite.log 2>&1 < /dev/null &
+```
+(Run from `loom-mill/frontend/` directory)
+
+Kill servers when done:
+```bash
+lsof -ti:8765 | xargs kill 2>/dev/null; lsof -ti:5173 | xargs kill 2>/dev/null
+```
+
+NEVER:
+- Use bare `&` without redirecting stdout/stderr (causes shell hang)
+- Use `npm run dev &` (hangs — Vite holds stdout open)
+- Forget to kill processes after Playwright verification
+- Start servers without killing existing port occupants first
+- Assume ports are free — ALWAYS kill first, even if you think nothing is running
+- Run two subagents that both try to start servers (coordinate or share)
+
 ## Editing Checks
 
 - `SKILL.md` frontmatter needs `name` and `description`; Loom record templates use grepable body labels such as `ID:`, `Type:`, `Status:`, `Created:`, and `Updated:`.
