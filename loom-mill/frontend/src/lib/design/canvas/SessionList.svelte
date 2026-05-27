@@ -17,6 +17,17 @@
 
   let sessions = $state<SessionSummary[]>([]);
   let loading = $state(true);
+  let error = $state<string | null>(null);
+  let searchQuery = $state('');
+
+  let filteredSessions = $derived(
+    searchQuery.trim()
+      ? sessions.filter(s =>
+          s.seed_text.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          s.status.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : sessions
+  );
 
   function relativeDate(value: string) {
     const created = new Date(value);
@@ -39,52 +50,85 @@
   onMount(async () => {
     try {
       const res = await fetch(apiUrl('/shaping/sessions'));
-      if (res.ok) sessions = await res.json();
+      if (res.ok) {
+        sessions = await res.json();
+      } else {
+        error = `Failed to load sessions (${res.status})`;
+      }
+    } catch (err) {
+      error = 'Network error loading sessions';
     } finally {
       loading = false;
     }
   });
 </script>
 
-<div class="flex h-full w-full items-center justify-center bg-bg-primary p-8">
-  <div class="flex w-full max-w-3xl flex-col gap-5">
-    <div>
-      <h2 class="text-lg font-semibold text-text-primary">Shaping Sessions</h2>
-      <p class="mt-1 text-[12px] text-text-tertiary">
-        Browse prior decision trees, resume active work, or start a fresh shaping session.
-      </p>
-    </div>
+<div class="flex h-full w-full flex-col bg-bg-primary">
+  <!-- Header with top padding -->
+  <div class="shrink-0 px-8 pt-12 pb-4 max-w-3xl mx-auto w-full">
+    <h2 class="text-lg font-semibold text-text-primary">Shaping Sessions</h2>
+    <p class="mt-1 text-[12px] text-text-tertiary">
+      Browse prior decision trees, resume active work, or start a fresh shaping session.
+    </p>
 
-    <button
-      onclick={onNewSession}
-      class="group flex w-full items-center gap-4 rounded-lg border border-accent-primary/40 bg-accent-primary/10 p-4 text-left transition-colors hover:border-accent-primary hover:bg-accent-primary/15"
-    >
-      <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-primary text-xl leading-none text-white shadow-sm">+</span>
-      <span class="flex flex-col gap-1">
-        <span class="text-[13px] font-semibold text-text-primary">Start new session</span>
-        <span class="text-[12px] text-text-tertiary">Begin from a new seed input without losing existing sessions.</span>
-      </span>
-    </button>
+    <!-- Search -->
+    <input
+      type="text"
+      bind:value={searchQuery}
+      placeholder="Search sessions..."
+      class="mt-4 w-full rounded border border-border-default bg-bg-surface px-3 py-2
+        text-[12px] text-text-primary placeholder-text-tertiary
+        focus:outline-none focus:border-accent-primary transition-colors"
+    />
+  </div>
 
-    {#if loading}
-      <div class="flex flex-col gap-3">
-        {#each [1, 2, 3] as item}
-          <div class="rounded-lg border border-border-default bg-bg-surface p-4" aria-label="Loading session">
-            <div class="h-4 w-3/4 rounded bg-bg-surface-hover"></div>
-            <div class="mt-3 flex items-center gap-2">
-              <div class="h-5 w-16 rounded-full bg-bg-surface-hover"></div>
-              <div class="h-5 w-20 rounded-full bg-bg-surface-hover"></div>
+  <!-- Scrollable session list -->
+  <div class="flex-1 overflow-y-auto px-8 pb-8">
+    <div class="max-w-3xl mx-auto w-full flex flex-col gap-3">
+      <!-- New session card -->
+      <button
+        onclick={onNewSession}
+        class="group flex w-full items-center gap-4 rounded-lg border border-accent-primary/40 bg-accent-primary/10 p-4 text-left transition-colors hover:border-accent-primary hover:bg-accent-primary/15"
+      >
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent-primary text-xl leading-none text-white shadow-sm">+</span>
+        <span class="flex flex-col gap-1">
+          <span class="text-[13px] font-semibold text-text-primary">Start new session</span>
+          <span class="text-[12px] text-text-tertiary">Begin from a new seed input without losing existing sessions.</span>
+        </span>
+      </button>
+
+      {#if loading}
+        <div class="flex flex-col gap-3">
+          {#each [1, 2, 3] as _}
+            <div class="rounded-lg border border-border-default bg-bg-surface p-4 animate-pulse">
+              <div class="h-4 w-3/4 rounded bg-bg-surface-hover"></div>
+              <div class="mt-3 flex items-center gap-2">
+                <div class="h-5 w-16 rounded-full bg-bg-surface-hover"></div>
+                <div class="h-5 w-20 rounded-full bg-bg-surface-hover"></div>
+              </div>
             </div>
-          </div>
-        {/each}
-      </div>
-    {:else if sessions.length === 0}
-      <div class="rounded-lg border border-border-default bg-bg-surface p-6 text-center">
-        <p class="text-[13px] text-text-secondary">No sessions yet. Start your first one.</p>
-      </div>
-    {:else}
-      <div class="flex flex-col gap-3">
-        {#each sessions as session}
+          {/each}
+        </div>
+      {:else if error}
+        <div class="rounded-lg border border-status-error-text/30 bg-status-error-text/5 p-4 text-center">
+          <p class="text-[13px] text-status-error-text">{error}</p>
+          <button
+            onclick={() => location.reload()}
+            class="mt-2 text-[11px] text-text-tertiary hover:text-text-primary transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      {:else if filteredSessions.length === 0 && searchQuery}
+        <div class="rounded-lg border border-border-default bg-bg-surface p-6 text-center">
+          <p class="text-[13px] text-text-secondary">No sessions match "{searchQuery}"</p>
+        </div>
+      {:else if sessions.length === 0}
+        <div class="rounded-lg border border-border-default bg-bg-surface p-6 text-center">
+          <p class="text-[13px] text-text-secondary">No sessions yet. Start your first one above.</p>
+        </div>
+      {:else}
+        {#each filteredSessions as session (session.id)}
           <button
             onclick={() => onSelectSession(session.id)}
             class="flex w-full items-center justify-between gap-4 rounded-lg border border-border-default bg-bg-surface p-4 text-left shadow-sm transition-colors hover:border-accent-primary/60 hover:bg-bg-surface-hover"
@@ -107,7 +151,7 @@
             </span>
           </button>
         {/each}
-      </div>
-    {/if}
+      {/if}
+    </div>
   </div>
 </div>

@@ -14,6 +14,13 @@
   let highlightedTempId = $state<string | null>(null);
   let highlightTimeout: ReturnType<typeof setTimeout> | null = null;
 
+  function exitShaping() {
+    store.shapingSession = null;
+    localStorage.removeItem('loom_shaping_session_id');
+    sessionId = null;
+    onExit();
+  }
+
   function toSessionState(data: any) {
     return data.state ?? data;
   }
@@ -144,7 +151,7 @@
   {#if view === 'list'}
     <div class="relative w-full h-full">
       <button
-        onclick={onExit}
+        onclick={exitShaping}
         class="absolute right-4 top-4 z-20 rounded border border-border-default bg-bg-surface px-2 py-2 text-[12px] text-text-tertiary shadow-sm transition-colors hover:bg-bg-surface-hover hover:text-status-error-text"
         title="Exit to editor"
       >
@@ -191,21 +198,12 @@
   {:else}
     <!-- Active session -->
     <div class="flex-1 min-w-0 flex flex-col overflow-hidden bg-bg-primary relative">
-      <div class="absolute left-4 top-4 z-20 flex items-center gap-2">
-        <button
-          onclick={showSessionList}
-          class="rounded border border-border-default bg-bg-surface px-3 py-2 text-[12px] font-medium text-text-secondary shadow-sm transition-colors hover:bg-bg-surface-hover hover:text-text-primary"
-        >
-          &larr; Sessions
-        </button>
-        <button
-          onclick={onExit}
-          class="rounded border border-border-default bg-bg-surface px-2 py-2 text-[12px] text-text-tertiary shadow-sm transition-colors hover:bg-bg-surface-hover hover:text-status-error-text"
-          title="Exit shaping session"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-        </button>
-      </div>
+      <button
+        onclick={showSessionList}
+        class="absolute left-4 top-4 z-20 rounded border border-border-default bg-bg-surface px-3 py-2 text-[12px] font-medium text-text-secondary shadow-sm transition-colors hover:bg-bg-surface-hover hover:text-text-primary"
+      >
+        &larr; Sessions
+      </button>
       <ShapingCanvas 
         {sessionId} 
         {advancing}
