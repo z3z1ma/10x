@@ -32,7 +32,11 @@
             activeExplorations: data.state.active_explorations || []
           };
         }
-        // The backend should start sending blocks via WS
+        // Trigger the engine to start the shaping conversation
+        fetch(apiUrl(`/shaping/sessions/${sessionId}/advance`), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        }).catch(err => console.error('Error triggering advance:', err));
       } else {
         console.error('Failed to start session:', await response.text());
       }
@@ -46,13 +50,22 @@
   async function handleRespond(content: string) {
     if (!sessionId) return;
     try {
-      await fetch(apiUrl(`/shaping/sessions/${sessionId}/input`), {
+      const inputRes = await fetch(apiUrl(`/shaping/sessions/${sessionId}/input`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content })
+        body: JSON.stringify({ text: content })
+      });
+      if (!inputRes.ok) {
+        console.error('Error sending input:', await inputRes.text());
+        return;
+      }
+      // Trigger the engine to produce the next block
+      await fetch(apiUrl(`/shaping/sessions/${sessionId}/advance`), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
       });
     } catch (err) {
-      console.error('Error sending response:', err);
+      console.error('Error in shaping respond:', err);
     }
   }
 
