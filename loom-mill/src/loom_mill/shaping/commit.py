@@ -60,10 +60,11 @@ class CommitFlow:
         try:
             self._run_git(["add", *relative_paths])
             self._run_git(["commit", "-m", commit_message])
-        except Exception:
+        except Exception as error:
+            self._reset_index(relative_paths)
             for path in written_paths:
                 path.unlink(missing_ok=True)
-            raise
+            raise RuntimeError(f"Failed to commit shaped records; rolled back written files: {error}") from error
 
         self.session.end()
         await self.store.publish(
@@ -132,6 +133,11 @@ The full session context document is available at `.mill/shaping-sessions/{self.
         if result.returncode != 0:
             message = result.stderr.strip() or result.stdout.strip() or f"git {' '.join(args)} failed"
             raise RuntimeError(message)
+
+    def _reset_index(self, relative_paths: list[str]) -> None:
+        if not relative_paths:
+            return
+        subprocess.run(["git", "reset", "HEAD", "--", *relative_paths], cwd=self.workspace_root, capture_output=True, text=True)
 
 
 def generate_real_id(surface: str, title: str) -> str:

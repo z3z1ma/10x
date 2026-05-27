@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 import os
+import shutil
 import time
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
@@ -61,14 +62,29 @@ def extract_context_summary(output: str) -> str:
     return output[index + len(marker) :].strip()
 
 
+def harness_command_error(command: str) -> str | None:
+    command = command.strip()
+    if not command:
+        return "No harness configured. Set up a harness in Settings."
+    if os.path.sep in command:
+        if not os.path.exists(command):
+            return f"Harness command not found: {command}. Set up a harness in Settings."
+        if not os.access(command, os.X_OK):
+            return f"Harness command is not executable: {command}. Set up a harness in Settings."
+        return None
+    if shutil.which(command) is None:
+        return f"Harness command not found: {command}. Set up a harness in Settings."
+    return None
+
+
 async def run_bounded_invocation(
     config: InvocationConfig,
     invocation_id: str,
     on_stream: StreamCallback | None = None,
     prompt_override: str | None = None,
 ) -> InvocationResult:
-    if not config.command.strip():
-        raise ValueError("harness command is required")
+    if error := harness_command_error(config.command):
+        raise ValueError(error)
 
     started = time.monotonic()
     env = os.environ.copy()

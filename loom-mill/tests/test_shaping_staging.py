@@ -139,6 +139,30 @@ async def test_atomic_write_rolls_back_partial_files_on_failure(tmp_path: Path, 
 
 
 @pytest.mark.asyncio
+async def test_commit_failure_resets_index_and_deletes_written_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _init_git(tmp_path)
+    session = ShapingSession.create(tmp_path, "shape rollback")
+    session.staging.propose("tickets", "Rollback Ticket", "# Rollback Ticket\n")
+    store = MillStateStore()
+    flow = CommitFlow(session, tmp_path, store)
+    original_run_git = flow._run_git
+
+    def fail_commit(args: list[str]) -> None:
+        if args and args[0] == "commit":
+            raise RuntimeError("simulated commit failure")
+        original_run_git(args)
+
+    monkeypatch.setattr(flow, "_run_git", fail_commit)
+
+    with pytest.raises(RuntimeError, match="rolled back written files"):
+        await flow.commit()
+
+    status = subprocess.run(["git", "diff", "--cached", "--name-only"], cwd=tmp_path, check=True, capture_output=True, text=True)
+    assert status.stdout.strip() == ""
+    assert not (tmp_path / ".loom" / "tickets" / f"{generate_real_id('tickets', 'Rollback Ticket').split(':')[1]}.md").exists()
+
+
+@pytest.mark.asyncio
 async def test_staging_api_endpoints_and_routes(tmp_path: Path) -> None:
     store = MillStateStore()
     session_id = _body(await shaping.create_shaping_session(Request(tmp_path, store, {"input": "initial"})))["session_id"]

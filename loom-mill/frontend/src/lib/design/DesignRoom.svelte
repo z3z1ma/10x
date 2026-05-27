@@ -23,9 +23,23 @@
   
   let designRoomContainer: HTMLDivElement;
 
+  $effect(() => {
+    if (shapingSessionId) {
+      localStorage.setItem('loom_shaping_session_id', shapingSessionId);
+    } else {
+      localStorage.removeItem('loom_shaping_session_id');
+    }
+  });
+
   import { onMount } from 'svelte';
 
   onMount(() => {
+    const savedSessionId = localStorage.getItem('loom_shaping_session_id');
+    if (savedSessionId) {
+      shapingSessionId = savedSessionId;
+      centerMode = 'shaping';
+    }
+
     const handleResize = () => {
       layoutWidth = window.innerWidth;
       if (layoutWidth < 1024 && layoutWidth >= 768) {

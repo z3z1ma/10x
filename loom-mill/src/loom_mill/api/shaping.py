@@ -171,7 +171,18 @@ async def advance_shaping_session(request: Request) -> JSONResponse:
         return JSONResponse({"error": "Session has ended"}, status_code=409)
 
     engine = ShapingEngine(session, _orchestrator(request, session), request.app.state.store)
-    blocks = await engine.advance()
+    try:
+        blocks = await engine.advance()
+    except Exception as error:
+        block = InteractionBlock(
+            id=str(uuid4()),
+            type=BlockType.SYSTEM,
+            timestamp=utc_now(),
+            content={"message": f"Shaping advance failed: {error}"},
+        )
+        session.add_block(block)
+        await request.app.state.store.publish(ShapingEvent(session_id=session.session_id, event="block_added", data={"block": asdict(block)}))
+        blocks = [block]
     return JSONResponse({"session_id": session.session_id, "blocks": [asdict(block) for block in blocks]})
 
 

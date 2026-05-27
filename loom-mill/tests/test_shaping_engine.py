@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 from dataclasses import asdict
 from pathlib import Path
@@ -199,6 +200,42 @@ async def test_advance_endpoint_returns_blocks(tmp_path: Path) -> None:
     assert payload["session_id"] == session_id
     assert payload["blocks"][0]["type"] == "agent_observation"
     assert payload["blocks"][0]["content"]["evidence"] == [".loom/specs/example.md"]
+
+
+@pytest.mark.asyncio
+async def test_advance_endpoint_returns_system_block_for_missing_harness(tmp_path: Path) -> None:
+    store = MillStateStore()
+    harness = HarnessConfig(command="definitely-not-a-loom-mill-harness")
+    create_response = await shaping.create_shaping_session(Request(tmp_path, store, {"input": "initial"}, harness_config=harness))
+    session_id = _body(create_response)["session_id"]
+
+    response = await shaping.advance_shaping_session(Request(tmp_path, store, path_params={"session_id": session_id}, harness_config=harness))
+
+    payload = _body(response)
+    assert response.status_code == 200
+    assert payload["blocks"][0]["type"] == "system"
+    assert "Set up a harness in Settings" in payload["blocks"][0]["content"]["message"]
+
+
+@pytest.mark.asyncio
+async def test_advance_endpoint_returns_exploration_start_block(tmp_path: Path) -> None:
+    store = MillStateStore()
+    harness = _printf_harness("```action\ntype: explore\ngoal: inspect scope\n```")
+    create_response = await shaping.create_shaping_session(Request(tmp_path, store, {"input": "initial"}, harness_config=harness))
+    session_id = _body(create_response)["session_id"]
+
+    request = Request(tmp_path, store, path_params={"session_id": session_id}, harness_config=harness)
+    response = await shaping.advance_shaping_session(request)
+    orchestrator = request.app.state.shaping_orchestrators[session_id]
+    for _ in range(100):
+        if orchestrator.active_count == 0:
+            break
+        await asyncio.sleep(0.01)
+
+    payload = _body(response)
+    assert response.status_code == 200
+    assert payload["blocks"][0]["type"] == "exploration_start"
+    assert payload["blocks"][0]["content"]["goal"] == "inspect scope"
 
 
 def test_advance_route_is_registered() -> None:

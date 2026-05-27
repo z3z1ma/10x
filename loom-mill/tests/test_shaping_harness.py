@@ -178,11 +178,14 @@ print('event summary')
         await subscription.aclose()
 
     payloads = [_event_payload(event) for event in events]
-    assert payloads[0] == {
+    assert payloads[0]["type"] == "shaping:block_added"
+    assert payloads[0]["data"]["block"]["type"] == "exploration_start"
+    assert payloads[1] == {
         "type": "shaping:exploration_start",
         "data": {"session_id": session_id, "invocation_id": invocation_id, "goal": "event exploration"},
     }
     assert any(payload["type"] == "shaping:exploration_stream" and payload["data"]["delta"] == "line one\n" for payload in payloads)
+    assert any(payload["type"] == "shaping:block_added" and payload["data"]["block"]["type"] == "exploration_complete" for payload in payloads)
     assert payloads[-1]["type"] == "shaping:exploration_complete"
 
 

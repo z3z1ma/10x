@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import asdict
 from uuid import uuid4
 
 from loom_mill.state.store import MillStateStore
@@ -53,7 +54,7 @@ class ShapingOrchestrator:
             content={"invocation_id": invocation_id, "goal": goal, "command": config.command},
         )
         self.session.state.active_explorations.append(invocation_id)
-        self.session.add_block(block)
+        await self._add_and_publish_block(block)
         await self.store.publish(
             ShapingEvent(session_id=self.session.session_id, event="exploration_start", data={"invocation_id": invocation_id, "goal": goal})
         )
@@ -126,7 +127,7 @@ class ShapingOrchestrator:
                     "duration_seconds": result.duration_seconds,
                 },
             )
-            self.session.add_block(block)
+            await self._add_and_publish_block(block)
             await self.store.publish(
                 ShapingEvent(
                     session_id=self.session.session_id,
@@ -152,10 +153,14 @@ class ShapingOrchestrator:
             timestamp=utc_now(),
             content={"invocation_id": invocation_id, "message": f"Exploration cancelled: {goal}"},
         )
-        self.session.add_block(block)
+        await self._add_and_publish_block(block)
         await self.store.publish(
             ShapingEvent(session_id=self.session.session_id, event="exploration_cancelled", data={"invocation_id": invocation_id})
         )
+
+    async def _add_and_publish_block(self, block: InteractionBlock) -> None:
+        self.session.add_block(block)
+        await self.store.publish(ShapingEvent(session_id=self.session.session_id, event="block_added", data={"block": asdict(block)}))
 
     def _finish_invocation(self, invocation_id: str) -> None:
         self._active.pop(invocation_id, None)

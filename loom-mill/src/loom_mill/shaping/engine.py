@@ -6,7 +6,7 @@ from uuid import uuid4
 from loom_mill.state.store import MillStateStore
 
 from .events import ShapingEvent
-from .harness import InvocationConfig, run_bounded_invocation
+from .harness import InvocationConfig, harness_command_error, run_bounded_invocation
 from .models import BlockType, InteractionBlock, SessionPhase
 from .orchestrator import ShapingOrchestrator
 from .parser import Decision, parse_decision
@@ -22,13 +22,19 @@ class ShapingEngine:
 
     async def advance(self) -> list[InteractionBlock]:
         await self._transition_for_operator_feedback()
+        if error := harness_command_error(self.orchestrator.harness_config.command):
+            block = InteractionBlock(id=str(uuid4()), type=BlockType.SYSTEM, timestamp=utc_now(), content={"message": error})
+            self.session.add_block(block)
+            await self._publish_block(block)
+            return [block]
         context = self.session.read_context()
         recent_blocks = self.session.state.blocks[-20:]
         decision = await self._decide_next_action(context, recent_blocks, self.session.state.phase)
 
         if decision.action == "explore":
+            block_count = len(self.session.state.blocks)
             await self.orchestrator.launch(decision.goal or "Explore context needed for shaping", decision.context_excerpt)
-            return []
+            return self.session.state.blocks[block_count:]
 
         block = self._block_from_decision(decision)
         if block.type == BlockType.AGENT_PROPOSAL:

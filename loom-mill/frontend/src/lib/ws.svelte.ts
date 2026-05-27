@@ -227,10 +227,30 @@ export class MillStore {
       case 'shaping:block_added':
         this.ensureShapingSession(data.session_id);
         this.shapingSession!.blocks = [...this.shapingSession!.blocks, data.block];
+        if (data.block.type === 'agent_proposal') {
+          // Refetch session state to sync staged records
+          fetch(apiUrl(`/shaping/sessions/${data.session_id}`)).then(res => {
+            if (res.ok) return res.json();
+          }).then(stateData => {
+            if (stateData?.state && this.shapingSession?.id === data.session_id) {
+              this.shapingSession.stagedRecords = stateData.state.staged_records || [];
+            }
+          }).catch(err => console.error('Failed to sync staged records:', err));
+        }
         break;
       case 'shaping:phase_changed':
         this.ensureShapingSession(data.session_id);
         this.shapingSession!.phase = data.phase;
+        break;
+      case 'shaping:exploration_start':
+        this.ensureShapingSession(data.session_id);
+        if (!this.shapingSession!.activeExplorations.includes(data.goal)) {
+          this.shapingSession!.activeExplorations = [...this.shapingSession!.activeExplorations, data.goal];
+        }
+        break;
+      case 'shaping:exploration_complete':
+        this.ensureShapingSession(data.session_id);
+        this.shapingSession!.activeExplorations = this.shapingSession!.activeExplorations.filter(e => e !== data.goal);
         break;
       case 'shaping:session_ended':
         if (this.shapingSession?.id === data.session_id) {

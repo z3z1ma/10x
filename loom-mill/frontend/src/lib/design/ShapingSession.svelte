@@ -8,6 +8,37 @@
 
   let seedInput = $state('');
   let starting = $state(false);
+  let advancing = $state(false);
+
+  import { onMount } from 'svelte';
+
+  onMount(async () => {
+    if (sessionId && !store.shapingSession) {
+      try {
+        const response = await fetch(apiUrl(`/shaping/sessions/${sessionId}`));
+        if (response.ok) {
+          const data = await response.json();
+          if (data.state) {
+            store.shapingSession = {
+              id: sessionId,
+              phase: data.state.phase,
+              blocks: data.state.blocks || [],
+              stagedRecords: data.state.staged_records || [],
+              activeBranch: data.state.active_branch || 'main',
+              branches: data.state.branches || ['main'],
+              activeExplorations: data.state.active_explorations || []
+            };
+          }
+        } else {
+          // Session not found or error, clear it
+          sessionId = null;
+        }
+      } catch (err) {
+        console.error('Error fetching session:', err);
+        sessionId = null;
+      }
+    }
+  });
 
   async function startSession() {
     if (!seedInput.trim() || starting) return;
@@ -33,10 +64,11 @@
           };
         }
         // Trigger the engine to start the shaping conversation
+        advancing = true;
         fetch(apiUrl(`/shaping/sessions/${sessionId}/advance`), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
-        }).catch(err => console.error('Error triggering advance:', err));
+        }).catch(err => console.error('Error triggering advance:', err)).finally(() => advancing = false);
       } else {
         console.error('Failed to start session:', await response.text());
       }
@@ -60,12 +92,15 @@
         return;
       }
       // Trigger the engine to produce the next block
+      advancing = true;
       await fetch(apiUrl(`/shaping/sessions/${sessionId}/advance`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
     } catch (err) {
       console.error('Error in shaping respond:', err);
+    } finally {
+      advancing = false;
     }
   }
 
@@ -124,6 +159,8 @@
         {sessionId} 
         blocks={store.shapingSession.blocks} 
         activeExplorations={store.shapingSession.activeExplorations}
+        phase={store.shapingSession.phase}
+        {advancing}
         onRespond={handleRespond} 
       />
     </div>
