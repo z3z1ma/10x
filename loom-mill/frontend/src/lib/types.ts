@@ -128,11 +128,22 @@ export interface ShippingEvent {
   timestamp: string;
 }
 
-export interface InteractionBlock {
+export interface CanvasNode {
   id: string;
-  type: string;
-  timestamp: string;
+  type: 'input' | 'processing' | 'question' | 'observation' | 'option_group' | 'option' | 'record';
+  parent_id: string | null;
+  status: 'active' | 'dead' | 'stale';
   content: Record<string, any>;
+  position: { x: number; y: number } | null;
+  timestamp: string;
+  option_group_id: string | null;
+}
+
+export interface CanvasEdge {
+  id: string;
+  source_id: string;
+  target_id: string;
+  type: 'causal' | 'option_group';
 }
 
 export interface StagedRecord {

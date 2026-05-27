@@ -1,4 +1,4 @@
-import { type InteractionBlock, type MillState, type StagedRecord } from './types';
+import { type CanvasNode, type CanvasEdge, type MillState, type StagedRecord } from './types';
 import { apiUrl, wsUrl } from './api';
 
 export class MillStore {
@@ -27,7 +27,8 @@ export class MillStore {
   shapingSession = $state<{
     id: string | null;
     phase: string;
-    blocks: InteractionBlock[];
+    nodes: Record<string, CanvasNode>;
+    edges: CanvasEdge[];
     stagedRecords: StagedRecord[];
     activeBranch: string;
     branches: string[];
@@ -224,18 +225,35 @@ export class MillStore {
           };
         }
         break;
-      case 'shaping:block_added':
+      case 'shaping:node_added':
         this.ensureShapingSession(data.session_id);
-        this.shapingSession!.blocks = [...this.shapingSession!.blocks, data.block];
-        if (data.block.type === 'agent_proposal') {
-          // Refetch session state to sync staged records
-          fetch(apiUrl(`/shaping/sessions/${data.session_id}`)).then(res => {
-            if (res.ok) return res.json();
-          }).then(stateData => {
-            if (stateData?.state && this.shapingSession?.id === data.session_id) {
-              this.shapingSession.stagedRecords = stateData.state.staged_records || [];
+        if (this.shapingSession) {
+          this.shapingSession.nodes[data.node.id] = data.node;
+        }
+        break;
+      case 'shaping:edge_added':
+        this.ensureShapingSession(data.session_id);
+        if (this.shapingSession) {
+          this.shapingSession.edges.push(data.edge);
+        }
+        break;
+      case 'shaping:node_updated':
+        this.ensureShapingSession(data.session_id);
+        if (this.shapingSession && this.shapingSession.nodes[data.node.id]) {
+          this.shapingSession.nodes[data.node.id] = {
+            ...this.shapingSession.nodes[data.node.id],
+            ...data.node
+          };
+        }
+        break;
+      case 'shaping:node_invalidated':
+        this.ensureShapingSession(data.session_id);
+        if (this.shapingSession) {
+          for (const nodeId of data.node_ids) {
+            if (this.shapingSession.nodes[nodeId]) {
+              this.shapingSession.nodes[nodeId].status = 'stale';
             }
-          }).catch(err => console.error('Failed to sync staged records:', err));
+          }
         }
         break;
       case 'shaping:phase_changed':
@@ -265,7 +283,8 @@ export class MillStore {
     this.shapingSession = {
       id: sessionId,
       phase: 'exploring',
-      blocks: [],
+      nodes: {},
+      edges: [],
       stagedRecords: [],
       activeBranch: 'main',
       branches: ['main'],

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { store } from '../ws.svelte.ts';
   import { apiUrl } from '../api';
-  import ShapingTimeline from './ShapingTimeline.svelte';
+  import ShapingCanvas from './canvas/ShapingCanvas.svelte';
   import StagingPanel from './StagingPanel.svelte';
 
   let { sessionId = $bindable(), onExit }: { sessionId: string | null, onExit: () => void } = $props();
@@ -22,7 +22,8 @@
             store.shapingSession = {
               id: sessionId,
               phase: data.state.phase,
-              blocks: data.state.blocks || [],
+              nodes: data.state.nodes || {},
+              edges: data.state.edges || [],
               stagedRecords: data.state.staged_records || [],
               activeBranch: data.state.active_branch || 'main',
               branches: data.state.branches || ['main'],
@@ -56,7 +57,8 @@
           store.shapingSession = {
             id: sessionId,
             phase: data.state.phase,
-            blocks: data.state.blocks || [],
+            nodes: data.state.nodes || {},
+            edges: data.state.edges || [],
             stagedRecords: data.state.staged_records || [],
             activeBranch: data.state.active_branch || 'main',
             branches: data.state.branches || ['main'],
@@ -76,31 +78,6 @@
       console.error('Error starting session:', err);
     } finally {
       starting = false;
-    }
-  }
-
-  async function handleRespond(content: string) {
-    if (!sessionId) return;
-    try {
-      const inputRes = await fetch(apiUrl(`/shaping/sessions/${sessionId}/input`), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: content })
-      });
-      if (!inputRes.ok) {
-        console.error('Error sending input:', await inputRes.text());
-        return;
-      }
-      // Trigger the engine to produce the next block
-      advancing = true;
-      await fetch(apiUrl(`/shaping/sessions/${sessionId}/advance`), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      });
-    } catch (err) {
-      console.error('Error in shaping respond:', err);
-    } finally {
-      advancing = false;
     }
   }
 
@@ -155,13 +132,9 @@
   {:else}
     <!-- Active session -->
     <div class="flex-1 min-w-0 flex flex-col overflow-hidden bg-bg-primary">
-      <ShapingTimeline 
+      <ShapingCanvas 
         {sessionId} 
-        blocks={store.shapingSession.blocks} 
-        activeExplorations={store.shapingSession.activeExplorations}
-        phase={store.shapingSession.phase}
         {advancing}
-        onRespond={handleRespond} 
       />
     </div>
     <div class="w-72 shrink-0 border-l border-border-default overflow-y-auto bg-bg-surface">

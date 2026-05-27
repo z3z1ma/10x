@@ -34,6 +34,10 @@
   </div>
 
   <div slot="anchorSouth">
-    <Anchor id="{node.id}-out" output {connections} />
+    {#if connections && connections.length > 0}
+      <Anchor id="{node.id}-out" output {connections} />
+    {:else}
+      <Anchor id="{node.id}-out" output />
+    {/if}
   </div>
 </Node>
