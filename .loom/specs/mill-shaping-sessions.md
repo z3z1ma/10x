@@ -2,7 +2,7 @@
 
 ID: spec:mill-shaping-sessions
 Type: Spec
-Status: draft
+Status: active
 Created: 2026-05-26
 Updated: 2026-05-26
 
@@ -84,6 +84,108 @@ made, and context gathered—not just the output records.
 harness subprocess piping. A new backend service that orchestrates bounded agent
 invocations, manages the internal context document, tracks session state, and
 streams structured interaction elements to the frontend.
+
+## Interaction Model
+
+### The Experience
+
+The shaping session is a **vertical timeline of rich interaction blocks** where the
+staging area IS the experience—records appear and grow as the session progresses,
+with agent questions, observations, and proposals appearing as inline annotations
+and blocks interwoven with the growing record subgraph.
+
+This is not a conversation panel with a separate staging panel. The entire center
+panel IS the shaping workspace. The interaction stream builds the staging area
+progressively. You're watching the subgraph materialize in front of you, with the
+agent's thinking and questions embedded directly in the flow.
+
+### Interaction Blocks
+
+Each block in the vertical timeline is typed:
+
+- **Operator input**: The raw text dump that seeds the session, or subsequent
+  operator responses/directions. Rendered as plain text blocks.
+- **Agent question**: A focused inquiry with optional response affordances (text
+  input, multiple choice, or "skip/redirect"). Questions reference specific
+  context they're asking about.
+- **Agent observation**: Something the agent discovered during exploration.
+  Can contain code snippets, file paths, record previews. Informational only.
+- **Agent proposal**: A draft record appearing in the staging area. Rendered as a
+  full record card (title, type, surface, key fields visible). Inline-editable.
+  Can be accepted, rejected, or modified.
+- **Exploration indicator**: Shows bounded harness invocations are running.
+  Default: spinner with brief description ("Exploring auth module..."). Opt-in:
+  live streaming of exploration output.
+- **Branch point**: When the agent sees multiple valid directions. Rendered as
+  labeled tabs/lanes. Operator picks one to continue, or explores both.
+
+### Staging Area
+
+Records appear inline in the timeline as they're proposed. But there's also a
+persistent **staged records panel** (sidebar or bottom bar) that shows the aggregate:
+- Count by type: "4 tickets, 1 plan, 1 spec staged"
+- Mini-graph of relationships between staged records
+- Each record is clickable to scroll to its proposal block in the timeline
+- Commit button lives here
+
+### Branching
+
+Branching creates a tab/lane UI at the branch point in the timeline. Each branch
+continues independently below that point. The operator can:
+- Flip between tabs to compare directions
+- Pick one branch to continue with (the other is archived but recoverable)
+- Cherry-pick individual proposals from the unchosen branch
+
+### Internal Context Document
+
+A Markdown document that grows throughout the session, accumulating:
+- Operator input
+- Exploration results (file contents, record summaries, code snippets)
+- Agent observations and reasoning
+- Decisions made
+- Questions asked and answers received
+- Current staged record summaries
+
+This document is **hidden from the operator** in the UI. It exists on disk at
+`.mill/shaping-sessions/{session-id}/context.md` for debugging and audit, but is
+not surfaced as a panel. We can revisit this if operators want visibility later.
+
+Harness invocations receive relevant sections of this document as context, NOT the
+full chat history. This is the mechanism that prevents re-exploring the same ground.
+
+### Parallel Harness Invocations
+
+The engine can launch multiple bounded harness runs simultaneously. Examples:
+- One exploring auth code while another examines the existing permission spec
+- One generating ticket drafts while another validates scope against existing work
+
+Default UI: just an indicator showing invocations are running ("Exploring..." with
+a subtle activity spinner). The operator can opt in to see live streaming output
+from each invocation by expanding the exploration indicator block.
+
+Operator can cancel in-flight explorations.
+
+### Entry Point
+
+The "New" button in the Design Room sidebar starts this flow. It replaces
+the center panel with the shaping session workspace. The existing editor mode
+remains the default for opening/editing existing records.
+
+This means the Design Room has three center-panel modes:
+1. **Editor** (default): Markdown editor for existing records
+2. **Graph**: Force-directed or DAG view of connected records
+3. **Shaping session**: The new interactive flow (entered via "New")
+
+### Commit Flow
+
+When the operator commits:
+1. All staged records are written atomically to `.loom/` directories
+2. Cross-references between them use correct IDs
+3. A git commit is created with a meaningful message summarizing what was shaped
+4. A durable session record is written (research or knowledge surface) capturing
+   the reasoning path, decisions made, and questions answered
+5. The shaping session workspace closes
+6. The Design Room navigates to the plan (if one was shaped) or the first record
 
 ### The interaction texture
 
@@ -228,26 +330,7 @@ remembers context and can continue asking questions or accept commit.
 
 ### Open Questions
 
-- **OQ-007**: What is the exact interaction rendering model? The operator rejected
-  structured-chat-as-MVP and wants a fully novel experience. What visual primitives
-  compose the interaction stream? Cards? Inline-editable blocks? A conversation
-  that embeds structured elements? Something else?
-
-- **OQ-008**: How does the operator steer branching? Does the agent propose a fork
-  ("I see two directions—A or B"), and the operator picks? Or can the operator
-  explicitly say "explore both and show me"? How is the unchosen branch represented?
-
-- **OQ-009**: How does the internal context document relate to the staging area?
-  Is the context document visible to the operator, or is it purely agent-internal?
-  Can the operator see "what the agent knows so far"?
-
-- **OQ-010**: What are the boundaries of bounded parallel harness invocations? How
-  many can run simultaneously? How is the operator notified when they complete? Can
-  the operator interrupt/cancel an in-flight exploration?
-
-- **OQ-011**: How do sessions compose with existing Design Room state? If the
-  operator already has a document open in the editor, does starting a shaping
-  session replace the editor panel, or does it become a new mode alongside it?
+All design questions resolved. None remaining.
 
 ## Evidence Expectations
 
