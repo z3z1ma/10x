@@ -2,7 +2,7 @@
 
 ID: ticket:20260526-mill-canvas-svelvet-proof
 Type: Ticket
-Status: open
+Status: closed
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: high - Svelvet declares peer dep svelte >=3.59.2 || ^4.0.0; our frontend uses Svelte 5. If incompatible, entire canvas plan pivots.
@@ -89,10 +89,22 @@ that would fail under real usage).
 
 ## Current State
 
-Ready to start. First Ralph run: install Svelvet, create proof component, run
-Playwright verification.
+Closed. Svelvet 11.0.5 works with Svelte 5. All acceptance criteria satisfied.
+Commit: `74132d8`. No pivot needed — plan proceeds as-is.
+
+Key findings for downstream tickets:
+- Edges require explicit Anchor components with `connections` prop (not the Node-level
+  `connections` prop or standalone Edge components)
+- Anchor format: `connections={[["target-node-id", "target-anchor-id"]]}`
+- Custom node content via default slot works perfectly with Svelte 5 runes
+- `let:selected` binding available for node selection highlighting
+- Svelvet uses CSS transform on `.svelvet-graph-wrapper` for zoom/pan
 
 ## Journal
 
 - 2026-05-26: Created ticket with Status `open`. Risk-first gate for canvas plan.
   If this fails, plan pivots to custom SVG before other tickets proceed.
+- 2026-05-26: Executed. Svelvet installs clean (0 vulnerabilities). Custom Svelte 5
+  nodes render with $state/$props runes. Reactive counter inside nodes works.
+  Zoom/pan/drag all function without errors. Edges render via Anchor connections and
+  dynamically re-route on drag. Status → closed.
