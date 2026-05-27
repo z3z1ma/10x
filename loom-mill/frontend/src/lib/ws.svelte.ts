@@ -33,6 +33,8 @@ export class MillStore {
     activeBranch: string;
     branches: string[];
     activeExplorations: string[];
+    explorationLogs: Record<string, string[]>;
+    explorationStatus: Record<string, 'running' | 'completed' | 'failed'>;
     advanceState: 'idle' | 'thinking' | 'error';
     advanceError: string | null;
   } | null>(null);
@@ -289,10 +291,34 @@ export class MillStore {
         if (!this.shapingSession!.activeExplorations.includes(data.goal)) {
           this.shapingSession!.activeExplorations = [...this.shapingSession!.activeExplorations, data.goal];
         }
+        if (data.invocation_id) {
+          this.shapingSession!.explorationStatus[data.invocation_id] = 'running';
+          if (!this.shapingSession!.explorationLogs[data.invocation_id]) {
+            this.shapingSession!.explorationLogs[data.invocation_id] = [];
+          }
+        }
+        break;
+      case 'shaping:exploration_stream':
+        this.ensureShapingSession(data.session_id);
+        if (data.invocation_id && data.delta) {
+          if (!this.shapingSession!.explorationLogs[data.invocation_id]) {
+            this.shapingSession!.explorationLogs[data.invocation_id] = [];
+          }
+          this.shapingSession!.explorationLogs[data.invocation_id].push(data.delta);
+        }
         break;
       case 'shaping:exploration_complete':
         this.ensureShapingSession(data.session_id);
         this.shapingSession!.activeExplorations = this.shapingSession!.activeExplorations.filter(e => e !== data.goal);
+        if (data.invocation_id) {
+          this.shapingSession!.explorationStatus[data.invocation_id] = 'completed';
+        }
+        break;
+      case 'shaping:exploration_cancelled':
+        this.ensureShapingSession(data.session_id);
+        if (data.invocation_id) {
+          this.shapingSession!.explorationStatus[data.invocation_id] = 'failed';
+        }
         break;
       case 'shaping:session_ended':
         if (this.shapingSession?.id === data.session_id) {
@@ -333,6 +359,8 @@ export class MillStore {
       activeBranch: 'main',
       branches: ['main'],
       activeExplorations: [],
+      explorationLogs: {},
+      explorationStatus: {},
       advanceState: 'idle',
       advanceError: null
     };

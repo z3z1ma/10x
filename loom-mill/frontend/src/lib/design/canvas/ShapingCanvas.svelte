@@ -8,6 +8,7 @@
   import OptionNode from './OptionNode.svelte';
   import RecordNode from './RecordNode.svelte';
   import CanvasInputBar from './CanvasInputBar.svelte';
+  import ProcessingLogModal from './ProcessingLogModal.svelte';
   import { apiUrl } from '../../api';
   import type { CanvasNode } from '../../types';
   import { computeTreeLayout } from './layout';
@@ -19,6 +20,14 @@
 
   let collapseDead = $state(false);
   let rejectedTempIds = $state<Set<string>>(new Set());
+  
+  let showLogModal = $state(false);
+  let logModalInvocationId = $state<string | null>(null);
+
+  function openLogModal(invocationId: string) {
+    logModalInvocationId = invocationId;
+    showLogModal = true;
+  }
 
   let nodes = $derived(
     collapseDead
@@ -209,7 +218,7 @@
         {#if node.type === 'input'}
           <InputNode {node} {sessionId} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} />
         {:else if node.type === 'processing'}
-          <ProcessingNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} />
+          <ProcessingNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} onOpenLogs={openLogModal} />
         {:else if node.type === 'question'}
           <QuestionNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} onRespond={(content) => handleRespond(content, node.id)} />
         {:else if node.type === 'observation'}
@@ -247,4 +256,12 @@
       headers: { 'Content-Type': 'application/json' }
     }).catch(err => console.error('Error triggering advance:', err));
   }} />
+  
+  {#if showLogModal}
+    <ProcessingLogModal 
+      invocationId={logModalInvocationId} 
+      {sessionId} 
+      onClose={() => showLogModal = false} 
+    />
+  {/if}
 </div>

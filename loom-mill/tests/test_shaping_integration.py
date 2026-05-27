@@ -97,4 +97,6 @@ async def test_full_shaping_session_lifecycle(tmp_path: Path) -> None:
     assert commit_payload["records_created"] == 1
     for relative_path in commit_payload["paths"]:
         assert (tmp_path / relative_path).exists()
-    assert (tmp_path / ".loom" / "tickets" / "20260526-backend-validation-fix.md").exists()
+    import datetime
+    today = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+    assert (tmp_path / ".loom" / "tickets" / f"{today}-backend-validation-fix.md").exists()

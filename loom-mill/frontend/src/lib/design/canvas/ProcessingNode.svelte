@@ -4,7 +4,7 @@
   import { apiUrl } from '../../api';
   import { store } from '../../ws.svelte.ts';
 
-  let { node, position, connections = [] } = $props();
+  let { node, position, connections = [], onOpenLogs } = $props();
 
   let elapsed = $state(0);
   let timer: ReturnType<typeof setInterval>;
@@ -21,19 +21,20 @@
     const sessionId = store.shapingSession?.id;
     if (!sessionId) return;
     
-    // Find the active exploration ID for this session
-    // The backend endpoint is /shaping/sessions/{session_id}/explorations/{invocation_id}/cancel
-    // But we don't have the invocation_id easily available in the node.
-    // However, the backend might support cancelling the current advance.
-    // Let's just call a generic cancel endpoint or the explorations list to find it.
     try {
-      const res = await fetch(apiUrl(`/shaping/sessions/${sessionId}/explorations`));
-      if (res.ok) {
-        const explorations = await res.json();
-        for (const exp of explorations) {
-          await fetch(apiUrl(`/shaping/sessions/${sessionId}/explorations/${exp.invocation_id}/cancel`), {
-            method: 'POST'
-          });
+      if (node.content.invocation_id) {
+        await fetch(apiUrl(`/shaping/sessions/${sessionId}/explorations/${node.content.invocation_id}/cancel`), {
+          method: 'POST'
+        });
+      } else {
+        const res = await fetch(apiUrl(`/shaping/sessions/${sessionId}/explorations`));
+        if (res.ok) {
+          const explorations = await res.json();
+          for (const exp of explorations) {
+            await fetch(apiUrl(`/shaping/sessions/${sessionId}/explorations/${exp.invocation_id}/cancel`), {
+              method: 'POST'
+            });
+          }
         }
       }
     } catch (err) {
@@ -60,6 +61,14 @@
         Cancel
       </button>
     </div>
+    {#if node.content.invocation_id}
+      <button 
+        class="text-[10px] text-left text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
+        onclick={() => onOpenLogs?.(node.content.invocation_id)}
+      >
+        📋 View logs
+      </button>
+    {/if}
     {#if elapsed > 30}
       <div class="text-[10px] text-text-tertiary">
         This is taking longer than usual...
