@@ -2,7 +2,8 @@
 
 ID: spec:mill-shaping-sessions
 Type: Spec
-Status: active
+Status: superseded
+Superseded By: spec:mill-shaping-canvas
 Created: 2026-05-26
 Updated: 2026-05-26
 
