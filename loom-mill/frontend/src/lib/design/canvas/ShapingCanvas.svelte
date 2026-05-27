@@ -9,11 +9,34 @@
   import RecordNode from './RecordNode.svelte';
   import { apiUrl } from '../../api';
   import type { CanvasNode } from '../../types';
+  import { computeTreeLayout } from './layout';
 
   let { sessionId, advancing }: { sessionId: string, advancing: boolean } = $props();
 
-  let nodes = $derived(store.shapingSession?.nodes ? Object.values(store.shapingSession.nodes) : []);
-  let edges = $derived(store.shapingSession?.edges ?? []);
+  let allNodes = $derived(store.shapingSession?.nodes ? Object.values(store.shapingSession.nodes) : []);
+  let allEdges = $derived(store.shapingSession?.edges ?? []);
+
+  let collapseDead = $state(false);
+
+  let nodes = $derived(
+    collapseDead
+      ? allNodes.filter(n => n.status !== 'dead')
+      : allNodes
+  );
+
+  let edges = $derived(
+    collapseDead
+      ? allEdges.filter(e => {
+          const source = store.shapingSession?.nodes[e.source_id];
+          const target = store.shapingSession?.nodes[e.target_id];
+          return source?.status !== 'dead' && target?.status !== 'dead';
+        })
+      : allEdges
+  );
+
+  let hiddenCount = $derived(allNodes.length - nodes.length);
+
+  let layoutResult = $derived(computeTreeLayout(nodes, edges));
 
   function getChildConnections(nodeId: string) {
     const conns = edges
@@ -22,31 +45,9 @@
     return conns;
   }
 
-  // Simple layout computation for nodes without position
-  // In a real app, we'd use a layout engine like dagre
   function computePosition(node: CanvasNode) {
     if (node.position) return node.position;
-    
-    // Fallback simple layout
-    if (!node.parent_id) return { x: 400, y: 100 };
-    
-    const parent = store.shapingSession?.nodes[node.parent_id];
-    if (!parent) return { x: 400, y: 100 };
-    
-    const parentPos = parent.position || computePosition(parent);
-    
-    // Find siblings to offset horizontally
-    const siblings = nodes.filter(n => n.parent_id === node.parent_id);
-    const index = siblings.findIndex(n => n.id === node.id);
-    const total = siblings.length;
-    
-    const spacing = 350;
-    const offset = (index - (total - 1) / 2) * spacing;
-    
-    return {
-      x: parentPos.x + offset,
-      y: parentPos.y + 200
-    };
+    return layoutResult.positions[node.id] ?? { x: 0, y: 0 };
   }
 
   async function handleRespond(content: string, parentNodeId: string) {
@@ -71,9 +72,42 @@
       console.error('Error in shaping respond:', err);
     }
   }
+
+  async function handleSelect(nodeId: string) {
+    if (!sessionId) return;
+    try {
+      const selectRes = await fetch(apiUrl(`/shaping/sessions/${sessionId}/nodes/${nodeId}/select`), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!selectRes.ok) {
+        console.error('Error selecting option:', await selectRes.text());
+        return;
+      }
+
+      await fetch(apiUrl(`/shaping/sessions/${sessionId}/advance`), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } catch (err) {
+      console.error('Error in shaping option select:', err);
+    }
+  }
 </script>
 
-<div class="w-full h-full bg-bg-primary">
+<div class="w-full h-full bg-bg-primary relative">
+  <div class="absolute top-4 right-4 z-10 flex items-center gap-2 bg-bg-surface p-2 rounded border border-border-default shadow-sm">
+    <label class="flex items-center gap-2 text-sm text-text-primary cursor-pointer">
+      <input type="checkbox" bind:checked={collapseDead} class="rounded border-border-default bg-bg-primary text-brand-primary focus:ring-brand-primary" />
+      Collapse dead branches
+    </label>
+    {#if collapseDead && hiddenCount > 0}
+      <span class="text-xs bg-bg-secondary text-text-secondary px-1.5 py-0.5 rounded-full">
+        {hiddenCount} hidden
+      </span>
+    {/if}
+  </div>
+
   <Svelvet theme="dark" minimap controls>
     {#each nodes as node (node.id)}
       {#if node.type === 'input'}
@@ -85,7 +119,7 @@
       {:else if node.type === 'observation'}
         <ObservationNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} />
       {:else if node.type === 'option'}
-        <OptionNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} onSelect={(id) => console.log('Selected option:', id)} />
+        <OptionNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} onSelect={handleSelect} />
       {:else if node.type === 'record'}
         <RecordNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} onAccept={(id) => console.log('Accept:', id)} onReject={(id) => console.log('Reject:', id)} onEdit={(id) => console.log('Edit:', id)} />
       {:else}

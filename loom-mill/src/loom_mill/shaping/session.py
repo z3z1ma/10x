@@ -29,6 +29,21 @@ def _atomic_write(path: Path, content: str) -> None:
             os.unlink(tmp_name)
 
 
+def mark_dead_recursive(session_state: SessionState, node_id: str) -> list[str]:
+    """Mark a node and all descendants as dead. Returns affected node IDs."""
+    affected: list[str] = []
+    node = session_state.nodes.get(node_id)
+    if not node or node.status == NodeStatus.DEAD:
+        return affected
+    node.status = NodeStatus.DEAD
+    node.selected = False
+    affected.append(node_id)
+    for child in list(session_state.nodes.values()):
+        if child.parent_id == node_id:
+            affected.extend(mark_dead_recursive(session_state, child.id))
+    return affected
+
+
 class ShapingSession:
     def __init__(self, session_id: str, workspace_root: str | Path):
         self.session_id = session_id

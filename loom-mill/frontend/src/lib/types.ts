@@ -137,6 +137,7 @@ export interface CanvasNode {
   position: { x: number; y: number } | null;
   timestamp: string;
   option_group_id: string | null;
+  selected: boolean;
 }
 
 export interface CanvasEdge {

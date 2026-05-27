@@ -13,7 +13,7 @@ from loom_mill.shaping.commit import CommitFlow
 from loom_mill.shaping.engine import ShapingEngine
 from loom_mill.shaping.events import ShapingEvent
 from loom_mill.shaping.orchestrator import ShapingOrchestrator
-from loom_mill.shaping.session import utc_now
+from loom_mill.shaping.session import mark_dead_recursive, utc_now
 from loom_mill.workstation.config import HarnessConfig
 
 
@@ -161,6 +161,55 @@ async def add_shaping_input(request: Request) -> JSONResponse:
             ShapingEvent(session_id=session.session_id, event="edge_added", data={"edge": asdict(edge)})
         )
     return JSONResponse({"session_id": session.session_id, "node": asdict(node), "edge": asdict(edge) if edge else None})
+
+
+async def select_option_node(request: Request) -> JSONResponse:
+    try:
+        session = _load_session(request)
+    except KeyError:
+        return JSONResponse({"detail": "Session not found"}, status_code=404)
+    if session.state.ended_at is not None:
+        return JSONResponse({"error": "Session has ended"}, status_code=409)
+
+    node_id = request.path_params["node_id"]
+    node = session.state.nodes.get(node_id)
+    if node is None:
+        return JSONResponse({"error": "Node not found"}, status_code=404)
+    if node.type != CanvasNodeType.OPTION:
+        return JSONResponse({"error": "Node must be an option"}, status_code=400)
+    if node.status == NodeStatus.DEAD:
+        return JSONResponse({"error": "Cannot select a dead option"}, status_code=409)
+
+    changed: list[str] = []
+    if not node.selected or node.status != NodeStatus.ACTIVE:
+        node.status = NodeStatus.ACTIVE
+        node.selected = True
+        changed.append(node.id)
+
+    siblings = [
+        candidate
+        for candidate in session.state.nodes.values()
+        if candidate.type == CanvasNodeType.OPTION
+        and candidate.id != node.id
+        and candidate.option_group_id is not None
+        and candidate.option_group_id == node.option_group_id
+    ]
+    for sibling in siblings:
+        changed.extend(mark_dead_recursive(session.state, sibling.id))
+
+    if changed:
+        session.state.updated_at = utc_now()
+        session._persist_state()
+        for changed_node_id in changed:
+            await request.app.state.store.publish(
+                ShapingEvent(
+                    session_id=session.session_id,
+                    event="node_updated",
+                    data={"node": asdict(session.state.nodes[changed_node_id])},
+                )
+            )
+
+    return JSONResponse({"session_id": session.session_id, "state": _state_payload(session), "changed_node_ids": changed})
 
 
 async def explore_shaping_session(request: Request) -> JSONResponse:

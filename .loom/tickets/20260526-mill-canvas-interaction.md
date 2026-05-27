@@ -2,7 +2,7 @@
 
 ID: ticket:20260526-mill-canvas-interaction
 Type: Ticket
-Status: open
+Status: review
 Created: 2026-05-26
 Updated: 2026-05-26
 Risk: medium - interaction state machine complexity; dead branch propagation must be complete and correct
@@ -123,11 +123,20 @@ single `nodes_batch_updated` event.
 
 ## Current State
 
-Blocked on end-to-end integration ticket. First Ralph run: implement backend
-select endpoint, dead propagation logic, wire frontend interaction handlers,
-test with Playwright.
+Implementation is complete for the backend select endpoint, recursive dead
+propagation, `parent_node_id` question-response input wiring, frontend option
+selection wiring, and backend test/build verification. The ticket is in `review`
+because Playwright/browser evidence and audit have not been performed.
+
+Evidence: `evidence:20260526-mill-canvas-interaction-validation`
 
 ## Journal
 
 - 2026-05-26: Created ticket with Status `open`. Interaction broadening: makes the
   canvas a living tool instead of a static graph.
+- 2026-05-26: Status set to `active` for implementation of backend option
+  selection/dead propagation, question response parent wiring, frontend selection
+  wiring, and requested backend/frontend verification.
+- 2026-05-26: Implemented option selection and dead propagation, added backend
+  tests, wired frontend option selection, and recorded validation evidence. Status
+  moved to `review`; remaining work is browser/Playwright evidence and audit.

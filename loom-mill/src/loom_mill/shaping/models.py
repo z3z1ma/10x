@@ -39,6 +39,7 @@ class CanvasNode:
     position: dict[str, float] | None
     timestamp: str
     option_group_id: str | None = None
+    selected: bool = False
 
     @classmethod
     def from_dict(cls, data: dict) -> "CanvasNode":
@@ -54,6 +55,7 @@ class CanvasNode:
             position=position,
             timestamp=str(data.get("timestamp") or ""),
             option_group_id=data.get("option_group_id"),
+            selected=bool(data.get("selected", False)),
         )
 
 

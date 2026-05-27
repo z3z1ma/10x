@@ -13,6 +13,7 @@ from loom_mill.api.ws import _event_payload
 from loom_mill.app import create_app
 from loom_mill.shaping import CanvasEdge, CanvasNode, CanvasNodeType, NodeStatus, SessionPhase, ShapingSession
 from loom_mill.shaping.events import ShapingEvent
+from loom_mill.shaping.session import mark_dead_recursive
 from loom_mill.state import MillStateStore
 
 
@@ -46,6 +47,7 @@ def test_shaping_routes_are_registered() -> None:
     assert has_route("/shaping/sessions/{session_id}", "GET")
     assert has_route("/shaping/sessions/{session_id}/context", "GET")
     assert has_route("/shaping/sessions/{session_id}/input", "POST")
+    assert has_route("/shaping/sessions/{session_id}/nodes/{node_id}/select", "POST")
     assert has_route("/shaping/sessions/{session_id}", "DELETE")
 
 
@@ -115,6 +117,108 @@ async def test_add_input_appends_context_adds_node_and_publishes_event(tmp_path:
     assert [node.content["text"] for node in session.state.nodes.values() if node.type == CanvasNodeType.INPUT] == ["initial", "follow up"]
     context = session.read_context()
     assert context.index("initial") < context.index("follow up")
+
+
+@pytest.mark.asyncio
+async def test_add_input_accepts_parent_node_id_and_adds_edge(tmp_path: Path) -> None:
+    store = MillStateStore()
+    session_id = _body(await shaping.create_shaping_session(Request(tmp_path, store, {"input": "initial"})))["session_id"]
+    session = ShapingSession.load(session_id, tmp_path)
+    parent_id = next(iter(session.state.nodes))
+
+    response = await shaping.add_shaping_input(
+        Request(tmp_path, store, {"text": "answer", "parent_node_id": parent_id}, {"session_id": session_id})
+    )
+
+    payload = _body(response)
+    assert response.status_code == 200
+    assert payload["node"]["parent_id"] == parent_id
+    assert payload["edge"]["source_id"] == parent_id
+    assert payload["edge"]["target_id"] == payload["node"]["id"]
+
+
+def _add_node(session: ShapingSession, node_id: str, node_type: CanvasNodeType, parent_id: str | None, *, option_group_id: str | None = None) -> None:
+    session.add_node_with_edge(
+        CanvasNode(
+            id=node_id,
+            type=node_type,
+            parent_id=parent_id,
+            status=NodeStatus.ACTIVE,
+            content={"label": node_id},
+            position=None,
+            timestamp=session.state.created_at,
+            option_group_id=option_group_id,
+        )
+    )
+
+
+@pytest.mark.asyncio
+async def test_select_option_marks_siblings_dead(tmp_path: Path) -> None:
+    store = MillStateStore()
+    session = ShapingSession.create(tmp_path, "initial")
+    session_id = session.session_id
+    root_id = next(iter(session.state.nodes))
+    _add_node(session, "option-a", CanvasNodeType.OPTION, root_id, option_group_id="group-1")
+    _add_node(session, "option-b", CanvasNodeType.OPTION, root_id, option_group_id="group-1")
+    _add_node(session, "option-c", CanvasNodeType.OPTION, root_id, option_group_id="group-1")
+
+    response = await shaping.select_option_node(Request(tmp_path, store, path_params={"session_id": session_id, "node_id": "option-b"}))
+
+    assert response.status_code == 200
+    session = ShapingSession.load(session_id, tmp_path)
+    assert session.state.nodes["option-b"].status == NodeStatus.ACTIVE
+    assert session.state.nodes["option-b"].selected is True
+    assert session.state.nodes["option-a"].status == NodeStatus.DEAD
+    assert session.state.nodes["option-c"].status == NodeStatus.DEAD
+
+
+def test_mark_dead_recursive_propagates_to_three_plus_levels(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "initial")
+    root_id = next(iter(session.state.nodes))
+    _add_node(session, "option-a", CanvasNodeType.OPTION, root_id, option_group_id="group-1")
+    _add_node(session, "child-1", CanvasNodeType.OBSERVATION, "option-a")
+    _add_node(session, "child-2", CanvasNodeType.QUESTION, "child-1")
+    _add_node(session, "child-3", CanvasNodeType.RECORD, "child-2")
+
+    affected = mark_dead_recursive(session.state, "option-a")
+
+    assert affected == ["option-a", "child-1", "child-2", "child-3"]
+    assert all(session.state.nodes[node_id].status == NodeStatus.DEAD for node_id in affected)
+
+
+@pytest.mark.asyncio
+async def test_selecting_already_selected_option_is_noop(tmp_path: Path) -> None:
+    store = MillStateStore()
+    session = ShapingSession.create(tmp_path, "initial")
+    session_id = session.session_id
+    root_id = next(iter(session.state.nodes))
+    _add_node(session, "option-a", CanvasNodeType.OPTION, root_id, option_group_id="group-1")
+    session.state.nodes["option-a"].selected = True
+    session._persist_state()
+
+    response = await shaping.select_option_node(Request(tmp_path, store, path_params={"session_id": session_id, "node_id": "option-a"}))
+
+    assert response.status_code == 200
+    assert _body(response)["changed_node_ids"] == []
+    session = ShapingSession.load(session_id, tmp_path)
+    assert session.state.nodes["option-a"].status == NodeStatus.ACTIVE
+    assert session.state.nodes["option-a"].selected is True
+
+
+@pytest.mark.asyncio
+async def test_cannot_select_dead_option(tmp_path: Path) -> None:
+    store = MillStateStore()
+    session = ShapingSession.create(tmp_path, "initial")
+    session_id = session.session_id
+    root_id = next(iter(session.state.nodes))
+    _add_node(session, "option-a", CanvasNodeType.OPTION, root_id, option_group_id="group-1")
+    session.state.nodes["option-a"].status = NodeStatus.DEAD
+    session._persist_state()
+
+    response = await shaping.select_option_node(Request(tmp_path, store, path_params={"session_id": session_id, "node_id": "option-a"}))
+
+    assert response.status_code == 409
+    assert _body(response)["error"] == "Cannot select a dead option"
 
 
 @pytest.mark.asyncio
