@@ -15,6 +15,7 @@
   import { apiUrl } from '../../api';
   import type { CanvasNode } from '../../types';
   import { computeTreeLayout } from './layout';
+  import { causalEdgeColor } from './edge-style';
 
   let { sessionId, advancing, highlightedTempId, onOpenLogs }: { sessionId: string, advancing: boolean, highlightedTempId?: string | null, onOpenLogs?: (invocationId: string) => void } = $props();
 
@@ -27,7 +28,7 @@
   let collapseDead = $state(false);
   let rejectedTempIds = $state<Set<string>>(new Set());
   let thinkingDismissed = $state(false);
-  
+
   let nodes = $derived(
     collapseDead
       ? allNodes.filter(n => n.status !== 'dead')
@@ -48,6 +49,23 @@
 
   let layoutResult = $derived(computeTreeLayout(nodes, edges));
 
+  // FIX: Defer position application to ensure edges render on load.
+  // Bug: Svelvet anchors mount and measure positions before Node.svelte's reactive
+  // block syncs the position prop to the internal store, so anchors capture (0,0) and
+  // edges render with degenerate paths. Solution: start all nodes at origin, let them
+  // mount with anchors, THEN update positions 50ms later. This triggers the reactive
+  // position sync in Node.svelte AFTER anchors exist, causing them to recalculate via
+  // afterUpdate and draw correct edge geometry.
+  let applyPositions = $state(false);
+  $effect(() => {
+    if (nodes.length > 0) {
+      applyPositions = false;
+      setTimeout(() => {
+        applyPositions = true;
+      }, 50);
+    }
+  });
+
   $effect(() => {
     if (isThinking) thinkingDismissed = false;
   });
@@ -60,6 +78,7 @@
   }
 
   function computePosition(node: CanvasNode) {
+    if (!applyPositions) return { x: 0, y: 0 }; // Start all nodes at origin
     if (node.position) return node.position;
     return layoutResult.positions[node.id] ?? { x: 0, y: 0 };
   }
@@ -264,9 +283,9 @@
             </div>
             <div slot="anchorSouth">
               {#if getChildConnections(node.id).length > 0}
-                <Anchor id="{node.id}-out" output connections={getChildConnections(node.id)} edgeStyle="step" edgeColor="#52525b" />
+                <Anchor id="{node.id}-out" output connections={getChildConnections(node.id)} edgeColor={causalEdgeColor} />
               {:else}
-                <Anchor id="{node.id}-out" output edgeStyle="step" edgeColor="#52525b" />
+                <Anchor id="{node.id}-out" output edgeColor={causalEdgeColor} />
               {/if}
             </div>
           </Node>

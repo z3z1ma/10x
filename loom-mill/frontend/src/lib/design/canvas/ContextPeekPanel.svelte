@@ -33,7 +33,7 @@
 </script>
 
 <button
-  class="absolute top-4 left-4 z-20 px-3 py-1.5 text-[11px] rounded border border-border-default
+  class="absolute top-16 left-4 z-20 px-3 py-1.5 text-[11px] rounded border border-border-default
     bg-bg-surface text-text-secondary hover:text-text-primary shadow-sm"
   onclick={toggle}
 >
@@ -41,7 +41,7 @@
 </button>
 
 {#if open}
-  <div class="absolute top-14 left-4 z-20 w-[420px] max-w-[90vw] max-h-[60vh] overflow-auto
+  <div class="absolute top-28 left-4 z-20 w-[420px] max-w-[90vw] max-h-[60vh] overflow-auto
     bg-bg-surface border border-border-default rounded-lg shadow-lg p-3">
     <div class="text-[10px] uppercase tracking-wider text-text-tertiary mb-2">Context document</div>
     {#if loading}

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Node, Anchor } from 'svelvet';
+  import { causalEdgeColor } from './edge-style';
   import RecordModal from './RecordModal.svelte';
 
   let { node, position, connections = [], highlighted = false, onAccept, onReject, onEdit } = $props();
@@ -76,9 +77,9 @@
 
   <div slot="anchorSouth">
     {#if connections && connections.length > 0}
-      <Anchor id="{node.id}-out" output {connections} edgeStyle="step" edgeColor="#52525b" />
+      <Anchor id="{node.id}-out" output {connections} edgeColor={causalEdgeColor} />
     {:else}
-      <Anchor id="{node.id}-out" output edgeStyle="step" edgeColor="#52525b" />
+      <Anchor id="{node.id}-out" output edgeColor={causalEdgeColor} />
     {/if}
   </div>
 </Node>
