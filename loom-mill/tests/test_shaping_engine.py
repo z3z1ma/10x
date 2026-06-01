@@ -324,3 +324,76 @@ def test_advance_route_is_registered() -> None:
     routes = [(route.path, route.methods or set()) for route in create_app().routes if hasattr(route, "methods")]
 
     assert any(route_path == "/shaping/sessions/{session_id}/advance" and "POST" in methods for route_path, methods in routes)
+
+
+@pytest.mark.asyncio
+async def test_advance_maps_tension_node_type(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="tension">Cache vs freshness.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert nodes[0].type == CanvasNodeType.TENSION
+    assert nodes[0].content["tension"] == "Cache vs freshness."
+
+
+@pytest.mark.asyncio
+async def test_advance_maps_framing_node_type(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="framing">We need cache invalidation.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert nodes[0].type == CanvasNodeType.FRAMING
+    assert nodes[0].content["framing"] == "We need cache invalidation."
+
+
+@pytest.mark.asyncio
+async def test_advance_maps_decision_node_type(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="decision">Use LRU cache.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert nodes[0].type == CanvasNodeType.DECISION
+    assert nodes[0].content["decision"] == "Use LRU cache."
+
+
+@pytest.mark.asyncio
+async def test_advance_applies_discard_staged_op(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    session.staging.propose("specs", "Doomed", "# doomed", "main")
+    store = MillStateStore()
+    output = '<op kind="discard-staged" temp_id="temp:specs:doomed"/>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    temp_ids = {r.temp_id for r in session.state.staged_records}
+    assert "temp:specs:doomed" not in temp_ids
+
+
+@pytest.mark.asyncio
+async def test_advance_supersede_consolidates_without_double_add(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    session.staging.propose("specs", "Spec A", "# A", "main")
+    session.staging.propose("specs", "Spec B", "# B", "main")
+    store = MillStateStore()
+    output = (
+        '<op kind="supersede" targets="temp:specs:spec-a,temp:specs:spec-b"/>'
+        '<node type="record" surface="specs" title="Spec Merged"># Merged</node>'
+    )
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    temp_ids = {r.temp_id for r in session.state.staged_records}
+    assert "temp:specs:spec-merged" in temp_ids
+    assert "temp:specs:spec-a" not in temp_ids
+    assert "temp:specs:spec-b" not in temp_ids
+
+
+@pytest.mark.asyncio
+async def test_advance_bad_op_fails_closed_with_observation(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<op kind="discard-staged" temp_id="temp:specs:nonexistent"/>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert any(n.type == CanvasNodeType.OBSERVATION and "could not be applied" in str(n.content) for n in nodes)
