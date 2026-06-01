@@ -69,6 +69,18 @@ class StagingArea:
         self.session.state.updated_at = utc_now()
         self.session._persist_state()
 
+    def consolidate(self, targets: list[str], surface: str, title: str, content: str) -> StagedRecord:
+        records = [self._find(temp_id) for temp_id in targets]
+        for record in records:
+            if record.status == "accepted":
+                raise ValueError(f"Cannot consolidate accepted record {record.temp_id}")
+        branch = records[0].branch if records else self.session.state.active_branch
+        merged = self.propose(surface, title, content, branch)
+        for temp_id in targets:
+            if temp_id != merged.temp_id:
+                self.reject(temp_id)
+        return merged
+
     def list_branch(self, branch: str = "main") -> list[StagedRecord]:
         return [record for record in self.session.state.staged_records if record.branch == branch]
 

@@ -222,3 +222,36 @@ async def test_engine_proposal_creates_staged_record(tmp_path: Path) -> None:
     assert nodes[0].type == CanvasNodeType.RECORD
     assert nodes[0].content["temp_id"] == "temp:tickets:fix-notification-label"
     assert session.state.staged_records[0].temp_id == nodes[0].content["temp_id"]
+
+
+def _session_with_two_specs(tmp_path) -> ShapingSession:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    session.staging.propose("specs", "Spec A", "# Spec A\nbody a", "main")
+    session.staging.propose("specs", "Spec B", "# Spec B\nbody b", "main")
+    return session
+
+
+def test_consolidate_stages_merged_and_discards_targets(tmp_path) -> None:
+    session = _session_with_two_specs(tmp_path)
+    merged = session.staging.consolidate(
+        ["temp:specs:spec-a", "temp:specs:spec-b"],
+        surface="specs",
+        title="Spec Combined",
+        content="# Spec Combined\nmerged body",
+    )
+    temp_ids = {r.temp_id for r in session.state.staged_records}
+    assert merged.temp_id in temp_ids
+    assert "temp:specs:spec-a" not in temp_ids
+    assert "temp:specs:spec-b" not in temp_ids
+
+
+def test_consolidate_refuses_accepted_target(tmp_path) -> None:
+    session = _session_with_two_specs(tmp_path)
+    session.staging.accept("temp:specs:spec-a")
+    with pytest.raises(ValueError, match="accepted"):
+        session.staging.consolidate(
+            ["temp:specs:spec-a", "temp:specs:spec-b"],
+            surface="specs",
+            title="Spec Combined",
+            content="# merged",
+        )
