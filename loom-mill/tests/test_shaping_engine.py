@@ -439,3 +439,33 @@ async def test_advance_continue_unknown_node_fails_closed(tmp_path: Path) -> Non
     engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
     nodes = await engine.advance()
     assert any(n.type == CanvasNodeType.OBSERVATION and "unknown node" in str(n.content) for n in nodes)
+
+
+@pytest.mark.asyncio
+async def test_framing_node_does_not_force_narrowing(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")  # starts in EXPLORING
+    store = MillStateStore()
+    output = '<node type="framing">A lens.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    assert session.state.phase == SessionPhase.EXPLORING
+
+
+@pytest.mark.asyncio
+async def test_tension_node_does_not_force_narrowing(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="tension">A risk.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    assert session.state.phase == SessionPhase.EXPLORING
+
+
+@pytest.mark.asyncio
+async def test_question_still_transitions_to_narrowing(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="question">Which path?</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    assert session.state.phase == SessionPhase.NARROWING
