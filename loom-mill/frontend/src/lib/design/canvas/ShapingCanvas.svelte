@@ -5,6 +5,9 @@
   import ProcessingNode from './ProcessingNode.svelte';
   import QuestionNode from './QuestionNode.svelte';
   import ObservationNode from './ObservationNode.svelte';
+  import FramingNode from './FramingNode.svelte';
+  import TensionNode from './TensionNode.svelte';
+  import DecisionNode from './DecisionNode.svelte';
   import OptionNode from './OptionNode.svelte';
   import RecordNode from './RecordNode.svelte';
   import CanvasInputBar from './CanvasInputBar.svelte';
@@ -199,6 +202,18 @@
       console.error('Error in shaping option reselect:', err);
     }
   }
+
+  async function handleContinue(_nodeId: string) {
+    if (!sessionId) return;
+    try {
+      await fetch(apiUrl(`/shaping/sessions/${sessionId}/advance`), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+    } catch (err) {
+      console.error('Error continuing from node:', err);
+    }
+  }
 </script>
 
 <div class="w-full h-full bg-bg-primary relative flex flex-col">
@@ -226,7 +241,13 @@
         {:else if node.type === 'question'}
           <QuestionNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} onRespond={(content) => handleRespond(content, node.id)} />
         {:else if node.type === 'observation'}
-          <ObservationNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} />
+          <ObservationNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} onContinue={handleContinue} />
+        {:else if node.type === 'framing'}
+          <FramingNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} />
+        {:else if node.type === 'tension'}
+          <TensionNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} onContinue={handleContinue} />
+        {:else if node.type === 'decision'}
+          <DecisionNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} />
         {:else if node.type === 'option'}
           <OptionNode {node} position={node.position ?? computePosition(node)} connections={getChildConnections(node.id)} onSelect={handleSelect} onReselect={handleReselect} />
         {:else if node.type === 'record'}

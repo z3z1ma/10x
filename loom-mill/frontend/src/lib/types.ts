@@ -130,7 +130,7 @@ export interface ShippingEvent {
 
 export interface CanvasNode {
   id: string;
-  type: 'input' | 'processing' | 'question' | 'observation' | 'option_group' | 'option' | 'record';
+  type: 'input' | 'processing' | 'question' | 'observation' | 'framing' | 'tension' | 'decision' | 'option_group' | 'option' | 'record';
   parent_id: string | null;
   status: 'active' | 'dead' | 'stale' | 'accepted' | 'rejected';
   content: Record<string, any>;

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Node, Anchor } from 'svelvet';
 
-  let { node, position, connections = [] } = $props();
+  let { node, position, connections = [], onContinue } = $props();
   
   let expanded = $state(false);
   let text = $derived(node.content.observation || node.content.message || node.content.summary || 'No content');
@@ -39,6 +39,11 @@
           {node.content.evidence}
         </div>
       </div>
+    {/if}
+
+    {#if node.status === 'active'}
+      <button class="mt-2 text-[10px] text-green-400 hover:text-green-300"
+        onclick={() => onContinue && onContinue(node.id)}>Continue from here →</button>
     {/if}
   </div>
 
