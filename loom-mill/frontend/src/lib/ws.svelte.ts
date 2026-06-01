@@ -37,6 +37,7 @@ export class MillStore {
     explorationStatus: Record<string, 'running' | 'completed' | 'failed'>;
     advanceState: 'idle' | 'thinking' | 'error';
     advanceError: string | null;
+    thinkingTrace: string;
   } | null>(null);
 
   private ws: WebSocket | null = null;
@@ -330,6 +331,13 @@ export class MillStore {
         if (this.shapingSession) {
           this.shapingSession.advanceState = 'thinking';
           this.shapingSession.advanceError = null;
+          this.shapingSession.thinkingTrace = '';
+        }
+        break;
+      case 'shaping:advance_stream':
+        this.ensureShapingSession(data.session_id);
+        if (this.shapingSession) {
+          this.shapingSession.thinkingTrace += data.delta ?? '';
         }
         break;
       case 'shaping:advance_completed':
@@ -362,7 +370,8 @@ export class MillStore {
       explorationLogs: {},
       explorationStatus: {},
       advanceState: 'idle',
-      advanceError: null
+      advanceError: null,
+      thinkingTrace: ''
     };
   }
 }
