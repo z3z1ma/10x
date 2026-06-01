@@ -8,6 +8,7 @@
   import OptionNode from './OptionNode.svelte';
   import RecordNode from './RecordNode.svelte';
   import CanvasInputBar from './CanvasInputBar.svelte';
+  import ContextPeekPanel from './ContextPeekPanel.svelte';
   import { apiUrl } from '../../api';
   import type { CanvasNode } from '../../types';
   import { computeTreeLayout } from './layout';
@@ -201,6 +202,8 @@
 </script>
 
 <div class="w-full h-full bg-bg-primary relative flex flex-col">
+  <ContextPeekPanel {sessionId} />
+
   <div class="absolute top-4 right-4 z-10 flex items-center gap-2 bg-bg-surface p-2 rounded border border-border-default shadow-sm">
     <label class="flex items-center gap-2 text-sm text-text-primary cursor-pointer">
       <input type="checkbox" bind:checked={collapseDead} class="rounded border-border-default bg-bg-primary text-brand-primary focus:ring-brand-primary" />
