@@ -254,11 +254,21 @@ class ShapingEngine:
             cwd=self.orchestrator.harness_config.cwd,
             timeout_seconds=300.0,
         )
+
+        async def on_stream(line: str) -> None:
+            await self.store.publish(
+                ShapingEvent(
+                    session_id=self.session.session_id,
+                    event="advance_stream",
+                    data={"delta": line},
+                )
+            )
+
         try:
             result = await run_bounded_invocation(
                 config,
                 invocation_id=f"decision-{uuid4().hex[:8]}",
-                on_stream=None,
+                on_stream=on_stream,
                 prompt_override=prompt,
             )
         except Exception as error:

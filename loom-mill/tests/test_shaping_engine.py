@@ -95,9 +95,16 @@ async def test_engine_advance_with_question_publishes_node_and_moves_to_narrowin
     output = '<node type="question" options="navigation, analysis">Is this for navigation or analysis?</node>'
     engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
     subscription = store.subscribe()
+    collected: list[dict] = []
     try:
         nodes = await engine.advance()
-        events = [await subscription.__anext__(), await subscription.__anext__()]
+        # Drain multiple events including possible advance_stream events
+        for _ in range(5):
+            try:
+                event = await asyncio.wait_for(subscription.__anext__(), timeout=1.0)
+            except (StopAsyncIteration, asyncio.TimeoutError):
+                break
+            collected.append(_event_payload(event))
     finally:
         await subscription.aclose()
 
@@ -105,7 +112,9 @@ async def test_engine_advance_with_question_publishes_node_and_moves_to_narrowin
     assert nodes[0].type == CanvasNodeType.QUESTION
     assert nodes[0].content["question"] == "Is this for navigation or analysis?"
     assert session.state.phase == SessionPhase.NARROWING
-    assert [_event_payload(event)["type"] for event in events] == ["shaping:node_added", "shaping:edge_added"]
+    # Filter for the node/edge events we care about
+    node_edge_events = [e["type"] for e in collected if e["type"] in ("shaping:node_added", "shaping:edge_added")]
+    assert node_edge_events == ["shaping:node_added", "shaping:edge_added"]
 
 
 @pytest.mark.asyncio
@@ -469,3 +478,28 @@ async def test_question_still_transitions_to_narrowing(tmp_path: Path) -> None:
     engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
     await engine.advance()
     assert session.state.phase == SessionPhase.NARROWING
+
+
+@pytest.mark.asyncio
+async def test_decision_step_publishes_advance_stream(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="observation">done</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    subscription = store.subscribe()
+    collected: list[dict] = []
+    try:
+        await engine.advance()
+        # Drain a handful of events; the decision stream should appear among them.
+        for _ in range(6):
+            try:
+                event = await asyncio.wait_for(subscription.__anext__(), timeout=1.0)
+            except (StopAsyncIteration, asyncio.TimeoutError):
+                break
+            collected.append(_event_payload(event))
+    finally:
+        await subscription.aclose()
+
+    stream_events = [e for e in collected if e["type"] == "shaping:advance_stream"]
+    assert stream_events, f"expected an advance_stream event, got {[e['type'] for e in collected]}"
+    assert any("done" in str(e.get("data", {}).get("delta", "")) for e in stream_events)
