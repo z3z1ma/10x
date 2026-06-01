@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .models import CanvasNode, NodeStatus, SessionState
+from .models import CanvasNode, SessionState
 
 _MAX_SUMMARY = 160
 _MAX_DIGEST = 200

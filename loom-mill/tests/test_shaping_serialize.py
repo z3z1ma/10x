@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from loom_mill.shaping.models import (
-    CanvasEdge,
     CanvasNode,
     CanvasNodeType,
     NodeStatus,
@@ -34,7 +33,6 @@ def _state() -> SessionState:
         created_at="t",
         updated_at="t",
         nodes={"n1": root, "n2": obs, "n3": dead},
-        edges=[CanvasEdge(id="e1", source_id="n1", target_id="n2", type="causal")],
         staged_records=[
             StagedRecord(
                 temp_id="temp:specs:graph-view",
