@@ -397,3 +397,45 @@ async def test_advance_bad_op_fails_closed_with_observation(tmp_path: Path) -> N
     engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
     nodes = await engine.advance()
     assert any(n.type == CanvasNodeType.OBSERVATION and "could not be applied" in str(n.content) for n in nodes)
+
+
+@pytest.mark.asyncio
+async def test_advance_edit_staged_updates_record(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    session.staging.propose("specs", "Draft", "# Draft", "main")
+    store = MillStateStore()
+    output = (
+        '<op kind="edit-staged" temp_id="temp:specs:draft"/>'
+        '<node type="record" surface="specs" title="Draft"># Revised</node>'
+    )
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    record = next(r for r in session.state.staged_records if r.temp_id == "temp:specs:draft")
+    assert record.content == "# Revised"
+    assert record.status == "modified"
+
+
+@pytest.mark.asyncio
+async def test_advance_continue_op_changes_parent(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output1 = '<node type="observation">Root</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output1)), store)
+    root_nodes = await engine.advance()
+    root_id = root_nodes[0].id
+
+    output2 = f'<op kind="continue" from="{root_id}"/><node type="observation">Child</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output2)), store)
+    child_nodes = await engine.advance()
+    # the appended child observation should attach to root_id
+    assert any(n.parent_id == root_id and n.content.get("observation") == "Child" for n in child_nodes)
+
+
+@pytest.mark.asyncio
+async def test_advance_continue_unknown_node_fails_closed(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<op kind="continue" from="does-not-exist"/><node type="observation">Child</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert any(n.type == CanvasNodeType.OBSERVATION and "unknown node" in str(n.content) for n in nodes)

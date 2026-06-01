@@ -115,15 +115,42 @@ class ShapingEngine:
             await self.orchestrator.launch(response.explore_goal)
             return list(self.session.state.nodes.values())[node_count:]
 
-        # Resolve parent override for continue/revise ops
+        # Resolve parent override for continue/revise ops; fail closed on unknown nodes
+        pre_op_nodes: list[CanvasNode] = []
         for op in response.ops:
-            if op.kind == "continue" and op.args.get("from") in self.session.state.nodes:
-                parent_id = op.args["from"]
-            elif op.kind == "revise" and op.args.get("node") in self.session.state.nodes:
-                self.session.invalidate_nodes(
-                    [n.id for n in self.session.state.nodes.values() if n.parent_id == op.args["node"]]
-                )
-                parent_id = op.args["node"]
+            if op.kind == "continue":
+                target_id = op.args.get("from")
+                if target_id in self.session.state.nodes:
+                    parent_id = target_id
+                elif target_id:
+                    node = self._new_node(
+                        CanvasNodeType.OBSERVATION,
+                        {"observation": f"Op 'continue' references unknown node {target_id}", "evidence": None},
+                        parent_id=parent_id,
+                    )
+                    edge = self.session.add_node_with_edge(node)
+                    await self._publish_node(node)
+                    if edge is not None:
+                        await self._publish_edge(edge)
+                    pre_op_nodes.append(node)
+            elif op.kind == "revise":
+                target_id = op.args.get("node")
+                if target_id in self.session.state.nodes:
+                    self.session.invalidate_nodes(
+                        [n.id for n in self.session.state.nodes.values() if n.parent_id == target_id]
+                    )
+                    parent_id = target_id
+                elif target_id:
+                    node = self._new_node(
+                        CanvasNodeType.OBSERVATION,
+                        {"observation": f"Op 'revise' references unknown node {target_id}", "evidence": None},
+                        parent_id=parent_id,
+                    )
+                    edge = self.session.add_node_with_edge(node)
+                    await self._publish_node(node)
+                    if edge is not None:
+                        await self._publish_edge(edge)
+                    pre_op_nodes.append(node)
 
         # Identify records consumed by supersede/edit-staged ops
         consuming_ops = {op.kind for op in response.ops} & {"supersede", "edit-staged"}
@@ -157,7 +184,7 @@ class ShapingEngine:
 
         if response.explore_goal:
             await self.orchestrator.launch(response.explore_goal)
-        return nodes + op_nodes
+        return nodes + op_nodes + pre_op_nodes
 
     def _path_to_node(self, node_id: str | None) -> list[CanvasNode]:
         path: list[CanvasNode] = []
