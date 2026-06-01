@@ -63,9 +63,9 @@
 
   <div slot="anchorSouth">
     {#if connections && connections.length > 0}
-      <Anchor id="{node.id}-out" output {connections} />
+      <Anchor id="{node.id}-out" output {connections} edgeStyle="step" edgeColor="#a78bfa" />
     {:else}
-      <Anchor id="{node.id}-out" output />
+      <Anchor id="{node.id}-out" output edgeStyle="step" edgeColor="#a78bfa" />
     {/if}
   </div>
 </Node>

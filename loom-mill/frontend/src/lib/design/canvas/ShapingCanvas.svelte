@@ -243,9 +243,9 @@
             </div>
             <div slot="anchorSouth">
               {#if getChildConnections(node.id).length > 0}
-                <Anchor id="{node.id}-out" output connections={getChildConnections(node.id)} />
+                <Anchor id="{node.id}-out" output connections={getChildConnections(node.id)} edgeStyle="step" edgeColor="#52525b" />
               {:else}
-                <Anchor id="{node.id}-out" output />
+                <Anchor id="{node.id}-out" output edgeStyle="step" edgeColor="#52525b" />
               {/if}
             </div>
           </Node>
