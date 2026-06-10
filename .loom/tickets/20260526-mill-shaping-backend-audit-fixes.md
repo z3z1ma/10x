@@ -1,11 +1,11 @@
 # Loom Mill Shaping Backend Audit Fixes
 
-ID: ticket:20260526-mill-shaping-backend-audit-fixes
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-26
 Updated: 2026-06-09
-Risk: medium - fixes cross-cut shaping session runtime behavior, error handling, event delivery, and commit rollback
+
+Legacy note: Risk — medium - fixes cross-cut shaping session runtime behavior, error handling, event delivery, and commit rollback
+
 Priority: high - adversarial audit found blocking backend issues before shaping sessions can be trusted
 
 ## Summary
@@ -16,9 +16,9 @@ Closure claim: Loom Mill shaping backend session lifecycle produces observable b
 
 ## Related Records
 
-- `ticket:20260526-mill-shaping-harness` - introduced exploration orchestration and harness invocation behavior.
-- `ticket:20260526-mill-shaping-blocks` - introduced engine advance and proposal block production.
-- `ticket:20260526-mill-shaping-staging` - introduced staged record integration and commit materialization.
+- `.loom/tickets/20260526-mill-shaping-harness.md` - introduced exploration orchestration and harness invocation behavior.
+- `.loom/tickets/20260526-mill-shaping-blocks.md` - introduced engine advance and proposal block production.
+- `.loom/tickets/20260526-mill-shaping-staging.md` - introduced staged record integration and commit materialization.
 
 ## Scope
 
@@ -61,7 +61,7 @@ Must not change frontend files, start servers, bind ports, or widen into unrelat
 
 ## Evidence
 
-- `evidence:20260526-mill-shaping-backend-audit-fixes-validation` - focused shaping tests, full backend tests, focused integration test, frontend build, and whitespace-check limitation.
+- `.loom/evidence/20260526-mill-shaping-backend-audit-fixes-validation.md` - focused shaping tests, full backend tests, focused integration test, frontend build, and whitespace-check limitation.
 
 ## Current State
 
@@ -83,4 +83,4 @@ acceptance disposition is reconciled.
   reviewed, and covered by focused verification, but should not be treated as
   accepted until ticket acceptance disposition lands.
 - 2026-05-26: Created ticket from the operator-provided adversarial audit findings and marked active for current-session implementation. Non-goals include frontend edits and server startup.
-- 2026-05-26: Implemented backend audit fixes and moved to review. Evidence recorded in `evidence:20260526-mill-shaping-backend-audit-fixes-validation`; separate adversarial audit still recommended before closure because this ticket directly follows audit findings.
+- 2026-05-26: Implemented backend audit fixes and moved to review. Evidence recorded in `.loom/evidence/20260526-mill-shaping-backend-audit-fixes-validation.md`; separate adversarial audit still recommended before closure because this ticket directly follows audit findings.

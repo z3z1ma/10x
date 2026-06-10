@@ -1,11 +1,10 @@
 # Design Room Shaping Canvas
 
-ID: spec:mill-shaping-canvas
-Type: Spec
 Status: active
 Created: 2026-05-26
 Updated: 2026-05-26
-Replaces: spec:mill-shaping-sessions
+
+Legacy note: Replaces — .loom/specs/mill-shaping-sessions.md
 
 ## Summary
 

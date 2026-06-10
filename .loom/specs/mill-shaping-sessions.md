@@ -1,9 +1,7 @@
 # Design Room Shaping Sessions
 
-ID: spec:mill-shaping-sessions
-Type: Spec
 Status: superseded
-Superseded By: spec:mill-shaping-canvas
+Superseded By: .loom/specs/mill-shaping-canvas.md
 Created: 2026-05-26
 Updated: 2026-05-26
 
@@ -343,7 +341,7 @@ All design questions resolved. None remaining.
 
 ## Related Records
 
-- `spec:mill-design-room` - Design Room behavior contract
+- `.loom/specs/mill-design-room.md` - Design Room behavior contract
 - `loom-mill/frontend/src/lib/design/ChatPanel.svelte` - existing chat (simpler interface)
 - `loom-mill/frontend/src/lib/design/DesignRoom.svelte` - Design Room container
 - `.loom/plans/` - example of multi-record shaped output

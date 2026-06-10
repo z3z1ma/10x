@@ -1,11 +1,10 @@
 # Factory Floor Review UX
 
-ID: ticket:20260526-mill-review-ux
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-26
 Updated: 2026-05-26
-Risk: low - adds UI actions that map to existing record update mechanics
+
+Legacy note: Risk — low - adds UI actions that map to existing record update mechanics
 
 ## Summary
 
@@ -27,7 +26,7 @@ directly from the Factory Floor detail panel without editing Markdown.
 
 ## Related Records
 
-- `plan:20260526-mill-next-gen` - parent plan
+- `.loom/tickets/20260526-mill-next-gen.md` - parent plan
 - `loom-mill/frontend/src/lib/DetailPanel.svelte` - where the actions render
 - `loom-mill/src/loom_mill/api/design.py` - existing record update endpoint (PUT /records/{id})
 - `loom-mill/frontend/src/lib/types.ts` - LoomRecord metadata shape
@@ -110,7 +109,7 @@ and broadcasts it.
 
 Implementation complete and awaiting review. The transition endpoint, route
 registration, review action panel, DetailPanel wiring, and backend transition tests
-are in place. Evidence is recorded in evidence:20260526-mill-review-ux-validation.
+are in place. Evidence is recorded in .loom/evidence/20260526-mill-review-ux-validation.md.
 Remaining review gap: no browser screenshot or adversarial audit has been captured
 yet, so ACC-001's screenshot evidence is still pending.
 
@@ -123,5 +122,5 @@ yet, so ACC-001's screenshot evidence is still pending.
   wiring, and backend test coverage.
 - 2026-05-26: Implemented the scoped backend endpoint and frontend review actions.
   Verification: frontend build passed, backend tests passed (`61 passed`), and
-  scoped diff whitespace check passed. Evidence: evidence:20260526-mill-review-ux-validation.
+  scoped diff whitespace check passed. Evidence: .loom/evidence/20260526-mill-review-ux-validation.md.
   Moved to review because screenshot evidence and audit remain pending.

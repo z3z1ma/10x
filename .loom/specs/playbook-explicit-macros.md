@@ -1,7 +1,5 @@
 # Playbook Explicit Macros
 
-ID: spec:playbook-explicit-macros
-Type: Spec
 Status: active
 Created: 2026-05-15
 Updated: 2026-05-16
@@ -25,7 +23,7 @@ This spec fills the behavior gap between Core record-skill activation and option
 Adjacent behavior outside this spec:
 
 - Core `using-loom` activation doctrine remains owned by the `using-loom` skill and its references.
-- Loom Weaver and Loom Driver behavior remains owned by `spec:loom-weaver-agent` and `spec:loom-driver-agent`.
+- Loom Weaver and Loom Driver behavior remains owned by `.loom/specs/loom-weaver-agent.md` and `.loom/specs/loom-driver-agent.md`.
 - Individual Playbook content quality may need separate tickets or specs if a Playbook's workflow behavior changes beyond invocation mechanics.
 
 ## Problem
@@ -217,7 +215,7 @@ Registering `loom-playbooks/skills/` as a broad implicit model-visible skill pat
 ## Amendment Notes
 
 - 2026-05-16: Added REQ-013 and SCN-006 after operator direction from
-  `research:20260516-product-surface-scan`: generated Playbook command
+  `.loom/research/20260516-product-surface-scan.md`: generated Playbook command
   descriptions should use existing Playbook descriptions and should not add the
   `Explicit optional workflow macro for` prefix. This amendment does not remove the
   requirement that Playbooks remain explicit lenses rather than natural-language
@@ -225,13 +223,13 @@ Registering `loom-playbooks/skills/` as a broad implicit model-visible skill pat
 
 ## Related Records
 
-- `research:20260515-playbook-command-surfaces` - identifies supported explicit macro or explicit-only skill surfaces by harness.
-- `research:20260515-playbooks-core-activation-pressure` - explains why Playbooks should become explicit lenses instead of automatic activation owners.
-- `evidence:20260515-playbook-activation-stacking` - preserves observed Playbook stacking and current smoke-test gaps.
-- `research:20260514-direct-interactive-agent-surfaces` - prior supported-harness capability survey.
-- `spec:loom-weaver-agent` - defines the complementary explicit outer-loop shaping persona.
-- `spec:loom-driver-agent` - defines the complementary explicit inner-loop coordination persona.
-- `spec:ticket-owned-worker-handoffs` - defines the worker/review handoff model Playbooks must preserve when adding workflow pressure.
+- `.loom/research/20260515-playbook-command-surfaces.md` - identifies supported explicit macro or explicit-only skill surfaces by harness.
+- `.loom/research/20260515-playbooks-core-activation-pressure.md` - explains why Playbooks should become explicit lenses instead of automatic activation owners.
+- `.loom/evidence/20260515-playbook-activation-stacking.md` - preserves observed Playbook stacking and current smoke-test gaps.
+- `.loom/research/20260514-direct-interactive-agent-surfaces.md` - prior supported-harness capability survey.
+- `.loom/specs/loom-weaver-agent.md` - defines the complementary explicit outer-loop shaping persona.
+- `.loom/specs/loom-driver-agent.md` - defines the complementary explicit inner-loop coordination persona.
+- `.loom/specs/ticket-owned-worker-handoffs.md` - defines the worker/review handoff model Playbooks must preserve when adding workflow pressure.
 - `loom-core/skills/using-loom/SKILL.md` - owns Core activation and routing doctrine.
 - `loom-playbooks/` - current package surface to convert.
-- `research:20260516-product-surface-scan` - records the command description polish finding and operator disposition.
+- `.loom/research/20260516-product-surface-scan.md` - records the command description polish finding and operator disposition.

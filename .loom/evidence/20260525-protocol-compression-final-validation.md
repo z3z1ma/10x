@@ -1,7 +1,5 @@
 # Protocol Compression Final Validation
 
-ID: evidence:20260525-protocol-compression-final-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -9,7 +7,7 @@ Observed: 2026-05-25
 
 ## Summary
 
-Final validation observations for `ticket:20260525-compression-validation-audit` and `plan:20260525-loom-protocol-compression`. The observations cover current package checks, scoped diff shape, current line counts against the baseline categories, behavior-preservation searches, leakage searches, Playbook command sync, canonical/Codex agent alignment, and limits.
+Final validation observations for `.loom/tickets/done/20260525-compression-validation-audit.md` and `.loom/tickets/20260525-loom-protocol-compression.md`. The observations cover current package checks, scoped diff shape, current line counts against the baseline categories, behavior-preservation searches, leakage searches, Playbook command sync, canonical/Codex agent alignment, and limits.
 
 ## Procedure
 
@@ -25,7 +23,7 @@ Validation commands:
 - `git diff --check`
 - `git diff --stat -- <complete compression scope>`
 - `git diff --name-only -- <complete compression scope>`
-- Node inventory line-count comparison over the baseline categories from `evidence:20260525-compression-inventory-baseline`
+- Node inventory line-count comparison over the baseline categories from `.loom/evidence/20260525-compression-inventory-baseline.md`
 - Node canonical/Codex agent prompt body comparison
 - Node Playbook bundle command/macro sync inspection
 - Targeted grep/source inspection over model-visible compressed surfaces for activation, shaping, ticket-owned Ralph, evidence, audit, worker-output reconciliation, active `Knowledge Preference` loading, explicit Playbook macro behavior, Driver/Weaver role behavior, and product-surface leakage terms
@@ -34,7 +32,7 @@ Validation commands:
 
 ### Workspace State
 
-`git status --short` showed the expected dirty compression worktree: modified parent plan and child/final tickets, modified Core skill/agent surfaces, modified Playbook source/generated command/doc surfaces, and untracked compression evidence/audit records plus `knowledge:general-subagent-for-ralph-runs`. No unexpected out-of-scope source family appeared in the final validation scope.
+`git status --short` showed the expected dirty compression worktree: modified parent plan and child/final tickets, modified Core skill/agent surfaces, modified Playbook source/generated command/doc surfaces, and untracked compression evidence/audit records plus `.loom/knowledge/general-subagent-for-ralph-runs.md`. No unexpected out-of-scope source family appeared in the final validation scope.
 
 ### Required Commands
 
@@ -48,11 +46,11 @@ Validation commands:
 
 Scoped diff over the complete compression write/read scope reported 119 tracked files changed with 2,189 insertions and 5,453 deletions. The changed tracked files are in expected scope: `.loom/plans/`, `.loom/tickets/`, `ARCHITECTURE.md`, `PROTOCOL.md`, `loom-core/agents/`, `loom-core/codex/agents/`, `loom-core/skills/`, `loom-playbooks/playbooks/`, `loom-playbooks/commands/`, and `loom-playbooks/loom-playbooks.mjs`.
 
-Untracked records expected from the workstream were existing child-slice evidence/audit records and the local execution preference knowledge record. This final validation adds this evidence record and `audit:20260525-protocol-compression-final-audit`.
+Untracked records expected from the workstream were existing child-slice evidence/audit records and the local execution preference knowledge record. This final validation adds this evidence record and `.loom/reviews/20260525-protocol-compression-final-audit.md`.
 
 ### Line Counts
 
-Current counts for the same inventory categories used by `evidence:20260525-compression-inventory-baseline`:
+Current counts for the same inventory categories used by `.loom/evidence/20260525-compression-inventory-baseline.md`:
 
 | Category | Baseline Files | Baseline Lines | Current Files | Current Lines | Change |
 |---|---:|---:|---:|---:|---:|
@@ -96,11 +94,11 @@ Targeted leakage search over Playbook model-visible Markdown/TOML surfaces found
 
 ## What This Shows
 
-- `ticket:20260525-compression-validation-audit#ACC-001` - supports - required Core/Playbooks smoke and pack checks passed, `git diff --check` passed, and the command results and limits are recorded here.
-- `ticket:20260525-compression-validation-audit#ACC-002` - supports - targeted behavior searches/source inspection found the core compressed-protocol behaviors in current model-visible surfaces and did not identify blocking product-surface leakage.
-- `ticket:20260525-compression-validation-audit#ACC-003` - supports in combination with `audit:20260525-protocol-compression-final-audit`, which records the final fresh-context adversarial review.
-- `ticket:20260525-compression-validation-audit#ACC-004` - supports - child tickets have evidence/audit links and closed state, current counts match their recorded reductions, and the parent plan/final ticket can cite this final validation story.
-- `spec:loom-protocol-compression#REQ-001`, `REQ-003`, `REQ-006`, `REQ-007`, `REQ-008`, and `REQ-009` - supports - the final source state preserves the required protocol spine, session kernel, agent roles, portability posture, product-surface hygiene, and validation requirements within the observed scope.
+- `.loom/tickets/done/20260525-compression-validation-audit.md#ACC-001` - supports - required Core/Playbooks smoke and pack checks passed, `git diff --check` passed, and the command results and limits are recorded here.
+- `.loom/tickets/done/20260525-compression-validation-audit.md#ACC-002` - supports - targeted behavior searches/source inspection found the core compressed-protocol behaviors in current model-visible surfaces and did not identify blocking product-surface leakage.
+- `.loom/tickets/done/20260525-compression-validation-audit.md#ACC-003` - supports in combination with `.loom/reviews/20260525-protocol-compression-final-audit.md`, which records the final fresh-context adversarial review.
+- `.loom/tickets/done/20260525-compression-validation-audit.md#ACC-004` - supports - child tickets have evidence/audit links and closed state, current counts match their recorded reductions, and the parent plan/final ticket can cite this final validation story.
+- `.loom/specs/loom-protocol-compression.md#REQ-001`, `REQ-003`, `REQ-006`, `REQ-007`, `REQ-008`, and `REQ-009` - supports - the final source state preserves the required protocol spine, session kernel, agent roles, portability posture, product-surface hygiene, and validation requirements within the observed scope.
 
 ## What This Does Not Show
 
@@ -111,8 +109,8 @@ Targeted leakage search over Playbook model-visible Markdown/TOML surfaces found
 
 ## Related Records
 
-- `ticket:20260525-compression-validation-audit` - consuming final validation ticket.
-- `plan:20260525-loom-protocol-compression` - parent compression plan.
-- `spec:loom-protocol-compression` - compression behavior contract.
-- `evidence:20260525-compression-inventory-baseline` - baseline categories and counts.
-- `audit:20260525-protocol-compression-final-audit` - final audit that challenges this evidence and the closure story.
+- `.loom/tickets/done/20260525-compression-validation-audit.md` - consuming final validation ticket.
+- `.loom/tickets/20260525-loom-protocol-compression.md` - parent compression plan.
+- `.loom/specs/loom-protocol-compression.md` - compression behavior contract.
+- `.loom/evidence/20260525-compression-inventory-baseline.md` - baseline categories and counts.
+- `.loom/reviews/20260525-protocol-compression-final-audit.md` - final audit that challenges this evidence and the closure story.

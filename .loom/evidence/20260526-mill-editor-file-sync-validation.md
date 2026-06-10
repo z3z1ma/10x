@@ -1,7 +1,5 @@
 # Mill Editor File Sync Validation
 
-ID: evidence:20260526-mill-editor-file-sync-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Automated validation for `ticket:20260526-mill-editor-file-sync` after adding
+Automated validation for `.loom/tickets/done/20260526-mill-editor-file-sync.md` after adding
 content hashes, conditional `GET /records/{id}/content`, editor polling, and the
 manual conflict banner controls.
 
@@ -31,9 +29,9 @@ manual conflict banner controls.
 
 ## What This Shows
 
-- `ticket:20260526-mill-editor-file-sync#ACC-004` - supports - the frontend build passed for the implemented editor polling/conflict UI changes.
-- `ticket:20260526-mill-editor-file-sync#ACC-005` - supports - the backend test suite passed, including the updated records API hash/conditional request coverage.
-- `ticket:20260526-mill-editor-file-sync#ACC-003` - partially supports - the backend `304` response path is covered by tests and `git diff --check` found no whitespace issues, but runtime network cadence and jank were not manually observed.
+- `.loom/tickets/done/20260526-mill-editor-file-sync.md#ACC-004` - supports - the frontend build passed for the implemented editor polling/conflict UI changes.
+- `.loom/tickets/done/20260526-mill-editor-file-sync.md#ACC-005` - supports - the backend test suite passed, including the updated records API hash/conditional request coverage.
+- `.loom/tickets/done/20260526-mill-editor-file-sync.md#ACC-003` - partially supports - the backend `304` response path is covered by tests and `git diff --check` found no whitespace issues, but runtime network cadence and jank were not manually observed.
 
 ## What This Does Not Show
 
@@ -44,4 +42,4 @@ running Loom Mill UI or browser reproduction.
 
 ## Related Records
 
-- `ticket:20260526-mill-editor-file-sync` - ticket whose automated validation this dossier supports.
+- `.loom/tickets/done/20260526-mill-editor-file-sync.md` - ticket whose automated validation this dossier supports.

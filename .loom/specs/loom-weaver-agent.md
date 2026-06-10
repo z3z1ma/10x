@@ -1,7 +1,5 @@
 # Loom Weaver Agent
 
-ID: spec:loom-weaver-agent
-Type: Spec
 Status: active
 Created: 2026-05-14
 Updated: 2026-05-15
@@ -179,10 +177,10 @@ Creating a ticket, spec, research record, evidence record, and audit record for 
 - Agent instructions are product-visible behavior and must not leak contributor-only repository process.
 - `.loom/` is the only write boundary for the Loom Weaver persona.
 - The canonical behavior should be defined once and adapted per harness to avoid drift.
-- Harness-specific invocation support must follow `research:20260514-direct-interactive-agent-surfaces` unless newer source-backed research supersedes it.
+- Harness-specific invocation support must follow `.loom/research/20260514-direct-interactive-agent-surfaces.md` unless newer source-backed research supersedes it.
 
 ## Related Records
 
-- `research:20260514-direct-interactive-agent-surfaces` - compares supported harness agent surfaces and invocation semantics that constrain how Loom Weaver can be exposed.
-- `decision:0002` - removes packets as an active surface and keeps Ralph as ticket-owned worker/review discipline.
-- `spec:ticket-owned-worker-handoffs` - defines the execution handoff model Weaver should shape toward without launching workers itself.
+- `.loom/research/20260514-direct-interactive-agent-surfaces.md` - compares supported harness agent surfaces and invocation semantics that constrain how Loom Weaver can be exposed.
+- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - removes packets as an active surface and keeps Ralph as ticket-owned worker/review discipline.
+- `.loom/specs/ticket-owned-worker-handoffs.md` - defines the execution handoff model Weaver should shape toward without launching workers itself.

@@ -1,5 +1,3 @@
-ID: evidence:20260511-playbook-corpus-release-review
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-11
 Updated: 2026-05-11

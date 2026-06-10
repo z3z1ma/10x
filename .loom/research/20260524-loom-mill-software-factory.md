@@ -1,7 +1,5 @@
 # Loom Mill: Software Factory Architecture
 
-ID: research:20260524-loom-mill-software-factory
-Type: Research
 Status: active
 Created: 2026-05-24
 Updated: 2026-05-24
@@ -39,7 +37,7 @@ Excluded:
 ## Method And Sources
 
 - Operator-provided articles: Ralph Wiggum technique, LLMs as mirrors of operator skill, AI as economic warfare, cognitive security, embedded software factory preview, everything is a ralph loop
-- Inspection of existing Loom records: `decision:0002`, `spec:ticket-owned-worker-handoffs`, `spec:loom-driver-agent`, `spec:loom-weaver-agent`, `plan:20260515-ticket-owned-worker-handoffs`, `research:20260510-loom-loop-failure-analysis`
+- Inspection of existing Loom records: `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, `.loom/specs/ticket-owned-worker-handoffs.md`, `.loom/specs/loom-driver-agent.md`, `.loom/specs/loom-weaver-agent.md`, `.loom/tickets/20260515-ticket-owned-worker-handoffs.md`, `.loom/research/20260510-loom-loop-failure-analysis.md`
 - Inspection of shipped skill surfaces: `loom-ralph`, `loom-tickets`, `loom-audit`, `loom-evidence`, `loom-driver.md`, `loom-weaver.md`
 - Collaborative operator-agent shaping session on 2026-05-24
 
@@ -58,10 +56,10 @@ The core Ralph ideas map directly to existing Loom surfaces:
 | Monolithic scheduler, not agent swarm | Driver (inner-loop coordinator) |
 | Shape before execute | Weaver (outer-loop shaping) |
 | Specs as deterministic context stack | Specs + Plans + Knowledge (loaded each iteration) |
-| Worker output is claims, not truth | `spec:ticket-owned-worker-handoffs` REQ-005 |
+| Worker output is claims, not truth | `.loom/specs/ticket-owned-worker-handoffs.md` REQ-005 |
 | Operator skill matters | Shaping discipline, Weaver adversarial posture |
 | Loop failures tune the system | Knowledge promotion, retrospective |
-| Transient prompts are transport, not truth | `decision:0002`, REQ-004 |
+| Transient prompts are transport, not truth | `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, REQ-004 |
 
 No new conceptual machinery is needed. The protocol is sound.
 
@@ -277,9 +275,9 @@ This means:
 
 ## Related Records
 
-- `decision:0002` - validates that tickets own worker context; Mill orchestrates workers against tickets
-- `spec:ticket-owned-worker-handoffs` - the execution contract Mill implements
-- `spec:loom-driver-agent` - Driver behavior maps to Mill's orchestration loop
-- `spec:loom-weaver-agent` - Weaver behavior maps to Mill's shaping mode
-- `research:20260510-loom-loop-failure-analysis` - historical context for why bounded execution discipline exists
-- `plan:20260510-core-loop-hardening` - historical context for protocol hardening that Mill now operationalizes
+- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - validates that tickets own worker context; Mill orchestrates workers against tickets
+- `.loom/specs/ticket-owned-worker-handoffs.md` - the execution contract Mill implements
+- `.loom/specs/loom-driver-agent.md` - Driver behavior maps to Mill's orchestration loop
+- `.loom/specs/loom-weaver-agent.md` - Weaver behavior maps to Mill's shaping mode
+- `.loom/research/20260510-loom-loop-failure-analysis.md` - historical context for why bounded execution discipline exists
+- `.loom/tickets/20260510-core-loop-hardening.md` - historical context for protocol hardening that Mill now operationalizes

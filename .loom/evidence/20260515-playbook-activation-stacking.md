@@ -1,7 +1,5 @@
 # Playbook Activation Stacking Observations
 
-ID: evidence:20260515-playbook-activation-stacking
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -57,9 +55,9 @@ activation.
 
 ## What This Shows
 
-- `research:20260515-playbooks-core-activation-pressure` - supports - Playbooks are currently exposed as 25 trigger-oriented workflow skills, and current smoke checks still treat that exposure as valid.
-- `research:20260515-playbooks-core-activation-pressure` - supports - Natural prompts can load multiple workflow playbooks in one run.
-- `research:20260515-playbooks-core-activation-pressure` - supports - The current activation tests are compliance tests for expected skill invocation, not precision tests for preserving a single route or suppressing unnecessary playbook pressure.
+- `.loom/research/20260515-playbooks-core-activation-pressure.md` - supports - Playbooks are currently exposed as 25 trigger-oriented workflow skills, and current smoke checks still treat that exposure as valid.
+- `.loom/research/20260515-playbooks-core-activation-pressure.md` - supports - Natural prompts can load multiple workflow playbooks in one run.
+- `.loom/research/20260515-playbooks-core-activation-pressure.md` - supports - The current activation tests are compliance tests for expected skill invocation, not precision tests for preserving a single route or suppressing unnecessary playbook pressure.
 
 ## What This Does Not Show
 
@@ -71,6 +69,6 @@ key excerpts above preserve the material observations.
 
 ## Related Records
 
-- `research:20260515-playbooks-core-activation-pressure` - consumes this evidence.
-- `evidence:20260513-superpowers-style-activation-checks` - earlier activation-validation dossier whose live log paths were inspected.
-- `ticket:20260513-superpowers-style-activation-doctrine` - introduced the Superpowers-style activation posture that made these checks important.
+- `.loom/research/20260515-playbooks-core-activation-pressure.md` - consumes this evidence.
+- `.loom/evidence/20260513-superpowers-style-activation-checks.md` - earlier activation-validation dossier whose live log paths were inspected.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md` - introduced the Superpowers-style activation posture that made these checks important.

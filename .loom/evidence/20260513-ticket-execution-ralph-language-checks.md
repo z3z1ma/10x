@@ -1,7 +1,5 @@
 # Ticket Execution Ralph Language Checks
 
-ID: evidence:20260513-ticket-execution-ralph-language-checks
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-13
 Updated: 2026-05-13
@@ -9,7 +7,7 @@ Observed: 2026-05-13
 
 ## Summary
 
-Validation for `ticket:20260513-ticket-execution-ralph-language`: targeted terminology scans, source inspection, package smoke/pack checks, and Markdown whitespace checks after making ticket execution language Ralph-centered.
+Validation for `.loom/tickets/done/20260513-ticket-execution-ralph-language.md`: targeted terminology scans, source inspection, package smoke/pack checks, and Markdown whitespace checks after making ticket execution language Ralph-centered.
 
 ## Observations
 
@@ -48,9 +46,9 @@ Validation for `ticket:20260513-ticket-execution-ralph-language`: targeted termi
 
 ## What This Shows
 
-- `ticket:20260513-ticket-execution-ralph-language#ACC-001` - supports - source inspection found `loom-tickets` now separates ticket ownership of state/acceptance/closure from Ralph ownership of execution/review slices.
-- `ticket:20260513-ticket-execution-ralph-language#ACC-002` - supports - `acting-on-tickets.md` now says ticket execution uses Ralph packets for implementation, review, inspection, and audit slices.
-- `ticket:20260513-ticket-execution-ralph-language#ACC-003` - supports - loop, plan-slicing, incremental implementation, and current docs no longer present normal ticket execution as bypassing Ralph packets.
+- `.loom/tickets/done/20260513-ticket-execution-ralph-language.md#ACC-001` - supports - source inspection found `loom-tickets` now separates ticket ownership of state/acceptance/closure from Ralph ownership of execution/review slices.
+- `.loom/tickets/done/20260513-ticket-execution-ralph-language.md#ACC-002` - supports - `acting-on-tickets.md` now says ticket execution uses Ralph packets for implementation, review, inspection, and audit slices.
+- `.loom/tickets/done/20260513-ticket-execution-ralph-language.md#ACC-003` - supports - loop, plan-slicing, incremental implementation, and current docs no longer present normal ticket execution as bypassing Ralph packets.
 
 ## What This Does Not Show
 
@@ -58,4 +56,4 @@ This evidence does not prove historical `.loom` records or eval records use the 
 
 ## Related Records
 
-- `ticket:20260513-ticket-execution-ralph-language` - consuming ticket.
+- `.loom/tickets/done/20260513-ticket-execution-ralph-language.md` - consuming ticket.

@@ -1,7 +1,5 @@
 # Skill Routing Procedure Consistency Checks
 
-ID: evidence:20260511-skill-routing-procedure-consistency-checks
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-11
 Updated: 2026-05-11
@@ -30,10 +28,10 @@ Validation observations after clarifying record-skill versus workflow-specific s
 
 ## What This Shows
 
-- Supports `ticket:20260511-skill-routing-procedure-consistency#ACC-001`: product-facing prose now names record skills and workflow-specific skills without using package-layer workflow precedence as the explanation.
-- Supports `ticket:20260511-skill-routing-procedure-consistency#ACC-002`: all 25 playbook skill files contain the routed-skill procedure requirement.
-- Supports `ticket:20260511-skill-routing-procedure-consistency#ACC-003`: core Ralph wording no longer contains the searched stale phrases that narrow packet-path launch guidance to harness-native subagents.
-- Supports `ticket:20260511-skill-routing-procedure-consistency#ACC-004`: package smoke, package pack checks, and Markdown diff checks passed after the wording changes.
+- Supports `.loom/tickets/done/20260511-skill-routing-procedure-consistency.md#ACC-001`: product-facing prose now names record skills and workflow-specific skills without using package-layer workflow precedence as the explanation.
+- Supports `.loom/tickets/done/20260511-skill-routing-procedure-consistency.md#ACC-002`: all 25 playbook skill files contain the routed-skill procedure requirement.
+- Supports `.loom/tickets/done/20260511-skill-routing-procedure-consistency.md#ACC-003`: core Ralph wording no longer contains the searched stale phrases that narrow packet-path launch guidance to harness-native subagents.
+- Supports `.loom/tickets/done/20260511-skill-routing-procedure-consistency.md#ACC-004`: package smoke, package pack checks, and Markdown diff checks passed after the wording changes.
 
 ## What This Does Not Show
 
@@ -44,4 +42,4 @@ Validation observations after clarifying record-skill versus workflow-specific s
 
 ## Related Records
 
-- `ticket:20260511-skill-routing-procedure-consistency` - ticket supported by this evidence.
+- `.loom/tickets/done/20260511-skill-routing-procedure-consistency.md` - ticket supported by this evidence.

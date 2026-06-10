@@ -1,7 +1,5 @@
 # Playbook Doc Compression Alignment Validation
 
-ID: evidence:20260525-playbook-doc-compression-alignment-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -9,7 +7,7 @@ Observed: 2026-05-25
 
 ## Summary
 
-Validation observations for `ticket:20260525-playbook-doc-compression-alignment`. The observations cover line-count reduction, generated command alignment, Playbook explicit macro posture, product-surface leakage searches, and package checks after the Playbook/doc compression edits.
+Validation observations for `.loom/tickets/done/20260525-playbook-doc-compression-alignment.md`. The observations cover line-count reduction, generated command alignment, Playbook explicit macro posture, product-surface leakage searches, and package checks after the Playbook/doc compression edits.
 
 ## Observations
 
@@ -55,11 +53,11 @@ Validation observations for `ticket:20260525-playbook-doc-compression-alignment`
 
 ## What This Shows
 
-- `ticket:20260525-playbook-doc-compression-alignment#ACC-001` - supports - Playbook source and generated macro language was shortened while preserving Core routing, evidence, audit, ticket, and ticket-owned Ralph references.
-- `ticket:20260525-playbook-doc-compression-alignment#ACC-002` - supports - command files were regenerated and catalog comparison reported no missing or stale commands.
-- `ticket:20260525-playbook-doc-compression-alignment#ACC-003` - supports - touched docs removed verbose bootstrap file lists and stale activation prose while keeping Core as the owning doctrine source.
-- `ticket:20260525-playbook-doc-compression-alignment#ACC-004` - supports - static package inspection still reports explicit command registration, no Playbook skill paths, and no natural-prompt activation framing in generated macro text.
-- `ticket:20260525-playbook-doc-compression-alignment#ACC-005` - supports - Playbooks smoke, Playbooks pack check, generated command comparison, targeted searches, and `git diff --check` passed.
+- `.loom/tickets/done/20260525-playbook-doc-compression-alignment.md#ACC-001` - supports - Playbook source and generated macro language was shortened while preserving Core routing, evidence, audit, ticket, and ticket-owned Ralph references.
+- `.loom/tickets/done/20260525-playbook-doc-compression-alignment.md#ACC-002` - supports - command files were regenerated and catalog comparison reported no missing or stale commands.
+- `.loom/tickets/done/20260525-playbook-doc-compression-alignment.md#ACC-003` - supports - touched docs removed verbose bootstrap file lists and stale activation prose while keeping Core as the owning doctrine source.
+- `.loom/tickets/done/20260525-playbook-doc-compression-alignment.md#ACC-004` - supports - static package inspection still reports explicit command registration, no Playbook skill paths, and no natural-prompt activation framing in generated macro text.
+- `.loom/tickets/done/20260525-playbook-doc-compression-alignment.md#ACC-005` - supports - Playbooks smoke, Playbooks pack check, generated command comparison, targeted searches, and `git diff --check` passed.
 
 ## What This Does Not Show
 
@@ -67,7 +65,7 @@ This dossier does not prove live harness natural-prompt behavior in OpenCode, Cl
 
 ## Related Records
 
-- `ticket:20260525-playbook-doc-compression-alignment` - consuming ticket.
-- `spec:playbook-explicit-macros` - explicit Playbook behavior contract.
-- `spec:loom-protocol-compression` - compression and product-surface hygiene contract.
-- `knowledge:playbook-activation-tests-procedure` - limits of static activation validation.
+- `.loom/tickets/done/20260525-playbook-doc-compression-alignment.md` - consuming ticket.
+- `.loom/specs/playbook-explicit-macros.md` - explicit Playbook behavior contract.
+- `.loom/specs/loom-protocol-compression.md` - compression and product-surface hygiene contract.
+- `.loom/knowledge/playbook-activation-tests-procedure.md` - limits of static activation validation.

@@ -1,12 +1,11 @@
 # No Backward Compatibility for Internal Replacements
 
-ID: knowledge:no-backward-compat-internal
-Type: Knowledge Preference
 Status: active
 Created: 2026-05-26
 Updated: 2026-05-26
-Triggers: backward compatibility, backward compat, backwards compatible, legacy support, old format, deprecated, migration path, keep old code, maintain old
-Applies To: loom-mill, internal APIs, parsers, data models, protocol changes
+
+Legacy note: Triggers — backward compatibility, backward compat, backwards compatible, legacy support, old format, deprecated, migration path, keep old code, maintain old
+Legacy note: Applies to — loom-mill, internal APIs, parsers, data models, protocol changes
 
 ## Preference
 
@@ -49,4 +48,4 @@ debt when we own the whole stack. DO NOT DO THIS."
 
 ## Related Records
 
-- `principle:no-backward-compat-own-stack` — constitutional principle backing this
+- `.loom/decisions/no-backward-compat-own-stack.md` — constitutional principle backing this

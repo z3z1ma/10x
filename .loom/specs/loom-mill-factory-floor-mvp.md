@@ -1,11 +1,9 @@
 # Loom Mill Factory Floor MVP
 
-ID: spec:loom-mill-factory-floor-mvp
-Type: Spec
 Status: superseded
 Created: 2026-05-25
 Updated: 2026-05-25
-Superseded By: spec:mill-factory-floor
+Superseded By: .loom/specs/mill-factory-floor.md
 
 ## Summary
 
@@ -23,11 +21,11 @@ This spec does not own the Design Office shaping UI, hosted/team collaboration, 
 
 This is the first behavior contract for Loom Mill as an application layer. It complements:
 
-- `constitution:main` - defines Loom as protocol plus Mill as factory application.
+- `.loom/decisions/project-constitution.md` - defines Loom as protocol plus Mill as factory application.
 - `roadmap:loom-mill` - says Factory Floor MVP ships before Design Office MVP.
-- `research:20260524-loom-mill-software-factory` - records the factory architecture and open design questions.
-- `spec:ticket-owned-worker-handoffs` - defines the ticket-owned worker context Mill must preserve when launching harness work.
-- `spec:loom-driver-agent` - defines the inner-loop coordinator behavior that Mill can invoke through a harness.
+- `.loom/research/20260524-loom-mill-software-factory.md` - records the factory architecture and open design questions.
+- `.loom/specs/ticket-owned-worker-handoffs.md` - defines the ticket-owned worker context Mill must preserve when launching harness work.
+- `.loom/specs/loom-driver-agent.md` - defines the inner-loop coordinator behavior that Mill can invoke through a harness.
 
 Adjacent behavior that needs separate specs later:
 
@@ -184,7 +182,7 @@ The UI should feel like a control room, not an IDE clone or markdown notebook. I
 
 ## Examples And Non-Examples
 
-Example: The operator selects `ticket:20260525-example`, starts one OpenCode workstation, watches the ticket move to active, sees a generated iteration summary after the subprocess exits, notices an andon alert for repeated test failure, opens the ticket, edits scope or constraints, and resumes from a fresh subprocess.
+Example: The operator selects `.loom/tickets/<ticket-slug>.md`, starts one OpenCode workstation, watches the ticket move to active, sees a generated iteration summary after the subprocess exits, notices an andon alert for repeated test failure, opens the ticket, edits scope or constraints, and resumes from a fresh subprocess.
 
 Non-example: Mill reads the prose in a ticket, decides acceptance is satisfied, closes the ticket itself, and records a verdict without a model/evidence/audit path.
 
@@ -200,9 +198,9 @@ Non-example: Mill requires users to migrate `.loom/` records into a database bef
 
 ## Related Records
 
-- `constitution:main` - durable Loom/Mill identity, factory principles, and constraints.
+- `.loom/decisions/project-constitution.md` - durable Loom/Mill identity, factory principles, and constraints.
 - `roadmap:loom-mill` - strategic sequence: Factory Floor MVP before Design Office MVP.
-- `research:20260524-loom-mill-software-factory` - synthesis and factory mapping behind this spec.
-- `spec:ticket-owned-worker-handoffs` - worker handoff behavior Mill must preserve.
-- `spec:loom-driver-agent` - inner-loop coordinator behavior Mill can invoke through harness subprocesses.
-- `spec:loom-weaver-agent` - shaping persona relevant to later Design Office work.
+- `.loom/research/20260524-loom-mill-software-factory.md` - synthesis and factory mapping behind this spec.
+- `.loom/specs/ticket-owned-worker-handoffs.md` - worker handoff behavior Mill must preserve.
+- `.loom/specs/loom-driver-agent.md` - inner-loop coordinator behavior Mill can invoke through harness subprocesses.
+- `.loom/specs/loom-weaver-agent.md` - shaping persona relevant to later Design Office work.

@@ -1,11 +1,11 @@
 # OpenCode Natural Prompt Routing Probes
 
-ID: ticket:20260525-opencode-natural-prompt-routing-probes
-Type: Ticket
 Status: blocked
 Created: 2026-05-25
 Updated: 2026-05-25
-Risk: medium - uses live OpenCode model invocation to validate compressed routing behavior, and the existing command runs with `--dangerously-skip-permissions`.
+
+Legacy note: Risk — medium - uses live OpenCode model invocation to validate compressed routing behavior, and the existing command runs with `--dangerously-skip-permissions`.
+
 Priority: medium - non-blocking follow-up from final compression audit before stronger runtime confidence claims.
 
 ## Summary
@@ -16,11 +16,11 @@ Single closure claim: the repo's OpenCode natural-prompt routing probes were eit
 
 ## Related Records
 
-- `audit:20260525-protocol-compression-final-audit` - recommended live harness/natural-prompt probes as non-blocking follow-up when stronger runtime confidence is needed.
-- `evidence:20260525-protocol-compression-final-validation` - records the current static/source/package validation baseline and the explicit limit that live natural-prompt behavior was not exercised.
-- `plan:20260525-loom-protocol-compression` - completed parent plan whose residual risk this ticket narrows without reopening by default.
-- `knowledge:playbook-activation-tests-procedure` - procedure for validating natural prompts without allowing implicit Playbook activation.
-- `spec:loom-protocol-compression` - behavior contract the probe should challenge, especially activation discipline, Core routing, and explicit Playbook macro behavior.
+- `.loom/reviews/20260525-protocol-compression-final-audit.md` - recommended live harness/natural-prompt probes as non-blocking follow-up when stronger runtime confidence is needed.
+- `.loom/evidence/20260525-protocol-compression-final-validation.md` - records the current static/source/package validation baseline and the explicit limit that live natural-prompt behavior was not exercised.
+- `.loom/tickets/20260525-loom-protocol-compression.md` - completed parent plan whose residual risk this ticket narrows without reopening by default.
+- `.loom/knowledge/playbook-activation-tests-procedure.md` - procedure for validating natural prompts without allowing implicit Playbook activation.
+- `.loom/specs/loom-protocol-compression.md` - behavior contract the probe should challenge, especially activation discipline, Core routing, and explicit Playbook macro behavior.
 
 ## Scope
 

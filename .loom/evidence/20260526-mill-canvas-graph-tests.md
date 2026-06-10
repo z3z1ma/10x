@@ -1,7 +1,5 @@
 # Mill Canvas Graph Backend Tests
 
-ID: evidence:20260526-mill-canvas-graph-tests
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -34,12 +32,12 @@ Additional scan: searched `loom-mill/src` for `InteractionBlock`, `BlockType`,
 
 ## What This Shows
 
-- `ticket:20260526-mill-canvas-graph-model#ACC-001` - supports - model construction and serialization round-trip tests passed.
-- `ticket:20260526-mill-canvas-graph-model#ACC-002` - supports - session graph save/load tests passed.
-- `ticket:20260526-mill-canvas-graph-model#ACC-003` - supports - REST graph response tests passed.
-- `ticket:20260526-mill-canvas-graph-model#ACC-004` - supports - WebSocket graph event payload tests passed.
-- `ticket:20260526-mill-canvas-graph-model#ACC-005` - supports - no old block model references were found under `loom-mill/src`.
-- `ticket:20260526-mill-canvas-graph-model#ACC-006` - supports - full pytest suite passed.
+- `.loom/tickets/done/20260526-mill-canvas-graph-model.md#ACC-001` - supports - model construction and serialization round-trip tests passed.
+- `.loom/tickets/done/20260526-mill-canvas-graph-model.md#ACC-002` - supports - session graph save/load tests passed.
+- `.loom/tickets/done/20260526-mill-canvas-graph-model.md#ACC-003` - supports - REST graph response tests passed.
+- `.loom/tickets/done/20260526-mill-canvas-graph-model.md#ACC-004` - supports - WebSocket graph event payload tests passed.
+- `.loom/tickets/done/20260526-mill-canvas-graph-model.md#ACC-005` - supports - no old block model references were found under `loom-mill/src`.
+- `.loom/tickets/done/20260526-mill-canvas-graph-model.md#ACC-006` - supports - full pytest suite passed.
 
 ## What This Does Not Show
 
@@ -50,5 +48,5 @@ runtime behavior.
 
 ## Related Records
 
-- `ticket:20260526-mill-canvas-graph-model` - implementation ticket supported by this evidence.
-- `spec:mill-shaping-canvas` - graph behavior specification that defines downstream expectations.
+- `.loom/tickets/done/20260526-mill-canvas-graph-model.md` - implementation ticket supported by this evidence.
+- `.loom/specs/mill-shaping-canvas.md` - graph behavior specification that defines downstream expectations.

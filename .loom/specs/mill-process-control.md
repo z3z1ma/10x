@@ -1,7 +1,5 @@
 # Mill Process Control (SPC + Jidoka)
 
-ID: spec:mill-process-control
-Type: Spec
 Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -183,7 +181,7 @@ The SPC model receives structured data (not prose). The prompt asks: "Given this
 
 ## Related Records
 
-- `spec:mill-factory-floor` - displays SPC signals and andon board, handles jidoka stop
-- `spec:mill-scheduling-agent` - may re-queue tickets that were stopped by jidoka
-- `constitution:main` - jidoka and autonomation as factory principles
-- `research:20260524-loom-mill-software-factory` - SPC and pattern detection research
+- `.loom/specs/mill-factory-floor.md` - displays SPC signals and andon board, handles jidoka stop
+- `.loom/specs/mill-scheduling-agent.md` - may re-queue tickets that were stopped by jidoka
+- `.loom/decisions/project-constitution.md` - jidoka and autonomation as factory principles
+- `.loom/research/20260524-loom-mill-software-factory.md` - SPC and pattern detection research

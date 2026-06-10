@@ -1,12 +1,11 @@
 # DAG Hierarchy Graph View
 
-ID: ticket:20260526-mill-graph-dag
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-26
 Updated: 2026-05-26
-Risk: medium - needs different layout algorithm from the connected graph; must handle cyclic references gracefully
-Depends On: ticket:20260526-mill-graph-connected
+Depends-On: .loom/tickets/20260526-mill-graph-connected.md
+
+Legacy note: Risk — medium - needs different layout algorithm from the connected graph; must handle cyclic references gracefully
 
 ## Summary
 
@@ -26,8 +25,8 @@ as a navigable DAG, with clear parent-child and dependency relationships.
 
 ## Related Records
 
-- `plan:20260526-mill-next-gen` - parent plan
-- `ticket:20260526-mill-graph-connected` - connected graph (shares rendering infra)
+- `.loom/tickets/20260526-mill-next-gen.md` - parent plan
+- `.loom/tickets/20260526-mill-graph-connected.md` - connected graph (shares rendering infra)
 - `loom-mill/frontend/src/lib/types.ts` - RecordMetadata.depends_on field
 
 ## Scope
@@ -38,7 +37,7 @@ Write:
 - `loom-mill/frontend/src/lib/design/DesignRoom.svelte` - wire DAG mode
 
 Read:
-- Existing GraphView infrastructure from ticket:20260526-mill-graph-connected
+- Existing GraphView infrastructure from .loom/tickets/20260526-mill-graph-connected.md
 
 Non-goals:
 - Do NOT add graph editing (creating dependencies by dragging)
@@ -110,7 +109,7 @@ exists; manual visual UI acceptance and audit remain before closure.
 
 ## Evidence
 
-- `evidence:20260526-mill-graph-dag-build` - `npm --prefix loom-mill/frontend run build` passed; supports ACC-005.
+- `.loom/evidence/20260526-mill-graph-dag-build.md` - `npm --prefix loom-mill/frontend run build` passed; supports ACC-005.
 
 ## Journal
 

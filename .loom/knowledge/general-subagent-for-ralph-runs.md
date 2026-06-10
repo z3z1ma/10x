@@ -1,12 +1,11 @@
 # Use General Subagent For Ralph Runs
 
-ID: knowledge:general-subagent-for-ralph-runs
-Type: Knowledge Preference
 Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
-Triggers: Ralph run, worker run, subagent, loom-driver, general subagent, permissions broken, ticket execution
-Applies To: Agent Loom ticket execution, bounded Ralph runs, OpenCode task tool
+
+Legacy note: Triggers — Ralph run, worker run, subagent, loom-driver, general subagent, permissions broken, ticket execution
+Legacy note: Applies to — Agent Loom ticket execution, bounded Ralph runs, OpenCode task tool
 
 ## Preference
 
@@ -14,7 +13,7 @@ Use the `general` subagent for bounded Ralph worker runs in this repo. Do not us
 
 ## Use When
 
-Apply this when launching implementation, inspection, review, or continuation workers for Loom tickets in this repo, especially the `plan:20260525-loom-protocol-compression` child tickets.
+Apply this when launching implementation, inspection, review, or continuation workers for Loom tickets in this repo, especially the `.loom/tickets/20260525-loom-protocol-compression.md` child tickets.
 
 ## Do Not Overapply
 
@@ -26,4 +25,4 @@ Operator note on 2026-05-25: "don't use loom-driver subagent, the permissions ar
 
 ## Related Records
 
-- `plan:20260525-loom-protocol-compression` - current ticket sequence where this preference applies.
+- `.loom/tickets/20260525-loom-protocol-compression.md` - current ticket sequence where this preference applies.

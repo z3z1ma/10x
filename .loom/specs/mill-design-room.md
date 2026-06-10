@@ -1,7 +1,5 @@
 # Mill Design Room
 
-ID: spec:mill-design-room
-Type: Spec
 Status: active
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -32,17 +30,17 @@ The Design Room UI and its supporting backend endpoints. This includes:
 - Record creation and file write-back
 - "Ready to fab" derivation from record graph state
 
-This spec does NOT cover the Factory Floor (spec:mill-factory-floor), the
-scheduling agent behavior (spec:mill-scheduling-agent), or the process control
-system (spec:mill-process-control). Those are separate product surfaces.
+This spec does NOT cover the Factory Floor (.loom/specs/mill-factory-floor.md), the
+scheduling agent behavior (.loom/specs/mill-scheduling-agent.md), or the process control
+system (.loom/specs/mill-process-control.md). Those are separate product surfaces.
 
 ## Spec Set Coverage
 
 The existing spec set covers the Factory Floor execution mode. This spec adds
 the shaping mode, completing the two-tab Mill application. Together with
-spec:mill-factory-floor, they define the complete operator experience. Adjacent
+.loom/specs/mill-factory-floor.md, they define the complete operator experience. Adjacent
 behavior needing separate specs: harness configuration (partially in
-spec:mill-factory-floor), and the scheduling agent's pull logic for transitioning
+.loom/specs/mill-factory-floor.md), and the scheduling agent's pull logic for transitioning
 shaped work to execution.
 
 ## Problem
@@ -158,7 +156,7 @@ ready for the Factory Floor.
 
 Exercises: REQ-003, REQ-004, REQ-005, REQ-006
 
-GIVEN the Design Room is active and `.loom/tickets/20260526-mill-foundation-fixes.md` exists
+GIVEN the Design Room is active and `.loom/tickets/done/20260526-mill-foundation-fixes.md` exists
 WHEN the operator clicks "mill-foundation-fixes" under the Tickets section in the graph
 THEN the document editor opens that file with Markdown syntax highlighting
 AND the chat panel context updates to reference that document
@@ -194,7 +192,7 @@ Exercises: REQ-013
 GIVEN a spec is open in the editor with multiple requirements listed
 WHEN the operator selects the text of REQ-003
 THEN a floating action "📎 Send to chat" appears near the selection
-AND clicking it appends to the chat input: "> [spec:mill-design-room, lines 45-47]\n> REQ-003: The graph sidebar MUST...\n\n"
+AND clicking it appends to the chat input: "> [.loom/specs/mill-design-room.md, lines 45-47]\n> REQ-003: The graph sidebar MUST...\n\n"
 AND the operator can add their message below the context before sending
 
 ### SCN-005: Voice Input
@@ -223,7 +221,7 @@ Exercises: REQ-016
 
 GIVEN the Design Room is active
 WHEN the operator clicks "+ New" and selects "Ticket"
-THEN a new file is created at `.loom/tickets/YYYYMMDD-untitled.md` with minimal template
+THEN a new file is created at `.loom/tickets/<YYYYMMDD-untitled>.md` with minimal template
 AND it opens in the editor
 AND the graph sidebar adds it under Tickets
 AND the chat context updates to the new document
@@ -324,6 +322,6 @@ Non-examples of quality:
 
 ## Related Records
 
-- `spec:mill-factory-floor` - the execution mode counterpart; shares the tab navigation and WebSocket infrastructure
-- `spec:mill-scheduling-agent` - defines how shaped work transitions to execution
+- `.loom/specs/mill-factory-floor.md` - the execution mode counterpart; shares the tab navigation and WebSocket infrastructure
+- `.loom/specs/mill-scheduling-agent.md` - defines how shaped work transitions to execution
 - `.loom/knowledge/frontend-expert-agent-preferences.md` - agent dispatch preferences for implementation

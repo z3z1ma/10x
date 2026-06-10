@@ -1,7 +1,5 @@
 # Mill Persistent Logs Validation
 
-ID: evidence:20260526-mill-persistent-logs-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Validation observations for `ticket:20260526-mill-persistent-logs` after adding backend disk log fallback and frontend empty-buffer log hydration.
+Validation observations for `.loom/tickets/done/20260526-mill-persistent-logs.md` after adding backend disk log fallback and frontend empty-buffer log hydration.
 
 ## Observations
 
@@ -32,8 +30,8 @@ Validation observations for `ticket:20260526-mill-persistent-logs` after adding 
 
 ## What This Shows
 
-- `ticket:20260526-mill-persistent-logs#ACC-004` - supports - the frontend build passed.
-- `ticket:20260526-mill-persistent-logs#ACC-005` - partially supports - the log-specific backend endpoint test passed, but the full backend suite did not pass cleanly.
+- `.loom/tickets/done/20260526-mill-persistent-logs.md#ACC-004` - supports - the frontend build passed.
+- `.loom/tickets/done/20260526-mill-persistent-logs.md#ACC-005` - partially supports - the log-specific backend endpoint test passed, but the full backend suite did not pass cleanly.
 
 ## What This Does Not Show
 
@@ -43,4 +41,4 @@ Validation observations for `ticket:20260526-mill-persistent-logs` after adding 
 
 ## Related Records
 
-- `ticket:20260526-mill-persistent-logs` - implementation ticket under validation.
+- `.loom/tickets/done/20260526-mill-persistent-logs.md` - implementation ticket under validation.

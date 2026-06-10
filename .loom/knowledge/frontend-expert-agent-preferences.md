@@ -1,12 +1,11 @@
 # Frontend Expert Agent: Usage Preferences
 
-ID: knowledge:frontend-expert-agent-preferences
-Type: Knowledge Preference
 Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
-Triggers: frontend-expert, subagent, frontend work, svelte, UI, visual, playwright, gemini, agent selection, nudge, continuation
-Applies To: loom-mill/frontend/, any frontend/UI work, agent selection for visual tasks
+
+Legacy note: Triggers — frontend-expert, subagent, frontend work, svelte, UI, visual, playwright, gemini, agent selection, nudge, continuation
+Legacy note: Applies to — loom-mill/frontend/, any frontend/UI work, agent selection for visual tasks
 
 ## Preference
 
@@ -52,4 +51,4 @@ Gemini (the model behind frontend-expert) sometimes returns empty on first invoc
 ## Related
 
 - `.opencode/agents/frontend-expert.md` - agent definition (google-vertex/gemini-3.1-pro-preview)
-- `knowledge:general-subagent-for-ralph-runs` - general agent preference for non-frontend Ralph runs
+- `.loom/knowledge/general-subagent-for-ralph-runs.md` - general agent preference for non-frontend Ralph runs

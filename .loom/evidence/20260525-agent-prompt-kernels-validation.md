@@ -1,7 +1,5 @@
 # Agent Prompt Kernels Validation
 
-ID: evidence:20260525-agent-prompt-kernels-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -9,7 +7,7 @@ Observed: 2026-05-25
 
 ## Summary
 
-This dossier records validation for `ticket:20260525-agent-prompt-kernels`: Driver and Weaver prompt compression, canonical/Codex alignment, package validation, targeted source inspection, and leakage search results.
+This dossier records validation for `.loom/tickets/done/20260525-agent-prompt-kernels.md`: Driver and Weaver prompt compression, canonical/Codex alignment, package validation, targeted source inspection, and leakage search results.
 
 ## Observations
 
@@ -55,11 +53,11 @@ This dossier records validation for `ticket:20260525-agent-prompt-kernels`: Driv
 
 ## What This Shows
 
-- `ticket:20260525-agent-prompt-kernels#ACC-001` - supports - Weaver is compressed around Design Office shaping, `.loom/` write boundary, no worker/review launch, routing, evidence/audit honesty, and handoff behavior.
-- `ticket:20260525-agent-prompt-kernels#ACC-002` - supports - Driver is compressed around Factory Floor coordination, graph-supported execution, ticket-owned Ralph runs, output reconciliation, evidence, audit, blockers, and higher-authority escalation.
-- `ticket:20260525-agent-prompt-kernels#ACC-003` - supports - canonical and Codex prompt bodies are aligned and line counts show material compression from 890 to 372 total lines.
-- `ticket:20260525-agent-prompt-kernels#ACC-004` - supports - targeted leakage search found no contributor-facing product-surface leakage in scoped agent surfaces.
-- `ticket:20260525-agent-prompt-kernels#ACC-005` - supports - Core smoke, Core pack check, and `git diff --check` passed after the final edits.
+- `.loom/tickets/done/20260525-agent-prompt-kernels.md#ACC-001` - supports - Weaver is compressed around Design Office shaping, `.loom/` write boundary, no worker/review launch, routing, evidence/audit honesty, and handoff behavior.
+- `.loom/tickets/done/20260525-agent-prompt-kernels.md#ACC-002` - supports - Driver is compressed around Factory Floor coordination, graph-supported execution, ticket-owned Ralph runs, output reconciliation, evidence, audit, blockers, and higher-authority escalation.
+- `.loom/tickets/done/20260525-agent-prompt-kernels.md#ACC-003` - supports - canonical and Codex prompt bodies are aligned and line counts show material compression from 890 to 372 total lines.
+- `.loom/tickets/done/20260525-agent-prompt-kernels.md#ACC-004` - supports - targeted leakage search found no contributor-facing product-surface leakage in scoped agent surfaces.
+- `.loom/tickets/done/20260525-agent-prompt-kernels.md#ACC-005` - supports - Core smoke, Core pack check, and `git diff --check` passed after the final edits.
 
 ## What This Does Not Show
 
@@ -67,7 +65,7 @@ This evidence does not prove live model behavior in a fresh harness session. It 
 
 ## Related Records
 
-- `ticket:20260525-agent-prompt-kernels` - consuming ticket for this validation.
-- `spec:loom-protocol-compression` - compression behavior contract.
-- `spec:loom-driver-agent` - Driver behavior contract.
-- `spec:loom-weaver-agent` - Weaver behavior contract.
+- `.loom/tickets/done/20260525-agent-prompt-kernels.md` - consuming ticket for this validation.
+- `.loom/specs/loom-protocol-compression.md` - compression behavior contract.
+- `.loom/specs/loom-driver-agent.md` - Driver behavior contract.
+- `.loom/specs/loom-weaver-agent.md` - Weaver behavior contract.

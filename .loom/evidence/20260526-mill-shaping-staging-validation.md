@@ -1,7 +1,5 @@
 # Mill Shaping Staging Validation
 
-ID: evidence:20260526-mill-shaping-staging-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Validation observations for `ticket:20260526-mill-shaping-staging`: focused staging
+Validation observations for `.loom/tickets/20260526-mill-shaping-staging.md`: focused staging
 tests, full backend tests, frontend build, and whitespace checks for touched files.
 
 ## Observations
@@ -36,13 +34,13 @@ tests, full backend tests, frontend build, and whitespace checks for touched fil
 
 ## What This Shows
 
-- `ticket:20260526-mill-shaping-staging#ACC-001` - supports - focused tests cover staging propose, update, accept, reject, API CRUD, and persistence after reload.
-- `ticket:20260526-mill-shaping-staging#ACC-002` - supports - focused tests cover branch create, switch, propose on branch, merge, and absence of source-branch records after merge.
-- `ticket:20260526-mill-shaping-staging#ACC-003` - supports - focused tests commit three cross-referencing records and verify committed files contain real IDs and no `temp:` strings.
-- `ticket:20260526-mill-shaping-staging#ACC-004` - supports - focused tests initialize a temp git repo, run commit flow, and verify latest commit message includes `shape: 1 tickets, 1 specs, 1 plans`.
-- `ticket:20260526-mill-shaping-staging#ACC-005` - supports - focused tests verify the durable knowledge record path exists after commit.
-- `ticket:20260526-mill-shaping-staging#ACC-006` - supports - focused tests simulate an atomic write failure and verify no partial files remain.
-- `ticket:20260526-mill-shaping-staging#ACC-007` - supports - full backend suite passed.
+- `.loom/tickets/20260526-mill-shaping-staging.md#ACC-001` - supports - focused tests cover staging propose, update, accept, reject, API CRUD, and persistence after reload.
+- `.loom/tickets/20260526-mill-shaping-staging.md#ACC-002` - supports - focused tests cover branch create, switch, propose on branch, merge, and absence of source-branch records after merge.
+- `.loom/tickets/20260526-mill-shaping-staging.md#ACC-003` - supports - focused tests commit three cross-referencing records and verify committed files contain real IDs and no `temp:` strings.
+- `.loom/tickets/20260526-mill-shaping-staging.md#ACC-004` - supports - focused tests initialize a temp git repo, run commit flow, and verify latest commit message includes `shape: 1 tickets, 1 specs, 1 plans`.
+- `.loom/tickets/20260526-mill-shaping-staging.md#ACC-005` - supports - focused tests verify the durable knowledge record path exists after commit.
+- `.loom/tickets/20260526-mill-shaping-staging.md#ACC-006` - supports - focused tests simulate an atomic write failure and verify no partial files remain.
+- `.loom/tickets/20260526-mill-shaping-staging.md#ACC-007` - supports - full backend suite passed.
 
 ## What This Does Not Show
 
@@ -52,5 +50,5 @@ tests, full backend tests, frontend build, and whitespace checks for touched fil
 
 ## Related Records
 
-- `ticket:20260526-mill-shaping-staging` - ticket validated by these observations.
-- `spec:mill-shaping-sessions` - intended shaping-session behavior.
+- `.loom/tickets/20260526-mill-shaping-staging.md` - ticket validated by these observations.
+- `.loom/specs/mill-shaping-sessions.md` - intended shaping-session behavior.

@@ -1,7 +1,5 @@
 # Loom Weaver Codex Agent Follow-up Validation
 
-ID: evidence:20260514-loom-weaver-codex-agent-followup-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-14
 Updated: 2026-05-14
@@ -10,7 +8,7 @@ Observed: 2026-05-14 23:14 UTC
 ## Summary
 
 This dossier records validation after revising Codex support for
-`ticket:20260514-loom-weaver-agent` from a bundled Core skill to a documented
+`.loom/tickets/done/20260514-loom-weaver-agent.md` from a bundled Core skill to a documented
 Codex custom-agent TOML install under `~/.codex/agents/`.
 
 ## Observations
@@ -53,13 +51,13 @@ Codex custom-agent TOML install under `~/.codex/agents/`.
 
 ## What This Shows
 
-- `ticket:20260514-loom-weaver-agent#ACC-001` - supports - Loom Weaver behavior remains in canonical agent prompt and Codex TOML developer instructions with prompt-body match verified by smoke.
-- `ticket:20260514-loom-weaver-agent#ACC-002` - supports - OpenCode registration still reports `loomWeaverOpenCodeMode: "all"` and the `.loom/**` write-boundary prompt/permission shape in smoke output.
-- `ticket:20260514-loom-weaver-agent#ACC-003` - supports - Claude plugin validation passed with the agent file manifest shape.
-- `ticket:20260514-loom-weaver-agent#ACC-004` - partially supports - Gemini extension validation passed with `agents/loom-weaver.md` present, but live `@loom-weaver` runtime invocation was not tested.
-- `ticket:20260514-loom-weaver-agent#ACC-006` - supports - Codex now ships a ready custom-agent TOML and docs show installation under `~/.codex/agents/`; docs avoid `@<agent>` and plugin-shipped profile/custom-agent claims.
-- `ticket:20260514-loom-weaver-agent#ACC-007` - supports - docs describe harness-specific invocation and avoid universal syntax claims.
-- `ticket:20260514-loom-weaver-agent#ACC-008` - supports - Core smoke, Core pack dry-run, Claude validation, Gemini validation, and `git diff --check` passed after the follow-up patch.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-001` - supports - Loom Weaver behavior remains in canonical agent prompt and Codex TOML developer instructions with prompt-body match verified by smoke.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-002` - supports - OpenCode registration still reports `loomWeaverOpenCodeMode: "all"` and the `.loom/**` write-boundary prompt/permission shape in smoke output.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-003` - supports - Claude plugin validation passed with the agent file manifest shape.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-004` - partially supports - Gemini extension validation passed with `agents/loom-weaver.md` present, but live `@loom-weaver` runtime invocation was not tested.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-006` - supports - Codex now ships a ready custom-agent TOML and docs show installation under `~/.codex/agents/`; docs avoid `@<agent>` and plugin-shipped profile/custom-agent claims.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-007` - supports - docs describe harness-specific invocation and avoid universal syntax claims.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-008` - supports - Core smoke, Core pack dry-run, Claude validation, Gemini validation, and `git diff --check` passed after the follow-up patch.
 
 ## What This Does Not Show
 
@@ -70,8 +68,8 @@ Codex custom-agent TOML install under `~/.codex/agents/`.
 
 ## Related Records
 
-- `ticket:20260514-loom-weaver-agent` - consuming ticket and acceptance criteria.
-- `spec:loom-weaver-agent` - behavior contract and Codex custom-agent decision.
-- `research:20260514-direct-interactive-agent-surfaces` - source-backed harness capability research.
-- `packet:20260514T230546Z-loom-weaver-codex-agent-followup` - follow-up implementation packet.
-- `evidence:20260514-loom-weaver-implementation-validation` - prior evidence record, superseded for the Codex bundled-skill path by this dossier.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md` - consuming ticket and acceptance criteria.
+- `.loom/specs/loom-weaver-agent.md` - behavior contract and Codex custom-agent decision.
+- `.loom/research/20260514-direct-interactive-agent-surfaces.md` - source-backed harness capability research.
+- `former packet 20260514T230546Z-loom-weaver-codex-agent-followup` - follow-up implementation packet.
+- `.loom/evidence/20260514-loom-weaver-implementation-validation.md` - prior evidence record, superseded for the Codex bundled-skill path by this dossier.

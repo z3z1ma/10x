@@ -1,7 +1,5 @@
 # Loom Mill Shaping Backend Audit Fixes Validation
 
-ID: evidence:20260526-mill-shaping-backend-audit-fixes-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Validation dossier for `ticket:20260526-mill-shaping-backend-audit-fixes`. It records the backend shaping tests, focused lifecycle integration test, frontend production build, and whitespace-check limitation observed after the backend fixes.
+Validation dossier for `.loom/tickets/20260526-mill-shaping-backend-audit-fixes.md`. It records the backend shaping tests, focused lifecycle integration test, frontend production build, and whitespace-check limitation observed after the backend fixes.
 
 ## Observations
 
@@ -39,11 +37,11 @@ Validation dossier for `ticket:20260526-mill-shaping-backend-audit-fixes`. It re
 
 ## What This Shows
 
-- `ticket:20260526-mill-shaping-backend-audit-fixes#ACC-002` - supports - advance endpoint and harness error behavior are covered by `tests/test_shaping_engine.py` and the full backend suite.
-- `ticket:20260526-mill-shaping-backend-audit-fixes#ACC-003` - supports - exploration `block_added` event behavior is covered by `tests/test_shaping_harness.py` and the full backend suite.
-- `ticket:20260526-mill-shaping-backend-audit-fixes#ACC-004` - supports - commit rollback behavior is covered by `tests/test_shaping_staging.py` and the full backend suite.
-- `ticket:20260526-mill-shaping-backend-audit-fixes#ACC-005` - supports - full shaping lifecycle is covered by `tests/test_shaping_integration.py`.
-- `ticket:20260526-mill-shaping-backend-audit-fixes#ACC-006` - supports - requested backend tests and frontend build completed successfully; whitespace check is limited by unrelated frontend changes.
+- `.loom/tickets/20260526-mill-shaping-backend-audit-fixes.md#ACC-002` - supports - advance endpoint and harness error behavior are covered by `tests/test_shaping_engine.py` and the full backend suite.
+- `.loom/tickets/20260526-mill-shaping-backend-audit-fixes.md#ACC-003` - supports - exploration `block_added` event behavior is covered by `tests/test_shaping_harness.py` and the full backend suite.
+- `.loom/tickets/20260526-mill-shaping-backend-audit-fixes.md#ACC-004` - supports - commit rollback behavior is covered by `tests/test_shaping_staging.py` and the full backend suite.
+- `.loom/tickets/20260526-mill-shaping-backend-audit-fixes.md#ACC-005` - supports - full shaping lifecycle is covered by `tests/test_shaping_integration.py`.
+- `.loom/tickets/20260526-mill-shaping-backend-audit-fixes.md#ACC-006` - supports - requested backend tests and frontend build completed successfully; whitespace check is limited by unrelated frontend changes.
 
 ## What This Does Not Show
 
@@ -51,4 +49,4 @@ This dossier does not constitute adversarial audit or acceptance. It does not ve
 
 ## Related Records
 
-- `ticket:20260526-mill-shaping-backend-audit-fixes` - ticket whose acceptance this evidence supports.
+- `.loom/tickets/20260526-mill-shaping-backend-audit-fixes.md` - ticket whose acceptance this evidence supports.

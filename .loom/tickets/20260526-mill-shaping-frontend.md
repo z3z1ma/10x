@@ -1,12 +1,11 @@
 # Frontend Shaping Session UI
 
-ID: ticket:20260526-mill-shaping-frontend
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-26
 Updated: 2026-06-10
-Risk: high - novel interaction design with no prior art to copy; visual quality and interaction feel determine whether the feature succeeds
-Depends On: ticket:20260526-mill-shaping-foundation
+Depends-On: .loom/tickets/20260526-mill-shaping-foundation.md
+
+Legacy note: Risk — high - novel interaction design with no prior art to copy; visual quality and interaction feel determine whether the feature succeeds
 
 ## Summary
 
@@ -26,9 +25,9 @@ and commit the result.
 
 ## Related Records
 
-- `plan:20260526-mill-shaping-sessions` - parent plan
-- `spec:mill-shaping-sessions` - full behavioral contract (interaction model section)
-- `ticket:20260526-mill-shaping-foundation` - backend session API and events
+- `.loom/tickets/20260526-mill-shaping-sessions.md` - parent plan
+- `.loom/specs/mill-shaping-sessions.md` - full behavioral contract (interaction model section)
+- `.loom/tickets/20260526-mill-shaping-foundation.md` - backend session API and events
 - `loom-mill/frontend/src/lib/design/DesignRoom.svelte` - Design Room container to extend
 
 ## Scope
@@ -45,7 +44,7 @@ Write:
 
 Read:
 - All backend shaping API endpoints
-- `spec:mill-shaping-sessions` (interaction model section especially)
+- `.loom/specs/mill-shaping-sessions.md` (interaction model section especially)
 
 Non-goals:
 - Do NOT implement the backend engine logic (tickets 1-4 handle that)
@@ -210,7 +209,7 @@ A rich card showing a proposed record:
 ┌─────────────────────────────────────────────────────────┐
 │ 🎫 ticket   ┊  Auth Permission Refactor                 │
 ├─────────────────────────────────────────────────────────┤
-│ ID: temp:ticket:auth-permission-refactor                │
+│ ID: temp:.loom/tickets/<auth-permission-refactor>.md                │
 │ Status: open                                            │
 │ Risk: medium - touches auth boundaries...               │
 │                                                         │

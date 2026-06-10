@@ -1,7 +1,5 @@
 # Mill Canvas Response Protocol Validation
 
-ID: evidence:20260526-mill-canvas-response-protocol-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Validation observations for `ticket:20260526-mill-canvas-response-protocol` after replacing the shaping response parser and prompt with the multi-node XML protocol.
+Validation observations for `.loom/tickets/done/20260526-mill-canvas-response-protocol.md` after replacing the shaping response parser and prompt with the multi-node XML protocol.
 
 ## Observations
 
@@ -35,12 +33,12 @@ Validation observations for `ticket:20260526-mill-canvas-response-protocol` afte
 
 ## What This Shows
 
-- `ticket:20260526-mill-canvas-response-protocol#ACC-001` - supports - parser tests cover multi-node XML extraction, including observation plus question and option groups.
-- `ticket:20260526-mill-canvas-response-protocol#ACC-002` - supports - parser tests cover record Markdown content with headings, lists, and fenced code blocks.
-- `ticket:20260526-mill-canvas-response-protocol#ACC-003` - supports - parser tests cover unclosed tags, no tags, empty tags, extra text, partially formed tags, XML-like angle brackets, and long content.
-- `ticket:20260526-mill-canvas-response-protocol#ACC-004` - supports - grep scans found no removed shaping parser/prompt identifiers or old action-block tests.
-- `ticket:20260526-mill-canvas-response-protocol#ACC-005` - partially supports - prompt code includes XML format examples and constraints; sufficiency still depends on review.
-- `ticket:20260526-mill-canvas-response-protocol#ACC-006` - supports - parser tests cover explore extraction and explore with other nodes.
+- `.loom/tickets/done/20260526-mill-canvas-response-protocol.md#ACC-001` - supports - parser tests cover multi-node XML extraction, including observation plus question and option groups.
+- `.loom/tickets/done/20260526-mill-canvas-response-protocol.md#ACC-002` - supports - parser tests cover record Markdown content with headings, lists, and fenced code blocks.
+- `.loom/tickets/done/20260526-mill-canvas-response-protocol.md#ACC-003` - supports - parser tests cover unclosed tags, no tags, empty tags, extra text, partially formed tags, XML-like angle brackets, and long content.
+- `.loom/tickets/done/20260526-mill-canvas-response-protocol.md#ACC-004` - supports - grep scans found no removed shaping parser/prompt identifiers or old action-block tests.
+- `.loom/tickets/done/20260526-mill-canvas-response-protocol.md#ACC-005` - partially supports - prompt code includes XML format examples and constraints; sufficiency still depends on review.
+- `.loom/tickets/done/20260526-mill-canvas-response-protocol.md#ACC-006` - supports - parser tests cover explore extraction and explore with other nodes.
 
 ## What This Does Not Show
 
@@ -48,6 +46,6 @@ This evidence does not prove real LLM compliance with the XML format, frontend r
 
 ## Related Records
 
-- `ticket:20260526-mill-canvas-response-protocol` - consuming ticket.
-- `spec:mill-shaping-canvas` - canvas node behavior and bounded processing requirements.
-- `plan:20260526-mill-shaping-canvas` - parent plan Unit 3.
+- `.loom/tickets/done/20260526-mill-canvas-response-protocol.md` - consuming ticket.
+- `.loom/specs/mill-shaping-canvas.md` - canvas node behavior and bounded processing requirements.
+- `.loom/tickets/20260526-mill-shaping-canvas.md` - parent plan Unit 3.

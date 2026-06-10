@@ -1,7 +1,5 @@
 # Evidence: Mill Interaction Completeness
 
-ID: evidence:20260526-mill-interaction-completeness
-Type: Evidence
 Status: verified
 Created: 2026-05-26
 Updated: 2026-05-26

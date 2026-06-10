@@ -1,7 +1,5 @@
 # Mill Chat Exit Indicator Validation
 
-ID: evidence:20260526-mill-chat-exit-indicator-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Validation observations for `ticket:20260526-mill-chat-exit-indicator` after adding `exit_code` to chat completion events and rendering a Design Room chat exit divider.
+Validation observations for `.loom/tickets/done/20260526-mill-chat-exit-indicator.md` after adding `exit_code` to chat completion events and rendering a Design Room chat exit divider.
 
 ## Observations
 
@@ -29,9 +27,9 @@ Validation observations for `ticket:20260526-mill-chat-exit-indicator` after add
 
 ## What This Shows
 
-- `ticket:20260526-mill-chat-exit-indicator#ACC-004` - supports - the frontend build passed after the changes.
-- `ticket:20260526-mill-chat-exit-indicator` whitespace safety - supports - `git diff --check` found no whitespace errors in the current diff.
-- `ticket:20260526-mill-chat-exit-indicator` backend pytest expectation - challenges - the requested pytest command could not run because `pytest` is not installed for the active Python interpreter.
+- `.loom/tickets/done/20260526-mill-chat-exit-indicator.md#ACC-004` - supports - the frontend build passed after the changes.
+- `.loom/tickets/done/20260526-mill-chat-exit-indicator.md` whitespace safety - supports - `git diff --check` found no whitespace errors in the current diff.
+- `.loom/tickets/done/20260526-mill-chat-exit-indicator.md` backend pytest expectation - challenges - the requested pytest command could not run because `pytest` is not installed for the active Python interpreter.
 
 ## What This Does Not Show
 
@@ -41,4 +39,4 @@ Validation observations for `ticket:20260526-mill-chat-exit-indicator` after add
 
 ## Related Records
 
-- `ticket:20260526-mill-chat-exit-indicator` - consuming ticket for this validation.
+- `.loom/tickets/done/20260526-mill-chat-exit-indicator.md` - consuming ticket for this validation.

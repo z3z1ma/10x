@@ -1,7 +1,5 @@
 # OpenCode Core Post Runtime Checks
 
-ID: evidence:20260525-opencode-core-post-runtime-checks
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -34,16 +32,16 @@ Result: passed with no output.
 
 ## What This Shows
 
-- `ticket:20260515-opencode-weaver-agent-runtime-wiring#ACC-005` - supports - the requested Core smoke, Core package, and Markdown diff checks passed after the fresh runtime probe and record reconciliation.
-- `ticket:20260515-opencode-weaver-agent-runtime-wiring#ACC-003` - supports - the smoke output still includes the model-only Loom Weaver prompt and permission checks that cover the diagnosed shadowing failure mode.
+- `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md#ACC-005` - supports - the requested Core smoke, Core package, and Markdown diff checks passed after the fresh runtime probe and record reconciliation.
+- `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md#ACC-003` - supports - the smoke output still includes the model-only Loom Weaver prompt and permission checks that cover the diagnosed shadowing failure mode.
 
 ## What This Does Not Show
 
-- It does not add new runtime coverage beyond `evidence:20260525-opencode-weaver-runtime-boundary-verification`.
+- It does not add new runtime coverage beyond `.loom/evidence/20260525-opencode-weaver-runtime-boundary-verification.md`.
 - It does not independently audit the ticket closure story.
 - It does not cover Playbooks or non-OpenCode adapter packages, which are outside this ticket's acceptance checks.
 
 ## Related Records
 
-- `ticket:20260515-opencode-weaver-agent-runtime-wiring` - consuming ticket for the OpenCode Loom Weaver runtime wiring fix.
-- `evidence:20260525-opencode-weaver-runtime-boundary-verification` - fresh runtime boundary probe that preceded these checks.
+- `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md` - consuming ticket for the OpenCode Loom Weaver runtime wiring fix.
+- `.loom/evidence/20260525-opencode-weaver-runtime-boundary-verification.md` - fresh runtime boundary probe that preceded these checks.

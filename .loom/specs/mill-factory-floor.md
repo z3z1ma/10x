@@ -1,12 +1,10 @@
 # Mill Factory Floor
 
-ID: spec:mill-factory-floor
-Type: Spec
 Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
 
-Supersedes: spec:loom-mill-factory-floor-mvp
+Supersedes: .loom/specs/loom-mill-factory-floor-mvp.md
 
 ## Summary
 
@@ -19,16 +17,16 @@ Downstream tickets should cite this spec when building multi-workstation managem
 This spec owns the Factory Floor as a product surface: the backend engine that manages N workstations and the frontend control room that renders their state.
 
 This spec does NOT own:
-- How work is selected for execution (see `spec:mill-scheduling-agent`)
-- How inter-iteration intelligence works (see `spec:mill-process-control`)
-- How finished work merges (see `spec:mill-shipping-dock`)
+- How work is selected for execution (see `.loom/specs/mill-scheduling-agent.md`)
+- How inter-iteration intelligence works (see `.loom/specs/mill-process-control.md`)
+- How finished work merges (see `.loom/specs/mill-shipping-dock.md`)
 - The Design Office shaping experience
 
 Those are connected systems with their own lifecycle and interface contracts.
 
 ## Spec Set Coverage
 
-Together with `spec:mill-scheduling-agent`, `spec:mill-process-control`, and `spec:mill-shipping-dock`, this forms the complete production Factory Floor behavior contract. This spec is the primary one; the satellites define subsystems that plug into the workstation lifecycle.
+Together with `.loom/specs/mill-scheduling-agent.md`, `.loom/specs/mill-process-control.md`, and `.loom/specs/mill-shipping-dock.md`, this forms the complete production Factory Floor behavior contract. This spec is the primary one; the satellites define subsystems that plug into the workstation lifecycle.
 
 ## Problem
 
@@ -45,9 +43,9 @@ The backend multiplexes all workstation state over WebSocket. The frontend rende
 ## Not Doing
 
 - Semantic interpretation of record prose (Mill is mechanical, not reasoning)
-- Scheduling logic (owned by `spec:mill-scheduling-agent`)
-- Inter-iteration LLM analysis (owned by `spec:mill-process-control`)
-- Merge/shipping workflow (owned by `spec:mill-shipping-dock`)
+- Scheduling logic (owned by `.loom/specs/mill-scheduling-agent.md`)
+- Inter-iteration LLM analysis (owned by `.loom/specs/mill-process-control.md`)
+- Merge/shipping workflow (owned by `.loom/specs/mill-shipping-dock.md`)
 - Design Office shaping UI
 - Remote/hosted operation
 - TUI (separate future product slice)
@@ -68,7 +66,7 @@ The backend multiplexes all workstation state over WebSocket. The frontend rende
 
 - REQ-007: Mill MUST provide playback: the operator can step through completed iterations of any workstation (active or finished), viewing the diff, duration, logs, and any SPC signals at each step.
 
-- REQ-008: Mill MUST track takt time per iteration and surface it as a visible indicator. When an iteration exceeds a configurable duration threshold, the indicator should escalate visually (not stop automatically; jidoka handles stopping via `spec:mill-process-control`).
+- REQ-008: Mill MUST track takt time per iteration and surface it as a visible indicator. When an iteration exceeds a configurable duration threshold, the indicator should escalate visually (not stop automatically; jidoka handles stopping via `.loom/specs/mill-process-control.md`).
 
 - REQ-009: Mill MUST enforce configurable WIP limits. When the number of active workstations equals the WIP limit, no new workstation can start until one finishes or is stopped. The scheduling agent respects this; manual start is also blocked with a clear message.
 
@@ -238,10 +236,10 @@ Playback should feel like scrubbing through a video timeline: instant, oriented,
 
 ## Related Records
 
-- `spec:loom-mill-factory-floor-mvp` - superseded predecessor
-- `spec:mill-scheduling-agent` - decides what enters workstations
-- `spec:mill-process-control` - decides when workstations stop (jidoka)
-- `spec:mill-shipping-dock` - decides how finished work merges
-- `constitution:main` - Loom/Mill identity and factory principles
+- `.loom/specs/loom-mill-factory-floor-mvp.md` - superseded predecessor
+- `.loom/specs/mill-scheduling-agent.md` - decides what enters workstations
+- `.loom/specs/mill-process-control.md` - decides when workstations stop (jidoka)
+- `.loom/specs/mill-shipping-dock.md` - decides how finished work merges
+- `.loom/decisions/project-constitution.md` - Loom/Mill identity and factory principles
 - `roadmap:loom-mill` - strategic sequence
-- `research:20260524-loom-mill-software-factory` - factory architecture research
+- `.loom/research/20260524-loom-mill-software-factory.md` - factory architecture research

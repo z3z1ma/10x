@@ -1,7 +1,5 @@
 # Mill Review UX Validation
 
-ID: evidence:20260526-mill-review-ux-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Validation observations for ticket:20260526-mill-review-ux after adding Factory
+Validation observations for .loom/tickets/20260526-mill-review-ux.md after adding Factory
 Floor review actions and the `POST /records/{record_id}/transition` backend
 endpoint.
 
@@ -33,10 +31,10 @@ endpoint.
 
 ## What This Shows
 
-- ticket:20260526-mill-review-ux#ACC-004 - supports - the requested frontend build passed.
-- ticket:20260526-mill-review-ux#ACC-005 - supports - the backend test suite passed with transition endpoint coverage included.
-- ticket:20260526-mill-review-ux#ACC-002 - partially supports - backend tests cover Accept changing `Status: review` to `Status: closed`, updating `Updated:`, and appending notes to the journal.
-- ticket:20260526-mill-review-ux#ACC-003 - partially supports - backend tests cover Request Change changing `Status: review` to `Status: active`, updating `Updated:`, and appending notes to the journal.
+- .loom/tickets/20260526-mill-review-ux.md#ACC-004 - supports - the requested frontend build passed.
+- .loom/tickets/20260526-mill-review-ux.md#ACC-005 - supports - the backend test suite passed with transition endpoint coverage included.
+- .loom/tickets/20260526-mill-review-ux.md#ACC-002 - partially supports - backend tests cover Accept changing `Status: review` to `Status: closed`, updating `Updated:`, and appending notes to the journal.
+- .loom/tickets/20260526-mill-review-ux.md#ACC-003 - partially supports - backend tests cover Request Change changing `Status: review` to `Status: active`, updating `Updated:`, and appending notes to the journal.
 
 ## What This Does Not Show
 
@@ -46,4 +44,4 @@ and it is not an audit verdict.
 
 ## Related Records
 
-- ticket:20260526-mill-review-ux - owning implementation ticket.
+- .loom/tickets/20260526-mill-review-ux.md - owning implementation ticket.

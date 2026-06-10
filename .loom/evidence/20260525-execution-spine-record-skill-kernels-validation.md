@@ -1,7 +1,5 @@
 # Execution Spine Record Skill Kernels Validation
 
-ID: evidence:20260525-execution-spine-record-skill-kernels-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -55,11 +53,11 @@ This dossier records validation for the bounded Ralph worker run that compressed
 
 ## What This Shows
 
-- `ticket:20260525-record-skill-kernels#ACC-001` - partially supports - the four touched station kernels preserve owner truth, triggers, inspect/write paths, lifecycle/status rules or record shapes, stop conditions, and non-examples for this run's scope.
-- `ticket:20260525-record-skill-kernels#ACC-002` - partially supports - references and templates for the four touched families remain linked from their owning `SKILL.md` files and were retained as shorter detail cards.
-- `ticket:20260525-record-skill-kernels#ACC-003` - supports for this run's scope - ticket, Ralph, evidence, and audit source inspection/searches found the execution spine terms and no active packet handoff language.
-- `ticket:20260525-record-skill-kernels#ACC-004` - partially supports - before/after line counts show material compression for the four touched skill families.
-- `ticket:20260525-record-skill-kernels#ACC-005` - partially supports - Core smoke, Core pack check, and `git diff --check` passed for this bounded run; `git diff --check` was rerun after evidence/ticket record updates.
+- `.loom/tickets/done/20260525-record-skill-kernels.md#ACC-001` - partially supports - the four touched station kernels preserve owner truth, triggers, inspect/write paths, lifecycle/status rules or record shapes, stop conditions, and non-examples for this run's scope.
+- `.loom/tickets/done/20260525-record-skill-kernels.md#ACC-002` - partially supports - references and templates for the four touched families remain linked from their owning `SKILL.md` files and were retained as shorter detail cards.
+- `.loom/tickets/done/20260525-record-skill-kernels.md#ACC-003` - supports for this run's scope - ticket, Ralph, evidence, and audit source inspection/searches found the execution spine terms and no active packet handoff language.
+- `.loom/tickets/done/20260525-record-skill-kernels.md#ACC-004` - partially supports - before/after line counts show material compression for the four touched skill families.
+- `.loom/tickets/done/20260525-record-skill-kernels.md#ACC-005` - partially supports - Core smoke, Core pack check, and `git diff --check` passed for this bounded run; `git diff --check` was rerun after evidence/ticket record updates.
 
 ## What This Does Not Show
 
@@ -70,6 +68,6 @@ This dossier records validation for the bounded Ralph worker run that compressed
 
 ## Related Records
 
-- `ticket:20260525-record-skill-kernels` - active ticket this evidence supports.
-- `spec:loom-protocol-compression` - compression contract.
-- `spec:ticket-owned-worker-handoffs` - execution-spine behavior contract.
+- `.loom/tickets/done/20260525-record-skill-kernels.md` - active ticket this evidence supports.
+- `.loom/specs/loom-protocol-compression.md` - compression contract.
+- `.loom/specs/ticket-owned-worker-handoffs.md` - execution-spine behavior contract.

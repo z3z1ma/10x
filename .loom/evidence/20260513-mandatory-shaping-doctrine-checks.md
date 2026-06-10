@@ -1,7 +1,5 @@
 # Mandatory Shaping Doctrine Checks
 
-ID: evidence:20260513-mandatory-shaping-doctrine-checks
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-13
 Updated: 2026-05-13
@@ -91,26 +89,26 @@ language in shipped skill directories, aligned docs, and package/Markdown checks
 
 ## What This Shows
 
-- `ticket:20260513-mandatory-shaping-doctrine#ACC-001` - supports -
+- `.loom/tickets/done/20260513-mandatory-shaping-doctrine.md#ACC-001` - supports -
   authoritative `using-loom` skill prose now says ambiguity defaults to shaping,
   not implementation, and names scope, system-shape, state, and coherence choices
   as execution blockers when unresolved.
 
-- `ticket:20260513-mandatory-shaping-doctrine#ACC-002` - supports -
+- `.loom/tickets/done/20260513-mandatory-shaping-doctrine.md#ACC-002` - supports -
   `shaping-with-humans` now defines a concrete-ask gate and mandatory shaping
   actions for unresolved design, scope, system-shape, state, evidence, and surface
   choices.
 
-- `ticket:20260513-mandatory-shaping-doctrine#ACC-003` - supports - ticket,
+- `.loom/tickets/done/20260513-mandatory-shaping-doctrine.md#ACC-003` - supports - ticket,
   plan, spec, delegation, and implementation-playbook guidance now prevent fuzzy
   asks from becoming executable work before direction-setting choices are settled
   or owned by linked records.
 
-- `ticket:20260513-mandatory-shaping-doctrine#ACC-004` - supports - updated docs
+- `.loom/tickets/done/20260513-mandatory-shaping-doctrine.md#ACC-004` - supports - updated docs
   restate the same mandatory shaping gate without adding symptom-specific MVP
   language.
 
-- `ticket:20260513-mandatory-shaping-doctrine#ACC-005` - supports - repository
+- `.loom/tickets/done/20260513-mandatory-shaping-doctrine.md#ACC-005` - supports - repository
   Markdown/package checks passed after the skill and docs edits.
 
 ## What This Does Not Show
@@ -122,5 +120,5 @@ no adapter manifest, hook, or bootstrap load-order files changed.
 
 ## Related Records
 
-- `ticket:20260513-mandatory-shaping-doctrine` - scoped the doctrine change and
+- `.loom/tickets/done/20260513-mandatory-shaping-doctrine.md` - scoped the doctrine change and
   acceptance claims.

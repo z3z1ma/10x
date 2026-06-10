@@ -1,7 +1,5 @@
 # Iterations Interactive Frontend Build
 
-ID: evidence:20260526-mill-iterations-interactive-build
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-The Loom Mill frontend production build was run after implementing clickable iteration entries and Playback initial-step wiring for ticket:20260526-mill-iterations-interactive.
+The Loom Mill frontend production build was run after implementing clickable iteration entries and Playback initial-step wiring for .loom/tickets/done/20260526-mill-iterations-interactive.md.
 
 ## Observation
 
@@ -24,7 +22,7 @@ Observed result: Vite completed successfully with `✓ built in 1.76s`. The buil
 
 ## What This Shows
 
-- ticket:20260526-mill-iterations-interactive#ACC-003 - supports - the requested frontend production build passes after the implementation.
+- .loom/tickets/done/20260526-mill-iterations-interactive.md#ACC-003 - supports - the requested frontend production build passes after the implementation.
 
 ## What This Does Not Show
 
@@ -32,4 +30,4 @@ This observation does not prove the click interaction in a browser, does not ver
 
 ## Related Records
 
-- ticket:20260526-mill-iterations-interactive - consuming ticket for this build evidence.
+- .loom/tickets/done/20260526-mill-iterations-interactive.md - consuming ticket for this build evidence.

@@ -1,7 +1,5 @@
 # Playbooks Versus Core Activation Pressure
 
-ID: research:20260515-playbooks-core-activation-pressure
-Type: Research
 Status: completed
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -29,7 +27,7 @@ Covered:
 - Playbooks package exposure, trigger descriptions, shared routing headers, and representative playbooks.
 - Dogfood records that explain why Superpowers-style activation was adopted.
 - Current Core and Playbooks smoke outputs.
-- Existing OpenCode activation logs cited by `evidence:20260513-superpowers-style-activation-checks`.
+- Existing OpenCode activation logs cited by `.loom/evidence/20260513-superpowers-style-activation-checks.md`.
 - Optional Loom Weaver and Loom Driver agent prompts as alternate ways to carry shaping and execution pressure.
 
 Excluded:
@@ -46,9 +44,9 @@ Excluded:
 - `loom-playbooks/loom-playbooks.mjs` - inspected package exposure and activation-description smoke checks.
 - `loom-playbooks/skills/*/SKILL.md` - inspected all descriptions and representative workflow bodies.
 - `tests/skill-triggering/**` - inspected natural-prompt activation checks.
-- `evidence:20260513-superpowers-style-activation-checks` - identified prior live OpenCode activation logs and test claims.
-- `evidence:20260515-playbook-activation-stacking` - preserves current smoke results and key log-derived observations.
-- `.loom/research/20260513-superpowers-skill-activation.md` and `ticket:20260513-superpowers-style-activation-doctrine` - inspected why stronger activation was introduced.
+- `.loom/evidence/20260513-superpowers-style-activation-checks.md` - identified prior live OpenCode activation logs and test claims.
+- `.loom/evidence/20260515-playbook-activation-stacking.md` - preserves current smoke results and key log-derived observations.
+- `.loom/research/20260513-superpowers-skill-activation.md` and `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md` - inspected why stronger activation was introduced.
 - `loom-core/agents/loom-weaver.md` and `loom-core/agents/loom-driver.md` - inspected Core agent surfaces that already carry shaping and execution coordination behavior.
 
 ## Findings
@@ -215,9 +213,9 @@ Excluded:
 
 ## Related Records
 
-- `evidence:20260515-playbook-activation-stacking` - key observations for current package shape and prior live activation logs.
-- `research:20260513-superpowers-skill-activation` - source of the stronger activation strategy.
-- `ticket:20260513-superpowers-style-activation-doctrine` - implemented the activation strategy that made playbook stacking likely.
-- `evidence:20260513-superpowers-style-activation-checks` - earlier validation dossier whose log paths were inspected.
+- `.loom/evidence/20260515-playbook-activation-stacking.md` - key observations for current package shape and prior live activation logs.
+- `.loom/research/20260513-superpowers-skill-activation.md` - source of the stronger activation strategy.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md` - implemented the activation strategy that made playbook stacking likely.
+- `.loom/evidence/20260513-superpowers-style-activation-checks.md` - earlier validation dossier whose log paths were inspected.
 - `loom-core/skills/using-loom/SKILL.md` - Core activation and loop-order owner.
 - `loom-playbooks/skills/*/SKILL.md` - playbook trigger and workflow surfaces.

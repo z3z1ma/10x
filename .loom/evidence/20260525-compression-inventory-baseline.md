@@ -1,7 +1,5 @@
 # Compression Inventory Baseline
 
-ID: evidence:20260525-compression-inventory-baseline
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -9,12 +7,12 @@ Observed: 2026-05-25
 
 ## Related Records
 
-- `ticket:20260525-compression-contract-inventory`
-- `plan:20260525-loom-protocol-compression`
-- `spec:loom-protocol-compression`
-- `constitution:main`
+- `.loom/tickets/done/20260525-compression-contract-inventory.md`
+- `.loom/tickets/20260525-loom-protocol-compression.md`
+- `.loom/specs/loom-protocol-compression.md`
+- `.loom/decisions/project-constitution.md`
 - `roadmap:loom-mill`
-- `research:20260524-loom-mill-software-factory`
+- `.loom/research/20260524-loom-mill-software-factory.md`
 
 ## Procedure
 
@@ -28,7 +26,7 @@ Commands were run from `/Users/alexanderbutler/code_projects/personal/agent-loom
 
 ## Observations
 
-`git status --short` before evidence/ticket edits showed one pre-existing ticket edit from this run boundary: `.loom/tickets/20260525-compression-contract-inventory.md` had already moved from `open` to `active` and recorded launch state.
+`git status --short` before evidence/ticket edits showed one pre-existing ticket edit from this run boundary: `.loom/tickets/done/20260525-compression-contract-inventory.md` had already moved from `open` to `active` and recorded launch state.
 
 Baseline line counts observed for inventory categories:
 
@@ -64,21 +62,21 @@ Notable risk areas for later compression:
 
 Contract consistency inspection:
 
-- `spec:loom-protocol-compression` is active and matches `constitution:main` lines 62-69 and 90-98 on operational kernels, portability, protocol/Mill split, and compression as current direction.
+- `.loom/specs/loom-protocol-compression.md` is active and matches `.loom/decisions/project-constitution.md` lines 62-69 and 90-98 on operational kernels, portability, protocol/Mill split, and compression as current direction.
 - It matches `roadmap:loom-mill` lines 15-31 and 53-58 on protocol compression as the foundation chapter and the compression/completeness tension.
-- It matches `research:20260524-loom-mill-software-factory` findings 2 and 10: the protocol is sound, too verbose, portable, and independent of Mill.
-- It does not conflict with active specs inspected: `spec:ticket-owned-worker-handoffs`, `spec:loom-driver-agent`, `spec:loom-weaver-agent`, or `spec:playbook-explicit-macros`. Those specs define behaviors the compression spec explicitly preserves or leaves adjacent.
+- It matches `.loom/research/20260524-loom-mill-software-factory.md` findings 2 and 10: the protocol is sound, too verbose, portable, and independent of Mill.
+- It does not conflict with active specs inspected: `.loom/specs/ticket-owned-worker-handoffs.md`, `.loom/specs/loom-driver-agent.md`, `.loom/specs/loom-weaver-agent.md`, or `.loom/specs/playbook-explicit-macros.md`. Those specs define behaviors the compression spec explicitly preserves or leaves adjacent.
 - Source inventory did not reveal a missing major model-visible surface beyond the plan's named categories. Core hooks/preload files are important under the session kernel slice, and tests/manifests are inventory-relevant rather than compression doctrine surfaces.
 
 ## What This Shows
 
-- `ticket:20260525-compression-contract-inventory#ACC-001` is supported by inspection showing the compression spec is active and no contradiction was found with the current constitution, roadmap, research, active specs, or observed source inventory.
-- `ticket:20260525-compression-contract-inventory#ACC-002` is supported by the baseline inventory and line-count categories above, including Core skills/references/templates, Core agents, Codex agent copies, Playbooks, generated commands, preload surfaces, docs, tests, and manifests relevant to inventory.
-- `ticket:20260525-compression-contract-inventory#ACC-003` is supported by inspection showing no plan or downstream-ticket update was required for missing slices, wrong sequencing, or unsafe compression boundary. Core preload/hooks are already included in the session-kernel unit; Playbooks/generated commands/docs/tests are already included in later plan units or validation.
+- `.loom/tickets/done/20260525-compression-contract-inventory.md#ACC-001` is supported by inspection showing the compression spec is active and no contradiction was found with the current constitution, roadmap, research, active specs, or observed source inventory.
+- `.loom/tickets/done/20260525-compression-contract-inventory.md#ACC-002` is supported by the baseline inventory and line-count categories above, including Core skills/references/templates, Core agents, Codex agent copies, Playbooks, generated commands, preload surfaces, docs, tests, and manifests relevant to inventory.
+- `.loom/tickets/done/20260525-compression-contract-inventory.md#ACC-003` is supported by inspection showing no plan or downstream-ticket update was required for missing slices, wrong sequencing, or unsafe compression boundary. Core preload/hooks are already included in the session-kernel unit; Playbooks/generated commands/docs/tests are already included in later plan units or validation.
 
 ## What This Does Not Show
 
 - This evidence does not prove later compression preserves behavior.
 - This evidence does not audit the final compressed source surface.
 - This evidence does not prove generated command files are currently synchronized byte-for-byte with Playbook source, only that the line-count baseline and category relationship were observed.
-- This evidence does not replace package smoke, pack checks, Markdown diff checks, targeted behavior/leakage searches after source edits, or the final Ralph-backed audit planned in `ticket:20260525-compression-validation-audit`.
+- This evidence does not replace package smoke, pack checks, Markdown diff checks, targeted behavior/leakage searches after source edits, or the final Ralph-backed audit planned in `.loom/tickets/done/20260525-compression-validation-audit.md`.

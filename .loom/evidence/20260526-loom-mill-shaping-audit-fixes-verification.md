@@ -1,7 +1,5 @@
 # Loom Mill Shaping Audit Fixes Verification
 
-ID: evidence:20260526-loom-mill-shaping-audit-fixes-verification
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26

@@ -1,7 +1,5 @@
 # Superpowers Skill Activation
 
-ID: research:20260513-superpowers-skill-activation
-Type: Research
 Status: completed
 Created: 2026-05-13
 Updated: 2026-05-13
@@ -59,7 +57,7 @@ Excluded:
 - Tests verify behavior rather than only packaging. `tests/skill-triggering/run-test.sh` sends naive prompts that do not mention the skill and checks stream JSON for Skill tool invocation. `tests/explicit-skill-requests/run-test.sh` checks explicit skill requests and detects premature non-Skill tool use before the Skill invocation.
 - `CLAUDE.md` makes bootstrap auto-trigger an acceptance test for new harnesses: in a clean session, the prompt `Let's make a react todo list` must auto-trigger `brainstorming` before code is written. Integrations requiring per-session opt-in are rejected.
 - There is a doc drift note: `docs/README.opencode.md` says OpenCode injects via `experimental.chat.system.transform`, but current `.opencode/plugins/superpowers.js` uses `experimental.chat.messages.transform`.
-- Before `ticket:20260513-superpowers-style-activation-doctrine`, Loom Core preloaded stronger source material than Superpowers in OpenCode by registering the full `using-loom` skill plus ordered references through `config.instructions`, while also registering `skills/` through `config.skills.paths`.
+- Before `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md`, Loom Core preloaded stronger source material than Superpowers in OpenCode by registering the full `using-loom` skill plus ordered references through `config.instructions`, while also registering `skills/` through `config.skills.paths`.
 - Loom's current local `using-loom` is more principled and less coercive. It teaches route order, surfaces, ambiguity shaping, Ralph packets, evidence, and audit, but it does not currently include a Superpowers-style 1% skill-check loop, rationalization table, or tests that assert the first action after a naive prompt is the right Loom skill.
 
 ## Tradeoffs
@@ -101,7 +99,7 @@ Excluded:
 
 ## Related Records
 
-- `ticket:20260513-mandatory-shaping-doctrine` - recent closed ticket strengthening Loom ambiguity shaping doctrine.
-- `research:20260510-loom-loop-failure-analysis` - prior analysis of Loom loop failures and premature execution.
+- `.loom/tickets/done/20260513-mandatory-shaping-doctrine.md` - recent closed ticket strengthening Loom ambiguity shaping doctrine.
+- `.loom/research/20260510-loom-loop-failure-analysis.md` - prior analysis of Loom loop failures and premature execution.
 - `loom-core/skills/using-loom/SKILL.md` - likely consuming surface for activation-loop changes.
 - `loom-core/loom-core.mjs` - OpenCode preload and skill registration surface.

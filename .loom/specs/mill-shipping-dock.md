@@ -1,7 +1,5 @@
 # Mill Shipping Dock
 
-ID: spec:mill-shipping-dock
-Type: Spec
 Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -174,7 +172,7 @@ class ShippingConfig:
 
 ## Related Records
 
-- `spec:mill-factory-floor` - pipeline visualization shows shipping dock state
-- `spec:mill-scheduling-agent` - notified when merge completes (capacity freed)
-- `spec:mill-process-control` - upstream; SPC/audit must pass before shipping
-- `constitution:main` - shipping dock = finished goods leave the factory
+- `.loom/specs/mill-factory-floor.md` - pipeline visualization shows shipping dock state
+- `.loom/specs/mill-scheduling-agent.md` - notified when merge completes (capacity freed)
+- `.loom/specs/mill-process-control.md` - upstream; SPC/audit must pass before shipping
+- `.loom/decisions/project-constitution.md` - shipping dock = finished goods leave the factory

@@ -1,7 +1,5 @@
 # Mill Shaping Blocks Engine Validation
 
-ID: evidence:20260526-mill-shaping-blocks-engine-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Validation observations for `ticket:20260526-mill-shaping-blocks`, covering the new
+Validation observations for `.loom/tickets/20260526-mill-shaping-blocks.md`, covering the new
 decision parser, shaping engine advance loop, API route, backend regression suite,
 and frontend production build.
 
@@ -37,11 +35,11 @@ and frontend production build.
 
 ## What This Shows
 
-- `ticket:20260526-mill-shaping-blocks#ACC-001` - partially supports - the engine can produce typed blocks from mock harness decisions, including question, observation, and proposal blocks.
-- `ticket:20260526-mill-shaping-blocks#ACC-003` - partially supports - tests cover operator feedback after a proposal transitioning the session to refining before continuing.
-- `ticket:20260526-mill-shaping-blocks#ACC-004` - supports the parser/block path - tests cover `AGENT_PROPOSAL` creation with Markdown record content.
-- `ticket:20260526-mill-shaping-blocks#ACC-005` - supports - malformed harness output is parsed as an observation rather than crashing.
-- `ticket:20260526-mill-shaping-blocks#ACC-006` - supports - full backend tests passed.
+- `.loom/tickets/20260526-mill-shaping-blocks.md#ACC-001` - partially supports - the engine can produce typed blocks from mock harness decisions, including question, observation, and proposal blocks.
+- `.loom/tickets/20260526-mill-shaping-blocks.md#ACC-003` - partially supports - tests cover operator feedback after a proposal transitioning the session to refining before continuing.
+- `.loom/tickets/20260526-mill-shaping-blocks.md#ACC-004` - supports the parser/block path - tests cover `AGENT_PROPOSAL` creation with Markdown record content.
+- `.loom/tickets/20260526-mill-shaping-blocks.md#ACC-005` - supports - malformed harness output is parsed as an observation rather than crashing.
+- `.loom/tickets/20260526-mill-shaping-blocks.md#ACC-006` - supports - full backend tests passed.
 
 ## What This Does Not Show
 
@@ -52,5 +50,5 @@ and frontend production build.
 
 ## Related Records
 
-- `ticket:20260526-mill-shaping-blocks` - consuming ticket for this validation story.
-- `spec:mill-shaping-sessions` - intended behavior for shaping sessions.
+- `.loom/tickets/20260526-mill-shaping-blocks.md` - consuming ticket for this validation story.
+- `.loom/specs/mill-shaping-sessions.md` - intended behavior for shaping sessions.

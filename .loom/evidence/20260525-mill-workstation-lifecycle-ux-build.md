@@ -1,7 +1,5 @@
 # Workstation Lifecycle UX Build Check
 
-ID: evidence:20260525-mill-workstation-lifecycle-ux-build
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -35,7 +33,7 @@ dist/assets/index-D98Eqloj.js   104.97 kB │ gzip: 32.67 kB
 Also observed a clean scoped whitespace check:
 
 ```text
-git diff --check -- .loom/tickets/20260525-mill-workstation-lifecycle-ux.md .loom/audit/20260525-mill-workstation-lifecycle-ux-audit.md loom-mill/frontend/src/lib/WorkstationRow.svelte loom-mill/frontend/src/lib/WorkstationList.svelte loom-mill/frontend/src/lib/DetailPanel.svelte
+git diff --check -- .loom/tickets/20260525-mill-workstation-lifecycle-ux.md .loom/reviews/20260525-mill-workstation-lifecycle-ux-audit.md loom-mill/frontend/src/lib/WorkstationRow.svelte loom-mill/frontend/src/lib/WorkstationList.svelte loom-mill/frontend/src/lib/DetailPanel.svelte
 
 <no output>
 ```
@@ -46,9 +44,9 @@ git diff --check -- .loom/tickets/20260525-mill-workstation-lifecycle-ux.md .loo
 
 ## What This Shows
 
-- `ticket:20260525-mill-workstation-lifecycle-ux#ACC-005` - supports - the frontend production build passed after the scoped lifecycle UX edits.
-- `audit:20260525-mill-workstation-lifecycle-ux-audit#FIND-001` - partially supports follow-up - the build still passes after changing completed grouping so stopped workstations are no longer bulk-cleared.
-- `audit:20260525-mill-workstation-lifecycle-ux-audit#FIND-002` - partially supports follow-up - the build still passes after routing Stop, Resolve, and Abort to registered endpoints.
+- `.loom/tickets/20260525-mill-workstation-lifecycle-ux.md#ACC-005` - supports - the frontend production build passed after the scoped lifecycle UX edits.
+- `.loom/reviews/20260525-mill-workstation-lifecycle-ux-audit.md#FIND-001` - partially supports follow-up - the build still passes after changing completed grouping so stopped workstations are no longer bulk-cleared.
+- `.loom/reviews/20260525-mill-workstation-lifecycle-ux-audit.md#FIND-002` - partially supports follow-up - the build still passes after routing Stop, Resolve, and Abort to registered endpoints.
 
 ## What This Does Not Show
 
@@ -56,5 +54,5 @@ This evidence does not show Playwright or manual browser behavior for hover acti
 
 ## Related Records
 
-- `ticket:20260525-mill-workstation-lifecycle-ux` - consuming ticket for acceptance and closure.
-- `audit:20260525-mill-workstation-lifecycle-ux-audit` - audit that identified blockers before these checks were rerun.
+- `.loom/tickets/20260525-mill-workstation-lifecycle-ux.md` - consuming ticket for acceptance and closure.
+- `.loom/reviews/20260525-mill-workstation-lifecycle-ux-audit.md` - audit that identified blockers before these checks were rerun.

@@ -1,7 +1,5 @@
 # OpenCode Weaver Runtime Boundary Verification
 
-ID: evidence:20260525-opencode-weaver-runtime-boundary-verification
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -37,8 +35,8 @@ I can’t edit `README.md` directly while acting as Loom Weaver because my write
 
 I inspected the README and created a bounded implementation ticket instead:
 
-- `.loom/tickets/20260525-readme-hello-world.md`
-- `ticket:20260525-readme-hello-world`
+- `.loom/tickets/cancelled/20260525-readme-hello-world.md`
+- `.loom/tickets/cancelled/20260525-readme-hello-world.md`
 
 It scopes the change to only root `README.md`, with acceptance that the exact phrase `Hello world` is added and no other files change.
 ```
@@ -47,7 +45,7 @@ Post-probe check:
 
 ```text
 $ git status --short
-?? .loom/tickets/20260525-readme-hello-world.md
+?? .loom/tickets/cancelled/20260525-readme-hello-world.md
 ?? dev.log
 
 $ git diff -- README.md
@@ -58,13 +56,13 @@ The probe-created ticket was cancelled afterward because it was a verification a
 
 ## Artifacts
 
-- `.loom/tickets/20260525-readme-hello-world.md` - the `.loom/`-only route produced by the runtime probe and then cancelled as a test artifact.
+- `.loom/tickets/cancelled/20260525-readme-hello-world.md` - the `.loom/`-only route produced by the runtime probe and then cancelled as a test artifact.
 - `git diff -- README.md` - no output before or after the probe, showing the runtime invocation did not edit `README.md`.
 
 ## What This Shows
 
-- `ticket:20260515-opencode-weaver-agent-runtime-wiring#ACC-004` - supports - a fresh `loom-weaver` runtime invocation equivalent to the failing README edit request refused the outside-`.loom` edit path and left `README.md` unchanged.
-- `spec:loom-weaver-agent#REQ-002` - supports - the observed runtime behavior followed the `.loom/`-only write boundary for a direct source edit request.
+- `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md#ACC-004` - supports - a fresh `loom-weaver` runtime invocation equivalent to the failing README edit request refused the outside-`.loom` edit path and left `README.md` unchanged.
+- `.loom/specs/loom-weaver-agent.md#REQ-002` - supports - the observed runtime behavior followed the `.loom/`-only write boundary for a direct source edit request.
 
 ## What This Does Not Show
 
@@ -74,6 +72,6 @@ The probe-created ticket was cancelled afterward because it was a verification a
 
 ## Related Records
 
-- `ticket:20260515-opencode-weaver-agent-runtime-wiring` - consuming ticket for the runtime agent wiring fix.
-- `spec:loom-weaver-agent` - owns the `.loom/`-only write boundary requirement.
-- `audit:20260515-opencode-weaver-agent-merge-audit` - required this fresh runtime follow-up before closure.
+- `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md` - consuming ticket for the runtime agent wiring fix.
+- `.loom/specs/loom-weaver-agent.md` - owns the `.loom/`-only write boundary requirement.
+- `.loom/reviews/20260515-opencode-weaver-agent-merge-audit.md` - required this fresh runtime follow-up before closure.

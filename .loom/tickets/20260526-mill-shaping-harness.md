@@ -1,12 +1,11 @@
 # Bounded Harness Orchestration for Shaping Sessions
 
-ID: ticket:20260526-mill-shaping-harness
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-26
 Updated: 2026-06-09
-Risk: medium - parallel subprocess management with shared mutable state (context doc); race conditions possible
-Depends On: ticket:20260526-mill-shaping-foundation
+Depends-On: .loom/tickets/20260526-mill-shaping-foundation.md
+
+Legacy note: Risk — medium - parallel subprocess management with shared mutable state (context doc); race conditions possible
 
 ## Summary
 
@@ -26,9 +25,9 @@ and support cancellation.
 
 ## Related Records
 
-- `plan:20260526-mill-shaping-sessions` - parent plan
-- `ticket:20260526-mill-shaping-foundation` - builds on session foundation
-- `spec:mill-shaping-sessions` - behavioral contract (harness invocation section)
+- `.loom/tickets/20260526-mill-shaping-sessions.md` - parent plan
+- `.loom/tickets/20260526-mill-shaping-foundation.md` - builds on session foundation
+- `.loom/specs/mill-shaping-sessions.md` - behavioral contract (harness invocation section)
 - `loom-mill/src/loom_mill/chat/harness.py` - existing single-subprocess harness
 - `loom-mill/src/loom_mill/workstation/engine.py` - existing process lifecycle with capture tasks
 

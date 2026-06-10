@@ -1,7 +1,5 @@
 # Playback Working-Tree Diff Validation
 
-ID: evidence:20260526-mill-playback-worktree-diff-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Validation observations for `ticket:20260526-mill-playback-worktree-diff` after updating workstation iteration boundary recording to include uncommitted working-tree changes.
+Validation observations for `.loom/tickets/done/20260526-mill-playback-worktree-diff.md` after updating workstation iteration boundary recording to include uncommitted working-tree changes.
 
 ## Observations
 
@@ -39,11 +37,11 @@ Validation observations for `ticket:20260526-mill-playback-worktree-diff` after 
 
 ## What This Shows
 
-- `ticket:20260526-mill-playback-worktree-diff#ACC-001` - supports - focused tests include a subprocess that modifies tracked and untracked files without committing; iteration metadata and diff include those changes.
-- `ticket:20260526-mill-playback-worktree-diff#ACC-002` - supports - existing committed-change iteration test still passes in focused and full backend suites.
-- `ticket:20260526-mill-playback-worktree-diff#ACC-003` - supports - focused test checks the auto-commit message `[mill] iteration 1 auto-commit` and clean worktree status after uncommitted changes are recorded.
-- `ticket:20260526-mill-playback-worktree-diff#ACC-004` - supports - full backend test suite passed via `uv run --extra dev python -m pytest tests/ -x`; the exact active `python -m pytest` command could not run because pytest is absent from that interpreter.
-- `ticket:20260526-mill-playback-worktree-diff#ACC-005` - supports - focused mixed test includes a subprocess commit plus a left-uncommitted file and verifies both appear in one iteration diff with deduplicated file metadata.
+- `.loom/tickets/done/20260526-mill-playback-worktree-diff.md#ACC-001` - supports - focused tests include a subprocess that modifies tracked and untracked files without committing; iteration metadata and diff include those changes.
+- `.loom/tickets/done/20260526-mill-playback-worktree-diff.md#ACC-002` - supports - existing committed-change iteration test still passes in focused and full backend suites.
+- `.loom/tickets/done/20260526-mill-playback-worktree-diff.md#ACC-003` - supports - focused test checks the auto-commit message `[mill] iteration 1 auto-commit` and clean worktree status after uncommitted changes are recorded.
+- `.loom/tickets/done/20260526-mill-playback-worktree-diff.md#ACC-004` - supports - full backend test suite passed via `uv run --extra dev python -m pytest tests/ -x`; the exact active `python -m pytest` command could not run because pytest is absent from that interpreter.
+- `.loom/tickets/done/20260526-mill-playback-worktree-diff.md#ACC-005` - supports - focused mixed test includes a subprocess commit plus a left-uncommitted file and verifies both appear in one iteration diff with deduplicated file metadata.
 
 ## What This Does Not Show
 
@@ -53,5 +51,5 @@ Validation observations for `ticket:20260526-mill-playback-worktree-diff` after 
 
 ## Related Records
 
-- `ticket:20260526-mill-playback-worktree-diff` - consuming ticket.
-- `plan:20260526-mill-factory-data-integrity` - parent plan.
+- `.loom/tickets/done/20260526-mill-playback-worktree-diff.md` - consuming ticket.
+- `.loom/tickets/20260526-mill-factory-data-integrity.md` - parent plan.

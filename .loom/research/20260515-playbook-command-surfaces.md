@@ -1,7 +1,5 @@
 # Playbook Command Surfaces
 
-ID: research:20260515-playbook-command-surfaces
-Type: Research
 Status: completed
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -42,12 +40,12 @@ Excluded:
 
 ## Method And Sources
 
-- `research:20260515-playbooks-core-activation-pressure` - current diagnosis that
+- `.loom/research/20260515-playbooks-core-activation-pressure.md` - current diagnosis that
   Playbooks are useful lenses but harmful when installed as broad auto-activated
   skills.
-- `evidence:20260515-playbook-activation-stacking` - OpenCode observations that
+- `.loom/evidence/20260515-playbook-activation-stacking.md` - OpenCode observations that
   simple prompts loaded multiple Playbook skills.
-- `research:20260514-direct-interactive-agent-surfaces` - existing supported
+- `.loom/research/20260514-direct-interactive-agent-surfaces.md` - existing supported
   harness matrix and adapter-source survey.
 - `loom-playbooks/loom-playbooks.mjs` - current OpenCode package registers the
   whole `skills/` tree through `config.skills.paths`.
@@ -295,10 +293,10 @@ Excluded:
 
 ## Related Records
 
-- `research:20260515-playbooks-core-activation-pressure` - explains why automatic
+- `.loom/research/20260515-playbooks-core-activation-pressure.md` - explains why automatic
   Playbook skill activation harms Core routing.
-- `evidence:20260515-playbook-activation-stacking` - preserves observed activation
+- `.loom/evidence/20260515-playbook-activation-stacking.md` - preserves observed activation
   stacking.
-- `research:20260514-direct-interactive-agent-surfaces` - prior harness capability
+- `.loom/research/20260514-direct-interactive-agent-surfaces.md` - prior harness capability
   survey for named agents.
 - `loom-playbooks/` - current package surface to convert.

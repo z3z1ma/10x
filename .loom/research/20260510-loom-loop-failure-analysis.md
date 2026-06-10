@@ -1,7 +1,5 @@
 # Loom Loop Failure Analysis
 
-ID: research:20260510-loom-loop-failure-analysis
-Type: Research
 Status: completed
 Created: 2026-05-10
 Updated: 2026-05-10
@@ -38,7 +36,7 @@ Excluded:
 - Queried the local OpenCode database for the session text and `task` prompts.
 - Read Core `using-loom`, `loom-tickets`, `loom-plans`, `loom-ralph`, and `loom-audit` skill references.
 - Read relevant playbooks: `loom-frontend-ui-engineering`, `loom-source-driven-development`, `loom-incremental-implementation`, `loom-idea-refine`, and `loom-code-review-and-quality`.
-- Preserved the observed transcript and record facts in `evidence:20260510-opencode-session-loop-failures`.
+- Preserved the observed transcript and record facts in `.loom/evidence/20260510-opencode-session-loop-failures.md`.
 
 ## Findings
 
@@ -68,5 +66,5 @@ Excluded:
 
 ## Related Records
 
-- `evidence:20260510-opencode-session-loop-failures` - observed source for this analysis.
-- `plan:20260510-core-loop-hardening` - implementation plan consuming this research.
+- `.loom/evidence/20260510-opencode-session-loop-failures.md` - observed source for this analysis.
+- `.loom/tickets/20260510-core-loop-hardening.md` - implementation plan consuming this research.

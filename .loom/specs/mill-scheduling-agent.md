@@ -1,7 +1,5 @@
 # Mill Scheduling Agent
 
-ID: spec:mill-scheduling-agent
-Type: Spec
 Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -12,7 +10,7 @@ This spec defines the autonomous scheduling agent that pulls work into free work
 
 ## Product Slice
 
-This spec owns the scheduling agent's decision logic: what ticket to execute next and when. It does NOT own workstation lifecycle (that's `spec:mill-factory-floor`), merge behavior (`spec:mill-shipping-dock`), or inter-iteration quality signals (`spec:mill-process-control`).
+This spec owns the scheduling agent's decision logic: what ticket to execute next and when. It does NOT own workstation lifecycle (that's `.loom/specs/mill-factory-floor.md`), merge behavior (`.loom/specs/mill-shipping-dock.md`), or inter-iteration quality signals (`.loom/specs/mill-process-control.md`).
 
 ## Spec Set Coverage
 
@@ -79,7 +77,7 @@ AND a second ticket is pulled (WIP allows 2)
 
 Exercises: REQ-002
 
-GIVEN ticket B references ticket A in Related Records with "depends on ticket:A"
+GIVEN ticket B references ticket A in Related Records with "depends on .loom/tickets/<ticket-a>.md"
 AND ticket A is status `active`
 WHEN the scheduler considers ticket B
 THEN ticket B is filtered out as dependency-unsatisfied
@@ -160,7 +158,7 @@ The advisory receives a structured summary (not full record prose) and returns a
 
 ## Related Records
 
-- `spec:mill-factory-floor` - the engine that runs workstations this agent feeds
-- `spec:mill-process-control` - may cause tickets to re-enter the queue (rework after jidoka stop)
-- `spec:mill-shipping-dock` - completion event triggers next scheduling pass
-- `constitution:main` - factory principles (pull not push, WIP limits, heijunka)
+- `.loom/specs/mill-factory-floor.md` - the engine that runs workstations this agent feeds
+- `.loom/specs/mill-process-control.md` - may cause tickets to re-enter the queue (rework after jidoka stop)
+- `.loom/specs/mill-shipping-dock.md` - completion event triggers next scheduling pass
+- `.loom/decisions/project-constitution.md` - factory principles (pull not push, WIP limits, heijunka)

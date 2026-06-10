@@ -1,7 +1,5 @@
 # Loom Protocol Compression
 
-ID: spec:loom-protocol-compression
-Type: Spec
 Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -18,14 +16,14 @@ It does not own Loom Mill UX, harness subprocess mechanics, record storage, pack
 
 ## Spec Set Coverage
 
-This spec fills the behavior gap created by `constitution:main` and `roadmap:loom-mill`: the protocol should become a sharp portable kernel before Loom Mill builds on it.
+This spec fills the behavior gap created by `.loom/decisions/project-constitution.md` and `roadmap:loom-mill`: the protocol should become a sharp portable kernel before Loom Mill builds on it.
 
 Adjacent behavior outside this spec:
 
-- `spec:ticket-owned-worker-handoffs` owns worker and review handoff behavior.
-- `spec:loom-driver-agent` owns Driver behavior.
-- `spec:loom-weaver-agent` owns Weaver behavior.
-- `spec:playbook-explicit-macros` owns Playbook invocation behavior.
+- `.loom/specs/ticket-owned-worker-handoffs.md` owns worker and review handoff behavior.
+- `.loom/specs/loom-driver-agent.md` owns Driver behavior.
+- `.loom/specs/loom-weaver-agent.md` owns Weaver behavior.
+- `.loom/specs/playbook-explicit-macros.md` owns Playbook invocation behavior.
 
 ## Problem
 
@@ -148,7 +146,7 @@ Non-example compressed posture:
 
 ## Constraints
 
-- This spec implements the compression direction in `constitution:main` and `roadmap:loom-mill`.
+- This spec implements the compression direction in `.loom/decisions/project-constitution.md` and `roadmap:loom-mill`.
 - Product-visible doctrine must remain runtime behavior for installed workspaces.
 - The protocol must remain prose-first and grep/find friendly.
 
@@ -159,9 +157,9 @@ Non-example compressed posture:
 
 ## Related Records
 
-- `constitution:main` - defines Loom as protocol and Loom Mill as factory application.
+- `.loom/decisions/project-constitution.md` - defines Loom as protocol and Loom Mill as factory application.
 - `roadmap:loom-mill` - names protocol compression as the current foundation chapter.
-- `research:20260524-loom-mill-software-factory` - investigation that identified verbosity as the key protocol issue.
-- `spec:ticket-owned-worker-handoffs` - worker handoff behavior compression must preserve.
-- `spec:loom-driver-agent` - Driver behavior compression must preserve.
-- `spec:loom-weaver-agent` - Weaver behavior compression must preserve.
+- `.loom/research/20260524-loom-mill-software-factory.md` - investigation that identified verbosity as the key protocol issue.
+- `.loom/specs/ticket-owned-worker-handoffs.md` - worker handoff behavior compression must preserve.
+- `.loom/specs/loom-driver-agent.md` - Driver behavior compression must preserve.
+- `.loom/specs/loom-weaver-agent.md` - Weaver behavior compression must preserve.

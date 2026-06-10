@@ -1,7 +1,5 @@
 # Mill Connected Graph Build
 
-ID: evidence:20260526-mill-connected-graph-build
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -10,7 +8,7 @@ Observed: 2026-05-26
 ## Summary
 
 Frontend production build was run after adding the connected-record graph view for
-`ticket:20260526-mill-graph-connected`.
+`.loom/tickets/20260526-mill-graph-connected.md`.
 
 ## Observation
 
@@ -29,7 +27,7 @@ warnings in chat components and a chunk-size warning, but did not fail.
 
 ## What This Shows
 
-- `ticket:20260526-mill-graph-connected#ACC-004` - supports - the frontend build
+- `.loom/tickets/20260526-mill-graph-connected.md#ACC-004` - supports - the frontend build
   completed successfully after the graph implementation.
 
 ## What This Does Not Show
@@ -41,5 +39,5 @@ configuration changes.
 
 ## Related Records
 
-- `ticket:20260526-mill-graph-connected` - ticket whose build acceptance this
+- `.loom/tickets/20260526-mill-graph-connected.md` - ticket whose build acceptance this
   observation supports.

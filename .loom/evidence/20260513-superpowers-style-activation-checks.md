@@ -1,7 +1,5 @@
 # Superpowers-Style Activation Checks
 
-ID: evidence:20260513-superpowers-style-activation-checks
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-13
 Updated: 2026-05-14
@@ -9,7 +7,7 @@ Observed: 2026-05-13 to 2026-05-14
 
 ## Summary
 
-Validation dossier for `ticket:20260513-superpowers-style-activation-doctrine`. It groups source scans, package checks, script syntax checks, and live OpenCode activation tests showing that the Superpowers-style bootstrap, language, red flags, trigger-description checks, and invocation tests are present and passing.
+Validation dossier for `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md`. It groups source scans, package checks, script syntax checks, and live OpenCode activation tests showing that the Superpowers-style bootstrap, language, red flags, trigger-description checks, and invocation tests are present and passing.
 
 ## Observations
 
@@ -82,13 +80,13 @@ Validation dossier for `ticket:20260513-superpowers-style-activation-doctrine`. 
 
 ## What This Shows
 
-- `ticket:20260513-superpowers-style-activation-doctrine#ACC-001` - supports - Core smoke and source inspection show OpenCode uses `config.skills.paths` plus first-user-message `experimental.chat.messages.transform`, not `config.instructions`, and dedupes injection. The final bootstrap-validation pass also shows the Gemini extension surfaces validate after adding the activation reference.
-- `ticket:20260513-superpowers-style-activation-doctrine#ACC-002` - supports - exact Superpowers-style enforcement phrases are present in model-visible Core doctrine and statically checked by Core smoke.
-- `ticket:20260513-superpowers-style-activation-doctrine#ACC-003` - supports - first-action ordering before clarifying questions, code exploration, quick checks, edits, tickets, Ralph, evidence, audit, and closure is present in doctrine and bootstrap text.
-- `ticket:20260513-superpowers-style-activation-doctrine#ACC-004` - supports - requested red-flag rationalizations are present in `using-loom` and the activation reference.
-- `ticket:20260513-superpowers-style-activation-doctrine#ACC-005` - supports - Core and Playbooks smoke checks and targeted scans show trigger-oriented descriptions with no prefix failures.
-- `ticket:20260513-superpowers-style-activation-doctrine#ACC-006` - supports - Superpowers-modeled natural prompt and explicit request scripts exist and pass live OpenCode runs.
-- `ticket:20260513-superpowers-style-activation-doctrine#ACC-007` - supports - `CLAUDE.md` includes the `Let's make a react todo list` acceptance test, and the live `loom-idea-refine` run passed for that prompt.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md#ACC-001` - supports - Core smoke and source inspection show OpenCode uses `config.skills.paths` plus first-user-message `experimental.chat.messages.transform`, not `config.instructions`, and dedupes injection. The final bootstrap-validation pass also shows the Gemini extension surfaces validate after adding the activation reference.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md#ACC-002` - supports - exact Superpowers-style enforcement phrases are present in model-visible Core doctrine and statically checked by Core smoke.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md#ACC-003` - supports - first-action ordering before clarifying questions, code exploration, quick checks, edits, tickets, Ralph, evidence, audit, and closure is present in doctrine and bootstrap text.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md#ACC-004` - supports - requested red-flag rationalizations are present in `using-loom` and the activation reference.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md#ACC-005` - supports - Core and Playbooks smoke checks and targeted scans show trigger-oriented descriptions with no prefix failures.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md#ACC-006` - supports - Superpowers-modeled natural prompt and explicit request scripts exist and pass live OpenCode runs.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md#ACC-007` - supports - `CLAUDE.md` includes the `Let's make a react todo list` acceptance test, and the live `loom-idea-refine` run passed for that prompt.
 
 ## What This Does Not Show
 
@@ -96,5 +94,5 @@ This evidence shows live OpenCode behavior for the new activation scripts, but i
 
 ## Related Records
 
-- `ticket:20260513-superpowers-style-activation-doctrine` - ticket whose acceptance this dossier supports.
-- `research:20260513-superpowers-skill-activation` - source investigation behind the changes.
+- `.loom/tickets/done/20260513-superpowers-style-activation-doctrine.md` - ticket whose acceptance this dossier supports.
+- `.loom/research/20260513-superpowers-skill-activation.md` - source investigation behind the changes.

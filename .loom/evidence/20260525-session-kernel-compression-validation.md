@@ -1,7 +1,5 @@
 # Session Kernel Compression Validation
 
-ID: evidence:20260525-session-kernel-compression-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -9,9 +7,9 @@ Observed: 2026-05-25
 
 ## Related Records
 
-- `ticket:20260525-session-kernel-compression`
-- `spec:loom-protocol-compression`
-- `evidence:20260525-compression-inventory-baseline`
+- `.loom/tickets/done/20260525-session-kernel-compression.md`
+- `.loom/specs/loom-protocol-compression.md`
+- `.loom/evidence/20260525-compression-inventory-baseline.md`
 
 ## Procedure
 
@@ -82,10 +80,10 @@ Targeted searches found:
 
 ## What This Shows
 
-- `ticket:20260525-session-kernel-compression#ACC-001` is supported by source inspection and smoke output showing activation discipline remains present and the required activation phrases are not missing.
-- `ticket:20260525-session-kernel-compression#ACC-002` is supported by source inspection showing the complete loop remains explicit: shape, route durable truth, slice executable work, execute bounded Ralph, preserve evidence, audit claims, and reconcile records.
-- `ticket:20260525-session-kernel-compression#ACC-003` is supported by unchanged ordered reference filenames and successful Core smoke/pack checks. The preload mirrors still include the same ordered files dynamically, and no stale embedded doctrine was observed in touched preload surfaces.
-- `ticket:20260525-session-kernel-compression#ACC-004` is supported by recorded before/after line counts showing a smaller session kernel and by source inspection showing retained prose maps to activation, routing, shaping, worker handoff, proof, and safety requirements.
+- `.loom/tickets/done/20260525-session-kernel-compression.md#ACC-001` is supported by source inspection and smoke output showing activation discipline remains present and the required activation phrases are not missing.
+- `.loom/tickets/done/20260525-session-kernel-compression.md#ACC-002` is supported by source inspection showing the complete loop remains explicit: shape, route durable truth, slice executable work, execute bounded Ralph, preserve evidence, audit claims, and reconcile records.
+- `.loom/tickets/done/20260525-session-kernel-compression.md#ACC-003` is supported by unchanged ordered reference filenames and successful Core smoke/pack checks. The preload mirrors still include the same ordered files dynamically, and no stale embedded doctrine was observed in touched preload surfaces.
+- `.loom/tickets/done/20260525-session-kernel-compression.md#ACC-004` is supported by recorded before/after line counts showing a smaller session kernel and by source inspection showing retained prose maps to activation, routing, shaping, worker handoff, proof, and safety requirements.
 
 ## What This Does Not Show
 

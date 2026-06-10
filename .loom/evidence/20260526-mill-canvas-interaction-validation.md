@@ -1,7 +1,5 @@
 # Mill Canvas Interaction Validation
 
-ID: evidence:20260526-mill-canvas-interaction-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -9,7 +7,7 @@ Observed: 2026-05-26
 
 ## Summary
 
-Validation observations for `ticket:20260526-mill-canvas-interaction` after implementing backend option selection, recursive dead propagation, question-response parent wiring tests, and frontend option-selection wiring.
+Validation observations for `.loom/tickets/done/20260526-mill-canvas-interaction.md` after implementing backend option selection, recursive dead propagation, question-response parent wiring tests, and frontend option-selection wiring.
 
 ## Observations
 
@@ -29,11 +27,11 @@ Validation observations for `ticket:20260526-mill-canvas-interaction` after impl
 
 ## What This Shows
 
-- `ticket:20260526-mill-canvas-interaction#ACC-001` - partially supports - backend test coverage now verifies `parent_node_id` creates a child input and edge; frontend build confirms the response wiring compiles.
-- `ticket:20260526-mill-canvas-interaction#ACC-002` - supports backend state portion - backend tests verify selecting an option marks sibling options dead while keeping the selected option active and selected.
-- `ticket:20260526-mill-canvas-interaction#ACC-003` - supports backend propagation portion - backend tests verify recursive dead propagation across three descendant levels.
-- `ticket:20260526-mill-canvas-interaction#ACC-004` - partially supports - component code already hides or disables dead-node interactions and the frontend build confirms it compiles, but no browser interaction test was run.
-- `ticket:20260526-mill-canvas-interaction#ACC-005` - partially supports - frontend build confirms the reactive event-handling code compiles, but rapid state-update behavior was not exercised in a browser.
+- `.loom/tickets/done/20260526-mill-canvas-interaction.md#ACC-001` - partially supports - backend test coverage now verifies `parent_node_id` creates a child input and edge; frontend build confirms the response wiring compiles.
+- `.loom/tickets/done/20260526-mill-canvas-interaction.md#ACC-002` - supports backend state portion - backend tests verify selecting an option marks sibling options dead while keeping the selected option active and selected.
+- `.loom/tickets/done/20260526-mill-canvas-interaction.md#ACC-003` - supports backend propagation portion - backend tests verify recursive dead propagation across three descendant levels.
+- `.loom/tickets/done/20260526-mill-canvas-interaction.md#ACC-004` - partially supports - component code already hides or disables dead-node interactions and the frontend build confirms it compiles, but no browser interaction test was run.
+- `.loom/tickets/done/20260526-mill-canvas-interaction.md#ACC-005` - partially supports - frontend build confirms the reactive event-handling code compiles, but rapid state-update behavior was not exercised in a browser.
 
 ## What This Does Not Show
 
@@ -43,5 +41,5 @@ Validation observations for `ticket:20260526-mill-canvas-interaction` after impl
 
 ## Related Records
 
-- `ticket:20260526-mill-canvas-interaction` - implementation ticket validated by these observations.
-- `spec:mill-shaping-canvas` - intended behavior for option selection, dead branches, and node interactions.
+- `.loom/tickets/done/20260526-mill-canvas-interaction.md` - implementation ticket validated by these observations.
+- `.loom/specs/mill-shaping-canvas.md` - intended behavior for option selection, dead branches, and node interactions.

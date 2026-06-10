@@ -1,7 +1,5 @@
 # Loom Driver Agent Validation
 
-ID: evidence:20260515-loom-driver-agent-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -9,7 +7,7 @@ Observed: 2026-05-15 05:58 UTC
 
 ## Summary
 
-This dossier records validation observations for `ticket:20260515-loom-driver-agent` after adding the Loom Driver prompt, Codex TOML, OpenCode registration, Claude manifest exposure, and human-facing docs.
+This dossier records validation observations for `.loom/tickets/done/20260515-loom-driver-agent.md` after adding the Loom Driver prompt, Codex TOML, OpenCode registration, Claude manifest exposure, and human-facing docs.
 
 ## Observations
 
@@ -47,18 +45,18 @@ This dossier records validation observations for `ticket:20260515-loom-driver-ag
 
 ## What This Shows
 
-- `ticket:20260515-loom-driver-agent#ACC-001` - supports - canonical Driver prompt and Codex TOML contain inner-loop execution, packet-first, parallelization, evidence, audit, ticket reconciliation, and high-authority record boundary language.
-- `ticket:20260515-loom-driver-agent#ACC-002` - supports - Core smoke observed OpenCode registration for `loom-driver` with mode `all`, high-authority prompt check true, and task permission `allow`.
-- `ticket:20260515-loom-driver-agent#ACC-003` - partially supports - Claude manifest validation passed, Cursor agent directory exposure remained manifest-backed, Codex TOML exists and matches the canonical prompt, and Gemini continues to package agents through the Core agent directory; live runtime invocation was not tested.
-- `ticket:20260515-loom-driver-agent#ACC-004` - supports - docs were updated while model-critical behavior remained in `loom-core/agents/loom-driver.md` and `loom-core/codex/agents/loom-driver.toml`; grep did not find contributor-process leakage in Driver instructions.
-- `ticket:20260515-loom-driver-agent#ACC-005` - supports - Core smoke, Core dry pack check, `git diff --check`, and Claude plugin validation passed.
+- `.loom/tickets/done/20260515-loom-driver-agent.md#ACC-001` - supports - canonical Driver prompt and Codex TOML contain inner-loop execution, packet-first, parallelization, evidence, audit, ticket reconciliation, and high-authority record boundary language.
+- `.loom/tickets/done/20260515-loom-driver-agent.md#ACC-002` - supports - Core smoke observed OpenCode registration for `loom-driver` with mode `all`, high-authority prompt check true, and task permission `allow`.
+- `.loom/tickets/done/20260515-loom-driver-agent.md#ACC-003` - partially supports - Claude manifest validation passed, Cursor agent directory exposure remained manifest-backed, Codex TOML exists and matches the canonical prompt, and Gemini continues to package agents through the Core agent directory; live runtime invocation was not tested.
+- `.loom/tickets/done/20260515-loom-driver-agent.md#ACC-004` - supports - docs were updated while model-critical behavior remained in `loom-core/agents/loom-driver.md` and `loom-core/codex/agents/loom-driver.toml`; grep did not find contributor-process leakage in Driver instructions.
+- `.loom/tickets/done/20260515-loom-driver-agent.md#ACC-005` - supports - Core smoke, Core dry pack check, `git diff --check`, and Claude plugin validation passed.
 
 ## What This Does Not Show
 
-This evidence does not prove live runtime invocation in OpenCode, Claude Code, Codex, Cursor, or Gemini. It does not prove that OpenCode permission matching enforces the high-authority record deny rules in every runtime path. It does not prove ticket closure because `ticket:20260515-loom-driver-agent#ACC-006` still requires a fresh Ralph-backed audit pass.
+This evidence does not prove live runtime invocation in OpenCode, Claude Code, Codex, Cursor, or Gemini. It does not prove that OpenCode permission matching enforces the high-authority record deny rules in every runtime path. It does not prove ticket closure because `.loom/tickets/done/20260515-loom-driver-agent.md#ACC-006` still requires a fresh Ralph-backed audit pass.
 
 ## Related Records
 
-- `ticket:20260515-loom-driver-agent` - consuming ticket for these observations.
-- `spec:loom-driver-agent` - behavior contract these observations support.
-- `packet:20260515T054840Z-loom-driver-agent-implementation` - implementation packet that requested this validation evidence.
+- `.loom/tickets/done/20260515-loom-driver-agent.md` - consuming ticket for these observations.
+- `.loom/specs/loom-driver-agent.md` - behavior contract these observations support.
+- `former packet 20260515T054840Z-loom-driver-agent-implementation` - implementation packet that requested this validation evidence.

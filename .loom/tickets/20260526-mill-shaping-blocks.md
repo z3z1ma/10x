@@ -1,12 +1,11 @@
 # Interaction Block Engine
 
-ID: ticket:20260526-mill-shaping-blocks
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-26
 Updated: 2026-06-09
-Risk: high - core novelty of the feature; agent reasoning quality directly determines UX quality; prompt engineering intensive
-Depends On: ticket:20260526-mill-shaping-harness
+Depends-On: .loom/tickets/20260526-mill-shaping-harness.md
+
+Legacy note: Risk — high - core novelty of the feature; agent reasoning quality directly determines UX quality; prompt engineering intensive
 
 ## Summary
 
@@ -29,9 +28,9 @@ toward materialized records.
 
 ## Related Records
 
-- `plan:20260526-mill-shaping-sessions` - parent plan
-- `ticket:20260526-mill-shaping-harness` - provides bounded invocations
-- `spec:mill-shaping-sessions` - interaction texture description
+- `.loom/tickets/20260526-mill-shaping-sessions.md` - parent plan
+- `.loom/tickets/20260526-mill-shaping-harness.md` - provides bounded invocations
+- `.loom/specs/mill-shaping-sessions.md` - interaction texture description
 - `loom-mill/src/loom_mill/shaping/orchestrator.py` - invocation infrastructure
 
 ## Scope
@@ -380,7 +379,7 @@ The engine automatically transitions phases based on conversation progress:
 
 ## Evidence
 
-- `evidence:20260526-mill-shaping-blocks-engine-validation` - focused engine tests,
+- `.loom/evidence/20260526-mill-shaping-blocks-engine-validation.md` - focused engine tests,
   full backend tests, frontend build, and whitespace checks for touched files.
 
 ## Current State
@@ -408,7 +407,7 @@ in review until acceptance disposition is reconciled.
   for internal decision prompts without streaming reasoning to the user.
 - 2026-05-26: Implemented the decision parser, prompt templates, shaping engine,
   advance API endpoint, and focused tests. Validation evidence recorded in
-  `evidence:20260526-mill-shaping-blocks-engine-validation`; moved ticket to
+  `.loom/evidence/20260526-mill-shaping-blocks-engine-validation.md`; moved ticket to
   review pending audit.
 - 2026-05-26: Created ticket. Third in the shaping sessions plan. This is the
   core novelty—the agent reasoning that drives meaningful shaping conversations.

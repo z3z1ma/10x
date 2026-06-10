@@ -1,7 +1,5 @@
 # Direct Interactive Agent Surfaces
 
-ID: research:20260514-direct-interactive-agent-surfaces
-Type: Research
 Status: completed
 Created: 2026-05-14
 Updated: 2026-05-14
@@ -34,7 +32,7 @@ Excluded:
 - Cursor official docs, `https://cursor.com/docs/subagents`, `https://cursor.com/docs/rules`, `https://cursor.com/docs/plugins`, and `https://cursor.com/docs/agent/overview`, accessed 2026-05-14. The `cursor.com` pages were retrieved through a reader proxy after direct `docs.cursor.com` fetches returned only the dynamic documentation shell.
 - Codex official docs, `https://developers.openai.com/codex/subagents`, `https://developers.openai.com/codex/concepts/subagents`, `https://developers.openai.com/codex/config-reference`, `https://developers.openai.com/codex/config-advanced`, `https://developers.openai.com/codex/cli/reference`, `https://developers.openai.com/codex/plugins`, and `https://developers.openai.com/codex/plugins/build`, accessed 2026-05-14 and rechecked 2026-05-14 after the Codex custom-agent install decision.
 - Gemini CLI official repository docs, `https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/core/subagents.md`, `docs/core/remote-agents.md`, `docs/cli/skills.md`, `docs/cli/system-prompt.md`, `docs/cli/gemini-md.md`, `docs/extensions/index.md`, and `docs/reference/configuration.md`, accessed 2026-05-14.
-- Existing Loom research: `research:20260513-superpowers-skill-activation` for prior adapter/bootstrap context.
+- Existing Loom research: `.loom/research/20260513-superpowers-skill-activation.md` for prior adapter/bootstrap context.
 
 ## Findings
 
@@ -176,6 +174,6 @@ For Agent Loom, "agent equals system-prompt switch" favors OpenCode primary agen
 
 ## Related Records
 
-- `research:20260513-superpowers-skill-activation` - prior research on adapter bootstrap and skill activation across several harnesses.
+- `.loom/research/20260513-superpowers-skill-activation.md` - prior research on adapter bootstrap and skill activation across several harnesses.
 - `INSTALL.md` - current human-facing install matrix for supported harnesses.
 - `CLAUDE.md` - current harness integration acceptance posture.

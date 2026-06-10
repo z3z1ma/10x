@@ -1,12 +1,11 @@
 # Staging Area + Commit Flow
 
-ID: ticket:20260526-mill-shaping-staging
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-26
 Updated: 2026-06-09
-Risk: medium - atomic multi-file writes with cross-reference resolution; branch state management
-Depends On: ticket:20260526-mill-shaping-blocks
+Depends-On: .loom/tickets/20260526-mill-shaping-blocks.md
+
+Legacy note: Risk — medium - atomic multi-file writes with cross-reference resolution; branch state management
 
 ## Summary
 
@@ -21,9 +20,9 @@ session record.
 
 ## Related Records
 
-- `plan:20260526-mill-shaping-sessions` - parent plan
-- `ticket:20260526-mill-shaping-blocks` - produces proposals that feed staging
-- `spec:mill-shaping-sessions` - commit flow and staging behavior
+- `.loom/tickets/20260526-mill-shaping-sessions.md` - parent plan
+- `.loom/tickets/20260526-mill-shaping-blocks.md` - produces proposals that feed staging
+- `.loom/specs/mill-shaping-sessions.md` - commit flow and staging behavior
 - `loom-mill/src/loom_mill/api/design.py:204-227` - existing record creation pattern
 
 ## Scope
@@ -201,7 +200,7 @@ class CommitFlow:
         
         for record in active_records:
             slug = slugify(record.title)
-            real_id = f"{record.surface.rstrip('s')}:{today}-{slug}"  # e.g., "ticket:20260526-auth-fix"
+            real_id = f"{record.surface.rstrip('s')}:{today}-{slug}"  # e.g., ".loom/tickets/<20260526-auth-fix>.md"
             id_map[record.temp_id] = real_id
             path_map[record.temp_id] = self.workspace_root / ".loom" / record.surface / f"{today}-{slug}.md"
         
@@ -286,8 +285,6 @@ class CommitFlow:
         
         content = f"""# Shaping Session Record
 
-ID: knowledge:{slug}
-Type: Knowledge Preference
 Status: active
 Created: {today}
 Updated: {today}
@@ -408,7 +405,7 @@ in review until acceptance disposition is reconciled.
 
 ## Evidence
 
-- `evidence:20260526-mill-shaping-staging-validation` - focused staging tests, full
+- `.loom/evidence/20260526-mill-shaping-staging-validation.md` - focused staging tests, full
   backend tests, frontend build, and whitespace checks.
 
 ## Journal
@@ -422,7 +419,7 @@ in review until acceptance disposition is reconciled.
   commit flow, API endpoints, engine proposal integration, and focused tests.
 - 2026-05-26: Implemented staging manager, commit flow, API endpoints, engine
   proposal staging hook, and focused tests. Validation evidence recorded in
-  `evidence:20260526-mill-shaping-staging-validation`; moved ticket to review
+  `.loom/evidence/20260526-mill-shaping-staging-validation.md`; moved ticket to review
   pending audit.
 - 2026-05-26: Created ticket. Fourth in the shaping sessions plan. Handles the
   materialization of shaped work into durable Loom records.

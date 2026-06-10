@@ -1,13 +1,13 @@
 # Workstation Lifecycle UX: Dismiss, States, Context Actions
 
-ID: ticket:20260525-mill-workstation-lifecycle-ux
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-25
 Updated: 2026-05-25
-Risk: low - frontend-only behavioral improvements with minor backend endpoint addition.
+
+Legacy note: Risk — low - frontend-only behavioral improvements with minor backend endpoint addition.
+
 Priority: medium - depends on layout overhaul being done first.
-Depends On: ticket:20260525-mill-layout-overhaul
+Depends-On: .loom/tickets/done/20260525-mill-layout-overhaul.md
 
 ## Summary
 
@@ -17,8 +17,8 @@ Closure claim: Workstation lifecycle states are visually distinct, completed wor
 
 ## Related Records
 
-- `spec:mill-factory-floor` REQ-011, REQ-016 - workstation panels and operator controls
-- `ticket:20260525-mill-layout-overhaul` - provides the new WorkstationRow component to build on
+- `.loom/specs/mill-factory-floor.md` REQ-011, REQ-016 - workstation panels and operator controls
+- `.loom/tickets/done/20260525-mill-layout-overhaul.md` - provides the new WorkstationRow component to build on
 - `loom-mill/src/loom_mill/workstation/manager.py:87-97` - existing stop(remove=True) method
 
 ## Scope
@@ -118,12 +118,12 @@ Conflict/Andon workstations:
 
 ## Current State
 
-Dependency `ticket:20260525-mill-layout-overhaul` is closed. Frontend lifecycle implementation has progressed in the current master-detail files: row actions are state-gated, missing-ticket rows are dismiss-only, completed/finished workstations are grouped with dismiss support, stopped workstations remain outside bulk clear and keep Resume/Dismiss controls, clear-all completed calls DELETE per completed/finished workstation, and the detail panel shows state-specific context. Existing backend `DELETE /workstations/{id}` is present and routes through `WorkstationManager.stop(remove=True)` for cleanup/removal; no backend edit was made. Audit `audit:20260525-mill-workstation-lifecycle-ux-audit` found blockers around bulk-clearing stopped workstations and unregistered row-action endpoints; both have been fixed in the frontend. Evidence `evidence:20260525-mill-workstation-lifecycle-ux-build` records a passing frontend build and scoped whitespace check after those fixes. Playwright/manual browser verification for ACC-001 through ACC-004 is still missing, so the ticket remains in review.
+Dependency `.loom/tickets/done/20260525-mill-layout-overhaul.md` is closed. Frontend lifecycle implementation has progressed in the current master-detail files: row actions are state-gated, missing-ticket rows are dismiss-only, completed/finished workstations are grouped with dismiss support, stopped workstations remain outside bulk clear and keep Resume/Dismiss controls, clear-all completed calls DELETE per completed/finished workstation, and the detail panel shows state-specific context. Existing backend `DELETE /workstations/{id}` is present and routes through `WorkstationManager.stop(remove=True)` for cleanup/removal; no backend edit was made. Audit `.loom/reviews/20260525-mill-workstation-lifecycle-ux-audit.md` found blockers around bulk-clearing stopped workstations and unregistered row-action endpoints; both have been fixed in the frontend. Evidence `.loom/evidence/20260525-mill-workstation-lifecycle-ux-build.md` records a passing frontend build and scoped whitespace check after those fixes. Playwright/manual browser verification for ACC-001 through ACC-004 is still missing, so the ticket remains in review.
 
 ## Journal
 
 - 2026-05-25: Created ticket. Source: operator feedback that completed workstations pile up and controls don't match state.
-- 2026-05-25: Dependency `ticket:20260525-mill-layout-overhaul` is closed; unblocked lifecycle UX implementation.
+- 2026-05-25: Dependency `.loom/tickets/done/20260525-mill-layout-overhaul.md` is closed; unblocked lifecycle UX implementation.
 - 2026-05-25: Ralph implementation run updated scoped frontend lifecycle UX files and verified `npm --prefix loom-mill/frontend run build` passes. Moved to review because Playwright/manual behavior evidence and audit are still pending.
-- 2026-05-25: Recorded `audit:20260525-mill-workstation-lifecycle-ux-audit`; fixed FIND-001 by excluding stopped workstations from the completed bulk-clear group and fixed FIND-002 by routing Stop to the legacy stop endpoint and Resolve/Abort to shipping endpoints. Recorded `evidence:20260525-mill-workstation-lifecycle-ux-build` after `npm --prefix loom-mill/frontend run build` and scoped `git diff --check` passed.
-- 2026-05-25: Recorded `audit:20260525-mill-workstation-lifecycle-ux-followup-audit`; original code blockers appear resolved, but restored `Status: review` because ACC-001 through ACC-004 still need behavioral evidence before closure.
+- 2026-05-25: Recorded `.loom/reviews/20260525-mill-workstation-lifecycle-ux-audit.md`; fixed FIND-001 by excluding stopped workstations from the completed bulk-clear group and fixed FIND-002 by routing Stop to the legacy stop endpoint and Resolve/Abort to shipping endpoints. Recorded `.loom/evidence/20260525-mill-workstation-lifecycle-ux-build.md` after `npm --prefix loom-mill/frontend run build` and scoped `git diff --check` passed.
+- 2026-05-25: Recorded `.loom/reviews/20260525-mill-workstation-lifecycle-ux-followup-audit.md`; original code blockers appear resolved, but restored `Status: review` because ACC-001 through ACC-004 still need behavioral evidence before closure.

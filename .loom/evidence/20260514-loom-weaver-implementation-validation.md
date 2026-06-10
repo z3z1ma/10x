@@ -1,7 +1,5 @@
 # Loom Weaver Implementation Validation
 
-ID: evidence:20260514-loom-weaver-implementation-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-14
 Updated: 2026-05-14
@@ -10,11 +8,11 @@ Observed: 2026-05-14 22:55 UTC
 ## Summary
 
 This dossier records source inspection, source-doc recheck, package checks, and
-adapter validation for `ticket:20260514-loom-weaver-agent` after adding the Loom
+adapter validation for `.loom/tickets/done/20260514-loom-weaver-agent.md` after adding the Loom
 Weaver agent and Codex bundled skill path.
 
 Freshness note: the Codex bundled-skill observations in this dossier were
-superseded by `evidence:20260514-loom-weaver-codex-agent-followup-validation`
+superseded by `.loom/evidence/20260514-loom-weaver-codex-agent-followup-validation.md`
 after the operator chose a Codex custom-agent TOML install path instead of a Core
 skill. Non-Codex observations remain historical evidence for the earlier
 implementation slice.
@@ -60,24 +58,24 @@ implementation slice.
 
 ## What This Shows
 
-- `ticket:20260514-loom-weaver-agent#ACC-001` - supports - source inspection and smoke output show the Loom Weaver prompt/skill bodies contain the required write boundary, shaping posture, challenge language, option recommendation guidance, Loom routing, and proof-honesty constraints.
-- `ticket:20260514-loom-weaver-agent#ACC-002` - supports - Core smoke shows OpenCode registers `loom-weaver` with `mode: "all"`, prompt content, and `.loom/**` edit allowlist over default edit deny.
-- `ticket:20260514-loom-weaver-agent#ACC-003` - supports - Claude plugin validation passed after the manifest named the agent file with the schema-supported `agents` array shape.
-- `ticket:20260514-loom-weaver-agent#ACC-004` - partially supports - Gemini extension validation passed with `agents/loom-weaver.md` present, supporting package structure validity but not live `@loom-weaver` runtime invocation.
-- `ticket:20260514-loom-weaver-agent#ACC-006` - supports - Codex docs and source inspection support the plugin-native bundled skill route and the decision not to ship or document manual profile copying as the default path.
-- `ticket:20260514-loom-weaver-agent#ACC-007` - supports - human-facing docs now describe harness-specific invocation semantics and avoid claiming universal `@<agent>` support.
-- `ticket:20260514-loom-weaver-agent#ACC-008` - supports - Core smoke, Core pack dry-run, Claude plugin validation, Gemini extension validation, and `git diff --check` passed.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-001` - supports - source inspection and smoke output show the Loom Weaver prompt/skill bodies contain the required write boundary, shaping posture, challenge language, option recommendation guidance, Loom routing, and proof-honesty constraints.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-002` - supports - Core smoke shows OpenCode registers `loom-weaver` with `mode: "all"`, prompt content, and `.loom/**` edit allowlist over default edit deny.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-003` - supports - Claude plugin validation passed after the manifest named the agent file with the schema-supported `agents` array shape.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-004` - partially supports - Gemini extension validation passed with `agents/loom-weaver.md` present, supporting package structure validity but not live `@loom-weaver` runtime invocation.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-006` - supports - Codex docs and source inspection support the plugin-native bundled skill route and the decision not to ship or document manual profile copying as the default path.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-007` - supports - human-facing docs now describe harness-specific invocation semantics and avoid claiming universal `@<agent>` support.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-008` - supports - Core smoke, Core pack dry-run, Claude plugin validation, Gemini extension validation, and `git diff --check` passed.
 
 ## What This Does Not Show
 
 - This evidence does not prove live runtime invocation inside OpenCode, Claude Code, Codex, Cursor, or Gemini CLI; it records source inspection, docs support, and available package/manifest validation.
 - This evidence does not prove OpenCode's permission schema enforces `.loom/**` exactly at runtime; it records the configured permission shape and smoke inspection.
 - This evidence does not validate Cursor plugin behavior with a harness validator; no Cursor validator was run or available in this session.
-- This evidence does not replace the required audit/review pass for `ticket:20260514-loom-weaver-agent#ACC-009`.
+- This evidence does not replace the required audit/review pass for `.loom/tickets/done/20260514-loom-weaver-agent.md#ACC-009`.
 
 ## Related Records
 
-- `ticket:20260514-loom-weaver-agent` - consuming ticket and acceptance criteria.
-- `spec:loom-weaver-agent` - behavior contract for Loom Weaver.
-- `research:20260514-direct-interactive-agent-surfaces` - source-backed harness capability research, amended for the Codex plugin-native skill route.
-- `packet:20260514T223622Z-loom-weaver-agent-implementation` - implementation packet that produced these observations.
+- `.loom/tickets/done/20260514-loom-weaver-agent.md` - consuming ticket and acceptance criteria.
+- `.loom/specs/loom-weaver-agent.md` - behavior contract for Loom Weaver.
+- `.loom/research/20260514-direct-interactive-agent-surfaces.md` - source-backed harness capability research, amended for the Codex plugin-native skill route.
+- `former packet 20260514T223622Z-loom-weaver-agent-implementation` - implementation packet that produced these observations.

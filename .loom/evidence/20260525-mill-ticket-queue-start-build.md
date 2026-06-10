@@ -1,7 +1,5 @@
 # Mill Ticket Queue Start Frontend Build
 
-ID: evidence:20260525-mill-ticket-queue-start-build
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -42,7 +40,7 @@ dist/assets/index-DducmVA0.js   108.72 kB │ gzip: 33.72 kB
 
 ## What This Shows
 
-- ticket:20260525-mill-ticket-queue-start#ACC-006 - supports - `npm --prefix loom-mill/frontend run build` completed without errors after the scoped frontend changes.
+- .loom/tickets/done/20260525-mill-ticket-queue-start.md#ACC-006 - supports - `npm --prefix loom-mill/frontend run build` completed without errors after the scoped frontend changes.
 
 ## What This Does Not Show
 
@@ -50,4 +48,4 @@ This evidence does not verify browser rendering, Playwright screenshots, Ready t
 
 ## Related Records
 
-- ticket:20260525-mill-ticket-queue-start - ticket whose build acceptance criterion this observation supports.
+- .loom/tickets/done/20260525-mill-ticket-queue-start.md - ticket whose build acceptance criterion this observation supports.

@@ -1,7 +1,5 @@
 # Gemini Playbooks Skills Root Conflict
 
-ID: research:20260515-gemini-playbooks-skills-root
-Type: Research
 Status: completed
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -12,7 +10,7 @@ Gemini CLI extension docs make the remaining Playbooks conversion non-local: an 
 
 ## Question
 
-Can `ticket:20260515-gemini-playbook-commands` expose Gemini Playbooks as commands without moving or splitting the current `loom-playbooks/skills/` directory?
+Can `.loom/tickets/done/20260515-gemini-playbook-commands.md` expose Gemini Playbooks as commands without moving or splitting the current `loom-playbooks/skills/` directory?
 
 ## Scope
 
@@ -34,7 +32,7 @@ Excluded:
 - Gemini extension writing guide, fetched 2026-05-15: custom commands are invoked by the user, while agent skills are invoked by the model. The guide says Gemini CLI automatically discovers skills bundled with an extension and the model activates them when it identifies a relevant task.
 - Gemini skills docs, fetched 2026-05-15: at session start, Gemini scans discovery tiers and injects the name and description of all enabled skills into the system prompt; extension skills are one of those discovery tiers; activation happens through `activate_skill` when the model matches a description.
 - Gemini custom commands docs, fetched 2026-05-15: TOML commands are user-invoked prompt macros under `commands/`, with `prompt`, optional `description`, and argument/file/shell injection support.
-- `research:20260515-playbook-command-surfaces` - earlier research that Gemini commands are the right explicit surface and Gemini skills are model-activated.
+- `.loom/research/20260515-playbook-command-surfaces.md` - earlier research that Gemini commands are the right explicit surface and Gemini skills are model-activated.
 - `loom-playbooks/gemini-extension.json` and `loom-playbooks/skills/` - current source layout inspected during this plan.
 
 ## Findings
@@ -61,7 +59,7 @@ Excluded:
   Strength: avoids moving the shared skill corpus and gives Gemini a clean `commands/` root with no `skills/`. Weakness: changes Gemini install and validation paths; the current repository guidance expects validating `$PWD/loom-playbooks`, not a sub-extension path.
 
 - Accept Gemini skill activation as a temporary exception.
-  Strength: avoids package restructure. Weakness: violates `spec:playbook-explicit-macros#REQ-006` and the research conclusion that Gemini skills remain model-activated.
+  Strength: avoids package restructure. Weakness: violates `.loom/specs/playbook-explicit-macros.md#REQ-006` and the research conclusion that Gemini skills remain model-activated.
 
 ## Rejected Paths And Null Results
 
@@ -73,7 +71,7 @@ Excluded:
 
 ## Conclusions
 
-- `ticket:20260515-gemini-playbook-commands` is blocked by package-root shape, not TOML syntax.
+- `.loom/tickets/done/20260515-gemini-playbook-commands.md` is blocked by package-root shape, not TOML syntax.
 
 - The remaining Gemini work requires a package architecture decision before implementation: either move the shared Playbook skill corpus out of the Gemini extension root, or create a Gemini-specific command-only extension root and update install/validation guidance accordingly.
 
@@ -96,7 +94,7 @@ Excluded:
 
 ## Related Records
 
-- `ticket:20260515-gemini-playbook-commands` - blocked consumer of this research.
-- `plan:20260515-playbook-explicit-macros` - broader conversion plan now blocked on the Gemini package-root decision.
-- `spec:playbook-explicit-macros` - behavior contract requiring Gemini true commands and no Playbook skill exposure.
-- `research:20260515-playbook-command-surfaces` - earlier harness command-surface research.
+- `.loom/tickets/done/20260515-gemini-playbook-commands.md` - blocked consumer of this research.
+- `.loom/tickets/20260515-playbook-explicit-macros.md` - broader conversion plan now blocked on the Gemini package-root decision.
+- `.loom/specs/playbook-explicit-macros.md` - behavior contract requiring Gemini true commands and no Playbook skill exposure.
+- `.loom/research/20260515-playbook-command-surfaces.md` - earlier harness command-surface research.

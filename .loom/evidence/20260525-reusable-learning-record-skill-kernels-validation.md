@@ -1,7 +1,5 @@
 # Reusable Learning Record Skill Kernels Validation
 
-ID: evidence:20260525-reusable-learning-record-skill-kernels-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-25
 Updated: 2026-05-25
@@ -56,10 +54,10 @@ This dossier records validation for the bounded Ralph worker run that compressed
 
 ## What This Shows
 
-- `ticket:20260525-record-skill-kernels#ACC-001` - supports for this run's scope - the two touched station kernels preserve owner truth, triggers, inspect/write paths, lifecycle/status rules or record shape, stop conditions, and non-examples.
-- `ticket:20260525-record-skill-kernels#ACC-002` - supports for this run's scope - retained references and templates remain linked from their owning `SKILL.md` files and are shorter detail cards or compact templates.
-- `ticket:20260525-record-skill-kernels#ACC-004` - supports for this run's scope - before/after line counts show compression for the two touched skill families.
-- `ticket:20260525-record-skill-kernels#ACC-005` - supports for this run's scope - Core smoke, Core pack check, and `git diff --check` passed before and after record updates.
+- `.loom/tickets/done/20260525-record-skill-kernels.md#ACC-001` - supports for this run's scope - the two touched station kernels preserve owner truth, triggers, inspect/write paths, lifecycle/status rules or record shape, stop conditions, and non-examples.
+- `.loom/tickets/done/20260525-record-skill-kernels.md#ACC-002` - supports for this run's scope - retained references and templates remain linked from their owning `SKILL.md` files and are shorter detail cards or compact templates.
+- `.loom/tickets/done/20260525-record-skill-kernels.md#ACC-004` - supports for this run's scope - before/after line counts show compression for the two touched skill families.
+- `.loom/tickets/done/20260525-record-skill-kernels.md#ACC-005` - supports for this run's scope - Core smoke, Core pack check, and `git diff --check` passed before and after record updates.
 
 ## What This Does Not Show
 
@@ -70,7 +68,7 @@ This dossier records validation for the bounded Ralph worker run that compressed
 
 ## Related Records
 
-- `ticket:20260525-record-skill-kernels` - active ticket this evidence supports.
-- `spec:loom-protocol-compression` - compression contract.
-- `evidence:20260525-execution-spine-record-skill-kernels-validation` - prior bounded run evidence for ticket, Ralph, evidence, and audit skill families.
-- `evidence:20260525-direction-record-skill-kernels-validation` - prior bounded run evidence for constitution, specs, plans, and research skill families.
+- `.loom/tickets/done/20260525-record-skill-kernels.md` - active ticket this evidence supports.
+- `.loom/specs/loom-protocol-compression.md` - compression contract.
+- `.loom/evidence/20260525-execution-spine-record-skill-kernels-validation.md` - prior bounded run evidence for ticket, Ralph, evidence, and audit skill families.
+- `.loom/evidence/20260525-direction-record-skill-kernels-validation.md` - prior bounded run evidence for constitution, specs, plans, and research skill families.

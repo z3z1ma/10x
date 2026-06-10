@@ -1,7 +1,5 @@
 # Ticket-Owned Worker Handoffs Validation
 
-ID: evidence:20260515-ticket-owned-worker-handoffs-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -35,24 +33,24 @@ An earlier bounded review run found `FIND-001`, a malformed bullet in `loom-core
 
 ## What This Shows
 
-- Supports `ticket:20260515-core-ticket-owned-worker-doctrine#ACC-001` through `ACC-005`: Core skills no longer contain active packet terminology, Core smoke and pack checks passed, and the Ralph invariant defect found during review was fixed.
-- Supports `ticket:20260515-agent-surfaces-ticket-worker-model#ACC-001` through `ACC-005`: Core agent and Codex agent surfaces contain no packet terminology, Core smoke confirms Driver permissions no longer include `.loom/packets`, and Core checks passed.
-- Supports `ticket:20260515-playbook-ticket-worker-language#ACC-001` through `ACC-005`: Playbook source and generated command surfaces contain no packet terminology, Playbooks smoke confirms 25 command macros, and Playbooks checks passed.
-- Supports `ticket:20260515-docs-validation-no-packets#ACC-001` through `ACC-004`: current docs/tests/evals searched outside `.loom` contain no packet terminology, and all package/Markdown checks passed.
-- Supports `spec:ticket-owned-worker-handoffs#REQ-001` and `REQ-008` for active product surfaces searched outside historical `.loom` records.
+- Supports `.loom/tickets/done/20260515-core-ticket-owned-worker-doctrine.md#ACC-001` through `ACC-005`: Core skills no longer contain active packet terminology, Core smoke and pack checks passed, and the Ralph invariant defect found during review was fixed.
+- Supports `.loom/tickets/done/20260515-agent-surfaces-ticket-worker-model.md#ACC-001` through `ACC-005`: Core agent and Codex agent surfaces contain no packet terminology, Core smoke confirms Driver permissions no longer include `.loom/packets`, and Core checks passed.
+- Supports `.loom/tickets/done/20260515-playbook-ticket-worker-language.md#ACC-001` through `ACC-005`: Playbook source and generated command surfaces contain no packet terminology, Playbooks smoke confirms 25 command macros, and Playbooks checks passed.
+- Supports `.loom/tickets/done/20260515-docs-validation-no-packets.md#ACC-001` through `ACC-004`: current docs/tests/evals searched outside `.loom` contain no packet terminology, and all package/Markdown checks passed.
+- Supports `.loom/specs/ticket-owned-worker-handoffs.md#REQ-001` and `REQ-008` for active product surfaces searched outside historical `.loom` records.
 
 ## What This Does Not Show
 
-- It does not prove every historical `.loom` packet record has been removed or rewritten; that is intentionally out of scope and contradicted by `decision:0002`, which allows historical packet records to remain as history.
+- It does not prove every historical `.loom` packet record has been removed or rewritten; that is intentionally out of scope and contradicted by `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, which allows historical packet records to remain as history.
 - It does not prove runtime behavior inside every external harness beyond the package smoke checks and source inspection represented by the commands above.
 - It does not by itself close the tickets or accept residual risk; ticket closure and audit disposition remain ticket-owned.
 
 ## Related Records
 
-- `decision:0002` - durable decision retiring packets as an active surface while keeping Ralph.
-- `spec:ticket-owned-worker-handoffs` - behavior contract validated by these observations.
-- `plan:20260515-ticket-owned-worker-handoffs` - migration plan.
-- `ticket:20260515-core-ticket-owned-worker-doctrine` - Core skill migration ticket.
-- `ticket:20260515-agent-surfaces-ticket-worker-model` - agent surface migration ticket.
-- `ticket:20260515-playbook-ticket-worker-language` - Playbook language migration ticket.
-- `ticket:20260515-docs-validation-no-packets` - docs/final validation ticket.
+- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - durable decision retiring packets as an active surface while keeping Ralph.
+- `.loom/specs/ticket-owned-worker-handoffs.md` - behavior contract validated by these observations.
+- `.loom/tickets/20260515-ticket-owned-worker-handoffs.md` - migration plan.
+- `.loom/tickets/done/20260515-core-ticket-owned-worker-doctrine.md` - Core skill migration ticket.
+- `.loom/tickets/done/20260515-agent-surfaces-ticket-worker-model.md` - agent surface migration ticket.
+- `.loom/tickets/done/20260515-playbook-ticket-worker-language.md` - Playbook language migration ticket.
+- `.loom/tickets/done/20260515-docs-validation-no-packets.md` - docs/final validation ticket.

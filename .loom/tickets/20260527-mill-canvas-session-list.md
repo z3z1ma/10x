@@ -1,11 +1,11 @@
 # Shaping Session List and Resume
 
-ID: ticket:20260527-mill-canvas-session-list
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-27
 Updated: 2026-05-27
-Risk: low - additive UI feature; backend list endpoint likely already exists
+
+Legacy note: Risk — low - additive UI feature; backend list endpoint likely already exists
+
 Priority: high - first class concern per operator; without this, sessions are effectively disposable
 
 ## Summary
@@ -23,7 +23,7 @@ review, and start new sessions without losing access to prior ones.
 
 ## Related Records
 
-- `spec:mill-shaping-canvas` — governs canvas UX
+- `.loom/specs/mill-shaping-canvas.md` — governs canvas UX
 - `loom-mill/src/loom_mill/api/shaping.py` — has `list_shaping_sessions()` endpoint
   (GET /shaping/sessions) that returns session metadata
 - `loom-mill/src/loom_mill/shaping/session.py` — `ShapingSession.list_sessions()`

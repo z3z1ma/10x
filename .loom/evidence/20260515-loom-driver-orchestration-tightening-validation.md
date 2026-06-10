@@ -1,7 +1,5 @@
 # Loom Driver Orchestration Tightening Validation
 
-ID: evidence:20260515-loom-driver-orchestration-tightening-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -47,18 +45,18 @@ This dossier records validation observations after tightening Loom Driver around
 
 ## What This Shows
 
-- `ticket:20260515-loom-driver-orchestration-tightening#ACC-001` - supports - the amended spec now describes Driver as inner-loop coordination through packets, workers, evidence, audit, and ticket reconciliation, with completion, blocker, and escalation outcomes.
-- `ticket:20260515-loom-driver-orchestration-tightening#ACC-002` - supports - the canonical prompt and Codex TOML contain matching coordination behavior and Core smoke reports prompt/TOML parity.
-- `ticket:20260515-loom-driver-orchestration-tightening#ACC-003` - supports - Core smoke shows Driver edit permissions deny general edits and allow only execution-record paths while preserving task permission for worker orchestration.
-- `ticket:20260515-loom-driver-orchestration-tightening#ACC-004` - supports - updated docs describe Driver as packetized coordination and no longer claim Driver directly edits source.
-- `ticket:20260515-loom-driver-orchestration-tightening#ACC-005` - supports - Core smoke, Core pack dry-run, `git diff --check`, and Claude plugin validation passed.
+- `.loom/tickets/done/20260515-loom-driver-orchestration-tightening.md#ACC-001` - supports - the amended spec now describes Driver as inner-loop coordination through packets, workers, evidence, audit, and ticket reconciliation, with completion, blocker, and escalation outcomes.
+- `.loom/tickets/done/20260515-loom-driver-orchestration-tightening.md#ACC-002` - supports - the canonical prompt and Codex TOML contain matching coordination behavior and Core smoke reports prompt/TOML parity.
+- `.loom/tickets/done/20260515-loom-driver-orchestration-tightening.md#ACC-003` - supports - Core smoke shows Driver edit permissions deny general edits and allow only execution-record paths while preserving task permission for worker orchestration.
+- `.loom/tickets/done/20260515-loom-driver-orchestration-tightening.md#ACC-004` - supports - updated docs describe Driver as packetized coordination and no longer claim Driver directly edits source.
+- `.loom/tickets/done/20260515-loom-driver-orchestration-tightening.md#ACC-005` - supports - Core smoke, Core pack dry-run, `git diff --check`, and Claude plugin validation passed.
 
 ## What This Does Not Show
 
-This evidence does not prove live runtime invocation in OpenCode, Claude Code, Codex, Cursor, or Gemini. It does not prove OpenCode's runtime permission matcher applies glob rules in the same order as represented in smoke output. It does not prove ticket closure because `ticket:20260515-loom-driver-orchestration-tightening#ACC-006` still requires a fresh Ralph-backed audit pass.
+This evidence does not prove live runtime invocation in OpenCode, Claude Code, Codex, Cursor, or Gemini. It does not prove OpenCode's runtime permission matcher applies glob rules in the same order as represented in smoke output. It does not prove ticket closure because `.loom/tickets/done/20260515-loom-driver-orchestration-tightening.md#ACC-006` still requires a fresh Ralph-backed audit pass.
 
 ## Related Records
 
-- `ticket:20260515-loom-driver-orchestration-tightening` - consuming ticket for these observations.
-- `spec:loom-driver-agent` - amended behavior contract these observations support.
-- `packet:20260515T062418Z-loom-driver-orchestration-tightening` - implementation packet that requested this validation evidence.
+- `.loom/tickets/done/20260515-loom-driver-orchestration-tightening.md` - consuming ticket for these observations.
+- `.loom/specs/loom-driver-agent.md` - amended behavior contract these observations support.
+- `former packet 20260515T062418Z-loom-driver-orchestration-tightening` - implementation packet that requested this validation evidence.

@@ -1,7 +1,5 @@
 # Product Surface Language Cleanup Checks
 
-ID: evidence:20260510-product-surface-language-cleanup-checks
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-10
 Updated: 2026-05-11
@@ -30,9 +28,9 @@ Search checks:
 
 ## What This Shows
 
-- Supports `ticket:20260510-product-surface-language-cleanup#ACC-001`: shipped skill bodies no longer contain the searched package-boundary guidance terms.
-- Supports `ticket:20260510-product-surface-language-cleanup#ACC-002`: shipped skill bodies no longer contain the searched eval-shaped terms.
-- Supports `ticket:20260510-product-surface-language-cleanup#ACC-003`: package and Markdown checks passed after cleanup.
+- Supports `.loom/tickets/done/20260510-product-surface-language-cleanup.md#ACC-001`: shipped skill bodies no longer contain the searched package-boundary guidance terms.
+- Supports `.loom/tickets/done/20260510-product-surface-language-cleanup.md#ACC-002`: shipped skill bodies no longer contain the searched eval-shaped terms.
+- Supports `.loom/tickets/done/20260510-product-surface-language-cleanup.md#ACC-003`: package and Markdown checks passed after cleanup.
 - Supports the ticket's single closure claim for the searched public-doc wording terms after the two review findings were patched.
 
 ## What This Does Not Show
@@ -44,4 +42,4 @@ Search checks:
 
 ## Related Records
 
-- `ticket:20260510-product-surface-language-cleanup` - ticket supported by this evidence.
+- `.loom/tickets/done/20260510-product-surface-language-cleanup.md` - ticket supported by this evidence.

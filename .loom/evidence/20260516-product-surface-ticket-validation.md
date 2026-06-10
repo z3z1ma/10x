@@ -1,7 +1,5 @@
 # Product Surface Follow-up Ticket Validation
 
-ID: evidence:20260516-product-surface-ticket-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-16
 Updated: 2026-05-16
@@ -10,7 +8,7 @@ Observed: 2026-05-16
 ## Summary
 
 This dossier records final validation observations for the four product-surface
-follow-up tickets created from `research:20260516-product-surface-scan`. It groups
+follow-up tickets created from `.loom/research/20260516-product-surface-scan.md`. It groups
 source inspections, targeted searches, package checks, explicit skill request tests,
 and formatting checks used by ticket review and closure.
 
@@ -74,21 +72,21 @@ and formatting checks used by ticket review and closure.
 
 ## What This Shows
 
-- `ticket:20260516-activation-scenarios-core-first-playbooks#ACC-001` - supports - targeted fixture search found no stale `loom-idea-refine` natural-prompt expectation pattern checked during review.
-- `ticket:20260516-activation-scenarios-core-first-playbooks#ACC-002` - supports - targeted fixture search found no stale debugging Playbook invocation expectation pattern checked during review.
-- `ticket:20260516-activation-scenarios-core-first-playbooks#ACC-003` - supports - `git diff --check` passed; search results show wording remains framed around Core-first natural routing and no Playbook auto-load.
-- `ticket:20260516-playbook-command-descriptions-source#ACC-001` - supports - source helper now emits source descriptions, and generated comparison matched all 25 descriptions.
-- `ticket:20260516-playbook-command-descriptions-source#ACC-002` - supports - generated command descriptions matched all 25 source descriptions and no generated command description contained the forbidden prefix.
-- `ticket:20260516-playbook-command-descriptions-source#ACC-003` - supports - smoke showed Playbooks still register as commands, with no registered Playbook skill paths.
-- `ticket:20260516-playbook-command-descriptions-source#ACC-004` - supports - `git diff --check` passed.
-- `ticket:20260516-generic-playbook-install-safety#ACC-001` - supports - source-doc search and inspection showed generic raw Playbook exposure is now qualified.
-- `ticket:20260516-generic-playbook-install-safety#ACC-002` - supports - fallback wording search/inspection showed Core-first natural routing remains explicit.
-- `ticket:20260516-generic-playbook-install-safety#ACC-003` - supports - docs still describe explicit Playbook surfaces without changing package entrypoints or generated command mechanics.
-- `ticket:20260516-generic-playbook-install-safety#ACC-004` - supports - `git diff --check` passed.
-- `ticket:20260516-explicit-skill-test-first-action-failures#ACC-001` - supports - strict runner logic now fails the controlled wrong-skill-first fixture and the passing suite shows no premature non-skill tools before first skill call.
-- `ticket:20260516-explicit-skill-test-first-action-failures#ACC-002` - supports - the runner now requires the first skill payload to match the requested skill in live cases; source inspection covers the no-skill branch.
-- `ticket:20260516-explicit-skill-test-first-action-failures#ACC-003` - supports - review diff removed the previous `todowrite` exemption from the pre-first-skill check.
-- `ticket:20260516-explicit-skill-test-first-action-failures#ACC-004` - supports - explicit request suite passed under OpenCode and `git diff --check` passed.
+- `.loom/tickets/done/20260516-activation-scenarios-core-first-playbooks.md#ACC-001` - supports - targeted fixture search found no stale `loom-idea-refine` natural-prompt expectation pattern checked during review.
+- `.loom/tickets/done/20260516-activation-scenarios-core-first-playbooks.md#ACC-002` - supports - targeted fixture search found no stale debugging Playbook invocation expectation pattern checked during review.
+- `.loom/tickets/done/20260516-activation-scenarios-core-first-playbooks.md#ACC-003` - supports - `git diff --check` passed; search results show wording remains framed around Core-first natural routing and no Playbook auto-load.
+- `.loom/tickets/done/20260516-playbook-command-descriptions-source.md#ACC-001` - supports - source helper now emits source descriptions, and generated comparison matched all 25 descriptions.
+- `.loom/tickets/done/20260516-playbook-command-descriptions-source.md#ACC-002` - supports - generated command descriptions matched all 25 source descriptions and no generated command description contained the forbidden prefix.
+- `.loom/tickets/done/20260516-playbook-command-descriptions-source.md#ACC-003` - supports - smoke showed Playbooks still register as commands, with no registered Playbook skill paths.
+- `.loom/tickets/done/20260516-playbook-command-descriptions-source.md#ACC-004` - supports - `git diff --check` passed.
+- `.loom/tickets/done/20260516-generic-playbook-install-safety.md#ACC-001` - supports - source-doc search and inspection showed generic raw Playbook exposure is now qualified.
+- `.loom/tickets/done/20260516-generic-playbook-install-safety.md#ACC-002` - supports - fallback wording search/inspection showed Core-first natural routing remains explicit.
+- `.loom/tickets/done/20260516-generic-playbook-install-safety.md#ACC-003` - supports - docs still describe explicit Playbook surfaces without changing package entrypoints or generated command mechanics.
+- `.loom/tickets/done/20260516-generic-playbook-install-safety.md#ACC-004` - supports - `git diff --check` passed.
+- `.loom/tickets/done/20260516-explicit-skill-test-first-action-failures.md#ACC-001` - supports - strict runner logic now fails the controlled wrong-skill-first fixture and the passing suite shows no premature non-skill tools before first skill call.
+- `.loom/tickets/done/20260516-explicit-skill-test-first-action-failures.md#ACC-002` - supports - the runner now requires the first skill payload to match the requested skill in live cases; source inspection covers the no-skill branch.
+- `.loom/tickets/done/20260516-explicit-skill-test-first-action-failures.md#ACC-003` - supports - review diff removed the previous `todowrite` exemption from the pre-first-skill check.
+- `.loom/tickets/done/20260516-explicit-skill-test-first-action-failures.md#ACC-004` - supports - explicit request suite passed under OpenCode and `git diff --check` passed.
 
 ## What This Does Not Show
 
@@ -100,9 +98,9 @@ and formatting checks used by ticket review and closure.
 
 ## Related Records
 
-- `research:20260516-product-surface-scan` - source of the follow-up recommendations.
-- `spec:playbook-explicit-macros` - expected Playbook explicit macro behavior and command-description requirement.
-- `ticket:20260516-activation-scenarios-core-first-playbooks` - activation fixture ticket.
-- `ticket:20260516-playbook-command-descriptions-source` - generated command description ticket.
-- `ticket:20260516-generic-playbook-install-safety` - install/docs safety ticket.
-- `ticket:20260516-explicit-skill-test-first-action-failures` - explicit skill request test hardening ticket.
+- `.loom/research/20260516-product-surface-scan.md` - source of the follow-up recommendations.
+- `.loom/specs/playbook-explicit-macros.md` - expected Playbook explicit macro behavior and command-description requirement.
+- `.loom/tickets/done/20260516-activation-scenarios-core-first-playbooks.md` - activation fixture ticket.
+- `.loom/tickets/done/20260516-playbook-command-descriptions-source.md` - generated command description ticket.
+- `.loom/tickets/done/20260516-generic-playbook-install-safety.md` - install/docs safety ticket.
+- `.loom/tickets/done/20260516-explicit-skill-test-first-action-failures.md` - explicit skill request test hardening ticket.

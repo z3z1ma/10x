@@ -1,7 +1,5 @@
 # Loom Driver Rename Validation
 
-ID: evidence:20260515-loom-driver-rename-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -47,17 +45,17 @@ This dossier records validation observations after renaming the inner-loop coord
 
 ## What This Shows
 
-- `ticket:20260515-loom-driver-rename#ACC-001` - supports - workspace filenames and record IDs use the Driver slug/name consistently.
-- `ticket:20260515-loom-driver-rename#ACC-002` - supports - source, docs, adapter surfaces, and Loom records contain no predecessor-name text occurrences outside VCS metadata.
-- `ticket:20260515-loom-driver-rename#ACC-003` - supports - Core smoke and package checks pass with the Driver agent surface and packed files.
-- `ticket:20260515-loom-driver-rename#ACC-004` - supports - Claude Core plugin validation passed after the manifest and agent filename rename.
+- `.loom/tickets/done/20260515-loom-driver-rename.md#ACC-001` - supports - workspace filenames and record IDs use the Driver slug/name consistently.
+- `.loom/tickets/done/20260515-loom-driver-rename.md#ACC-002` - supports - source, docs, adapter surfaces, and Loom records contain no predecessor-name text occurrences outside VCS metadata.
+- `.loom/tickets/done/20260515-loom-driver-rename.md#ACC-003` - supports - Core smoke and package checks pass with the Driver agent surface and packed files.
+- `.loom/tickets/done/20260515-loom-driver-rename.md#ACC-004` - supports - Claude Core plugin validation passed after the manifest and agent filename rename.
 
 ## What This Does Not Show
 
-This evidence does not prove live runtime invocation in OpenCode, Claude Code, Codex, Cursor, or Gemini. It does not inspect or rewrite VCS metadata under `.git/`. It does not prove ticket closure because `ticket:20260515-loom-driver-rename#ACC-005` still requires a fresh Ralph-backed audit pass.
+This evidence does not prove live runtime invocation in OpenCode, Claude Code, Codex, Cursor, or Gemini. It does not inspect or rewrite VCS metadata under `.git/`. It does not prove ticket closure because `.loom/tickets/done/20260515-loom-driver-rename.md#ACC-005` still requires a fresh Ralph-backed audit pass.
 
 ## Related Records
 
-- `ticket:20260515-loom-driver-rename` - consuming ticket for these observations.
-- `packet:20260515T070409Z-loom-driver-rename` - execution packet that requested this validation.
-- `spec:loom-driver-agent` - renamed behavior contract.
+- `.loom/tickets/done/20260515-loom-driver-rename.md` - consuming ticket for these observations.
+- `former packet 20260515T070409Z-loom-driver-rename` - execution packet that requested this validation.
+- `.loom/specs/loom-driver-agent.md` - renamed behavior contract.

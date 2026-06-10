@@ -1,12 +1,11 @@
 # Playbook Activation Tests Procedure
 
-ID: knowledge:playbook-activation-tests-procedure
-Type: Knowledge Procedure
 Status: active
 Created: 2026-05-16
 Updated: 2026-05-16
-Triggers: Playbook activation tests, natural prompts, skill-triggering, explicit macros, implicit Playbook invocation, tests/skill-triggering
-Applies To: tests/skill-triggering/, loom-playbooks/playbooks/, Playbook explicit macro validation
+
+Legacy note: Triggers — Playbook activation tests, natural prompts, skill-triggering, explicit macros, implicit Playbook invocation, tests/skill-triggering
+Legacy note: Applies to — tests/skill-triggering/, loom-playbooks/playbooks/, Playbook explicit macro validation
 
 ## Summary
 
@@ -28,7 +27,7 @@ Static command-registration smoke can support explicit macro availability, but i
 
 ## Stop Or Escalate When
 
-Stop and route to audit or ticket work if a test only forbids selected likely Playbooks while claiming no Playbooks auto-activate. That false-positive gap was FIND-001 in `audit:20260516-playbook-explicit-macro-docs-tests`.
+Stop and route to audit or ticket work if a test only forbids selected likely Playbooks while claiming no Playbooks auto-activate. That false-positive gap was FIND-001 in `.loom/reviews/20260516-playbook-explicit-macro-docs-tests.md`.
 
 Escalate to research or a harness-specific ticket if OpenCode log shapes change enough that `tests/skill-triggering/run-test.sh` can no longer detect Playbook invocations reliably from local logs.
 
@@ -38,6 +37,6 @@ This procedure covers the repository's static/local activation validation. It do
 
 ## Related Records
 
-- `audit:20260516-playbook-explicit-macro-docs-tests` - recorded the false-positive gap where only selected Playbooks were forbidden.
-- `audit:20260516-playbook-explicit-macro-docs-tests-followup` - confirmed the all-Playbook negative check resolved the finding within local/static validation limits.
-- `ticket:20260515-playbook-explicit-macro-docs-tests` - closed final docs/tests ticket that introduced the current test pattern.
+- `.loom/reviews/20260516-playbook-explicit-macro-docs-tests.md` - recorded the false-positive gap where only selected Playbooks were forbidden.
+- `.loom/reviews/20260516-playbook-explicit-macro-docs-tests-followup.md` - confirmed the all-Playbook negative check resolved the finding within local/static validation limits.
+- `.loom/tickets/done/20260515-playbook-explicit-macro-docs-tests.md` - closed final docs/tests ticket that introduced the current test pattern.

@@ -1,11 +1,10 @@
 # Shaping Session Foundation + Context Document
 
-ID: ticket:20260526-mill-shaping-foundation
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-26
 Updated: 2026-06-09
-Risk: medium - new backend module with new data model; must get the persistence and event shapes right since everything else builds on them
+
+Legacy note: Risk — medium - new backend module with new data model; must get the persistence and event shapes right since everything else builds on them
 
 ## Summary
 
@@ -25,8 +24,8 @@ to, and read through a complete API and event surface.
 
 ## Related Records
 
-- `plan:20260526-mill-shaping-sessions` - parent plan
-- `spec:mill-shaping-sessions` - behavioral contract
+- `.loom/tickets/20260526-mill-shaping-sessions.md` - parent plan
+- `.loom/specs/mill-shaping-sessions.md` - behavioral contract
 - `loom-mill/src/loom_mill/chat/session.py` - existing session persistence pattern to follow
 - `loom-mill/src/loom_mill/state/models.py` - existing event types to extend
 - `loom-mill/src/loom_mill/state/store.py` - pub/sub for WebSocket streaming
@@ -103,7 +102,7 @@ class InteractionBlock:
 
 @dataclass
 class StagedRecord:
-    temp_id: str                 # temporary ID (e.g., "temp:ticket:auth-fix")
+    temp_id: str                 # temporary ID (e.g., "temp:.loom/tickets/<auth-fix>.md")
     surface: str                 # "tickets", "specs", "plans", etc.
     title: str
     content: str                 # full Markdown content

@@ -1,7 +1,5 @@
 # Loom Weaver Runtime Agent Boundary Failure
 
-ID: evidence:20260515-loom-weaver-runtime-agent-failure
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -48,7 +46,7 @@ The accidental README change was then removed by the parent session with a narro
 
 ## What This Shows
 
-- Supports `ticket:20260515-opencode-weaver-agent-runtime-wiring#ACC-001`: the actual invoked OpenCode `loom-weaver` task did not enforce the `.loom/`-only write boundary.
+- Supports `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md#ACC-001`: the actual invoked OpenCode `loom-weaver` task did not enforce the `.loom/`-only write boundary.
 - Challenges the existing smoke confidence that checking `configureOpenCode({})` and prompt string presence is enough to prove actual runtime subagent behavior.
 
 ## What This Does Not Show

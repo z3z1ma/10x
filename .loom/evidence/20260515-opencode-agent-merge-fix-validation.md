@@ -1,7 +1,5 @@
 # OpenCode Agent Merge Fix Validation
 
-ID: evidence:20260515-opencode-agent-merge-fix-validation
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-15
 Updated: 2026-05-15
@@ -69,12 +67,12 @@ Result: passed with no output. The accidental `Hello world.` edit from the faili
 
 ## What This Shows
 
-- Supports `ticket:20260515-opencode-weaver-agent-runtime-wiring#ACC-002`: the plugin-level merge now installs canonical prompts and permissions over preexisting model-only Loom agent stubs while preserving the model field.
-- Supports `ticket:20260515-opencode-weaver-agent-runtime-wiring#ACC-003`: smoke coverage now exercises the specific model-only shadowing case that previously escaped the self-referential check.
-- Supports `ticket:20260515-opencode-weaver-agent-runtime-wiring#ACC-005`: core package and Markdown diff checks passed after the plugin merge fix.
+- Supports `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md#ACC-002`: the plugin-level merge now installs canonical prompts and permissions over preexisting model-only Loom agent stubs while preserving the model field.
+- Supports `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md#ACC-003`: smoke coverage now exercises the specific model-only shadowing case that previously escaped the self-referential check.
+- Supports `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md#ACC-005`: core package and Markdown diff checks passed after the plugin merge fix.
 
 ## What This Does Not Show
 
 - It does not prove the already-running OpenCode session has reloaded the fixed plugin.
-- It does not satisfy `ticket:20260515-opencode-weaver-agent-runtime-wiring#ACC-004`; a fresh runtime `loom-weaver` invocation after plugin reload is still required.
+- It does not satisfy `.loom/tickets/done/20260515-opencode-weaver-agent-runtime-wiring.md#ACC-004`; a fresh runtime `loom-weaver` invocation after plugin reload is still required.
 - It does not replace adversarial audit.

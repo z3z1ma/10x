@@ -1,7 +1,5 @@
 # AgentOps Repository Scan
 
-ID: research:20260516-agentops-scan
-Type: Research
 Status: completed
 Created: 2026-05-16
 Updated: 2026-05-16
@@ -43,8 +41,8 @@ Excluded:
 - `docs/contracts/agents-write-surfaces.md`, `docs/agents-operator-guide.md`, and representative CLI files `cli/cmd/ao/agents*.go` - write-surface inventory, lint, and doctor pattern.
 - `schemas/skill-frontmatter.v2.schema.json`, `registry.json`, `hooks/hooks.json`, `hooks/codex-hooks.json`, `.opencode/plugins/agentops.js`, `.codex/agentops-bootstrap.md`, and `.codex-plugin/plugin.json` - runtime/catalog/adapter metadata surfaces.
 - `evals/agentops-core/*.json` representative fixtures including `core-surfaces`, `skill-change-scorecard`, `red-team-adversarial-validation`, `retrieval-contracts`, `workbench-behavioral-v1`, `model-upgrade-readiness`, and `lid-primitives-demo`; `evals/workbench/results/2026-05-06-yjzp9-counterstat.json` - offline canary and behavioral-eval patterns.
-- `research:20260516-aegis-method-pack-scan` - prior external method-pack scan that sets a useful comparison pattern.
-- `research:20260516-product-surface-scan` - current internal Agent Loom product-surface baseline and known improvement areas.
+- `.loom/research/20260516-aegis-method-pack-scan.md` - prior external method-pack scan that sets a useful comparison pattern.
+- `.loom/research/20260516-product-surface-scan.md` - current internal Agent Loom product-surface baseline and known improvement areas.
 
 Source quality note: this is source-backed external repository research but not live validation of AgentOps behavior. The clone and public metadata are strong enough for product-shape and transferable-pattern analysis; AgentOps's own runtime, daemon, multi-agent, and evidence claims were not independently executed.
 
@@ -203,8 +201,8 @@ These are not flaws relative to AgentOps's chosen product; they are consequences
 
 ## Related Records
 
-- `research:20260516-aegis-method-pack-scan` - recent external scan whose conclusions help distinguish transferable validation/guardrail ideas from incompatible surface-taxonomy changes.
-- `research:20260516-product-surface-scan` - current baseline of Agent Loom's product-surface strengths and known drift/polish issues.
-- `research:20260513-superpowers-skill-activation` - earlier source for activation discipline and skill-description trigger posture.
-- `spec:playbook-explicit-macros` - current Loom answer to implicit Playbook activation pressure; relevant to eval/canary recommendations.
-- `decision:0002` and `spec:ticket-owned-worker-handoffs` - current Loom worker-context model; relevant to rejecting AgentOps packet/runtime taxonomy and adopting only bounded wave/handoff checks.
+- `.loom/research/20260516-aegis-method-pack-scan.md` - recent external scan whose conclusions help distinguish transferable validation/guardrail ideas from incompatible surface-taxonomy changes.
+- `.loom/research/20260516-product-surface-scan.md` - current baseline of Agent Loom's product-surface strengths and known drift/polish issues.
+- `.loom/research/20260513-superpowers-skill-activation.md` - earlier source for activation discipline and skill-description trigger posture.
+- `.loom/specs/playbook-explicit-macros.md` - current Loom answer to implicit Playbook activation pressure; relevant to eval/canary recommendations.
+- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md` - current Loom worker-context model; relevant to rejecting AgentOps packet/runtime taxonomy and adopting only bounded wave/handoff checks.

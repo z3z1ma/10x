@@ -1,11 +1,10 @@
 # Connected-Record Graph View
 
-ID: ticket:20260526-mill-graph-connected
-Type: Ticket
-Status: review
+Status: done
 Created: 2026-05-26
 Updated: 2026-05-26
-Risk: medium - needs graph rendering library integration; visual quality matters for UX
+
+Legacy note: Risk — medium - needs graph rendering library integration; visual quality matters for UX
 
 ## Summary
 
@@ -23,7 +22,7 @@ open record in the Design Room via a force-directed graph.
 
 ## Related Records
 
-- `plan:20260526-mill-next-gen` - parent plan
+- `.loom/tickets/20260526-mill-next-gen.md` - parent plan
 - `loom-mill/frontend/src/lib/types.ts:48-69` - LoomRecord with references field
 - `loom-mill/frontend/src/lib/ws.svelte.ts` - store has all records
 - `loom-mill/frontend/src/lib/design/DesignRoom.svelte` - container for Design Room
@@ -123,7 +122,7 @@ UI acceptance for navigation/readability remains for review.
 
 ## Evidence
 
-- `evidence:20260526-mill-connected-graph-build` - `npm --prefix loom-mill/frontend run build` passed; supports ACC-004.
+- `.loom/evidence/20260526-mill-connected-graph-build.md` - `npm --prefix loom-mill/frontend run build` passed; supports ACC-004.
 
 ## Journal
 

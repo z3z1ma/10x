@@ -1,7 +1,5 @@
 # Mill DAG Graph Build
 
-ID: evidence:20260526-mill-graph-dag-build
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-26
 Updated: 2026-05-26
@@ -29,7 +27,7 @@ the existing chunk-size warning. No build error was observed.
 
 ## What This Shows
 
-- ticket:20260526-mill-graph-dag#ACC-005 - supports - the frontend production build passes after the DAG graph changes.
+- .loom/tickets/20260526-mill-graph-dag.md#ACC-005 - supports - the frontend production build passes after the DAG graph changes.
 
 ## What This Does Not Show
 
@@ -39,5 +37,5 @@ running browser. Those require UI inspection or audit.
 
 ## Related Records
 
-- ticket:20260526-mill-graph-dag - consuming ticket for the DAG hierarchy graph.
+- .loom/tickets/20260526-mill-graph-dag.md - consuming ticket for the DAG hierarchy graph.
 - loom-mill/frontend/src/lib/design/GraphView.svelte - source file changed for the observation.

@@ -1,7 +1,5 @@
 # Loop Hardening Checks
 
-ID: evidence:20260510-loop-hardening-checks
-Type: Evidence Dossier
 Status: recorded
 Created: 2026-05-10
 Updated: 2026-05-10
@@ -22,7 +20,7 @@ Commands run from `/Users/alexanderbutler/code_projects/personal/agent-loom`:
 
 ## What This Shows
 
-- Supports `ticket:20260510-loop-hardening-verification#ACC-001`: available package and Markdown checks passed after the edits and final record updates.
+- Supports `.loom/tickets/done/20260510-loop-hardening-verification.md#ACC-001`: available package and Markdown checks passed after the edits and final record updates.
 - Supports package-surface integrity for the changed skill corpus.
 
 ## What This Does Not Show
@@ -33,5 +31,5 @@ Commands run from `/Users/alexanderbutler/code_projects/personal/agent-loom`:
 
 ## Related Records
 
-- `plan:20260510-core-loop-hardening` - plan being verified.
-- `ticket:20260510-loop-hardening-verification` - verification ticket supported by this evidence.
+- `.loom/tickets/20260510-core-loop-hardening.md` - plan being verified.
+- `.loom/tickets/done/20260510-loop-hardening-verification.md` - verification ticket supported by this evidence.

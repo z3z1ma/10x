@@ -1,7 +1,5 @@
 # OpenCode Session Loop Failure Observations
 
-ID: evidence:20260510-opencode-session-loop-failures
-Type: Evidence Observation
 Status: recorded
 Created: 2026-05-10
 Updated: 2026-05-10
@@ -31,8 +29,8 @@ Commands and inspections used:
 
 ## What This Shows
 
-- Supports `research:20260510-loom-loop-failure-analysis`: the failure modes were observable in a real eval transcript and committed eval records.
-- Supports `plan:20260510-core-loop-hardening`: the corpus needs clearer positive guidance for shaping, slicing, and packetized worker handoff.
+- Supports `.loom/research/20260510-loom-loop-failure-analysis.md`: the failure modes were observable in a real eval transcript and committed eval records.
+- Supports `.loom/tickets/20260510-core-loop-hardening.md`: the corpus needs clearer positive guidance for shaping, slicing, and packetized worker handoff.
 
 ## What This Does Not Show
 
@@ -42,5 +40,5 @@ Commands and inspections used:
 
 ## Related Records
 
-- `research:20260510-loom-loop-failure-analysis` - synthesizes these observations into protocol hardening recommendations.
-- `plan:20260510-core-loop-hardening` - consumes the observations for implementation slices.
+- `.loom/research/20260510-loom-loop-failure-analysis.md` - synthesizes these observations into protocol hardening recommendations.
+- `.loom/tickets/20260510-core-loop-hardening.md` - consumes the observations for implementation slices.
