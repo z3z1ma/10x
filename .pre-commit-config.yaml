@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: sync-protocol-to-skill
+        name: Sync PROTOCOL.md to skills/loom/SKILL.md
+        entry: cp PROTOCOL.md skills/loom/SKILL.md
+        language: system
+        files: ^PROTOCOL\.md$
+        pass_filenames: false
