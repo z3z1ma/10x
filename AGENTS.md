@@ -287,8 +287,9 @@ Before closing a ticket, verify coherence. Read the acceptance criteria you set 
 ## Repo Shape
 
 - This repo ships Loom: a Markdown protocol for project memory and execution discipline.
-- The protocol lives in `PROTOCOL.md`. Users paste it into their `AGENTS.md`/`CLAUDE.md`.
-- `loom-core/` and `loom-playbooks/` are minimal OpenCode plugin skeletons on this branch.
+- The protocol lives in `PROTOCOL.md`. Users copy-paste it into their agent instructions.
+- `skills/loom/SKILL.md` is a copy of `PROTOCOL.md` with frontmatter for the skills ecosystem (`npx skills add z3z1ma/agent-loom`).
+- First-class harness manifests (`.claude-plugin/`, `.cursor-plugin/`, `.agents/plugins/`, `gemini-extension.json`) enable native marketplace install.
 - `loom-mill/` is a companion web application for visualizing and interacting with `.loom/` records.
 - `.loom/` is this repo's own dogfood workspace — it is not part of the shipped product surface.
 
@@ -303,11 +304,8 @@ Before closing a ticket, verify coherence. Read the acceptance criteria you set 
 
 ## Commands
 
-- Core smoke: `npm --prefix loom-core run smoke`.
-- Playbooks smoke: `npm --prefix loom-playbooks run smoke`.
-- Core package check: `npm --prefix loom-core run pack:check`.
-- Playbooks package check: `npm --prefix loom-playbooks run pack:check`.
 - For Markdown-only edits, run `git diff --check`.
+- After editing `PROTOCOL.md`, sync the skill copy: `cp PROTOCOL.md skills/loom/SKILL.md`.
 
 ## Loom Mill Dev Servers
 
