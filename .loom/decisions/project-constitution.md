@@ -2,7 +2,7 @@
 
 Status: active
 Created: 2026-05-24
-Updated: 2026-05-24
+Updated: 2026-06-10
 
 ## Summary
 
@@ -87,27 +87,25 @@ The intelligence is always in the model reading prose. Mill never interprets rec
 
 ## Current Constitutional Direction
 
-The project has two immediate work streams:
+The project has completed protocol compression and is actively building Mill:
 
-1. **Protocol compression**: Reduce model-visible skill doctrine to operational kernels. Cut repeated explanations, philosophy, and justification. Preserve invariants, activation discipline, surface model, and record contracts.
+1. **Protocol compression** *(done)*: The multi-package skill architecture (loom-core, loom-playbooks, named agent skills) was compressed into a single portable `PROTOCOL.md`. All record types, execution model, and behavioral discipline are now in one document that users copy-paste or install via the skills ecosystem.
 
-2. **Loom Mill design and prototyping**: Build the factory application. Start with execution visibility (Tab 2 / Factory Floor) as it solves the biggest pain point. Shaping experience (Tab 1 / Design Office) follows as the more complex but more differentiating surface.
+2. **Loom Mill design and prototyping** *(active)*: Build the factory application. The Factory Floor (execution visibility, workstation management, scheduling) and Design Room (shaping sessions, canvas-based record authoring) are both implemented and under active development.
 
-Both are independent and can proceed in parallel. Protocol compression improves the portable foundation regardless of Mill. Mill can be built incrementally against the current protocol.
+Mill is a client of the protocol. It reads and writes `.loom/` records but never owns truth.
 
 ## Open Questions
 
-- What is the minimum viable Factory Floor (Tab 2) that delivers real value?
 - How should the scheduling agent's priorities be shaped by the operator?
 - Should inter-iteration processes be pluggable?
 - How much Mill state (iteration counts, takt measurements, pattern history) should persist in `.loom/` vs. be ephemeral?
-- What is the right technology stack for Mill's backend?
 - Should Mill produce its own records (evidence from automated checks) or only orchestrate model-produced records?
 
 ## Related
 
 - `.loom/research/20260524-loom-mill-software-factory.md` - full investigation and synthesis that produced this constitutional direction
 - `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - validates ticket-owned worker handoffs as the execution contract Mill implements
-- `.loom/specs/ticket-owned-worker-handoffs.md` - behavior contract for bounded worker runs
-- `.loom/specs/loom-driver-agent.md` - Driver behavior that maps to Mill's orchestration loop
-- `.loom/specs/loom-weaver-agent.md` - Weaver behavior that maps to Mill's shaping mode
+- `.loom/specs/superseded/ticket-owned-worker-handoffs.md` - behavior contract for bounded worker runs (superseded)
+- `.loom/specs/superseded/loom-driver-agent.md` - Driver behavior that maps to Mill's orchestration loop (superseded)
+- `.loom/specs/superseded/loom-weaver-agent.md` - Weaver behavior that maps to Mill's shaping mode (superseded)

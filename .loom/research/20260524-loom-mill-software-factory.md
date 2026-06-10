@@ -276,8 +276,8 @@ This means:
 ## Related Records
 
 - `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - validates that tickets own worker context; Mill orchestrates workers against tickets
-- `.loom/specs/ticket-owned-worker-handoffs.md` - the execution contract Mill implements
-- `.loom/specs/loom-driver-agent.md` - Driver behavior maps to Mill's orchestration loop
-- `.loom/specs/loom-weaver-agent.md` - Weaver behavior maps to Mill's shaping mode
+- `.loom/specs/superseded/ticket-owned-worker-handoffs.md` - the execution contract Mill implements (superseded by Mill specs)
+- `.loom/specs/superseded/loom-driver-agent.md` - Driver behavior maps to Mill's orchestration loop (superseded)
+- `.loom/specs/superseded/loom-weaver-agent.md` - Weaver behavior maps to Mill's shaping mode (superseded)
 - `.loom/research/20260510-loom-loop-failure-analysis.md` - historical context for why bounded execution discipline exists
-- `.loom/tickets/20260510-core-loop-hardening.md` - historical context for protocol hardening that Mill now operationalizes
+- `.loom/tickets/done/20260510-core-loop-hardening.md` - historical context for protocol hardening that Mill now operationalizes

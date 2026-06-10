@@ -62,8 +62,8 @@ Parallel worker coordination should use separate child tickets when units can cl
 
 ## Related
 
-- `.loom/specs/ticket-owned-worker-handoffs.md` - intended behavior contract for the new worker handoff model.
-- `.loom/tickets/20260515-ticket-owned-worker-handoffs.md` - implementation plan consuming this decision.
+- `.loom/specs/superseded/ticket-owned-worker-handoffs.md` - intended behavior contract for the new worker handoff model.
+- `.loom/tickets/done/20260515-ticket-owned-worker-handoffs.md` - implementation plan consuming this decision.
 - `.loom/research/20260510-loom-loop-failure-analysis.md` - historical reason packet-before-worker doctrine was introduced.
 - `.loom/tickets/done/20260513-ticket-execution-ralph-language.md` - historical ticket that centered ticket execution on Ralph packets and is superseded in direction by this decision.
 - `.loom/tickets/done/20260513-ralph-language-consolidation.md` - historical ticket that centered worker and audit language on Ralph packets and is superseded in direction by this decision.

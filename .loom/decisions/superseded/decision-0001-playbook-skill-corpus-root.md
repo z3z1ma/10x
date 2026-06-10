@@ -1,8 +1,8 @@
 # Decision 0001: Move Playbook Skill Corpus Out Of Extension Root
 
-Status: active
+Status: superseded
 Created: 2026-05-15
-Updated: 2026-05-15
+Updated: 2026-06-10
 
 ## Summary
 
