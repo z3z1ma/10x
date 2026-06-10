@@ -37,7 +37,7 @@ Excluded:
 ## Method And Sources
 
 - Operator-provided articles: Ralph Wiggum technique, LLMs as mirrors of operator skill, AI as economic warfare, cognitive security, embedded software factory preview, everything is a ralph loop
-- Inspection of existing Loom records: `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, `.loom/specs/ticket-owned-worker-handoffs.md`, `.loom/specs/loom-driver-agent.md`, `.loom/specs/loom-weaver-agent.md`, `.loom/tickets/20260515-ticket-owned-worker-handoffs.md`, `.loom/research/20260510-loom-loop-failure-analysis.md`
+- Inspection of existing Loom records: `.loom/decisions/ticket-owned-worker-handoffs.md`, `.loom/specs/ticket-owned-worker-handoffs.md`, `.loom/specs/loom-driver-agent.md`, `.loom/specs/loom-weaver-agent.md`, `.loom/tickets/20260515-ticket-owned-worker-handoffs.md`, `.loom/research/20260510-loom-loop-failure-analysis.md`
 - Inspection of shipped skill surfaces: `loom-ralph`, `loom-tickets`, `loom-audit`, `loom-evidence`, `loom-driver.md`, `loom-weaver.md`
 - Collaborative operator-agent shaping session on 2026-05-24
 
@@ -59,7 +59,7 @@ The core Ralph ideas map directly to existing Loom surfaces:
 | Worker output is claims, not truth | `.loom/specs/ticket-owned-worker-handoffs.md` REQ-005 |
 | Operator skill matters | Shaping discipline, Weaver adversarial posture |
 | Loop failures tune the system | Knowledge promotion, retrospective |
-| Transient prompts are transport, not truth | `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, REQ-004 |
+| Transient prompts are transport, not truth | `.loom/decisions/ticket-owned-worker-handoffs.md`, REQ-004 |
 
 No new conceptual machinery is needed. The protocol is sound.
 
@@ -275,7 +275,7 @@ This means:
 
 ## Related Records
 
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - validates that tickets own worker context; Mill orchestrates workers against tickets
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - validates that tickets own worker context; Mill orchestrates workers against tickets
 - `.loom/specs/superseded/ticket-owned-worker-handoffs.md` - the execution contract Mill implements (superseded by Mill specs)
 - `.loom/specs/superseded/loom-driver-agent.md` - Driver behavior maps to Mill's orchestration loop (superseded)
 - `.loom/specs/superseded/loom-weaver-agent.md` - Weaver behavior maps to Mill's shaping mode (superseded)

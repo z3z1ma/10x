@@ -15,7 +15,7 @@ Relocate the shared Playbook skill corpus out of top-level `loom-playbooks/skill
 
 ## Related Records
 
-- `.loom/decisions/decision-0001-playbook-skill-corpus-root.md` - durable decision to keep the `loom-playbooks/` Gemini extension root and move the shared skill corpus away from top-level `skills/`.
+- `.loom/decisions/superseded/playbook-skill-corpus-root.md` - durable decision to keep the `loom-playbooks/` Gemini extension root and move the shared skill corpus away from top-level `skills/`.
 - `.loom/research/20260515-gemini-playbooks-skills-root.md` - source-backed Gemini auto-discovery conflict that this ticket resolves.
 - `.loom/reviews/20260515-playbook-skill-corpus-relocation.md` - clear Ralph-backed review of ACC-001 through ACC-005.
 - `.loom/tickets/20260515-playbook-explicit-macros.md` - broader conversion plan now updated with this prerequisite unit.
@@ -79,7 +79,7 @@ Audit `.loom/reviews/20260515-playbook-skill-corpus-relocation.md` returned `cle
 
 ## Journal
 
-- 2026-05-15: Created ticket from operator-selected `.loom/decisions/decision-0001-playbook-skill-corpus-root.md` route after Gemini research showed top-level extension `skills/` blocks command-only Playbooks.
+- 2026-05-15: Created ticket from operator-selected `.loom/decisions/superseded/playbook-skill-corpus-root.md` route after Gemini research showed top-level extension `skills/` blocks command-only Playbooks.
 - 2026-05-15: Set status to active and launched `former packet 20260515T230227Z-playbook-skill-corpus-relocation`.
 - 2026-05-15: `former packet 20260515T230227Z-playbook-skill-corpus-relocation` returned `continue`: moved the corpus to `loom-playbooks/playbooks/`, updated package/native/OpenCode/AGENTS references, preserved all 25 `SKILL.md` files plus 25 Codex policies and explicit-only frontmatter entries, and passed smoke, pack dry-run, Claude plugin validation, metadata counts, stale-path grep, and `git diff --check`. Active docs outside packet write scope still reference the old Playbooks path and need disposition before closure.
 - 2026-05-15: Launched follow-up `former packet 20260515T231048Z-playbook-relocation-doc-paths` for narrow path-only doc alignment needed by ACC-004.

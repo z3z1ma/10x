@@ -18,7 +18,7 @@ This spec does not own exact source implementation, harness-specific sub-agent i
 
 ## Spec Set Coverage
 
-This spec fills the behavior gap created by `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`. Without it, implementation tickets would have to infer whether packet removal means retiring Ralph, making worker prompts authoritative, or moving packet fields into an unspecified new surface.
+This spec fills the behavior gap created by `.loom/decisions/ticket-owned-worker-handoffs.md`. Without it, implementation tickets would have to infer whether packet removal means retiring Ralph, making worker prompts authoritative, or moving packet fields into an unspecified new surface.
 
 Adjacent behavior outside this spec:
 
@@ -153,13 +153,13 @@ Creating `former packet 20260515T..` for a future worker run, or leaving the onl
 
 ## Constraints
 
-- This spec implements `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`.
+- This spec implements `.loom/decisions/ticket-owned-worker-handoffs.md`.
 - The source migration must not delete or rewrite historical `.loom/packets` records as part of current-product cleanup.
 - Product-visible doctrine must not explain this change as repository dogfood process; it should teach the runtime behavior directly.
 
 ## Related Records
 
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - durable decision removing packets as an active surface while keeping Ralph.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - durable decision removing packets as an active surface while keeping Ralph.
 - `.loom/tickets/20260515-ticket-owned-worker-handoffs.md` - coordinated source migration plan.
 - `.loom/specs/loom-driver-agent.md` - Driver persona that coordinates ticket-owned Ralph runs.
 - `.loom/specs/loom-weaver-agent.md` - Weaver persona that shapes records before execution.

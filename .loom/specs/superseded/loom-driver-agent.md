@@ -29,7 +29,7 @@ Adjacent behavior outside this spec:
 
 ## Problem
 
-Agent Loom needs a named inner-loop persona for disciplined execution coordination across tickets, workers, evidence, audit, and ticket reconciliation. Earlier Driver behavior centered packet compilation; `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` retires packets as an active surface while preserving Ralph as bounded worker and review discipline.
+`.loom/decisions/ticket-owned-worker-handoffs.md` retires packets as an active surface while preserving Ralph as bounded worker and review discipline.
 
 Without an updated behavior contract, Driver can drift into a generic coding persona, a shortcut around ticket-owned context, a high-authority record mutator, or a worker launcher that treats returned reports as sufficient proof.
 
@@ -196,16 +196,16 @@ Changing `spec:*` requirements during execution to match worker output, or launc
 - Direction-setting records are read-only while acting as Loom Driver unless a future explicit product decision changes this boundary.
 - The canonical behavior should be defined once and adapted per harness to avoid drift.
 - Harness-specific invocation support should follow `.loom/research/20260514-direct-interactive-agent-surfaces.md` unless newer source-backed research supersedes it.
-- Worker handoff behavior must follow `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md`.
+- Worker handoff behavior must follow `.loom/decisions/ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md`.
 
 ## Amendment Notes
 
-- Rewrote the Driver behavior contract on 2026-05-15 to replace packetized execution with ticket-owned Ralph worker and review runs under `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`.
+- Rewrote the Driver behavior contract on 2026-05-15 to replace packetized execution with ticket-owned Ralph worker and review runs under `.loom/decisions/ticket-owned-worker-handoffs.md`.
 - Historical tickets, evidence, audits, and packet records that cite the earlier packet-centered Driver behavior remain historical context.
 
 ## Related Records
 
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - durable decision removing packets as an active surface while preserving Ralph.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - durable decision removing packets as an active surface while preserving Ralph.
 - `.loom/specs/ticket-owned-worker-handoffs.md` - general worker/review handoff model this persona must follow.
 - `.loom/specs/loom-weaver-agent.md` - defines the complementary outer-loop agent persona.
 - `.loom/tickets/done/20260515-agent-surfaces-ticket-worker-model.md` - follow-up ticket that should implement this behavior in model-visible agent surfaces.

@@ -15,7 +15,7 @@ Update Loom Driver, Loom Weaver, and adapter agent surfaces so explicit agents a
 
 ## Related Records
 
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - durable decision removing packets while preserving Ralph.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - durable decision removing packets while preserving Ralph.
 - `.loom/specs/ticket-owned-worker-handoffs.md` - target worker handoff behavior.
 - `.loom/specs/loom-driver-agent.md` - updated Driver behavior contract.
 - `.loom/specs/loom-weaver-agent.md` - updated Weaver behavior contract.

@@ -182,5 +182,5 @@ Creating a ticket, spec, research record, evidence record, and audit record for 
 ## Related Records
 
 - `.loom/research/20260514-direct-interactive-agent-surfaces.md` - compares supported harness agent surfaces and invocation semantics that constrain how Loom Weaver can be exposed.
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - removes packets as an active surface and keeps Ralph as ticket-owned worker/review discipline.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - removes packets as an active surface and keeps Ralph as ticket-owned worker/review discipline.
 - `.loom/specs/ticket-owned-worker-handoffs.md` - defines the execution handoff model Weaver should shape toward without launching workers itself.

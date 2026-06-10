@@ -37,7 +37,7 @@ Excluded:
 - Read Loom Weaver and Loom Driver canonical and Codex agent prompts.
 - Read representative Playbooks and generated command TOML, including idea refinement, incremental implementation, source-driven development, debugging, TDD, security, review, and parallel worker coordination.
 - Read `PROTOCOL.md`, `ARCHITECTURE.md`, `INSTALL.md`, root and package READMEs, `CLAUDE.md`, activation scenarios, and activation test scripts.
-- Read relevant records: `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, `.loom/specs/ticket-owned-worker-handoffs.md`, `.loom/specs/playbook-explicit-macros.md`, `.loom/specs/loom-weaver-agent.md`, `.loom/specs/loom-driver-agent.md`, `.loom/research/20260515-playbooks-core-activation-pressure.md`, and related migration tickets/audits.
+- Read relevant records: `.loom/decisions/ticket-owned-worker-handoffs.md`, `.loom/specs/ticket-owned-worker-handoffs.md`, `.loom/specs/playbook-explicit-macros.md`, `.loom/specs/loom-weaver-agent.md`, `.loom/specs/loom-driver-agent.md`, `.loom/research/20260515-playbooks-core-activation-pressure.md`, and related migration tickets/audits.
 - Ran targeted repository searches for packet terms, Playbook explicitness language, contributor-leakage terms, and generated command description shapes; ran `git status --short` and observed a clean worktree.
 
 Source quality note: project-owned source and accepted Loom records are strong for current product reality. This scan did not validate external harness behavior in live sessions.
@@ -46,7 +46,7 @@ Source quality note: project-owned source and accepted Loom records are strong f
 
 - Core's truth-surface model is the strongest part of the product. `using-loom` and the record skills consistently separate intended behavior, executable work, evidence, audit, research, knowledge, and durable judgment. The same distinction appears in `PROTOCOL.md` and `ARCHITECTURE.md`.
 
-- The ticket-owned Ralph migration appears conceptually complete in active product surfaces. `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, `.loom/specs/ticket-owned-worker-handoffs.md`, the closed migration plan/tickets, and the current Core/Playbook surfaces all point at tickets and linked records as durable worker context rather than packet records. Targeted searches found no packet terms in active Core skill or Playbook source surfaces.
+- The ticket-owned Ralph migration appears conceptually complete in active product surfaces. `.loom/decisions/ticket-owned-worker-handoffs.md`, `.loom/specs/ticket-owned-worker-handoffs.md`, the closed migration plan/tickets, and the current Core/Playbook surfaces all point at tickets and linked records as durable worker context rather than packet records. Targeted searches found no packet terms in active Core skill or Playbook source surfaces.
 
 - The Playbook explicit-macro direction is right and mostly implemented. All 25 Playbook source `SKILL.md` files carry `disable-model-invocation: true`, the OpenCode entrypoint registers Playbooks as commands instead of `config.skills.paths`, and generated command prompts include an explicit macro preamble.
 
@@ -130,7 +130,7 @@ Source quality note: project-owned source and accepted Loom records are strong f
 
 - `.loom/specs/playbook-explicit-macros.md` - owns the intended explicit Playbook invocation behavior.
 - `.loom/research/20260515-playbooks-core-activation-pressure.md` - explains why implicit Playbook pressure was demoted.
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md` - own the current ticket-owned Ralph model.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md` - own the current ticket-owned Ralph model.
 - `.loom/specs/loom-weaver-agent.md` and `.loom/specs/loom-driver-agent.md` - own named agent behavior contracts.
 - `.loom/knowledge/playbook-activation-tests-procedure.md` - records the all-Playbook negative activation test procedure.
 - `.loom/tickets/done/20260516-activation-scenarios-core-first-playbooks.md` - accepted follow-up for stale activation scenario expectations.

@@ -15,7 +15,7 @@ Align human-facing docs and final validation with the no-packet active product m
 
 ## Related Records
 
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - durable decision removing packets while preserving Ralph.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - durable decision removing packets while preserving Ralph.
 - `.loom/specs/ticket-owned-worker-handoffs.md` - target worker handoff behavior.
 - `.loom/tickets/20260515-ticket-owned-worker-handoffs.md` - parent plan.
 - `.loom/tickets/done/20260515-core-ticket-owned-worker-doctrine.md` - Core prerequisite.

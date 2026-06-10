@@ -205,4 +205,4 @@ These are not flaws relative to AgentOps's chosen product; they are consequences
 - `.loom/research/20260516-product-surface-scan.md` - current baseline of Agent Loom's product-surface strengths and known drift/polish issues.
 - `.loom/research/20260513-superpowers-skill-activation.md` - earlier source for activation discipline and skill-description trigger posture.
 - `.loom/specs/playbook-explicit-macros.md` - current Loom answer to implicit Playbook activation pressure; relevant to eval/canary recommendations.
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md` - current Loom worker-context model; relevant to rejecting AgentOps packet/runtime taxonomy and adopting only bounded wave/handoff checks.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md` - current Loom worker-context model; relevant to rejecting AgentOps packet/runtime taxonomy and adopting only bounded wave/handoff checks.

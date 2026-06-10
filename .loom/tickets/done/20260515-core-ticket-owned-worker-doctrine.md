@@ -14,7 +14,7 @@ Update Core Loom skills and references so packets are no longer an active surfac
 
 ## Related Records
 
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - durable decision removing packets while preserving Ralph.
+`.loom/decisions/ticket-owned-worker-handoffs.md` - durable decision removing packets while preserving Ralph.
 - `.loom/specs/ticket-owned-worker-handoffs.md` - target behavior for ticket-owned worker and audit handoffs.
 - `.loom/tickets/20260515-ticket-owned-worker-handoffs.md` - parent plan and sequencing.
 - `.loom/research/20260510-loom-loop-failure-analysis.md` - historical failure mode this migration must not reintroduce.
@@ -76,7 +76,7 @@ Validation run:
 - `git diff --check` passed.
 - Targeted grep over `loom-core/skills` for `packet|packets|\.loom/packets|packet:` returned no matches.
 
-Audit: `.loom/reviews/20260515-ticket-owned-worker-handoffs.md` initially found a malformed `loom-ralph` invariant; the finding was fixed and the follow-up review returned clear. The audit accepted the explicit exclusion of unrelated historical `.loom/packets/ralph` worktree records from this migration closure. Residual risk is limited to external installed harness behavior beyond smoke/pack checks and historical packet records that remain by design under `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`.
+Residual risk is limited to external installed harness behavior beyond smoke/pack checks and historical packet records that remain by design under `.loom/decisions/ticket-owned-worker-handoffs.md`.
 
 ## Journal
 

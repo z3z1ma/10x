@@ -41,13 +41,13 @@ An earlier bounded review run found `FIND-001`, a malformed bullet in `loom-core
 
 ## What This Does Not Show
 
-- It does not prove every historical `.loom` packet record has been removed or rewritten; that is intentionally out of scope and contradicted by `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, which allows historical packet records to remain as history.
+It does not prove every historical `.loom` packet record has been removed or rewritten; that is intentionally out of scope and contradicted by `.loom/decisions/ticket-owned-worker-handoffs.md`, which allows historical packet records to remain as history.
 - It does not prove runtime behavior inside every external harness beyond the package smoke checks and source inspection represented by the commands above.
 - It does not by itself close the tickets or accept residual risk; ticket closure and audit disposition remain ticket-owned.
 
 ## Related Records
 
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - durable decision retiring packets as an active surface while keeping Ralph.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - durable decision retiring packets as an active surface while keeping Ralph.
 - `.loom/specs/ticket-owned-worker-handoffs.md` - behavior contract validated by these observations.
 - `.loom/tickets/20260515-ticket-owned-worker-handoffs.md` - migration plan.
 - `.loom/tickets/done/20260515-core-ticket-owned-worker-doctrine.md` - Core skill migration ticket.

@@ -15,7 +15,7 @@ Update Playbook macro bodies and generated command surfaces so optional workflow
 
 ## Related Records
 
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - durable decision removing packets while preserving Ralph.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - durable decision removing packets while preserving Ralph.
 - `.loom/specs/ticket-owned-worker-handoffs.md` - target worker handoff behavior.
 - `.loom/specs/playbook-explicit-macros.md` - Playbook invocation and workflow-lens behavior.
 - `.loom/tickets/20260515-ticket-owned-worker-handoffs.md` - parent plan.

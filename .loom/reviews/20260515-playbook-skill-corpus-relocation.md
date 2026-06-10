@@ -37,7 +37,7 @@ Lenses:
 - `.loom/tickets/done/20260515-playbook-skill-corpus-relocation.md` - target ticket acceptance and current state.
 - `former packet 20260515T230227Z-playbook-skill-corpus-relocation` - relocation implementation packet and evidence.
 - `former packet 20260515T231048Z-playbook-relocation-doc-paths` - docs path follow-up packet and evidence.
-- `.loom/decisions/decision-0001-playbook-skill-corpus-root.md` - durable package decision selecting corpus relocation.
+- `.loom/decisions/superseded/playbook-skill-corpus-root.md` - durable package decision selecting corpus relocation.
 - `.loom/research/20260515-gemini-playbooks-skills-root.md` - Gemini extension skills root conflict.
 - `.loom/specs/playbook-explicit-macros.md` - behavior contract.
 - `.loom/tickets/20260515-playbook-explicit-macros.md` - sequencing and downstream Gemini ticket.
@@ -87,5 +87,5 @@ This verdict does not claim live OpenCode, Cursor, Codex, or Gemini runtime invo
 - `former packet 20260515T231741Z-playbook-skill-corpus-relocation-audit` - Ralph review packet that produced this verdict.
 - `former packet 20260515T230227Z-playbook-skill-corpus-relocation` - relocation implementation packet.
 - `former packet 20260515T231048Z-playbook-relocation-doc-paths` - docs path follow-up packet.
-- `.loom/decisions/decision-0001-playbook-skill-corpus-root.md` - package decision this ticket implemented.
+- `.loom/decisions/superseded/playbook-skill-corpus-root.md` - package decision this ticket implemented.
 - `.loom/tickets/done/20260515-gemini-playbook-commands.md` - downstream ticket unblocked by relocation.

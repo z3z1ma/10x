@@ -64,7 +64,7 @@ Ticket: .loom/tickets/done/20260515-playbook-skill-corpus-relocation.md
 
 Move the shared Playbook skill corpus out of top-level `loom-playbooks/skills/` and update OpenCode, Claude, Cursor, Codex, package files, and contributor guidance to the relocated path. This preserves the existing `loom-playbooks/` Gemini extension root while removing Gemini's automatic extension skill discovery surface.
 
-This unit was added after `.loom/research/20260515-gemini-playbooks-skills-root.md` and `.loom/decisions/decision-0001-playbook-skill-corpus-root.md`. It must complete before Gemini command TOML work starts. Evidence should include Playbook count/path inspection, OpenCode smoke/pack checks, Claude plugin validation, stale-path grep, and `git diff --check`.
+This unit was added after `.loom/research/20260515-gemini-playbooks-skills-root.md` and `.loom/decisions/superseded/playbook-skill-corpus-root.md`. It must complete before Gemini command TOML work starts. Evidence should include Playbook count/path inspection, OpenCode smoke/pack checks, Claude plugin validation, stale-path grep, and `git diff --check`.
 
 ### Unit: Gemini Command Surface
 
@@ -115,7 +115,7 @@ Residual limits remain explicit in child tickets: live runtime invocation was no
 - 2026-05-15: Closed `.loom/tickets/done/20260515-opencode-playbook-commands.md` after implementation and clear Ralph audit. OpenCode Playbooks now register explicit commands from the macro catalog instead of a Playbook skill path.
 - 2026-05-15: Closed `.loom/tickets/done/20260515-native-playbook-explicit-surfaces.md` after implementation and clear Ralph audit. Claude/Cursor Playbooks are explicit-only skills, and Codex Playbooks have per-skill implicit-invocation disabled.
 - 2026-05-15: Blocked `.loom/tickets/done/20260515-gemini-playbook-commands.md` after Gemini docs confirmed extension roots auto-discover top-level `skills/`. Need operator/package architecture decision: move shared skill corpus out of top-level `skills/`, or create a Gemini-specific command-only extension root.
-- 2026-05-15: Operator selected the corpus-move route. Recorded `.loom/decisions/decision-0001-playbook-skill-corpus-root.md`, added `.loom/tickets/done/20260515-playbook-skill-corpus-relocation.md`, and made it the hard prerequisite for Gemini command implementation.
+- 2026-05-15: Operator selected the corpus-move route. Recorded `.loom/decisions/superseded/playbook-skill-corpus-root.md`, added `.loom/tickets/done/20260515-playbook-skill-corpus-relocation.md`, and made it the hard prerequisite for Gemini command implementation.
 - 2026-05-15: Closed `.loom/tickets/done/20260515-playbook-skill-corpus-relocation.md` after implementation, path-doc follow-up, and clear Ralph audit. Gemini command implementation is unblocked.
 - 2026-05-15: Closed `.loom/tickets/done/20260515-gemini-playbook-commands.md` after generating 25 Gemini command TOML files from the macro catalog, validating the Playbooks Gemini extension, and recording a clear Ralph audit.
 - 2026-05-16: Closed `.loom/tickets/done/20260515-playbook-explicit-macro-docs-tests.md` after docs/tests alignment, validation, a changes-needed audit finding, a follow-up fix that makes natural-prompt tests forbid all Playbooks, and a clear follow-up audit.

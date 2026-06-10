@@ -20,7 +20,7 @@ Expose Loom Playbooks to Gemini CLI as extension command TOML prompt macros. The
 - `.loom/specs/playbook-explicit-macros.md` - defines Gemini requirements, especially REQ-001, REQ-003, REQ-006, REQ-008, REQ-010, and REQ-011.
 - `.loom/research/20260515-playbook-command-surfaces.md` - records Gemini extension command TOML support and model-activated skill risk.
 - `.loom/research/20260515-gemini-playbooks-skills-root.md` - records the package-root blocker: Gemini auto-discovers `skills/` from the extension root.
-- `.loom/decisions/decision-0001-playbook-skill-corpus-root.md` - operator-selected route to move the shared skill corpus out of top-level `loom-playbooks/skills/`.
+- `.loom/decisions/superseded/playbook-skill-corpus-root.md` - operator-selected route to move the shared skill corpus out of top-level `loom-playbooks/skills/`.
 - `.loom/tickets/done/20260515-playbook-skill-corpus-relocation.md` - new hard prerequisite before Gemini commands can be implemented honestly.
 - `.loom/reviews/20260515-gemini-playbook-commands.md` - clear Ralph-backed audit for this ticket's closure claim.
 - `loom-playbooks/gemini-extension.json` - current Gemini extension manifest.
@@ -70,7 +70,7 @@ Residual limits: no live Gemini command invocation was performed; root/Core Gemi
 
 - 2026-05-15: Created ticket from `.loom/tickets/20260515-playbook-explicit-macros.md`; depends on the canonical macro catalog ticket.
 - 2026-05-15: Set status to blocked after `.loom/research/20260515-gemini-playbooks-skills-root.md` confirmed that Gemini auto-discovers top-level extension `skills/`; current package root shape cannot be commands-only without moving skills or splitting the Gemini extension root.
-- 2026-05-15: Added dependency on `.loom/tickets/done/20260515-playbook-skill-corpus-relocation.md` after operator selected the corpus-move route in `.loom/decisions/decision-0001-playbook-skill-corpus-root.md`.
+- 2026-05-15: Added dependency on `.loom/tickets/done/20260515-playbook-skill-corpus-relocation.md` after operator selected the corpus-move route in `.loom/decisions/superseded/playbook-skill-corpus-root.md`.
 - 2026-05-15: Set status back to open after `.loom/tickets/done/20260515-playbook-skill-corpus-relocation.md` closed with clear audit and removed top-level `loom-playbooks/skills/`.
 - 2026-05-15: Set status to active and launched `former packet 20260515T233211Z-gemini-playbook-commands` for Gemini command TOML implementation.
 - 2026-05-15: `former packet 20260515T233211Z-gemini-playbook-commands` returned `stop`: added 25 Gemini `commands/*.toml` files from the canonical macro catalog, updated the Gemini extension description from Playbook skills to commands, confirmed top-level `loom-playbooks/skills/` is absent, passed catalog/file alignment inspection, passed `gemini extensions validate "$PWD/loom-playbooks"`, and passed `git diff --check`. Moved ticket to review for Ralph audit before closure.

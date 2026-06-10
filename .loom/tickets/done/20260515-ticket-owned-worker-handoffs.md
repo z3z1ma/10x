@@ -8,18 +8,18 @@ Legacy note: Risk — high - removes an active Core execution surface and change
 
 ## Summary
 
-This plan decomposes the migration from packet-owned Ralph worker contracts to ticket-owned worker handoffs. It matters because the active corpus currently teaches agents to create packet records before worker and audit runs, while `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` now removes packets as a future Loom surface. The completed outcome is a coherent product surface where tickets carry durable execution context, Ralph remains the bounded worker/review discipline, and no active instructions create future packet records.
+`.loom/decisions/ticket-owned-worker-handoffs.md` now removes packets as a future Loom surface.
 
 ## Related Records
 
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - durable product judgment that packets are retired as an active surface and Ralph remains.
+`.loom/decisions/ticket-owned-worker-handoffs.md` - durable product judgment that packets are retired as an active surface and Ralph remains.
 - `.loom/specs/ticket-owned-worker-handoffs.md` - behavior contract for ticket-owned worker and audit handoffs.
 - `.loom/specs/loom-driver-agent.md` - Driver behavior must coordinate ticket-owned Ralph runs instead of packetized execution.
 - `.loom/specs/loom-weaver-agent.md` - Weaver remains outer-loop only and should no longer be framed around non-packet records.
 - `.loom/specs/playbook-explicit-macros.md` - Playbook macro bodies must preserve ticket-owned worker/audit discipline.
 - `.loom/research/20260510-loom-loop-failure-analysis.md` - historical context for why packet-before-worker doctrine existed.
-- `.loom/tickets/done/20260513-ticket-execution-ralph-language.md` - historical prior direction now superseded by `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`.
-- `.loom/tickets/done/20260513-ralph-language-consolidation.md` - historical prior direction now superseded by `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`.
+`.loom/tickets/done/20260513-ticket-execution-ralph-language.md` - historical prior direction now superseded by `.loom/decisions/ticket-owned-worker-handoffs.md`.
+`.loom/tickets/done/20260513-ralph-language-consolidation.md` - historical prior direction now superseded by `.loom/decisions/ticket-owned-worker-handoffs.md`.
 
 ## Strategy
 
@@ -89,9 +89,9 @@ Completed. All four child tickets are closed: `.loom/tickets/done/20260515-core-
 
 Validation passed for the full migration: Core smoke, Core pack check, Playbooks smoke, Playbooks pack check, `git diff --check`, and targeted active-surface searches found no packet terminology in shipped Core skills, Core agents, Codex agents, Playbook source/commands, current docs, tests, or eval surfaces outside historical `.loom` records. `.loom/reviews/20260515-ticket-owned-worker-handoffs.md` returned clear after follow-up; its initial malformed Ralph invariant finding was fixed and revalidated.
 
-Unrelated historical `.loom/packets/ralph` worktree records are explicitly excluded from this migration. They are out of scope under `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, were not created by this migration, and do not block completion because active product surfaces no longer teach packets as a future Loom surface.
+Unrelated historical `.loom/packets/ralph` worktree records are explicitly excluded from this migration. They are out of scope under `.loom/decisions/ticket-owned-worker-handoffs.md`, were not created by this migration, and do not block completion because active product surfaces no longer teach packets as a future Loom surface.
 
 ## Journal
 
 - 2026-05-15: Created plan after operator selected the option to retire packets while preserving Ralph as ticket-owned worker/audit discipline. Created four child tickets for Core doctrine, agent surfaces, Playbook language, and docs/final validation.
-- 2026-05-15: Completed plan after all four child tickets closed, shared validation passed, and `.loom/reviews/20260515-ticket-owned-worker-handoffs.md` returned clear after follow-up. Closure explicitly excludes unrelated historical `.loom/packets/ralph` worktree records as out of scope under `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`; this migration did not create those records.
+- 2026-05-15: Completed plan after all four child tickets closed, shared validation passed, and `.loom/reviews/20260515-ticket-owned-worker-handoffs.md` returned clear after follow-up. Closure explicitly excludes unrelated historical `.loom/packets/ralph` worktree records as out of scope under `.loom/decisions/ticket-owned-worker-handoffs.md`; this migration did not create those records.

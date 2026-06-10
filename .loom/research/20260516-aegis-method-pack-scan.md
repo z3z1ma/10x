@@ -48,7 +48,7 @@ Excluded:
 - `scripts/aegis-doctor.py`, `scripts/aegis-workspace.py`, and `scripts/log-window.sh` - install/discovery/config/workspace helper verification, target-project workspace lifecycle support, structural proof bundle assembly, and bounded log-window readback.
 - `tests/e2e/fixtures/workflow-quality-matrix.json`, `tests/e2e/fixtures/trigger-health-matrix.json`, `tests/e2e/workflow-quality-check.sh`, `tests/e2e/trigger-health-check.sh`, `tests/e2e/context-budget-check.sh`, `tests/e2e/boundary-compliance-check.sh`, `tests/skill-triggering/run-test.sh`, and `tests/explicit-skill-requests/run-test.sh` - representative matrices, static guardrail checks, and live-harness activation test shapes.
 - Aegis `AGENTS.md`, `CLAUDE.md`, `.codex-plugin/plugin.json`, `.claude-plugin/plugin.json`, `.cursor-plugin/plugin.json`, `gemini-extension.json`, `.opencode/plugins/aegis.js`, `hooks/session-start`, `commands/brainstorm.md`, and `agents/code-reviewer.md` - repo/contributor authority, adapter packaging, bootstrap injection, deprecated command posture, and named review-agent projection.
-- Local Agent Loom records: `.loom/research/20260516-product-surface-scan.md`, `.loom/research/20260513-superpowers-skill-activation.md`, `.loom/specs/playbook-explicit-macros.md`, `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, and `.loom/specs/ticket-owned-worker-handoffs.md`.
+- Local Agent Loom records: `.loom/research/20260516-product-surface-scan.md`, `.loom/research/20260513-superpowers-skill-activation.md`, `.loom/specs/playbook-explicit-macros.md`, `.loom/decisions/ticket-owned-worker-handoffs.md`, and `.loom/specs/ticket-owned-worker-handoffs.md`.
 
 Source quality note: this is source-backed external repository research with a local clone, but not a live validation of Aegis behavior. Claims about runtime behavior remain limited to what the repository source and tests intend, not what a host actually did during this session.
 
@@ -200,7 +200,7 @@ Implication for Loom: Aegis packaging is useful for host-compatibility compariso
 
 - Do not copy Aegis's `docs/aegis/` workspace model into Loom. Loom already has `.loom/` as a durable recovery graph with owned surfaces.
 
-- Do not recreate `SubagentContextPacket` as a Loom durable artifact. `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md` deliberately moved worker context into tickets and linked records.
+- Do not recreate `SubagentContextPacket` as a Loom durable artifact. `.loom/decisions/ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md` deliberately moved worker context into tickets and linked records.
 
 - Do not recreate `docs/aegis/work/` as a second Loom task-process tree. Loom tickets, evidence, audit, specs, plans, research, and knowledge already own those truths.
 
@@ -254,5 +254,5 @@ Implication for Loom: Aegis packaging is useful for host-compatibility compariso
 - `.loom/research/20260516-product-surface-scan.md` - prior internal scan that already identified activation validation, command metadata, generic install safety, and prompt duplication improvements.
 - `.loom/research/20260513-superpowers-skill-activation.md` - predecessor research on Superpowers activation discipline, which Aegis inherits and extends.
 - `.loom/specs/playbook-explicit-macros.md` - current Loom answer to explicit workflow lenses and Playbook autoactivation pressure.
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md` - reason not to copy Aegis's subagent packet artifact as a durable Loom surface.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` and `.loom/specs/ticket-owned-worker-handoffs.md` - reason not to copy Aegis's subagent packet artifact as a durable Loom surface.
 - `loom-core/skills/using-loom/SKILL.md` and ordered references - current Core preload and routing doctrine.

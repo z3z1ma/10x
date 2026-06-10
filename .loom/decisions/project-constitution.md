@@ -105,7 +105,7 @@ Mill is a client of the protocol. It reads and writes `.loom/` records but never
 ## Related
 
 - `.loom/research/20260524-loom-mill-software-factory.md` - full investigation and synthesis that produced this constitutional direction
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - validates ticket-owned worker handoffs as the execution contract Mill implements
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - validates ticket-owned worker handoffs as the execution contract Mill implements
 - `.loom/specs/superseded/ticket-owned-worker-handoffs.md` - behavior contract for bounded worker runs (superseded)
 - `.loom/specs/superseded/loom-driver-agent.md` - Driver behavior that maps to Mill's orchestration loop (superseded)
 - `.loom/specs/superseded/loom-weaver-agent.md` - Weaver behavior that maps to Mill's shaping mode (superseded)

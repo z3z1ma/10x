@@ -36,7 +36,7 @@ Excluded:
 - `runtime/hotl-rt`, `scripts/document-lint.sh`, `scripts/hotl-prepare-execution-root.sh`, `scripts/hotl-locate-run.sh`, `scripts/render-execution-summary.sh`, and related script references - runtime/state/lint/report mechanics inspected as source only. No untrusted HOTL scripts were executed.
 - `docs/contracts/execution-report-output.md`, `docs/contracts/code-review-output.md`, and representative checklists - output contract and review dimensions.
 - `test/smoke.bats`, `test/runtime-integration.bats`, `test/execution-root.bats`, `test/fixtures/hotl-workflow-typed-verify-sample.md`, and representative scenario fixtures - validation shapes and product-surface drift checks.
-- Local Agent Loom records: `.loom/research/20260516-product-surface-scan.md`, `.loom/research/20260516-aegis-method-pack-scan.md`, `.loom/research/20260513-superpowers-skill-activation.md`, `.loom/specs/playbook-explicit-macros.md`, `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`, and `.loom/specs/ticket-owned-worker-handoffs.md`.
+`.loom/research/20260516-product-surface-scan.md`, `.loom/research/20260516-aegis-method-pack-scan.md`, `.loom/research/20260513-superpowers-skill-activation.md`, `.loom/specs/playbook-explicit-macros.md`, `.loom/decisions/ticket-owned-worker-handoffs.md`, and `.loom/specs/ticket-owned-worker-handoffs.md`.
 
 Source quality note: this is source-backed external repository research, not live validation of HOTL behavior in Codex, Claude Code, Cline, Cursor, or OpenCode. Claims about runtime behavior are limited to what repository source and tests specify.
 

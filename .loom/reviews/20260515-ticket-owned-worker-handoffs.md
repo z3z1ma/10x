@@ -18,7 +18,7 @@ The audit targeted:
 - `.loom/tickets/done/20260515-agent-surfaces-ticket-worker-model.md`
 - `.loom/tickets/done/20260515-playbook-ticket-worker-language.md`
 - `.loom/tickets/done/20260515-docs-validation-no-packets.md`
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`
+- `.loom/decisions/ticket-owned-worker-handoffs.md`
 - `.loom/specs/ticket-owned-worker-handoffs.md`
 - current source/docs/test diffs implementing the migration
 
@@ -67,7 +67,7 @@ Disposition: fixed before this audit was recorded. A follow-up worker corrected 
 
 The first review found a modified historical packet and two untracked packet records under `.loom/packets/ralph/` related to earlier `playbook-explicit-macro-docs-tests` work. These records were not created by this migration and are not active product doctrine, but closing the migration without naming that exclusion would weaken graph coherence.
 
-Disposition required: migration closure records must explicitly state that historical/current `.loom/packets/ralph` worktree records are unrelated to this migration, remain outside active product-surface validation, and are allowed as historical/out-of-scope artifacts under `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md`.
+Disposition required: migration closure records must explicitly state that historical/current `.loom/packets/ralph` worktree records are unrelated to this migration, remain outside active product-surface validation, and are allowed as historical/out-of-scope artifacts under `.loom/decisions/ticket-owned-worker-handoffs.md`.
 
 The follow-up review accepted that disposition condition and reported that the `.loom/packets/ralph` changes do not block this migration if closure records include the exclusion.
 
@@ -84,12 +84,12 @@ The active product-surface migration is supported: Core doctrine, ticket/Ralph/a
 
 ## Residual Risk
 
-- Historical `.loom/packets/ralph` records still exist, including unrelated untracked records already present in the worktree. Future readers could misread them unless they follow `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` and the closure notes.
+- Historical `.loom/packets/ralph` records still exist, including unrelated untracked records already present in the worktree. Future readers could misread them unless they follow `.loom/decisions/ticket-owned-worker-handoffs.md` and the closure notes.
 - Validation proves current source/package surfaces and package smoke behavior, not every external installed harness runtime beyond those checks.
 
 ## Related Records
 
 - `.loom/evidence/20260515-ticket-owned-worker-handoffs-validation.md` - validation dossier reviewed by the follow-up audit.
-- `.loom/decisions/decision-0002-ticket-owned-worker-handoffs.md` - active decision retiring packets as future active surface while preserving Ralph.
+- `.loom/decisions/ticket-owned-worker-handoffs.md` - active decision retiring packets as future active surface while preserving Ralph.
 - `.loom/specs/ticket-owned-worker-handoffs.md` - behavior contract audited here.
 - `.loom/tickets/20260515-ticket-owned-worker-handoffs.md` - parent migration plan.
