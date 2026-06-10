@@ -79,7 +79,7 @@
       if (action === 'dismiss') {
         response = await fetch(apiUrl(`/workstations/${workstationId}`), { method: 'DELETE' });
       } else if (action === 'stop') {
-        response = await fetch(apiUrl(`/api/workstation/${workstationId}/stop`), { method: 'POST' });
+        response = await fetch(apiUrl(`/workstations/${workstationId}/stop`), { method: 'POST' });
       } else if (action === 'resolve' || action === 'abort') {
         response = await fetch(apiUrl(`/shipping/${workstationId}/${action}`), { method: 'POST' });
       } else {

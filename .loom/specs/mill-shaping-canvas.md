@@ -4,7 +4,7 @@ Status: active
 Created: 2026-05-26
 Updated: 2026-05-26
 
-Legacy note: Replaces — .loom/specs/mill-shaping-sessions.md
+Legacy note: Replaces — .loom/specs/superseded/mill-shaping-sessions.md
 
 ## Summary
 

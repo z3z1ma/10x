@@ -34,6 +34,7 @@ _OPTION_RE = re.compile(r"<option\b(?P<attrs>[^>]*)>(?P<body>.*?)</option\s*>", 
 _EXPLORE_RE = re.compile(r"<explore\b(?P<attrs>[^>]*)/\s*>", re.IGNORECASE | re.DOTALL)
 _OP_RE = re.compile(r"<op\b(?P<attrs>[^>]*)/\s*>", re.IGNORECASE | re.DOTALL)
 _XML_TAG_RE = re.compile(r"</?\w+\b|<\w+\b[^>]*/\s*>")
+_RECORD_CLOSE_FOLLOWER_RE = re.compile(r"\s*(<node\b|<op\b|<explore\b|$)", re.IGNORECASE)
 _ATTR_RE = re.compile(
     r"(?P<name>[\w:-]+)\s*=\s*(?:\"(?P<double>.*?)\"|'(?P<single>.*?)'|(?P<bare>[^\s>]+))",
     re.DOTALL,
@@ -70,14 +71,14 @@ def _mask_record_node_bodies(output: str) -> str:
         body_start = match.end()
         attrs = match.group("attrs")
         node_type = _normalize_type(_parse_attrs(attrs).get("type") or "observation")
+        next_open = _NODE_OPEN_RE.search(output, body_start)
+        next_start = next_open.start() if next_open else len(output)
         if node_type == "record":
             close = _find_record_close(output, body_start)
             body_end = close.start() if close else len(output)
             for index in range(body_start, body_end):
                 masked[index] = " "
         else:
-            next_open = _NODE_OPEN_RE.search(output, body_start)
-            next_start = next_open.start() if next_open else len(output)
             close = _NODE_CLOSE_RE.search(output, body_start, next_start)
             if close is None:
                 position = next_start
@@ -91,8 +92,18 @@ def _mask_record_node_bodies(output: str) -> str:
 
 
 def _find_record_close(output: str, body_start: int):
-    close_matches = list(_NODE_CLOSE_RE.finditer(output, body_start))
-    return close_matches[-1] if close_matches else None
+    """Find the real closing </node> for a record node.
+
+    Record bodies may contain literal </node> and <node> text (e.g. when
+    discussing XML or showing code examples). The real close is the first
+    </node> whose remainder is either end-of-string or a top-level grammar
+    element (<node, <op, <explore) — i.e., the transition back to top-level.
+    """
+    for match in _NODE_CLOSE_RE.finditer(output, body_start):
+        after = output[match.end():]
+        if _RECORD_CLOSE_FOLLOWER_RE.match(after):
+            return match
+    return None
 
 
 def _node_blocks(output: str) -> list[tuple[str, str]]:

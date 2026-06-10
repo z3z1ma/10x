@@ -4,7 +4,7 @@ Status: active
 Created: 2026-05-25
 Updated: 2026-05-25
 
-Supersedes: .loom/specs/loom-mill-factory-floor-mvp.md
+Supersedes: .loom/specs/superseded/loom-mill-factory-floor-mvp.md
 
 ## Summary
 
@@ -236,7 +236,7 @@ Playback should feel like scrubbing through a video timeline: instant, oriented,
 
 ## Related Records
 
-- `.loom/specs/loom-mill-factory-floor-mvp.md` - superseded predecessor
+- `.loom/specs/superseded/loom-mill-factory-floor-mvp.md` - superseded predecessor
 - `.loom/specs/mill-scheduling-agent.md` - decides what enters workstations
 - `.loom/specs/mill-process-control.md` - decides when workstations stop (jidoka)
 - `.loom/specs/mill-shipping-dock.md` - decides how finished work merges

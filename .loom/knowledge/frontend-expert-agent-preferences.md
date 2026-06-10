@@ -51,4 +51,3 @@ Gemini (the model behind frontend-expert) sometimes returns empty on first invoc
 ## Related
 
 - `.opencode/agents/frontend-expert.md` - agent definition (google-vertex/gemini-3.1-pro-preview)
-- `.loom/knowledge/general-subagent-for-ralph-runs.md` - general agent preference for non-frontend Ralph runs

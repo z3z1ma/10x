@@ -51,7 +51,7 @@
     busy[ticketId] = true;
     error[ticketId] = '';
     try {
-      const response = await fetch(apiUrl(`/api/workstation/${ticketId}/acknowledge-andon`), { method: 'POST' });
+      const response = await fetch(apiUrl(`/workstations/${ticketId}/acknowledge-andon`), { method: 'POST' });
       if (!response.ok) {
         let msg = `${response.status}: ${response.statusText}`;
         try {

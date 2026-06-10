@@ -38,23 +38,23 @@
   }
 
   function start() {
-    return command('/api/workstation/start', { ticket_id: ticketId });
+    return command('/workstations', { ticket_id: ticketId });
   }
 
   function pause() {
-    return command(`/api/workstation/${ticketId}/pause`);
+    return command(`/workstations/${ticketId}/pause`);
   }
 
   function stop() {
-    return command(`/api/workstation/${ticketId}/stop`);
+    return command(`/workstations/${ticketId}/stop`);
   }
 
   function edit() {
-    return command(`/api/workstation/${ticketId}/edit`);
+    return command(`/workstations/${ticketId}/edit`);
   }
 
   function resume() {
-    return command(`/api/workstation/${ticketId}/resume`);
+    return command(`/workstations/${ticketId}/resume`);
   }
 
   function viewHistory() {

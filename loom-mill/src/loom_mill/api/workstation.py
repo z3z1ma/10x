@@ -343,11 +343,11 @@ async def delete_workstation(request: Request) -> JSONResponse:
 
 
 async def pause_workstation(request: Request) -> JSONResponse:
-    return await _control_workstation(request, request.path_params.get("workstation_id") or request.path_params["ticket_id"], WorkstationStatus.PAUSED)
+    return await _control_workstation(request, request.path_params["workstation_id"], WorkstationStatus.PAUSED)
 
 
 async def resume_workstation(request: Request) -> JSONResponse:
-    workstation_id = request.path_params.get("workstation_id") or request.path_params["ticket_id"]
+    workstation_id = request.path_params["workstation_id"]
     engine = _get_engine_by_route_param(request, workstation_id)
     if engine is None:
         return JSONResponse({"error": "workstation not found"}, status_code=404)
@@ -362,7 +362,7 @@ async def resume_workstation(request: Request) -> JSONResponse:
 
 
 async def acknowledge_andon(request: Request) -> JSONResponse:
-    ticket_id = request.path_params["ticket_id"].removeprefix("ticket:")
+    ticket_id = request.path_params["workstation_id"].removeprefix("ticket:")
     engine = _manager(request).get_by_ticket(ticket_id)
     if engine is None:
         return JSONResponse({"error": "workstation not found"}, status_code=404)
@@ -374,11 +374,11 @@ async def acknowledge_andon(request: Request) -> JSONResponse:
 
 
 async def stop_workstation(request: Request) -> JSONResponse:
-    return await _control_workstation(request, request.path_params.get("workstation_id") or request.path_params["ticket_id"], WorkstationStatus.STOPPED)
+    return await _control_workstation(request, request.path_params["workstation_id"], WorkstationStatus.STOPPED)
 
 
 async def edit_workstation_ticket(request: Request) -> JSONResponse:
-    ticket_id = request.path_params["ticket_id"].removeprefix("ticket:")
+    ticket_id = request.path_params["workstation_id"].removeprefix("ticket:")
     ticket_path = _ticket_path(request, ticket_id)
     if not ticket_path.exists():
         return JSONResponse({"error": "ticket not found"}, status_code=404)
