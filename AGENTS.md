@@ -64,6 +64,8 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
 
+---
+
 # Loom
 
 Loom is a protocol for project memory and execution discipline. It structures how knowledge, decisions, research, specs, work, evidence, and reviews are captured and used across sessions and agents. Follow it without exception.
@@ -79,6 +81,8 @@ When you have a recommended answer, say so. Give the user something concrete to 
 Before shaping new work, fish through what already exists. Grep open tickets to understand what's in progress and avoid duplicating effort. Scan knowledge records for shared vocabulary and conventions. Read active decisions for constraints that might already apply. Search research for prior investigations on the topic — if relevant research exists but is old, note the staleness and consider whether it needs updating before relying on it. Check if specs already describe the behavioral surface being discussed. The `.loom/` directory is cumulative. Don't re-derive what the project already knows — build on it.
 
 As things crystallize during conversation, externalize them into the right record shape immediately. A decision made mid-conversation is still a decision. A term of art clarified is still knowledge. A behavior described concretely is a spec. Don't wait for a neat stopping point — write things down as they become clear.
+
+Other tools, skills, or workflows may produce artifacts that overlap with Loom record types. When something lands outside `.loom/` but corresponds to a Loom record type, create the Loom record anyway. It can be thin — some context, headers, and a pointer to the canonical location — but it must exist so the `.loom/` graph remains complete and navigable. The graph is the index; gaps in it are invisible work.
 
 Build a shared glossary. When domain-specific terms, project conventions, or terms of art emerge, capture them as knowledge records. Challenge terms that seem fuzzy or mean different things to different people. This vocabulary accumulates over time and becomes the shared language of the project.
 
@@ -276,7 +280,9 @@ When you encounter something outside your current scope that needs attention —
 
 Before closing a ticket, verify coherence. Read the acceptance criteria you set at the start. Check the evidence you collected against those criteria. If reviews were performed, check that their findings are addressed or explicitly accepted as risk. Check that related specs still reflect reality after your changes. Closure means the records agree — not that you feel done.
 
-# General Context
+---
+
+# Repo Specific Context
 
 ## Repo Shape
 
