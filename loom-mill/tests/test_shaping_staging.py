@@ -9,11 +9,12 @@ import pytest
 
 from loom_mill.api import shaping
 from loom_mill.app import create_app
-from loom_mill.shaping import CanvasNodeType, SessionPhase, ShapingSession
+from loom_mill.shaping import CanvasNode, CanvasNodeType, NodeStatus, SessionPhase, ShapingSession
 from loom_mill.shaping.commit import CommitFlow, atomic_write_all, generate_real_id
 from loom_mill.shaping.engine import ShapingEngine
 from loom_mill.shaping.models import StagedRecord
 from loom_mill.shaping.orchestrator import ShapingOrchestrator
+from loom_mill.shaping.session import utc_now
 from loom_mill.state import MillStateStore
 from loom_mill.workstation.config import HarnessConfig
 
@@ -55,8 +56,9 @@ def test_staging_crud_persists_across_reload(tmp_path: Path) -> None:
     assert loaded.state.staged_records[0].content == "# Updated"
     assert loaded.state.staged_records[0].status == "accepted"
 
-    loaded.staging.reject(record.temp_id)
-    assert ShapingSession.load(session.session_id, tmp_path).state.staged_records == []
+    with pytest.raises(ValueError, match="accepted"):
+        loaded.staging.reject(record.temp_id)
+    assert ShapingSession.load(session.session_id, tmp_path).state.staged_records[0].status == "accepted"
 
 
 def test_staging_branch_create_switch_and_merge(tmp_path: Path) -> None:
@@ -202,11 +204,57 @@ async def test_staging_api_endpoints_and_routes(tmp_path: Path) -> None:
     assert create.status_code == 200
     assert _body(update)["record"]["status"] == "modified"
     assert _body(accept)["record"]["status"] == "accepted"
-    assert _body(delete)["rejected"] == temp_id
+    assert delete.status_code == 400
+    assert "accepted" in _body(delete)["error"]
 
     routes = [(route.path, route.methods or set()) for route in create_app().routes if hasattr(route, "methods")]
     assert ("/shaping/sessions/{session_id}/commit", {"POST"}) in [(path, methods) for path, methods in routes]
     assert any(path == "/shaping/sessions/{session_id}/staged/{temp_id}/accept" and "POST" in methods for path, methods in routes)
+
+
+@pytest.mark.asyncio
+async def test_delete_staged_record_marks_matching_record_nodes_rejected(tmp_path: Path) -> None:
+    store = MillStateStore()
+    session = ShapingSession.create(tmp_path, "initial")
+    record = session.staging.propose("tickets", "Auth Fix", "# Auth Fix")
+    session.add_node_with_edge(
+        CanvasNode(
+            id="record-node",
+            type=CanvasNodeType.RECORD,
+            parent_id=next(iter(session.state.nodes)),
+            status=NodeStatus.ACTIVE,
+            content={"temp_id": record.temp_id, "surface": "tickets", "title": "Auth Fix", "content": "# Auth Fix"},
+            position=None,
+            timestamp=utc_now(),
+        )
+    )
+    session.add_node_with_edge(
+        CanvasNode(
+            id="dead-record-node",
+            type=CanvasNodeType.RECORD,
+            parent_id=next(iter(session.state.nodes)),
+            status=NodeStatus.DEAD,
+            content={"temp_id": record.temp_id, "surface": "tickets", "title": "Auth Fix", "content": "# Auth Fix"},
+            position=None,
+            timestamp=utc_now(),
+        )
+    )
+    subscription = store.subscribe()
+    try:
+        response = await shaping.delete_staged_record(
+            Request(tmp_path, store, path_params={"session_id": session.session_id, "temp_id": record.temp_id})
+        )
+        event = await subscription.__anext__()
+    finally:
+        await subscription.aclose()
+
+    loaded = ShapingSession.load(session.session_id, tmp_path)
+    assert response.status_code == 200
+    assert loaded.state.nodes["record-node"].status == NodeStatus.REJECTED
+    assert loaded.state.nodes["dead-record-node"].status == NodeStatus.REJECTED
+    assert event.event == "node_updated"
+    assert event.data["node"]["id"] == "record-node"
+    assert event.data["node"]["status"] == "rejected"
 
 
 @pytest.mark.asyncio
@@ -222,3 +270,98 @@ async def test_engine_proposal_creates_staged_record(tmp_path: Path) -> None:
     assert nodes[0].type == CanvasNodeType.RECORD
     assert nodes[0].content["temp_id"] == "temp:tickets:fix-notification-label"
     assert session.state.staged_records[0].temp_id == nodes[0].content["temp_id"]
+
+
+def _session_with_two_specs(tmp_path) -> ShapingSession:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    session.staging.propose("specs", "Spec A", "# Spec A\nbody a", "main")
+    session.staging.propose("specs", "Spec B", "# Spec B\nbody b", "main")
+    return session
+
+
+def test_consolidate_stages_merged_and_discards_targets(tmp_path) -> None:
+    session = _session_with_two_specs(tmp_path)
+    merged = session.staging.consolidate(
+        ["temp:specs:spec-a", "temp:specs:spec-b"],
+        surface="specs",
+        title="Spec Combined",
+        content="# Spec Combined\nmerged body",
+    )
+    temp_ids = {r.temp_id for r in session.state.staged_records}
+    assert merged.temp_id in temp_ids
+    assert "temp:specs:spec-a" not in temp_ids
+    assert "temp:specs:spec-b" not in temp_ids
+
+
+def test_consolidate_refuses_accepted_target(tmp_path) -> None:
+    session = _session_with_two_specs(tmp_path)
+    session.staging.accept("temp:specs:spec-a")
+    with pytest.raises(ValueError, match="accepted"):
+        session.staging.consolidate(
+            ["temp:specs:spec-a", "temp:specs:spec-b"],
+            surface="specs",
+            title="Spec Combined",
+            content="# merged",
+        )
+
+
+def test_accepted_record_is_immutable_except_idempotent_accept(tmp_path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    record = session.staging.propose("specs", "Accepted", "# Accepted", "main")
+    accepted = session.staging.accept(record.temp_id)
+    modified_at = accepted.modified_at
+
+    assert session.staging.accept(record.temp_id).modified_at == modified_at
+    with pytest.raises(ValueError, match="accepted"):
+        session.staging.update(record.temp_id, content="# Mutated")
+    with pytest.raises(ValueError, match="accepted"):
+        session.staging.reject(record.temp_id)
+    assert session.staging._find(record.temp_id).content == "# Accepted"
+
+
+@pytest.mark.asyncio
+async def test_staging_api_refuses_to_update_accepted_record(tmp_path: Path) -> None:
+    store = MillStateStore()
+    session_id = _body(await shaping.create_shaping_session(Request(tmp_path, store, {"input": "initial"})))["session_id"]
+    create = await shaping.create_staged_record(
+        Request(tmp_path, store, {"surface": "specs", "title": "Accepted", "content": "# Accepted"}, {"session_id": session_id})
+    )
+    temp_id = _body(create)["record"]["temp_id"]
+    await shaping.accept_staged_record(Request(tmp_path, store, path_params={"session_id": session_id, "temp_id": temp_id}))
+
+    update = await shaping.update_staged_record(
+        Request(tmp_path, store, {"content": "# Mutated"}, {"session_id": session_id, "temp_id": temp_id})
+    )
+
+    assert update.status_code == 400
+    assert "accepted" in _body(update)["error"]
+
+
+def test_consolidate_allows_merged_id_matching_removed_target_without_duplicates(tmp_path) -> None:
+    session = _session_with_two_specs(tmp_path)
+
+    merged = session.staging.consolidate(
+        ["temp:specs:spec-a", "temp:specs:spec-b"],
+        surface="specs",
+        title="Spec A",
+        content="# Spec A\nmerged",
+    )
+
+    temp_ids = [record.temp_id for record in session.state.staged_records]
+    assert merged.temp_id == "temp:specs:spec-a"
+    assert temp_ids.count("temp:specs:spec-a") == 1
+    assert "temp:specs:spec-b" not in temp_ids
+
+
+def test_consolidate_rejects_duplicate_targets_before_mutating(tmp_path) -> None:
+    session = _session_with_two_specs(tmp_path)
+
+    with pytest.raises(ValueError, match="unique"):
+        session.staging.consolidate(
+            ["temp:specs:spec-a", "temp:specs:spec-a"],
+            surface="specs",
+            title="Spec Combined",
+            content="# merged",
+        )
+
+    assert {record.temp_id for record in session.state.staged_records} == {"temp:specs:spec-a", "temp:specs:spec-b"}

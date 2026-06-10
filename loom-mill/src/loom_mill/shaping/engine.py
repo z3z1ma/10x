@@ -11,7 +11,8 @@ from .models import CanvasEdge, CanvasNode, CanvasNodeType, NodeStatus, SessionP
 from .orchestrator import ShapingOrchestrator
 from .parser import ParsedNode, ParsedResponse, parse_canvas_response
 from .prompts import build_canvas_prompt
-from .session import ShapingSession, utc_now
+from .serialize import serialize_graph
+from .session import ShapingSession, mark_stale_recursive, utc_now
 
 
 class ShapingEngine:
@@ -49,6 +50,42 @@ class ShapingEngine:
             )
         return await self._advance_from(from_node_id)
 
+    async def _apply_ops(self, ops: list, parsed_nodes: list[ParsedNode], parent_id: str | None) -> list[CanvasNode]:
+        """Apply structured mutation ops and return any error observation nodes."""
+        created: list[CanvasNode] = []
+        for op in ops:
+            try:
+                if op.kind == "discard-staged":
+                    self.session.staging.reject(op.args["temp_id"])
+                elif op.kind == "edit-staged":
+                    record = next((n for n in parsed_nodes if n.type == "record"), None)
+                    if record is None:
+                        raise ValueError("edit-staged requires a paired record node")
+                    self.session.staging.update(op.args["temp_id"], content=record.content, title=record.title)
+                elif op.kind == "supersede":
+                    record = next((n for n in parsed_nodes if n.type == "record"), None)
+                    if record is None:
+                        raise ValueError("supersede requires a paired record node")
+                    targets = [t.strip() for t in op.args.get("targets", "").split(",") if t.strip()]
+                    self.session.staging.consolidate(
+                        targets,
+                        surface=record.surface or "specs",
+                        title=record.title or "Consolidated record",
+                        content=record.content or "",
+                    )
+            except (KeyError, ValueError) as error:
+                node = self._new_node(
+                    CanvasNodeType.OBSERVATION,
+                    {"observation": f"Op '{op.kind}' could not be applied: {error}", "evidence": None},
+                    parent_id=parent_id,
+                )
+                edge = self.session.add_node_with_edge(node)
+                await self._publish_node(node)
+                if edge is not None:
+                    await self._publish_edge(edge)
+                created.append(node)
+        return created
+
     def _remove_subtree(self, node_id: str) -> list[str]:
         """Remove a node and all descendants from session state."""
         removed: list[str] = []
@@ -71,16 +108,81 @@ class ShapingEngine:
                 await self._publish_edge(edge)
             return [node]
         context = self._context_for_node(parent_id)
+        graph_view = serialize_graph(self.session.state)
         recent_nodes = self._path_to_node(parent_id)[-20:] if parent_id else list(self.session.state.nodes.values())[-20:]
-        response = await self._decide_next_action(context, recent_nodes, self.session.state.phase)
+        response = await self._decide_next_action(context, graph_view, recent_nodes, self.session.state.phase)
 
         if response.explore_goal and not response.nodes:
             node_count = len(self.session.state.nodes)
             await self.orchestrator.launch(response.explore_goal)
             return list(self.session.state.nodes.values())[node_count:]
 
+        # Resolve parent override for continue/revise ops; fail closed on unknown nodes
+        pre_op_nodes: list[CanvasNode] = []
+        invalid_parent_op = False
+        revise_targets: list[str] = []
+        for op in response.ops:
+            if op.kind == "continue":
+                target_id = op.args.get("from")
+                if target_id in self.session.state.nodes:
+                    parent_id = target_id
+                else:
+                    invalid_parent_op = True
+                    message = f"Op 'continue' references unknown node {target_id}" if target_id else "Op 'continue' requires a from node"
+                    node = self._new_node(
+                        CanvasNodeType.OBSERVATION,
+                        {"observation": message, "evidence": None},
+                        parent_id=parent_id,
+                    )
+                    edge = self.session.add_node_with_edge(node)
+                    await self._publish_node(node)
+                    if edge is not None:
+                        await self._publish_edge(edge)
+                    pre_op_nodes.append(node)
+            elif op.kind == "revise":
+                target_id = op.args.get("node")
+                if target_id in self.session.state.nodes:
+                    revise_targets.append(target_id)
+                    parent_id = target_id
+                else:
+                    invalid_parent_op = True
+                    message = f"Op 'revise' references unknown node {target_id}" if target_id else "Op 'revise' requires a node"
+                    node = self._new_node(
+                        CanvasNodeType.OBSERVATION,
+                        {"observation": message, "evidence": None},
+                        parent_id=parent_id,
+                    )
+                    edge = self.session.add_node_with_edge(node)
+                    await self._publish_node(node)
+                    if edge is not None:
+                        await self._publish_edge(edge)
+                    pre_op_nodes.append(node)
+
+        if not invalid_parent_op:
+            for target_id in revise_targets:
+                stale_ids = mark_stale_recursive(self.session.state, target_id)
+                if stale_ids:
+                    self.session.state.updated_at = utc_now()
+                    self.session._persist_state()
+                    await self.store.publish(
+                        ShapingEvent(
+                            session_id=self.session.session_id,
+                            event="node_invalidated",
+                            data={"node_ids": stale_ids},
+                        )
+                    )
+
+        ops_to_apply = [] if invalid_parent_op else response.ops
+
+        # Identify records consumed by supersede/edit-staged ops
+        consuming_ops = {op.kind for op in ops_to_apply} & {"supersede", "edit-staged"}
+
         nodes: list[CanvasNode] = []
-        for parsed_node in response.nodes:
+        parsed_nodes = [] if invalid_parent_op else response.nodes
+        for parsed_node in parsed_nodes:
+            # Skip record nodes that will be consumed by supersede/edit-staged
+            if parsed_node.type == "record" and consuming_ops:
+                continue
             if parsed_node.type == "option_group":
                 nodes.extend(await self._add_option_group(parsed_node, parent_id))
                 continue
@@ -100,9 +202,12 @@ class ShapingEngine:
             await self._transition_after_node(node)
             nodes.append(node)
 
+        # Apply structured mutation ops
+        op_nodes = await self._apply_ops(ops_to_apply, parsed_nodes, parent_id)
+
         if response.explore_goal:
             await self.orchestrator.launch(response.explore_goal)
-        return nodes
+        return nodes + op_nodes + pre_op_nodes
 
     def _path_to_node(self, node_id: str | None) -> list[CanvasNode]:
         path: list[CanvasNode] = []
@@ -156,10 +261,11 @@ class ShapingEngine:
     async def _decide_next_action(
         self,
         context: str,
+        graph_view: str,
         recent_nodes: list[CanvasNode],
         phase: SessionPhase,
     ) -> ParsedResponse:
-        prompt = build_canvas_prompt(context, recent_nodes, phase)
+        prompt = build_canvas_prompt(context, graph_view, recent_nodes, phase)
         config = InvocationConfig(
             goal="Decide next shaping action",
             context_excerpt="",
@@ -169,11 +275,21 @@ class ShapingEngine:
             cwd=self.orchestrator.harness_config.cwd,
             timeout_seconds=300.0,
         )
+
+        async def on_stream(line: str) -> None:
+            await self.store.publish(
+                ShapingEvent(
+                    session_id=self.session.session_id,
+                    event="advance_stream",
+                    data={"delta": line},
+                )
+            )
+
         try:
             result = await run_bounded_invocation(
                 config,
                 invocation_id=f"decision-{uuid4().hex[:8]}",
-                on_stream=None,
+                on_stream=on_stream,
                 prompt_override=prompt,
             )
         except Exception as error:
@@ -189,6 +305,9 @@ class ShapingEngine:
         node_type = {
             "question": CanvasNodeType.QUESTION,
             "observation": CanvasNodeType.OBSERVATION,
+            "framing": CanvasNodeType.FRAMING,
+            "tension": CanvasNodeType.TENSION,
+            "decision": CanvasNodeType.DECISION,
             "record": CanvasNodeType.RECORD,
             "option_group": CanvasNodeType.OPTION_GROUP,
         }.get(parsed_node.type, CanvasNodeType.OBSERVATION)
@@ -228,6 +347,8 @@ class ShapingEngine:
                 ],
                 "reasoning": parsed_node.reasoning,
             }
+        if parsed_node.type in ("framing", "tension", "decision"):
+            return {parsed_node.type: parsed_node.content or "", "evidence": None}
         return {"observation": parsed_node.content or "No structured response was produced.", "evidence": None}
 
     async def _transition_for_operator_feedback(self) -> None:

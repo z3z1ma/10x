@@ -69,6 +69,20 @@ def test_parse_canvas_response_question_record_option_group_and_fallback() -> No
     assert fallback.nodes[0].type == "observation"
 
 
+def test_parse_canvas_response_ignores_ops_inside_record_markdown() -> None:
+    parsed = parse_canvas_response(
+        '<node type="record" surface="specs" title="Spec">'
+        '# Spec\n\nLiteral node example: <node type="observation">Example</node>\n'
+        'Literal closing tag example: </node>\n'
+        'Literal op example: <op kind="discard-staged" temp_id="temp:specs:kept"/>\n'
+        '</node>'
+    )
+
+    assert parsed.ops == []
+    assert len(parsed.nodes) == 1
+    assert '<op kind="discard-staged"' in parsed.nodes[0].content
+
+
 def test_canvas_prompt_includes_context_history_and_phase() -> None:
     node = CanvasNode(
         id="n1",
@@ -80,7 +94,7 @@ def test_canvas_prompt_includes_context_history_and_phase() -> None:
         position=None,
     )
 
-    prompt = build_canvas_prompt("context facts", [node], SessionPhase.EXPLORING)
+    prompt = build_canvas_prompt("context facts", "graph view text", [node], SessionPhase.EXPLORING)
 
     assert "## Current Phase: exploring" in prompt
     assert "context facts" in prompt
@@ -95,9 +109,16 @@ async def test_engine_advance_with_question_publishes_node_and_moves_to_narrowin
     output = '<node type="question" options="navigation, analysis">Is this for navigation or analysis?</node>'
     engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
     subscription = store.subscribe()
+    collected: list[dict] = []
     try:
         nodes = await engine.advance()
-        events = [await subscription.__anext__(), await subscription.__anext__()]
+        # Drain multiple events including possible advance_stream events
+        for _ in range(5):
+            try:
+                event = await asyncio.wait_for(subscription.__anext__(), timeout=1.0)
+            except (StopAsyncIteration, asyncio.TimeoutError):
+                break
+            collected.append(_event_payload(event))
     finally:
         await subscription.aclose()
 
@@ -105,7 +126,9 @@ async def test_engine_advance_with_question_publishes_node_and_moves_to_narrowin
     assert nodes[0].type == CanvasNodeType.QUESTION
     assert nodes[0].content["question"] == "Is this for navigation or analysis?"
     assert session.state.phase == SessionPhase.NARROWING
-    assert [_event_payload(event)["type"] for event in events] == ["shaping:node_added", "shaping:edge_added"]
+    # Filter for the node/edge events we care about
+    node_edge_events = [e["type"] for e in collected if e["type"] in ("shaping:node_added", "shaping:edge_added")]
+    assert node_edge_events == ["shaping:node_added", "shaping:edge_added"]
 
 
 @pytest.mark.asyncio
@@ -324,3 +347,338 @@ def test_advance_route_is_registered() -> None:
     routes = [(route.path, route.methods or set()) for route in create_app().routes if hasattr(route, "methods")]
 
     assert any(route_path == "/shaping/sessions/{session_id}/advance" and "POST" in methods for route_path, methods in routes)
+
+
+@pytest.mark.asyncio
+async def test_advance_maps_tension_node_type(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="tension">Cache vs freshness.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert nodes[0].type == CanvasNodeType.TENSION
+    assert nodes[0].content["tension"] == "Cache vs freshness."
+
+
+@pytest.mark.asyncio
+async def test_advance_maps_framing_node_type(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="framing">We need cache invalidation.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert nodes[0].type == CanvasNodeType.FRAMING
+    assert nodes[0].content["framing"] == "We need cache invalidation."
+
+
+@pytest.mark.asyncio
+async def test_advance_maps_decision_node_type(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="decision">Use LRU cache.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert nodes[0].type == CanvasNodeType.DECISION
+    assert nodes[0].content["decision"] == "Use LRU cache."
+
+
+@pytest.mark.asyncio
+async def test_advance_applies_discard_staged_op(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    session.staging.propose("specs", "Doomed", "# doomed", "main")
+    store = MillStateStore()
+    output = '<op kind="discard-staged" temp_id="temp:specs:doomed"/>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    temp_ids = {r.temp_id for r in session.state.staged_records}
+    assert "temp:specs:doomed" not in temp_ids
+
+
+@pytest.mark.asyncio
+async def test_advance_supersede_consolidates_without_double_add(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    session.staging.propose("specs", "Spec A", "# A", "main")
+    session.staging.propose("specs", "Spec B", "# B", "main")
+    store = MillStateStore()
+    output = (
+        '<op kind="supersede" targets="temp:specs:spec-a,temp:specs:spec-b"/>'
+        '<node type="record" surface="specs" title="Spec Merged"># Merged</node>'
+    )
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    temp_ids = {r.temp_id for r in session.state.staged_records}
+    assert "temp:specs:spec-merged" in temp_ids
+    assert "temp:specs:spec-a" not in temp_ids
+    assert "temp:specs:spec-b" not in temp_ids
+
+
+@pytest.mark.asyncio
+async def test_advance_bad_op_fails_closed_with_observation(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<op kind="discard-staged" temp_id="temp:specs:nonexistent"/>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert any(n.type == CanvasNodeType.OBSERVATION and "could not be applied" in str(n.content) for n in nodes)
+
+
+@pytest.mark.asyncio
+async def test_advance_edit_staged_updates_record(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    session.staging.propose("specs", "Draft", "# Draft", "main")
+    store = MillStateStore()
+    output = (
+        '<op kind="edit-staged" temp_id="temp:specs:draft"/>'
+        '<node type="record" surface="specs" title="Draft"># Revised</node>'
+    )
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    record = next(r for r in session.state.staged_records if r.temp_id == "temp:specs:draft")
+    assert record.content == "# Revised"
+    assert record.status == "modified"
+
+
+@pytest.mark.asyncio
+async def test_advance_continue_op_changes_parent(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output1 = '<node type="observation">Root</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output1)), store)
+    root_nodes = await engine.advance()
+    root_id = root_nodes[0].id
+
+    output2 = f'<op kind="continue" from="{root_id}"/><node type="observation">Child</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output2)), store)
+    child_nodes = await engine.advance()
+    # the appended child observation should attach to root_id
+    assert any(n.parent_id == root_id and n.content.get("observation") == "Child" for n in child_nodes)
+
+
+@pytest.mark.asyncio
+async def test_advance_continue_unknown_node_fails_closed(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<op kind="continue" from="does-not-exist"/><node type="observation">Child</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    nodes = await engine.advance()
+    assert any(n.type == CanvasNodeType.OBSERVATION and "unknown node" in str(n.content) for n in nodes)
+    assert not any(n.content.get("observation") == "Child" for n in nodes)
+
+
+@pytest.mark.asyncio
+async def test_advance_continue_unknown_node_skips_other_mutation_ops(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    record = session.staging.propose("specs", "Draft", "# Draft", "main")
+    store = MillStateStore()
+    output = f'<op kind="continue" from="does-not-exist"/><op kind="discard-staged" temp_id="{record.temp_id}"/>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+
+    nodes = await engine.advance()
+
+    assert any(n.type == CanvasNodeType.OBSERVATION and "unknown node" in str(n.content) for n in nodes)
+    assert [r.temp_id for r in session.state.staged_records] == [record.temp_id]
+
+
+@pytest.mark.asyncio
+async def test_advance_revise_unknown_node_fails_closed_without_paired_node(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<op kind="revise" node="does-not-exist"/><node type="observation">Replacement</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+
+    nodes = await engine.advance()
+
+    assert any(n.type == CanvasNodeType.OBSERVATION and "unknown node" in str(n.content) for n in nodes)
+    assert not any(n.content.get("observation") == "Replacement" for n in nodes)
+
+
+@pytest.mark.asyncio
+async def test_advance_invalid_parent_op_does_not_stale_valid_revise_target(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    root_id = next(iter(session.state.nodes))
+    child = CanvasNode(
+        id="child",
+        type=CanvasNodeType.OBSERVATION,
+        parent_id=root_id,
+        status=NodeStatus.ACTIVE,
+        content={"observation": "child"},
+        position=None,
+        timestamp=utc_now(),
+    )
+    session.add_node(child)
+    store = MillStateStore()
+    output = f'<op kind="revise" node="{root_id}"/><op kind="continue" from="missing"/><node type="observation">Replacement</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+
+    nodes = await engine.advance()
+
+    assert any(n.type == CanvasNodeType.OBSERVATION and "unknown node" in str(n.content) for n in nodes)
+    assert session.state.nodes["child"].status == NodeStatus.ACTIVE
+    assert not any(n.content.get("observation") == "Replacement" for n in nodes)
+
+
+@pytest.mark.asyncio
+async def test_advance_revise_stales_full_descendant_subtree(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    root_id = next(iter(session.state.nodes))
+    child = CanvasNode(
+        id="child",
+        type=CanvasNodeType.OBSERVATION,
+        parent_id=root_id,
+        status=NodeStatus.ACTIVE,
+        content={"observation": "child"},
+        position=None,
+        timestamp=utc_now(),
+    )
+    grandchild = CanvasNode(
+        id="grandchild",
+        type=CanvasNodeType.OBSERVATION,
+        parent_id="child",
+        status=NodeStatus.ACTIVE,
+        content={"observation": "grandchild"},
+        position=None,
+        timestamp=utc_now(),
+    )
+    session.add_node(child)
+    session.add_node(grandchild)
+    store = MillStateStore()
+    output = f'<op kind="revise" node="{root_id}"/><node type="observation">Replacement</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+
+    nodes = await engine.advance()
+
+    assert session.state.nodes["child"].status == NodeStatus.STALE
+    assert session.state.nodes["grandchild"].status == NodeStatus.STALE
+    assert any(n.parent_id == root_id and n.content.get("observation") == "Replacement" for n in nodes)
+
+
+@pytest.mark.asyncio
+async def test_advance_revise_publishes_descendant_invalidations(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    root_id = next(iter(session.state.nodes))
+    child = CanvasNode(
+        id="child",
+        type=CanvasNodeType.OBSERVATION,
+        parent_id=root_id,
+        status=NodeStatus.ACTIVE,
+        content={"observation": "child"},
+        position=None,
+        timestamp=utc_now(),
+    )
+    grandchild = CanvasNode(
+        id="grandchild",
+        type=CanvasNodeType.OBSERVATION,
+        parent_id="child",
+        status=NodeStatus.ACTIVE,
+        content={"observation": "grandchild"},
+        position=None,
+        timestamp=utc_now(),
+    )
+    session.add_node(child)
+    session.add_node(grandchild)
+    store = MillStateStore()
+    output = f'<op kind="revise" node="{root_id}"/><node type="observation">Replacement</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    subscription = store.subscribe()
+    collected: list[dict] = []
+    try:
+        await engine.advance()
+        for _ in range(8):
+            try:
+                event = await asyncio.wait_for(subscription.__anext__(), timeout=1.0)
+            except (StopAsyncIteration, asyncio.TimeoutError):
+                break
+            collected.append(_event_payload(event))
+    finally:
+        await subscription.aclose()
+
+    invalidations = [event for event in collected if event["type"] == "shaping:node_invalidated"]
+    assert invalidations
+    assert invalidations[0]["data"]["node_ids"] == ["child", "grandchild"]
+
+
+@pytest.mark.asyncio
+async def test_advance_discard_accepted_staged_op_reports_error_and_keeps_record(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    record = session.staging.propose("specs", "Accepted", "# Accepted", "main")
+    session.staging.accept(record.temp_id)
+    store = MillStateStore()
+    output = f'<op kind="discard-staged" temp_id="{record.temp_id}"/>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+
+    nodes = await engine.advance()
+
+    assert any(n.type == CanvasNodeType.OBSERVATION and "accepted" in str(n.content) for n in nodes)
+    assert session.state.staged_records[0].temp_id == record.temp_id
+    assert session.state.staged_records[0].status == "accepted"
+
+
+@pytest.mark.asyncio
+async def test_advance_edit_accepted_staged_op_reports_error_and_keeps_record(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    record = session.staging.propose("specs", "Accepted", "# Accepted", "main")
+    session.staging.accept(record.temp_id)
+    store = MillStateStore()
+    output = f'<op kind="edit-staged" temp_id="{record.temp_id}"/><node type="record" surface="specs" title="Accepted"># Mutated</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+
+    nodes = await engine.advance()
+
+    assert any(n.type == CanvasNodeType.OBSERVATION and "accepted" in str(n.content) for n in nodes)
+    assert session.state.staged_records[0].content == "# Accepted"
+    assert session.state.staged_records[0].status == "accepted"
+
+
+@pytest.mark.asyncio
+async def test_framing_node_does_not_force_narrowing(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")  # starts in EXPLORING
+    store = MillStateStore()
+    output = '<node type="framing">A lens.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    assert session.state.phase == SessionPhase.EXPLORING
+
+
+@pytest.mark.asyncio
+async def test_tension_node_does_not_force_narrowing(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="tension">A risk.</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    assert session.state.phase == SessionPhase.EXPLORING
+
+
+@pytest.mark.asyncio
+async def test_question_still_transitions_to_narrowing(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="question">Which path?</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    await engine.advance()
+    assert session.state.phase == SessionPhase.NARROWING
+
+
+@pytest.mark.asyncio
+async def test_decision_step_publishes_advance_stream(tmp_path: Path) -> None:
+    session = ShapingSession.create(tmp_path, "shape a feature")
+    store = MillStateStore()
+    output = '<node type="observation">done</node>'
+    engine = ShapingEngine(session, ShapingOrchestrator(session, store, _printf_harness(output)), store)
+    subscription = store.subscribe()
+    collected: list[dict] = []
+    try:
+        await engine.advance()
+        # Drain a handful of events; the decision stream should appear among them.
+        for _ in range(6):
+            try:
+                event = await asyncio.wait_for(subscription.__anext__(), timeout=1.0)
+            except (StopAsyncIteration, asyncio.TimeoutError):
+                break
+            collected.append(_event_payload(event))
+    finally:
+        await subscription.aclose()
+
+    stream_events = [e for e in collected if e["type"] == "shaping:advance_stream"]
+    assert stream_events, f"expected an advance_stream event, got {[e['type'] for e in collected]}"
+    assert any("done" in str(e.get("data", {}).get("delta", "")) for e in stream_events)

@@ -2,9 +2,9 @@
 
 ID: plan:20260526-mill-shaping-polish
 Type: Plan
-Status: open
+Status: active
 Created: 2026-05-26
-Updated: 2026-05-26
+Updated: 2026-06-10
 Risk: high - P0 and P1 issues mean the feature is non-functional in its current state; needs deep backend+frontend alignment work
 
 ## Summary
@@ -56,7 +56,7 @@ Then do the visual differentiation pass that makes this feel novel.
 
 ### Unit: Backend End-to-End Fix
 
-Ticket: ticket:20260526-mill-shaping-backend-fix
+Ticket: ticket:20260526-mill-shaping-backend-audit-fixes
 
 Fix ALL backend issues in one pass:
 - Align proposal block schema with what frontend expects
@@ -68,7 +68,7 @@ Fix ALL backend issues in one pass:
 
 ### Unit: Frontend End-to-End Fix + Differentiation
 
-Ticket: ticket:20260526-mill-shaping-frontend-fix
+Ticket: ticket:20260526-mill-shaping-frontend
 
 Fix ALL frontend issues and add the visual richness that differentiates from chat:
 - Fix ProposalCard API routes to match real endpoints
@@ -83,11 +83,38 @@ Fix ALL frontend issues and add the visual richness that differentiates from cha
 
 ## Current State
 
-Plan created. P0 fix is critical path. Both tickets can execute in parallel since
-they touch different file sets (backend vs frontend).
+Original backend/frontend polish work landed on the branch, including the backend
+audit-fix ticket. A fresh implementation review found nine remaining issues:
+accepted staged records could still be mutated or discarded, consolidation could
+duplicate temp IDs, invalid continue/revise paths did not fail closed, revise only
+staled direct children, the parser could execute op tags embedded in record
+Markdown, frontend continuation could ignore the clicked node, sidebar discard
+could leave the canvas actionable, staging refetch could reset advance/thinking
+state, and Loom records were stale. Those fixes were implemented and reviewed,
+but the branch remains active because a designer adversarial frontend pass found
+new interaction blockers: record-node resurrection on deterministic temp IDs,
+canvas origin flicker from the Svelvet positioning workaround, missing immediate
+advancing feedback, option/question race gaps, and repeated multiple-choice
+selections creating duplicate branches. The current follow-up pass is addressing
+those frontend interaction issues, including the required multiple-choice behavior
+where choices create downstream input nodes, already-chosen options become
+gray/unclickable from the originating choice UI, and edits happen on the generated
+input text card. Frontend build, relevant backend shaping tests, and final
+adversarial-review confirmation passed for this follow-up. The plan stays active
+until the owning ticket acceptance gate closes it.
 
 ## Journal
 
+- 2026-06-10: Reconciled branch truth for the designer adversarial frontend
+  follow-up. The pass is addressing record-node resurrection, canvas origin
+  flicker, missing immediate advancing feedback, option/question race gaps, and
+  duplicate branches from repeated multiple-choice selections. Frontend build,
+  relevant backend shaping tests, and final adversarial-review confirmation
+  passed; no ticket acceptance is claimed.
+- 2026-06-09: Reopened plan truth for the follow-up review pass. The current
+  implementation review produced nine findings; backend, frontend, and Loom
+  record fixes were applied, adversarially reviewed, and verified with focused
+  backend tests plus the frontend production build.
 - 2026-05-26: Created plan after adversarial audit. Operator confirmed basic smoke
   test fails with 400 error (now fixed) and no agent response (advance not called,
   now fixed). Deeper audit revealed schema mismatches and missing state sync.

@@ -15,6 +15,8 @@
   let highlightedTempId = $state<string | null>(null);
   let showLogModal = $state(false);
   let logModalInvocationId = $state<string | null>(null);
+  let lastDiscardedTempId = $state<string | null>(null);
+  let discardedVersion = $state(0);
   let highlightTimeout: ReturnType<typeof setTimeout> | null = null;
 
   function exitShaping() {
@@ -30,6 +32,7 @@
   }
 
   function applySessionState(id: string, state: any) {
+    const current = store.shapingSession?.id === id ? store.shapingSession : null;
     store.shapingSession = {
       id,
       phase: state.phase,
@@ -39,10 +42,11 @@
       activeBranch: state.active_branch || 'main',
       branches: state.branches || ['main'],
       activeExplorations: state.active_explorations || [],
-      explorationLogs: {},
-      explorationStatus: {},
-      advanceState: 'idle',
-      advanceError: null
+      explorationLogs: current?.explorationLogs ?? {},
+      explorationStatus: current?.explorationStatus ?? {},
+      advanceState: current?.advanceState ?? 'idle',
+      advanceError: current?.advanceError ?? null,
+      thinkingTrace: current?.thinkingTrace ?? ''
     };
   }
 
@@ -159,6 +163,21 @@
       highlightTimeout = null;
     }, 2000);
   }
+
+  async function refetchStaging(discardedTempId?: string) {
+    if (!sessionId) return;
+    if (discardedTempId) {
+      lastDiscardedTempId = discardedTempId;
+      discardedVersion += 1;
+    }
+    try {
+      const resp = await fetch(apiUrl(`/shaping/sessions/${sessionId}`));
+      if (resp.ok) {
+        const data = await resp.json();
+        applySessionState(sessionId, toSessionState(data));
+      }
+    } catch (err) { console.error('Failed to refetch staging:', err); }
+  }
 </script>
 
 <div class="flex h-full w-full">
@@ -222,17 +241,20 @@
         {sessionId} 
         {advancing}
         {highlightedTempId}
+        {lastDiscardedTempId}
+        {discardedVersion}
         onOpenLogs={openLogModal}
       />
     </div>
     <div class="w-72 shrink-0 border-l border-border-default overflow-y-auto bg-bg-surface">
-      <StagingPanel 
-        {sessionId} 
-        records={store.shapingSession.stagedRecords} 
-        branches={store.shapingSession.branches} 
-        activeBranch={store.shapingSession.activeBranch} 
-        onCommit={handleCommit} 
+      <StagingPanel
+        {sessionId}
+        records={store.shapingSession.stagedRecords}
+        branches={store.shapingSession.branches}
+        activeBranch={store.shapingSession.activeBranch}
+        onCommit={handleCommit}
         onRecordClick={highlightRecord}
+        onChanged={refetchStaging}
       />
     </div>
   {/if}

@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Node, Anchor } from 'svelvet';
+  import { causalEdgeColor } from './edge-style';
 
-  let { node, position, connections = [] } = $props();
+  let { node, position, connections = [], onContinue, continueDisabled = false } = $props();
   
   let expanded = $state(false);
   let text = $derived(node.content.observation || node.content.message || node.content.summary || 'No content');
@@ -40,6 +41,12 @@
         </div>
       </div>
     {/if}
+
+    {#if node.status === 'active'}
+      <button class="mt-2 text-[10px] text-green-400 hover:text-green-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={continueDisabled}
+        onclick={() => onContinue && onContinue(node.id)}>Continue from here →</button>
+    {/if}
   </div>
 
   <div slot="anchorNorth">
@@ -48,9 +55,9 @@
 
   <div slot="anchorSouth">
     {#if connections && connections.length > 0}
-      <Anchor id="{node.id}-out" output {connections} />
+      <Anchor id="{node.id}-out" output {connections} edgeColor={causalEdgeColor} />
     {:else}
-      <Anchor id="{node.id}-out" output />
+      <Anchor id="{node.id}-out" output edgeColor={causalEdgeColor} />
     {/if}
   </div>
 </Node>

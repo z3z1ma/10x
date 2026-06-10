@@ -18,6 +18,9 @@ class CanvasNodeType(StrEnum):
     PROCESSING = "processing"
     QUESTION = "question"
     OBSERVATION = "observation"
+    FRAMING = "framing"
+    TENSION = "tension"
+    DECISION = "decision"
     OPTION_GROUP = "option_group"
     OPTION = "option"
     RECORD = "record"
@@ -27,6 +30,7 @@ class NodeStatus(StrEnum):
     ACTIVE = "active"
     DEAD = "dead"
     STALE = "stale"
+    REJECTED = "rejected"
 
 
 @dataclass

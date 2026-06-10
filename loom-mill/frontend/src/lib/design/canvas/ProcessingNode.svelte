@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Node, Anchor } from 'svelvet';
+  import { causalEdgeColor } from './edge-style';
   import { apiUrl } from '../../api';
   import { store } from '../../ws.svelte.ts';
 
@@ -103,9 +104,9 @@
 
   <div slot="anchorSouth">
     {#if connections && connections.length > 0}
-      <Anchor id="{node.id}-out" output {connections} />
+      <Anchor id="{node.id}-out" output {connections} edgeColor={causalEdgeColor} />
     {:else}
-      <Anchor id="{node.id}-out" output />
+      <Anchor id="{node.id}-out" output edgeColor={causalEdgeColor} />
     {/if}
   </div>
 </Node>

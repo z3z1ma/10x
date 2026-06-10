@@ -130,7 +130,7 @@ export interface ShippingEvent {
 
 export interface CanvasNode {
   id: string;
-  type: 'input' | 'processing' | 'question' | 'observation' | 'option_group' | 'option' | 'record';
+  type: 'input' | 'processing' | 'question' | 'observation' | 'framing' | 'tension' | 'decision' | 'option_group' | 'option' | 'record';
   parent_id: string | null;
   status: 'active' | 'dead' | 'stale' | 'accepted' | 'rejected';
   content: Record<string, any>;
@@ -165,4 +165,15 @@ export interface MillState {
   backpressure_signals: Record<string, BackpressureSignal[]>;
   shipping_events: ShippingEvent[];
   andon_events: Record<string, AndonEventPayload[]>;
+}
+
+declare global {
+  interface ImportMetaEnv {
+    readonly VITE_API_URL?: string;
+    readonly VITE_WS_URL?: string;
+  }
+
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
 }
