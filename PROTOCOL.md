@@ -6,6 +6,8 @@ When intent is unclear, don't implement. Interrogate.
 
 Ask focused questions. Root out ambiguity. Challenge vague terms — especially domain-specific ones that seem overloaded or hand-wavy. Propose concrete scenarios that test the boundaries of what someone actually means. When you think you understand, state your understanding back and let them correct you.
 
+Before shaping new work, check what already exists. Read open tickets to understand what's in progress. Read knowledge records for shared vocabulary and conventions. Read active decisions for constraints that might already apply. Check if research has already been done on the topic at hand — someone may have already investigated and concluded. Check if specs already describe the behavioral surface being discussed. Don't re-derive what the project already knows.
+
 As things crystallize during conversation, externalize them into the right record shape immediately. A decision made mid-conversation is still a decision. A term of art clarified is still knowledge. A behavior described concretely is a spec. Don't wait for a neat stopping point — write things down as they become clear.
 
 Build a shared glossary. When domain-specific terms, project conventions, or terms of art emerge, capture them as knowledge records. Challenge terms that seem fuzzy or mean different things to different people. This vocabulary accumulates over time and becomes the shared language of the project.
@@ -67,7 +69,7 @@ A research record should contain:
 
 - **Question** — what prompted the investigation. Be precise about what you needed to learn.
 - **Sources and methods** — what was consulted, tried, tested, or read. Include versions, dates, and links where relevant.
-- **Findings** — what was discovered, including null results and dead ends. Dead ends are valuable — they prevent future agents from repeating failed approaches.
+- **Findings** — what was discovered, including null results and dead ends. Dead ends are valuable — they prevent repeating failed approaches.
 - **Conclusions** — the synthesis. What do the findings mean for the project? What should be done or avoided based on this?
 
 Statuses: `active`, `done`, `superseded`
@@ -98,10 +100,6 @@ A ticket record should contain:
 - **Progress and notes** — an append-only log of what's been done, tried, learned, and decided during execution. Update as you go.
 - **Blockers** — anything preventing forward progress, with enough context to act on.
 
-Parent tickets decompose into child tickets. This is how you plan. A parent ticket with children is the plan; no separate planning artifact is needed.
-
-Keep tickets focused — one coherent outcome per ticket. If a ticket covers multiple independent outcomes, split it. A ticket should carry enough context that someone encountering it cold can understand the work without the conversation that created it.
-
 Statuses: `open`, `active`, `blocked`, `done`, `cancelled`
 
 Additional headers:
@@ -109,6 +107,12 @@ Additional headers:
 Parent: <path>
 Depends-On: <path>, <path>, …
 ```
+
+**Parent tickets are plans.** When a change involves multiple independent pieces of work, create a parent ticket that describes the aggregate change, the sequencing of child tickets, what can be parallelized, and what depends on what. Child tickets are the actual executable units. The parent tracks overall progress and coherence across children.
+
+**Tickets are executed by sub-agents.** Point a sub-agent at the ticket and the records it needs — relevant specs, decisions, knowledge, and prior evidence. The sub-agent works within the ticket's scope. The parent agent orchestrates, sequences, and ensures coherence across the broader record graph.
+
+**Open tickets autonomously.** When you notice something out of place, incomplete, broken, or risky during any work — open a ticket for it. Don't hold the observation in your head or leave it as a comment. If it's worth mentioning, it's worth tracking. This applies especially to sub-agents in the inner loop: if you encounter something outside your current ticket's scope that needs attention, create a new ticket for it and keep moving.
 
 ### Evidence
 
@@ -162,7 +166,7 @@ Knowledge records cover:
 - **Procedures** — repeatable steps for common tasks: deployment, environment setup, debugging patterns, release processes.
 - **Troubleshooting** — known issues, symptoms, fixes, and workarounds.
 
-Keep each knowledge record focused on one topic. If it starts covering unrelated things, split it. Knowledge should be the first place you check when encountering a domain term, project convention, or recurring task.
+Keep each knowledge record focused on one topic. If it starts covering unrelated things, split it.
 
 Status: `active` (delete or update when no longer true)
 
@@ -170,8 +174,12 @@ Status: `active` (delete or update when no longer true)
 
 When scope and intent are clear, execute with discipline.
 
+Before starting work on a ticket, read it fully. Read the specs that describe the behavior you're implementing. Read decisions that constrain your approach. Read related evidence from prior attempts. Check knowledge for relevant conventions and procedures. Understand the landscape before changing it.
+
 Tickets are your unit of work. Don't let them bloat — if a ticket covers multiple independent outcomes, split it. Log progress and notes inside the ticket as you go. Move it through statuses honestly.
 
 Sub-agents produce claims, not truth. The parent agent has the broader execution context to judge where sub-agent output belongs — which ticket to update, what evidence to record, whether findings warrant a review. Sub-agents may update records directly when their scope is clear, but the parent is responsible for coherence across the record graph.
 
-Closing a ticket means the records agree. The ticket's acceptance criteria, the evidence collected, any reviews performed, the relevant specs and decisions — they should tell one coherent story. If they don't, the work isn't done. Say what's missing instead of pretending coherence exists.
+When you encounter something outside your current scope that needs attention — a bug, an inconsistency, a missing test, a violated convention, an incorrect assumption in a spec — open a ticket for it. Don't let observations die in the context window. The project's memory is only as good as what gets written down.
+
+Before closing a ticket, verify coherence. Read the acceptance criteria you set at the start. Check the evidence you collected against those criteria. If reviews were performed, check that their findings are addressed or explicitly accepted as risk. Check that related specs still reflect reality after your changes. Closure means the records agree — not that you feel done.
