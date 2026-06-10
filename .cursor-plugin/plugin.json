@@ -1,0 +1,15 @@
+{
+  "name": "loom",
+  "displayName": "Loom",
+  "version": "0.4.0",
+  "description": "Protocol for project memory and execution discipline. Structures how knowledge, decisions, research, specs, work, evidence, and reviews are captured across sessions and agents.",
+  "author": {
+    "name": "z3z1ma"
+  },
+  "homepage": "https://github.com/z3z1ma/agent-loom",
+  "repository": "https://github.com/z3z1ma/agent-loom",
+  "license": "MIT",
+  "keywords": ["loom", "ai-agents", "protocol", "markdown"],
+  "category": "Productivity",
+  "skills": "./skills/"
+}

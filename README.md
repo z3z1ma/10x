@@ -41,6 +41,80 @@ hand them to a sub-agent, and continue after context is gone.
 
 The forms are for the model. Humans get the trail.
 
+## Try It
+
+Copy [`PROTOCOL.md`](PROTOCOL.md) into your project's `AGENTS.md`, `CLAUDE.md`, or
+equivalent. Start working with your coding agent. Records appear in `.loom/` as the
+agent works.
+
+Or install via the skills ecosystem (supports 70+ coding agents):
+
+```bash
+npx skills add z3z1ma/agent-loom
+```
+
+## Installing
+
+### Copy-Paste (Recommended)
+
+Copy the contents of [`PROTOCOL.md`](PROTOCOL.md) into your project's agent
+instructions file:
+
+| Harness | File |
+| --- | --- |
+| OpenCode | `AGENTS.md` |
+| Claude Code | `CLAUDE.md` |
+| Cursor | `.cursor/rules/loom.md` or project rules |
+| Codex | `AGENTS.md` |
+| Gemini CLI | `GEMINI.md` |
+| Others | Whatever file your agent reads for instructions |
+
+This is the most portable approach. No dependencies, no tooling, works everywhere.
+
+### Skills Ecosystem
+
+```bash
+npx skills add z3z1ma/agent-loom
+```
+
+Uses the [Vercel skills CLI](https://github.com/vercel-labs/skills) to install the
+Loom skill into your agent's skill directory. Supports 70+ coding agents including
+OpenCode, Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, Windsurf, Roo
+Code, and many more.
+
+```bash
+# Install globally (available across all projects)
+npx skills add z3z1ma/agent-loom -g
+
+# Install to specific agents
+npx skills add z3z1ma/agent-loom -a claude-code -a opencode
+
+# Non-interactive
+npx skills add z3z1ma/agent-loom -g -a claude-code -y
+```
+
+### First-Class Harness Support
+
+This repo ships native plugin manifests for direct marketplace install:
+
+| Harness | Install |
+| --- | --- |
+| Claude Code | `claude plugin marketplace add z3z1ma/agent-loom` |
+| Cursor | Install from Cursor marketplace or `git clone` to `~/.cursor/plugins/local/agent-loom` |
+| Gemini CLI | `gemini extensions install https://github.com/z3z1ma/agent-loom` |
+| Codex | `codex plugin marketplace add z3z1ma/agent-loom` |
+| OpenCode | Add `"@z3z1ma/agent-loom"` to your config plugins |
+
+### After Installation
+
+The protocol teaches the agent the full workflow. Start with a natural prompt:
+
+```text
+Let's shape this feature before building it.
+```
+
+Records appear in `.loom/` as the agent works.
+
 ## The Shape
 
 ```mermaid
@@ -72,13 +146,6 @@ Loom forces useful friction at the exact points where agents usually blur things
 - knowledge keeps accepted lessons searchable
 - sub-agents stay bounded while tickets carry the durable context
 
-A normal bug fix might leave only a diff and a final answer. Through Loom, the
-same work can leave reproduction evidence, root-cause research, a scoped ticket,
-green evidence, review findings, and a troubleshooting note that survives before
-the diagnosis has to be repeated.
-
-You get the fix and the trace.
-
 ## The Record Surfaces
 
 | Surface | Job |
@@ -90,34 +157,6 @@ You get the fix and the trace.
 | evidence | observed facts, outputs, reproductions, screenshots, logs |
 | reviews | adversarial critique, findings, verdicts, residual risk |
 | knowledge | shared vocabulary, conventions, procedures, troubleshooting |
-
-```mermaid
-flowchart TB
-  A["agent does software work"] --> B{"what should be durable?"}
-
-  B -->|choice, constraint, tradeoff| D["decisions"]
-  B -->|uncertainty, investigation| R["research"]
-  B -->|intended behavior, scenario| S["specs"]
-  B -->|bounded work, progress| T["tickets"]
-  B -->|observed output, test, log| E["evidence"]
-  B -->|adversarial critique, risk| V["reviews"]
-  B -->|reusable context, vocabulary| K["knowledge"]
-
-  D --> G[".loom/ record graph"]
-  R --> G
-  S --> G
-  T --> G
-  E --> G
-  V --> G
-  K --> G
-
-  G --> T
-  T --> Sub["sub-agent"]
-  Sub --> E
-  Sub --> T
-  E --> V
-  V --> T
-```
 
 ## When It Helps
 
@@ -141,27 +180,35 @@ observation. It reads and writes the same Markdown records the protocol defines.
 
 See [`loom-mill/`](loom-mill/) for details.
 
-## Try It
-
-Copy the contents of [`PROTOCOL.md`](PROTOCOL.md) into your project's `AGENTS.md`,
-`CLAUDE.md`, or equivalent harness instructions.
-
-Start working with your coding agent. The protocol changes how it behaves —
-shaping before executing, externalizing as it goes, building shared vocabulary.
-
-Records appear in `.loom/` as the agent works.
-
 ## Repository Layout
 
 ```
 .
-├── PROTOCOL.md          — the protocol (paste into your harness instructions)
-├── AGENTS.md            — contributor guidelines for this repo
-├── loom-mill/           — companion visual application
-├── loom-core/           — OpenCode plugin skeleton
-├── loom-playbooks/      — OpenCode plugin skeleton
-└── .loom/               — dogfood records for this repo
+├── PROTOCOL.md              — the protocol (copy into your harness instructions)
+├── skills/loom/SKILL.md     — same protocol, packaged as a skill
+├── .claude-plugin/          — Claude Code marketplace manifest
+├── .cursor-plugin/          — Cursor marketplace manifest
+├── .agents/plugins/         — Codex/OpenCode marketplace manifest
+├── gemini-extension.json    — Gemini CLI extension manifest
+├── loom-mill/               — companion visual application
+└── .loom/                   — dogfood records for this repo
 ```
+
+## For Agents
+
+If you are a coding agent reading this README (e.g. because a user asked you to
+install or set up Loom), here is what to do:
+
+1. **Preferred**: Copy the contents of `PROTOCOL.md` from this repo into the
+   project's agent instructions file (`AGENTS.md`, `CLAUDE.md`, or equivalent).
+
+2. **Alternative**: Run `npx skills add z3z1ma/agent-loom` to install the Loom
+   skill via the skills ecosystem. This places the protocol into your skill
+   directory automatically.
+
+3. **After install**: The protocol is self-contained. Once loaded, follow it. Start
+   by reading any existing `.loom/` directory in the project. If none exists, begin
+   the outer loop when the user's next request has ambiguity worth capturing.
 
 ## The Short Version
 

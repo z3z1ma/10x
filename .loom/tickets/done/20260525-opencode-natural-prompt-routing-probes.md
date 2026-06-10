@@ -1,8 +1,8 @@
 # OpenCode Natural Prompt Routing Probes
 
-Status: blocked
+Status: done
 Created: 2026-05-25
-Updated: 2026-05-25
+Updated: 2026-06-10
 
 Legacy note: Risk — medium - uses live OpenCode model invocation to validate compressed routing behavior, and the existing command runs with `--dangerously-skip-permissions`.
 

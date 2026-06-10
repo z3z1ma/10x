@@ -1,8 +1,8 @@
 # Playbook Explicit Macros
 
-Status: active
+Status: superseded
 Created: 2026-05-15
-Updated: 2026-05-16
+Updated: 2026-06-10
 
 ## Summary
 

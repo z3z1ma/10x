@@ -1,8 +1,8 @@
 # Loom Protocol Compression
 
-Status: active
+Status: superseded
 Created: 2026-05-25
-Updated: 2026-05-25
+Updated: 2026-06-10
 
 ## Summary
 

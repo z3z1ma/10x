@@ -1,22 +1,10 @@
 {
-  "name": "agent-loom-workspace",
-  "version": "0.3.0",
+  "name": "agent-loom",
+  "version": "0.4.0",
   "private": true,
-  "description": "Repository workspace for the Loom Markdown-native AI work protocol packages.",
+  "description": "Loom: a Markdown protocol for project memory and execution discipline.",
   "type": "module",
-  "scripts": {
-    "dev:mill": "loom-mill/.venv/bin/python -m loom_mill.dev",
-    "smoke:core": "npm --prefix loom-core run smoke",
-    "smoke:playbooks": "npm --prefix loom-playbooks run smoke",
-    "smoke:packages": "npm run smoke:core && npm run smoke:playbooks",
-    "pack:check:core": "npm --prefix loom-core run pack:check",
-    "pack:check:playbooks": "npm --prefix loom-playbooks run pack:check",
-    "pack:check": "npm run pack:check:core && npm run pack:check:playbooks",
-    "test:skill-triggering": "bash tests/skill-triggering/run-all.sh",
-    "test:explicit-skill-requests": "bash tests/explicit-skill-requests/run-all.sh"
-  },
   "keywords": [
-    "opencode",
     "loom",
     "ai-agents",
     "agent-skills",

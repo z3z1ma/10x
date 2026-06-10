@@ -1,6 +1,6 @@
 # Shaping Sessions Production Polishing
 
-Status: active
+Status: done
 Created: 2026-05-26
 Updated: 2026-06-10
 

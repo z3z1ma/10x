@@ -1,8 +1,8 @@
 # Design Room Next Generation & Factory Floor Polish
 
-Status: open
+Status: done
 Created: 2026-05-26
-Updated: 2026-05-26
+Updated: 2026-06-10
 
 Legacy note: Risk — medium - graph views need a new rendering library; shaping sessions are architecturally novel
 

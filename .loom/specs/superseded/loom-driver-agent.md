@@ -1,8 +1,8 @@
 # Loom Driver Agent
 
-Status: active
+Status: superseded
 Created: 2026-05-15
-Updated: 2026-05-15
+Updated: 2026-06-10
 
 ## Summary
 
