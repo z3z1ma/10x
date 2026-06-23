@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -152,15 +152,34 @@ Inspect all raw transcripts, file outputs, workspace manifests, and report.
 ## Execution Log
 
 - 2026-06-23: Registered before execution.
+- 2026-06-23: Ran live Codex MICRO with three arms. Candidate matched current
+  S001 but lost S007 by five points.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `mutate`.
 
 ## Score Artifacts
 
-Pending.
+- Raw artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/012-explicit-concise-blockers-scn001-live-micro/raw/`
+- Score artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/012-explicit-concise-blockers-scn001-live-micro/scores/`
+- Report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/012-explicit-concise-blockers-scn001-live-micro/report.md`
+- Evidence:
+  `.10x/evidence/2026-06-23-explicit-concise-blockers-scn001-live-micro.md`
 
 ## Manual Inspection Findings
 
-Pending.
+- Score vector:
+  - candidate-variant: `S001=100;S007=65`
+  - current-10x: `S001=100;S007=70`
+  - no-10x-control: `S001=55 floor;S007=25`
+- Candidate used explicit ambiguity, compact blockers, examples, and a
+  provisional recommendation.
+- Current 10x remained slightly stronger on S007 because it was shorter and
+  named the tradeoff more directly.
 
 ## Final Verdict
 
-Pending.
+`mutate`, not promoted. Candidate matched current S001 but lost S007 by five
+points.

@@ -105,6 +105,9 @@ Canonical start guard:
   scored `S001=70;S007=55` versus current `S001=80;S007=30`. Manual inspection
   found the candidate safer than current in SCN-002 because current proposed
   arbitrary approval thresholds. Verdict: `mutate`, not promoted.
+- `candidate-explicit-concise-blockers-v1` matched current S001 in both target
+  MICROs and improved SCN-002 S007 by 10 points, but lost SCN-001 S007 by five
+  points. Verdict: keep testing/mutate, not promoted.
 
 ## Conclusions
 
@@ -143,6 +146,9 @@ Canonical start guard:
   add explicit "ambiguous/clarify" and "I recommend this provisional default"
   wording while preserving compact blocker lines and avoiding invented business
   rules.
+- Explicit concise blockers are the strongest candidate so far. The remaining
+  gap is SCN-001 brevity/tradeoff: retain comprehensive blockers for high-risk
+  ambiguity, but ask only the upstream subset when one answer gates the rest.
 
 ## Execution Log
 
@@ -227,3 +233,7 @@ Canonical start guard:
   `EXP-20260623-809-concise-blocking-decisions-scn001-live-micro` plus
   `EXP-20260623-810-concise-blocking-decisions-scn002-live-micro` in parallel.
   Logged both rows as `mutate`.
+- 2026-06-23: Added `candidate-explicit-concise-blockers-v1` and ran
+  `EXP-20260623-811-explicit-concise-blockers-scn001-live-micro` plus
+  `EXP-20260623-812-explicit-concise-blockers-scn002-live-micro` in parallel.
+  Logged SCN-001 as `mutate` and SCN-002 as `keep`.

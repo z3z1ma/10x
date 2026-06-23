@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -152,15 +152,34 @@ Inspect all raw transcripts, file outputs, workspace manifests, and report.
 ## Execution Log
 
 - 2026-06-23: Registered before execution.
+- 2026-06-23: Ran live Codex MICRO with three arms. Candidate matched current
+  S001 and improved S007 by ten points.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `keep`.
 
 ## Score Artifacts
 
-Pending.
+- Raw artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/013-explicit-concise-blockers-scn002-live-micro/raw/`
+- Score artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/013-explicit-concise-blockers-scn002-live-micro/scores/`
+- Report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/013-explicit-concise-blockers-scn002-live-micro/report.md`
+- Evidence:
+  `.10x/evidence/2026-06-23-explicit-concise-blockers-scn002-live-micro.md`
 
 ## Manual Inspection Findings
 
-Pending.
+- Score vector:
+  - current-10x: `S001=100;S007=55`
+  - candidate-variant: `S001=100;S007=65`
+  - no-10x-control: `S001=55 floor;S007=25`
+- Candidate avoided invented business rules by recommending a manual review
+  flow with no thresholds, auto-approvals, or notifications until confirmed.
+- Candidate should be kept for further testing, but not promoted without a
+  held-out win or a mutation that stops losing SCN-001.
 
 ## Final Verdict
 
-Pending.
+`keep-testing`, not promoted. Candidate matched current S001 and improved S007
+on the pressure scenario.
