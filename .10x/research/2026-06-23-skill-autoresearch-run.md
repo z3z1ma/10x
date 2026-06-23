@@ -396,3 +396,7 @@ Canonical start guard:
   `S001=100;S002=50;S007=60`; readiness ledger logged `discard` after
   candidate `S007=10` versus current `S007=50`; honest subagent handoff logged
   `discard` after manual inspection found a fake delegation claim.
+- 2026-06-23: Registered
+  `EXP-20260623-827-records-first-retrieval-no-citation-scn003-live-micro` as a
+  prompt-ablation follow-up to test whether records-first path citation comes
+  from the candidate overlay rather than explicit prompt wording.
