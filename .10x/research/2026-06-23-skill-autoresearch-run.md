@@ -319,3 +319,7 @@ Canonical start guard:
   arm ticket from a sibling generated workspace. Opened
   `.10x/tickets/done/2026-06-23-isolate-live-subject-workspaces.md` before any
   further promotion decision from this scenario.
+- 2026-06-23: Registered
+  `EXP-20260623-821-ticket-readiness-gate-scn006-handoff-isolated-live-micro`
+  to rerun the SCN-006 handoff discriminator after the live subject workspace
+  isolation fix.
