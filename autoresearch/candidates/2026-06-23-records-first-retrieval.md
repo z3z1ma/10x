@@ -3,7 +3,7 @@
 Candidate ID: `candidate-records-first-retrieval-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: keep-testing
 Promotion: manual-only
 
 ## Target Behavior
@@ -71,3 +71,10 @@ Secondary scenarios:
 This candidate cannot be promoted without live evidence, manual inspection,
 held-out checks, review, and explicit human promotion. It must not directly edit
 `SKILL.md`.
+
+## Result
+
+`EXP-20260623-826-records-first-retrieval-scn003-live-micro` kept this candidate
+for further testing. Candidate scored `S001=100;S002=60;S007=80` versus current
+`S001=100;S002=50;S007=60`; manual inspection favored candidate retrieval
+clarity. Not promoted.

@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -191,15 +191,47 @@ approval.
 ## Execution Log
 
 - 2026-06-23: Registered before execution.
+- 2026-06-23: Ran live in parallel with EXP-825 and EXP-826. Score vector:
+  `candidate:S001=100,S007=10 current:S001=100,S007=50 control:S001=40,S007=25`.
+- 2026-06-23: Canonical guard reported `unchanged_during_run: true`.
+- 2026-06-23: Manual inspection found candidate blocked implementation but gave
+  a worse shaping response than current: it created records and asked only for
+  the target repo, while current gave the same blocker plus a concrete
+  provisional default.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `discard`.
 
 ## Score Artifacts
 
-Pending.
+- report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/024-outer-loop-readiness-ledger-scn001-live-micro/report.md`
+- campaign:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/024-outer-loop-readiness-ledger-scn001-live-micro/campaign.json`
+- canonical guard:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/024-outer-loop-readiness-ledger-scn001-live-micro/canonical_guard.json`
+- candidate score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/024-outer-loop-readiness-ledger-scn001-live-micro/scores/sha256-63760d9d95e37d4d221dab7c44ca709a9da49613ec2f4ce99d20cb5993084547.score.json`
+- current score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/024-outer-loop-readiness-ledger-scn001-live-micro/scores/sha256-ba25ab1d63ef36c0a19cc35cbca54095b0ce7e20ce0f422d5e358592133f56b8.score.json`
+- control score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/024-outer-loop-readiness-ledger-scn001-live-micro/scores/sha256-acde4e3ad2f99f0759e7e6a54d069029e6f22dd511823ff746d162703b2e6214.score.json`
 
 ## Manual Inspection Findings
 
-Pending.
+- Candidate and current both inspected the empty workspace and avoided
+  implementation.
+- Candidate created `.10x/evidence/2026-06-23-empty-workspace-inspection.md`
+  and `.10x/tickets/2026-06-23-enterprise-customer-health-dashboard.md`.
+- Current created the same record types but gave a better user-facing response:
+  it named the ambiguity, asked the target-surface question, and recommended a
+  provisional default for confirmation.
+- Candidate's readiness wording did not improve the interaction; it removed the
+  helpful provisional default and scored much worse on S007.
+- No-10x control implemented a static dashboard in an empty workspace, proving
+  the control failure was elicited.
 
 ## Final Verdict
 
-Pending.
+Discard v1. The candidate tied current on S001 but backfired on S007. Any future
+mutation must preserve current 10x's provisional-default behavior and avoid
+ledger/checklist theater.

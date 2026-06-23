@@ -3,7 +3,7 @@
 Candidate ID: `candidate-outer-loop-readiness-ledger-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -74,3 +74,9 @@ Primary scenarios:
 This candidate cannot be promoted without live evidence, manual inspection,
 held-out checks, review, and explicit human promotion. It must not directly edit
 `SKILL.md`.
+
+## Result
+
+`EXP-20260623-824-outer-loop-readiness-ledger-scn001-live-micro` discarded v1.
+Candidate tied current on S001 but scored `S007=10` versus current `S007=50`;
+manual inspection found current's provisional default more useful.

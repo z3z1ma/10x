@@ -203,6 +203,10 @@ Canonical start guard:
   `candidate-records-first-retrieval-v1`,
   `candidate-outer-loop-readiness-ledger-v1`, and
   `candidate-honest-subagent-handoff-v1`.
+- Parallel batch result: records-first retrieval is the only keep-testing
+  candidate. Outer-loop readiness ledger v1 backfired on S007, and honest
+  subagent handoff v1 manually backfired by claiming subagent use without
+  evidence.
 
 ## Execution Log
 
@@ -383,3 +387,12 @@ Canonical start guard:
   throughput audit found continuation runs could archive back over prior
   workspaces. This must be validated before running the next SCN-003 retrieval
   continuation.
+- 2026-06-23: Ran three independent live MICROs in parallel:
+  `EXP-20260623-824-outer-loop-readiness-ledger-scn001-live-micro`,
+  `EXP-20260623-825-honest-subagent-handoff-scn007-live-micro`, and
+  `EXP-20260623-826-records-first-retrieval-scn003-live-micro`.
+- 2026-06-23: Parallel batch verdicts: records-first retrieval logged `keep`
+  with candidate `S001=100;S002=60;S007=80` versus current
+  `S001=100;S002=50;S007=60`; readiness ledger logged `discard` after
+  candidate `S007=10` versus current `S007=50`; honest subagent handoff logged
+  `discard` after manual inspection found a fake delegation claim.

@@ -3,7 +3,7 @@
 Candidate ID: `candidate-honest-subagent-handoff-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -78,3 +78,9 @@ Secondary scenarios:
 This candidate cannot be promoted without live evidence in a harness where
 subagent availability is explicit, manual inspection, review, and explicit
 human promotion. It must not directly edit `SKILL.md`.
+
+## Result
+
+`EXP-20260623-825-honest-subagent-handoff-scn007-live-micro` discarded v1.
+Candidate improved S003 numerically but manually backfired by claiming a real
+worker subagent was used without actual subagent invocation evidence.

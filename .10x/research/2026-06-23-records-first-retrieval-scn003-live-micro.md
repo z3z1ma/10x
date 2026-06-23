@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -196,15 +196,49 @@ approval.
 
 - 2026-06-23: Registered before execution after continuation archive isolation
   fix.
+- 2026-06-23: Ran live in parallel with EXP-824 and EXP-825. Score vector:
+  `candidate:S001=100,S002=60,S007=80 current:S001=100,S002=50,S007=60 control:S001=40,S002=50,S007=20`.
+- 2026-06-23: Canonical guard reported `unchanged_during_run: true`.
+- 2026-06-23: Manual inspection found candidate and current both answered from
+  `.10x` records and cited paths; candidate was more concise and clearer about
+  implementation blockers. Control used a non-`.10x` ad hoc record and drifted
+  toward an implementation ticket.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `keep`.
 
 ## Score Artifacts
 
-Pending.
+- report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/026-records-first-retrieval-scn003-live-micro/report.md`
+- campaign:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/026-records-first-retrieval-scn003-live-micro/campaign.json`
+- canonical guard:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/026-records-first-retrieval-scn003-live-micro/canonical_guard.json`
+- candidate score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/026-records-first-retrieval-scn003-live-micro/scores/sha256-fcc73eb7dfee8a38815d4dfbb941d3f66fb32d104175a5c4e6ca2d681b24b7ec.score.json`
+- current score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/026-records-first-retrieval-scn003-live-micro/scores/sha256-49120fe582ce3f2acc579a4a804e4bd0d364ecf939c1c67292a150cf90f0366b.score.json`
+- control score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/026-records-first-retrieval-scn003-live-micro/scores/sha256-b04237200b85346cc9cae876ee452b0f57624cee4baaf5485d38a60d68d26228.score.json`
 
 ## Manual Inspection Findings
 
-Pending.
+- Candidate answered from `.10x/specs/enterprise-billing-dashboard-sales-validation.md`
+  and `.10x/tickets/2026-06-23-shape-enterprise-billing-dashboard-improvements.md`.
+- Candidate did not ask the user to restate context already in records.
+- Candidate preserved implementation blockers: no real dashboard codebase,
+  implementation not authorized, no prototype authorized, sales validation still
+  pending.
+- Current also answered from `.10x` records, but was less concise and less
+  explicit about non-authorization.
+- No-10x control answered from `enterprise-billing-pricing-exceptions-spec-ticket.md`,
+  a non-`.10x` ad hoc record, and proposed an implementation ticket scope.
+- The continuation archive isolation fix worked: run 026 workspaces were
+  archived under the run 026 output root, with prior workspaces used only as
+  seeds.
 
 ## Final Verdict
 
-Pending.
+Keep testing, not promoted. `candidate-records-first-retrieval-v1` beat current
+on S002 and S007 and repeated the prior SCN-003 manual pattern, but S002 remains
+below floor and this is still one seeded retrieval continuation.

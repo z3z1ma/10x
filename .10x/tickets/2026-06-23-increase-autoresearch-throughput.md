@@ -66,6 +66,13 @@ Excluded:
   `.10x/tickets/done/2026-06-23-isolate-continuation-archives.md` to remove
   the shared-prior-workspace mutation blocker before running more retrieval
   continuations.
+- 2026-06-23: Used the safe parallel pattern for a three-experiment live MICRO
+  batch with distinct experiment IDs and output roots:
+  `EXP-20260623-824-outer-loop-readiness-ledger-scn001-live-micro`,
+  `EXP-20260623-825-honest-subagent-handoff-scn007-live-micro`, and
+  `EXP-20260623-826-records-first-retrieval-scn003-live-micro`.
+- 2026-06-23: Parent agent retained serial ownership of manual inspection,
+  campaign metadata, `results.tsv`, verdicts, and candidate status updates.
 
 ## Blockers
 
