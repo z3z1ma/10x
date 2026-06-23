@@ -122,6 +122,11 @@ Canonical start guard:
   `EXP-20260623-816-upstream-gated-blockers-scn001-continuation-live-micro`
   confirmed the candidate keeps dynamic-answer behavior: candidate
   `S001=100;S007=80` versus current `S001=100;S007=35`.
+- Held-out retrieval continuation
+  `EXP-20260623-817-upstream-gated-blockers-scn003-record-retrieval-live-micro`
+  manually passed: candidate answered from existing `.10x` records without
+  asking for restated context. Automated S002 remained below floor, treated as a
+  scorer-limit trigger for retrieval continuations.
 
 ## Conclusions
 
@@ -173,6 +178,10 @@ Canonical start guard:
 - Upstream-gated dynamic continuation passed. Next held-out check should ask the
   subject to answer from the records created in that continuation rather than
   asking the user to restate context.
+- The SCN-003 retrieval check passed manually. Next promotion confidence gap is
+  either repeated target runs for variance or a ticket-boundary held-out
+  scenario that tests whether upstream gating under-questions when work is
+  nearly executable.
 
 ## Execution Log
 
@@ -272,3 +281,8 @@ Canonical start guard:
   `EXP-20260623-816-upstream-gated-blockers-scn001-continuation-live-micro`
   as a true continuation from upstream-gated raw artifacts. Logged result as
   `keep`.
+- 2026-06-23: Ran
+  `EXP-20260623-817-upstream-gated-blockers-scn003-record-retrieval-live-micro`
+  from records created in the upstream-gated continuation. Logged result as
+  `review` because manual inspection passed while automated S002 stayed below
+  floor.

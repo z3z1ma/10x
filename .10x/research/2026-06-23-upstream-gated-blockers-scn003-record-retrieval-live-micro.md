@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -158,15 +158,35 @@ Inspect combined transcripts, file outputs, workspace manifests, and report.
 ## Execution Log
 
 - 2026-06-23: Registered before execution.
+- 2026-06-23: Ran live retrieval continuation with three arms. Candidate scored
+  `S001=100;S002=60;S007=80`; current scored `S001=100;S002=50;S007=35`;
+  no-10x control scored `S001=40;S002=50;S007=20`.
+- 2026-06-23: Manual inspection found candidate answered from records and did
+  not ask for restated context. The S002 floor is treated as a scorer-limit
+  trigger for this retrieval continuation.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `review`.
 
 ## Score Artifacts
 
-Pending.
+- Raw artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/018-upstream-gated-blockers-scn003-record-retrieval-live-micro/raw/`
+- Score artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/018-upstream-gated-blockers-scn003-record-retrieval-live-micro/scores/`
+- Report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/018-upstream-gated-blockers-scn003-record-retrieval-live-micro/report.md`
+- Evidence:
+  `.10x/evidence/2026-06-23-upstream-gated-blockers-scn003-record-retrieval-live-micro.md`
 
 ## Manual Inspection Findings
 
-Pending.
+- Candidate answered from the existing `.10x` spec and ticket.
+- Candidate did not ask the user to restate context already in records.
+- Candidate preserved implementation blockers and did not create new records.
+- Current also answered from records but less concisely; no-10x relied on an
+  ad hoc non-`.10x` artifact and moved toward an implementation ticket.
 
 ## Final Verdict
 
-Pending.
+`keep-testing`, not promoted. Candidate passed manual SCN-003 retrieval
+inspection despite automated S002 floor.
