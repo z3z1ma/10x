@@ -108,6 +108,12 @@ Canonical start guard:
 - `candidate-explicit-concise-blockers-v1` matched current S001 in both target
   MICROs and improved SCN-002 S007 by 10 points, but lost SCN-001 S007 by five
   points. Verdict: keep testing/mutate, not promoted.
+- Dynamic continuation
+  `EXP-20260623-813-explicit-concise-blockers-scn001-continuation-live-micro`
+  gave arm-specific answers to each subject's actual questions. Candidate won
+  with `S001=100;S007=80` versus current `S001=100;S007=75`, while no-10x
+  control wrote ad hoc non-`.10x` Markdown artifacts and triggered the S001
+  floor.
 
 ## Conclusions
 
@@ -149,6 +155,10 @@ Canonical start guard:
 - Explicit concise blockers are the strongest candidate so far. The remaining
   gap is SCN-001 brevity/tradeoff: retain comprehensive blockers for high-risk
   ambiguity, but ask only the upstream subset when one answer gates the rest.
+- The continuation result increases confidence that the explicit concise
+  blocker pattern composes with dynamic user answers. Promotion still needs
+  held-out evidence or a mutation that improves first-turn SCN-001 without
+  losing continuation behavior.
 
 ## Execution Log
 
@@ -237,3 +247,6 @@ Canonical start guard:
   `EXP-20260623-811-explicit-concise-blockers-scn001-live-micro` plus
   `EXP-20260623-812-explicit-concise-blockers-scn002-live-micro` in parallel.
   Logged SCN-001 as `mutate` and SCN-002 as `keep`.
+- 2026-06-23: Ran
+  `EXP-20260623-813-explicit-concise-blockers-scn001-continuation-live-micro`
+  as a true continuation from prior raw artifacts. Logged result as `keep`.

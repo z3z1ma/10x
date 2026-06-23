@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -166,15 +166,34 @@ Inspect combined transcripts, file outputs, workspace manifests, and report.
 ## Execution Log
 
 - 2026-06-23: Registered before execution.
+- 2026-06-23: Ran live continuation with three arms using `prior_raw_paths` and
+  arm-specific dynamic answers. Candidate scored `S001=100;S007=80`, current
+  scored `S001=100;S007=75`, and no-10x control scored `S001=40;S007=25`.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `keep`.
 
 ## Score Artifacts
 
-Pending.
+- Raw artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/014-explicit-concise-blockers-scn001-continuation-live-micro/raw/`
+- Score artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/014-explicit-concise-blockers-scn001-continuation-live-micro/scores/`
+- Report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/014-explicit-concise-blockers-scn001-continuation-live-micro/report.md`
+- Evidence:
+  `.10x/evidence/2026-06-23-explicit-concise-blockers-scn001-continuation-live-micro.md`
 
 ## Manual Inspection Findings
 
-Pending.
+- Candidate preserved implementation blocking, created proper `.10x` records,
+  and did not create a throwaway prototype.
+- Current 10x also behaved correctly but scored slightly lower on S007.
+- No-10x control created ad hoc Markdown artifacts outside `.10x`, triggering
+  the S001 floor.
+- The dynamic continuation harness worked: each arm received an answer to its
+  actual first-turn questions.
 
 ## Final Verdict
 
-Pending.
+`keep-testing`, not promoted. Candidate won the dynamic continuation but still
+needs held-out scenario evidence before canonical `SKILL.md` changes.
