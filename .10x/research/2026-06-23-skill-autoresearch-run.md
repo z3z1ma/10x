@@ -76,6 +76,11 @@ Canonical start guard:
   promotion decision is `not-promoted`.
 - Durable live evidence created during this run:
   `.10x/evidence/2026-06-23-smallest-executable-unit-live-subject.md`.
+- Subject-agent clarification support was corrected before the next live
+  iteration: continuations now use `prior_raw_paths` and `prompts_by_arm` so the
+  researcher can answer each arm's actual question after reading its transcript.
+  Evidence:
+  `.10x/evidence/2026-06-23-dynamic-subject-continuations.md`.
 
 ## Conclusions
 
@@ -92,6 +97,10 @@ Canonical start guard:
 - The first live MICRO result shows the current `SKILL.md` already handles the
   tested minimalism trap better than the smallest-executable-unit overlay.
   Further work should mutate the candidate idea, not promote it.
+- The next live iteration can now include subject-agent questions without
+  prewritten follow-up scripts: the researcher should run a first turn, inspect
+  raw transcripts, then register at most one next-turn continuation per
+  experiment using arm-specific answers when needed.
 
 ## Execution Log
 
@@ -143,3 +152,10 @@ Canonical start guard:
   `python3 -m unittest discover -s autoresearch/tests` ran 43 tests with `OK`;
   `python3 autoresearch/validate.py` reported `autoresearch contracts valid`;
   `python3 autoresearch/canonical_guard.py` recorded unchanged `SKILL.md`.
+- 2026-06-23: Corrected clarification continuation support after operator
+  feedback. Fixed follow-up arrays are not valid for stochastic agents.
+  `run_codex_subject.py` now supports prior raw artifact continuation and
+  per-arm continuation prompts. Verification passed:
+  `python3 -m unittest discover -s autoresearch/tests` ran 44 tests with `OK`;
+  `python3 autoresearch/validate.py` reported `autoresearch contracts valid`;
+  `python3 autoresearch/canonical_guard.py` recorded a canonical snapshot.

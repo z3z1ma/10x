@@ -116,6 +116,30 @@ FULL experiments must use a real subject harness.
 confirm that `unchanged_during_run` is true. If the guard fails, discard the
 iteration and restore canonical files before continuing.
 
+## Handling Subject Questions
+
+Subject agents may ask clarifying questions. That is normal evidence, not a
+failed run. The LLM researcher decides the next turn after reading the raw
+transcript; Python does not decide whether the conversation is complete.
+
+When a subject asks a material question:
+
+1. Read the raw transcript for each arm.
+2. Decide whether the answer is available from the scenario intent, existing
+   records, or a reasonable benchmark assumption.
+3. If the answer is available, register a continuation experiment with
+   `prior_raw_paths` pointing to each arm's prior raw artifact.
+4. Provide the next user message through `prompts_by_arm` when arms asked
+   different questions or need different wording. Use a shared `prompt` only
+   when the same reply is correct for every arm.
+5. Run exactly one continuation turn with `run_once.py`.
+6. Inspect the combined transcript and decide whether to score, continue, mark
+   inconclusive, or ask the human for a real product decision.
+
+Do not prewrite fixed arrays of follow-up inputs. LLMs may ask the same
+questions in different orders or ask different questions entirely. Continuation
+is an autoresearch reasoning step, not runner control flow.
+
 ## Reading Scores
 
 After each run, inspect:

@@ -47,6 +47,13 @@ subject harness path. Fixture-backed calibration remains a separate
 Do not use an `execution_mode` experiment flag to choose live candidate
 execution.
 
+Subject-agent clarification is also outside runner control. When a subject asks
+a question, the LLM researcher reads the raw transcript and may register one
+continuation turn with `prior_raw_paths` plus `prompts_by_arm` for arm-specific
+answers. The runner executes that single registered turn against the prior
+transcript and workspace. It does not carry fixed follow-up arrays or decide
+when the conversation is complete.
+
 ## Alternatives Considered
 
 Keep fixture-backed MICRO as the optimization loop.
@@ -81,3 +88,8 @@ Fixture and smoke definitions are not part of the `run_once.py` surface.
 
 Future candidate promotion attempts must include live or manually inspected
 subject-agent output where the candidate instruction text was actually loaded.
+
+Clarification-heavy scenarios require the researcher to preserve per-arm
+conversation state explicitly. This adds a little experiment-definition work,
+but it avoids pretending stochastic subject questions can be handled by one
+prewritten follow-up sequence.

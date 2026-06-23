@@ -188,6 +188,31 @@ metadata, prompt files, workspace manifests, and subject last messages. Full
 prompts are kept as raw artifacts; scorer transcripts contain only the scenario
 prompt and subject response so quoted instructions are not scored as behavior.
 
+If a subject asks a clarifying question, the LLM researcher inspects the raw
+transcript and registers a one-turn continuation. Use `prior_raw_paths` to point
+each arm at its prior raw artifact. Use `prompts_by_arm` when different arms
+asked different questions:
+
+```json
+{
+  "id": "SCN-001",
+  "prior_raw_paths": {
+    "no-10x-control": ".10x/evidence/.storage/run/raw/control.json",
+    "current-10x": ".10x/evidence/.storage/run/raw/current.json",
+    "candidate-variant": ".10x/evidence/.storage/run/raw/candidate.json"
+  },
+  "prompts_by_arm": {
+    "no-10x-control": "The widget should show archived items only when the user enables Show archived.",
+    "current-10x": "The intended behavior is archived items hidden by default, shown when Show archived is enabled.",
+    "candidate-variant": "Use the existing Show archived toggle; no new filtering modes are in scope."
+  }
+}
+```
+
+Each continuation runs one new Codex turn against the prior transcript and
+workspace. The researcher, not the runner, decides whether another continuation
+is needed or whether the turn is ready to score.
+
 ## One-Shot Runner
 
 Run exactly one registered MICRO or FULL experiment and write a report:

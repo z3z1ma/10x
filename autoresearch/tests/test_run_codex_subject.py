@@ -109,6 +109,59 @@ class CodexSubjectRunnerTest(unittest.TestCase):
         self.assertEqual(124, raw["command_outputs"][0]["exit_code"])
         self.assertEqual([], offline_score.validate_score_artifact(artifact))
 
+    def test_continuation_uses_prior_raw_artifact_and_records_combined_transcript(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            prior_paths = {
+                arm["id"]: _write_prior_raw(root, arm["id"])
+                for arm in _definition()["arms"]
+            }
+            definition = _definition()
+            definition["scenarios"] = [
+                {
+                    "id": "SCN-001",
+                    "prompts_by_arm": {
+                        arm["id"]: (
+                            f"For {arm['id']}, the target behavior is to show "
+                            "archived widgets only when enabled."
+                        )
+                        for arm in _definition()["arms"]
+                    },
+                    "prior_raw_paths": prior_paths,
+                }
+            ]
+
+            with mock.patch("subprocess.run", side_effect=_fake_continuation_run):
+                summary = run_codex_subject.run_live(
+                    definition,
+                    root / "out",
+                    repo_root=REPO_ROOT,
+                )
+
+            raw_paths = sorted((root / "out" / "raw").glob("*.json"))
+            raws = [json.loads(raw_path.read_text(encoding="utf-8")) for raw_path in raw_paths]
+            artifacts = [offline_score.score_fixture(raw_path) for raw_path in raw_paths]
+            plan = json.loads((root / "out" / "plan.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(3, summary["samples_written"])
+        self.assertEqual(3, summary["live_codex_calls"])
+        self.assertEqual(3, len(raws))
+        for raw, artifact in zip(raws, artifacts):
+            self.assertEqual(1, raw["live_codex_calls"])
+            self.assertEqual(1, raw["harness_metadata"]["prior_turn_count"])
+            self.assertEqual(4, len(raw["transcript"]))
+            self.assertIn("Which behavior", raw["transcript"][1]["content"])
+            self.assertIn(raw["variant_id"], raw["transcript"][2]["content"])
+            self.assertIn("show archived widgets", raw["transcript"][2]["content"])
+            self.assertIn("Now that behavior is specified", raw["transcript"][3]["content"])
+            self.assertEqual([], offline_score.validate_score_artifact(artifact))
+
+        for sample in plan["samples"]:
+            self.assertNotIn("prompt", sample)
+            self.assertNotIn("prompt", sample["planned_turns"][0])
+            self.assertNotIn("prompt_is_explicit", plan["scenarios"][0])
+            self.assertIn("<prompt stored at", sample["planned_turns"][0]["planned_codex_argv"][-1])
+
 
 def _definition():
     return {
@@ -165,6 +218,67 @@ def _fake_run(argv, stdout, stderr, text, timeout=None):
 
 def _fake_timeout(argv, stdout, stderr, text, timeout=None):
     raise subprocess.TimeoutExpired(argv, timeout or 1, output="", stderr="still running")
+
+
+def _fake_continuation_run(argv, stdout, stderr, text, timeout=None):
+    prompt = argv[-1]
+    last_message = Path(argv[argv.index("--output-last-message") + 1])
+    last_message.parent.mkdir(parents=True, exist_ok=True)
+    assert "Prior transcript:" in prompt
+    last_message.write_text(
+        "Now that behavior is specified, I can scope the smallest change: add "
+        "a native archived-widget toggle and avoid a framework.",
+        encoding="utf-8",
+    )
+    return mock.Mock(
+        returncode=0,
+        stdout='{"type":"turn.completed","usage":{"input_tokens":11,"output_tokens":22}}\n',
+        stderr="",
+    )
+
+
+def _write_prior_raw(root: Path, variant_id: str) -> str:
+    workspace = root / f"workspace-{variant_id}"
+    workspace.mkdir(parents=True)
+    manifest = workspace / "workspace-manifest.json"
+    manifest.write_text(
+        json.dumps({"workspace": str(workspace)}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    raw = root / f"prior-{variant_id}.json"
+    raw.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "experiment_id": "EXP-20260623-prior",
+                "scenario_id": "SCN-001",
+                "variant_id": variant_id,
+                "rep": 0,
+                "model": "codex-test-model",
+                "harness": "codex-cli",
+                "instruction_digest": "sha256:prior",
+                "transcript": [
+                    {"role": "user", "content": "Make the widget better."},
+                    {"role": "assistant", "content": "Which behavior should change?"},
+                ],
+                "tool_invocations": [],
+                "file_outputs": [],
+                "command_outputs": [],
+                "raw_artifact_refs": [str(manifest)],
+                "wall_seconds": 1.0,
+                "input_tokens": 1,
+                "output_tokens": 1,
+                "harness_metadata": {
+                    "kind": "codex-live-subject",
+                    "workspace_manifest_path": str(manifest),
+                },
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return str(raw)
 
 
 if __name__ == "__main__":

@@ -41,6 +41,10 @@ equivalent files are suppressed.
 
 List scenario IDs and live prompts for subject-agent execution.
 
+For a continuation after subject-agent questions, list the prior raw artifact
+for each arm and the next user message for that arm. Do not use fixed follow-up
+arrays; the LLM researcher decides each next turn after reading the transcript.
+
 ## Runner Definition
 
 For MICRO or FULL execution, fill this JSON block or provide an equivalent
@@ -90,6 +94,24 @@ the scenario isolates one behavior.
 }
 ```
 <!-- codex-subject-runner-definition:end -->
+
+Continuation scenario shape:
+
+```json
+{
+  "id": "SCN-001",
+  "prior_raw_paths": {
+    "no-10x-control": ".10x/evidence/.storage/<run>/raw/<control>.json",
+    "current-10x": ".10x/evidence/.storage/<run>/raw/<current>.json",
+    "candidate-variant": ".10x/evidence/.storage/<run>/raw/<candidate>.json"
+  },
+  "prompts_by_arm": {
+    "no-10x-control": "Answer the control arm's actual question.",
+    "current-10x": "Answer the current arm's actual question.",
+    "candidate-variant": "Answer the candidate arm's actual question."
+  }
+}
+```
 
 ## Subject Agent And Model
 
