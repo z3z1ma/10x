@@ -323,3 +323,10 @@ Canonical start guard:
   `EXP-20260623-821-ticket-readiness-gate-scn006-handoff-isolated-live-micro`
   to rerun the SCN-006 handoff discriminator after the live subject workspace
   isolation fix.
+- 2026-06-23: Ran
+  `EXP-20260623-821-ticket-readiness-gate-scn006-handoff-isolated-live-micro`.
+  Isolated live score vector was
+  `candidate:S003=100 current:S003=100 control:S003=10`. Manual inspection
+  found no sibling-workspace contamination. Candidate passed, but current 10x
+  matched it and produced an extra evidence record, so
+  `candidate-ticket-readiness-gate-v1` is not promoted.

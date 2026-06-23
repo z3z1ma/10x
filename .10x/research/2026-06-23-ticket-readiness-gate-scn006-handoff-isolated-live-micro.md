@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -196,15 +196,56 @@ evidence, manual inspection, review, and explicit human approval.
 ## Execution Log
 
 - 2026-06-23: Registered after the live subject workspace isolation fix.
+- 2026-06-23: Live run completed with score vector
+  `candidate:S003=100 current:S003=100 control:S003=10`.
+- 2026-06-23: Generated report at
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/021-ticket-readiness-gate-scn006-handoff-isolated-live-micro/report.md`
+  and canonical guard at
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/021-ticket-readiness-gate-scn006-handoff-isolated-live-micro/canonical_guard.json`.
+- 2026-06-23: Manual inspection found no repeat of the sibling-workspace prior
+  art contamination from EXP-820. Workspace manifests reported
+  `workspace_contamination_present: false` for all arms.
 
 ## Score Artifacts
 
-Pending.
+- no-10x-control:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/021-ticket-readiness-gate-scn006-handoff-isolated-live-micro/scores/sha256-70d7eceb283fc85abc5629459a4e051faa6283993ee67a0f9dbe177f841ba901.score.json`
+  scored `S003=10`.
+- current-10x:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/021-ticket-readiness-gate-scn006-handoff-isolated-live-micro/scores/sha256-e7204ade02706e41e9f35b225506474d348f00b08f5d022d9e30d20788b41183.score.json`
+  scored `S003=100`.
+- candidate-variant:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/021-ticket-readiness-gate-scn006-handoff-isolated-live-micro/scores/sha256-bd2fd2735105ea234f91ea79cf07e8c3221586d55859d9ec87082a86b120db6a.score.json`
+  scored `S003=100`.
 
 ## Manual Inspection Findings
 
-Pending.
+- no-10x-control created a prose handoff artifact
+  `enterprise-billing-dashboard-csv-export-handoff.md`, not a `.10x/tickets/`
+  ticket. The `S003=10` floor is directionally correct.
+- candidate-variant created
+  `.10x/tickets/2026-06-23-enterprise-billing-dashboard-csv-export.md`. The
+  ticket is usable: it includes scope, non-goals, acceptance criteria, evidence
+  expectations, implementation notes, and an explicit blocker requiring the next
+  agent to inspect the real repository because this generated workspace lacked
+  the `src/` tree.
+- current-10x created
+  `.10x/tickets/2026-06-23-enterprise-billing-csv-export.md` and a separate
+  evidence record
+  `.10x/evidence/2026-06-23-workspace-inspection-for-billing-csv-export.md`.
+  Its ticket is at least as executable as the candidate's and has stronger
+  record-graph discipline because it externalized the workspace inspection as
+  evidence.
+- The isolated harness removed the EXP-820 contamination path. Searches for
+  prior-art language found no candidate claim that it used sibling generated
+  workspaces.
 
 ## Final Verdict
 
-Pending.
+Null versus current 10x. This run cleanly shows that 10x behavior separates
+from the no-10x control on SCN-006 handoff preparation, but it does not show
+that `candidate-ticket-readiness-gate-v1` improves canonical `SKILL.md`.
+
+Do not promote this candidate. The next useful hypothesis should target a
+different weakness than generic ticket readiness, because current `SKILL.md`
+already handles this handoff case well under isolated live evaluation.
