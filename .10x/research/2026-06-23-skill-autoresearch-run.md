@@ -340,3 +340,7 @@ Canonical start guard:
   `S002=65;S005=80`, so the run was a null/weak-discriminator result. The next
   record-economy test needs a harder prompt that tempts decision/spec/ticket
   spread.
+- 2026-06-23: Registered
+  `EXP-20260623-823-record-economy-threshold-scn005-hard-live-micro` with a
+  harder mixed planning note to retest record economy under stronger record-spam
+  pressure.
