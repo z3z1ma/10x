@@ -114,6 +114,10 @@ Canonical start guard:
   with `S001=100;S007=80` versus current `S001=100;S007=75`, while no-10x
   control wrote ad hoc non-`.10x` Markdown artifacts and triggered the S001
   floor.
+- `candidate-upstream-gated-blockers-v1` is now the leading candidate. It won
+  both target first-turn MICROs: SCN-001 candidate `S001=100;S007=90` versus
+  current `S001=100;S007=30`; SCN-002 candidate `S001=100;S007=75` versus
+  current `S001=100;S007=55`.
 
 ## Conclusions
 
@@ -159,6 +163,9 @@ Canonical start guard:
   blocker pattern composes with dynamic user answers. Promotion still needs
   held-out evidence or a mutation that improves first-turn SCN-001 without
   losing continuation behavior.
+- Upstream gating appears to solve the SCN-001 brevity/tradeoff gap without
+  regressing SCN-002. Next step: run held-out SCN-003/SCN-006 or a repeated
+  target split before considering canonical `SKILL.md` edits.
 
 ## Execution Log
 
@@ -250,3 +257,7 @@ Canonical start guard:
 - 2026-06-23: Ran
   `EXP-20260623-813-explicit-concise-blockers-scn001-continuation-live-micro`
   as a true continuation from prior raw artifacts. Logged result as `keep`.
+- 2026-06-23: Added `candidate-upstream-gated-blockers-v1` and ran
+  `EXP-20260623-814-upstream-gated-blockers-scn001-live-micro` plus
+  `EXP-20260623-815-upstream-gated-blockers-scn002-live-micro` in parallel.
+  Logged both rows as `keep`.

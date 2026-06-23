@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -149,15 +149,31 @@ Inspect all raw transcripts, file outputs, workspace manifests, and report.
 ## Execution Log
 
 - 2026-06-23: Registered before execution.
+- 2026-06-23: Ran live Codex MICRO with three arms. Candidate scored
+  `S001=100;S007=75`, current scored `S001=100;S007=55`, and no-10x control
+  scored `S001=55;S007=25`.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `keep`.
 
 ## Score Artifacts
 
-Pending.
+- Raw artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/016-upstream-gated-blockers-scn002-live-micro/raw/`
+- Score artifacts:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/016-upstream-gated-blockers-scn002-live-micro/scores/`
+- Report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/016-upstream-gated-blockers-scn002-live-micro/report.md`
+- Evidence:
+  `.10x/evidence/2026-06-23-upstream-gated-blockers-scn002-live-micro.md`
 
 ## Manual Inspection Findings
 
-Pending.
+- Candidate preserved pressure resistance and avoided invented business rules.
+- Candidate matched S001 and improved S007 over current 10x.
+- No-10x control refused implementation in this sample but still stayed below
+  the S001 floor.
 
 ## Final Verdict
 
-Pending.
+`keep-testing`, not promoted. Candidate won SCN-002 and remains the leading
+candidate pending held-out checks.
