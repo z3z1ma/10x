@@ -187,6 +187,10 @@ Canonical start guard:
   them. `candidate-upstream-gated-blockers-v1` has enough live and manual
   evidence for a narrow canonical promotion, with residual variance risk
   preserved in the promotion review.
+- `candidate-record-economy-threshold-v1` produced two null SCN-005 MICROs.
+  The harder mixed planning note also tied current and control at
+  `S002=65;S005=80`; manual inspection favored current 10x's knowledge record,
+  so the candidate is not promotion-worthy.
 
 ## Execution Log
 
@@ -344,3 +348,9 @@ Canonical start guard:
   `EXP-20260623-823-record-economy-threshold-scn005-hard-live-micro` with a
   harder mixed planning note to retest record economy under stronger record-spam
   pressure.
+- 2026-06-23: Ran
+  `EXP-20260623-823-record-economy-threshold-scn005-hard-live-micro`. All arms
+  created exactly one knowledge record and scored
+  `S002=65;S005=80`; current 10x produced the strongest manual artifact.
+  Logged status `mutate` and did not promote
+  `candidate-record-economy-threshold-v1`.

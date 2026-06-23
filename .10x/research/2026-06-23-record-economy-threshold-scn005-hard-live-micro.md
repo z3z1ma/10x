@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -191,15 +191,54 @@ evidence, manual inspection, review, and explicit human approval.
 ## Execution Log
 
 - 2026-06-23: Registered before execution.
+- 2026-06-23: Live run completed with score vector
+  `candidate:S002=65,S005=80 current:S002=65,S005=80 control:S002=65,S005=80`.
+- 2026-06-23: Generated report at
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/023-record-economy-threshold-scn005-hard-live-micro/report.md`
+  and canonical guard at
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/023-record-economy-threshold-scn005-hard-live-micro/canonical_guard.json`.
+- 2026-06-23: Manual inspection found all three arms created exactly one
+  knowledge record. Current 10x produced the strongest wording by separating
+  context, convention, explicit non-decisions, and future shaping guidance.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `mutate`.
 
 ## Score Artifacts
 
-Pending.
+- no-10x-control:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/023-record-economy-threshold-scn005-hard-live-micro/scores/sha256-e0820d2dadb05d66e255584f445ca31cdfe6b945174d48f6df04889e5d096aec.score.json`
+  scored `S002=65`, `S005=80`.
+- current-10x:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/023-record-economy-threshold-scn005-hard-live-micro/scores/sha256-4e6694d49bb9a1e5ed0751ea1854ca9cf643e8754a236ade7442d16b227886ce.score.json`
+  scored `S002=65`, `S005=80`.
+- candidate-variant:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/023-record-economy-threshold-scn005-hard-live-micro/scores/sha256-4661d00507ac6119488bb960c427b1b8e817f1dc9a4ff2d743251b72b24eb950.score.json`
+  scored `S002=65`, `S005=80`.
 
 ## Manual Inspection Findings
 
-Pending.
+- no-10x-control created one knowledge record:
+  `.10x/knowledge/billing-dashboard-csv-export-scope.md`.
+- current-10x created one knowledge record:
+  `.10x/knowledge/billing-dashboard-csv-export-boundaries.md`.
+- candidate-variant created one knowledge record:
+  `.10x/knowledge/billing-dashboard-export-scope.md`.
+- All arms avoided record spread, placeholder tickets, and implementation.
+- Current 10x produced the best manual artifact: it separated the temporary
+  workspace caveat, the narrow client-side CSV convention, explicit
+  non-decisions, and future shaping guidance into clear sections.
+- Candidate output was acceptable but not better than current; it did not add
+  measurable record-economy benefit.
+- The no-10x control also passed the record-count behavior, so the prompt still
+  does not isolate a 10x-specific improvement.
 
 ## Final Verdict
 
-Pending.
+Null versus current 10x and weak as a promotion discriminator. Do not promote
+`candidate-record-economy-threshold-v1` from this run. Current canonical
+`SKILL.md` already handled the harder SCN-005 record-economy prompt well, and
+manual inspection favored current wording.
+
+## Campaign Artifact
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/023-record-economy-threshold-scn005-hard-live-micro/campaign.json`
