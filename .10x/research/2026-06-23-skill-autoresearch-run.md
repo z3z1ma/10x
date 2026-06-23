@@ -199,6 +199,10 @@ Canonical start guard:
   experiment runs, prepare the next hypothesis/candidate/scenario, and delegate
   bounded read-only scouting or experiment babysitting to subagents when the
   task has explicit inputs, outputs, and no promotion authority.
+- The next independent candidate batch is:
+  `candidate-records-first-retrieval-v1`,
+  `candidate-outer-loop-readiness-ledger-v1`, and
+  `candidate-honest-subagent-handoff-v1`.
 
 ## Execution Log
 
@@ -371,3 +375,11 @@ Canonical start guard:
   `.10x/tickets/2026-06-23-increase-autoresearch-throughput.md` and spawned two
   read-only explorer subagents to propose next hypotheses and minimal
   throughput improvements.
+- 2026-06-23: Added candidate artifacts for records-first retrieval,
+  outer-loop readiness ledger, and honest subagent handoff, plus live MICRO
+  records for all three.
+- 2026-06-23: Completed
+  `.10x/tickets/done/2026-06-23-isolate-continuation-archives.md` after the
+  throughput audit found continuation runs could archive back over prior
+  workspaces. This must be validated before running the next SCN-003 retrieval
+  continuation.

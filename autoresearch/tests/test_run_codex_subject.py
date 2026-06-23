@@ -186,19 +186,29 @@ class CodexSubjectRunnerTest(unittest.TestCase):
             raws = [json.loads(raw_path.read_text(encoding="utf-8")) for raw_path in raw_paths]
             artifacts = [offline_score.score_fixture(raw_path) for raw_path in raw_paths]
             plan = json.loads((root / "out" / "plan.json").read_text(encoding="utf-8"))
+            manifests = [
+                json.loads(path.read_text(encoding="utf-8"))
+                for path in sorted((root / "out" / "workspaces").glob("*/workspace-manifest.json"))
+            ]
 
         self.assertEqual(3, summary["samples_written"])
         self.assertEqual(3, summary["live_codex_calls"])
         self.assertEqual(3, len(raws))
+        self.assertEqual(3, len(manifests))
         for raw, artifact in zip(raws, artifacts):
             self.assertEqual(1, raw["live_codex_calls"])
             self.assertEqual(1, raw["harness_metadata"]["prior_turn_count"])
+            self.assertIn(str(root / "workspace-"), raw["harness_metadata"]["seed_workspace_dir"])
+            self.assertIn(str(root / "out" / "workspaces"), raw["harness_metadata"]["workspace_manifest_path"])
             self.assertEqual(4, len(raw["transcript"]))
             self.assertIn("Which behavior", raw["transcript"][1]["content"])
             self.assertIn(raw["variant_id"], raw["transcript"][2]["content"])
             self.assertIn("show archived widgets", raw["transcript"][2]["content"])
             self.assertIn("Now that behavior is specified", raw["transcript"][3]["content"])
             self.assertEqual([], offline_score.validate_score_artifact(artifact))
+
+        for manifest in manifests:
+            self.assertIn(str(root / "out" / "workspaces"), manifest["workspace"])
 
         for sample in plan["samples"]:
             self.assertNotIn("prompt", sample)
@@ -259,7 +269,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
                 data["variant_id"]: data
                 for data in (
                     json.loads(path.read_text(encoding="utf-8"))
-                    for path in root.glob("workspace-*/workspace-manifest.json")
+                    for path in (root / "out" / "workspaces").glob("*/workspace-manifest.json")
                 )
             }
 

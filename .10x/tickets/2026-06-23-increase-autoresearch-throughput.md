@@ -55,6 +55,17 @@ Excluded:
     high-value independent hypotheses.
   - `Leibniz`: inspect autoresearch harness/docs and propose minimal throughput
     improvements without loop-controller complexity.
+- 2026-06-23: Pauli recommended three independent next hypotheses:
+  records-first retrieval, harness-aware child-ticket execution/no fake
+  delegation, and contract-complete minimalism.
+- 2026-06-23: Leibniz recommended process-level parallelism only: distinct
+  experiment IDs and output roots, parent-owned serial `results.tsv`, subagents
+  as bounded researchers/babysitters without promotion authority, and no
+  parallel continuations that mutate shared prior workspaces.
+- 2026-06-23: Opened and completed
+  `.10x/tickets/done/2026-06-23-isolate-continuation-archives.md` to remove
+  the shared-prior-workspace mutation blocker before running more retrieval
+  continuations.
 
 ## Blockers
 

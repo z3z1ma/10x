@@ -93,7 +93,8 @@ def build_plan(
                 )
                 stem = _artifact_stem(live_run_key)
                 prior_context = _load_prior_context(repo_root, prior_raw_path)
-                workspace_dir = prior_context.get("workspace_dir") or artifact_dirs["workspaces"] / stem
+                seed_workspace_dir = prior_context.get("workspace_dir")
+                workspace_dir = artifact_dirs["workspaces"] / stem
                 raw_path = artifact_dirs["raw"] / f"{stem}.json"
                 score_path = artifact_dirs["scores"] / f"{stem}.score.json"
                 command_path = artifact_dirs["codex"] / f"{stem}.command.json"
@@ -129,6 +130,7 @@ def build_plan(
                         "scenario_prompt": user_message,
                         "prior_raw_path": prior_context.get("raw_path"),
                         "prior_transcript": prior_context.get("transcript", []),
+                        "planned_seed_workspace_dir": str(seed_workspace_dir) if seed_workspace_dir else None,
                         "prompt": turns[0]["prompt"],
                         "prompt_path": str(prompt_path),
                         "planned_workspace_dir": str(workspace_dir),
@@ -273,6 +275,11 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
     stderr_path = Path(sample["planned_stderr_path"])
     prompt_path = Path(sample["prompt_path"])
     archive_manifest_path = Path(sample["planned_workspace_manifest_path"])
+    seed_workspace = (
+        Path(sample["planned_seed_workspace_dir"])
+        if sample.get("planned_seed_workspace_dir")
+        else None
+    )
 
     raw_path.parent.mkdir(parents=True, exist_ok=True)
     score_path.parent.mkdir(parents=True, exist_ok=True)
@@ -281,7 +288,9 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
 
     with tempfile.TemporaryDirectory(prefix="10x-autoresearch-") as temp_root:
         workspace = Path(temp_root) / "workspace"
-        if archive_workspace.exists():
+        if seed_workspace and seed_workspace.exists():
+            shutil.copytree(seed_workspace, workspace)
+        elif archive_workspace.exists():
             shutil.copytree(archive_workspace, workspace)
         else:
             workspace.mkdir(parents=True)
@@ -452,6 +461,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
             "base_instruction_path": sample.get("base_instruction_path"),
             "workspace_manifest_path": str(archive_manifest_path),
             "prior_raw_path": sample.get("prior_raw_path"),
+            "seed_workspace_dir": str(seed_workspace) if seed_workspace else None,
             "prior_turn_count": len(prior_transcript) // 2,
             "turns": [
                 {
@@ -493,6 +503,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
             "score_artifact_path": str(score_path),
             "live_codex_calls": (len(transcript) - len(prior_transcript)) // 2,
             "prior_raw_path": sample.get("prior_raw_path"),
+            "seed_workspace_dir": str(seed_workspace) if seed_workspace else None,
         }
     )
     return sample
