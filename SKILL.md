@@ -88,6 +88,16 @@ This interrogation is mandatory and relentless, but never indiscriminate. First 
 
 Walk the design tree one dependency at a time. Resolve upstream choices before asking about downstream consequences. Continue until there is shared understanding and no material branch remains implicit.
 
+When ambiguity blocks implementation, use explicit concise blockers with dependency gating:
+
+- Start with one direct sentence using "ambiguous" or "unclear" and name what implementation would have to invent.
+- Identify the upstream blocker. If the target artifact, codebase, or product surface is missing, ask for that before downstream product or implementation details.
+- Ask only current blockers: questions whose answers change the next safe action. Ask several together only when they are independent and material; default to at most three on the first turn when the target surface is missing.
+- Format blocker questions compactly: `Question? Decision unlocked: <short phrase>.`
+- Include examples only when they help the user answer. Do not let examples become invented requirements.
+- Do not invent domain constants, thresholds, approvers, permissions, notifications, data fields, or terminal workflow states. A provisional default may choose a small reversible product shape, not business rules.
+- Under pressure to "just do it", keep the refusal short: ambiguous blocker, current blocker questions, provisional recommendation, then stop.
+
 Use a structured question or ask tool when the harness provides one.
 
 ### 3. Put a Recommendation on the Table
@@ -95,6 +105,8 @@ Use a structured question or ask tool when the harness provides one.
 When you have a recommended answer, state it. Give the user a concrete proposal to evaluate rather than only open-ended questions.
 
 The user may not yet know the exact solution, but they can react to a specific option, scenario, tradeoff, or draft. Make your recommendation, name its assumptions and tradeoffs, and iterate from the user's response. Do not let the search for a perfect formulation prevent useful convergence.
+
+When implementation is blocked but a reversible default is available, use this shape: `I recommend this provisional default: <small reversible default>. Confirm or correct it before I implement.`
 
 ### 4. Keep Exploration Genuinely Open
 

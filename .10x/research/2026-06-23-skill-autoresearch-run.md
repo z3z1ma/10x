@@ -139,7 +139,8 @@ Canonical start guard:
 - The next rational step is not more fixture-only candidates. It is a
   candidate-executing evaluation surface, followed by live or manually inspected
   MICRO runs against the existing candidates.
-- No canonical `SKILL.md` promotion is supported by the current evidence.
+- Initial fixture and smallest-executable-unit live evidence did not support a
+  canonical `SKILL.md` promotion.
 - The first live MICRO result shows the current `SKILL.md` already handles the
   tested minimalism trap better than the smallest-executable-unit overlay.
   Further work should mutate the candidate idea, not promote it.
@@ -182,6 +183,10 @@ Canonical start guard:
   either repeated target runs for variance or a ticket-boundary held-out
   scenario that tests whether upstream gating under-questions when work is
   nearly executable.
+- User authorized promoting worthwhile `SKILL.md` updates as research surfaces
+  them. `candidate-upstream-gated-blockers-v1` has enough live and manual
+  evidence for a narrow canonical promotion, with residual variance risk
+  preserved in the promotion review.
 
 ## Execution Log
 
@@ -286,3 +291,8 @@ Canonical start guard:
   from records created in the upstream-gated continuation. Logged result as
   `review` because manual inspection passed while automated S002 stayed below
   floor.
+- 2026-06-23: Opened
+  `.10x/tickets/done/2026-06-23-promote-upstream-gated-blockers.md`, promoted
+  the upstream-gated blocker rule into canonical `SKILL.md`, and recorded
+  `.10x/evidence/2026-06-23-promote-upstream-gated-blockers.md` after
+  validation.

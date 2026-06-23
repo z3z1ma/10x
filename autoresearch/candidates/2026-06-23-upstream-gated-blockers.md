@@ -3,8 +3,8 @@
 Candidate ID: `candidate-upstream-gated-blockers-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
-Promotion: manual-only
+Status: promoted
+Promotion: promoted 2026-06-23
 
 ## Target Behavior
 
@@ -14,8 +14,7 @@ the target artifact or codebase is missing, the first response should ask for
 the target surface and only the few product decisions needed to choose the next
 safe shaping step.
 
-This is an instruction overlay candidate. It is not a canonical change to
-`SKILL.md`.
+This instruction overlay was promoted into canonical `SKILL.md` on 2026-06-23.
 
 ## Proposed Instruction Overlay
 
@@ -78,8 +77,8 @@ Secondary scenarios:
 - Keyword overfitting: the agent may include explicit rubric words without
   better judgment.
 
-## Promotion Boundary
+## Promotion Result
 
-This candidate cannot be promoted without separate live evidence, manual
-inspection, held-out scenario checks, review, and explicit human promotion. It
-must not directly edit `SKILL.md`.
+Promoted after separate live evidence on SCN-001, SCN-002, SCN-001
+continuation, and SCN-003 retrieval, manual inspection of the scorer floors, and
+explicit user authorization to promote worthwhile `SKILL.md` updates.

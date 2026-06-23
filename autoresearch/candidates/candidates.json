@@ -95,7 +95,7 @@
       "id": "candidate-upstream-gated-blockers-v1",
       "path": "autoresearch/candidates/2026-06-23-upstream-gated-blockers.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "promoted",
       "created": "2026-06-23",
       "target_scores": ["S001", "S007"],
       "target_scenarios": ["SCN-001", "SCN-002", "SCN-003", "SCN-006"],
