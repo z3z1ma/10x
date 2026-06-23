@@ -419,3 +419,15 @@ Canonical start guard:
 - 2026-06-23: Added tracked opaque seed fixture
   `autoresearch/fixtures/live-seeds/records-first-opaque/` and registered
   `EXP-20260623-829-records-first-retrieval-opaque-scn003-live-micro`.
+- 2026-06-23: Ran
+  `EXP-20260623-829-records-first-retrieval-opaque-scn003-live-micro`. Manual
+  inspection found candidate and current both retrieved exact opaque facts from
+  seeded `.10x` records, and no-10x control correctly reported that records were
+  absent after `.10x` cleanup. Logged status `review`: valid 10x-over-control
+  signal, neutral candidate-over-current signal.
+- 2026-06-23: Promoted a compact records-first retrieval rule into `SKILL.md`
+  after review `.10x/reviews/2026-06-23-records-first-retrieval-promotion.md`.
+  The promotion is narrower than the candidate overlay and adds no new
+  mechanism: answer from relevant `.10x` records before asking the user to
+  restate existing context, cite paths used, separate gaps from settled facts,
+  and avoid duplicate records.

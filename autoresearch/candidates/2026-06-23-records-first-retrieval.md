@@ -3,8 +3,8 @@
 Candidate ID: `candidate-records-first-retrieval-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: keep-testing
-Promotion: manual-only
+Status: promoted
+Promotion: promoted to `SKILL.md` on 2026-06-23
 
 ## Target Behavior
 
@@ -89,3 +89,12 @@ and no-10x control correctly removed inherited `.10x`, but the control still
 produced a plausible checkout answer from generic domain inference. The next
 fresh-record test must use opaque tokens and exact phrases that cannot be
 guessed from the prompt.
+
+`EXP-20260623-829-records-first-retrieval-opaque-scn003-live-micro` was a valid
+opaque discriminator. Candidate and current both retrieved exact opaque facts
+from `.10x`, and no-10x control correctly reported the records absent after
+`.10x` cleanup. This is neutral for candidate-over-current improvement but
+supports that the behavior is safe and not a control artifact.
+
+Promotion review `.10x/reviews/2026-06-23-records-first-retrieval-promotion.md`
+passed a compact version of this rule into `SKILL.md`.

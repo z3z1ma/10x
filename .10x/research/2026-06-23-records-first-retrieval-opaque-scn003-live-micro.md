@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -189,15 +189,53 @@ promotion review for records-first retrieval.
 ## Execution Log
 
 - 2026-06-23: Registered before execution with tracked opaque seed fixture.
+- 2026-06-23: Ran live. Automated score vector:
+  `candidate:S001=70,S002=50,S007=10 current:S001=70,S002=50,S007=10 control:S001=70,S002=70,S007=10`.
+- 2026-06-23: Canonical guard reported `unchanged_during_run: true`.
+- 2026-06-23: Manual inspection found candidate and current both retrieved the
+  exact opaque token `PAX-17-HALCYON`, ledger note `halcyon-blue`, sentinel
+  copy, and owning ticket path from seeded `.10x` records.
+- 2026-06-23: Manual inspection found no-10x control removed inherited `.10x`
+  before execution and correctly reported that the records were absent.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `review`.
 
 ## Score Artifacts
 
-Pending.
+- report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/029-records-first-retrieval-opaque-scn003-live-micro/report.md`
+- campaign:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/029-records-first-retrieval-opaque-scn003-live-micro/campaign.json`
+- canonical guard:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/029-records-first-retrieval-opaque-scn003-live-micro/canonical_guard.json`
+- candidate score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/029-records-first-retrieval-opaque-scn003-live-micro/scores/sha256-894b390a0db048453683289dfc8be2069c566cdf9fddb9c724ccc462c56c3481.score.json`
+- current score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/029-records-first-retrieval-opaque-scn003-live-micro/scores/sha256-633f5a085b2c6f152930b641c90576c243daeec4bfe49926a892842904985999.score.json`
+- control score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/029-records-first-retrieval-opaque-scn003-live-micro/scores/sha256-c5f9a7873efeb294780913b4b51212dfbe89da7dab4aa9097d76267645a44ae5.score.json`
 
 ## Manual Inspection Findings
 
-Pending.
+- Candidate answered from `.10x` records and cited:
+  `.10x/decisions/orion-release-token.md`,
+  `.10x/specs/kappa-amber-hold-sentinel.md`, and
+  `.10x/tickets/2026-06-23-add-kappa-amber-hold-sentinel.md`.
+- Current also retrieved and cited the same record set, using absolute temporary
+  workspace links.
+- Candidate and current both included the exact opaque token, exact ledger note,
+  exact sentinel copy, and owning ticket.
+- No-10x control had `.10x` removed before execution, created no files, and did
+  not invent the opaque facts. It reported that only `workspace-manifest.json`
+  existed and that no `.10x` records were available.
+- Automated S002 incorrectly treated seeded record files as duplicate records.
+  Workspace manifests showed no extra files beyond the seeded `.10x` records for
+  current and candidate.
 
 ## Final Verdict
 
-Pending.
+Review/keep-testing. This is a valid discriminator proving 10x record retrieval
+against an isolated no-10x control, but it is neutral on the candidate overlay
+because current 10x matched candidate on the opaque seed. Aggregate promotion
+review must weigh this tie against EXP-826 and EXP-827, where candidate was
+clearer than current.

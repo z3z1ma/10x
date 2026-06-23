@@ -76,6 +76,8 @@ Before shaping new work, search what already exists.
 
 The `.10x/` directory is cumulative. Do not make the project repay the cost of knowledge it has already acquired. Build on what exists.
 
+When the user's request asks about existing project context, prior decisions, terminology, constraints, or next work, answer from records before interviewing the user. Cite the record paths used, separate settled record-backed facts from gaps or stale assumptions, and ask follow-ups only for named execution-critical gaps whose answer changes the next safe action. Do not create duplicate records for context already present in `.10x`; update or create a record only when the current turn adds durable context beyond the existing record graph.
+
 ### 2. Resolve Execution-Critical Ambiguity
 
 When intent is unclear, do not implement. Interrogate the ambiguity until the work can be executed without invention.
