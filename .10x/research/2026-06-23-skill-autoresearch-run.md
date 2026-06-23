@@ -299,3 +299,8 @@ Canonical start guard:
 - 2026-06-23: Added `candidate-ticket-readiness-gate-v1` and registered
   `EXP-20260623-819-ticket-readiness-gate-scn006-live-micro` to test the
   promotion review's residual ticket-boundary risk.
+- 2026-06-23: Audited prior candidates for missed promotion opportunities in
+  `.10x/reviews/2026-06-23-prior-candidate-promotion-audit.md`. No additional
+  prior candidate met the fully net-positive promotion standard; explicit
+  concise blockers were partially subsumed by the already promoted
+  upstream-gated blocker rule.
