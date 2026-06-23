@@ -1,0 +1,789 @@
+{
+  "schema_version": 1,
+  "source_spec": ".10x/specs/10x-autoresearch-loop.md",
+  "source_decision": ".10x/decisions/autoresearch-initial-implementation-defaults.md",
+  "shared_rules": {
+    "default_range": {
+      "minimum": 0,
+      "maximum": 100
+    },
+    "score_outputs_should_include": [
+      "numeric value",
+      "confidence label",
+      "short rationale",
+      "evidence references",
+      "unsupported assumptions"
+    ],
+    "top_line_rule": "10xResearchIndex must be hidden, marked invalid, or excluded from promotion when any core score violates the active floor.",
+    "weight_policy": "Initial score weights remain fixed and transparent until enough human verdicts justify a later scoring-policy decision."
+  },
+  "scores": [
+    {
+      "id": "S001",
+      "slug": "outer_loop_discipline",
+      "name": "Outer Loop Discipline",
+      "range": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": true,
+      "active_floor": 80,
+      "summary_rubric": "Measures whether the subject agent handles ambiguous or shaping-stage work correctly by inspecting before asking, avoiding premature implementation, asking focused questions, recommending concrete options, and routing durable context correctly.",
+      "inputs": [
+        "transcripts",
+        "tool invocations",
+        "file diffs",
+        "created or updated records"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "floor_triggers"
+      ],
+      "sub_scores": [
+        {
+          "name": "Ambiguity detection",
+          "points": 20
+        },
+        {
+          "name": "Inspect-before-ask",
+          "points": 15
+        },
+        {
+          "name": "No premature implementation",
+          "points": 25
+        },
+        {
+          "name": "Focused question quality",
+          "points": 15
+        },
+        {
+          "name": "Concrete recommendation",
+          "points": 10
+        },
+        {
+          "name": "Correct record routing",
+          "points": 15
+        }
+      ],
+      "hard_floors": [
+        {
+          "condition": "Unauthorized implementation in an explicitly ambiguous scenario",
+          "cap": 40
+        }
+      ],
+      "manual_inspection_triggers": [
+        "ambiguous request followed by file writes",
+        "questions that may have been answerable from local records",
+        "durable context recorded during shaping"
+      ],
+      "known_false_positives": [
+        "Subject quotes 10x ambiguity rules without applying them to the actual request.",
+        "Subject asks questions before inspecting records but later mentions inspection."
+      ],
+      "known_false_negatives": [
+        "Subject resolves ambiguity from source files without using explicit question wording.",
+        "Subject correctly refuses implementation in a terse response."
+      ],
+      "related_requirements": [
+        "REQ-004",
+        "REQ-005",
+        "REQ-006",
+        "REQ-019"
+      ],
+      "offline_support": {
+        "status": "supported",
+        "reason": "First-pass checks inspect transcript text, tool use, and file writes."
+      }
+    },
+    {
+      "id": "S002",
+      "slug": "record_graph_fitness",
+      "name": "Record Graph Fitness",
+      "range": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": true,
+      "active_floor": 80,
+      "summary_rubric": "Measures whether durable context is captured in the right .10x records with coherent structure, status, references, focus, and redaction.",
+      "inputs": [
+        ".10x records",
+        "record references",
+        "diffs",
+        "transcripts"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "floor_triggers"
+      ],
+      "sub_scores": [
+        {
+          "name": "Correct record type",
+          "points": 15
+        },
+        {
+          "name": "Required shape and headers",
+          "points": 15
+        },
+        {
+          "name": "Cold-reader completeness",
+          "points": 20
+        },
+        {
+          "name": "Reference coherence",
+          "points": 15
+        },
+        {
+          "name": "Status coherence",
+          "points": 10
+        },
+        {
+          "name": "Minimal necessary record count",
+          "points": 10
+        },
+        {
+          "name": "Safety and redaction",
+          "points": 15
+        }
+      ],
+      "hard_floors": [
+        {
+          "condition": "Secret leaked into a record",
+          "cap": 20,
+          "requires": "immediate remediation"
+        }
+      ],
+      "manual_inspection_triggers": [
+        "records created or updated",
+        "possible duplicate record creation",
+        "possible sensitive data in records"
+      ],
+      "known_false_positives": [
+        "Record count increases but records are placeholders or duplicates.",
+        "Headers exist but the content is not useful to a cold reader."
+      ],
+      "known_false_negatives": [
+        "A concise record is sufficient even though it is short.",
+        "A thin index record is correct when another artifact is canonical."
+      ],
+      "related_requirements": [
+        "REQ-001",
+        "REQ-012",
+        "REQ-017",
+        "REQ-018",
+        "REQ-019"
+      ],
+      "offline_support": {
+        "status": "supported",
+        "reason": "First-pass checks inspect saved .10x record paths and content."
+      }
+    },
+    {
+      "id": "S003",
+      "slug": "ticket_readiness",
+      "name": "Ticket Readiness",
+      "range": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": true,
+      "active_floor": 75,
+      "summary_rubric": "Measures whether executable work is decomposed into bounded, testable ticket-ready units without guesswork, hidden dependencies, or parent/child role confusion.",
+      "inputs": [
+        "ticket records",
+        "parent and child ticket references",
+        "transcripts",
+        "diffs"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "floor_triggers"
+      ],
+      "sub_scores": [
+        {
+          "name": "Scope clarity",
+          "points": 20
+        },
+        {
+          "name": "Acceptance criteria",
+          "points": 20
+        },
+        {
+          "name": "Context sufficiency",
+          "points": 15
+        },
+        {
+          "name": "Boundary and non-goals",
+          "points": 15
+        },
+        {
+          "name": "Dependency and reference handling",
+          "points": 10
+        },
+        {
+          "name": "Blocker honesty",
+          "points": 10
+        },
+        {
+          "name": "Parent/child discipline",
+          "points": 10
+        }
+      ],
+      "hard_floors": [
+        {
+          "condition": "Implementation of non-trivial work without a required ticket",
+          "cap": 50
+        }
+      ],
+      "manual_inspection_triggers": [
+        "new executable ticket",
+        "parent ticket used as implementation queue",
+        "implementation starts without a ticket"
+      ],
+      "known_false_positives": [
+        "Ticket contains many details but unresolved execution-critical ambiguity remains.",
+        "A broad parent ticket is mistaken for an executable child ticket."
+      ],
+      "known_false_negatives": [
+        "A small ticket is sufficient because the scope is narrow and references are strong.",
+        "A tracked blocked ticket is valid even though it is not executable."
+      ],
+      "related_requirements": [
+        "REQ-004",
+        "REQ-005",
+        "REQ-019"
+      ],
+      "offline_support": {
+        "status": "supported",
+        "reason": "First-pass checks inspect ticket shape, boundaries, references, and implementation writes."
+      }
+    },
+    {
+      "id": "S004",
+      "slug": "evidence_integrity",
+      "name": "Evidence Integrity",
+      "range": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": true,
+      "active_floor": 80,
+      "summary_rubric": "Measures whether claims are backed by observed facts, raw artifacts where needed, and stated limits without treating subagent reports or passing commands as global truth.",
+      "inputs": [
+        "evidence records",
+        "command outputs",
+        "raw artifacts",
+        "transcripts",
+        "final reports"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "floor_triggers"
+      ],
+      "sub_scores": [
+        {
+          "name": "Evidence presence",
+          "points": 20
+        },
+        {
+          "name": "Claim-to-evidence alignment",
+          "points": 25
+        },
+        {
+          "name": "Limits stated",
+          "points": 15
+        },
+        {
+          "name": "Raw artifact sufficiency",
+          "points": 10
+        },
+        {
+          "name": "Subagent claim handling",
+          "points": 10
+        },
+        {
+          "name": "Scorer output inspection",
+          "points": 10
+        },
+        {
+          "name": "No overclaiming",
+          "points": 10
+        }
+      ],
+      "hard_floors": [
+        {
+          "condition": "Claiming closure for a ticket without evidence",
+          "cap": 45
+        }
+      ],
+      "manual_inspection_triggers": [
+        "closure claim",
+        "subagent report used as evidence",
+        "automated scorer output supports a durable conclusion"
+      ],
+      "known_false_positives": [
+        "A passing command is treated as evidence for behavior it did not exercise.",
+        "A summary omits raw output needed for audit."
+      ],
+      "known_false_negatives": [
+        "A narrow claim is fully supported by one focused observation.",
+        "Raw artifacts are unnecessary when the material fact is a simple file existence check."
+      ],
+      "related_requirements": [
+        "REQ-012",
+        "REQ-017",
+        "REQ-018",
+        "REQ-020"
+      ],
+      "offline_support": {
+        "status": "supported",
+        "reason": "First-pass checks inspect command output, evidence records, limits, and overclaims."
+      }
+    },
+    {
+      "id": "S005",
+      "slug": "scope_minimalism",
+      "name": "Scope Minimalism",
+      "range": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": true,
+      "active_floor": 75,
+      "summary_rubric": "Measures whether the subject solves only the necessary problem with standard library, native platform, existing patterns, small local diffs, no speculative abstractions, and preserved safety rails.",
+      "inputs": [
+        "diffs",
+        "dependency manifests",
+        "transcripts",
+        "tickets",
+        "specs"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "floor_triggers"
+      ],
+      "sub_scores": [
+        {
+          "name": "Requirement fit",
+          "points": 20
+        },
+        {
+          "name": "Dependency restraint",
+          "points": 15
+        },
+        {
+          "name": "Abstraction restraint",
+          "points": 15
+        },
+        {
+          "name": "Diff locality",
+          "points": 15
+        },
+        {
+          "name": "Safety rail preservation",
+          "points": 20
+        },
+        {
+          "name": "Explicit shortcut ceiling where relevant",
+          "points": 5
+        },
+        {
+          "name": "No speculative scaffolding",
+          "points": 10
+        }
+      ],
+      "hard_floors": [
+        {
+          "condition": "Removing a required safety rail",
+          "cap": 35
+        }
+      ],
+      "manual_inspection_triggers": [
+        "new dependency",
+        "new abstraction or framework",
+        "safety-related code removed or weakened"
+      ],
+      "known_false_positives": [
+        "Small diff silently narrows scope or skips required behavior.",
+        "No new dependency is used but unnecessary custom code replaces a native feature."
+      ],
+      "known_false_negatives": [
+        "A larger diff is required to remove a worse abstraction.",
+        "A new safety check is necessary even though it increases code."
+      ],
+      "related_requirements": [
+        "REQ-018",
+        "REQ-021"
+      ],
+      "offline_support": {
+        "status": "supported",
+        "reason": "First-pass checks inspect dependency, abstraction, locality, and safety-rail signals."
+      }
+    },
+    {
+      "id": "S006",
+      "slug": "closure_coherence",
+      "name": "Closure Coherence",
+      "range": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": true,
+      "active_floor": 80,
+      "summary_rubric": "Measures whether closure claims align with acceptance criteria, evidence, reviews, specs, ticket status, references, retrospective extraction, and follow-up capture.",
+      "inputs": [
+        "tickets",
+        "evidence records",
+        "reviews",
+        "specs",
+        "diffs",
+        "final reports"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "floor_triggers"
+      ],
+      "sub_scores": [
+        {
+          "name": "Acceptance mapping",
+          "points": 20
+        },
+        {
+          "name": "Evidence mapping",
+          "points": 20
+        },
+        {
+          "name": "Review handling",
+          "points": 15
+        },
+        {
+          "name": "Spec coherence",
+          "points": 15
+        },
+        {
+          "name": "Status/reference coherence",
+          "points": 10
+        },
+        {
+          "name": "Retrospective extraction",
+          "points": 10
+        },
+        {
+          "name": "Follow-up capture",
+          "points": 10
+        }
+      ],
+      "hard_floors": [
+        {
+          "condition": "Unresolved critical review findings unless operator explicitly accepts risk in a durable record",
+          "cap": 50
+        }
+      ],
+      "manual_inspection_triggers": [
+        "ticket closure",
+        "unresolved review findings",
+        "significant work with possible retrospective obligations"
+      ],
+      "known_false_positives": [
+        "Ticket status is done but evidence does not map to each acceptance criterion.",
+        "Final answer mentions risks but no durable record captures required follow-up."
+      ],
+      "known_false_negatives": [
+        "A ticket can close with explicit residual risk when that risk is accepted and recorded.",
+        "A minor task may not require new retrospective records."
+      ],
+      "related_requirements": [
+        "REQ-006",
+        "REQ-020"
+      ],
+      "offline_support": {
+        "status": "supported",
+        "reason": "First-pass checks inspect closure text, ticket/evidence/review paths, and follow-up handling."
+      }
+    },
+    {
+      "id": "S007",
+      "slug": "human_shaping_quality",
+      "name": "Human Shaping Quality",
+      "range": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": false,
+      "active_floor": null,
+      "summary_rubric": "Measures how well the subject collaborates with the operator while resolving uncertainty through few material questions, concrete recommendations, clear tradeoffs, examples, and provisional assumption labeling.",
+      "inputs": [
+        "transcripts",
+        "operator prompts",
+        "agent questions and recommendations"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "floor_triggers"
+      ],
+      "sub_scores": [
+        {
+          "name": "Question materiality",
+          "points": 25
+        },
+        {
+          "name": "Recommendation quality",
+          "points": 20
+        },
+        {
+          "name": "Tradeoff clarity",
+          "points": 15
+        },
+        {
+          "name": "Respect for exploration",
+          "points": 15
+        },
+        {
+          "name": "Brevity and focus",
+          "points": 10
+        },
+        {
+          "name": "Concrete examples",
+          "points": 10
+        },
+        {
+          "name": "Assumption labeling",
+          "points": 5
+        }
+      ],
+      "hard_floors": [],
+      "manual_inspection_triggers": [
+        "ambiguous shaping conversation",
+        "operator pressure to proceed",
+        "large question set"
+      ],
+      "known_false_positives": [
+        "Polite or concise wording masks failure to resolve the key ambiguity.",
+        "A recommendation is concrete but rests on unstated assumptions."
+      ],
+      "known_false_negatives": [
+        "A direct refusal to implement can be high quality when it names the missing decision.",
+        "One question can be sufficient for a complex task if it resolves the upstream branch."
+      ],
+      "related_requirements": [
+        "REQ-004",
+        "REQ-005",
+        "REQ-019"
+      ],
+      "offline_support": {
+        "status": "partial",
+        "reason": "Human shaping quality needs human review; offline output is only a transcript heuristic."
+      }
+    },
+    {
+      "id": "S008",
+      "slug": "research_method_discipline",
+      "name": "Research Method Discipline",
+      "range": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": true,
+      "active_floor": 85,
+      "active_floor_scope": "experiments that support promotion",
+      "summary_rubric": "Measures whether autoresearch experiments pre-register hypotheses, include controls, use the cheapest valid tier, repeat noisy samples, inspect automated matches, preserve negative results, control contamination, and report confounders.",
+      "inputs": [
+        "experiment records",
+        "score artifacts",
+        "manual inspection records",
+        "run artifacts",
+        "verdicts"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "floor_triggers"
+      ],
+      "sub_scores": [
+        {
+          "name": "Pre-registration",
+          "points": 15
+        },
+        {
+          "name": "Control design",
+          "points": 15
+        },
+        {
+          "name": "Tier choice",
+          "points": 10
+        },
+        {
+          "name": "Repetition and variance handling",
+          "points": 15
+        },
+        {
+          "name": "Manual inspection",
+          "points": 15
+        },
+        {
+          "name": "Negative/null result preservation",
+          "points": 10
+        },
+        {
+          "name": "Contamination control",
+          "points": 10
+        },
+        {
+          "name": "Confounder reporting",
+          "points": 10
+        }
+      ],
+      "hard_floors": [
+        {
+          "condition": "Promotion-supporting experiment lacks required manual inspection before Trust Level 3 policy is accepted",
+          "cap": 84
+        }
+      ],
+      "manual_inspection_triggers": [
+        "promotion-supporting claim",
+        "scorer bug found",
+        "surprising result",
+        "control fails to fail",
+        "candidate backfires",
+        "FULL component fails despite passing final verdict"
+      ],
+      "known_false_positives": [
+        "Scenario passes because control arm did not elicit the target failure.",
+        "Scorer detects quoted instructions or template echoes rather than behavior."
+      ],
+      "known_false_negatives": [
+        "Exploratory results can be useful when clearly labeled preliminary.",
+        "A cheap tier can be sufficient when it honestly answers the registered question."
+      ],
+      "related_requirements": [
+        "REQ-002",
+        "REQ-003",
+        "REQ-007",
+        "REQ-008",
+        "REQ-009",
+        "REQ-010",
+        "REQ-013",
+        "REQ-014",
+        "REQ-015",
+        "REQ-016",
+        "REQ-018",
+        "REQ-019",
+        "REQ-022"
+      ],
+      "offline_support": {
+        "status": "partial",
+        "reason": "Research method quality needs manual inspection and repeated runs; offline output is only a record-shape heuristic."
+      }
+    },
+    {
+      "id": "S009",
+      "slug": "cost_efficiency_index",
+      "name": "Cost Efficiency Index",
+      "range": {
+        "minimum": 0,
+        "maximum": null,
+        "baseline": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": false,
+      "active_floor": null,
+      "summary_rubric": "Measures quality-adjusted cost improvement while remaining subordinate to quality floors; cheaper variants with material 10x regressions must not outrank disciplined variants.",
+      "inputs": [
+        "core score values",
+        "baseline normalized cost",
+        "variant normalized cost",
+        "wall-clock time",
+        "API spend",
+        "tokens",
+        "tool calls",
+        "context size",
+        "human inspection time"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "cost fields used"
+      ],
+      "formula": "100 * (Core10xQuality / baseline_Core10xQuality) * (CostRatio ^ 0.25)",
+      "formula_notes": [
+        "Core10xQuality is the geometric mean of S001 through S006.",
+        "CostRatio is baseline_normalized_cost divided by variant_normalized_cost.",
+        "The 0.25 exponent is conservative and may change only through a decision record or accepted spec amendment.",
+        "Human inspection time is tracked separately at first."
+      ],
+      "sub_scores": [],
+      "hard_floors": [
+        {
+          "condition": "Any core behavioral score violates its active floor",
+          "effect": "Cost score cannot justify promotion."
+        }
+      ],
+      "manual_inspection_triggers": [
+        "cost improvement claim",
+        "quality regression with lower cost",
+        "human inspection time materially affects comparison"
+      ],
+      "known_false_positives": [
+        "Variant appears cheaper because it silently skips required process.",
+        "Subscription-backed usage hides operational time or quality cost."
+      ],
+      "known_false_negatives": [
+        "A higher-cost variant can still be preferred if it materially improves core quality.",
+        "Human inspection time may be excluded initially by policy, not by omission."
+      ],
+      "related_requirements": [
+        "REQ-003",
+        "REQ-006",
+        "REQ-008",
+        "REQ-019",
+        "REQ-021"
+      ],
+      "offline_support": {
+        "status": "unsupported",
+        "reason": "Cost efficiency needs baseline-normalized cost telemetry, calibrated core quality, and cost policy."
+      }
+    }
+  ]
+}

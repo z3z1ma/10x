@@ -1,4 +1,4 @@
-Status: open
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 Parent: .10x/tickets/2026-06-23-implement-autoresearch-loop.md
@@ -45,8 +45,27 @@ Excluded:
 ## Progress And Notes
 
 - 2026-06-23: Ticket opened from implementation scoping.
+- 2026-06-23: Implemented `autoresearch/report.py` Markdown report generation
+  from saved `*.score.json` artifacts, added focused tests in
+  `autoresearch/tests/test_report.py`, and documented the CLI in
+  `autoresearch/README.md`.
+- 2026-06-23: Validation commands run: `python3 -m unittest
+  autoresearch.tests.test_report` (3 tests OK), `python3
+  autoresearch/validate.py` (`autoresearch contracts valid`), `python3 -m
+  unittest discover -s autoresearch/tests` (17 tests OK), `python3
+  autoresearch/offline_score.py --fixtures autoresearch/fixtures/offline --out
+  .10x/evidence/.storage/2026-06-23-reporting-validation/scores`, and `python3
+  autoresearch/report.py --scores
+  .10x/evidence/.storage/2026-06-23-reporting-validation/scores --out
+  .10x/evidence/.storage/2026-06-23-reporting-validation/report.md`.
+- 2026-06-23: Validation report path:
+  `.10x/evidence/.storage/2026-06-23-reporting-validation/report.md`. Not
+  verified: live or FULL harness execution, promotion decisions, calibrated
+  verdicts, or human inspection of scorer matches.
+- 2026-06-23: Parent verification completed. Evidence recorded at
+  `.10x/evidence/2026-06-23-autoresearch-reporting.md`; acceptance criteria
+  AC-001 through AC-004 are satisfied within the ticket's reporting scope.
 
 ## Blockers
 
-Blocked until score artifacts exist.
-
+None.

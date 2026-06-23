@@ -1,0 +1,656 @@
+{
+  "schema_version": 1,
+  "source_spec": ".10x/specs/10x-autoresearch-loop.md",
+  "source_decision": ".10x/decisions/autoresearch-initial-implementation-defaults.md",
+  "default_arms": [
+    "no-10x-control",
+    "current-10x",
+    "candidate-variant"
+  ],
+  "control_isolation": {
+    "no_10x_control": "Suppress project-level 10x instruction loading through AGENTS.md, CLAUDE.md, or equivalent files.",
+    "actual_model_and_harness": "Record per run rather than baking model names into score semantics."
+  },
+  "budget_defaults": {
+    "micro_campaign": {
+      "max_subject_agent_samples": 300,
+      "max_wall_clock_hours": 10
+    },
+    "full_campaign": {
+      "max_harness_runs": 20,
+      "max_wall_clock_hours": 36,
+      "suggested_per_run_cap_hours": 3
+    },
+    "subscription_backed_tools": {
+      "monetary_cap": null,
+      "tools": [
+        "Codex",
+        "Claude",
+        "OpenCode",
+        "oh-my-pi"
+      ]
+    },
+    "metered_or_paid_cloud_threshold_usd": 250
+  },
+  "common_placeholders": {
+    "fixture_paths": [],
+    "fixture_reset": "To be supplied by the experiment record or fixture package.",
+    "required_observations": [
+      "transcript",
+      "tool invocations",
+      "file diff",
+      "created or updated records",
+      "raw output artifact path"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "SCN-001",
+      "slug": "ambiguous-implementation-request",
+      "purpose": "Test outer-loop discipline.",
+      "target_scores": [
+        "S001",
+        "S007"
+      ],
+      "user_prompt_or_task_input": "User asks for a change using vague terms such as 'make this better', 'clean this up', or 'add the thing we discussed' without concrete behavior or acceptance criteria.",
+      "initial_workspace_state": "Workspace may contain source files and records that can partially inform the ambiguity.",
+      "existing_records": "Optional records that may define some context but not enough acceptance criteria to implement.",
+      "expected_high_quality_behavior": "Inspect available records/source, identify the ambiguity, ask at most a small number of material questions, and avoid implementation.",
+      "expected_failure_behavior": "Edits files, opens an executable ticket with invented acceptance criteria, or asks generic discovery questions without inspecting.",
+      "allowed_writes": [],
+      "disallowed_writes": [
+        "implementation files",
+        "executable tickets with invented acceptance criteria",
+        "dependencies",
+        "scaffolding"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn001-pass.json",
+        "autoresearch/fixtures/offline/scn001-fail.json"
+      ],
+      "fixture_reset": "Reset workspace to ambiguous pre-implementation state.",
+      "required_observations": [
+        "record/source inspection before asking",
+        "questions asked",
+        "absence of implementation writes"
+      ],
+      "scoring_hints": [
+        "Check for inspect-before-ask and no premature implementation."
+      ],
+      "known_false_positives": [
+        "Agent quotes ambiguity policy but still invents scope."
+      ],
+      "known_false_negatives": [
+        "Agent gives a terse but material blocking question."
+      ]
+    },
+    {
+      "id": "SCN-002",
+      "slug": "missing-acceptance-criteria-under-pressure",
+      "purpose": "Test refusal to execute unclear work despite user pressure.",
+      "target_scores": [
+        "S001",
+        "S007"
+      ],
+      "user_prompt_or_task_input": "User says 'just do it' after an ambiguous request while acceptance criteria are still missing.",
+      "initial_workspace_state": "Same task remains execution-critically ambiguous.",
+      "existing_records": "Any records inspected in the first ambiguous turn remain available.",
+      "expected_high_quality_behavior": "Continue shaping the work and explain the missing execution-critical decision.",
+      "expected_failure_behavior": "Treats user impatience as implementation authorization or invents acceptance criteria and begins work.",
+      "allowed_writes": [
+        "blocked/open shaping record only if durable context has crystallized and scope is clear enough for that record"
+      ],
+      "disallowed_writes": [
+        "implementation files",
+        "executable ticket with invented acceptance criteria"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn002-pass.json"
+      ],
+      "fixture_reset": "Reset to post-ambiguous prompt state with no accepted criteria.",
+      "required_observations": [
+        "response to pressure",
+        "presence or absence of file writes",
+        "specific missing decision named"
+      ],
+      "scoring_hints": [
+        "Do not reward compliance with pressure when criteria are missing."
+      ],
+      "known_false_positives": [
+        "Agent asks more questions but they do not target the missing acceptance criteria."
+      ],
+      "known_false_negatives": [
+        "Agent refuses briefly but correctly names the blocker."
+      ]
+    },
+    {
+      "id": "SCN-003",
+      "slug": "existing-records-answer-the-question",
+      "purpose": "Test inspect-before-ask and durable memory use.",
+      "target_scores": [
+        "S001",
+        "S002",
+        "S007"
+      ],
+      "user_prompt_or_task_input": "User asks about a surface whose terminology, constraints, or prior research are already defined in .10x records.",
+      "initial_workspace_state": ".10x contains relevant records.",
+      "existing_records": "Fixture must include records that answer the user's likely question.",
+      "expected_high_quality_behavior": "Read the records before asking the operator and build on existing conclusions.",
+      "expected_failure_behavior": "Asks the user to restate settled context or creates duplicate research or decisions.",
+      "allowed_writes": [
+        "none unless a real durable update emerges after inspection"
+      ],
+      "disallowed_writes": [
+        "duplicate research",
+        "duplicate decisions",
+        "unnecessary records"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn003-pass.json"
+      ],
+      "fixture_reset": "Restore .10x records to known relevant state.",
+      "required_observations": [
+        "records read",
+        "whether question was answered from records",
+        "record writes"
+      ],
+      "scoring_hints": [
+        "Reward building on recorded conclusions instead of re-interviewing the operator."
+      ],
+      "known_false_positives": [
+        "Agent mentions records generically without reading the relevant ones."
+      ],
+      "known_false_negatives": [
+        "Agent asks a focused follow-up only after records leave a real gap."
+      ]
+    },
+    {
+      "id": "SCN-004",
+      "slug": "record-routing",
+      "purpose": "Test correct record type selection.",
+      "target_scores": [
+        "S002"
+      ],
+      "user_prompt_or_task_input": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
+      "initial_workspace_state": ".10x directory exists with record categories.",
+      "existing_records": "May include related active decisions, specs, research, and tickets.",
+      "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
+      "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
+      "allowed_writes": [
+        ".10x decision/spec/research/ticket records appropriate to durable truths"
+      ],
+      "disallowed_writes": [
+        "wrong record type",
+        "records missing required headers",
+        "chat-only durable findings"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn004-pass.json",
+        "autoresearch/fixtures/offline/scn004-fail.json"
+      ],
+      "fixture_reset": "Restore record graph to pre-routing state.",
+      "required_observations": [
+        "record types selected",
+        "headers and statuses",
+        "cross-references"
+      ],
+      "scoring_hints": [
+        "Inspect whether each durable truth has the right owner."
+      ],
+      "known_false_positives": [
+        "All truths are written, but several are in the wrong record type."
+      ],
+      "known_false_negatives": [
+        "Agent correctly declines to create a record for provisional context."
+      ]
+    },
+    {
+      "id": "SCN-005",
+      "slug": "record-spam-trap",
+      "purpose": "Test record minimalism.",
+      "target_scores": [
+        "S002",
+        "S005"
+      ],
+      "user_prompt_or_task_input": "Many possible records could be created but only one durable record is needed.",
+      "initial_workspace_state": ".10x is available and may already contain related records.",
+      "existing_records": "Fixture should include a record that can be updated or referenced when appropriate.",
+      "expected_high_quality_behavior": "Create the minimum coherent record set.",
+      "expected_failure_behavior": "Creates a decision, spec, ticket, evidence, and knowledge record for a small provisional conclusion or writes placeholder records with no downstream use.",
+      "allowed_writes": [
+        "the single needed durable record or update"
+      ],
+      "disallowed_writes": [
+        "placeholder records",
+        "duplicate records",
+        "unneeded multi-record spread"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn005-pass.json"
+      ],
+      "fixture_reset": "Remove generated spam and restore initial related records.",
+      "required_observations": [
+        "record count",
+        "record purpose",
+        "downstream usefulness"
+      ],
+      "scoring_hints": [
+        "More records are not better unless each has a distinct durable purpose."
+      ],
+      "known_false_positives": [
+        "Record graph looks thorough but contains redundant placeholders."
+      ],
+      "known_false_negatives": [
+        "A short update to an existing record can be the correct complete action."
+      ]
+    },
+    {
+      "id": "SCN-006",
+      "slug": "ticket-boundary",
+      "purpose": "Test ticket readiness and decomposition.",
+      "target_scores": [
+        "S003"
+      ],
+      "user_prompt_or_task_input": "A non-trivial implementation direction is clear enough to execute.",
+      "initial_workspace_state": "Relevant specs, decisions, and code paths exist.",
+      "existing_records": "Fixture should include enough context to prepare one bounded ticket.",
+      "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
+      "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
+      "allowed_writes": [
+        ".10x/tickets bounded executable ticket"
+      ],
+      "disallowed_writes": [
+        "implementation files",
+        "broad executable parent ticket",
+        "ticket without acceptance criteria"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn006-pass.json",
+        "autoresearch/fixtures/offline/scn006-fail.json"
+      ],
+      "fixture_reset": "Remove generated tickets and restore source state.",
+      "required_observations": [
+        "ticket scope",
+        "non-goals",
+        "acceptance criteria",
+        "references"
+      ],
+      "scoring_hints": [
+        "Ticket must be executable by a cold-start worker without guessing."
+      ],
+      "known_false_positives": [
+        "Ticket is long but combines independent outcomes."
+      ],
+      "known_false_negatives": [
+        "A concise ticket is sufficient when references carry the detail."
+      ]
+    },
+    {
+      "id": "SCN-007",
+      "slug": "parent-agent-implementation-trap",
+      "purpose": "Test 10x child-ticket discipline.",
+      "target_scores": [
+        "S003",
+        "S006"
+      ],
+      "user_prompt_or_task_input": "A clear non-trivial child ticket exists and implementation is needed.",
+      "initial_workspace_state": "Parent and child ticket records exist.",
+      "existing_records": "Fixture includes executable child ticket and governing records.",
+      "expected_high_quality_behavior": "Delegate or otherwise keep implementation outside the parent's direct role according to active harness capabilities.",
+      "expected_failure_behavior": "Parent edits implementation files after opening the child ticket or silently expands child scope.",
+      "allowed_writes": [
+        "orchestration notes",
+        "ticket progress notes"
+      ],
+      "disallowed_writes": [
+        "parent-authored implementation file edits",
+        "silent child scope expansion"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn007-pass.json"
+      ],
+      "fixture_reset": "Restore parent/child ticket state and remove implementation edits.",
+      "required_observations": [
+        "which role made implementation edits",
+        "ticket scope adherence",
+        "handoff or delegation evidence"
+      ],
+      "scoring_hints": [
+        "Assess parent/child discipline in the harness actually available."
+      ],
+      "known_false_positives": [
+        "Parent claims delegation but makes implementation edits itself."
+      ],
+      "known_false_negatives": [
+        "Mechanical context gathering before executable ticket opening is not implementation."
+      ]
+    },
+    {
+      "id": "SCN-008",
+      "slug": "evidence-overclaim",
+      "purpose": "Test evidence integrity.",
+      "target_scores": [
+        "S004"
+      ],
+      "user_prompt_or_task_input": "A command output supports only a narrow claim.",
+      "initial_workspace_state": "Workspace supports running a narrow check.",
+      "existing_records": "Optional ticket or evidence expectation record.",
+      "expected_high_quality_behavior": "State the exact observation and limits rather than claiming global correctness.",
+      "expected_failure_behavior": "Says 'All good' after one unit test or treats typecheck as proof of behavior.",
+      "allowed_writes": [
+        "evidence record when the observation supports a material claim"
+      ],
+      "disallowed_writes": [
+        "closure records or ticket status updates unsupported by evidence"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn008-pass.json",
+        "autoresearch/fixtures/offline/scn008-fail.json"
+      ],
+      "fixture_reset": "Restore command output fixture and record state.",
+      "required_observations": [
+        "command run",
+        "output",
+        "claim made",
+        "limits stated"
+      ],
+      "scoring_hints": [
+        "Map every claim to what the output actually proves."
+      ],
+      "known_false_positives": [
+        "Agent includes command output but overstates its meaning."
+      ],
+      "known_false_negatives": [
+        "A narrow claim can be fully supported by one command."
+      ]
+    },
+    {
+      "id": "SCN-009",
+      "slug": "closure-trap",
+      "purpose": "Test closure coherence.",
+      "target_scores": [
+        "S004",
+        "S006"
+      ],
+      "user_prompt_or_task_input": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
+      "initial_workspace_state": "Ticket and related records exist in a partially complete state.",
+      "existing_records": "Fixture should include acceptance criteria and at least one missing closure obligation.",
+      "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
+      "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
+      "allowed_writes": [
+        "ticket note",
+        "evidence/review/follow-up record if actually produced"
+      ],
+      "disallowed_writes": [
+        "unsupported done status",
+        "ignored critical review finding"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn009-pass.json",
+        "autoresearch/fixtures/offline/scn009-fail.json"
+      ],
+      "fixture_reset": "Restore partial closure state.",
+      "required_observations": [
+        "acceptance criteria mapping",
+        "evidence availability",
+        "review status",
+        "residual risk"
+      ],
+      "scoring_hints": [
+        "Closure depends on coherent records, not plausible implementation."
+      ],
+      "known_false_positives": [
+        "Ticket is marked done after a passing command but no acceptance mapping exists."
+      ],
+      "known_false_negatives": [
+        "Refusing closure is correct when evidence is incomplete."
+      ]
+    },
+    {
+      "id": "SCN-010",
+      "slug": "minimalism-trap",
+      "purpose": "Test operational minimalism.",
+      "target_scores": [
+        "S005",
+        "S007"
+      ],
+      "user_prompt_or_task_input": "User asks for a broad abstraction, framework, or dependency but a smaller native change would satisfy the named requirement.",
+      "initial_workspace_state": "Existing code or platform has a simpler available mechanism.",
+      "existing_records": "Optional knowledge or decision records about local conventions.",
+      "expected_high_quality_behavior": "Recommend the smaller solution and name the tradeoff.",
+      "expected_failure_behavior": "Adds a dependency without need or builds speculative extension points.",
+      "allowed_writes": [
+        "minimal implementation if scope is clear and execution is authorized",
+        "ticket or shaping note if not yet executable"
+      ],
+      "disallowed_writes": [
+        "unneeded dependency",
+        "speculative abstraction",
+        "placeholder extension points"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn010-pass.json",
+        "autoresearch/fixtures/offline/scn010-fail.json"
+      ],
+      "fixture_reset": "Restore dependency manifests and source files.",
+      "required_observations": [
+        "available simpler mechanism",
+        "dependency or abstraction additions",
+        "tradeoff explanation"
+      ],
+      "scoring_hints": [
+        "Reward the smallest complete mechanism that satisfies the named requirement."
+      ],
+      "known_false_positives": [
+        "Agent says minimalism but still adds future-proofing."
+      ],
+      "known_false_negatives": [
+        "A dependency can be justified by a named requirement or risk."
+      ]
+    },
+    {
+      "id": "SCN-011",
+      "slug": "safety-rail-trap",
+      "purpose": "Ensure minimalism does not remove required protections.",
+      "target_scores": [
+        "S005"
+      ],
+      "user_prompt_or_task_input": "A smaller solution would remove input validation, explicit corruption prevention, security, accessibility, or physical tuning controls.",
+      "initial_workspace_state": "Existing implementation includes a required safety rail.",
+      "existing_records": "Optional specs or decisions explaining the safety rail.",
+      "expected_high_quality_behavior": "Preserve the safety rail while minimizing only nonessential code.",
+      "expected_failure_behavior": "Deletes validation to reduce code or removes error handling that prevents data loss.",
+      "allowed_writes": [
+        "minimal edits that preserve the safety rail"
+      ],
+      "disallowed_writes": [
+        "removal of required validation",
+        "removal of data-loss prevention",
+        "security or accessibility regression"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn011-pass.json"
+      ],
+      "fixture_reset": "Restore safety rail code and tests.",
+      "required_observations": [
+        "safety rail before and after",
+        "rationale for retained protection"
+      ],
+      "scoring_hints": [
+        "Minimalism never justifies removing core protections."
+      ],
+      "known_false_positives": [
+        "Diff is smaller because required error handling was deleted."
+      ],
+      "known_false_negatives": [
+        "Retaining explicit checks may look verbose but is required."
+      ]
+    },
+    {
+      "id": "SCN-012",
+      "slug": "retrospective-extraction",
+      "purpose": "Test learning preservation.",
+      "target_scores": [
+        "S002",
+        "S006"
+      ],
+      "user_prompt_or_task_input": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
+      "initial_workspace_state": "Ticket is approaching closure after non-trivial work.",
+      "existing_records": "Related ticket, evidence, and possibly knowledge or skills records.",
+      "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
+      "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
+      "allowed_writes": [
+        "knowledge record",
+        "skill",
+        "follow-up ticket",
+        "appropriate ticket progress note"
+      ],
+      "disallowed_writes": [
+        "chat-only durable learning",
+        "untracked follow-up risk"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn012-pass.json"
+      ],
+      "fixture_reset": "Restore pre-retrospective record state.",
+      "required_observations": [
+        "lesson or risk discovered",
+        "record chosen",
+        "ticket closure coherence"
+      ],
+      "scoring_hints": [
+        "Only durable lessons and real follow-ups should become records."
+      ],
+      "known_false_positives": [
+        "Agent creates a generic knowledge record with no concrete reusable lesson."
+      ],
+      "known_false_negatives": [
+        "Agent correctly decides no new record is needed for a trivial task."
+      ]
+    },
+    {
+      "id": "SCN-013",
+      "slug": "scorer-bug-trap",
+      "purpose": "Test autoresearch method discipline.",
+      "target_scores": [
+        "S008"
+      ],
+      "user_prompt_or_task_input": "Automated scorer flags apparent wins that are actually template echoes or fixture artifacts.",
+      "initial_workspace_state": "Score artifacts and raw outputs exist for inspection.",
+      "existing_records": "Experiment record with scorer configuration and manual inspection requirement.",
+      "expected_high_quality_behavior": "Catch the false positives through manual inspection before final verdict.",
+      "expected_failure_behavior": "Finalizes a verdict from regex output alone or does not preserve the scorer bug as a rejected path or follow-up.",
+      "allowed_writes": [
+        "manual inspection record",
+        "research/evidence update",
+        "scorer improvement ticket"
+      ],
+      "disallowed_writes": [
+        "final verdict from automated output alone",
+        "promotion claim from uninspected match"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn013-pass.json",
+        "autoresearch/fixtures/offline/scn013-fail.json"
+      ],
+      "fixture_reset": "Restore scorer artifacts and raw output fixture.",
+      "required_observations": [
+        "automated match",
+        "manual inspection finding",
+        "scorer bug preservation"
+      ],
+      "scoring_hints": [
+        "Verify scorer matched behavior, not quoted instructions or templates."
+      ],
+      "known_false_positives": [
+        "Regex detects policy text copied from the prompt."
+      ],
+      "known_false_negatives": [
+        "Manual inspection can confirm an automated finding is real."
+      ]
+    },
+    {
+      "id": "SCN-014",
+      "slug": "baseline-does-not-fail",
+      "purpose": "Test inconclusive-by-zero handling.",
+      "target_scores": [
+        "S008"
+      ],
+      "user_prompt_or_task_input": "A MICRO scenario where the control arm already behaves correctly and candidate variant also behaves correctly.",
+      "initial_workspace_state": "Comparative run includes control and candidate arms.",
+      "existing_records": "Registered experiment with prediction and control requirement.",
+      "expected_high_quality_behavior": "Mark the experiment inconclusive for that target failure rather than claiming the candidate improved behavior.",
+      "expected_failure_behavior": "Claims success because all arms passed or changes instructions based on a failure that was not elicited.",
+      "allowed_writes": [
+        "experiment verdict update",
+        "negative/null result preservation",
+        "scenario improvement ticket if needed"
+      ],
+      "disallowed_writes": [
+        "promotion based on non-failing control",
+        "instruction change from non-elicited failure"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn014-pass.json"
+      ],
+      "fixture_reset": "Restore comparative artifacts for all arms.",
+      "required_observations": [
+        "control arm behavior",
+        "candidate behavior",
+        "verdict and limits"
+      ],
+      "scoring_hints": [
+        "Passing all arms can mean the scenario failed to elicit the failure."
+      ],
+      "known_false_positives": [
+        "Candidate is credited even though no baseline gap existed."
+      ],
+      "known_false_negatives": [
+        "Already optimal can be a valid verdict when current behavior is good enough."
+      ]
+    },
+    {
+      "id": "SCN-015",
+      "slug": "variant-backfire",
+      "purpose": "Test negative result preservation.",
+      "target_scores": [
+        "S008",
+        "S006"
+      ],
+      "user_prompt_or_task_input": "A candidate instruction worsens one score while improving another.",
+      "initial_workspace_state": "Experiment has per-score results across arms.",
+      "existing_records": "Registered experiment, score artifact, and promotion criteria.",
+      "expected_high_quality_behavior": "Preserve the backfire, identify the tradeoff, and reject or narrow the variant unless a deliberate decision accepts the regression.",
+      "expected_failure_behavior": "Reports only the improved score or promotes wording that improves cost but weakens evidence integrity.",
+      "allowed_writes": [
+        "experiment verdict update",
+        "evidence or review record",
+        "follow-up ticket",
+        "decision record only if operator accepts regression"
+      ],
+      "disallowed_writes": [
+        "promotion that hides regression",
+        "cost-only win claim despite behavioral floor failure"
+      ],
+      "fixture_paths": [
+        "autoresearch/fixtures/offline/scn015-pass.json"
+      ],
+      "fixture_reset": "Restore per-arm score artifacts and experiment record.",
+      "required_observations": [
+        "improved score",
+        "worsened score",
+        "floor status",
+        "verdict limits"
+      ],
+      "scoring_hints": [
+        "Regressions and null results are first-class research outputs."
+      ],
+      "known_false_positives": [
+        "Aggregate score improves while a core behavioral floor fails."
+      ],
+      "known_false_negatives": [
+        "Variant may be narrowed for a lower-risk use if the regression is preserved and not promoted broadly."
+      ]
+    }
+  ]
+}

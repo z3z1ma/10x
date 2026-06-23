@@ -1,4 +1,4 @@
-Status: open
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 Parent: .10x/tickets/2026-06-23-implement-autoresearch-loop.md
@@ -55,8 +55,28 @@ Excluded:
 ## Progress And Notes
 
 - 2026-06-23: Ticket opened from implementation scoping.
+- 2026-06-23: First calibration campaign executed within ticket write scope.
+  Registered research record:
+  `.10x/research/2026-06-23-first-autoresearch-calibration-campaign.md`.
+  MICRO fixture-backed run wrote three raw artifacts and three score artifacts
+  with no live calls. Codex FULL fixture-smoke wrote three raw artifacts, three
+  score artifacts, and workspace manifests with no live Codex calls. Generated
+  `.10x/evidence/.storage/2026-06-23-first-autoresearch-calibration-campaign/report.md`.
+  Evidence:
+  `.10x/evidence/2026-06-23-first-autoresearch-calibration-campaign.md`.
+  Review:
+  `.10x/reviews/2026-06-23-first-autoresearch-calibration-campaign.md`.
+  Verdict is null/confounded for candidate improvement because candidate reused
+  current `SKILL.md` and identical pass fixtures. Follow-ups opened:
+  `.10x/tickets/2026-06-23-design-real-autoresearch-candidate.md`,
+  `.10x/tickets/2026-06-23-calibrate-autoresearch-scorer-trust.md`,
+  `.10x/tickets/2026-06-23-broaden-codex-live-harness-isolation.md`, and
+  `.10x/tickets/2026-06-23-propagate-campaign-statuses-to-reports.md`.
+- 2026-06-23: Parent verification completed. Evidence and review records support
+  AC-001 through AC-006 within the ticket's calibration scope. Status set to
+  done; promotion-grade gaps are tracked in follow-up tickets and deferred by
+  `.10x/decisions/autoresearch-initial-loop-deferrals.md`.
 
 ## Blockers
 
-Blocked until Codex FULL harness and reporting are ready.
-
+None.
