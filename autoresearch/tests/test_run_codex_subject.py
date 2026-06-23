@@ -206,6 +206,79 @@ class CodexSubjectRunnerTest(unittest.TestCase):
             self.assertNotIn("prompt_is_explicit", plan["scenarios"][0])
             self.assertIn("<prompt stored at", sample["planned_turns"][0]["planned_codex_argv"][-1])
 
+    def test_no_10x_control_drops_inherited_record_graph_before_execution(self):
+        observed_record_graphs = {}
+
+        def fake_run(argv, stdout, stderr, text, timeout=None):
+            workspace = Path(argv[argv.index("--cd") + 1])
+            prompt = argv[-1]
+            variant_id = next(arm["id"] for arm in _definition()["arms"] if arm["id"] in prompt)
+            observed_record_graphs[variant_id] = (workspace / ".10x").exists()
+            if variant_id == "no-10x-control":
+                created = workspace / ".10x" / "knowledge"
+                created.mkdir(parents=True)
+                (created / "control-created.md").write_text(
+                    "Status: active\nCreated: 2026-06-23\nUpdated: 2026-06-23\n\n# Control Created\n",
+                    encoding="utf-8",
+                )
+            last_message = Path(argv[argv.index("--output-last-message") + 1])
+            last_message.parent.mkdir(parents=True, exist_ok=True)
+            last_message.write_text(f"{variant_id} completed.", encoding="utf-8")
+            return mock.Mock(
+                returncode=0,
+                stdout='{"type":"turn.completed","usage":{"input_tokens":1,"output_tokens":1}}\n',
+                stderr="",
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            prior_paths = {
+                arm["id"]: _write_prior_raw(root, arm["id"], with_record_graph=True)
+                for arm in _definition()["arms"]
+            }
+            definition = _definition()
+            definition["scenarios"] = [
+                {
+                    "id": "SCN-001",
+                    "prompts_by_arm": {
+                        arm["id"]: f"For {arm['id']}, continue from prior context."
+                        for arm in _definition()["arms"]
+                    },
+                    "prior_raw_paths": prior_paths,
+                }
+            ]
+
+            with mock.patch("subprocess.run", side_effect=fake_run):
+                run_codex_subject.run_live(
+                    definition,
+                    root / "out",
+                    repo_root=REPO_ROOT,
+                )
+
+            manifests = {
+                data["variant_id"]: data
+                for data in (
+                    json.loads(path.read_text(encoding="utf-8"))
+                    for path in root.glob("workspace-*/workspace-manifest.json")
+                )
+            }
+
+        self.assertEqual(
+            {
+                "no-10x-control": False,
+                "current-10x": True,
+                "candidate-variant": True,
+            },
+            observed_record_graphs,
+        )
+        self.assertEqual([".10x"], manifests["no-10x-control"]["pre_run_removed_control_record_dirs"])
+        self.assertEqual([], manifests["current-10x"]["pre_run_removed_control_record_dirs"])
+        self.assertEqual([], manifests["candidate-variant"]["pre_run_removed_control_record_dirs"])
+        self.assertNotIn(".10x/knowledge/seed.md", manifests["no-10x-control"]["post_run_files"])
+        self.assertIn(".10x/knowledge/control-created.md", manifests["no-10x-control"]["post_run_files"])
+        self.assertIn(".10x/knowledge/seed.md", manifests["current-10x"]["post_run_files"])
+        self.assertIn(".10x/knowledge/seed.md", manifests["candidate-variant"]["post_run_files"])
+
 
 def _definition():
     return {
@@ -285,9 +358,16 @@ def _fake_continuation_run(argv, stdout, stderr, text, timeout=None):
     )
 
 
-def _write_prior_raw(root: Path, variant_id: str) -> str:
+def _write_prior_raw(root: Path, variant_id: str, *, with_record_graph: bool = False) -> str:
     workspace = root / f"workspace-{variant_id}"
     workspace.mkdir(parents=True)
+    if with_record_graph:
+        record_dir = workspace / ".10x" / "knowledge"
+        record_dir.mkdir(parents=True)
+        (record_dir / "seed.md").write_text(
+            "Status: active\nCreated: 2026-06-23\nUpdated: 2026-06-23\n\n# Seed\n",
+            encoding="utf-8",
+        )
     manifest = workspace / "workspace-manifest.json"
     manifest.write_text(
         json.dumps({"workspace": str(workspace)}, indent=2) + "\n",

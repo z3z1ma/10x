@@ -33,6 +33,7 @@ SUPPRESSED_INSTRUCTION_FILES = [
     ".cursor/rules",
     ".agents/skills",
 ]
+SUPPRESSED_CONTROL_RECORD_DIRS = [".10x"]
 
 
 class ExperimentError(ValueError):
@@ -285,6 +286,10 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
         else:
             workspace.mkdir(parents=True)
 
+        pre_removed_control_record_dirs = _remove_inherited_control_records(
+            workspace,
+            sample["variant_id"],
+        )
         pre_present = _present_suppressed(workspace)
         prior_transcript = list(sample.get("prior_transcript", []))
         transcript: list[dict[str, str]] = list(prior_transcript)
@@ -364,6 +369,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
                 "timed_out": turn_timed_out,
                 "timeout_seconds": sample["timeout_seconds"],
                 "control_isolation": sample["control_isolation"],
+                "pre_run_removed_control_record_dirs": pre_removed_control_record_dirs,
             }
             command_path.write_text(json.dumps(command, indent=2) + "\n", encoding="utf-8")
 
@@ -407,6 +413,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
         "suppressed_instruction_files": SUPPRESSED_INSTRUCTION_FILES,
         "pre_run_present_suppressed_instruction_files": pre_present,
         "post_run_present_suppressed_instruction_files": post_present,
+        "pre_run_removed_control_record_dirs": pre_removed_control_record_dirs,
         "post_run_files": [item["path"] for item in file_outputs],
         "workspace_contamination_present": bool(pre_present or post_present),
         "timed_out": timed_out,
@@ -458,6 +465,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
                 for turn in sample["planned_turns"]
             ],
             "control_isolation": sample["control_isolation"],
+            "pre_run_removed_control_record_dirs": pre_removed_control_record_dirs,
             "timed_out": timed_out,
             "timeout_seconds": sample["timeout_seconds"],
             "promotion_limit": "Live subject output is candidate-quality evidence, not promotion authority.",
@@ -795,9 +803,11 @@ def _planned_codex_argv(workspace_dir: Path, prompt: str, last_message_path: Pat
 def _control_isolation() -> dict[str, Any]:
     return {
         "suppress_instruction_files": SUPPRESSED_INSTRUCTION_FILES,
+        "suppress_control_record_dirs": SUPPRESSED_CONTROL_RECORD_DIRS,
         "codex_args": ["--disable", "plugins", "--ignore-user-config"],
         "workspace_strategy": "Run each sample in a private temporary workspace, then archive outputs under the experiment artifact directory.",
         "instruction_strategy": "Pass current and candidate instructions explicitly in the prompt; no-10x receives minimal instructions.",
+        "record_graph_strategy": "Remove inherited .10x only from no-10x-control workspaces before execution; record graph files created during the run remain captured.",
         "limitation": "Codex system context and authenticated home remain outside this runner's control.",
     }
 
@@ -839,6 +849,22 @@ def _positive_int(value: Any, field: str) -> int:
 
 def _present_suppressed(workspace: Path) -> list[str]:
     return [path for path in SUPPRESSED_INSTRUCTION_FILES if (workspace / path).exists()]
+
+
+def _remove_inherited_control_records(workspace: Path, variant_id: str) -> list[str]:
+    if variant_id != "no-10x-control":
+        return []
+    removed = []
+    for relative in SUPPRESSED_CONTROL_RECORD_DIRS:
+        path = workspace / relative
+        if not path.exists() and not path.is_symlink():
+            continue
+        if path.is_symlink() or path.is_file():
+            path.unlink()
+        else:
+            shutil.rmtree(path)
+        removed.append(relative)
+    return removed
 
 
 def _workspace_file_outputs(workspace: Path, manifest_path: Path) -> list[dict[str, str]]:

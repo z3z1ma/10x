@@ -191,6 +191,10 @@ Canonical start guard:
   The harder mixed planning note also tied current and control at
   `S002=65;S005=80`; manual inspection favored current 10x's knowledge record,
   so the candidate is not promotion-worthy.
+- Future seeded or continuation MICROs must not let `no-10x-control` inherit a
+  prior `.10x` record graph. The runner now removes inherited `.10x` only from
+  control execution workspaces while preserving control-created `.10x` output
+  for scoring.
 
 ## Execution Log
 
@@ -354,3 +358,8 @@ Canonical start guard:
   `S002=65;S005=80`; current 10x produced the strongest manual artifact.
   Logged status `mutate` and did not promote
   `candidate-record-economy-threshold-v1`.
+- 2026-06-23: Completed
+  `.10x/tickets/done/2026-06-23-isolate-no-10x-control-record-graph.md` after
+  operator noted that `no-10x-control` should not inherit a preexisting `.10x`.
+  Validation passed with 48 autoresearch tests, `autoresearch/validate.py`, and
+  `git diff --check`.
