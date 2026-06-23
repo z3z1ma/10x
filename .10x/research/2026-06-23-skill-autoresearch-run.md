@@ -406,3 +406,7 @@ Canonical start guard:
   `S001=100;S002=60;S007=80` versus current `S001=100;S002=50;S007=60` without
   explicit citation wording in the prompt. Logged status `keep`; next required
   confidence step is a fresh-record retrieval test.
+- 2026-06-23: Added tracked seed fixture
+  `autoresearch/fixtures/live-seeds/records-first-checkout/` and registered
+  `EXP-20260623-828-records-first-retrieval-fresh-checkout-scn003-live-micro`
+  as the fresh-record retrieval generalization check.
