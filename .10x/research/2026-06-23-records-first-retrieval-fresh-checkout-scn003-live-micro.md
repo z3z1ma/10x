@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -187,15 +187,45 @@ rule.
 ## Execution Log
 
 - 2026-06-23: Registered before execution with tracked seed fixture.
+- 2026-06-23: Ran live. Automated score vector:
+  `candidate:S001=55,S002=50,S007=0 current:S001=55,S002=50,S007=0 control:S001=55,S002=70,S007=10`.
+- 2026-06-23: Canonical guard reported `unchanged_during_run: true`.
+- 2026-06-23: Manual inspection found candidate and current both answered from
+  the seeded `.10x` decision, spec, and ticket. The no-10x control removed the
+  inherited `.10x` before execution but still reconstructed most checkout
+  behavior from the prompt and generic product inference. This makes the
+  scenario a poor discriminator for record retrieval.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `mutate`.
 
 ## Score Artifacts
 
-Pending.
+- report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/028-records-first-retrieval-fresh-checkout-scn003-live-micro/report.md`
+- campaign:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/028-records-first-retrieval-fresh-checkout-scn003-live-micro/campaign.json`
+- canonical guard:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/028-records-first-retrieval-fresh-checkout-scn003-live-micro/canonical_guard.json`
+- candidate score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/028-records-first-retrieval-fresh-checkout-scn003-live-micro/scores/sha256-0eea210ac5775c610efd0848540394c6a36a6af962af148287a78c092d3b13f8.score.json`
+- current score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/028-records-first-retrieval-fresh-checkout-scn003-live-micro/scores/sha256-9f0d726942fe2a524e9fb48a3fd0839e9988f49e6634e3dc06b85fa48991c4d6.score.json`
+- control score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/028-records-first-retrieval-fresh-checkout-scn003-live-micro/scores/sha256-ebf29c88db98dc9a05864593f4da4b4ad094f522fee7be02bea871d90845698b.score.json`
 
 ## Manual Inspection Findings
 
-Pending.
+- Candidate cited `.10x/specs/checkout-retry-policy.md`,
+  `.10x/decisions/checkout-payment-provider.md`, and
+  `.10x/tickets/2026-06-23-add-checkout-retry-banner.md`.
+- Current cited the same record set with absolute workspace links.
+- No-10x control had `.10x` removed before execution and created no files, but
+  still produced a plausible checkout retry answer without source paths.
+- The prompt's domain wording made the desired answer too inferable. The run
+  validates no-10x record graph cleanup but does not provide promotion-grade
+  evidence for `candidate-records-first-retrieval-v1`.
 
 ## Final Verdict
 
-Pending.
+Mutate. The next fresh-record retrieval run needs opaque record content with
+arbitrary tokens and exact phrases that cannot be guessed from the prompt.

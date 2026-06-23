@@ -410,3 +410,12 @@ Canonical start guard:
   `autoresearch/fixtures/live-seeds/records-first-checkout/` and registered
   `EXP-20260623-828-records-first-retrieval-fresh-checkout-scn003-live-micro`
   as the fresh-record retrieval generalization check.
+- 2026-06-23: Ran
+  `EXP-20260623-828-records-first-retrieval-fresh-checkout-scn003-live-micro`.
+  Manual inspection found candidate and current both answered from the seeded
+  records, while the no-10x control correctly removed `.10x` but still produced
+  a plausible generic checkout retry answer. Logged status `mutate`; the next
+  SCN-003 seed must use opaque record content that cannot be guessed.
+- 2026-06-23: Added tracked opaque seed fixture
+  `autoresearch/fixtures/live-seeds/records-first-opaque/` and registered
+  `EXP-20260623-829-records-first-retrieval-opaque-scn003-live-micro`.

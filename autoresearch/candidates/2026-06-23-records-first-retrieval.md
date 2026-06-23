@@ -82,3 +82,10 @@ clarity. Not promoted.
 `EXP-20260623-827-records-first-retrieval-no-citation-scn003-live-micro`
 repeated the same positive vector without explicit prompt wording to cite record
 paths. Still not promoted; next confidence step is fresh-record retrieval.
+
+`EXP-20260623-828-records-first-retrieval-fresh-checkout-scn003-live-micro`
+was confounded. Candidate and current both answered from fresh seeded records,
+and no-10x control correctly removed inherited `.10x`, but the control still
+produced a plausible checkout answer from generic domain inference. The next
+fresh-record test must use opaque tokens and exact phrases that cannot be
+guessed from the prompt.
