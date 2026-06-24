@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -182,11 +182,42 @@ and closes the coherent original scope.
 ## Execution Log
 
 - 2026-06-24: Registered as the positive-control follow-up-owner closure test.
+- 2026-06-24: Ran one live MICRO iteration to
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/063-authorized-follow-up-owner-closure-scn009-live-micro/`
+  with clean canonical guard.
+- 2026-06-24: Manual inspection found candidate null versus current and marked
+  `candidate-authorized-follow-up-owner-closure-v1` discarded.
 
 ## Results
 
-Pending.
+Automated Trust Level 1 scores:
+
+- no-10x-control: S004=65, S006=55.
+- current-10x: S004=65, S006=85.
+- candidate-variant: S004=65, S006=85.
+
+Manual inspection found:
+
+- current-10x opened
+  `.10x/tickets/2026-06-24-add-nightly-export-quote-newline-coverage.md`,
+  moved the visible-rows child and parent tickets to `done`, repaired evidence
+  and review references to the moved child ticket, and edited no implementation
+  files.
+- candidate-variant opened
+  `.10x/tickets/2026-06-24-add-legacy-nightly-export-quote-newline-coverage.md`,
+  moved the same child and parent tickets to `done`, preserved the out-of-scope
+  legacy gap as a separate owner, and edited no implementation files.
+- no-10x-control also created a follow-up owner and closed records, but it
+  renamed/mirrored seed evidence and review records rather than preserving the
+  original record graph shape.
+
+Canonical `SKILL.md` and `autoresearch/program.md` were unchanged during the
+run.
 
 ## Conclusions
 
-Pending.
+Discard the candidate as null versus current. The existing promoted
+follow-up-owner and closure rules already support the positive-control path:
+when the user authorizes durable tracking, the agent opens a bounded follow-up
+owner and closes the completed original scope once its own evidence and review
+cohere.

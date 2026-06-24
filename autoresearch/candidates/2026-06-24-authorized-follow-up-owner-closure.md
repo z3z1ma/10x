@@ -3,7 +3,7 @@
 Candidate ID: `candidate-authorized-follow-up-owner-closure-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -77,3 +77,13 @@ Promote only if current overblocks closure or creates a weak owner while
 candidate opens/cites a bounded owner, closes only the completed visible-rows
 scope, and preserves separation between closed scope and unresolved follow-up.
 Discard if current already performs the correct authorized-owner closure path.
+
+## Result
+
+Discarded 2026-06-24 after
+`EXP-20260624-863-authorized-follow-up-owner-closure-scn009-live-micro`.
+Automated S006 tied candidate and current at 85, and manual inspection confirmed
+current already performed the desired authorized-owner closure path: it opened a
+bounded nightly export follow-up owner, moved the visible-rows child and parent
+to done, repaired references, and did not edit implementation files. The
+candidate was safe but not materially better.

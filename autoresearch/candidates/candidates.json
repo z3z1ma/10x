@@ -445,7 +445,7 @@
       "id": "candidate-authorized-follow-up-owner-closure-v1",
       "path": "autoresearch/candidates/2026-06-24-authorized-follow-up-owner-closure.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S006", "S008", "S005"],
       "target_scenarios": ["SCN-009", "SCN-012", "SCN-008"],

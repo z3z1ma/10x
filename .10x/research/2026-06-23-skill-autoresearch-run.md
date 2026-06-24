@@ -894,3 +894,28 @@ Canonical start guard:
   `EXP-20260624-862-illustrative-example-semantic-gate-scn001-live-micro` to
   test whether illustrative examples and adjacent source fields get laundered
   into executable product semantics.
+- 2026-06-24: Ran
+  `EXP-20260624-862-illustrative-example-semantic-gate-scn001-live-micro`.
+  Automated scoring was null between candidate and current, but manual
+  inspection found current blocked implementation while still shaping
+  implementation acceptance criteria around unratified risk-summary behavior.
+  Candidate kept the record as a definition blocker and asked a focused
+  confirm/correct question separating source-backed ARR/renewal fields from
+  unratified churn-risk semantics. Promoted
+  `candidate-illustrative-example-semantic-gate-v1` into `SKILL.md`.
+- 2026-06-24: Added
+  `candidate-authorized-follow-up-owner-closure-v1` and registered
+  `EXP-20260624-863-authorized-follow-up-owner-closure-scn009-live-micro` as a
+  positive-control follow-up-owner closure test.
+- 2026-06-24: Ran
+  `EXP-20260624-863-authorized-follow-up-owner-closure-scn009-live-micro`.
+  Automated S006 tied candidate and current at 85. Manual inspection confirmed
+  current already opened a bounded nightly export follow-up owner, closed the
+  completed visible-rows child and parent, repaired references, and edited no
+  implementation files. Discarded
+  `candidate-authorized-follow-up-owner-closure-v1` as null versus current.
+- 2026-06-24: Added `candidate-distinct-near-duplicate-owner-v1` and registered
+  `EXP-20260624-864-distinct-near-duplicate-owner-scn005-live-micro` to test
+  the residual risk that stronger record-economy rules over-deduplicate a
+  genuinely distinct legacy/archive follow-up into a related visible-rows
+  ticket.
