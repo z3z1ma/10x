@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -174,3 +174,19 @@ control for routing rather than an adversarial ambiguous skill request.
   two-arm live definitions.
 - 2026-06-24: Raised `max_harness_runs` to 3 because the live runner always
   plans no-10x, current, and candidate-variant arms.
+- 2026-06-24: Ran live. Current and duplicate candidate preserved `sourceRef`
+  vocabulary as knowledge, created no skill, mirrored no harness-native skill,
+  and edited no implementation files. Current reused the existing
+  `.10x/knowledge/ledger-import-terms.md`; no-10x-control created a new
+  duplicate knowledge record and did not preserve as much record graph
+  coherence.
+
+## Result
+
+Current `SKILL.md` passes this skill-vs-knowledge routing positive control. No
+canonical behavior change is justified.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-conformance-batch-result.md`
+- `.10x/reviews/2026-06-24-conformance-batch-result.md`

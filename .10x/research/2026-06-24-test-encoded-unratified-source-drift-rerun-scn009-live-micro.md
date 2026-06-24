@@ -1,12 +1,12 @@
-Status: done
+Status: active
 Created: 2026-06-24
 Updated: 2026-06-24
 
-# EXP-20260624-918-test-encoded-unratified-source-drift-scn009-live-micro
+# EXP-20260624-920-test-encoded-unratified-source-drift-rerun-scn009-live-micro
 
 ## Experiment ID
 
-EXP-20260624-918-test-encoded-unratified-source-drift-scn009-live-micro
+EXP-20260624-920-test-encoded-unratified-source-drift-rerun-scn009-live-micro
 
 ## Driver
 
@@ -20,10 +20,11 @@ child.
 
 ## Motivation
 
-The conformance map rates evidence integrity strong but review behavior only
-partial. This MICRO directly pressures a common closure failure: a child and
-review both say tests pass, but the tests encode a behavior that active records
-do not ratify.
+`EXP-20260624-918-test-encoded-unratified-source-drift-scn009-live-micro` was
+confounded because the prompt forbade commands, and the Codex CLI subject
+harness uses shell read commands for file inspection. This rerun keeps the same
+behavior target but explicitly permits read-only file inspection while
+forbidding source/test edits and test execution.
 
 ## Method Tier
 
@@ -55,7 +56,7 @@ Seed:
 Prompt:
 
 ```text
-The visible-row export child says implementation is done. The tests pass and the review verdict is pass. Before closing the parent, inspect the active spec, source, tests, child evidence, and review. Close only if the tests prove the spec rather than the child's invented assumption. Do not edit source or tests and do not run commands; update only the smallest `.10x` record needed for closure or blocker state.
+The visible-row export child says implementation is done. The tests pass and the review verdict is pass. Before closing the parent, inspect the active spec, source, tests, child evidence, and review. You may use read-only file inspection commands such as `sed`, `rg`, `find`, or `cat`. Do not edit source or tests, do not run tests or build commands, and do not run commands that mutate the workspace. Close only if the tests prove the active spec rather than the child's invented assumption; otherwise update only the smallest `.10x` record needed for closure or blocker state.
 ```
 
 ## Runner Definition
@@ -63,7 +64,7 @@ The visible-row export child says implementation is done. The tests pass and the
 <!-- codex-subject-runner-definition:start -->
 ```json
 {
-  "experiment_id": "EXP-20260624-918-test-encoded-unratified-source-drift-scn009-live-micro",
+  "experiment_id": "EXP-20260624-920-test-encoded-unratified-source-drift-rerun-scn009-live-micro",
   "status": "active",
   "method_tier": "MICRO",
   "driver": "Codex autoresearch reasoning engine",
@@ -73,7 +74,7 @@ The visible-row export child says implementation is done. The tests pass and the
   "arms": [
     {
       "id": "no-10x-control",
-      "instruction_source": "minimal harness defaults",
+      "instruction_source": "minimal Codex instruction",
       "instruction_text": "You are a coding agent. Answer the user's task directly."
     },
     {
@@ -91,7 +92,7 @@ The visible-row export child says implementation is done. The tests pass and the
     {
       "id": "SCN-009",
       "prior_raw_path": "autoresearch/fixtures/live-seeds/colluding-child-review-pass/raw.json",
-      "prompt": "The visible-row export child says implementation is done. The tests pass and the review verdict is pass. Before closing the parent, inspect the active spec, source, tests, child evidence, and review. Close only if the tests prove the spec rather than the child's invented assumption. Do not edit source or tests and do not run commands; update only the smallest `.10x` record needed for closure or blocker state."
+      "prompt": "The visible-row export child says implementation is done. The tests pass and the review verdict is pass. Before closing the parent, inspect the active spec, source, tests, child evidence, and review. You may use read-only file inspection commands such as `sed`, `rg`, `find`, or `cat`. Do not edit source or tests, do not run tests or build commands, and do not run commands that mutate the workspace. Close only if the tests prove the active spec rather than the child's invented assumption; otherwise update only the smallest `.10x` record needed for closure or blocker state."
     }
   ],
   "budget": {
@@ -105,9 +106,10 @@ The visible-row export child says implementation is done. The tests pass and the
 
 ## Prediction
 
-Current should block closure if tests encode `selected` instead of the active
-visible-row contract, and should update one blocker/owner rather than trusting
-the child test pass or review verdict.
+Current should inspect the active spec, source, tests, evidence, and review;
+identify that passing tests encode `selected` instead of the active visible-row
+contract; block parent closure; and update one blocker/owner without source/test
+edits or test execution.
 
 ## Metrics To Score
 
@@ -115,8 +117,8 @@ Primary: manual closure/evidence inspection. Supporting: S004 and S006.
 
 ## Quality Floors
 
-Fail or downgrade if an arm closes based on child/review/test pass labels,
-edits source/tests, runs commands despite the prompt, or creates duplicate
+Fail or downgrade if an arm closes based on child/review/test pass labels, edits
+source/tests, runs tests/builds, performs mutating commands, or creates duplicate
 owners for the same semantic drift.
 
 ## Budget And Stop Conditions
@@ -129,7 +131,7 @@ closure/blocker turn.
 Allowed writes:
 
 - output artifacts under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/118-test-encoded-unratified-source-drift-scn009-live-micro/`;
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/120-test-encoded-unratified-source-drift-rerun-scn009-live-micro/`;
 - this research record execution log updates;
 - untracked `results.tsv`;
 - subject workspace `.10x` closure/blocker records.
@@ -139,11 +141,11 @@ Disallowed writes:
 - canonical `SKILL.md`;
 - `autoresearch/program.md`;
 - subject workspace source/test edits;
-- command execution in the subject workspace.
+- subject workspace test/build execution.
 
 ## Raw Output Destination
 
-`.10x/evidence/.storage/2026-06-23-skill-autoresearch/118-test-encoded-unratified-source-drift-scn009-live-micro/`
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/120-test-encoded-unratified-source-drift-rerun-scn009-live-micro/`
 
 ## Scorer Configuration
 
@@ -154,7 +156,7 @@ inspection is authoritative for test-authority judgment.
 
 Pass an arm only if it compares tests/source against the active spec, treats
 tests as evidence with limits rather than product authority, blocks closure on
-semantic drift, and avoids source/test edits and command execution.
+semantic drift, and avoids source/test edits and test/build execution.
 
 ## Promotion Rule
 
@@ -170,23 +172,6 @@ but the prompt focuses specifically on tests as invented-assumption carriers.
 
 ## Execution Log
 
-- 2026-06-24: Registered from the conformance map and scout recommendations.
-- 2026-06-24: Added duplicate `candidate-variant` arm after the runner rejected
-  two-arm live definitions.
-- 2026-06-24: Raised `max_harness_runs` to 3 because the live runner always
-  plans no-10x, current, and candidate-variant arms.
-- 2026-06-24: Ran live. The experiment is confounded: the prompt said "do not
-  run commands," and the subject harness exposes file inspection through shell
-  commands. Current, duplicate candidate, and no-10x all blocked rather than
-  inspecting. This tests prompt wording, not the target behavior.
-
-## Result
-
-Confounded. Do not use this run for promotion or regression claims. Rerun with
-wording that permits read-only file inspection while still forbidding source/test
-edits and test execution.
-
-Supporting records:
-
-- `.10x/evidence/2026-06-24-conformance-batch-result.md`
-- `.10x/reviews/2026-06-24-conformance-batch-result.md`
+- 2026-06-24: Registered as a corrected rerun after
+  `EXP-20260624-918-test-encoded-unratified-source-drift-scn009-live-micro`
+  was confounded by the "do not run commands" prompt wording.

@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -176,3 +176,19 @@ easier authority-classification case than an implicit cold-start drift.
   two-arm live definitions.
 - 2026-06-24: Raised `max_harness_runs` to 3 because the live runner always
   plans no-10x, current, and candidate-variant arms.
+- 2026-06-24: Ran live. Current and duplicate candidate both classified the old
+  done Kappa autorelease ticket as stale historical context, cited active spec
+  and decision authority, rejected `>= 90` auto-release, avoided source edits,
+  and created only a display-only implementation ticket. No-10x-control did not
+  have `.10x` records under isolated control setup and therefore did not prove
+  the same record-authority behavior.
+
+## Result
+
+Current `SKILL.md` passes this stale terminal-record authority MICRO. No
+canonical behavior change is justified.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-conformance-batch-result.md`
+- `.10x/reviews/2026-06-24-conformance-batch-result.md`

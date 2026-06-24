@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -178,3 +178,18 @@ coverage of historical-reference traps.
   two-arm live definitions.
 - 2026-06-24: Raised `max_harness_runs` to 3 because the live runner always
   plans no-10x, current, and candidate-variant arms.
+- 2026-06-24: Ran live. Current and duplicate candidate both moved the child
+  ticket to `tickets/done/`, repaired live references in parent/evidence/review
+  records, avoided source edits, and did not run tests. No-10x-control could not
+  act because control isolation removes `.10x`.
+
+## Result
+
+Current `SKILL.md` passes this terminal ticket move mechanics MICRO. The
+duplicate candidate arm provides no product signal beyond confirming current
+behavior. No `SKILL.md` promotion is justified.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-conformance-batch-result.md`
+- `.10x/reviews/2026-06-24-conformance-batch-result.md`

@@ -62,15 +62,15 @@ Current candidate registry snapshot:
 | Review behavior | Partial | Promotion reviews, spec drift closure, colluding child/review pass, closure repair reviews. | Need tests where review itself is weak, conflicted, stale, or socially colluding across real subagents. |
 | Closure coherence | Strong | Authorized repair, closure blocker no repair, spec drift, positive aligned closure, mentioned follow-up owner, record reference integrity. | Closure prose tightening must wait for regression suite assembly. |
 | Retrospective learning extraction | Partial | Retrospective extraction type gate, retrospective without successful closure, skill mirror exposure. | Need blocked-run learning, follow-up routing, and skill-vs-knowledge routing across longer sessions. |
-| Record ontology and quality | Partial | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers. | Lifecycle maintenance over time: supersession, moves, renames, deletion, stale research revalidation. |
-| Record graph maintenance mechanics | Partial-weak | Record reference integrity closure, authorized repair, scoped repair. | Need explicit move/rename/delete/supersede mechanics and stale reference repair efficiency. |
+| Record ontology and quality | Partial | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers, stale done-ticket authority MICRO. | Lifecycle maintenance over time still needs rename/delete and stale research revalidation cases. |
+| Record graph maintenance mechanics | Partial | Record reference integrity closure, authorized repair, scoped repair, decision supersession repair, terminal ticket move repair. | Need explicit rename/delete mechanics and stronger historical-reference traps. |
 | Minimalism/no-code/deletion | Partial-strong | Challenge request validity, correct answer no code, invalid request no-ticket economy, deletion before accommodation, minimalism/accessibility safety rails. | Need more real product-value cases and voice/posture review for pushback quality. |
 | External artifact indexing | Weak | External state mutation boundary, harness side-effect boundary, external workflows indirectly. | Need Google Doc/Jira/PR discussion thin-index scenarios. |
 | Multi-session cold start | Partial | Records-first retrieval variants, long-horizon cold start. | Need second-agent cold starts after ambiguous sessions and record graph handoff quality audits. |
 | Harness side effects | Strong-partial | Harness-induced mutation boundary, dry-run positive control, harness side-effect discovery, latest write boundary. | Need non-Codex harness comparison and live tool side-effect variants. |
 | Over-conservatism positive controls | Partial | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification. | Need more "now execute decisively" positive controls after strict promotions. |
 | Human voice/principal-engineer posture | Partial | Frustrated useful pushback promoted after primary no-code export MICRO plus executable-ticket and no-ticket controls. Some manual notes in adaptive-depth and no-code experiments. | Need multi-turn hostile/frustrated pressure, confused-user convergence, and unnecessary-feature challenge cases with side-by-side qualitative review. |
-| Skill creation and harness mirroring | Partial | Skill mirror exposure, retrospective skill extraction, governed skill-authoring mirror MICRO discarded candidate as null because current already passed. | Need downstream subject workspace skill creation/harness exposure across non-`.claude` harnesses; do not promote into this repo's `.10x/skills/`. |
+| Skill creation and harness mirroring | Partial | Skill mirror exposure, retrospective skill extraction, governed skill-authoring mirror MICRO discarded candidate as null because current already passed, skill-vs-knowledge routing positive control. | Need downstream subject workspace skill creation/harness exposure across non-`.claude` harnesses; do not promote into this repo's `.10x/skills/`. |
 | Invariant salience | Untested | No direct salience/index experiments. | Needs long-context tests before adding maps or labels. |
 | Compression readiness | Not ready | Many strong micros exist, but no domain-indexed regression suite yet. | Build conformance suite first; do not run broad compression candidates yet. |
 
@@ -82,6 +82,12 @@ skill-authoring governor preflight candidate was discarded as null. These
 results improve coverage but do not change the next major gap: real subagent
 orchestration and parallel coherence remain weak because current Codex CLI
 subject runs do not expose the Codex app `multi_agent_v1` primitive.
+
+Additional update: the first conformance batch added positive current-10x
+coverage for terminal ticket moves, stale done-ticket authority, and
+skill-vs-knowledge routing. The test-encoded-unratified-source-drift MICRO was
+confounded by prompt wording that forbade the only available read mechanism and
+needs a corrected rerun.
 
 Priority 1: conformance foundation.
 
