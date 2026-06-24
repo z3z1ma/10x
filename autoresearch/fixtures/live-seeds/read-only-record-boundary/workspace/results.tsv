@@ -1,0 +1,3 @@
+timestamp	experiment	tier	candidate	scores	verdict	notes
+2026-06-24T04:52:35Z	EXP-20260623-849-subagent-claim-reconciliation-scn009-live-micro	MICRO	candidate-subagent-claim-reconciliation-v1	candidate:S004=100/S006=75_current:S004=100/S006=75_control:S004=60/S006=20	discard	null_to_weaker_current_recorded_blockers_in_child_and_parent
+2026-06-24T05:09:00Z	EXP-20260623-850-retrospective-extraction-type-gate-scn012-live-micro	MICRO	candidate-retrospective-extraction-type-gate-v1	candidate:S002=70/S006=85_current:S002=85/S006=85_control:S002=85/S006=50	keep	manual_candidate_won_type_routing_scorer_false_negative_skill_records

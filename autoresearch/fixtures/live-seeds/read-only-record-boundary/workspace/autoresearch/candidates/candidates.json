@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "candidates": [
+    {
+      "id": "candidate-redacted-evidence-capture-v1",
+      "status": "unregistered",
+      "target_scores": ["S002", "S004"],
+      "target_scenarios": ["SCN-008", "SCN-004"]
+    },
+    {
+      "id": "candidate-read-only-record-boundary-v1",
+      "status": "draft",
+      "target_scores": ["S001", "S002", "S007"],
+      "target_scenarios": ["SCN-001", "SCN-003"]
+    }
+  ]
+}

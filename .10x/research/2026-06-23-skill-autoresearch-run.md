@@ -716,3 +716,8 @@ Canonical start guard:
   knowledge for `sourceRef`, and a follow-up ticket for archive
   malformed-currency coverage without editing implementation files. Promoted
   `candidate-retrospective-extraction-type-gate-v1`.
+- 2026-06-23: Added `candidate-read-only-record-boundary-v1`, created the
+  `read-only-record-boundary` live seed, and registered
+  `EXP-20260623-851-read-only-record-boundary-scn001-live-micro` to test whether
+  explicit read-only/no-edit scouting prevents unauthorized durable-record
+  writes without blocking useful hypothesis recommendations.
