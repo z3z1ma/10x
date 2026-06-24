@@ -3,7 +3,7 @@
 Candidate ID: `candidate-closure-blocker-ticket-recording-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -66,3 +66,11 @@ Promote only if current blocks closure only in chat while candidate records the
 blocker in the relevant active ticket(s), without closing tickets, fabricating
 evidence, rerunning forbidden commands, or editing implementation files. Discard
 if current already records blockers durably or candidate creates record churn.
+
+## Result
+
+Discarded after
+`EXP-20260624-889-closure-blocker-ticket-recording-scn009-live-micro`.
+Current canonical 10x already recorded the closure blocker in both child and
+parent tickets and marked both tickets `blocked`. The candidate recorded the
+blockers but left both tickets `active`, which is weaker ticket-state coherence.

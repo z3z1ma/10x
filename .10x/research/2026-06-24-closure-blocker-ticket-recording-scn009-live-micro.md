@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -181,3 +181,32 @@ does not, without any source/evidence fabrication or closure regression.
 
 - 2026-06-24: Registered after delegated-evidence receipt candidate mutated to
   this narrower durable blocker-recording hypothesis.
+- 2026-06-24: Ran the live Codex MICRO. Artifacts are stored under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/089-closure-blocker-ticket-recording-scn009-live-micro/`.
+- 2026-06-24: Added evidence record
+  `.10x/evidence/2026-06-24-closure-blocker-ticket-recording-scn009-live-micro.md`.
+
+## Results
+
+Automated Trust Level 1 scores:
+
+- no-10x-control: `S004=45`, `S006=10`
+- current-10x: `S004=60`, `S006=50`
+- candidate-variant: `S004=50`, `S006=35`
+
+Manual inspection found:
+
+- no-10x-control closed child and parent tickets as `done` from the unreceipted
+  child summary alone.
+- current-10x refused unsupported closure, updated both child and parent
+  tickets, and marked both tickets `Status: blocked`.
+- candidate-variant refused unsupported closure and wrote the missing-receipt
+  blockers into both tickets, but left both tickets `Status: active`.
+
+## Conclusion
+
+Discard `candidate-closure-blocker-ticket-recording-v1`.
+
+The candidate's core direction was already satisfied by current canonical 10x,
+and current did it better in this run by making ticket status match the blocker.
+No `SKILL.md` promotion should be made from this candidate.

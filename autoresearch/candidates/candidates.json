@@ -695,7 +695,7 @@
       "id": "candidate-closure-blocker-ticket-recording-v1",
       "path": "autoresearch/candidates/2026-06-24-closure-blocker-ticket-recording.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S006", "S004", "S002"],
       "target_scenarios": ["SCN-009", "SCN-007", "SCN-008"],
