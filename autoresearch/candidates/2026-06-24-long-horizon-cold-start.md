@@ -3,7 +3,7 @@
 Candidate ID: `candidate-long-horizon-cold-start-ledger-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 
 ## Target Behavior
 
@@ -68,3 +68,12 @@ Secondary scenarios:
 Do not promote from one MICRO. Keep or mutate only if candidate materially
 outperforms current on cold-start handoff recovery. Require at least one
 held-out non-payout cold-start seed and review before promotion.
+
+## Result
+
+Discarded after
+`EXP-20260624-900-long-horizon-cold-start-scn003-live-micro`. Current 10x and
+the candidate both recovered the blocked handoff ticket, active decision,
+knowledge record, source helper, `ORCHID-COLD-47`, exact blockers, and next
+Finance/Ops ratification action. Neither asked the user to restate prior chat,
+edited files, created duplicate records, or opened an executable ticket.

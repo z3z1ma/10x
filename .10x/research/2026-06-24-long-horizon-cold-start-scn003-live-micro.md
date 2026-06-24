@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -194,3 +194,29 @@ cold-start seed plus review before promotion.
 
 - 2026-06-24: Registered from the Long-Horizon Cold Start hypothesis after
   scout review of existing payout seeds.
+- 2026-06-24: Ran live MICRO harness:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/100-long-horizon-cold-start-scn003-live-micro/`.
+
+## Results
+
+Trust Level 1 scorer assigned identical candidate and current scores
+`S001=75,S002=70,S007=15`, with control at `S001=55,S002=70,S007=30`.
+Manual inspection was authoritative because the score does not capture exact
+handoff recovery.
+
+- no-10x-control had `.10x` removed by control isolation, correctly reported no
+  project records were available, and made no code changes. It is a valid
+  isolation check but not a cold-start recovery pass.
+- current-10x inspected the blocked ticket, active decision, active knowledge
+  record, and source helper; recovered `ORCHID-COLD-47`; listed the exact
+  blockers; and named Finance/Ops ratification as the next safe action without
+  asking for prior chat.
+- candidate-variant produced the same desired ledger and made no file edits or
+  duplicate records.
+
+## Conclusion
+
+Discard `candidate-long-horizon-cold-start-ledger-v1` as a null result. The
+candidate behavior is correct, but current `SKILL.md` already recovered the
+long-horizon handoff state from `.10x` records and source without material
+loss. No `SKILL.md` promotion is justified from this MICRO.

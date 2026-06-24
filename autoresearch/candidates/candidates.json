@@ -805,7 +805,7 @@
       "id": "candidate-long-horizon-cold-start-ledger-v1",
       "path": "autoresearch/candidates/2026-06-24-long-horizon-cold-start.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S002", "S001", "S007", "S003"],
       "target_scenarios": ["SCN-003", "SCN-001", "SCN-006", "SCN-007"],
