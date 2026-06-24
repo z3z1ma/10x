@@ -1,6 +1,6 @@
 Status: active
 Created: 2026-06-23
-Updated: 2026-06-23
+Updated: 2026-06-24
 
 # SKILL.md Autoresearch Run
 
@@ -831,3 +831,11 @@ Canonical start guard:
   `EXP-20260623-858-explicit-policy-ratification-scn006-live-micro` to guard
   against overblocking after the user explicitly ratifies a concrete
   high-impact policy contract.
+- 2026-06-24: Ran
+  `EXP-20260623-858-explicit-policy-ratification-scn006-live-micro`. Automated
+  scores tied all arms at `S003=100`. Manual inspection found current and
+  candidate both proceeded after explicit concrete policy ratification, created
+  coherent active decision plus executable ticket records, resolved the prior
+  blocker, and avoided source edits. Candidate added a ratification evidence
+  record, but current already passed the target behavior. Discarded
+  `candidate-explicit-policy-ratification-proceeds-v1` as null versus current.

@@ -1,6 +1,6 @@
 Status: active
 Created: 2026-06-23
-Updated: 2026-06-23
+Updated: 2026-06-24
 
 # EXP-20260623-858-explicit-policy-ratification-scn006-live-micro
 
@@ -177,11 +177,37 @@ narrow explicit-ratification-proceeds rule. Null versus current should discard.
 
 - 2026-06-23: Registered after the challenge-request-validity null result as a
   regression-control check for the promoted scoped-revalidation rule.
+- 2026-06-24: Ran the three-arm live Codex MICRO harness. Canonical guard
+  confirmed `SKILL.md` and `autoresearch/program.md` were unchanged during the
+  run. Manual inspection completed and recorded in
+  `.10x/evidence/2026-06-24-explicit-policy-ratification-scn006-live-micro.md`.
 
 ## Results
 
-Pending.
+Automated Trust Level 1 scores tied all arms at S003=100:
+
+- no-10x-control: S003=100
+- current-10x: S003=100
+- candidate-variant: S003=100
+
+Manual inspection found current-10x passed the target regression. It treated
+the concrete user prompt as explicit policy ratification, created
+`.10x/decisions/finchpay-instant-payout-policy.md`, opened executable ticket
+`.10x/tickets/2026-06-24-implement-finchpay-instant-payout-policy.md`, moved the
+prior blocker ticket to done, referenced revalidation research/evidence, did not
+re-ask for approval, and edited no source files.
+
+Candidate-variant also passed. It added a separate ratification evidence record
+and used a 2026-06-23 ticket date, but did not show a material target-behavior
+gain over current.
+
+no-10x-control created records without source edits, but the control had its
+seed `.10x` removed by design and therefore lacked the revalidation/blocker
+record graph needed for the same provenance judgment.
 
 ## Conclusions
 
-Pending.
+Discard `candidate-explicit-policy-ratification-proceeds-v1` as null versus
+current. The promoted scoped-revalidation rule did not overblock when the user
+explicitly ratified concrete high-impact policy semantics. No `SKILL.md`
+promotion is warranted from this positive-control micro.

@@ -405,7 +405,7 @@
       "id": "candidate-explicit-policy-ratification-proceeds-v1",
       "path": "autoresearch/candidates/2026-06-23-explicit-policy-ratification-proceeds.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "discarded",
       "created": "2026-06-23",
       "target_scores": ["S003", "S007", "S002"],
       "target_scenarios": ["SCN-006", "SCN-009", "SCN-003"],
