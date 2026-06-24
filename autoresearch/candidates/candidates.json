@@ -205,7 +205,7 @@
       "id": "candidate-record-hardening-gate-v1",
       "path": "autoresearch/candidates/2026-06-23-record-hardening-gate.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "promoted",
       "created": "2026-06-23",
       "target_scores": ["S003", "S007", "S002"],
       "target_scenarios": ["SCN-006", "SCN-001", "SCN-004"],

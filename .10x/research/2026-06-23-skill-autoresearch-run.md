@@ -552,3 +552,10 @@ Canonical start guard:
   registered `EXP-20260623-837-record-hardening-gate-scn006-live-micro` to test
   whether agents launder unratified source-field/threshold semantics into active
   specs, decisions, or executable-ticket acceptance criteria.
+- 2026-06-23: Ran
+  `EXP-20260623-837-record-hardening-gate-scn006-live-micro`. Automated S003
+  tied candidate and current at `100`, with control at `80`, but manual
+  inspection found current created active spec behavior and an executable ticket
+  using `readinessScore >= 85` while the candidate preserved display-only as
+  ratified and kept threshold/source-field semantics blocked. Promoted the
+  narrow record-hardening gate into `SKILL.md`.

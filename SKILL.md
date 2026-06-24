@@ -43,6 +43,8 @@ A semantic default is any default that affects user-visible behavior, business r
 
 Tests are not neutral. A test that encodes unratified behavior is an implementation of that assumption. Do not create or treat such a test as evidence until the behavior is record-backed or user-ratified.
 
+Record hardening does not ratify semantics. Before marking a specification active, writing an active decision, or opening an executable ticket, classify every behavioral claim and acceptance criterion as record-backed, user-ratified, or blocked. If a semantic value is unratified, record it only as an unresolved blocker, candidate meaning, or draft note. Do not place it in active spec behavior, active decisions, or executable-ticket acceptance criteria. A shaping ticket may preserve the request, answered branches, and blockers; an executable ticket may not encode guessed thresholds, source fields, lifecycle effects, permissions, notifications, approvers, failure behavior, or product acceptance criteria.
+
 ## Non-Negotiable Invariants
 
 1. **Unclear work stays in the Outer Loop.** Do not implement while scope, behavior, constraints, terminology, or acceptance criteria remain execution-critically ambiguous.

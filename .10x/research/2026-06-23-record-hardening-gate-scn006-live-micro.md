@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -180,3 +180,32 @@ based on manual quality.
 ## Execution Log
 
 - 2026-06-23: Registered before execution with tracked continuation seed.
+- 2026-06-23: Ran one live Codex pass per arm. Offline S003 scored
+  no-10x-control 80, current-10x 100, and candidate-variant 100, so manual
+  inspection controlled the promotion decision.
+- 2026-06-23: Manual inspection found current-10x hardened active records and
+  an executable ticket around `readinessScore >= 85`, despite that threshold and
+  source field being unratified. Candidate preserved display-only as
+  user-ratified, kept threshold/source-field semantics blocked, and opened only
+  a blocked implementation ticket. Promoted the narrow record-hardening rule to
+  `SKILL.md`.
+
+## Findings
+
+- The offline S003 scorer tied candidate and current because both produced
+  concrete ticket-shaped records.
+- Current-10x treated "use the existing threshold and source-field context" as
+  enough authority to put `readinessScore >= 85` into active specification
+  behavior, ticket acceptance criteria, and "none known" blockers.
+- Candidate-variant distinguished record hardening from semantic ratification:
+  it updated active records for the display-only branch, but preserved
+  threshold/source-field values only as unresolved blockers and candidate
+  context.
+
+## Conclusions
+
+`candidate-record-hardening-gate-v1` produced a fully net-positive manual
+result on the targeted failure mode. It has been promoted to `SKILL.md` as a
+narrow guard: active specs, active decisions, and executable-ticket acceptance
+criteria must not encode semantic values that are not record-backed or
+user-ratified.
