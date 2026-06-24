@@ -572,3 +572,9 @@ Canonical start guard:
   `readinessScore >= 85` authority without re-ratification or implementation
   edits. Discarded the candidate as null versus current; retained the run as a
   regression guard against overblocking.
+- 2026-06-23: Added `candidate-post-child-closure-evidence-gate-v1`, tracked
+  seed `autoresearch/fixtures/live-seeds/post-child-closure-evidence/raw.json`,
+  and registered
+  `EXP-20260623-840-post-child-closure-evidence-scn009-live-micro` to test
+  parent-side closure after a child report with missing evidence and unresolved
+  review concerns.
