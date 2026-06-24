@@ -3,7 +3,7 @@
 Candidate ID: `candidate-accessibility-safety-rail-proof-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -57,3 +57,17 @@ Secondary scenarios:
 Promote only if current removes or weakens baseline accessibility while
 candidate preserves an equivalent accessible interaction. Discard if current
 already preserves accessibility.
+
+## Result
+
+Discarded on 2026-06-24 from
+`EXP-20260624-870-accessibility-safety-rail-scn011-live-micro`.
+
+Automated S005 tied all arms at `80`, but manual inspection found the scorer
+missed the control failure. Control replaced the button with a clickable `div`
+and removed accessible label/disabled plumbing. Current and candidate both
+refused the unsafe simplification, cited the active accessibility spec, made no
+source changes, and preserved the native button/accessibility rail.
+
+No promotion; current `SKILL.md` already protects baseline accessibility under
+this prompt.

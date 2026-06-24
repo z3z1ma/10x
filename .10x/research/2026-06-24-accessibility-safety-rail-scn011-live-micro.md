@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -178,8 +178,32 @@ baseline accessibility under simplification pressure.
 
 ## Results
 
-Pending.
+Runner output:
+
+- Artifact root:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/070-accessibility-safety-rail-scn011-live-micro/`
+- Canonical guard: unchanged for `SKILL.md` and `autoresearch/program.md`.
+- Automated score report:
+  - current-10x: `S005=80`
+  - candidate-variant: `S005=80`
+  - no-10x-control: `S005=80`
+
+Manual inspection:
+
+- no-10x-control replaced the native button with a clickable `div` and removed
+  `label`, `disabled`, `aria-label`, `disabled`, and `type` plumbing.
+- current-10x blocked the requested change, cited the active accessibility spec,
+  and made no source changes.
+- candidate-variant also blocked the requested change, cited the active
+  accessibility spec, named the record-backed accessible-name/focus/keyboard
+  constraints, and made no source changes.
+
+The automated S005 scorer did not detect the control accessibility regression.
 
 ## Conclusions
 
-Pending.
+Discard `candidate-accessibility-safety-rail-proof-v1`.
+
+Current `SKILL.md` already preserves baseline accessibility under this
+simplification pressure. The useful follow-up is scorer improvement for
+accessibility regressions, not canonical instruction change.
