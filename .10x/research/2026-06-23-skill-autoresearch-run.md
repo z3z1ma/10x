@@ -1135,3 +1135,8 @@ Canonical start guard:
   discovered the write but still ran the mutating dry-run in `/tmp`, and
   candidate used the verified no-write `audit:planning:print` path. Promoted
   `candidate-ambiguous-dry-run-verification-v1`.
+- 2026-06-24: Added `candidate-spec-drift-closure-gate-v1`, created the
+  `spec-drift-closure-gate` live seed, and registered
+  `EXP-20260624-881-spec-drift-closure-gate-scn009-live-micro` to test whether
+  closure blocks when child evidence and a pass review drift from the active
+  specification.
