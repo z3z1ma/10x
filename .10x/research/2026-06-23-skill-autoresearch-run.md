@@ -1140,3 +1140,10 @@ Canonical start guard:
   `EXP-20260624-881-spec-drift-closure-gate-scn009-live-micro` to test whether
   closure blocks when child evidence and a pass review drift from the active
   specification.
+- 2026-06-24: Ran
+  `EXP-20260624-881-spec-drift-closure-gate-scn009-live-micro`. Automated
+  scores were candidate `S004=100/S006=45`, current `S004=65/S006=45`, and
+  control `S004=100/S006=30`. Manual inspection found control closed invalid
+  records, current blocked closure without inspecting source/test assertions,
+  and candidate identified the concrete active-spec drift and recorded a fail
+  closure review. Promoted `candidate-spec-drift-closure-gate-v1`.

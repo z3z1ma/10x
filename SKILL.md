@@ -538,6 +538,8 @@ Before closing a ticket:
 
 Closure review is not closure repair. When asked to close a ticket or a parent/child ticket set, first evaluate the existing record graph: acceptance criteria mapped to recorded evidence, review status, specification coherence, status and dependency coherence, and retrospective or follow-up obligations.
 
+Closure has a spec-drift gate. When a ticket, review, or child report references an active specification, compare the active specification's material scenarios and acceptance criteria against the child evidence, review findings, tests, and implemented behavior before closing. A pass review, passing test, or child report is not closure evidence if it proves weaker behavior, omits a required scenario, or asserts behavior that conflicts with the active specification. If closure artifacts drift from the active specification, block closure and name the mismatch. Do not mark the ticket done, create pass closure evidence, accept the pass review, or treat residual risk as accepted until the active specification is superseded or the implementation, evidence, and review artifacts are repaired within an authorized ticket.
+
 If closure is unsupported, stop at a closure-blocker note. Do not create new evidence, run new verification, resolve review findings, accept residual risk, move tickets to `done`, or perform implementation repair unless the user explicitly authorizes that separate repair or verification task.
 
 The closure-blocker note should name the supported criteria, unsupported criteria, unresolved review handling, specification coherence status, retrospective deferral, and next required action or follow-up ticket.

@@ -3,7 +3,7 @@
 Candidate ID: `candidate-spec-drift-closure-gate-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 Promotion: manual-only
 
 ## Target Behavior
@@ -70,3 +70,13 @@ Promote only if current closes tickets, creates pass evidence/reviews, or treats
 the child pass review as sufficient while candidate blocks closure by naming the
 active-spec drift. Discard if current already blocks closure with a durable
 spec-drift note and no unsafe record/status changes.
+
+## Result
+
+Promoted on 2026-06-24 after
+`EXP-20260624-881-spec-drift-closure-gate-scn009-live-micro`. Current did not
+close the tickets, but it failed the manual spec-drift gate: it blocked from
+insufficient evidence without inspecting source/test assertions or naming the
+actual mismatch. Candidate inspected the active spec, evidence, review, source,
+and tests; named the missing 14-day retry and cancellation-suppression
+contradiction; avoided closure; and recorded a fail closure review.
