@@ -118,7 +118,10 @@ promotion signal yet.
 Candidate follow-up:
 `candidate-confused-user-convergence-contract-v1` and
 `EXP-20260624-924-confused-user-convergence-contract-scn001-live-micro` are
-registered to test a narrow confused/contradictory request convergence rule.
+discarded as null versus current. In the follow-up run, current already named
+the `closed` lifecycle ambiguity and email/notification contradiction, cited
+records/source, avoided edits, and produced a compact confirm-or-correct
+contract.
 
 Priority 1: conformance foundation.
 

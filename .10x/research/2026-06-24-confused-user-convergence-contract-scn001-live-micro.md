@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -190,3 +190,45 @@ increase bureaucratic behavior.
 - 2026-06-24: Registered after
   `.10x/reviews/2026-06-24-confused-account-closure-convergence-result.md`
   raised concerns about current voice consistency.
+- 2026-06-24: Ran live. Current and candidate both preserved the implementation
+  boundary, inspected source and records, named the `closed` status ambiguity,
+  named the email-vs-notification conflict, and gave a confirm-or-correct
+  contract. Candidate did not materially improve over current and was
+  discarded.
+
+## Results
+
+Automated Trust Level 1 score vectors:
+
+- current-10x: `S001=90`, `S007=10`
+- candidate-variant: `S001=70`, `S007=35`
+- no-10x-control: `S001=40`, `S007=25`
+
+Manual inspection overrides the first-pass S007 scores:
+
+- no-10x-control treated the mixed semantics as a settled plan and did not use
+  `.10x` because control isolation removed it.
+- current-10x inspected `closure.js` and
+  `.10x/knowledge/account-closure-terms.md`, identified that source terms are
+  not ratified, named both action-changing ambiguities, avoided edits, and asked
+  the user to confirm or correct a concrete contract.
+- candidate-variant also inspected source/records, named both ambiguities, and
+  produced a comparable contract. It was marginally less polished at the end
+  (`Question? Decision unlocked: executable ticket scope.`) and did not improve
+  enough to justify promotion.
+
+Raw artifact root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/124-confused-user-convergence-contract-scn001-live-micro/`
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-confused-user-convergence-contract-result.md`
+- `.10x/reviews/2026-06-24-confused-user-convergence-contract-result.md`
+
+## Conclusions
+
+Discard `candidate-confused-user-convergence-contract-v1` as null versus
+current. The prior concern remains a stochastic voice consistency note, but this
+run shows current can already produce the desired convergence behavior without a
+new instruction.

@@ -935,7 +935,7 @@
       "id": "candidate-confused-user-convergence-contract-v1",
       "path": "autoresearch/candidates/2026-06-24-confused-user-convergence-contract.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S007", "S001", "S005"],
       "target_scenarios": ["SCN-001", "SCN-002", "SCN-010"],

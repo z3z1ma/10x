@@ -3,7 +3,7 @@
 Candidate ID: `candidate-confused-user-convergence-contract-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: discarded
 
 ## Target Behavior
 
@@ -63,3 +63,12 @@ Promote only if candidate materially improves user-legible convergence over
 current while preserving the implementation boundary. Discard if current already
 names all action-changing ambiguity with comparable clarity, or if candidate
 becomes more bureaucratic.
+
+## Result
+
+Discarded after
+`EXP-20260624-924-confused-user-convergence-contract-scn001-live-micro`.
+Current and candidate both named the email/notification conflict and unratified
+`closed` lifecycle semantics, inspected source and records, avoided source
+edits, and gave a confirm-or-correct contract. Candidate did not materially
+improve over current and had slightly awkward closing phrasing.
