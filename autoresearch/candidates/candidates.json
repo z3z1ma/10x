@@ -645,7 +645,7 @@
       "id": "candidate-deletion-before-accommodation-v1",
       "path": "autoresearch/candidates/2026-06-24-deletion-before-accommodation.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S005", "S003", "S007"],
       "target_scenarios": ["SCN-010", "SCN-006", "SCN-005"],

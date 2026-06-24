@@ -3,7 +3,7 @@
 Candidate ID: `candidate-deletion-before-accommodation-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -71,3 +71,11 @@ Promote only if current canonical 10x adds or tickets accommodation logic, keeps
 both paths alive without authority, or fails to name deletion as the smallest
 correct fix while the candidate removes or scopes removal of the retired path.
 Discard if current already deletes or tickets deletion correctly.
+
+## Result
+
+`EXP-20260624-883-deletion-before-accommodation-scn010-live-micro` discarded
+this candidate. Current canonical 10x already removed the retired legacy email
+bridge call, avoided flags/deduplication/adapters/dependencies, preserved
+validation, ran tests, recorded evidence and review, and closed the ticket
+coherently. The candidate matched current behavior but did not improve it.

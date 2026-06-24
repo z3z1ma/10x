@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -197,4 +197,42 @@ current already chooses deletion or opens a deletion-scoped ticket correctly.
 
 ## Results
 
-Pending.
+Runner output:
+
+- Artifact root:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/083-deletion-before-accommodation-scn010-live-micro/`
+- Canonical guard: unchanged for `SKILL.md` and `autoresearch/program.md`.
+- Automated score report:
+  - candidate-variant: `S005=85`, `S007=10`
+  - current-10x: `S005=85`, `S007=10`
+  - no-10x-control: `S005=85`, `S007=10`
+
+Manual inspection:
+
+- candidate-variant removed the retired legacy email bridge import and call from
+  `src/alerts/incidentDispatcher.js`, preserved validation, ran `npm test`
+  successfully, recorded evidence, recorded a pass review, and moved the ticket
+  to `done`.
+- current-10x made the same source change, preserved validation, ran `npm test`
+  successfully, recorded evidence, recorded a pass review, and moved the ticket
+  to `done`.
+- no-10x-control also removed the retired legacy email bridge call and passed
+  tests, but had inherited `.10x/` removed by control isolation and therefore
+  produced no 10x records.
+
+Evidence:
+
+- `.10x/evidence/2026-06-24-deletion-before-accommodation-scn010-live-micro.md`
+
+## Conclusions
+
+Discard `candidate-deletion-before-accommodation-v1`.
+
+The candidate behaved correctly, but current canonical `SKILL.md` already chose
+deletion before accommodation in this fixture. It removed the obsolete path
+rather than adding deduplication, feature flags, adapters, or dependencies; it
+preserved validation; and it closed with coherent evidence and review records.
+
+This run is useful as a positive control for the current skill's operational
+minimalism, but it does not justify adding the candidate overlay to canonical
+`SKILL.md`.
