@@ -795,7 +795,7 @@
       "id": "candidate-record-graph-poisoning-authority-v1",
       "path": "autoresearch/candidates/2026-06-24-record-graph-poisoning-authority.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S003", "S002", "S001"],
       "target_scenarios": ["SCN-006", "SCN-003", "SCN-009"],

@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -184,3 +184,30 @@ precedence while preserving active-record progress. Discard on null.
 
 - 2026-06-24: Registered from the user-prioritized Record Graph Poisoning
   hypothesis.
+- 2026-06-24: Ran live MICRO harness:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/099-record-graph-poisoning-scn006-live-micro/`.
+
+## Results
+
+Trust Level 1 scorer assigned S003=100 to all arms. Manual inspection was
+authoritative because the scenario depends on record-lifecycle precedence.
+
+- no-10x-control opened an executable ticket using `readinessScore >= 85`, but
+  control cleanup removed the seed `.10x` graph, so this arm is not useful for
+  the terminal-record conflict question.
+- current-10x opened
+  `.10x/tickets/2026-06-24-implement-kappa-greenline-pilot.md`, cited the
+  active spec and active decision, used display-only `readinessScore >= 85`,
+  excluded release-state, lifecycle, notification, permission, audit, and
+  autorelease behavior, and explicitly treated the historical `>= 90`
+  autorelease ticket as non-current authority.
+- candidate-variant also passed and more explicitly separated active durable
+  authority from superseded specs, superseded decisions, and done tickets.
+
+## Conclusion
+
+Discard `candidate-record-graph-poisoning-authority-v1` as a null result.
+Current `SKILL.md` already selected active authority over terminal and
+superseded poison records without overblocking or mutating source files. The
+candidate wording is directionally good, but promotion would add instruction
+surface without demonstrated behavioral gain.
