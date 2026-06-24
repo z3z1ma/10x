@@ -510,6 +510,16 @@
       "target_scores": ["S005", "S003"],
       "target_scenarios": ["SCN-006", "SCN-005", "SCN-010"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-accessibility-safety-rail-proof-v1",
+      "path": "autoresearch/candidates/2026-06-24-accessibility-safety-rail-proof.md",
+      "target": "SKILL.md",
+      "status": "active",
+      "created": "2026-06-24",
+      "target_scores": ["S005", "S004"],
+      "target_scenarios": ["SCN-011", "SCN-010", "SCN-008"],
+      "promotion": "manual-only"
     }
   ]
 }

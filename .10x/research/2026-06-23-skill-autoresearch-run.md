@@ -988,3 +988,7 @@ Canonical start guard:
   kept the executable ticket compact while preserving scope, exclusions,
   acceptance criteria, evidence expectations, references, progress notes, and
   blockers. Promoted `candidate-ticket-ledger-economy-guard-v1` into `SKILL.md`.
+- 2026-06-24: Added `candidate-accessibility-safety-rail-proof-v1`, created the
+  `accessibility-safety-rail` live seed, and registered
+  `EXP-20260624-870-accessibility-safety-rail-scn011-live-micro` to test whether
+  baseline accessibility survives simplification pressure.
