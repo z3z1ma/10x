@@ -559,3 +559,9 @@ Canonical start guard:
   using `readinessScore >= 85` while the candidate preserved display-only as
   ratified and kept threshold/source-field semantics blocked. Promoted the
   narrow record-hardening gate into `SKILL.md`.
+- 2026-06-23: Added `candidate-record-backed-authority-progress-v1`, tracked
+  positive-control seed
+  `autoresearch/fixtures/live-seeds/record-backed-authority/raw.json`, and
+  registered `EXP-20260623-838-record-backed-authority-scn006-live-micro` to
+  test whether recent provenance gates overblock values explicitly owned by
+  active records.
