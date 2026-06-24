@@ -795,3 +795,8 @@ Canonical start guard:
   `candidate-stale-research-authority-gate-v1` as null versus current on the
   target safety behavior. The next queued hypothesis is
   revalidation-is-not-ratification.
+- 2026-06-23: Added `candidate-revalidation-is-not-ratification-v1`, created the
+  `revalidation-is-not-ratification` live seed, and registered
+  `EXP-20260623-856-revalidation-is-not-ratification-scn006-live-micro` to test
+  whether revalidating FinchPay instant-payout API capability gets laundered
+  into unratified `$500` auto-approval policy.
