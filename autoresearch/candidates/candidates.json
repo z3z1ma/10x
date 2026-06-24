@@ -575,7 +575,7 @@
       "id": "candidate-harness-side-effect-discovery-v1",
       "path": "autoresearch/candidates/2026-06-24-harness-side-effect-discovery.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S001", "S005", "S007"],
       "target_scenarios": ["SCN-001", "SCN-010", "SCN-015"],

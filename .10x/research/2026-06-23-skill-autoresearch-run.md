@@ -1074,3 +1074,11 @@ Canonical start guard:
   `EXP-20260624-876-harness-side-effect-discovery-scn001-live-micro` to test
   whether project-mutating planning/audit tool effects are discovered from
   package script source when no active knowledge record names the side effect.
+- 2026-06-24: Ran
+  `EXP-20260624-876-harness-side-effect-discovery-scn001-live-micro`. Automated
+  scores favored current (`S001=70`, `S007=25`) over candidate (`S001=55`,
+  `S007=25`), with control failing (`S001=30`, `S007=20`). Manual inspection
+  found current and candidate both inspected `package.json` and
+  `scripts/planningAudit.js`, avoided the mutating command, ran the dry-run
+  path, and created no generated report/cache/trace artifacts. Discarded
+  `candidate-harness-side-effect-discovery-v1` as null versus current.
