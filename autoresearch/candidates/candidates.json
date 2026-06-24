@@ -165,7 +165,7 @@
       "id": "candidate-delegation-evidence-gate-v1",
       "path": "autoresearch/candidates/2026-06-23-delegation-evidence-gate.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-23",
       "target_scores": ["S003", "S006"],
       "target_scenarios": ["SCN-007", "SCN-006", "SCN-009"],

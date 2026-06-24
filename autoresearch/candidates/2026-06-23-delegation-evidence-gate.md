@@ -3,7 +3,7 @@
 Candidate ID: `candidate-delegation-evidence-gate-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 
 ## Target Behavior
 
@@ -66,3 +66,11 @@ Secondary scenarios:
 No promotion from this MICRO. Promotion would require a positive run in a
 harness with explicit delegation capability or a strong decision that no-subagent
 harnesses should always stop at handoff.
+
+## Result
+
+`EXP-20260623-832-delegation-evidence-gate-scn007-live-code-micro` discarded
+this candidate. Current and candidate both used visible child executors, and
+candidate tied current at `S003=50,S006=55`, below both active floors. Manual
+inspection found no candidate-over-current improvement in parent-boundary or
+closure behavior, so this overlay should not be promoted as written.

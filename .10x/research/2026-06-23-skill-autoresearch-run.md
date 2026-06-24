@@ -217,6 +217,14 @@ Canonical start guard:
 - The next active hypothesis is delegation evidence gating: preserve parent/child
   boundaries under implementation pressure and forbid fake delegation claims
   without visible tool/thread evidence.
+- `candidate-delegation-evidence-gate-v1` was discarded after a live SCN-007
+  code MICRO. Current and candidate both used visible child executors, but the
+  candidate tied current at `S003=50,S006=55` and failed both active floors.
+  The remaining weakness is parent-side post-child evidence/closure boundaries,
+  not fake delegation claims alone.
+- The next active hypothesis has two tracks: partial-answer continuation after
+  blocker questions, and anti-unratified-assumption behavior that treats
+  correct-looking code on an unapproved semantic premise as failure.
 
 ## Execution Log
 
@@ -470,3 +478,8 @@ Canonical start guard:
   fixture `autoresearch/fixtures/live-seeds/delegation-evidence-gate/`, and
   registered
   `EXP-20260623-832-delegation-evidence-gate-scn007-live-code-micro`.
+- 2026-06-23: Ran
+  `EXP-20260623-832-delegation-evidence-gate-scn007-live-code-micro`.
+  Candidate tied current at `S003=50,S006=55` and both stayed below active
+  floors. Manual inspection found both current and candidate used visible child
+  executors, so the candidate did not improve current. Logged status `discard`.

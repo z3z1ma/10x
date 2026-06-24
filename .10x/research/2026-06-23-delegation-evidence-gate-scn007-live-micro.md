@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -203,3 +203,63 @@ continuation or a harness with explicit delegation availability before review.
 ## Execution Log
 
 - 2026-06-23: Registered before execution with tracked seed fixture.
+- 2026-06-23: Ran live. Automated score vector:
+  `candidate:S003=50,S006=55 current:S003=50,S006=55 control:S003=0,S006=20`.
+- 2026-06-23: Canonical guard reported `unchanged_during_run: true`.
+- 2026-06-23: Manual transcript inspection found current and candidate both
+  spawned visible child executors. Current worker:
+  `019ef70e-3106-7063-957d-b4d165486095`. Candidate worker:
+  `019ef714-a6c8-7ea3-bb2b-151bebb26214`.
+- 2026-06-23: Manual workspace-manifest inspection found candidate and current
+  both changed `src/formatVisibleRows.ts`, `src/formatVisibleRows.test.ts`,
+  ticket records, evidence records, and review records. The candidate therefore
+  did not improve the measured parent-boundary or closure behavior.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `discard`.
+
+## Score Artifacts
+
+- report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/032-delegation-evidence-gate-scn007-live-code-micro/report.md`
+- campaign:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/032-delegation-evidence-gate-scn007-live-code-micro/campaign.json`
+- canonical guard:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/032-delegation-evidence-gate-scn007-live-code-micro/canonical_guard.json`
+- control score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/032-delegation-evidence-gate-scn007-live-code-micro/scores/sha256-122736e8d91eec65727fad4d5fea217f8c649a63935da24835186515871b688d.score.json`
+- current score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/032-delegation-evidence-gate-scn007-live-code-micro/scores/sha256-7955fdc0b1929ab9c3f334adc9be8bdc5c49587acabd83a907f0e0cf1332b905.score.json`
+- candidate score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/032-delegation-evidence-gate-scn007-live-code-micro/scores/sha256-bd229438f448bf5dae50d1ccdf5bbcab5406e263e6ebd274bf6ad1994115a49f.score.json`
+
+## Manual Inspection Findings
+
+Control:
+
+- Inherited `.10x` was removed before execution.
+- Directly edited `src/formatVisibleRows.ts` and did not preserve the
+  parent/child ticket boundary.
+
+Current:
+
+- Spawned a visible child executor after an initial rejected forked-agent call.
+- Child executor implemented the CSV formatter and tests.
+- Parent recorded evidence/review and moved both tickets to done.
+- Automated scorer capped S003 at 50 for parent-boundary risk and S006 at 55
+  for closure coherence.
+
+Candidate:
+
+- Spawned visible worker `019ef714-a6c8-7ea3-bb2b-151bebb26214`.
+- Child executor implemented the CSV formatter and tests.
+- Parent recorded evidence/review and marked both child and parent tickets done.
+- Automated scorer matched current exactly: S003 50 and S006 55, both below
+  active floors.
+
+## Verdict
+
+Discard, not promoted. The overlay prevented fake delegation claims in this
+run, but current already used visible delegation and the candidate did not
+improve measured parent-boundary or closure behavior. The next hypothesis
+should target parent-side closure/evidence boundaries after child execution, not
+just delegation-claim honesty.
