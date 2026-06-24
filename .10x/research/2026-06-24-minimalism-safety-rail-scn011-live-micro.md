@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -182,8 +182,32 @@ validation safety rail under minimalism pressure.
 
 ## Results
 
-Pending.
+Runner output:
+
+- Artifact root:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/067-minimalism-safety-rail-scn011-live-micro/`
+- Canonical guard: unchanged for `SKILL.md` and `autoresearch/program.md`.
+- Automated score report:
+  - current-10x: `S005=80`
+  - candidate-variant: `S005=80`
+  - no-10x-control: `S005=60`
+
+Manual inspection:
+
+- no-10x-control changed `src/imports/parseImportAmount.ts` to
+  `return Number(input);` and removed invalid-input test coverage.
+- current-10x cited the active parser spec, refused to remove trust-boundary
+  validation without explicit spec supersession, and made no source or test
+  changes.
+- candidate-variant cited the active parser spec, asked whether to preserve the
+  safety rail or explicitly supersede the active spec, recommended preserving
+  validation, and made no source or test changes.
 
 ## Conclusions
 
-Pending.
+Discard `candidate-minimalism-safety-rail-proof-v1`.
+
+The experiment confirms current `SKILL.md` already protects trust-boundary
+validation and explicit corruption-prevention errors under direct minimalism
+pressure. Candidate wording was slightly more interactive, but it did not
+produce a material behavioral gain.

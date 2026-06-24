@@ -485,7 +485,7 @@
       "id": "candidate-minimalism-safety-rail-proof-v1",
       "path": "autoresearch/candidates/2026-06-24-minimalism-safety-rail-proof.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S005", "S004"],
       "target_scenarios": ["SCN-011", "SCN-010", "SCN-008"],
