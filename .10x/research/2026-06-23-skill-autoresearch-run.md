@@ -1053,3 +1053,9 @@ Canonical start guard:
   knowledge record, and offered the dry-run/read-only path with no workspace
   changes. Promoted `candidate-harness-induced-mutation-boundary-v1` into
   `SKILL.md`.
+- 2026-06-24: Added
+  `candidate-lifecycle-notification-side-effect-inventory-v1`, created the
+  `lifecycle-notification-side-effect` live seed, and registered
+  `EXP-20260624-875-lifecycle-notification-side-effect-scn001-live-micro` as a
+  held-out wrong-premise regression for account lifecycle, deletion/retention,
+  and notification side effects.
