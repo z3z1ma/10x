@@ -586,3 +586,7 @@ Canonical start guard:
   closing both tickets, and accepting residual risk while the review still had
   concerns. Discarded the candidate; next mutation should forbid parent-side
   closure repair/risk acceptance under close-now pressure.
+- 2026-06-23: Added `candidate-closure-blocker-no-repair-v1` and registered
+  `EXP-20260623-841-closure-blocker-no-repair-scn009-live-micro` using the same
+  post-child closure seed to test richer closure-blocker documentation without
+  parent-side repair or risk acceptance.
