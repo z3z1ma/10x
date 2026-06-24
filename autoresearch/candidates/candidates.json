@@ -765,7 +765,7 @@
       "id": "candidate-over-conservatism-positive-control-v1",
       "path": "autoresearch/candidates/2026-06-24-over-conservatism-positive-control.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S003", "S007", "S001"],
       "target_scenarios": ["SCN-006", "SCN-003", "SCN-007"],

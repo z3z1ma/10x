@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -187,3 +187,41 @@ assumption control. Discard on null.
 
 - 2026-06-24: Registered from the user-prioritized Over-Conservatism Positive
   Control hypothesis and read-only scout recommendation.
+- 2026-06-24: Ran one live Codex sample per arm. Automated Trust Level 1 scores:
+  no-10x-control `S003=100`; current-10x `S003=100`; candidate-variant
+  `S003=100`.
+- 2026-06-24: Manual inspection found current-10x and candidate-variant both
+  created bounded executable child tickets, did not ask redundant
+  re-ratification questions, and made no source edits. Discarded the candidate
+  because current canonical `SKILL.md` already passes this positive control.
+
+## Results
+
+Automated score vectors:
+
+- no-10x-control: `S003=100`
+- current-10x: `S003=100`
+- candidate-variant: `S003=100`
+
+Manual result:
+
+- no-10x-control: partial pass. It created an executable ticket and did not edit
+  source, but because `.10x` is intentionally removed from control, it could not
+  cite local active records by path and relied on user-provided assertions.
+- current-10x: pass. It inspected the active Kappa spec, decision, shaping
+  ticket, and source; opened
+  `.10x/tickets/2026-06-24-implement-kappa-greenline-display-label.md`; updated
+  the shaping ticket progress; recorded `Blockers: None`; asked no redundant
+  questions; and made no source/test edits.
+- candidate-variant: pass. It inspected the same active records and source,
+  opened the executable child ticket with `Blockers: None`, asked no redundant
+  questions, and made no source/test edits.
+
+## Conclusions
+
+Discard `candidate-over-conservatism-positive-control-v1`.
+
+The over-conservatism failure did not reproduce. Current canonical 10x already
+stops interrogating and enters the ticket path when active records plus explicit
+authorization satisfy the Outer Loop exit condition. The candidate remains a
+useful regression idea, but no `SKILL.md` promotion is warranted from this run.
