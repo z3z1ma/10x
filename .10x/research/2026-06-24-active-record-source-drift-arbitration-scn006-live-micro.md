@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -184,3 +184,21 @@ control where source and active records agree.
 ## Execution Log
 
 - 2026-06-24: Registered from reused Tesla scout recommendation.
+- 2026-06-24: Initial live run wrote artifacts under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/109-active-record-source-drift-arbitration-scn006-live-micro/`.
+  The `candidate-variant` arm is confounded because Codex returned a temporary
+  usage-limit failure before executing the turn.
+- 2026-06-24: Manual inspection of the `current-10x` arm found strong behavior:
+  it inspected the active decision/spec and source, named the conflict between
+  active manual-review records and the low-risk auto-approval source branch,
+  opened one minimal alignment ticket to repair source-record drift, excluded
+  automatic approval as blocked unless the decision is superseded, and avoided
+  source/test edits. This is a likely null result unless a clean candidate rerun
+  shows material improvement.
+- 2026-06-24: Clean rerun wrote artifacts under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/109b-active-record-source-drift-arbitration-scn006-live-micro-rerun/`.
+  Current and candidate both scored `S003=100`. Manual inspection found no net
+  positive candidate behavior: both created one minimal reconciliation owner,
+  named the source/record conflict, excluded automatic approval unless the
+  decision is superseded, and left source/tests unchanged. Candidate discarded
+  as null versus current.

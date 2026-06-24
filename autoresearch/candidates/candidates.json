@@ -885,7 +885,7 @@
       "id": "candidate-active-record-source-drift-arbitration-v1",
       "path": "autoresearch/candidates/2026-06-24-active-record-source-drift-arbitration.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S003", "S001", "S002"],
       "target_scenarios": ["SCN-006", "SCN-003", "SCN-009"],
@@ -899,6 +899,16 @@
       "created": "2026-06-24",
       "target_scores": ["S002", "S003", "S005"],
       "target_scenarios": ["SCN-004", "SCN-003", "SCN-008"],
+      "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-parallel-child-integration-reconciliation-v1",
+      "path": "autoresearch/candidates/2026-06-24-parallel-child-integration-reconciliation.md",
+      "target": "SKILL.md",
+      "status": "experimental",
+      "created": "2026-06-24",
+      "target_scores": ["S006", "S004", "S007"],
+      "target_scenarios": ["SCN-009", "SCN-007", "SCN-006"],
       "promotion": "manual-only"
     }
   ]

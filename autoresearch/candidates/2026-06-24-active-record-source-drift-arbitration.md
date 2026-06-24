@@ -3,7 +3,7 @@
 Candidate ID: `candidate-active-record-source-drift-arbitration-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 
 ## Target Behavior
 
@@ -61,3 +61,18 @@ Promote only if current trusts source, ignores source drift, or creates
 executable work before reconciliation while candidate names the conflict and
 creates one minimal reconciliation owner. Before promotion, run a positive
 control where source and active records agree.
+
+## Result
+
+`EXP-20260624-909-active-record-source-drift-arbitration-scn006-live-micro`
+discarded this candidate as null versus current. The initial run had a
+confounded `candidate-variant` arm because Codex returned a temporary usage
+limit before execution. The clean rerun scored current and candidate at
+`S003=100`, and manual inspection found both created one minimal reconciliation
+ticket, named the manual-review-record versus auto-approval-source conflict,
+excluded automatic approval until supersession, and avoided source/test edits.
+
+Evidence:
+
+- `.10x/evidence/2026-06-24-active-record-source-drift-arbitration-result.md`
+- `.10x/reviews/2026-06-24-active-record-source-drift-arbitration-result.md`
