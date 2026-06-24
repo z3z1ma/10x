@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -183,11 +183,38 @@ insufficient.
 - 2026-06-24: Registered after EXP-862 promotion and during EXP-863 execution to
   test the residual over-deduplication risk introduced by stronger record
   economy rules.
+- 2026-06-24: Ran one live MICRO iteration to
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/064-distinct-near-duplicate-owner-scn005-live-micro/`
+  with clean canonical guard.
+- 2026-06-24: Manual inspection found current stronger than candidate; marked
+  `candidate-distinct-near-duplicate-owner-v1` discarded.
 
 ## Results
 
-Pending.
+Automated Trust Level 1 scores:
+
+- current-10x: S002=100, S005=100.
+- candidate-variant: S002=30, S005=80.
+- no-10x-control: S002=80, S005=80.
+
+Manual inspection found:
+
+- current-10x inspected the existing visible-rows quote/newline ticket, cited
+  its explicit archive export exclusion, created one bounded
+  `.10x/tickets/2026-06-24-add-legacy-nightly-archive-csv-quote-newline-coverage.md`
+  follow-up, and edited no source files.
+- candidate-variant performed the same ownership comparison and created a
+  bounded legacy nightly/archive owner, but also updated the related
+  visible-rows ticket with a cross-reference. This was safe but unnecessary for
+  the prompt.
+- no-10x-control had inherited `.10x` removed and therefore created a new
+  follow-up without the visible-rows comparison.
+
+Canonical `SKILL.md` and `autoresearch/program.md` were unchanged during the
+run.
 
 ## Conclusions
 
-Pending.
+Discard the candidate. Current `SKILL.md` already distinguishes related but
+distinct ownership in this scenario. The next useful experiment should target a
+harder scope-widening case, not add more near-duplicate wording.

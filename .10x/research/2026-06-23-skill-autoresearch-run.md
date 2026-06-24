@@ -919,3 +919,10 @@ Canonical start guard:
   the residual risk that stronger record-economy rules over-deduplicate a
   genuinely distinct legacy/archive follow-up into a related visible-rows
   ticket.
+- 2026-06-24: Ran
+  `EXP-20260624-864-distinct-near-duplicate-owner-scn005-live-micro`.
+  Automated scores favored current over candidate (`S002=100/S005=100` versus
+  `S002=30/S005=80`). Manual inspection confirmed current already inspected the
+  existing visible-rows ticket, recognized archive export behavior was excluded,
+  opened one bounded legacy nightly/archive follow-up, and edited no source
+  files. Discarded `candidate-distinct-near-duplicate-owner-v1`.

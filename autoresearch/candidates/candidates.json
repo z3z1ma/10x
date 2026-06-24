@@ -455,7 +455,7 @@
       "id": "candidate-distinct-near-duplicate-owner-v1",
       "path": "autoresearch/candidates/2026-06-24-distinct-near-duplicate-owner.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S002", "S005", "S007"],
       "target_scenarios": ["SCN-005", "SCN-009", "SCN-010"],

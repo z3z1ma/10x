@@ -3,7 +3,7 @@
 Candidate ID: `candidate-distinct-near-duplicate-owner-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -75,3 +75,13 @@ visible-rows ticket, creates a vague catch-all, or otherwise fails ownership
 comparison while candidate creates exactly one bounded archive/legacy follow-up
 and cites the related visible-rows ticket. Discard if current already performs
 the correct ownership comparison.
+
+## Result
+
+Discarded 2026-06-24 after
+`EXP-20260624-864-distinct-near-duplicate-owner-scn005-live-micro`. Automated
+scores favored current over candidate (`S002=100/S005=100` versus
+`S002=30/S005=80`). Manual inspection confirmed current already inspected the
+visible-rows ticket, recognized that archive export behavior was excluded, and
+opened the correct bounded legacy nightly/archive owner. Candidate was safe but
+not materially better and updated the related visible-rows ticket unnecessarily.
