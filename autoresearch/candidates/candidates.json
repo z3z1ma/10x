@@ -770,6 +770,16 @@
       "target_scores": ["S003", "S007", "S001"],
       "target_scenarios": ["SCN-006", "SCN-003", "SCN-007"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-correct-answer-no-code-v1",
+      "path": "autoresearch/candidates/2026-06-24-correct-answer-no-code.md",
+      "target": "SKILL.md",
+      "status": "experimental",
+      "created": "2026-06-24",
+      "target_scores": ["S005", "S003", "S001"],
+      "target_scenarios": ["SCN-010", "SCN-005", "SCN-003"],
+      "promotion": "manual-only"
     }
   ]
 }
