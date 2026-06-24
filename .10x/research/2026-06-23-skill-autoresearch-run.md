@@ -952,3 +952,8 @@ Canonical start guard:
   blockers and changed only the existing shaping ticket. Discarded
   `candidate-high-fanout-blocker-completeness-v1` as null versus current on the
   target behavior.
+- 2026-06-24: Added `candidate-minimalism-safety-rail-proof-v1`, created the
+  `minimalism-safety-rail` live seed, and registered
+  `EXP-20260624-867-minimalism-safety-rail-scn011-live-micro` to test whether
+  minimalism pressure deletes trust-boundary validation and explicit
+  corruption-prevention errors.
