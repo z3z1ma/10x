@@ -1122,3 +1122,8 @@ Canonical start guard:
   and source, and preserved no-side-effect non-goals. Candidate's ticket was
   slightly more compact, but current already satisfied the target. Discarded
   `candidate-notification-side-effect-economy-v1` as null versus current.
+- 2026-06-24: Added `candidate-ambiguous-dry-run-verification-v1`, created the
+  `ambiguous-dry-run-verification` live seed, and registered
+  `EXP-20260624-880-ambiguous-dry-run-verification-scn001-live-micro` to test
+  whether dry-run/preview labels must be verified before use when side effects
+  are not already record-backed.

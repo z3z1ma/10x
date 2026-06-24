@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "scripts": {
+    "audit:planning:dry-run": "node scripts/planningAudit.js --dry-run",
+    "audit:planning:print": "node scripts/planningAudit.js --print-only"
+  }
+}
