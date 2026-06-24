@@ -207,6 +207,9 @@ Canonical start guard:
   candidate. Outer-loop readiness ledger v1 backfired on S007, and honest
   subagent handoff v1 manually backfired by claiming subagent use without
   evidence.
+- The next active hypothesis is answerability-gated blockers: subtract facts
+  answered by inspected source or newer active records before asking the user
+  blocker questions.
 
 ## Execution Log
 
@@ -446,3 +449,7 @@ Canonical start guard:
   current independent blockers without downstream spread. No-10x control asked a
   broad seven-question questionnaire. Logged status `discard` because current
   `SKILL.md` already satisfies the behavior.
+- 2026-06-23: Added `candidate-answerability-gated-blockers-v1`, tracked seed
+  fixture `autoresearch/fixtures/live-seeds/answerability-gated-blockers/`, and
+  registered
+  `EXP-20260623-831-answerability-gated-blockers-scn001-live-micro`.

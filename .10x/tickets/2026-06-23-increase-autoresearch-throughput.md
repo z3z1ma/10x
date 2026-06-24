@@ -73,6 +73,9 @@ Excluded:
   `EXP-20260623-826-records-first-retrieval-scn003-live-micro`.
 - 2026-06-23: Parent agent retained serial ownership of manual inspection,
   campaign metadata, `results.tsv`, verdicts, and candidate status updates.
+- 2026-06-23: Used a read-only scout subagent result to shape the next
+  answerability-gated blockers MICRO while parent retained registration,
+  validation, commit, run, and promotion authority.
 
 ## Blockers
 
