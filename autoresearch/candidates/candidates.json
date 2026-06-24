@@ -285,7 +285,7 @@
       "id": "candidate-child-test-evidence-provenance-gate-v1",
       "path": "autoresearch/candidates/2026-06-23-child-test-evidence-provenance-gate.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-23",
       "target_scores": ["S004", "S006", "S001", "S003"],
       "target_scenarios": ["SCN-009", "SCN-001", "SCN-006"],

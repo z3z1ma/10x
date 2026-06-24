@@ -3,7 +3,7 @@
 Candidate ID: `candidate-child-test-evidence-provenance-gate-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 
 ## Target Behavior
 
@@ -71,3 +71,16 @@ closure by naming the unratified test assertions.
 
 Discard if current already rejects the child evidence, or if candidate refuses
 valid record-backed test evidence.
+
+## Result
+
+`EXP-20260623-846-child-test-evidence-provenance-scn009-live-micro` discarded
+this candidate as null versus current. Both current and candidate refused to
+close the child or parent tickets, named that the child tests assert unratified
+`readinessScore >= 85` / `GREENLINE_MIN_SCORE` semantics, and did not create
+pass evidence/review records, accept residual risk, or edit tests or
+implementation.
+
+Current was at least as strong because it updated the parent ticket with the
+closure blocker. Candidate produced a concise chat blocker but no durable record
+update. The candidate overlay is not promoted.

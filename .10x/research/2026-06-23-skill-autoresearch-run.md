@@ -650,3 +650,10 @@ Canonical start guard:
   `EXP-20260623-846-child-test-evidence-provenance-scn009-live-micro` to test
   parent closure behavior when a child reports passing tests whose assertions
   encode unratified `readinessScore >= 85` semantics.
+- 2026-06-23: Ran
+  `EXP-20260623-846-child-test-evidence-provenance-scn009-live-micro`. Current
+  and candidate both scored `S004=65,S006=65`; control scored
+  `S004=60,S006=10`. Manual inspection found current and candidate both refused
+  closure because the child tests asserted unratified `readinessScore >= 85`
+  semantics. Current also wrote the closure blocker to the parent ticket.
+  Discarded the candidate as null versus current.
