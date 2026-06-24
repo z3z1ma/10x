@@ -699,3 +699,9 @@ Canonical start guard:
   edits. Current was stronger because it recorded blockers in both child and
   parent tickets, while candidate only updated the parent. Discarded
   `candidate-subagent-claim-reconciliation-v1`.
+- 2026-06-23: Added
+  `candidate-retrospective-extraction-type-gate-v1`, created the
+  `retrospective-extraction` live seed, and registered
+  `EXP-20260623-850-retrospective-extraction-type-gate-scn012-live-micro` to
+  test whether closure retrospectives route a follow-up risk, reusable
+  procedure, and naming convention into the correct durable record types.
