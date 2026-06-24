@@ -755,7 +755,7 @@
       "id": "candidate-explicit-user-override-without-supersession-v1",
       "path": "autoresearch/candidates/2026-06-24-explicit-user-override-without-supersession.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S001", "S003", "S002"],
       "target_scenarios": ["SCN-006", "SCN-001", "SCN-010"],
