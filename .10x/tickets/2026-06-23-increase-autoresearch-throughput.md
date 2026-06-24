@@ -76,6 +76,9 @@ Excluded:
 - 2026-06-23: Used a read-only scout subagent result to shape the next
   answerability-gated blockers MICRO while parent retained registration,
   validation, commit, run, and promotion authority.
+- 2026-06-23: Used a second read-only scout result to queue an independent
+  SCN-007 delegation-evidence MICRO after EXP-831 while parent retained all
+  file edits, validation, commits, runs, and verdict authority.
 
 ## Blockers
 

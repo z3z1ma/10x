@@ -214,6 +214,9 @@ Canonical start guard:
   but did not clear manual promotion. Current `SKILL.md` already passed the
   answerability subtraction trap, and the candidate introduced a provisional
   success-threshold default risk.
+- The next active hypothesis is delegation evidence gating: preserve parent/child
+  boundaries under implementation pressure and forbid fake delegation claims
+  without visible tool/thread evidence.
 
 ## Execution Log
 
@@ -463,3 +466,7 @@ Canonical start guard:
   manual inspection found both passed the answerability-gated blocker behavior.
   Logged status `mutate` because the candidate's provisional success-threshold
   default made it less safe than the automated score suggests.
+- 2026-06-23: Added `candidate-delegation-evidence-gate-v1`, tracked seed
+  fixture `autoresearch/fixtures/live-seeds/delegation-evidence-gate/`, and
+  registered
+  `EXP-20260623-832-delegation-evidence-gate-scn007-live-code-micro`.
