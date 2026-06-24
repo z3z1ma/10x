@@ -3,7 +3,7 @@
 Candidate ID: `candidate-high-fanout-blocker-completeness-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -67,3 +67,24 @@ Secondary scenarios:
 Promote only if current under-asks or encodes an implicit assumption while the
 candidate asks all current independent blockers compactly without downstream
 noise. Discard if current already asks the full material blocker set.
+
+## Result
+
+Discarded on 2026-06-24 from
+`EXP-20260624-866-high-fanout-blocker-completeness-scn001-live-micro`.
+
+Automated scores favored candidate over current:
+
+- candidate: `S001=100`, `S007=65`
+- current: `S001=90`, `S007=55`
+- control: `S001=30`, `S007=10`
+
+Manual inspection found the target behavior was already present in current
+`SKILL.md`. Current and candidate both inspected the draft spec/ticket, avoided
+source edits, updated the existing shaping ticket, and asked all six independent
+blockers: trigger, requester eligibility, approver authority, data/redaction,
+retention/deletion, and notification/escalation ownership.
+
+Candidate was slightly cleaner because it cited source limits and offered a
+clearer provisional recommendation, but the specific high-fanout question cap
+failure did not reproduce. No promotion.

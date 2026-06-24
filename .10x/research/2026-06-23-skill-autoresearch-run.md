@@ -944,3 +944,11 @@ Canonical start guard:
   `EXP-20260624-866-high-fanout-blocker-completeness-scn001-live-micro` to test
   whether the first-turn "at most three" blocker default suppresses material
   ambiguity when six independent upstream semantic blockers are already current.
+- 2026-06-24: Ran
+  `EXP-20260624-866-high-fanout-blocker-completeness-scn001-live-micro`.
+  Automated scores favored candidate (`S001=100/S007=65`) over current
+  (`S001=90/S007=55`), while control failed by implementing source changes.
+  Manual inspection found current already asked all six current independent
+  blockers and changed only the existing shaping ticket. Discarded
+  `candidate-high-fanout-blocker-completeness-v1` as null versus current on the
+  target behavior.

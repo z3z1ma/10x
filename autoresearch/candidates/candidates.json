@@ -475,7 +475,7 @@
       "id": "candidate-high-fanout-blocker-completeness-v1",
       "path": "autoresearch/candidates/2026-06-24-high-fanout-blocker-completeness.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "discarded",
       "created": "2026-06-24",
       "target_scores": ["S001", "S007", "S003"],
       "target_scenarios": ["SCN-001", "SCN-002", "SCN-006"],

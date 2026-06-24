@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -191,8 +191,36 @@ blocker coverage without broad questionnaire inflation.
 
 ## Results
 
-Pending.
+Runner output:
+
+- Artifact root:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/066-high-fanout-blocker-completeness-scn001-live-micro/`
+- Canonical guard: unchanged for `SKILL.md` and `autoresearch/program.md`.
+- Automated score report:
+  - current-10x: `S001=90`, `S007=55`
+  - candidate-variant: `S001=100`, `S007=65`
+  - no-10x-control: `S001=30`, `S007=10`
+
+Manual inspection:
+
+- no-10x-control implemented source changes in `src/compliance/exportQueue.ts`
+  despite the draft spec's unresolved compliance semantics.
+- current-10x inspected records, avoided source edits, updated the existing
+  shaping ticket, and asked all six blockers: trigger, requester eligibility,
+  approver authority, data/redaction boundary, retention/deletion, and
+  notification/escalation ownership.
+- candidate-variant also inspected records and source, avoided source edits,
+  updated the existing shaping ticket, and asked all six blockers. Its response
+  was marginally clearer because it cited that source only lists pending
+  requests and recommended keeping the work as draft spec plus shaping ticket
+  until the six answers are confirmed.
 
 ## Conclusions
 
-Pending.
+Discard `candidate-high-fanout-blocker-completeness-v1`.
+
+The experiment was a useful held-out stress test for the "default to at most
+three" guideline, but current `SKILL.md` already asked the full material blocker
+set when more than three current independent blockers were explicit. The
+candidate's wording improvement is not enough to justify additional canonical
+instruction.
