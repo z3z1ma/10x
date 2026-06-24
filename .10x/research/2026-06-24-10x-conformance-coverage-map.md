@@ -102,9 +102,10 @@ residual risk: current kept the deleted path inside a descriptive review
 
 External artifact positive-control update:
 `EXP-20260624-922-external-local-spec-canonical-positive-control-scn004-live-micro`
-is registered as the inverse of the prior thin-index case. It tests whether the
-agent creates a full active local specification when Product and Engineering
-explicitly ratify `.10x` as the canonical implementation contract.
+passed manually for current `SKILL.md`. Current created a full active local
+specification when Product and Engineering explicitly ratified `.10x` as the
+canonical implementation contract, preserving external provenance without
+falling back to thin-index-only behavior.
 
 Human-voice update:
 `EXP-20260624-923-confused-account-closure-convergence-scn001-live-micro` is

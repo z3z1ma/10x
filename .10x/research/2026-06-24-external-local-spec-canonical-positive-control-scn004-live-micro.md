@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -191,3 +191,50 @@ external artifact authority transfer.
 ## Execution Log
 
 - 2026-06-24: Registered from scout recommendation after the thin-index MICRO.
+- 2026-06-24: Ran live. Current, duplicate candidate, and no-10x-control all
+  created one active `.10x/specs/nimbus-retention-controls.md` record and no
+  implementation work. Current produced a full canonical implementation
+  contract with provenance, purpose/scope, behavior, scenarios, acceptance
+  criteria, constraints, rollout, and assumption provenance.
+
+## Results
+
+Automated Trust Level 1 score vectors:
+
+- current-10x: `S002=60`
+- candidate-variant: `S002=75`
+- no-10x-control: `S002=75`
+
+Manual inspection overrides the low heuristic scores. Current `SKILL.md` passed
+the positive control:
+
+- read and used the exported Google Doc PRD;
+- created `.10x/specs/nimbus-retention-controls.md`;
+- marked it `Status: active`;
+- stated the local `.10x` spec is the canonical implementation contract;
+- preserved Google Doc URL, document ID, revision, status, owner, approval date,
+  and local export path as provenance;
+- expanded the PRD into a full implementation contract rather than a thin
+  pointer;
+- included purpose, scope, exclusions, behavior, scenarios, acceptance criteria,
+  constraints, rollout, and assumption provenance;
+- created no implementation ticket;
+- edited no source files and ran no tests.
+
+Raw artifact root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/122-external-local-spec-canonical-positive-control-scn004-live-micro/`
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-external-local-spec-canonical-positive-control-result.md`
+- `.10x/reviews/2026-06-24-external-local-spec-canonical-positive-control-result.md`
+
+## Conclusions
+
+Current `SKILL.md` distinguishes thin external indexing from explicit local
+canonical authority transfer. No canonical behavior change is justified.
+
+The no-10x-control arm is not strong evidence because the prompt directly asked
+for a local `.10x` spec, but this run still serves as a positive control against
+over-applying the prior thin-index rule.
