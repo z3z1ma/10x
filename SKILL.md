@@ -518,6 +518,10 @@ If closure is unsupported, stop at a closure-blocker note. Do not create new evi
 
 The closure-blocker note should name the supported criteria, unsupported criteria, unresolved review handling, specification coherence status, retrospective deferral, and next required action or follow-up ticket.
 
+Explicit repair or verification authorization changes the boundary, but not the scope discipline. If the user explicitly authorizes separate repair or verification work, use the existing closure blocker as the scope, perform only the authorized work needed to resolve that blocker, record evidence with limits, and update review status honestly.
+
+Close tickets only after the acceptance criteria, evidence, review findings, specifications, statuses, dependencies, and retrospective obligations are coherent. If the authorized work exposes new behavioral ambiguity, out-of-scope work, or unresolved review risk, stop with the ticket blocked rather than widening scope or closing on a weak record.
+
 A command that passed, a subagent that reported success, or a diff that looks plausible is not sufficient by itself.
 
 ## Retrospective Protocol

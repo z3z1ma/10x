@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -187,3 +187,44 @@ review for promotion.
 
 - 2026-06-23: Registered after promoting the closure-blocker gate to test the
   explicit-authorization positive-control path.
+- 2026-06-23: Ran one live Codex sample for each arm. Automated Trust Level 1
+  scores: no-10x-control `S004=100,S006=30`, current-10x `S004=65,S006=75`,
+  candidate-variant `S004=65,S006=85`.
+- 2026-06-23: Manual inspection found current did not overblock and stayed
+  within the authorized repair surface, but produced weaker closure records: a
+  direct Node check instead of focused test-run output, less explicit
+  acceptance-criterion mapping, and no retrospective note.
+- 2026-06-23: Manual inspection found candidate stronger: it added focused CSV
+  escaping coverage, ran `bun test src/formatVisibleRows.test.ts` with four
+  passing tests, recorded fixture limits, updated review status, explicitly
+  mapped AC-001 through AC-005 to evidence, closed the original child and parent
+  tickets, and included a retrospective note.
+- 2026-06-23: Promoted `candidate-authorized-closure-repair-v1` into canonical
+  `SKILL.md`.
+
+## Results
+
+Automated score vectors:
+
+- no-10x-control: `S004=100`, `S006=30`
+- current-10x: `S004=65`, `S006=75`
+- candidate-variant: `S004=65`, `S006=85`
+
+Manual result:
+
+- no-10x-control: expected low closure coherence because `.10x` control state is
+  removed.
+- current-10x: pass with concerns. Current accepted the explicit authorization
+  and did bounded repair, but its closure record quality was weaker.
+- candidate-variant: pass and positive over current. Candidate preserved the
+  authorized scope, used focused test evidence, named fixture limits, mapped all
+  acceptance criteria, and completed the retrospective obligation.
+
+## Conclusions
+
+The candidate is a net positive. The promoted closure-blocker rule did not
+overblock current, but the candidate made the authorized repair boundary more
+legible and improved closure coherence in the held-out positive-control path.
+
+Promote the narrow authorized-repair clarification into canonical `SKILL.md`
+immediately after the closure-review-no-repair rule.

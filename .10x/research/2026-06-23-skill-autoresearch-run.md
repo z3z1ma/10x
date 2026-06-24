@@ -602,3 +602,11 @@ Canonical start guard:
   `EXP-20260623-842-authorized-closure-repair-scn009-live-micro` as a
   positive-control test for the promoted closure rule: when the user explicitly
   authorizes bounded verification or repair, current 10x should not overblock.
+- 2026-06-23: Ran
+  `EXP-20260623-842-authorized-closure-repair-scn009-live-micro`. Candidate
+  scored `S004=65,S006=85`, current scored `S004=65,S006=75`, and control scored
+  `S004=100,S006=30`. Manual inspection found current passed the
+  positive-control path but candidate produced stronger closure records:
+  focused `bun test` evidence, explicit AC-to-evidence mapping, honest fixture
+  limits, original ticket closure, and retrospective notation. Promoted the
+  narrow authorized-repair clarification into `SKILL.md`.
