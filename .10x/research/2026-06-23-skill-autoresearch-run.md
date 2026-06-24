@@ -673,3 +673,8 @@ Canonical start guard:
   implementation edits. Current had stronger closure dependencies in the done
   parent ticket, while candidate left the shaping ticket open. Discarded the
   candidate as null to slightly weaker versus current.
+- 2026-06-23: Added `candidate-mentioned-follow-up-owner-v1`, created the
+  `follow-up-owner-closure` live seed, and registered
+  `EXP-20260623-848-mentioned-follow-up-owner-scn009-live-micro` to test whether
+  closure-time discovered follow-ups receive durable owners instead of surviving
+  only as final-answer prose.
