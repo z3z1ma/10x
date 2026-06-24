@@ -1147,3 +1147,7 @@ Canonical start guard:
   records, current blocked closure without inspecting source/test assertions,
   and candidate identified the concrete active-spec drift and recorded a fail
   closure review. Promoted `candidate-spec-drift-closure-gate-v1`.
+- 2026-06-24: Added `candidate-spec-aligned-closure-completion-v1`, created the
+  `spec-aligned-closure-positive` live seed, and registered
+  `EXP-20260624-882-spec-aligned-closure-positive-scn009-live-micro` as a
+  positive control for the newly promoted spec-drift closure gate.
