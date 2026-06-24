@@ -657,3 +657,10 @@ Canonical start guard:
   closure because the child tests asserted unratified `readinessScore >= 85`
   semantics. Current also wrote the closure blocker to the parent ticket.
   Discarded the candidate as null versus current.
+- 2026-06-23: Added
+  `candidate-closure-time-semantic-ratification-record-coherence-v1` and
+  registered
+  `EXP-20260623-847-closure-time-semantic-ratification-scn009-live-micro` as a
+  positive-control test: when the user explicitly authorizes the missing Kappa
+  source-field and threshold semantics, the agent should repair the active
+  records before using child tests as closure evidence.
