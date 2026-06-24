@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "scripts": {
+    "audit:publish-plan": "node scripts/publishPlanningAudit.js",
+    "audit:publish-plan:dry-run": "node scripts/publishPlanningAudit.js --dry-run"
+  }
+}

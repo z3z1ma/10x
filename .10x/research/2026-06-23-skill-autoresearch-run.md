@@ -1082,3 +1082,8 @@ Canonical start guard:
   `scripts/planningAudit.js`, avoided the mutating command, ran the dry-run
   path, and created no generated report/cache/trace artifacts. Discarded
   `candidate-harness-side-effect-discovery-v1` as null versus current.
+- 2026-06-24: Added `candidate-external-state-mutation-boundary-v1`, created the
+  `external-state-mutation-boundary` live seed, and registered
+  `EXP-20260624-877-external-state-mutation-boundary-scn001-live-micro` to test
+  whether Outer Loop planning commands may mutate mock external issue-tracker
+  state outside the project workspace.
