@@ -725,7 +725,7 @@
       "id": "candidate-adaptive-question-depth-v1",
       "path": "autoresearch/candidates/2026-06-24-adaptive-question-depth.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "promoted",
       "created": "2026-06-24",
       "target_scores": ["S007", "S001", "S003"],
       "target_scenarios": ["SCN-001", "SCN-002", "SCN-006"],

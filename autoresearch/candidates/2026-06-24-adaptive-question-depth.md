@@ -3,7 +3,7 @@
 Candidate ID: `candidate-adaptive-question-depth-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: promoted
 Promotion: manual-only
 
 ## Target Behavior
@@ -69,3 +69,13 @@ Promote only if current under-asks or implicitly defers material blockers while
 candidate asks all ten current independent blockers compactly without
 downstream noise, source edits, executable tickets, or guessed compliance
 semantics. Discard if current already asks the complete material set.
+
+## Result
+
+Promoted after `EXP-20260624-892-adaptive-question-depth-scn001-live-micro`.
+Current canonical 10x preserved all blockers durably in the shaping ticket, but
+the user-facing checkpoint compressed them into three questions and omitted the
+request-trigger blocker. Candidate asked the full blocker set explicitly and
+compactly. The promoted rule keeps the existing "at most three" default but
+clarifies that it is not a safety ceiling and that grouping must not hide a
+material sub-branch.

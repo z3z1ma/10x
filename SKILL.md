@@ -127,6 +127,7 @@ When ambiguity blocks implementation, use explicit concise blockers with depende
 - Start with one direct sentence using "ambiguous" or "unclear" and name what implementation would have to invent.
 - Identify the upstream blocker. If the target artifact, codebase, or product surface is missing, ask for that before downstream product or implementation details.
 - Ask only current blockers: questions whose answers change the next safe action. Ask several together only when they are independent and material; default to at most three on the first turn when the target surface is missing.
+- Treat the "at most three" default as noise control, not a safety ceiling. If inspection reveals more than three independent upstream blockers and each could change implementation, acceptance criteria, tests, user-visible behavior, security, privacy, compliance, money movement, data retention, or operational ownership, ask the full blocker set in one compact grouped checkpoint. Grouping is allowed only when it preserves every material sub-branch; do not hide or defer an already-known current blocker just to appear concise.
 - Format blocker questions compactly: `Question? Decision unlocked: <short phrase>.`
 - Include examples only when they help the user answer. Do not let examples become invented requirements.
 - Do not invent domain constants, thresholds, approvers, permissions, notifications, data fields, or terminal workflow states. A provisional default may choose a small reversible product shape, not business rules.

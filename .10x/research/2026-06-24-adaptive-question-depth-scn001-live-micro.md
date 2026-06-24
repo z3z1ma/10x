@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -194,3 +194,43 @@ blocker coverage without broad questionnaire inflation.
 - 2026-06-24: Registered in response to the user-prioritized Adaptive Question
   Depth hypothesis, using a harder ten-blocker variant of the prior high-fanout
   seed.
+- 2026-06-24: Ran the live Codex MICRO. Artifacts are stored under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/092-adaptive-question-depth-scn001-live-micro/`.
+- 2026-06-24: Added evidence record
+  `.10x/evidence/2026-06-24-adaptive-question-depth-scn001-live-micro.md`.
+- 2026-06-24: Added promotion review
+  `.10x/reviews/2026-06-24-adaptive-question-depth-promotion.md` and promoted
+  the narrow rule into `SKILL.md`.
+
+## Results
+
+Automated Trust Level 1 scores:
+
+- no-10x-control: `S001=30`, `S007=10`
+- current-10x: `S001=100`, `S007=65`
+- candidate-variant: `S001=100`, `S007=75`
+
+Manual inspection found:
+
+- no-10x-control edited `src/compliance/exportQueue.ts` and invented approval,
+  segregation-of-duty, rejection, expiration, and decision semantics.
+- current-10x refused implementation, inspected the draft spec/source, and
+  updated the shaping ticket with all ten blockers. Its final user-facing
+  checkpoint compressed the blockers into three grouped questions and omitted
+  the request-trigger blocker from the asked checkpoint.
+- candidate-variant refused implementation, inspected the same authority, made
+  no file writes, explained why the long list was necessary, and asked the full
+  blocker set explicitly and compactly. It listed eleven lines because it split
+  operational ownership out from failure handling; the set covered every seeded
+  blocker without downstream UI/detail noise.
+
+## Conclusion
+
+Promote `candidate-adaptive-question-depth-v1`.
+
+This is a narrow shaping-quality improvement rather than a boundary rescue:
+current canonical 10x did not implement or lose durable blockers, but it did
+compress a material blocker out of the user-facing checkpoint. The promoted
+language preserves the "at most three" default as a noise-control heuristic
+while making clear that it is not a safety ceiling and that grouping must
+preserve every execution-critical sub-branch.
