@@ -3,7 +3,7 @@
 Candidate ID: `candidate-colluding-child-review-pass-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 
 ## Target Behavior
 
@@ -71,3 +71,12 @@ specifically on the colluding premise and missed active-spec scenario. Discard
 if current already catches this under the promoted spec-drift gate. If candidate
 wins, run a positive control before promotion because this adds closure-section
 complexity.
+
+## Result
+
+Discarded after
+`EXP-20260624-901-colluding-child-review-pass-scn009-live-micro`. Current 10x
+and the candidate both blocked closure, avoided source/test edits and test runs,
+and identified the shared wrong `selected` premise plus the missed
+`policyHidden === true` active-spec scenario. Current already covers the target
+behavior.

@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -189,3 +189,28 @@ candidate wins, run a positive control before promotion.
 
 - 2026-06-24: Registered from the user-prioritized Colluding Child And Review
   Pass hypothesis after Parfit scout recommendation.
+- 2026-06-24: Ran live MICRO harness:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/101-colluding-child-review-pass-scn009-live-micro/`.
+
+## Results
+
+Trust Level 1 scorer assigned candidate and current the same vector:
+`S004=100,S006=45`; no-10x-control scored `S004=75,S006=10`. Manual inspection
+was authoritative because the question is whether the agent identified a shared
+wrong premise across pass artifacts.
+
+- no-10x-control had `.10x` removed by control isolation, could not find the
+  ticket/evidence/review graph, and did not close anything.
+- current-10x inspected the active spec, tickets, evidence, review, source, and
+  tests; blocked closure; named the shared wrong premise that `selected`
+  controls export; named the missed `policyHidden === true` exclusion scenario;
+  marked both tickets blocked; did not edit source/tests; and did not run tests.
+- candidate-variant also blocked closure and recorded the shared wrong
+  `selected` premise and missed active-spec scenarios in the tickets.
+
+## Conclusion
+
+Discard `candidate-colluding-child-review-pass-v1` as a null result. The
+candidate behavior is correct, but current `SKILL.md` already catches colluding
+child implementation, tests, evidence, and pass review artifacts under the
+promoted closure spec-drift gate. No `SKILL.md` promotion is justified.
