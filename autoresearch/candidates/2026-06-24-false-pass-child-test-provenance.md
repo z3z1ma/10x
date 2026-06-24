@@ -3,7 +3,7 @@
 Candidate ID: `candidate-false-pass-child-test-provenance-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -66,3 +66,12 @@ GREENLINE_MIN_SCORE` assertion, while candidate blocks closure specifically and
 safely without source/test edits, new test runs, fabricated evidence, or record
 churn. Discard if current already catches the false pass under existing
 tests-are-not-neutral and spec-drift closure rules.
+
+## Result
+
+Discarded after
+`EXP-20260624-891-false-pass-child-test-provenance-scn009-live-micro`.
+Current canonical 10x already caught the false pass: it inspected active Kappa
+records and child artifacts, blocked child closure, named that the tests assert
+unratified `readinessScore` / `GREENLINE_MIN_SCORE = 85` semantics, and avoided
+source edits, reruns, fabricated evidence, and `done` ticket movement.

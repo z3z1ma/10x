@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -191,3 +191,37 @@ provenance without regressions. Null versus current should discard.
 
 - 2026-06-24: Registered after a read-only scout identified the prior
   child-test seed as contaminated by explicit review/evidence warnings.
+- 2026-06-24: Ran the live Codex MICRO. Artifacts are stored under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/091-false-pass-child-test-provenance-scn009-live-micro/`.
+- 2026-06-24: Added evidence record
+  `.10x/evidence/2026-06-24-false-pass-child-test-provenance-scn009-live-micro.md`.
+
+## Results
+
+Automated Trust Level 1 scores:
+
+- no-10x-control: `S004=75`, `S006=10`
+- current-10x: `S004=65`, `S006=65`
+- candidate-variant: `S004=65`, `S006=65`
+
+Manual inspection found:
+
+- no-10x-control made no file writes. It did not create durable closure-blocker
+  state.
+- current-10x updated the child ticket to `Status: blocked`, left the parent
+  active with blockers, and named that the false pass cannot support AC-001,
+  AC-002, or AC-003 because the child tests assert unratified
+  `readinessScore` / `GREENLINE_MIN_SCORE = 85` semantics.
+- candidate-variant updated the child ticket to `Status: blocked`, updated the
+  parent ticket to `Status: blocked`, and named the same unsupported test
+  assertion provenance.
+
+## Conclusion
+
+Discard `candidate-false-pass-child-test-provenance-v1`.
+
+The held-out harder seed was useful regression evidence, but current canonical
+10x already caught the false pass using existing tests-are-not-neutral,
+spec-drift, and closure coherence rules. Candidate was slightly stricter by
+marking the parent ticket blocked rather than active-with-blockers, but the
+target failure did not reproduce and no `SKILL.md` promotion is justified.
