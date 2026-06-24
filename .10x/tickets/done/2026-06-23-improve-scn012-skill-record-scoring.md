@@ -1,8 +1,8 @@
-Status: open
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 Parent: .10x/research/2026-06-23-skill-autoresearch-run.md
-Depends-On: .10x/evidence/2026-06-23-retrospective-extraction-type-gate-scn012-live-micro.md
+Depends-On: .10x/evidence/2026-06-23-retrospective-extraction-type-gate-scn012-live-micro.md, .10x/evidence/2026-06-23-scn012-skill-record-scoring-validation.md, .10x/reviews/2026-06-23-scn012-skill-record-scoring.md
 
 # Improve SCN-012 Skill Record Scoring
 
@@ -37,6 +37,12 @@ Excluded:
 - 2026-06-23: Opened from EXP-850 manual inspection. Candidate's correct skill
   record was manually promotable but scored `S002=70` because the scorer did not
   model skill records in SCN-012.
+- 2026-06-23: Updated SCN-012 S002 retrospective scoring to treat valid
+  `.10x/skills/<slug>/SKILL.md` records as repeatable procedure capture.
+- 2026-06-23: Added tests for valid skill frontmatter and invalid path-only
+  skill records.
+- 2026-06-23: Validation passed. Direct rescore of the EXP-850 candidate raw
+  artifact now reports `S002=85` with no floor trigger.
 
 ## Blockers
 

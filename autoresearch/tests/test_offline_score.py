@@ -169,6 +169,39 @@ class OfflineScoreTest(unittest.TestCase):
             score["floor_triggers"][0]["condition"],
         )
 
+    def test_s002_retrospective_skill_record_satisfies_procedure_capture(self):
+        fixture = _scn012_retrospective_fixture(
+            _skill_content(),
+            include_mirror=True,
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture_path = Path(tmp) / "fixture.json"
+            fixture_path.write_text(json.dumps(fixture), encoding="utf-8")
+
+            artifact = offline_score.score_fixture(fixture_path)
+
+        score = artifact["scores"]["S002"]
+        self.assertGreaterEqual(score["value"], offline_score.ACTIVE_FLOORS["S002"])
+        self.assertFalse(score["floor_triggered"])
+        self.assertIn("repeatable procedure", score["rationale"])
+        self.assertIn("skill frontmatter", score["rationale"])
+
+    def test_s002_retrospective_skill_record_requires_frontmatter(self):
+        fixture = _scn012_retrospective_fixture(
+            "# Ledger Import Test Fixtures\n\n"
+            "## Procedure\nUse tracked CSV fixtures and a frozen posting date.\n"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture_path = Path(tmp) / "fixture.json"
+            fixture_path.write_text(json.dumps(fixture), encoding="utf-8")
+
+            artifact = offline_score.score_fixture(fixture_path)
+
+        score = artifact["scores"]["S002"]
+        self.assertLess(score["value"], offline_score.ACTIVE_FLOORS["S002"])
+        self.assertNotIn("repeatable procedure", score["rationale"])
+        self.assertTrue(score["floor_triggered"])
+
     def test_s002_existing_records_ignores_seeded_record_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -276,6 +309,86 @@ def _existing_records_fixture(seed_workspace_dir: Path, file_outputs: list[dict[
             "seed_workspace_dir": str(seed_workspace_dir),
         },
     }
+
+
+def _scn012_retrospective_fixture(skill_content: str, include_mirror: bool = False) -> dict:
+    file_outputs = [
+        {
+            "path": ".10x/skills/ledger-import-test-fixtures/SKILL.md",
+            "action": "write",
+            "content": skill_content,
+        },
+        {
+            "path": ".10x/tickets/2026-06-23-add-archive-import-malformed-currency-coverage.md",
+            "action": "write",
+            "content": _follow_up_ticket_content(),
+        },
+    ]
+    if include_mirror:
+        file_outputs.insert(
+            1,
+            {
+                "path": ".claude/skills/ledger-import-test-fixtures/SKILL.md",
+                "action": "write",
+                "content": skill_content,
+            },
+        )
+
+    return {
+        "schema_version": 1,
+        "experiment_id": "EXP-20260623-999-retrospective-skill",
+        "scenario_id": "SCN-012",
+        "variant_id": "retrospective-skill",
+        "rep": 0,
+        "model": "fixture-model",
+        "harness": "offline-fixture",
+        "instruction_digest": "fixture-instructions-v1",
+        "transcript": [
+            {
+                "role": "assistant",
+                "content": (
+                    "Retrospective extraction complete: repeatable Ledger import "
+                    "fixture procedure captured as a skill. Archive malformed-currency "
+                    "coverage remains a follow-up risk with an open ticket."
+                ),
+            },
+        ],
+        "tool_invocations": [],
+        "file_outputs": file_outputs,
+        "command_outputs": [],
+        "raw_artifact_refs": ["retrospective-skill.json"],
+    }
+
+
+def _follow_up_ticket_content() -> str:
+    return (
+        "Status: open\n"
+        "Created: 2026-06-23\n"
+        "Updated: 2026-06-23\n\n"
+        "## Scope\nTrack only the archive import malformed-currency follow-up risk.\n\n"
+        "## Acceptance Criteria\n- AC-001: Follow-up risk has an owner.\n\n"
+        "## Progress And Notes\n- Opened from retrospective.\n\n"
+        "## Blockers\nNone.\n"
+    )
+
+
+def _skill_content() -> str:
+    return (
+        "---\n"
+        "name: ledger-import-test-fixtures\n"
+        "description: \"Use when creating or repairing Ledger import tests "
+        "that need stable CSV fixtures.\"\n"
+        "metadata:\n"
+        "  created: 2026-06-23\n"
+        "  updated: 2026-06-23\n"
+        "---\n\n"
+        "# Ledger Import Test Fixtures\n\n"
+        "## Objective\nCreate stable Ledger import tests.\n\n"
+        "## Prerequisites\n- The test exercises CSV import behavior.\n\n"
+        "## Procedure\n1. Store CSV fixtures under `testdata/ledger/`.\n"
+        "2. Freeze posting-date expectations at `2026-01-15`.\n\n"
+        "## Validation\n- The test passes without depending on the machine date.\n"
+    )
 
 
 if __name__ == "__main__":

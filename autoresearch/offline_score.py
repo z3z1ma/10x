@@ -431,7 +431,7 @@ def _score_s002_minimal_records(fixture: dict[str, Any]) -> dict[str, Any]:
 
 
 def _score_s002_retrospective_records(fixture: dict[str, Any]) -> dict[str, Any]:
-    records = _file_outputs(fixture)
+    records = _tenx_record_outputs(fixture)
     paths = [record.get("path", "") for record in records]
     text = _all_text(fixture)
     triggers: list[dict[str, Any]] = []
@@ -439,9 +439,21 @@ def _score_s002_retrospective_records(fixture: dict[str, Any]) -> dict[str, Any]
     rationale: list[str] = []
 
     checks = (
-        ("durable lesson is captured", 20, any("/knowledge/" in path for path in paths) and _has_any(text, "lesson", "reusable", "recurring")),
+        (
+            "repeatable procedure or durable lesson is captured",
+            20,
+            any(_is_valid_skill_record(record) for record in records)
+            or (
+                any("/knowledge/" in path for path in paths)
+                and _has_any(text, "lesson", "reusable", "recurring")
+            ),
+        ),
         ("follow-up risk is tracked", 20, any("/tickets/" in path for path in paths) and _has_any(text, "follow-up", "risk")),
-        ("records have valid headers", 15, records and all(_has_headers(record) for record in records)),
+        (
+            "records have valid headers or skill frontmatter",
+            15,
+            records and all(_has_headers(record) or _is_valid_skill_record(record) for record in records),
+        ),
         ("record statuses are coherent", 15, records and all(_status_is_valid(record) for record in records)),
         ("chat-only learning is avoided", 15, bool(records)),
         ("no obvious secret is present", 15, not _contains_secret(text)),
@@ -828,6 +840,14 @@ def _file_outputs(fixture: dict[str, Any]) -> list[dict[str, Any]]:
     return [item for item in _list(fixture.get("file_outputs")) if isinstance(item, dict)]
 
 
+def _tenx_record_outputs(fixture: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        output
+        for output in _file_outputs(fixture)
+        if str(output.get("path", "")).startswith(".10x/")
+    ]
+
+
 def _implementation_file_outputs(fixture: dict[str, Any]) -> list[dict[str, Any]]:
     return [
         output
@@ -952,6 +972,8 @@ def _references_are_coherent(records: list[dict[str, Any]]) -> bool:
 
 def _status_is_valid(record: dict[str, Any]) -> bool:
     path = record.get("path", "")
+    if _is_valid_skill_record(record):
+        return True
     status = _status(record)
     if "/decisions/" in path:
         return status in {"active", "superseded"}
@@ -962,6 +984,41 @@ def _status_is_valid(record: dict[str, Any]) -> bool:
     if "/tickets/" in path:
         return status in {"open", "active", "blocked", "done", "cancelled"}
     return False
+
+
+def _is_valid_skill_record(record: dict[str, Any]) -> bool:
+    path = str(record.get("path", ""))
+    match = re.fullmatch(
+        r"\.10x/skills/([A-Za-z0-9][A-Za-z0-9_-]*)/SKILL\.md",
+        path,
+    )
+    if not match:
+        return False
+
+    content = str(record.get("content", ""))
+    frontmatter = re.match(r"^---\n(.*?)\n---\n", content, flags=re.DOTALL)
+    if not frontmatter:
+        return False
+
+    slug = re.escape(match.group(1))
+    header = frontmatter.group(1)
+    required_frontmatter = (
+        rf"^name:\s*['\"]?{slug}['\"]?\s*$",
+        r"^description:\s*['\"]?Use when\b",
+        r"^metadata:\s*$",
+        r"^\s+created:\s*['\"]?\d{4}-\d{2}-\d{2}['\"]?\s*$",
+        r"^\s+updated:\s*['\"]?\d{4}-\d{2}-\d{2}['\"]?\s*$",
+    )
+    required_sections = (
+        "## Objective",
+        "## Prerequisites",
+        "## Procedure",
+        "## Validation",
+    )
+    return all(
+        re.search(pattern, header, flags=re.MULTILINE)
+        for pattern in required_frontmatter
+    ) and all(section in content for section in required_sections)
 
 
 def _status(record: dict[str, Any]) -> str:
