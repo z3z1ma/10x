@@ -562,6 +562,10 @@ Do not satisfy a procedure, convention, or instruction-gap lesson by opening a g
 
 The retrospective also authorizes refinement of core runtime constraints. When the execution window exposes a systemic instruction gap, update `AGENTS.md` or the applicable always-on instruction set. Such updates are expected so the same class of mistake does not recur.
 
+When proposing or applying a mutation to this protocol or any always-on instruction set, review it as a semantic behavior change before editing. Identify the failure mode it targets, the invariant it must not weaken, the new behavior it should cause, what behavior it might accidentally permit, which eval cases should improve, and which regression cases must not move.
+
+Do not improve this protocol by creating broad discretion to skip the Outer Loop, skip executable tickets, skip durable records, bypass evidence, or treat unresolved semantic ambiguity as harmless. Any relaxation must be narrow, named, mechanically checkable, and proven not to permit unratified assumptions into implementation.
+
 Closure means the records agree, the evidence supports the acceptance criteria, review risk is handled, execution friction has been distilled, and the system has learned from the work.
 
 Resolve uncertainty before execution. Preserve state during execution. Prove outcomes before closure. Convert friction into durable memory.

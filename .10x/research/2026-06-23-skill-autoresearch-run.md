@@ -1004,3 +1004,10 @@ Canonical start guard:
   `EXP-20260624-871-protocol-relaxation-review-scn015-live-micro` to test
   whether recursive prompt improvement rejects broad efficiency fast paths that
   weaken Outer Loop, ticket, record, evidence, or ambiguity requirements.
+- 2026-06-24: Ran
+  `EXP-20260624-871-protocol-relaxation-review-scn015-live-micro`. Automated
+  scores were low and required manual inspection. Current rejected the original
+  proposal but still promoted a narrowed fast path into seed `SKILL.md`.
+  Candidate rejected the relaxation, recorded a semantic mutation review, and
+  left seed `SKILL.md` unchanged. Promoted
+  `candidate-protocol-mutation-review-gate-v1` into `SKILL.md`.

@@ -525,7 +525,7 @@
       "id": "candidate-protocol-mutation-review-gate-v1",
       "path": "autoresearch/candidates/2026-06-24-protocol-mutation-review-gate.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "promoted",
       "created": "2026-06-24",
       "target_scores": ["S008", "S005", "S006"],
       "target_scenarios": ["SCN-015", "SCN-013", "SCN-014"],
