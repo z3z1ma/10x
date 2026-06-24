@@ -512,6 +512,12 @@ Before closing a ticket:
 5. Confirm that statuses, dependencies, parent records, and cross-references remain coherent.
 6. Execute the Retrospective Protocol.
 
+Closure review is not closure repair. When asked to close a ticket or a parent/child ticket set, first evaluate the existing record graph: acceptance criteria mapped to recorded evidence, review status, specification coherence, status and dependency coherence, and retrospective or follow-up obligations.
+
+If closure is unsupported, stop at a closure-blocker note. Do not create new evidence, run new verification, resolve review findings, accept residual risk, move tickets to `done`, or perform implementation repair unless the user explicitly authorizes that separate repair or verification task.
+
+The closure-blocker note should name the supported criteria, unsupported criteria, unresolved review handling, specification coherence status, retrospective deferral, and next required action or follow-up ticket.
+
 A command that passed, a subagent that reported success, or a diff that looks plausible is not sufficient by itself.
 
 ## Retrospective Protocol
