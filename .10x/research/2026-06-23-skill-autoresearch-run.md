@@ -850,3 +850,11 @@ Canonical start guard:
   confounded because the new seed workspace manifest lacked `workspace`, causing
   empty current/candidate workspaces. Fixed the manifest and added validation so
   live seed manifests without resolvable workspaces fail before execution.
+- 2026-06-24: Reran
+  `EXP-20260624-859-referential-ratification-bridge-scn006-live-micro` with a
+  valid seed workspace. Automated S003 scored current and candidate at `45`
+  because both correctly stayed in the Outer Loop. Manual inspection found both
+  avoided active policy and executable-ticket creation, but candidate asked the
+  stronger single confirm/correct question by exposing missing notification
+  behavior and operational ownership up front. Promoted
+  `candidate-referential-ratification-confirmation-v1` into `SKILL.md`.

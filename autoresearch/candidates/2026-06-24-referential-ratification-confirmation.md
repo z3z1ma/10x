@@ -3,7 +3,7 @@
 Candidate ID: `candidate-referential-ratification-confirmation-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 
 ## Target Behavior
 
@@ -70,3 +70,13 @@ implementation records.
 Discard if current already asks a concrete confirm/correct question and avoids
 active policy/ticket records. Reject if candidate treats referential approval as
 ratification.
+
+## Result
+
+Promoted after
+`EXP-20260624-859-referential-ratification-bridge-scn006-live-micro`. Current
+already avoided active policy and executable-ticket creation, but its
+confirm/correct question omitted missing notification behavior and operational
+ownership from the user-visible contract. Candidate exposed those missing
+semantics in the one required question and still wrote no active policy,
+executable ticket, tests, or source code.
