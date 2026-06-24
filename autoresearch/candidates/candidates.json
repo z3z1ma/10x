@@ -670,6 +670,16 @@
       "target_scores": ["S007", "S001", "S005"],
       "target_scenarios": ["SCN-001", "SCN-006", "SCN-005"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-mechanical-default-action-gate-v1",
+      "path": "autoresearch/candidates/2026-06-24-mechanical-default-action-gate.md",
+      "target": "SKILL.md",
+      "status": "experimental",
+      "created": "2026-06-24",
+      "target_scores": ["S003", "S005", "S007"],
+      "target_scenarios": ["SCN-006", "SCN-005", "SCN-010"],
+      "promotion": "manual-only"
     }
   ]
 }
