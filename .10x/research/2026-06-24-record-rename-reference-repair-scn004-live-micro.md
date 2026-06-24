@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -196,3 +196,52 @@ failure.
 
 - 2026-06-24: Registered from the record graph lifecycle backlog after the
   invalid-draft deletion MICRO passed with a minor machine-header hygiene risk.
+- 2026-06-24: Ran live. Current and duplicate candidate both moved the active
+  spec, updated the heading, repaired live headers/body references, preserved
+  historical old-path mentions, avoided duplicate active specs, avoided source
+  edits, and did not run tests. No-10x-control could not act because control
+  isolation removed the seed `.10x` graph.
+
+## Results
+
+Automated Trust Level 1 score vectors:
+
+- current-10x: `S002=30`
+- candidate-variant: `S002=30`
+- no-10x-control: `S002=15`
+
+Manual inspection overrides the low heuristic score. Current and candidate both
+passed the core rename lifecycle criteria:
+
+- `.10x/specs/acme-retry-window.md` was absent after the run.
+- `.10x/specs/acme-webhook-retry-policy.md` existed with heading
+  `# ACME Webhook Retry Policy`.
+- The implementation ticket `Depends-On` header, scope reference, and
+  acceptance reference pointed at the new spec path.
+- The evidence `Relates-To` header and live support body reference pointed at
+  the new spec path.
+- The review `Target:` header and target body reference pointed at the new spec
+  path.
+- Historical references in the ticket note and naming-history research record
+  still showed `.10x/specs/acme-retry-window.md` as history.
+- Fenced `rg` output showing the old path was preserved.
+- No source files were edited and no tests were run.
+
+Raw artifact root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/125-record-rename-reference-repair-scn004-live-micro/`
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-record-rename-reference-repair-result.md`
+- `.10x/reviews/2026-06-24-record-rename-reference-repair-result.md`
+
+## Conclusions
+
+Current `SKILL.md` passes this active record rename/reference-repair MICRO. No
+canonical behavior change is justified.
+
+The next highest-value conformance work should move away from one-shot record
+maintenance and toward the remaining researcher backlog: real subagent
+orchestration, multi-agent parallel coherence, external artifact indexing, and
+active record/source drift arbitration.

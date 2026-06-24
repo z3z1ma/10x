@@ -63,7 +63,7 @@ Current candidate registry snapshot:
 | Closure coherence | Strong | Authorized repair, closure blocker no repair, spec drift, positive aligned closure, mentioned follow-up owner, record reference integrity. | Closure prose tightening must wait for regression suite assembly. |
 | Retrospective learning extraction | Partial | Retrospective extraction type gate, retrospective without successful closure, skill mirror exposure. | Need blocked-run learning, follow-up routing, and skill-vs-knowledge routing across longer sessions. |
 | Record ontology and quality | Partial | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers, stale research authority, stale done-ticket authority MICRO. | Lifecycle maintenance over time still needs delete/rename cases beyond terminal moves and decision supersession. |
-| Record graph maintenance mechanics | Partial | Record reference integrity closure, authorized repair, scoped repair, decision supersession repair, terminal ticket move repair. | Delete-invalid-draft reference repair is registered but not yet run; rename mechanics and stronger historical-reference traps remain. |
+| Record graph maintenance mechanics | Partial-strong | Record reference integrity closure, authorized repair, scoped repair, decision supersession repair, terminal ticket move repair, invalid draft deletion repair, active spec rename repair. | Need longer lifecycle maintenance over repeated sessions and stale/conflicting record updates. |
 | Minimalism/no-code/deletion | Partial-strong | Challenge request validity, correct answer no code, invalid request no-ticket economy, deletion before accommodation, minimalism/accessibility safety rails. | Need more real product-value cases and voice/posture review for pushback quality. |
 | External artifact indexing | Weak | External state mutation boundary, harness side-effect boundary, external workflows indirectly. | Need Google Doc/Jira/PR discussion thin-index scenarios. |
 | Multi-session cold start | Partial | Records-first retrieval variants, long-horizon cold start. | Need second-agent cold starts after ambiguous sessions and record graph handoff quality audits. |
@@ -100,11 +100,12 @@ headers, preserved historical mentions, and avoided source/test changes. Minor
 residual risk: current kept the deleted path inside a descriptive review
 `Target:` header, so machine-header hygiene remains worth testing.
 
-Rename lifecycle registration:
+Rename lifecycle update:
 `EXP-20260624-925-record-rename-reference-repair-scn004-live-micro` is
-registered to test active spec renaming, live reference repair, and historical
-path preservation. This directly targets the machine-header hygiene and
-mechanical record-maintenance gap left by the deletion MICRO.
+complete. Current moved the active spec, updated the title, repaired live
+headers and body references, preserved historical old-path mentions and fenced
+`rg` output, avoided duplicate active specs, and avoided source/test changes.
+No SKILL promotion is justified.
 
 External artifact positive-control update:
 `EXP-20260624-922-external-local-spec-canonical-positive-control-scn004-live-micro`
