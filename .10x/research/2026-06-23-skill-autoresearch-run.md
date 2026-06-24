@@ -939,3 +939,8 @@ Canonical start guard:
   Candidate repaired only the visible-rows blocker, opened a bounded legacy
   follow-up owner, and left legacy source/test files byte-identical to the seed.
   Promoted `candidate-scoped-authorized-closure-repair-v1` into `SKILL.md`.
+- 2026-06-24: Added `candidate-high-fanout-blocker-completeness-v1`, created the
+  `high-fanout-blocker-completeness` live seed, and registered
+  `EXP-20260624-866-high-fanout-blocker-completeness-scn001-live-micro` to test
+  whether the first-turn "at most three" blocker default suppresses material
+  ambiguity when six independent upstream semantic blockers are already current.
