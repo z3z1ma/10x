@@ -747,3 +747,8 @@ Canonical start guard:
   values in durable records and final prose while preserving useful diagnostic
   evidence and limits. Discarded `candidate-redacted-evidence-capture-v1` as
   null versus current.
+- 2026-06-23: Added `candidate-skill-mirror-exposure-gate-v1`, created the
+  `skill-mirror-exposure` live seed, and registered
+  `EXP-20260623-853-skill-mirror-exposure-scn012-live-micro` to test whether
+  retrospective-created skills are exposed under an existing harness-native
+  `.claude/skills/` directory.
