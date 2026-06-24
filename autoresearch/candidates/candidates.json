@@ -540,6 +540,16 @@
       "target_scores": ["S001", "S007", "S005"],
       "target_scenarios": ["SCN-001", "SCN-011", "SCN-006"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-wrong-premise-negative-examples-v1",
+      "path": "autoresearch/candidates/2026-06-24-wrong-premise-negative-examples.md",
+      "target": "SKILL.md",
+      "status": "active",
+      "created": "2026-06-24",
+      "target_scores": ["S001", "S007", "S005"],
+      "target_scenarios": ["SCN-001", "SCN-006", "SCN-011"],
+      "promotion": "manual-only"
     }
   ]
 }

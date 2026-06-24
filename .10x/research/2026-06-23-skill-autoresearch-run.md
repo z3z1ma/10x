@@ -1025,3 +1025,8 @@ Canonical start guard:
   from existing active records with no new record. Discarded
   `candidate-judgment-channel-calibration-v1` as null/mutate rather than
   promote.
+- 2026-06-24: Added `candidate-wrong-premise-negative-examples-v1`, created the
+  `wrong-premise-negative-examples` live seed, and registered
+  `EXP-20260624-873-wrong-premise-negative-examples-scn001-live-micro` to test
+  whether concise wrong-premise examples improve handling of familiar but
+  unratified permission semantics.
