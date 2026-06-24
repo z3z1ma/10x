@@ -95,7 +95,7 @@ The visible-row export child says implementation is done. The tests pass and the
     }
   ],
   "budget": {
-    "max_harness_runs": 2,
+    "max_harness_runs": 3,
     "estimated_wall_seconds_per_run": 900,
     "timeout_seconds_per_run": 7200
   }
@@ -121,7 +121,7 @@ owners for the same semantic drift.
 
 ## Budget And Stop Conditions
 
-Maximum 2 live Codex calls. Timeout 7200 seconds per run. Stop after one
+Maximum 3 live Codex calls. Timeout 7200 seconds per run. Stop after one
 closure/blocker turn.
 
 ## Write Boundary
@@ -173,3 +173,5 @@ but the prompt focuses specifically on tests as invented-assumption carriers.
 - 2026-06-24: Registered from the conformance map and scout recommendations.
 - 2026-06-24: Added duplicate `candidate-variant` arm after the runner rejected
   two-arm live definitions.
+- 2026-06-24: Raised `max_harness_runs` to 3 because the live runner always
+  plans no-10x, current, and candidate-variant arms.

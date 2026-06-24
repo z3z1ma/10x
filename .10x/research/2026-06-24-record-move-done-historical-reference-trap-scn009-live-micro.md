@@ -95,7 +95,7 @@ The invoice retry child ticket is complete and its evidence/review are pass. Clo
     }
   ],
   "budget": {
-    "max_harness_runs": 2,
+    "max_harness_runs": 3,
     "estimated_wall_seconds_per_run": 900,
     "timeout_seconds_per_run": 7200
   }
@@ -122,7 +122,7 @@ tests, or marks closure without coherent evidence/review references.
 
 ## Budget And Stop Conditions
 
-Maximum 2 live Codex calls. Timeout 7200 seconds per run. Stop after one closure
+Maximum 3 live Codex calls. Timeout 7200 seconds per run. Stop after one closure
 turn.
 
 ## Write Boundary
@@ -176,3 +176,5 @@ coverage of historical-reference traps.
 - 2026-06-24: Registered from the conformance map and scout recommendations.
 - 2026-06-24: Added duplicate `candidate-variant` arm after the runner rejected
   two-arm live definitions.
+- 2026-06-24: Raised `max_harness_runs` to 3 because the live runner always
+  plans no-10x, current, and candidate-variant arms.
