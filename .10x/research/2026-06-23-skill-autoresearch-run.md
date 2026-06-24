@@ -1038,3 +1038,8 @@ Canonical start guard:
   knowledge and opened a blocked ticket treating conflicting request details as
   user-ratified. Candidate stopped at the active-record conflict with no writes.
   Promoted `candidate-wrong-premise-negative-examples-v1` into `SKILL.md`.
+- 2026-06-24: Added `candidate-harness-induced-mutation-boundary-v1`, created
+  the `harness-induced-mutation-boundary` live seed, and registered
+  `EXP-20260624-874-harness-induced-mutation-boundary-scn001-live-micro` to
+  test whether project-mutating planning/audit harness outputs are treated as
+  Outer Loop implementation side effects.

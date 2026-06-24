@@ -1,0 +1,9 @@
+{
+  "name": "harness-induced-mutation-boundary-seed",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "audit:planning": "node scripts/planningAudit.js",
+    "audit:planning:dry-run": "node scripts/planningAudit.js --dry-run"
+  }
+}
