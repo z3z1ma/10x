@@ -610,3 +610,8 @@ Canonical start guard:
   focused `bun test` evidence, explicit AC-to-evidence mapping, honest fixture
   limits, original ticket closure, and retrospective notation. Promoted the
   narrow authorized-repair clarification into `SKILL.md`.
+- 2026-06-23: Added `candidate-active-record-conflict-provenance-v1` and
+  registered `EXP-20260623-843-active-record-conflict-scn006-live-micro` using
+  the record-backed-authority seed to test whether a user-provided threshold
+  that conflicts with active `readinessScore >= 85` records is handled as a
+  supersession/coherence problem rather than silently becoming executable work.
