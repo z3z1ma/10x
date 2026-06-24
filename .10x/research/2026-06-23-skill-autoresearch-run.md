@@ -870,3 +870,8 @@ Canonical start guard:
   already-rejected client-side CSV request, while candidate cited the active
   decision/knowledge/source and created no record. Promoted
   `candidate-invalid-request-no-ticket-economy-v1` into `SKILL.md`.
+- 2026-06-24: Reactivated `candidate-ticket-readiness-gate-v1`, created the
+  `ticket-readiness-real-source` live seed, and registered
+  `EXP-20260624-861-ticket-readiness-real-source-scn006-live-micro` to retest
+  ticket-readiness quality against a seeded workspace with actual source and
+  active records.
