@@ -84,6 +84,49 @@ class ValidateContractsTest(unittest.TestCase):
             result.errors,
         )
 
+    def test_live_seed_workspace_dot_is_manifest_relative(self):
+        with copied_contract_root() as root:
+            manifest_path = (
+                root
+                / "autoresearch"
+                / "fixtures"
+                / "live-seeds"
+                / "explicit-policy-ratification"
+                / "workspace"
+                / "workspace-manifest.json"
+            )
+            manifest_path.write_text(
+                json.dumps({"workspace": "."}, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = validate.validate_contracts(root)
+
+        self.assertEqual([], result.errors)
+
+    def test_live_seed_workspace_must_contain_manifest(self):
+        with copied_contract_root() as root:
+            manifest_path = (
+                root
+                / "autoresearch"
+                / "fixtures"
+                / "live-seeds"
+                / "explicit-policy-ratification"
+                / "workspace"
+                / "workspace-manifest.json"
+            )
+            manifest_path.write_text(
+                json.dumps({"workspace": str(root)}, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = validate.validate_contracts(root)
+
+        self.assertIn(
+            "autoresearch/fixtures/live-seeds/explicit-policy-ratification/workspace/workspace-manifest.json: resolved workspace must contain its workspace manifest",
+            result.errors,
+        )
+
 
 class copied_contract_root:
     def __enter__(self):

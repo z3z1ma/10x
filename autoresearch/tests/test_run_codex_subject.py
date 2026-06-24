@@ -216,6 +216,66 @@ class CodexSubjectRunnerTest(unittest.TestCase):
             self.assertNotIn("prompt_is_explicit", plan["scenarios"][0])
             self.assertIn("<prompt stored at", sample["planned_turns"][0]["planned_codex_argv"][-1])
 
+    def test_seed_workspace_dot_resolves_relative_to_manifest(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            workspace = root / "seed" / "workspace"
+            workspace.mkdir(parents=True)
+            manifest = workspace / "workspace-manifest.json"
+            manifest.write_text(
+                json.dumps({"workspace": "."}, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            raw = root / "prior.json"
+            raw.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "experiment_id": "EXP-20260623-prior",
+                        "scenario_id": "SCN-001",
+                        "variant_id": "seed",
+                        "rep": 0,
+                        "model": "codex-test-model",
+                        "harness": "codex-cli",
+                        "instruction_digest": "sha256:prior",
+                        "transcript": [],
+                        "tool_invocations": [],
+                        "file_outputs": [],
+                        "command_outputs": [],
+                        "raw_artifact_refs": [str(manifest)],
+                        "wall_seconds": 1.0,
+                        "input_tokens": 1,
+                        "output_tokens": 1,
+                        "harness_metadata": {
+                            "kind": "seed-workspace",
+                            "workspace_manifest_path": str(manifest),
+                        },
+                    },
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            definition = _definition()
+            definition["scenarios"] = [
+                {
+                    "id": "SCN-001",
+                    "prompt": "Continue from the seed workspace.",
+                    "prior_raw_path": str(raw),
+                }
+            ]
+
+            plan = run_codex_subject.build_plan(
+                definition,
+                repo_root=REPO_ROOT,
+                out_dir=root / "out",
+            )
+
+        self.assertEqual(
+            {str(workspace)},
+            {sample["planned_seed_workspace_dir"] for sample in plan["samples"]},
+        )
+
     def test_no_10x_control_drops_inherited_record_graph_before_execution(self):
         observed_record_graphs = {}
 

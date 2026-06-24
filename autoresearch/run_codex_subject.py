@@ -681,10 +681,15 @@ def _load_prior_context(repo_root: Path, prior_raw_path: str | None) -> dict[str
     manifest_path = metadata.get("workspace_manifest_path")
     workspace_dir = None
     if isinstance(manifest_path, str):
-        manifest = json.loads(_resolve_path(repo_root, manifest_path).read_text(encoding="utf-8"))
+        resolved_manifest_path = _resolve_path(repo_root, manifest_path)
+        manifest = json.loads(resolved_manifest_path.read_text(encoding="utf-8"))
         workspace = manifest.get("workspace")
         if isinstance(workspace, str):
-            workspace_dir = _resolve_path(repo_root, workspace)
+            workspace_dir = _resolve_seed_workspace_path(
+                repo_root,
+                resolved_manifest_path,
+                workspace,
+            )
     return {
         "raw_path": str(raw_path),
         "transcript": cleaned_transcript,
@@ -850,6 +855,20 @@ def _resolve_path(repo_root: Path, path: str) -> Path:
     candidate = Path(path)
     if candidate.is_absolute():
         return candidate
+    return repo_root / candidate
+
+
+def _resolve_seed_workspace_path(
+    repo_root: Path,
+    manifest_path: Path,
+    workspace_ref: str,
+) -> Path:
+    candidate = Path(workspace_ref)
+    if candidate.is_absolute():
+        return candidate
+    manifest_relative = manifest_path.parent / candidate
+    if manifest_relative.is_dir():
+        return manifest_relative
     return repo_root / candidate
 
 

@@ -875,3 +875,8 @@ Canonical start guard:
   `EXP-20260624-861-ticket-readiness-real-source-scn006-live-micro` to retest
   ticket-readiness quality against a seeded workspace with actual source and
   active records.
+- 2026-06-24: First EXP-861 run to `061-...` was confounded by seed workspace
+  path resolution: `"workspace": "."` resolved to the canonical repo root
+  instead of the manifest directory. Interrupted the oversized archive step,
+  recorded the confound, fixed runner/validator resolution, and retargeted the
+  clean rerun to `061b-...`.

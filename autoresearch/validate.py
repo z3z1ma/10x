@@ -208,10 +208,20 @@ def _validate_live_seed_workspaces(repo_root: Path, errors: list[str]) -> None:
             errors.append(f"{manifest_label}: seed workspace manifest requires workspace")
             continue
 
-        workspace_path = _resolve_repo_path(repo_root, workspace_ref)
+        workspace_path = _resolve_seed_workspace_path(
+            repo_root,
+            manifest_path,
+            workspace_ref,
+        )
         if not workspace_path.is_dir():
             errors.append(
                 f"{manifest_label}: workspace does not resolve to a directory: {workspace_ref}"
+            )
+            continue
+
+        if (workspace_path / manifest_path.name).resolve() != manifest_path.resolve():
+            errors.append(
+                f"{manifest_label}: resolved workspace must contain its workspace manifest"
             )
 
 
@@ -227,6 +237,20 @@ def _resolve_repo_path(repo_root: Path, value: str) -> Path:
     path = Path(value)
     if path.is_absolute():
         return path
+    return repo_root / path
+
+
+def _resolve_seed_workspace_path(
+    repo_root: Path,
+    manifest_path: Path,
+    workspace_ref: str,
+) -> Path:
+    path = Path(workspace_ref)
+    if path.is_absolute():
+        return path
+    manifest_relative = manifest_path.parent / path
+    if manifest_relative.is_dir():
+        return manifest_relative
     return repo_root / path
 
 

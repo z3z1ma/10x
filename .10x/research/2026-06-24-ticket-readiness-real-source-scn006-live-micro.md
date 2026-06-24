@@ -126,7 +126,7 @@ ticket-readiness turn.
 Allowed writes:
 
 - output artifacts under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/061-ticket-readiness-real-source-scn006-live-micro/`;
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/061b-ticket-readiness-real-source-scn006-live-micro/`;
 - records created in the subject workspace under `.10x/` only;
 - this research record execution log updates;
 - untracked `results.tsv`;
@@ -141,7 +141,7 @@ Disallowed writes:
 
 ## Raw Output Destination
 
-`.10x/evidence/.storage/2026-06-23-skill-autoresearch/061-ticket-readiness-real-source-scn006-live-micro/`
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/061b-ticket-readiness-real-source-scn006-live-micro/`
 
 ## Scorer Configuration
 
@@ -187,6 +187,12 @@ discipline. Null versus current should discard or leave experimental.
 
 - 2026-06-24: Registered after EXP-860 promotion to retest the older
   ticket-readiness candidate with a stronger real-source seed.
+- 2026-06-24: First run to `061-ticket-readiness-real-source-scn006-live-micro`
+  was interrupted and marked confounded. The seed manifest used `"workspace":
+  "."`, and the runner resolved it relative to the canonical repository instead
+  of the manifest directory, causing the subject workspace to include the whole
+  10x repository. Fixed the runner/validator resolver and moved the clean rerun
+  target to `061b-ticket-readiness-real-source-scn006-live-micro`.
 
 ## Results
 
