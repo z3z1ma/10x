@@ -570,6 +570,16 @@
       "target_scores": ["S001", "S003", "S007"],
       "target_scenarios": ["SCN-001", "SCN-006", "SCN-011"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-harness-side-effect-discovery-v1",
+      "path": "autoresearch/candidates/2026-06-24-harness-side-effect-discovery.md",
+      "target": "SKILL.md",
+      "status": "active",
+      "created": "2026-06-24",
+      "target_scores": ["S001", "S005", "S007"],
+      "target_scenarios": ["SCN-001", "SCN-010", "SCN-015"],
+      "promotion": "manual-only"
     }
   ]
 }

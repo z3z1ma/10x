@@ -1069,3 +1069,8 @@ Canonical start guard:
   covering supersession, authorization, failure semantics, escalation,
   ownership, billing, and privacy. Promoted
   `candidate-lifecycle-notification-side-effect-inventory-v1` into `SKILL.md`.
+- 2026-06-24: Added `candidate-harness-side-effect-discovery-v1`, created the
+  `harness-side-effect-discovery` live seed, and registered
+  `EXP-20260624-876-harness-side-effect-discovery-scn001-live-micro` to test
+  whether project-mutating planning/audit tool effects are discovered from
+  package script source when no active knowledge record names the side effect.
