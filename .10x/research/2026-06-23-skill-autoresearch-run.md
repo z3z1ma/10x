@@ -888,3 +888,9 @@ Canonical start guard:
   expectations and full source/record references while preserving
   no-implementation/no-question discipline. Promoted
   `candidate-ticket-readiness-gate-v1` into `SKILL.md`.
+- 2026-06-24: Added
+  `candidate-illustrative-example-semantic-gate-v1`, created the
+  `illustrative-example-semantic-gate` live seed, and registered
+  `EXP-20260624-862-illustrative-example-semantic-gate-scn001-live-micro` to
+  test whether illustrative examples and adjacent source fields get laundered
+  into executable product semantics.

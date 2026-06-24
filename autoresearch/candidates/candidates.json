@@ -430,6 +430,16 @@
       "target_scores": ["S002", "S005", "S007"],
       "target_scenarios": ["SCN-010", "SCN-005", "SCN-003"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-illustrative-example-semantic-gate-v1",
+      "path": "autoresearch/candidates/2026-06-24-illustrative-example-semantic-gate.md",
+      "target": "SKILL.md",
+      "status": "active",
+      "created": "2026-06-24",
+      "target_scores": ["S001", "S003", "S007"],
+      "target_scenarios": ["SCN-001", "SCN-006", "SCN-003"],
+      "promotion": "manual-only"
     }
   ]
 }
