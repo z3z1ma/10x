@@ -105,7 +105,7 @@
       "id": "candidate-ticket-readiness-gate-v1",
       "path": "autoresearch/candidates/2026-06-23-ticket-readiness-gate.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "promoted",
       "created": "2026-06-23",
       "target_scores": ["S003", "S007"],
       "target_scenarios": ["SCN-006", "SCN-007", "SCN-001", "SCN-002", "SCN-010"],

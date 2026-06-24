@@ -3,7 +3,7 @@
 Candidate ID: `candidate-ticket-readiness-gate-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 Promotion: manual-only
 
 ## Target Behavior

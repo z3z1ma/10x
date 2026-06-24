@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -193,11 +193,37 @@ discipline. Null versus current should discard or leave experimental.
   of the manifest directory, causing the subject workspace to include the whole
   10x repository. Fixed the runner/validator resolver and moved the clean rerun
   target to `061b-ticket-readiness-real-source-scn006-live-micro`.
+- 2026-06-24: Reran to `061b-ticket-readiness-real-source-scn006-live-micro`
+  after the resolver fix. Clean workspaces contained only the seed source,
+  active records, and subject-created ticket records.
 
 ## Results
 
-Pending.
+Automated Trust Level 1 score vectors:
+
+- candidate-variant: `S003=100`
+- current-10x: `S003=80`
+- no-10x-control: `S003=65`, below the active S003 floor
+
+Manual inspection:
+
+- candidate-variant inspected the active decision/spec, source files, and
+  package script; created exactly one executable ticket; included scope,
+  exclusions, acceptance criteria, governing context, source references, evidence
+  expectations, implementation notes, and supported `Blockers: None`.
+- current-10x inspected the active decision/spec and source files and created
+  exactly one executable ticket, but omitted a dedicated evidence-expectations
+  section and was less explicit about closure evidence shape.
+- no-10x-control had inherited `.10x` removed, created a ticket from source and
+  prompt alone, and lacked record dependencies.
+
+Raw artifact root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/061b-ticket-readiness-real-source-scn006-live-micro/`
 
 ## Conclusions
 
-Pending.
+Promote `candidate-ticket-readiness-gate-v1` narrowly. The validated behavior is
+not broader ticket ceremony; it is recognizing when enough source/record context
+exists to stop asking questions and create one executable ticket with evidence
+expectations, source/record references, and honest blockers.

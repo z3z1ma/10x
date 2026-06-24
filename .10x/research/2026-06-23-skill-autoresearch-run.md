@@ -880,3 +880,11 @@ Canonical start guard:
   instead of the manifest directory. Interrupted the oversized archive step,
   recorded the confound, fixed runner/validator resolution, and retargeted the
   clean rerun to `061b-...`.
+- 2026-06-24: Reran
+  `EXP-20260624-861-ticket-readiness-real-source-scn006-live-micro` to
+  `061b-...`. Automated S003 favored candidate over current (`100` vs `80`) and
+  control failed the S003 floor (`65`). Manual inspection found candidate
+  produced the stronger executable ticket by including explicit evidence
+  expectations and full source/record references while preserving
+  no-implementation/no-question discipline. Promoted
+  `candidate-ticket-readiness-gate-v1` into `SKILL.md`.

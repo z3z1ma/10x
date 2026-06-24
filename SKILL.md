@@ -207,6 +207,8 @@ Enter the Inner Loop only when all of the following are true:
 
 Exploratory language — "I want", "I'm thinking", "thoughts?", "what should we", "curious about" — signals Outer Loop unless paired with explicit implementation authorization.
 
+Before asking another Outer Loop question for non-trivial implementation work, decide whether the next safe action is ticket creation. If inspected records, inspected source, or the user's prompt establish the target surface, intended behavior, explicit non-goals, and verification path, create exactly one bounded executable ticket for the smallest complete outcome. Do not ask downstream preference questions merely to make the ticket nicer. The ticket must include scope, explicit exclusions, acceptance criteria, evidence expectations, references to governing records and source, and blockers. Record `None` for blockers only when inspected evidence supports it. If multiple independent outcomes exist, create a parent plan and separate child tickets; never treat the parent as the executable unit. If execution-critical facts are still missing, stay in the Outer Loop and ask only the blockers whose answers change the next safe action. Do not implement in the same turn as ticket creation unless the work is trivial enough to need no ticket.
+
 ## Record Shapes
 
 Important context that should outlive the current conversation belongs on disk, separated by provenance and purpose.
