@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -180,3 +180,29 @@ regression check against upstream-gated blocker behavior.
 ## Execution Log
 
 - 2026-06-23: Registered before execution with tracked seed fixture.
+- 2026-06-23: Ran live. Automated score vector:
+  `candidate:S001=100,S007=90 current:S001=100,S007=90 control:S001=30,S007=10`.
+- 2026-06-23: Canonical guard reported `unchanged_during_run: true`.
+- 2026-06-23: Manual inspection found candidate and current both blocked
+  automatic retry implementation. Candidate was cleaner because it made no file
+  changes and explicitly noted that tests would encode the unratified retry
+  policy; current created a blocked ticket.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `keep`.
+
+## Score Artifacts
+
+- report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/034-assumption-provenance-gate-scn001-live-micro/report.md`
+- campaign:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/034-assumption-provenance-gate-scn001-live-micro/campaign.json`
+- canonical guard:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/034-assumption-provenance-gate-scn001-live-micro/canonical_guard.json`
+
+## Verdict
+
+Keep testing, not promoted. The candidate captured a useful semantic-assumption
+spine and beat control, but current already passed the primary behavior on this
+seed. The next test should use a held-out ambiguous product term, such as a
+"greenline" release state, where source names or stale tickets suggest but do
+not ratify semantics.

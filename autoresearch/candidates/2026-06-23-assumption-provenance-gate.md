@@ -3,7 +3,7 @@
 Candidate ID: `candidate-assumption-provenance-gate-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: keep-testing
 
 ## Target Behavior
 
@@ -97,3 +97,14 @@ No promotion from one MICRO. Promotion requires a positive live run, manual
 inspection that the candidate blocks only execution-relevant semantic
 assumptions, and at least one regression check showing it does not weaken the
 promoted upstream-gated blocker behavior.
+
+## Result
+
+`EXP-20260623-834-assumption-provenance-gate-scn001-live-micro` produced a
+positive control comparison but a score tie with current: candidate and current
+both scored `S001=100,S007=90`, while control scored `S001=30,S007=10`.
+
+Manual inspection favored the candidate's cleaner no-write response and its
+explicit warning that tests would encode unratified policy. Current still
+blocked implementation correctly, so this candidate remains `keep-testing`
+rather than promoted.

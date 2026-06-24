@@ -230,6 +230,14 @@ Canonical start guard:
   `candidate-assumption-provenance-gate-v1`. The second candidate incorporates
   the refined north star that 10x prevents unratified semantic assumptions, not
   questioning or record-keeping for its own sake.
+- `candidate-partial-answer-continuation-exit-gate-v1` won its live
+  continuation MICRO and exposed a current `SKILL.md` bug: current implemented
+  after launch authority was answered even though the success threshold remained
+  unknown. The narrow continuation rule was promoted into `SKILL.md`.
+- `candidate-assumption-provenance-gate-v1` beat control and was cleaner than
+  current by manual inspection, but current already blocked implementation on
+  the payment-retry semantic trap. It remains `keep-testing` for a held-out
+  ambiguous product-term seed.
 
 ## Execution Log
 
@@ -495,3 +503,13 @@ Canonical start guard:
   registered
   `EXP-20260623-833-partial-answer-continuation-exit-gate-scn001-live-micro`
   plus `EXP-20260623-834-assumption-provenance-gate-scn001-live-micro`.
+- 2026-06-23: Ran
+  `EXP-20260623-833-partial-answer-continuation-exit-gate-scn001-live-micro`.
+  Candidate scored `S001=100,S007=80`; current scored `S001=40,S007=75`;
+  control scored `S001=40,S007=45`. Promoted the narrow continuation
+  reconciliation rule into `SKILL.md`.
+- 2026-06-23: Ran
+  `EXP-20260623-834-assumption-provenance-gate-scn001-live-micro`. Candidate
+  and current tied at `S001=100,S007=90` while control failed at
+  `S001=30,S007=10`. Logged status `keep` for held-out semantic-ratification
+  testing.

@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -171,3 +171,32 @@ pressure or semantic-assumption scenario.
 ## Execution Log
 
 - 2026-06-23: Registered before execution.
+- 2026-06-23: Ran live. Automated score vector:
+  `candidate:S001=100,S007=80 current:S001=40,S007=75 control:S001=40,S007=45`.
+- 2026-06-23: Canonical guard reported `unchanged_during_run: true`.
+- 2026-06-23: Manual inspection found candidate passed the partial-answer
+  continuation target: it recorded launch authority as answered, kept the
+  success threshold blocked, asked only for that remaining blocker, and did not
+  implement.
+- 2026-06-23: Manual inspection found current and control implemented despite
+  the missing success threshold. Current also recorded a decision, ticket,
+  evidence, and review around report-only export while saying the broader
+  production-ready threshold remained unknown.
+- 2026-06-23: Regenerated report with campaign metadata, appended `results.tsv`
+  with status `promote`, and promoted the narrow continuation rule into
+  `SKILL.md`.
+
+## Score Artifacts
+
+- report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/033-partial-answer-continuation-exit-gate-scn001-live-micro/report.md`
+- campaign:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/033-partial-answer-continuation-exit-gate-scn001-live-micro/campaign.json`
+- canonical guard:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/033-partial-answer-continuation-exit-gate-scn001-live-micro/canonical_guard.json`
+
+## Verdict
+
+Promote. The candidate corrected a current-10x continuation failure with a
+narrow rule that preserves Outer Loop discipline and does not reduce the number
+of execution-critical questions.

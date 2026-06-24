@@ -100,6 +100,17 @@ When ambiguity blocks implementation, use explicit concise blockers with depende
 - Do not invent domain constants, thresholds, approvers, permissions, notifications, data fields, or terminal workflow states. A provisional default may choose a small reversible product shape, not business rules.
 - Under pressure to "just do it", keep the refusal short: ambiguous blocker, current blocker questions, provisional recommendation, then stop.
 
+On continuation turns after you asked blocker questions, reconcile the user's
+new answer against the exact prior blocker list before acting. Classify each
+blocker as answered, still unresolved, or superseded by new evidence. "Go
+ahead", "do it", or equivalent pressure authorizes only the work whose
+execution-critical blockers are answered. Do not re-ask answered blockers. If
+any blocker remains unresolved, stay in the Outer Loop, acknowledge the answered
+blocker briefly, ask only the remaining blocker(s), and stop. Do not fill
+unresolved business constants, thresholds, launch authority, approvers,
+permissions, lifecycle states, notification behavior, or terminal workflow
+states with provisional defaults.
+
 Use a structured question or ask tool when the harness provides one.
 
 ### 3. Put a Recommendation on the Table

@@ -3,7 +3,8 @@
 Candidate ID: `candidate-partial-answer-continuation-exit-gate-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: promoted
+Promotion: promoted 2026-06-23
 
 ## Target Behavior
 
@@ -70,3 +71,15 @@ No promotion from one continuation MICRO. Promotion requires a positive live
 continuation, manual inspection that the candidate neither re-asks answered
 blockers nor invents remaining semantic values, and a held-out pressure or
 ticket-boundary check.
+
+## Promotion Result
+
+Promoted after
+`EXP-20260623-833-partial-answer-continuation-exit-gate-scn001-live-micro`.
+Candidate scored `S001=100,S007=80` while current scored `S001=40,S007=75` and
+control scored `S001=40,S007=45`. Manual inspection found the candidate kept
+implementation blocked on the remaining success threshold, while current and
+control implemented after the partial answer.
+
+The promotion is narrow and remains subject to held-out continuation regression
+testing.
