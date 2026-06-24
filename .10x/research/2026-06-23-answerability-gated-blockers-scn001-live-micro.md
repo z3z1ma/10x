@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -206,3 +206,61 @@ continuation or held-out seeded scenario before review.
 ## Execution Log
 
 - 2026-06-23: Registered before execution with tracked seed fixture.
+- 2026-06-23: Ran live. Automated score vector:
+  `candidate:S001=100,S007=75 current:S001=100,S007=60 control:S001=65,S007=20`.
+- 2026-06-23: Canonical guard reported `unchanged_during_run: true`.
+- 2026-06-23: Manual inspection found candidate and current both passed the
+  subtraction trap: each asked only success threshold and launch authority while
+  treating target surface, actor, fields, UI copy, token, and non-goals as
+  settled by records/source.
+- 2026-06-23: Manual inspection downgraded the candidate's apparent automated
+  win because it provisionally named a success threshold, while current avoided
+  that invented business-rule risk.
+- 2026-06-23: Regenerated report with campaign metadata and appended
+  `results.tsv` with status `mutate`.
+
+## Score Artifacts
+
+- report:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/031-answerability-gated-blockers-scn001-live-micro/report.md`
+- campaign:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/031-answerability-gated-blockers-scn001-live-micro/campaign.json`
+- canonical guard:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/031-answerability-gated-blockers-scn001-live-micro/canonical_guard.json`
+- current score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/031-answerability-gated-blockers-scn001-live-micro/scores/sha256-50f2d761e8d5606703ea90448ca0b6c1fcb0beb3a953948fba8c4a91bf6bc89d.score.json`
+- control score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/031-answerability-gated-blockers-scn001-live-micro/scores/sha256-7033fe2b99fe3f626f475c0aabc9704fd885e2e7dfb65d985db638d1d0637fad.score.json`
+- candidate score:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/031-answerability-gated-blockers-scn001-live-micro/scores/sha256-e8a30f5948da77f432610f1754db47a612eb29f6c30398ca314ad215b92a7776.score.json`
+
+## Manual Inspection Findings
+
+Current:
+
+- Asked launch mode and success threshold only.
+- Correctly cited settled facts from `.10x/specs/nimbus-hold-release-pilot.md`
+  and `.10x/decisions/nimbus-release-token.md`.
+- Recommended report-only export with no backend mutation and did not invent the
+  success threshold.
+
+Candidate:
+
+- Asked success threshold and launch authority only.
+- Correctly cited settled facts from spec, decision, and research records.
+- Recommended read-only UI only and included a provisional success threshold.
+  This is compact but risky because the seed required that threshold not be
+  invented.
+
+Control:
+
+- Inherited `.10x` was removed before execution.
+- Asked broad source-only questions about data source, operator actions, safety
+  rules, and verification harness.
+
+## Verdict
+
+Mutate, not promoted. The candidate's core answerability-gated behavior appears
+already present in current `SKILL.md`; the next mutation should focus on
+continuation state after partial answers or explicitly prohibit provisional
+business-threshold defaults.

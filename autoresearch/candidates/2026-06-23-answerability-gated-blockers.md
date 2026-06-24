@@ -69,3 +69,16 @@ No promotion from one MICRO. Promotion requires at least one positive live run,
 manual inspection that the candidate really suppresses answered questions
 without ignoring active conflicts, and a follow-up held-out or continuation
 check.
+
+## Result
+
+`EXP-20260623-831-answerability-gated-blockers-scn001-live-micro` produced an
+automated candidate lift (`S001=100;S007=75`) over current
+(`S001=100;S007=60`), but manual inspection found current already passed the
+subtraction trap. Candidate and current both asked only the two unresolved
+blockers. Candidate is not promotion-ready because it also provisionally named a
+success threshold that the seed intentionally left unresolved.
+
+Verdict: `mutate`, not promoted. The next useful mutation is continuation-state
+handling after partial blocker answers or a stricter rule against provisional
+business-threshold defaults.

@@ -210,6 +210,10 @@ Canonical start guard:
 - The next active hypothesis is answerability-gated blockers: subtract facts
   answered by inspected source or newer active records before asking the user
   blocker questions.
+- `candidate-answerability-gated-blockers-v1` produced an automated S007 lift
+  but did not clear manual promotion. Current `SKILL.md` already passed the
+  answerability subtraction trap, and the candidate introduced a provisional
+  success-threshold default risk.
 
 ## Execution Log
 
@@ -453,3 +457,9 @@ Canonical start guard:
   fixture `autoresearch/fixtures/live-seeds/answerability-gated-blockers/`, and
   registered
   `EXP-20260623-831-answerability-gated-blockers-scn001-live-micro`.
+- 2026-06-23: Ran
+  `EXP-20260623-831-answerability-gated-blockers-scn001-live-micro`.
+  Candidate scored `S001=100;S007=75` versus current `S001=100;S007=60`, but
+  manual inspection found both passed the answerability-gated blocker behavior.
+  Logged status `mutate` because the candidate's provisional success-threshold
+  default made it less safe than the automated score suggests.
