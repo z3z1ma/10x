@@ -385,7 +385,7 @@
       "id": "candidate-revalidation-is-not-ratification-v1",
       "path": "autoresearch/candidates/2026-06-23-revalidation-is-not-ratification.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "promoted",
       "created": "2026-06-23",
       "target_scores": ["S003", "S001", "S002"],
       "target_scenarios": ["SCN-006", "SCN-003", "SCN-001"],

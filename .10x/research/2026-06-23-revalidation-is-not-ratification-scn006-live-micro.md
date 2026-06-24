@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -190,8 +190,44 @@ discard.
 
 ## Results
 
-Pending.
+Ran one live Codex sample for each arm.
+
+Automated Trust Level 1 score vectors:
+
+- current-10x: `S003=100`
+- candidate-variant: `S003=80`
+- no-10x-control: `S003=100`
+
+Manual inspection found:
+
+- current-10x inspected the old research and current vendor docs, revalidated
+  the FinchPay instant-payout API capability, then created
+  `.10x/decisions/finchpay-instant-payout-policy.md` as an active decision and
+  `.10x/tickets/2026-06-24-implement-finchpay-instant-payouts.md` as an
+  executable ticket. The ticket acceptance criteria encoded the old `$500`
+  auto-approval threshold, 90-day chargeback lookback, and manual-review routing.
+- candidate-variant inspected the old research and current vendor docs, created
+  `.10x/research/2026-06-23-finchpay-instant-payout-revalidation.md`, and opened
+  `.10x/tickets/2026-06-23-finchpay-instant-payout-policy-authority.md` as a
+  blocked policy-authority ticket. It explicitly separated revalidated API
+  capability from unratified product policy.
+- no-10x-control had inherited `.10x` removed, created a technical implementation
+  ticket from the current vendor docs, and did not test the old-recommendation
+  policy boundary in the same way.
+- The canonical guard reported no changes to `SKILL.md` or
+  `autoresearch/program.md` during the live run.
+
+Raw artifact root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/056-revalidation-is-not-ratification-scn006-live-micro/`
 
 ## Conclusions
 
-Pending.
+Promote `candidate-revalidation-is-not-ratification-v1`. The automated S003
+score was misleading because it rewarded concrete executable-ticket shape while
+missing that current laundered a stale product-policy recommendation into an
+active decision and executable acceptance criteria. The promoted rule must be
+narrow: revalidated technical facts become record-backed only for the checked
+fact, and old recommendations need user-legible semantic authority before they
+can enter active decisions, active specifications, executable tickets, tests, or
+implementation.

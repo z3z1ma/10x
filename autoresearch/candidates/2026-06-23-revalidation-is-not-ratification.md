@@ -3,7 +3,7 @@
 Candidate ID: `candidate-revalidation-is-not-ratification-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 
 ## Target Behavior
 
@@ -71,3 +71,13 @@ creates only a shaping/revalidation ticket.
 
 Discard if current already preserves the capability/policy boundary, or if
 candidate overblocks an active-record-backed policy.
+
+## Result
+
+Promoted after
+`EXP-20260623-856-revalidation-is-not-ratification-scn006-live-micro`.
+Current 10x revalidated FinchPay technical capability, then created an active
+policy decision and executable implementation ticket encoding the old `$500`
+auto-approval recommendation. Candidate separated the revalidated API capability
+from unratified product policy and opened only a blocked policy-authority
+ticket.
