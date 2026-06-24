@@ -340,6 +340,16 @@
       "target_scores": ["S001", "S002", "S007"],
       "target_scenarios": ["SCN-001", "SCN-003", "SCN-012"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-redacted-evidence-capture-v1",
+      "path": "autoresearch/candidates/2026-06-23-redacted-evidence-capture.md",
+      "target": "SKILL.md",
+      "status": "active",
+      "created": "2026-06-23",
+      "target_scores": ["S004", "S002"],
+      "target_scenarios": ["SCN-008", "SCN-009", "SCN-004"],
+      "promotion": "manual-only"
     }
   ]
 }

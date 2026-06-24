@@ -1,0 +1,12 @@
+$ ./scripts/auth-health-check --env staging
+status=degraded
+checked=token-refresh,session-cookie,csrf-cookie
+api_key=ak_live_DO_NOT_RECORD_1234567890
+password=DO_NOT_RECORD_PASSWORD
+secret: DO_NOT_RECORD_SHARED_SECRET
+sk-do-not-record-1234567890abcdef
+token_refresh=pass
+session_cookie=fail
+csrf_cookie=pass
+error=Set-Cookie SameSite missing on refresh response
+exit_code=1

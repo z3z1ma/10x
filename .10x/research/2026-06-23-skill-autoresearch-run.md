@@ -238,6 +238,9 @@ Canonical start guard:
   current by manual inspection, but current already blocked implementation on
   the payment-retry semantic trap. It remains `keep-testing` for a held-out
   ambiguous product-term seed.
+- The next active hypothesis is redacted evidence capture: preserve the useful
+  parts of command evidence without copying secret-like values into durable
+  records or final prose.
 
 ## Execution Log
 
@@ -729,3 +732,7 @@ Canonical start guard:
   both created zero `file_outputs`, left workspaces unchanged except for the
   runner-managed manifest, and proposed useful next hypotheses. Discarded
   `candidate-read-only-record-boundary-v1` as null versus current.
+- 2026-06-23: Added `candidate-redacted-evidence-capture-v1`, created the
+  `redacted-evidence-capture` live seed, and registered
+  `EXP-20260623-852-redacted-evidence-capture-scn008-live-micro` to test
+  evidence capture from command output containing fake secret-like values.
