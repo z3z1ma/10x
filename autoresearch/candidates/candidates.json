@@ -650,6 +650,16 @@
       "target_scores": ["S005", "S003", "S007"],
       "target_scenarios": ["SCN-010", "SCN-006", "SCN-005"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-latest-write-boundary-v1",
+      "path": "autoresearch/candidates/2026-06-24-latest-write-boundary.md",
+      "target": "SKILL.md",
+      "status": "experimental",
+      "created": "2026-06-24",
+      "target_scores": ["S001", "S005", "S007"],
+      "target_scenarios": ["SCN-001", "SCN-007", "SCN-008"],
+      "promotion": "manual-only"
     }
   ]
 }
