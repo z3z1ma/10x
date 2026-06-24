@@ -3,7 +3,7 @@
 Candidate ID: `candidate-answerability-gated-blockers-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 
 ## Target Behavior
 

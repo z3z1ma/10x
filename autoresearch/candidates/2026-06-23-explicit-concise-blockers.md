@@ -3,7 +3,7 @@
 Candidate ID: `candidate-explicit-concise-blockers-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
