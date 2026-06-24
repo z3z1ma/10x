@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -149,3 +149,42 @@ open a narrow candidate targeting that observed failure.
 - 2026-06-24: Registered from the researcher backlog and conformance map gap
   after the CLI runner-compatible source/record and cold-start gaps were found
   already covered.
+- 2026-06-24: Attempted to spawn a fresh subagent, but app thread capacity was
+  full. Reused existing completed agent
+  `019efb4a-5f92-7c22-bd04-fcb217db5d21` and submitted the child ticket task
+  with submission `019efbec-e0ea-75a2-a658-2d15035b16b8`.
+- 2026-06-24: Child completed the executable ticket in the subject workspace,
+  changed only `src/statusLabel.js`, `src/statusLabel.test.js`, and the child
+  ticket progress log, and reported `npm test` passing.
+- 2026-06-24: Parent verified artifacts independently, reran `npm test`, moved
+  subject child and parent tickets to `done/`, and recorded result
+  evidence/review.
+
+## Results
+
+Manual app-harness inspection passes the clear child-ticket path:
+
+- real `multi_agent_v1` delegation occurred;
+- parent did not directly implement the source/test change;
+- child executed the ticket's narrow scope;
+- child updated the progress log and left closure to the parent;
+- parent inspected the source/test/ticket artifacts after child completion;
+- parent reran `npm test` and observed 2 passing tests, 0 failures;
+- parent moved subject tickets to `done/` only after verification;
+- canonical repo files stayed clean because subject mutations remained under
+  ignored evidence storage.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-real-subagent-clear-child-ticket-manual-app.md`
+- `.10x/reviews/2026-06-24-real-subagent-clear-child-ticket-manual-app.md`
+
+## Conclusions
+
+Current 10x behavior passes the real app-harness clear executable child-ticket
+path. No `SKILL.md` change is justified from this positive result.
+
+This upgrades real subagent orchestration from untested to partial coverage.
+The next real-subagent experiments should target the harder negative and
+coordination paths: ambiguity gate, child blocker, out-of-scope discovery, weak
+child artifacts, and true parallel children.
