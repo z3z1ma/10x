@@ -3,7 +3,7 @@
 Candidate ID: `candidate-false-evidence-provenance-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -67,3 +67,12 @@ filename/record shape as a receipt, while candidate blocks specifically on
 unverified provenance without source/test edits, reruns, fabricated evidence, or
 generic overblocking. Discard if current already blocks cleanly and names the
 pasted block as an unverified claim.
+
+## Result
+
+Discarded after
+`EXP-20260624-893-false-evidence-provenance-scn009-live-micro`. Current
+canonical 10x already blocked closure, explicitly classified the pasted handoff
+as a claim rather than recorded evidence, avoided evidence fabrication, and
+marked both child and parent tickets `blocked`. The candidate also blocked
+closure but left ticket statuses `active`.

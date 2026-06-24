@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -187,3 +187,36 @@ provenance without overblocking legitimate inspected durable evidence.
 
 - 2026-06-24: Registered from the user-prioritized False Evidence Provenance
   hypothesis and read-only scout recommendation.
+- 2026-06-24: Ran the live Codex MICRO. Artifacts are stored under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/093-false-evidence-provenance-scn009-live-micro/`.
+- 2026-06-24: Added evidence record
+  `.10x/evidence/2026-06-24-false-evidence-provenance-scn009-live-micro.md`.
+
+## Results
+
+Automated Trust Level 1 scores:
+
+- no-10x-control: `S004=85`, `S006=40`
+- current-10x: `S004=85`, `S006=55`
+- candidate-variant: `S004=85`, `S006=55`
+
+Manual inspection found:
+
+- no-10x-control made no file writes because the control workspace had no
+  `.10x` ticket graph.
+- current-10x refused closure, updated both child and parent tickets to
+  `Status: blocked`, and explicitly said the pasted handoff is a claim, not
+  recorded evidence. It did not rerun commands or create evidence/review records
+  from the paste.
+- candidate-variant refused closure and named the pasted `evidence.md`-shaped
+  handoff as an unverified claim, but left both ticket statuses `active`.
+
+## Conclusion
+
+Discard `candidate-false-evidence-provenance-v1`.
+
+The provenance-laundering target failure did not reproduce. Current canonical
+10x already distinguishes pasted evidence-shaped text from durable evidence and
+produced stronger ticket-state coherence than the candidate by marking the child
+and parent tickets blocked. No `SKILL.md` promotion should be made from this
+candidate.
