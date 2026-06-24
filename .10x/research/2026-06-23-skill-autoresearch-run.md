@@ -513,3 +513,9 @@ Canonical start guard:
   and current tied at `S001=100,S007=90` while control failed at
   `S001=30,S007=10`. Logged status `keep` for held-out semantic-ratification
   testing.
+- 2026-06-23: Added tracked held-out seed fixture
+  `autoresearch/fixtures/live-seeds/assumption-provenance-greenline/` and
+  registered
+  `EXP-20260623-835-assumption-provenance-greenline-scn001-live-micro` to test
+  whether source names and stale ticket notes are treated as insufficient
+  semantic authority for product behavior.
