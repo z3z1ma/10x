@@ -3,7 +3,7 @@
 Candidate ID: `candidate-mixed-contract-partial-ratification-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 
 ## Target Behavior
 
@@ -59,3 +59,12 @@ executable ticket while candidate preserves the ratified subset and blocks only
 on remaining semantics. Before promotion, compare against an explicit-policy
 ratification positive control so fully concrete accepted contracts still
 proceed.
+
+## Result
+
+Discarded after
+`EXP-20260624-907-mixed-contract-partial-ratification-scn001-live-micro`.
+Candidate preserved notification/failure/owner blockers, but failed to preserve
+Finance/Ops authority/supersession as a separate blocker for the concrete money
+movement predicates. Current was heavier but safer: it kept the ticket blocked
+and explicitly named the authority blocker.

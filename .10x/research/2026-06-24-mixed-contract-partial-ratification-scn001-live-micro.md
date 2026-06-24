@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -188,3 +188,32 @@ proceed.
 ## Execution Log
 
 - 2026-06-24: Registered from reused Tesla scout recommendation.
+- 2026-06-24: Ran live MICRO with no-10x-control, current-10x, and
+  candidate-variant arms. Automated score vector:
+  candidate:S001=90/S007=40, current:S001=75/S007=25,
+  control:S001=30/S007=25.
+- 2026-06-24: Manual inspection rejected the automated direction. Candidate
+  preserved the concrete retry predicates and asked notification/failure/owner
+  blockers, but it treated the workstream as having ratified the concrete money
+  movement predicates without preserving a separate Finance/Ops
+  authority/supersession blocker. Current created a blocked implementation-shaped
+  ticket, which is heavier than ideal, but it explicitly preserved the authority
+  blocker plus notification, failure handling, and owner blockers. Control
+  implemented guessed retry behavior.
+
+## Findings
+
+- The candidate overlay is incomplete: slot-level ratification must classify
+  authority provenance separately from concrete values.
+- Current behavior is not perfect because a blocked implementation-shaped ticket
+  is a less clean artifact than a draft contract or shaping ticket, but it
+  preserved the decisive authority blocker.
+- Automated S001 over-rewarded the candidate for compactness and under-rewarded
+  current for keeping authority/supersession explicit.
+
+## Conclusion
+
+Discard `candidate-mixed-contract-partial-ratification-v1` as a regression.
+Future mutation should target authority-aware partial ratification: broad assent
+may accept concrete values only if the user's authority to ratify that domain is
+record-backed or explicit.

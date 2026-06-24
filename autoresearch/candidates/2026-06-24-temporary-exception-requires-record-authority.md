@@ -3,7 +3,7 @@
 Candidate ID: `candidate-temporary-exception-requires-record-authority-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 
 ## Target Behavior
 
@@ -61,3 +61,11 @@ code, tests, or executable ticket while candidate blocks cleanly. Before
 promotion, run a positive control where the user explicitly authorizes a durable
 temporary exception record with scope, owner, expiry, rollback path, and
 verification boundary.
+
+## Result
+
+Discarded after
+`EXP-20260624-906-explicit-override-temporary-exception-scn006-live-micro`.
+Current and candidate both blocked the emergency feature-flag override, cited
+active FinchPay authority, and made no source/test edits or executable ticket.
+The overlay was a null result.
