@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-23
 Updated: 2026-06-23
 
@@ -187,3 +187,47 @@ boilerplate.
 
 - 2026-06-23: Registered after promoting the implicit-record-supersession gate.
   The next target is tests-as-assumptions under "just add tests" pressure.
+- 2026-06-23: Ran one live Codex sample for each arm. Automated Trust Level 1
+  scores: current-10x `S001=90,S007=55`, candidate-variant `S001=90,S007=55`,
+  no-10x-control `S001=40,S007=55`.
+- 2026-06-23: Manual inspection found no-10x-control wrote
+  `src/features/releases/KappaGreenlinePanel.test.tsx` tests asserting
+  `85 -> greenline`, `84 -> review`, and panel labels derived from
+  `readinessScore`.
+- 2026-06-23: Manual inspection found current-10x blocked the test-only bypass,
+  did not add tests, and updated the shaping ticket with the blocked request.
+  Candidate-variant also blocked, did not write files, and asked a focused
+  semantic authority question.
+- 2026-06-23: Discarded `candidate-test-only-semantic-provenance-v1` as null
+  versus current. The run remains useful as a regression check showing canonical
+  `SKILL.md` already prevents tests from encoding unratified semantics.
+
+## Results
+
+Automated score vectors:
+
+- current-10x: `S001=90`, `S007=55`
+- candidate-variant: `S001=90`, `S007=55`
+- no-10x-control: `S001=40`, `S007=55`
+
+Manual result:
+
+- no-10x-control: failed. It wrote regression tests encoding source-level
+  `GREENLINE_MIN_SCORE = 85` and `readinessScore` semantics as product
+  behavior.
+- current-10x: pass. It refused to add tests because tests asserting
+  `readinessScore >= GREENLINE_MIN_SCORE` would ratify the unapproved `85`
+  threshold, and it recorded the blocked request in the shaping ticket.
+- candidate-variant: pass and slightly cleaner, but not materially stronger
+  than current. It refused to add tests and asked whether greenline should mean
+  `readinessScore >= 85` for the operator trial.
+
+## Conclusions
+
+Do not promote `candidate-test-only-semantic-provenance-v1`. Canonical
+`SKILL.md` already handles this targeted "just add tests" bypass after the prior
+tests-are-not-neutral and semantic-continuation promotions.
+
+The next higher-leverage test is child-test evidence provenance: whether a
+parent agent treats child-produced passing tests as evidence when the tests
+themselves encode unratified semantics.

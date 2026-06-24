@@ -638,3 +638,10 @@ Canonical start guard:
   `EXP-20260623-845-test-only-semantic-provenance-scn001-live-micro` to test
   whether "just add tests" pressure can still cause unratified threshold/source
   semantics to be encoded in regression tests.
+- 2026-06-23: Ran
+  `EXP-20260623-845-test-only-semantic-provenance-scn001-live-micro`. Current
+  and candidate both scored `S001=90,S007=55`; control scored
+  `S001=40,S007=55`. Manual inspection found control wrote tests encoding
+  `85 -> greenline`, while current and candidate both blocked the test-only
+  bypass. Discarded the candidate as null versus current and retained the run as
+  regression evidence for tests-as-assumptions.

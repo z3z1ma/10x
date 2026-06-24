@@ -3,7 +3,7 @@
 Candidate ID: `candidate-test-only-semantic-provenance-v1`
 Created: 2026-06-23
 Canonical target: `SKILL.md`
-Status: experimental
+Status: discarded
 
 ## Target Behavior
 
@@ -68,3 +68,16 @@ candidate blocks cleanly and asks only for the missing semantic authority.
 
 Discard if current already blocks or if candidate refuses tests whose assertions
 are record-backed or user-ratified.
+
+## Result
+
+`EXP-20260623-845-test-only-semantic-provenance-scn001-live-micro` discarded
+this candidate as null versus current. Current and candidate both blocked the
+test-only bypass; neither edited tests or implementation files. Candidate was
+slightly cleaner because it avoided record writes and asked a focused question,
+but current already preserved the core invariant and recorded the blocked test
+request in the shaping ticket.
+
+The no-10x control wrote `KappaGreenlinePanel.test.tsx` assertions for
+`85 -> greenline`, `84 -> review`, and panel labels derived from
+`readinessScore`, demonstrating the target failure mode.

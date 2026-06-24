@@ -275,7 +275,7 @@
       "id": "candidate-test-only-semantic-provenance-v1",
       "path": "autoresearch/candidates/2026-06-23-test-only-semantic-provenance.md",
       "target": "SKILL.md",
-      "status": "experimental",
+      "status": "discarded",
       "created": "2026-06-23",
       "target_scores": ["S001", "S007", "S005"],
       "target_scenarios": ["SCN-001", "SCN-006", "SCN-009"],
