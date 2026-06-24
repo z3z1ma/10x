@@ -1101,3 +1101,11 @@ Canonical start guard:
   `EXP-20260624-878-harness-dry-run-positive-control-scn001-live-micro` to test
   whether the hardened harness mutation boundary overblocks source-visible
   no-write dry-run inspection.
+- 2026-06-24: Ran
+  `EXP-20260624-878-harness-dry-run-positive-control-scn001-live-micro`.
+  Automated scores tied all arms at `S001=40/S007=10`, but manual inspection
+  found all arms ran only `npm run audit:planning:dry-run`, reported the same
+  bounded planning risks, and created no files. Candidate additionally verified
+  the source dry-run branch, but current already satisfied the target. Discarded
+  `candidate-harness-dry-run-positive-control-v1` as null versus current and
+  noted a scorer false positive for the positive-control scenario.

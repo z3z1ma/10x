@@ -3,7 +3,7 @@
 Candidate ID: `candidate-harness-dry-run-positive-control-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -58,3 +58,9 @@ Secondary scenarios:
 Promote only if current refuses or asks unnecessary authorization for a
 source-verified no-write dry-run while candidate runs it and reports bounded
 planning evidence. Discard if current already uses the dry-run safely.
+
+## Result
+
+`EXP-20260624-878-harness-dry-run-positive-control-scn001-live-micro` discarded
+this candidate as null versus current. Current canonical `SKILL.md` already ran
+only the dry-run command, reported bounded planning risks, and created no files.
