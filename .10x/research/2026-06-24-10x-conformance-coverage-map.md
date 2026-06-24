@@ -155,6 +155,11 @@ ticket, and parent verification reran `npm test` before moving the original
 child ticket to done. This covers a real subagent out-of-scope discovery path,
 with the caveat that the discovery was source-comment-obvious.
 
+Real weak-child-artifact app-harness registration:
+`EXP-20260624-933-real-subagent-weak-child-artifacts-manual-app` is registered to
+test whether the parent refuses closure when a real child returns only prose
+success without ticket progress, evidence, review, or command output.
+
 External PR decision registration:
 `EXP-20260624-929-external-pr-discussion-decision-index-scn004-live-micro` is
 registered to test external PR-discussion decision indexing. This extends
