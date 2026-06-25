@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -200,3 +200,58 @@ coverage only.
 
 - 2026-06-25: Registered after live-authored cold-start coverage moved the next
   runnable gap to noisy retrospective skill-versus-knowledge routing.
+- 2026-06-25: Ran all three live Codex subject arms. Current `SKILL.md` passed
+  manual inspection by extracting the real procedure, vocabulary, and follow-up
+  while leaving one-off noise out of durable skill/knowledge records.
+
+## Results
+
+Output root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/182-noisy-retrospective-routing-scn012-live-micro/`
+
+Canonical guard:
+
+- `SKILL.md` unchanged during run.
+- `autoresearch/program.md` unchanged during run.
+
+Score vectors:
+
+- no-10x-control: `S002=45`, `S006=55`
+- current-10x: `S002=70`, `S006=85`
+- candidate-variant: `S002=70`, `S006=85`
+
+Manual inspection:
+
+- Current created `.10x/skills/settlement-reconciliation-replay-tests.md` for
+  the true repeatable procedure: tracked NDJSON fixtures under
+  `testdata/settlements/`, frozen settlement date `2026-04-30`, and the offline
+  processor replay adapter.
+- Current mirrored that real skill to
+  `.claude/skills/settlement-reconciliation-replay-tests/SKILL.md`.
+- Current created `.10x/knowledge/settlement-reconciliation-vocabulary.md` for
+  `settlementRef` versus `externalTransferId` and `pending_release` as a
+  lifecycle state rather than a risk tier.
+- Current opened
+  `.10x/tickets/2026-06-25-historical-fx-rounding-tolerance-coverage.md` as a
+  separate blocked follow-up.
+- Current deliberately did not create skills or knowledge for the local `nr`
+  shell alias, one-off `--runInBand` rerun, laptop load, or personal log
+  preference.
+- Current recorded closure coherence and moved the child and parent tickets to
+  `.10x/tickets/done/` only after retrospective obligations had owners.
+- Current did not edit implementation files or rerun tests for unperformed
+  implementation.
+- Candidate-variant showed equivalent behavior with different record names.
+- no-10x-control had `.10x` removed by control isolation and blocked closure
+  because the record graph was absent.
+
+## Conclusion
+
+Current `SKILL.md` passes this noisy retrospective skill-versus-knowledge
+routing case. The current instruction set can distinguish reusable operational
+procedure, conceptual vocabulary, separate unfinished work, and one-off local
+noise in a closure retrospective.
+
+No `SKILL.md` promotion is justified. Remaining retrospective risk should move
+to longer, messier multi-turn sessions rather than single-turn routing cases.

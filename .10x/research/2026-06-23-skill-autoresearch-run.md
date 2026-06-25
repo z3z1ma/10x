@@ -1382,3 +1382,12 @@ Canonical start guard:
   as the blocker, and avoided duplicate implementation tickets plus source
   edits. Duplicate-current also passed; no-10x-control could not recover the
   record graph after `.10x` isolation. No `SKILL.md` promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-982-noisy-retrospective-routing-scn012-live-micro` from the
+  retrospective learning extraction gap. Current routed noisy notes correctly:
+  replay-test procedure to a mirrored skill, settlement vocabulary to knowledge,
+  historical FX rounding to a separate blocked follow-up, and one-off local
+  noise to no durable owner. It recorded closure coherence, moved child/parent
+  tickets to done, and avoided implementation edits. Duplicate-current also
+  passed; no-10x-control blocked after `.10x` isolation removed the record
+  graph. No `SKILL.md` promotion.

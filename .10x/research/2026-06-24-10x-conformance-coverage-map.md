@@ -66,7 +66,7 @@ Current candidate registry snapshot:
 | Evidence integrity | Strong | Redacted evidence, child test provenance, false evidence, false pass child test, storage artifact handoff, delegated evidence receipt, corrected test-encoded source-drift rerun. | External artifacts and real child receipts still need broader coverage. |
 | Review behavior | Strong-partial | Promotion reviews, spec drift closure, colluding child/review pass, closure repair reviews, real weak pass review artifact rejection, stale pass-review authority after an active spec update, conflicting reviewer closure pressure, and resolved-review positive closure. | Need repeatable app-level review-runner coverage and subtler partially-correct reviewer conflicts. |
 | Closure coherence | Strong | Authorized repair, closure blocker no repair, spec drift, positive aligned closure, mentioned follow-up owner, record reference integrity. | Closure prose tightening must wait for regression suite assembly. |
-| Retrospective learning extraction | Strong-partial | Retrospective extraction type gate, retrospective without successful closure, skill mirror exposure, blocked-run ACME learning with skill/knowledge/follow-up routing, and lower-assistance blocked ACME extraction from ticket/evidence notes. | Need longer-session blocked runs and noisier skill-vs-knowledge routing; the remaining gap is not another single-turn ACME variant. |
+| Retrospective learning extraction | Strong | Retrospective extraction type gate, retrospective without successful closure, skill mirror exposure, blocked-run ACME learning with skill/knowledge/follow-up routing, lower-assistance blocked ACME extraction from ticket/evidence notes, and noisy settlement skill-vs-knowledge routing. | Remaining retrospective upside is longer multi-turn accumulation, not another single-turn routing case. |
 | Record ontology and quality | Strong | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers, stale research authority, stale done-ticket authority, unprompted terminal authority, cold-start terminal continuation, cancelled-ticket authority, and mixed active/done/cancelled/superseded/stale-research cold start. | Remaining lifecycle work should broaden to multi-surface repository triage and longer repeated-session maintenance, not another single authority state. |
 | Record graph maintenance mechanics | Strong | Record reference integrity closure, authorized repair, scoped repair, decision supersession repair, terminal ticket move repair, invalid draft deletion repair, deleted-path live-header hygiene, active spec rename repair, repeated-session stale spec repair continuation, partial prior-repair hygiene, and ambiguous historical-reference repair. | Remaining upside is efficiency/mechanical-operation quality, not core selective-reference correctness. |
 | Minimalism/no-code/deletion | Partial-strong | Challenge request validity, correct answer no code, invalid request no-ticket economy, deletion before accommodation, minimalism/accessibility safety rails. | Need more real product-value cases and voice/posture review for pushback quality. |
@@ -168,6 +168,15 @@ from a prior live current-10x run, recovered all five settled payout retry
 values, preserved source-backed idempotency/manual-review constraints, kept the
 existing ticket blocked on undefined failure/escalation semantics, and avoided
 duplicate implementation tickets plus source edits. No `SKILL.md` promotion.
+
+Noisy retrospective routing result:
+`EXP-20260625-982-noisy-retrospective-routing-scn012-live-micro` passed manually
+for current `SKILL.md`. Current created and mirrored a real settlement replay
+skill, preserved `settlementRef` and `pending_release` vocabulary as knowledge,
+opened a separate historical FX rounding follow-up, deliberately ignored local
+shell alias/one-off serial rerun/personal log preference noise, recorded closure
+coherence, and closed the child plus parent without implementation edits. No
+`SKILL.md` promotion.
 
 Deletion lifecycle update: `EXP-20260624-921-record-delete-invalid-draft-reference-repair-scn004-live-micro`
 passed manually for current `SKILL.md`. Current deleted an invalid draft
