@@ -448,6 +448,72 @@ class CodexSubjectRunnerTest(unittest.TestCase):
         self.assertEqual([], raw_outputs["current-10x"])
         self.assertEqual([], raw_outputs["candidate-variant"])
 
+    def test_no_10x_control_preserves_fixture_record_graph_task_surface(self):
+        observed_record_graphs = {}
+
+        def fake_run(argv, stdout, stderr, text, timeout=None):
+            workspace = Path(argv[argv.index("--cd") + 1])
+            prompt = argv[-1]
+            variant_id = next(arm["id"] for arm in _definition()["arms"] if arm["id"] in prompt)
+            observed_record_graphs[variant_id] = (workspace / ".10x" / "knowledge" / "seed.md").exists()
+            last_message = Path(argv[argv.index("--output-last-message") + 1])
+            last_message.parent.mkdir(parents=True, exist_ok=True)
+            last_message.write_text(f"{variant_id} completed.", encoding="utf-8")
+            return mock.Mock(
+                returncode=0,
+                stdout='{"type":"turn.completed","usage":{"input_tokens":1,"output_tokens":1}}\n',
+                stderr="",
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            prior_paths = {
+                arm["id"]: _write_prior_raw(
+                    root,
+                    arm["id"],
+                    with_record_graph=True,
+                    workspace_kind="seed-workspace",
+                )
+                for arm in _definition()["arms"]
+            }
+            definition = _definition()
+            definition["scenarios"] = [
+                {
+                    "id": "SCN-001",
+                    "prompts_by_arm": {
+                        arm["id"]: f"For {arm['id']}, continue from prior context."
+                        for arm in _definition()["arms"]
+                    },
+                    "prior_raw_paths": prior_paths,
+                }
+            ]
+
+            with mock.patch("subprocess.run", side_effect=fake_run):
+                run_codex_subject.run_live(
+                    definition,
+                    root / "out",
+                    repo_root=REPO_ROOT,
+                )
+
+            manifests = {
+                data["variant_id"]: data
+                for data in (
+                    json.loads(path.read_text(encoding="utf-8"))
+                    for path in (root / "out" / "workspaces").glob("*/workspace-manifest.json")
+                )
+            }
+
+        self.assertEqual(
+            {
+                "no-10x-control": True,
+                "current-10x": True,
+                "candidate-variant": True,
+            },
+            observed_record_graphs,
+        )
+        self.assertEqual([], manifests["no-10x-control"]["pre_run_removed_control_record_dirs"])
+        self.assertIn(".10x/knowledge/seed.md", manifests["no-10x-control"]["post_run_files"])
+
 
 def _definition():
     return {
@@ -527,7 +593,13 @@ def _fake_continuation_run(argv, stdout, stderr, text, timeout=None):
     )
 
 
-def _write_prior_raw(root: Path, variant_id: str, *, with_record_graph: bool = False) -> str:
+def _write_prior_raw(
+    root: Path,
+    variant_id: str,
+    *,
+    with_record_graph: bool = False,
+    workspace_kind: str = "codex-live-subject",
+) -> str:
     workspace = root / f"workspace-{variant_id}"
     workspace.mkdir(parents=True)
     if with_record_graph:
@@ -566,7 +638,7 @@ def _write_prior_raw(root: Path, variant_id: str, *, with_record_graph: bool = F
                 "input_tokens": 1,
                 "output_tokens": 1,
                 "harness_metadata": {
-                    "kind": "codex-live-subject",
+                    "kind": workspace_kind,
                     "workspace_manifest_path": str(manifest),
                 },
             },

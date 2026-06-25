@@ -94,6 +94,7 @@ def build_plan(
                 stem = _artifact_stem(live_run_key)
                 prior_context = _load_prior_context(repo_root, prior_raw_path)
                 seed_workspace_dir = prior_context.get("workspace_dir")
+                seed_workspace_kind = prior_context.get("workspace_kind")
                 workspace_dir = artifact_dirs["workspaces"] / stem
                 raw_path = artifact_dirs["raw"] / f"{stem}.json"
                 score_path = artifact_dirs["scores"] / f"{stem}.score.json"
@@ -132,6 +133,7 @@ def build_plan(
                         "prior_raw_path": prior_context.get("raw_path"),
                         "prior_transcript": prior_context.get("transcript", []),
                         "planned_seed_workspace_dir": str(seed_workspace_dir) if seed_workspace_dir else None,
+                        "planned_seed_workspace_kind": seed_workspace_kind,
                         "prompt": turns[0]["prompt"],
                         "prompt_path": str(prompt_path),
                         "planned_workspace_dir": str(workspace_dir),
@@ -300,6 +302,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
         pre_removed_control_record_dirs = _remove_inherited_control_records(
             workspace,
             sample["variant_id"],
+            sample.get("planned_seed_workspace_kind"),
         )
         pre_present = _present_suppressed(workspace)
         run_manifest_path = workspace / archive_manifest_path.name
@@ -687,6 +690,7 @@ def _load_prior_context(repo_root: Path, prior_raw_path: str | None) -> dict[str
         if isinstance(item, dict) and isinstance(item.get("role"), str) and isinstance(item.get("content"), str):
             cleaned_transcript.append({"role": item["role"], "content": item["content"]})
     metadata = raw.get("harness_metadata") if isinstance(raw.get("harness_metadata"), dict) else {}
+    workspace_kind = metadata.get("kind") if isinstance(metadata.get("kind"), str) else None
     manifest_path = metadata.get("workspace_manifest_path")
     workspace_dir = None
     if isinstance(manifest_path, str):
@@ -703,6 +707,7 @@ def _load_prior_context(repo_root: Path, prior_raw_path: str | None) -> dict[str
         "raw_path": str(raw_path),
         "transcript": cleaned_transcript,
         "workspace_dir": workspace_dir,
+        "workspace_kind": workspace_kind,
     }
 
 
@@ -851,7 +856,7 @@ def _control_isolation() -> dict[str, Any]:
         "codex_args": ["--disable", "plugins", "--ignore-user-config"],
         "workspace_strategy": "Run each sample in a private temporary workspace, then archive outputs under the experiment artifact directory.",
         "instruction_strategy": "Pass current and candidate instructions explicitly in the prompt; no-10x receives minimal instructions.",
-        "record_graph_strategy": "Remove inherited .10x only from no-10x-control workspaces before execution; record graph files created during the run remain captured.",
+        "record_graph_strategy": "Remove inherited .10x only from no-10x-control continuation workspaces before execution; fixture seed-workspace .10x records remain available when they are the task surface.",
         "limitation": "Codex system context and authenticated home remain outside this runner's control.",
     }
 
@@ -926,8 +931,14 @@ def _present_suppressed(workspace: Path) -> list[str]:
     return [path for path in SUPPRESSED_INSTRUCTION_FILES if (workspace / path).exists()]
 
 
-def _remove_inherited_control_records(workspace: Path, variant_id: str) -> list[str]:
+def _remove_inherited_control_records(
+    workspace: Path,
+    variant_id: str,
+    workspace_kind: str | None = None,
+) -> list[str]:
     if variant_id != "no-10x-control":
+        return []
+    if workspace_kind == "seed-workspace":
         return []
     removed = []
     for relative in SUPPRESSED_CONTROL_RECORD_DIRS:
