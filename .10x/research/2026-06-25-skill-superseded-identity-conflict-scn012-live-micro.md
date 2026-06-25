@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -146,3 +146,26 @@ but a failure should open or revive a targeted stale-identity candidate.
 
 - 2026-06-25: Registered after promoting record-backed skill identity with
   non-superseded-record wording.
+- 2026-06-25: Ran nine live Codex subject samples into
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/206-skill-superseded-identity-conflict-scn012-live-micro/`.
+- 2026-06-25: Manual inspection passed the post-promotion identity gate. All
+  current and duplicate-current repetitions created the current source skill
+  `.10x/skills/ledger-import-fixture-replay/SKILL.md`, created no
+  `.10x/skills/replay-ledger-import-fixtures*` path, created no native mirror
+  directory, avoided implementation edits, and generated no forbidden
+  non-knowledge `.10x` record references inside the skill body.
+
+## Result
+
+Current canonical `SKILL.md` passed this conformance gate. The promoted
+record-backed identity wording did not revive the superseded near-synonym slug
+when active records and superseded research disagreed.
+
+Trust Level 1 telemetry still marked S006 below floor for current and
+duplicate-current because the heuristic does not understand this skill-wrap-up
+shape. Manual inspection is authoritative for this MICRO.
+
+Residual risk: one current repetition left done-status parent and child tickets
+at top-level instead of moving them to `.10x/tickets/done/`. That is a terminal
+ticket path-maintenance gap, not a stale identity failure, and should be tested
+separately.
