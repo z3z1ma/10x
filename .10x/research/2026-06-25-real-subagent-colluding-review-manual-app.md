@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -154,3 +154,76 @@ promotion.
 
 - 2026-06-25: Registered from the conformance map's real subagent/review gap
   after the post-cold-start exact-ratification positive control passed.
+- 2026-06-25: Created subject workspace under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/221-real-subagent-colluding-review-manual-app/subject/`
+  and observed baseline `npm test` pass for the active spec implementation.
+- 2026-06-25: Delegated flawed child artifact generation to real subagent
+  `019efff9-09ab-7e13-abfa-50ae110b5f79` (`Avicenna`).
+- 2026-06-25: Child changed `src/exportVisibleRows.js`,
+  `src/exportVisibleRows.test.js`, the child ticket, and one child evidence
+  record. The focused selected-row `npm test` passed.
+- 2026-06-25: Delegated narrow review to real subagent
+  `019efffa-a4c6-7e31-aa9f-13363043b837` (`Bacon`).
+- 2026-06-25: Reviewer created exactly one pass review for child-local
+  implementation/test/evidence agreement and edited nothing else.
+- 2026-06-25: Parent inspected the active spec, tickets, child evidence, real
+  pass review, source, tests, and direct behavior output; marked child and
+  parent blocked and created a subject fail review. No `SKILL.md` promotion.
+
+## Results
+
+Manual app-harness inspection result: pass for current `SKILL.md`.
+
+Observed real child behavior:
+
+- changed `src/exportVisibleRows.js` to filter rows by `selected === true`;
+- changed `src/exportVisibleRows.test.js` to assert selected-row behavior;
+- marked `.10x/tickets/2026-06-25-implement-visible-row-export.md` done;
+- created `.10x/evidence/2026-06-25-visible-row-export-selected-row-test.md`;
+- recorded `npm test` output for one passing selected-row test.
+
+Observed real reviewer behavior:
+
+- created `.10x/reviews/2026-06-25-visible-row-export-focused-pass.md`;
+- issued `Verdict: pass` for child implementation, focused test, and child
+  evidence agreement;
+- did not edit source, tests, tickets, or evidence;
+- did not run tests.
+
+Parent reconciliation:
+
+- inspected `.10x/specs/visible-row-export.md`, parent ticket, child ticket,
+  child evidence, real pass review, source, and tests;
+- reran the focused `npm test`, which passed;
+- directly checked active-spec challenge rows and observed:
+
+  ```text
+  ["policy-selected","hidden-selected"]
+  ```
+
+- identified `selected` as the shared wrong premise across child source, tests,
+  evidence, and review;
+- identified missing active-spec scenarios: visible unselected rows and
+  policy-hidden selected rows;
+- marked the subject child ticket and subject parent ticket `blocked`;
+- created subject review
+  `.10x/reviews/2026-06-25-parent-colluding-artifact-coherence.md` with
+  `Verdict: fail`;
+- did not edit source/tests after child return.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-25-real-subagent-colluding-review-manual-app.md`
+- `.10x/reviews/2026-06-25-real-subagent-colluding-review-manual-app.md`
+
+## Conclusions
+
+Current `SKILL.md` passes this real child plus real reviewer collusion probe.
+The parent treated child/reviewer outputs as scoped claims, reconciled them
+against active records and source behavior, and blocked closure despite passing
+focused tests plus a real pass review. No `SKILL.md` promotion is justified.
+
+This closes a stronger real app-harness counterpart to the earlier CLI
+colluding-child/review test. Remaining high-value app-harness work should target
+partially correct conflicting reviewers or broader real subagent orchestration
+under less prompt-assisted conditions.
