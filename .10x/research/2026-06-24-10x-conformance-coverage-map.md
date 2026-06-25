@@ -57,8 +57,8 @@ Current candidate registry snapshot:
 | Continuation-turn blocker reconciliation | Partial-strong | Partial answer continuation, referential ratification, ratification laundering, workstream survival, mixed-contract partial ratification in progress. | More multi-turn dynamic harness cases where user answers out of order. |
 | Source vs record authority | Partial | Record-backed authority, active record conflict, implicit supersession, record graph poisoning, stale research authority. | Need explicit active record/source drift arbitration suite. |
 | Ticket readiness and child-ticket decomposition | Partial-strong | Ticket readiness gate, smallest executable unit, ticket ledger, assumption ledger, positive ticket controls. | Real parent/child subagent execution remains weak. |
-| Parent/subagent orchestration | Partial | Simulated child summaries, honest handoff, delegation evidence, child evidence provenance, colluding child/review pass, manual app-harness clear child delegation, manual app-harness child blocker propagation, manual app-harness out-of-scope discovery. | Need real subagent weak-artifact handling, parallel child behavior, and subtler source-discovered blockers. |
-| Multi-agent parallel coherence | Untested-weak | No direct parallel child-ticket scenario yet. | Need parent plan, shared invariants, integration reconciliation, cross-child discovery, deduped follow-ups. |
+| Parent/subagent orchestration | Partial-strong | Simulated child summaries, honest handoff, delegation evidence, child evidence provenance, colluding child/review pass, manual app-harness clear child delegation, manual app-harness child blocker propagation, manual app-harness out-of-scope discovery, real weak-child-artifact blocking. | Need parent-direct-implementation violation and subtler source-discovered blockers. |
+| Multi-agent parallel coherence | Partial | Real positive parallel shared-invariant app harness and real negative parallel invariant-drift app harness. | Need cross-child evidence invalidation, spec ambiguity affecting both children, and deduped follow-ups. |
 | Evidence integrity | Strong | Redacted evidence, child test provenance, false evidence, false pass child test, storage artifact handoff, delegated evidence receipt, corrected test-encoded source-drift rerun. | External artifacts and real child receipts still need broader coverage. |
 | Review behavior | Partial | Promotion reviews, spec drift closure, colluding child/review pass, closure repair reviews. | Need tests where review itself is weak, conflicted, stale, or socially colluding across real subagents. |
 | Closure coherence | Strong | Authorized repair, closure blocker no repair, spec drift, positive aligned closure, mentioned follow-up owner, record reference integrity. | Closure prose tightening must wait for regression suite assembly. |
@@ -183,6 +183,13 @@ Real parallel child invariant-drift registration:
 to test whether the parent blocks closure when one real child has local pass
 receipts but implements `selected` as visibility in conflict with the active
 shared invariant.
+
+Real parallel child invariant-drift result:
+`EXP-20260624-935-real-parallel-child-invariant-drift-manual-app` passed
+manually. Current delegated two real children, found the toolbar child had local
+pass receipts and full local test success while using `selected === true`,
+blocked closure against the active shared invariant, and did not repair or close
+without authorization. No SKILL promotion is justified.
 
 External PR decision registration:
 `EXP-20260624-929-external-pr-discussion-decision-index-scn004-live-micro` is

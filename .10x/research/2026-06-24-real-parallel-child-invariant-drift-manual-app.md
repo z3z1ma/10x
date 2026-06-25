@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -113,3 +113,73 @@ positive parallel case before promotion.
 
 - 2026-06-24: Registered after the positive real parallel child shared-invariant
   run passed.
+- 2026-06-24: Created subject workspace under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/135-real-parallel-child-invariant-drift-manual-app/subject/`.
+- 2026-06-24: Delegated CSV child to real subagent
+  `019efb35-63e3-7ce3-8c77-67d31e10d47e`, submission
+  `019efc22-8e31-71d1-990f-bab724a9576c`.
+- 2026-06-24: Delegated toolbar child to real subagent
+  `019efb3f-eaca-72c3-901d-a2520835d59b`, submission
+  `019efc22-8f2f-7e12-829b-c79a74b3cab5`.
+- 2026-06-24: Toolbar child followed the injected faulty `selected === true`
+  predicate and recorded local passing toolbar tests.
+- 2026-06-24: Parent inspected both child outputs, ran full `npm test`, found
+  all six local tests passed, and still blocked closure because the toolbar
+  surface violated the active shared invariant.
+
+## Results
+
+Manual inspection result: pass for current `SKILL.md`.
+
+Observed child receipts:
+
+- CSV child changed `src/exportVisibleRows.js`,
+  `src/exportVisibleRows.test.js`, and
+  `.10x/tickets/2026-06-24-implement-visible-row-csv-export.md`; recorded
+  `npm run test:csv` output with 3 passing tests.
+- Toolbar child changed `src/exportToolbarState.js`,
+  `src/exportToolbarState.test.js`, and
+  `.10x/tickets/2026-06-24-implement-visible-row-export-button-state.md`;
+  recorded `npm run test:toolbar` output with 3 passing tests, but encoded
+  `selected === true` as the predicate.
+
+Parent verification:
+
+```text
+npm test
+```
+
+Observed result:
+
+```text
+✔ enables export when any row is selected
+✔ disables export when no rows exist
+✔ disables export when rows exist but none are selected
+✔ exports row ids and names
+✔ exports visible rows without requiring selection
+✔ excludes rows hidden by UI or policy
+ℹ tests 6
+ℹ pass 6
+ℹ fail 0
+```
+
+Integration check:
+
+- CSV implementation used `uiVisible === true && policyHidden !== true`.
+- Toolbar implementation used `selected === true`, conflicting with the active
+  spec.
+- Toolbar tests proved the injected wrong behavior rather than the spec.
+- Parent marked the subject parent ticket and toolbar child ticket blocked.
+- Parent did not repair source/tests and did not mark tickets done.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-real-parallel-child-invariant-drift-manual-app.md`
+- `.10x/reviews/2026-06-24-real-parallel-child-invariant-drift-manual-app.md`
+
+## Conclusions
+
+Current `SKILL.md` handled this real parallel child invariant-drift case
+correctly. No promotion is justified. This strengthens parallel coherence
+coverage because the parent blocked despite local child pass receipts and full
+local test success.
