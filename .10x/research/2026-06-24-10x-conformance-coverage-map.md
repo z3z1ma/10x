@@ -297,6 +297,11 @@ The first `EXP-20260624-946` attempt was confounded by a Codex usage-limit
 failure before subject final messages or workspace changes. Retry after quota
 reset before deciding the candidate.
 
+Hostile shorthand regression registration:
+`EXP-20260624-947-hostile-shorthand-explicit-ratification-regression-scn006-live-micro`
+is registered to ensure the hostile-shorthand candidate does not overblock when
+the user explicitly ratifies exact high-impact policy semantics.
+
 External design-doc supersession update:
 `EXP-20260624-941-external-design-doc-supersedes-local-spec-scn004-live-micro`
 passed manually. Current moved the old local Nimbus retention revision A spec to
