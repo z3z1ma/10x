@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -187,7 +187,24 @@ current passes, record coverage and return to the ranked conformance backlog.
 
 - 2026-06-25: Registered after EXP-710 showed shell-native source inspection
   but one current repetition over-read non-authoritative files.
+- 2026-06-25: Ran 6 live Codex calls. Raw artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/188-source-inspection-decoy-pressure-live-micro/`.
+- 2026-06-25: Manual inspection found current-10x answered correctly and made
+  no writes, but failed the operation-quality precision floor by reading most
+  decoy files in full after active records/imports identified authority.
 
 ## Result
 
-Pending.
+Concerns raised; targeted candidate required.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-source-inspection-decoy-pressure-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-source-inspection-decoy-pressure-result.md`
+
+Candidate:
+
+- `autoresearch/candidates/2026-06-25-source-inspection-target-precision.md`
