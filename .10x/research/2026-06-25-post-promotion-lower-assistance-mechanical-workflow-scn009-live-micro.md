@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -221,3 +221,74 @@ promotion.
 - 2026-06-25: Registered after the user clarified that simple mechanical
   workflow should be encouraged by 10x itself and should not rely on explicit
   scenario prompting.
+- 2026-06-25: Ran all 6 live Codex subject calls under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/182-post-promotion-lower-assistance-mechanical-workflow-scn009-live-micro/`.
+- 2026-06-25: Manual inspection recorded in
+  `.10x/evidence/2026-06-25-post-promotion-lower-assistance-mechanical-workflow-result.md`
+  and reviewed in
+  `.10x/reviews/2026-06-25-post-promotion-lower-assistance-mechanical-workflow-result.md`.
+
+## Findings
+
+Canonical files stayed unchanged during the run:
+
+- `SKILL.md`
+- `autoresearch/program.md`
+
+All six subjects preserved the write boundary: only `.10x` files changed, no
+source/test files changed, no tests ran, and no implementation tickets were
+created.
+
+All six subjects passed graph-correctness inspection:
+
+- the done child ticket was moved to
+  `.10x/tickets/done/2026-06-25-align-payout-export-csv.md`;
+- the old top-level ticket file was absent after each run;
+- live references in spec, parent, evidence, review, and knowledge records
+  pointed to the terminal path;
+- historical old-path mentions survived only in the maintenance research record
+  and parent progress notes, not in live authority headers.
+
+Current `SKILL.md` improved over pre-promotion behavior by using shell-native
+inspection and direct filesystem moves:
+
+- both current repetitions used `rg` to enumerate references;
+- both current repetitions used `mkdir -p ... && mv ...` for the ticket move;
+- both current repetitions validated terminal path existence and old-path
+  survivors with shell commands.
+
+However, current still failed the stricter operation-quality target:
+
+- both current repetitions updated repeated live references across the spec,
+  parent ticket, evidence, review, and knowledge records through assistant-side
+  `file_change` edits rather than one bounded shell-native literal replacement
+  over the unambiguous live-reference file set;
+- current rep 1 required multiple additional assistant-side edits to repair the
+  parent ticket note after the repeated live-reference update.
+
+The no-op candidate arm behaved similarly: graph-correct, shell-native move,
+but still assistant-side repeated reference edits.
+
+The no-10x-control arm also saw the fixture `.10x` graph and completed the task,
+which confirms the control fixture-preservation fix remains active, but its
+behavior is not the target authority for 10x promotion decisions.
+
+Trust Level 1 automated scoring under-scored every arm because it cannot
+distinguish preserved historical old-path references from stale live references.
+Manual inspection is authoritative.
+
+## Conclusions
+
+The promoted narrow mechanical record/file maintenance rule is not strong enough
+to make lower-assistance subjects consistently choose the simplest mechanical
+workflow for repeated literal reference updates.
+
+Current `SKILL.md` is correct but still too tolerant of inefficient
+assistant-side read/write/find/edit loops when the transformation is established
+and mechanically safe.
+
+Next step: design a broader candidate that makes shell-native inspection and
+safe bounded mechanical transformations a general 10x behavior while preserving
+the existing safeguards against blind semantic rewrites, historical prose
+corruption, append-only history mutation, and implementation-before-gate
+violations.
