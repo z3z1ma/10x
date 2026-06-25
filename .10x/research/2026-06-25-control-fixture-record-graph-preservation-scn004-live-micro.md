@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -187,3 +187,29 @@ No `SKILL.md` promotion. If the harness sanity check fails, fix
 - 2026-06-25: Registered after EXP-701 found no-10x-control could not access
   fixture `.10x` records and the runner was patched to preserve
   `seed-workspace` record graphs.
+- 2026-06-25: Ran all three live Codex samples. Raw artifacts are stored under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/179-control-fixture-record-graph-preservation-scn004-live-micro/`.
+- 2026-06-25: Manual inspection recorded in
+  `.10x/evidence/2026-06-25-control-fixture-record-graph-preservation-result.md`
+  and
+  `.10x/reviews/2026-06-25-control-fixture-record-graph-preservation-result.md`.
+
+## Findings
+
+- no-10x-control preserved the fixture `.10x` task surface:
+  `pre_run_removed_control_record_dirs` was `[]`.
+- no-10x-control saw the active spec, renamed it to
+  `.10x/specs/payments-webhook-retry-policy.md`, repaired live references, and
+  preserved historical old-path mentions.
+- current-10x and the no-op candidate arm produced the expected equivalent
+  changed-file set.
+- canonical `SKILL.md` and `autoresearch/program.md` stayed unchanged.
+- Trust Level 1 S002 remained low for all arms because the scorer cannot
+  distinguish historical old-path preservation from stale live references.
+
+## Conclusions
+
+The harness fix is valid for seed workspaces: no-10x-control can now participate
+in `.10x` record-graph scenarios without deleting the fixture records that
+define the task. Future record-maintenance experiments can use no-10x controls
+again, provided the seed raw artifact marks the fixture as `seed-workspace`.
