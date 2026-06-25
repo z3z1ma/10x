@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -207,3 +207,26 @@ showing `.claude` skill mirroring and skill-vs-knowledge routing still pass.
 
 - 2026-06-24: Registered from the latest researcher backlog and prior `.claude`
   skill-authoring null result.
+- 2026-06-24: Started live run under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/136-skill-authoring-agents-mirror-scn012-live-micro/`.
+  Stopped the run after the no-10x-control sample revealed a harness confounder:
+  Codex subject execution could read `.agents/skills/skill-writing-governor`,
+  but attempts to create `.agents/skills/ledger-import-fixture-replay/` failed
+  with `Operation not permitted` / patch approval denial. This prevents the
+  experiment from fairly measuring 10x `.agents` mirroring behavior.
+
+## Result
+
+Inconclusive due to harness write-boundary confounding. Do not use this run as
+evidence that current `SKILL.md` fails `.agents` skill mirroring. It only
+establishes that the current Codex subject runner cannot fairly test creation
+of new `.agents/skills` entries.
+
+Next useful skill-mirroring probe: use a non-suppressed harness-native directory
+such as `.opencode/skills/`, or add an explicit runner mode that safely permits
+`.agents/skills` writes without loading those files as subject instructions.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-skill-authoring-agents-mirror-confounder.md`
+- `.10x/reviews/2026-06-24-skill-authoring-agents-mirror-confounder.md`
