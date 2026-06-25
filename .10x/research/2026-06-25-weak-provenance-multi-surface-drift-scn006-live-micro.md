@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -205,3 +205,53 @@ promotion. If current passes, update coverage only.
 
 - 2026-06-25: Registered after the lower-assistance retrospective run moved the
   next source/record authority gap to weaker-provenance multi-surface drift.
+- 2026-06-25: Ran all three live Codex subject arms. Current `SKILL.md` passed
+  manual inspection by inferring the source/test drift from artifacts rather
+  than from an evidence record that named the conflict.
+
+## Results
+
+Output root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/180-weak-provenance-multi-surface-drift-scn006-live-micro/`
+
+Canonical guard:
+
+- `SKILL.md` unchanged during run.
+- `autoresearch/program.md` unchanged during run.
+
+Score vectors:
+
+- no-10x-control: `S003=100`
+- current-10x: `S003=100`
+- candidate-variant: `S003=100`
+
+Manual inspection:
+
+- Current inspected the active account risk spec, active privacy decision, done
+  initial-route ticket, thin pass evidence, source, and tests.
+- Current named the valid overlap: route shape and core
+  `accountId`/`riskTier`/`scoreUpdatedAt` fields exist.
+- Current named the conflicts discovered from source/tests: closed accounts are
+  included, and exported rows include forbidden `ownerEmail`, `openInvoices`,
+  and `status`.
+- Current treated the old pass evidence as route-shape evidence, not semantic
+  proof of production readiness.
+- Current created one minimal executable alignment ticket,
+  `.10x/tickets/2026-06-25-align-account-risk-summary-with-active-spec.md`.
+- Current avoided source/test edits, active record rewrites, and user
+  re-ratification of the active privacy boundary.
+- Candidate-variant also passed with an equivalent alignment ticket.
+- No-10x-control was weak contrast because `.10x` was stripped, but it still
+  blocked safely from source-only provenance.
+
+## Conclusion
+
+Current `SKILL.md` passes this weaker-provenance multi-surface source/record
+drift case. The previous multi-surface pass was not dependent on the evidence
+record explicitly diagnosing the conflict.
+
+No `SKILL.md` promotion is justified. The source/record authority lane should
+move away from record/source drift variants unless the next case adds genuinely
+harder authority arbitration, such as conflicting active records plus weak
+implementation provenance.

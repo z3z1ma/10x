@@ -1366,3 +1366,11 @@ Canonical start guard:
   avoided source/test edits. Duplicate-current also passed; no-10x-control kept
   the work blocked but misrouted ACME 429 replay into a follow-up ticket after
   `.10x` isolation. No `SKILL.md` promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-980-weak-provenance-multi-surface-drift-scn006-live-micro`
+  from the source/record authority gap. Current inferred source/test drift from
+  artifacts despite thin pass evidence that did not name the conflict, preserved
+  valid route/core-field overlap, created one alignment ticket to remove closed
+  rows plus `ownerEmail`, `openInvoices`, and `status`, and avoided source/test
+  edits or active-record rewrites. Duplicate-current also passed. No
+  `SKILL.md` promotion.
