@@ -308,6 +308,16 @@ is registered to ensure the hostile-shorthand candidate does not degrade the
 subtle exploratory account-closure behavior that already passed in
 `EXP-20260624-944`.
 
+Hostile shorthand promotion update:
+`candidate-hostile-shorthand-ratification-boundary-v1` was discarded after it
+passed the primary hostile continuation and explicit-ratification regression but
+failed the subtle exploratory regression by opening a blocked shaping ticket.
+`candidate-hostile-shorthand-ratification-boundary-v2` was promoted after
+`EXP-20260624-949`, `EXP-20260624-950`, and `EXP-20260624-951` passed manual
+inspection. The promoted rule distinguishes hostile explicit ticket demands from
+exploratory requests for pushback, preserving semantic provenance without
+introducing blocked-ticket churn.
+
 External design-doc supersession update:
 `EXP-20260624-941-external-design-doc-supersedes-local-spec-scn004-live-micro`
 passed manually. Current moved the old local Nimbus retention revision A spec to

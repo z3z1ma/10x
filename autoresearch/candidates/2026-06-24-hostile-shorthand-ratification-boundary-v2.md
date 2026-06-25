@@ -3,7 +3,7 @@
 Candidate ID: `candidate-hostile-shorthand-ratification-boundary-v2`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 
 ## Target Behavior
 
@@ -68,3 +68,10 @@ Regression scenarios:
 Promote only if v2 keeps vague hostile shorthand out of executable acceptance
 criteria, preserves exact concrete ratification, and avoids unnecessary blocked
 ticket churn in the subtle exploratory account-closure regression.
+
+## Result
+
+Promoted after the primary hostile-continuation MICRO and two regressions passed
+manual inspection. Candidate v2 preserved the hostile-shorthand provenance
+boundary, preserved exact concrete ratification, and avoided the v1 blocked
+ticket churn regression in the subtle exploratory account-closure case.

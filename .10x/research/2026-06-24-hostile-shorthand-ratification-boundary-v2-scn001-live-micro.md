@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -179,3 +179,10 @@ concrete-ratification plus subtle exploratory regressions.
 
 - 2026-06-24: Registered after v1 passed the primary but failed the subtle
   exploratory regression.
+- 2026-06-24: Ran live under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/149-hostile-shorthand-ratification-boundary-v2-scn001-live-micro/`.
+  Candidate v2 passed manual inspection. It created a blocked shaping ticket
+  only because the user explicitly demanded a ticket, classified hostile
+  shorthand as requested/source-observed/blocked rather than user-ratified, and
+  avoided source edits, tests, executable implementation tickets, and executable
+  acceptance criteria.

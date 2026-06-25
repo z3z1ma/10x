@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -173,3 +173,9 @@ is necessary but not sufficient for promotion.
 
 - 2026-06-24: Registered after v1 passed this regression but failed the subtle
   exploratory regression.
+- 2026-06-24: Ran live under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/150-hostile-shorthand-v2-explicit-ratification-regression-scn006-live-micro/`.
+  Candidate v2 passed manual inspection. It created the active FinchPay policy
+  decision, ratification evidence, executable implementation ticket, and done
+  policy-authority ticket from exact user-ratified policy values, with no source
+  edits and no overblocking.

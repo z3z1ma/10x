@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -179,3 +179,8 @@ is necessary but not sufficient for promotion.
 
 - 2026-06-24: Registered after v1 failed this regression by opening a blocked
   shaping ticket.
+- 2026-06-24: Ran live under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/151-hostile-shorthand-v2-subtle-exploratory-regression-scn001-live-micro/`.
+  Candidate v2 passed manual inspection. It created no ticket, edited no source
+  or tests, named the record-backed/source-observed boundary, and asked one
+  concrete confirm-or-correct decision.
