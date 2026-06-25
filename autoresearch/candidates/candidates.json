@@ -1050,6 +1050,16 @@
       "target_scores": ["S003", "S005", "S001", "S002"],
       "target_scenarios": ["SCN-003", "SCN-006", "SCN-001"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-source-inspection-citation-decoy-boundary-v1",
+      "path": "autoresearch/candidates/2026-06-25-source-inspection-citation-decoy-boundary.md",
+      "target": "SKILL.md",
+      "status": "active",
+      "created": "2026-06-25",
+      "target_scores": ["S003", "S005", "S001", "S002"],
+      "target_scenarios": ["SCN-003", "SCN-006", "SCN-001"],
+      "promotion": "manual-only"
     }
   ]
 }

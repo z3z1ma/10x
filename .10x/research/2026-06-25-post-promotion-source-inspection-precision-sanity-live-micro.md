@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -183,7 +183,24 @@ wording.
 
 - 2026-06-25: Registered after promoting
   `candidate-source-inspection-target-precision-v1` into `SKILL.md`.
+- 2026-06-25: Ran 9 live Codex calls. Raw artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/190-post-promotion-source-inspection-precision-sanity-live-micro/`.
+- 2026-06-25: Manual inspection found current canonical improved the primary
+  decoy-pressure case and held drift/mutation regressions, but still read three
+  decoy files for citation and the no-op arm regressed to broad decoy reads.
 
 ## Result
 
-Pending.
+Concerns raised; targeted v2 candidate required.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-post-promotion-source-inspection-precision-sanity-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-post-promotion-source-inspection-precision-sanity-result.md`
+
+Candidate:
+
+- `autoresearch/candidates/2026-06-25-source-inspection-citation-decoy-boundary.md`
