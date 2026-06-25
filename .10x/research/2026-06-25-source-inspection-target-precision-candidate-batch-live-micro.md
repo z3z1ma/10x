@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -195,7 +195,20 @@ discard or narrow.
 
 - 2026-06-25: Registered after EXP-711 exposed decoy-pressure over-reading in
   canonical current.
+- 2026-06-25: Ran 12 live Codex calls. Raw artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/189-source-inspection-target-precision-candidate-batch-live-micro/`.
+- 2026-06-25: Manual inspection found candidate-variant fixed the
+  decoy-pressure over-reading gap and held small source-inspection,
+  source/record drift, and mutation-boundary regressions.
 
 ## Result
 
-Pending.
+Pass; promote candidate.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-source-inspection-target-precision-candidate-batch-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-source-inspection-target-precision-candidate-batch-result.md`

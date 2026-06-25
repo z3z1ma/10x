@@ -1045,7 +1045,7 @@
       "id": "candidate-source-inspection-target-precision-v1",
       "path": "autoresearch/candidates/2026-06-25-source-inspection-target-precision.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "promoted",
       "created": "2026-06-25",
       "target_scores": ["S003", "S005", "S001", "S002"],
       "target_scenarios": ["SCN-003", "SCN-006", "SCN-001"],

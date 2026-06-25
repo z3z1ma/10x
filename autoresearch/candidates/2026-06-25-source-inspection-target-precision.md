@@ -3,7 +3,7 @@
 Candidate ID: `candidate-source-inspection-target-precision-v1`
 Created: 2026-06-25
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 Promotion: manual-only
 
 ## Target Behavior
@@ -85,4 +85,20 @@ weakens record/source drift detection.
 
 ## Result
 
-Pending.
+Promoted after
+`EXP-20260625-712-source-inspection-target-precision-candidate-batch-live-micro`.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-source-inspection-target-precision-candidate-batch-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-source-inspection-target-precision-candidate-batch-result.md`
+
+Promotion rationale:
+
+- improved source-inspection decoy-pressure operation quality;
+- held small source-inspection correctness;
+- held source/record drift inspection;
+- held harness-induced mutation boundary.

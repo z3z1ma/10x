@@ -625,6 +625,19 @@ read/find loops. Use `rg --files`, `rg -n`, `find`, `git status`, `git diff`,
 and targeted `sed -n` or equivalent commands to inspect file sets and verify
 results.
 
+For read-only source-authority questions, use broad repository-native search to
+find the governing records, source-owner files, and import/dependency chain;
+then narrow. Once active records or imports identify the files that own the
+answer, inspect those files first and treat UI labels, fixtures, tests, legacy
+files, analytics, routes, jobs, generated files, and consumers as candidate
+non-authority unless they could materially change the conclusion.
+
+Do not read every plausible decoy in full merely to say it was ignored. Cite why
+it is non-authoritative from active records, search results, filenames, imports,
+or a small targeted check. Read a decoy when it could contradict the record,
+reveal source/record drift, or change the answer; otherwise keep source
+inspection bounded to the authority path.
+
 Prefer direct filesystem operations and bounded literal rewrites over
 assistant-side multi-file edit loops when the transformation is established,
 repeated, and mechanical: moves, renames, status/header changes, path updates,
