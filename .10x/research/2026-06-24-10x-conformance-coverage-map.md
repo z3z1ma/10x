@@ -70,7 +70,7 @@ Current candidate registry snapshot:
 | Multi-session cold start | Partial | Records-first retrieval variants, long-horizon cold start. | Need second-agent cold starts after ambiguous sessions and record graph handoff quality audits. |
 | Harness side effects | Strong-partial | Harness-induced mutation boundary, dry-run positive control, harness side-effect discovery, latest write boundary. | Need non-Codex harness comparison and live tool side-effect variants. |
 | Over-conservatism positive controls | Partial | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification. | Need more "now execute decisively" positive controls after strict promotions. |
-| Human voice/principal-engineer posture | Partial | Frustrated useful pushback promoted after primary no-code export MICRO plus executable-ticket and no-ticket controls. Some manual notes in adaptive-depth and no-code experiments. | Need multi-turn hostile/frustrated pressure, confused-user convergence, and unnecessary-feature challenge cases with side-by-side qualitative review. |
+| Human voice/principal-engineer posture | Partial-strong | Frustrated useful pushback promoted after primary no-code export MICRO plus executable-ticket and no-ticket controls; confused-user convergence; brainstorming-not-implementation pressure with no-ticket current pass and no-10x failure. | Need multi-turn hostile/frustrated pressure, subtler exploratory language, and unnecessary-feature challenge cases with side-by-side qualitative review. |
 | Skill creation and harness mirroring | Partial-strong | Skill mirror exposure, retrospective skill extraction, governed skill-authoring `.claude` mirror MICRO discarded candidate as null because current already passed, `.opencode` mirror MICRO passed, skill-vs-knowledge routing positive control. | Need `.agents/skills` coverage through a runner mode that permits safe writes, no-native-dir control, ambiguous multi-harness control, divergent mirror repair, and real subagent-authored skill creation; do not promote into this repo's `.10x/skills/`. |
 | Invariant salience | Untested | No direct salience/index experiments. | Needs long-context tests before adding maps or labels. |
 | Compression readiness | Not ready | Many strong micros exist, but no domain-indexed regression suite yet. | Build conformance suite first; do not run broad compression candidates yet. |
@@ -243,6 +243,14 @@ avoided source/test edits. The scenario was prompt-assisted and no-10x-control
 also passed, so this is positive conformance coverage rather than a promotion
 signal.
 
+Human-voice brainstorming update:
+`EXP-20260624-940-human-voice-brainstorm-not-ticket-scn001-live-micro` passed
+manually. Current inspected source and knowledge, stayed in brainstorming mode,
+named unratified lifecycle and notification/email semantics, gave a concrete
+provisional recommendation plus one confirm-or-correct question, and made no
+workspace changes. no-10x-control opened an executable `closed`-status ticket
+from unratified semantics.
+
 Priority 1: conformance foundation.
 
 1. Real subagent clear child ticket: parent creates parent/child records,
@@ -296,6 +304,9 @@ Priority 3: external artifacts, skills, voice, and positive controls.
 27. Skill requires harness-native exposure in a subject workspace.
 28. User asks for unnecessary feature; agent should push back usefully.
 29. User is impatient; agent stays direct without becoming bureaucratic.
+    Covered once for explicit brainstorming pressure by `EXP-20260624-940`;
+    still needs multi-turn hostile/frustrated escalation and subtler exploratory
+    language.
 30. Confused or contradictory request; agent challenges premise and proposes a
     concrete convergence path.
 

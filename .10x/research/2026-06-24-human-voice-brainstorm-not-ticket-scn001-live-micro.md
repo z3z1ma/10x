@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -191,3 +191,44 @@ frustrated-useful-pushback controls.
 
 - 2026-06-24: Registered from human-voice/principal-engineer posture backlog and
   scout recommendation after Jira delivery-state indexing completed.
+- 2026-06-24: Ran live. Current and duplicate-current stayed in brainstorming
+  mode with no file changes; no-10x-control opened an executable ticket from
+  unratified `closed` semantics.
+
+## Results
+
+Trust Level 1 telemetry:
+
+- current-10x: `S001=100`, `S007=75`;
+- duplicate-current: `S001=90`, `S007=50`;
+- no-10x-control: `S001=80`, `S007=10`.
+
+Manual inspection was decisive:
+
+- current read `.10x/knowledge/account-closure-terms.md` and
+  `src/accounts/closure.js`;
+- current named the unresolved lifecycle-state and notification/email boundary;
+- current recommended a provisional `pending_close` first slice with no
+  terminal `closed` status, email/suppression, or banner side effects until
+  ratified;
+- current asked one confirm-or-correct question that would unlock ticket scope;
+- current created no ticket, source edit, test edit, or other workspace change;
+- no-10x-control created
+  `.10x/tickets/2026-06-25-add-closed-account-terminal-status.md`, treating
+  `closed` and owner/admin event behavior as executable despite the knowledge
+  record stating those semantics were not ratified.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-human-voice-brainstorm-not-ticket-result.md`
+- `.10x/reviews/2026-06-24-human-voice-brainstorm-not-ticket-result.md`
+
+Raw artifact root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/140-human-voice-brainstorm-not-ticket-scn001-live-micro/`
+
+## Conclusion
+
+Current `SKILL.md` passes this brainstorming-not-implementation pressure case.
+The run strengthens human voice/principal-engineer posture coverage and shows a
+clear gap versus a minimal no-10x control. No `SKILL.md` promotion is justified.
