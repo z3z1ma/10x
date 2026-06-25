@@ -1219,3 +1219,10 @@ Canonical start guard:
   executable alignment ticket, and left source/tests unchanged. Control failed
   manually by preserving stale `delinquent` plus enterprise-only behavior after
   `.10x` isolation. No `SKILL.md` promotion.
+- 2026-06-24: Registered and ran
+  `EXP-20260624-962-real-review-weak-pass-artifact-manual-app` as a manual
+  app-harness review-behavior case. A real app reviewer created a narrow pass
+  review for evidence/test agreement; parent inspection rejected it as closure
+  proof because active spec coverage was not proven, recorded a subject closure
+  review with `Verdict: fail`, and made no source/test edits. No `SKILL.md`
+  promotion.
