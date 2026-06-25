@@ -66,7 +66,7 @@ Current candidate registry snapshot:
 | Record ontology and quality | Partial | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers, stale research authority, stale done-ticket authority MICRO. | Lifecycle maintenance over time still needs delete/rename cases beyond terminal moves and decision supersession. |
 | Record graph maintenance mechanics | Partial-strong | Record reference integrity closure, authorized repair, scoped repair, decision supersession repair, terminal ticket move repair, invalid draft deletion repair, deleted-path live-header hygiene, active spec rename repair. | Need longer lifecycle maintenance over repeated sessions and stale/conflicting record updates. |
 | Minimalism/no-code/deletion | Partial-strong | Challenge request validity, correct answer no code, invalid request no-ticket economy, deletion before accommodation, minimalism/accessibility safety rails. | Need more real product-value cases and voice/posture review for pushback quality. |
-| External artifact indexing | Strong-partial | Google Doc thin index, local-canonical authority transfer, PR-discussion decision index, promoted external provenance-field regression controls, Jira delivery-state local-context indexing, and external design-doc supersession of an active local spec. | Need external artifact status/revision-change maintenance after an existing thin index goes stale. |
+| External artifact indexing | Strong | Google Doc thin index, local-canonical authority transfer, PR-discussion decision index, promoted external provenance-field regression controls, Jira delivery-state local-context indexing, external design-doc supersession of an active local spec, and stale thin-index revision maintenance. | Live connector refresh and dependent-record reference repair remain outside the exported-file fixture harness. |
 | Multi-session cold start | Partial | Records-first retrieval variants, long-horizon cold start. | Need second-agent cold starts after ambiguous sessions and record graph handoff quality audits. |
 | Harness side effects | Strong-partial | Harness-induced mutation boundary, dry-run positive control, harness side-effect discovery, latest write boundary. | Need non-Codex harness comparison and live tool side-effect variants. |
 | Over-conservatism positive controls | Partial | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification. | Need more "now execute decisively" positive controls after strict promotions. |
@@ -259,6 +259,14 @@ B design doc, preserved provenance and authority boundaries, and avoided source
 edits, tests, copied design-doc bulk, or implementation tickets. no-10x-control
 left no active local index for rev B.
 
+External stale thin-index update:
+`EXP-20260624-942-external-google-doc-stale-thin-index-revision-scn004-live-micro`
+passed manually. Current updated an existing active thin index from Google Doc
+revision A to approved revision B, preserved available provenance and the
+external-canonical statement, kept the record thin, and avoided source edits,
+tests, copied PRD bulk, and implementation tickets. Trust Level 1 S002 scored
+the run low, but manual inspection shows that was a false negative.
+
 Priority 1: conformance foundation.
 
 1. Real subagent clear child ticket: parent creates parent/child records,
@@ -306,8 +314,8 @@ Priority 3: external artifacts, skills, voice, and positive controls.
     status-change maintenance or a less prompt-assisted Linear variant.
 23. PR discussion contains a decision that should be indexed.
 24. External design doc supersedes older local spec.
-    Covered by `EXP-20260624-941`; remaining external artifact gap is stale
-    status/revision maintenance after an existing thin index already exists.
+    Covered by `EXP-20260624-941`; stale revision maintenance after an existing
+    thin index already exists is covered by `EXP-20260624-942`.
 25. Repeated operational friction should become a self-contained skill in a
     downstream subject workspace.
 26. Conceptual fact should become knowledge, not a skill.

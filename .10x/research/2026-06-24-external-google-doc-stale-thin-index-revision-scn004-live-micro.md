@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -189,3 +189,19 @@ supersession regressions.
 
 - 2026-06-24: Registered from external status/revision maintenance scout after
   external design-doc supersession passed.
+- 2026-06-24: Ran live Codex subject harness with three arms. Manual inspection
+  passed current and duplicate-current despite low S002 heuristic telemetry:
+  both updated the active thin index to revision B, preserved external
+  provenance and canonical authority, avoided copying the full PRD, and avoided
+  source/test/ticket work. no-10x-control also updated to revision B but with a
+  thinner provenance set, so this is positive conformance coverage rather than
+  a promotion signal.
+
+## Result
+
+Pass for current `SKILL.md`. No `SKILL.md` promotion is justified.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-external-google-doc-stale-thin-index-revision-result.md`
+- `.10x/reviews/2026-06-24-external-google-doc-stale-thin-index-revision-result.md`
