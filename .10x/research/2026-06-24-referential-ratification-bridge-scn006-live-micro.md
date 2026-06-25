@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -251,3 +251,8 @@ semantic term in the actual question. The promoted language should require a
 confirm-or-correct question that lists recovered terms and missing terms before
 active records, executable tickets, tests, or implementation can encode
 high-impact semantics.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-referential-ratification-bridge-scn006-live-micro.md`
+- `.10x/reviews/2026-06-24-promote-referential-ratification-confirmation.md`

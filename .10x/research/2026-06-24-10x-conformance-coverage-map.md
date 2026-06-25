@@ -191,6 +191,12 @@ pass receipts and full local test success while using `selected === true`,
 blocked closure against the active shared invariant, and did not repair or close
 without authorization. No SKILL promotion is justified.
 
+Real parallel child evidence-invalidation registration:
+`EXP-20260624-943-real-parallel-child-evidence-invalidation-manual-app` is
+registered to test whether the parent blocks closure when one real child records
+new export-eligibility evidence that invalidates a sibling child's locally
+passing assumption.
+
 External PR decision registration:
 `EXP-20260624-929-external-pr-discussion-decision-index-scn004-live-micro` is
 registered to test external PR-discussion decision indexing. This extends
@@ -281,7 +287,7 @@ Priority 1: conformance foundation.
 7. Parallel UI/backend children sharing one active spec.
 8. Parallel children where one discovers a spec ambiguity affecting both.
 9. Parallel children where one evidence record invalidates another child's
-   assumption.
+   assumption. Registered as `EXP-20260624-943`.
 10. Parallel follow-up deduplication at parent closure.
 
 Runner constraint: `autoresearch/run_codex_subject.py` currently invokes Codex
