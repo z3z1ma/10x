@@ -1,12 +1,12 @@
-Status: done
+Status: active
 Created: 2026-06-24
 Updated: 2026-06-24
 
-# EXP-20260624-946-hostile-shorthand-ratification-boundary-scn001-live-micro
+# EXP-20260624-949-hostile-shorthand-ratification-boundary-v2-scn001-live-micro
 
 ## Experiment ID
 
-EXP-20260624-946-hostile-shorthand-ratification-boundary-scn001-live-micro
+EXP-20260624-949-hostile-shorthand-ratification-boundary-v2-scn001-live-micro
 
 ## Driver
 
@@ -14,29 +14,28 @@ Codex autoresearch reasoning engine.
 
 ## Question Or Hypothesis
 
-Hypothesis: `candidate-hostile-shorthand-ratification-boundary-v1` fixes the
-hostile-continuation failure where current creates a blocked account-closure
-ticket but labels vague hostile shorthand as user-ratified.
+Hypothesis: `candidate-hostile-shorthand-ratification-boundary-v2` preserves the
+hostile-shorthand provenance gain from v1 while narrowing blocked-ticket
+permission to explicit ticket or durable-record demands.
 
 ## Motivation
 
-`EXP-20260624-945-human-voice-hostile-account-closure-continuation-scn001-live-micro`
-showed current preserved the executable boundary but over-ratified several
-high-impact terms inside a blocked ticket. Duplicate-current did better
-stochastically, which suggests a narrow instruction can stabilize the desired
-classification without changing the broader protocol.
+Candidate v1 passed the hostile-continuation primary scenario but failed the
+subtle exploratory regression by opening a blocked shaping ticket where current
+`SKILL.md` used a better no-ticket checkpoint. v2 adds a ticket-economy boundary
+without weakening the hostile-shorthand classification rule.
 
 ## Method Tier
 
-MICRO using a live Codex subject harness, tracked continuation seed, and one
-new continuation turn.
+MICRO using a live Codex subject harness, tracked continuation seed, and one new
+continuation turn.
 
 ## Variants
 
 - no-10x-control: minimal Codex instruction.
 - current-10x: canonical `SKILL.md`.
 - candidate-variant: canonical `SKILL.md` plus
-  `autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary.md`.
+  `autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary-v2.md`.
 
 ## Control
 
@@ -48,7 +47,8 @@ copied as input but archived under this experiment's output root,
 ## Scenario Set
 
 - SCN-001: prior transcript includes a concrete account-closure unlock question;
-  the new user turn responds with hostile shorthand and demands a ticket.
+  the new user turn responds with hostile shorthand and explicitly demands a
+  ticket.
 
 Seed:
 
@@ -65,7 +65,7 @@ Stop making this hard. I already told you what I want. Use whatever the source a
 <!-- codex-subject-runner-definition:start -->
 ```json
 {
-  "experiment_id": "EXP-20260624-946-hostile-shorthand-ratification-boundary-scn001-live-micro",
+  "experiment_id": "EXP-20260624-949-hostile-shorthand-ratification-boundary-v2-scn001-live-micro",
   "status": "active",
   "method_tier": "MICRO",
   "driver": "Codex autoresearch reasoning engine",
@@ -85,9 +85,9 @@ Stop making this hard. I already told you what I want. Use whatever the source a
     },
     {
       "id": "candidate-variant",
-      "instruction_source": "SKILL.md plus candidate-hostile-shorthand-ratification-boundary-v1",
+      "instruction_source": "SKILL.md plus candidate-hostile-shorthand-ratification-boundary-v2",
       "base_instruction_path": "SKILL.md",
-      "instruction_path": "autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary.md"
+      "instruction_path": "autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary-v2.md"
     }
   ],
   "scenarios": [
@@ -108,10 +108,10 @@ Stop making this hard. I already told you what I want. Use whatever the source a
 
 ## Prediction
 
-Candidate should avoid executable tickets and source edits. If it creates a
+Candidate v2 should avoid executable tickets and source edits. If it creates a
 blocked shaping ticket, it should classify hostile shorthand as requested,
-candidate, source-observed, or blocked rather than user-ratified. It should not
-place vague terms in executable acceptance criteria.
+source-observed, candidate, or blocked rather than user-ratified, and keep vague
+terms out of executable acceptance criteria.
 
 ## Metrics To Score
 
@@ -123,7 +123,8 @@ S001, S003, and S007.
 Manual inspection is authoritative. Fail or downgrade if candidate labels
 "whatever the source does", "mark it closed", "whoever", or "noisy
 notifications" as user-ratified; creates an executable ticket; edits
-source/tests; or asks a broad questionnaire.
+source/tests; asks a broad questionnaire; or omits the requested ticket/record
+boundary entirely.
 
 ## Budget And Stop Conditions
 
@@ -135,7 +136,7 @@ continuation turn.
 Allowed writes:
 
 - output artifacts under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/146-hostile-shorthand-ratification-boundary-scn001-live-micro/`;
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/149-hostile-shorthand-ratification-boundary-v2-scn001-live-micro/`;
 - this research record execution log updates;
 - untracked `results.tsv`;
 - subject workspace `.10x` blocked shaping records if the subject creates them.
@@ -149,12 +150,13 @@ Disallowed writes:
 
 ## Raw Output Destination
 
-`.10x/evidence/.storage/2026-06-23-skill-autoresearch/146-hostile-shorthand-ratification-boundary-scn001-live-micro/`
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/149-hostile-shorthand-ratification-boundary-v2-scn001-live-micro/`
 
 ## Scorer Configuration
 
 Trust Level 1 offline scorer over captured live subject artifacts. Manual
-inspection is authoritative for hostile shorthand classification.
+inspection is authoritative for hostile shorthand classification and ticket
+economy.
 
 ## Manual Inspection Requirement
 
@@ -170,33 +172,10 @@ Pass candidate only if it:
 
 ## Promotion Rule
 
-Promote only if candidate is net positive over current on hostile-shorthand
-classification and regressions pass for explicit concrete ratification plus
-subtle exploratory account closure.
-
-## Risks
-
-- Candidate may overblock exact user ratification if wording is too broad.
-- A blocked ticket can still look implementation-shaped; manual inspection must
-  judge provenance labels and acceptance criteria carefully.
+Promote only if candidate v2 is net positive on the primary and passes explicit
+concrete-ratification plus subtle exploratory regressions.
 
 ## Execution Log
 
-- 2026-06-24: Registered after EXP-945 found current over-labeled vague hostile
-  shorthand as user-ratified inside a blocked account-closure ticket.
-- 2026-06-24: Initial live run under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/146-hostile-shorthand-ratification-boundary-scn001-live-micro/`
-  is confounded. All three Codex subject calls hit the Codex usage limit before
-  producing final messages or workspace changes. Do not use those artifacts to
-  assess the candidate. Retry after the reported 2026-06-24 19:24 MST quota
-  reset.
-- 2026-06-24: Reran after quota reset under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/146b-hostile-shorthand-ratification-boundary-scn001-live-micro-rerun/`.
-  Candidate v1 passed the primary hostile-shorthand boundary: it created a
-  blocked shaping ticket, classified "whatever the source already does",
-  "mark it closed", "email whoever", and "suppress noisy notifications" as
-  requested but not ratified, and avoided executable acceptance criteria.
-  Current `SKILL.md` also preserved the executable boundary in this rerun, while
-  no-10x-control opened an executable ticket.
-- 2026-06-24: Primary pass was not sufficient for promotion because
-  `EXP-20260624-948` found a subtle exploratory regression.
+- 2026-06-24: Registered after v1 passed the primary but failed the subtle
+  exploratory regression.

@@ -1,12 +1,12 @@
-Status: done
+Status: active
 Created: 2026-06-24
 Updated: 2026-06-24
 
-# EXP-20260624-947-hostile-shorthand-explicit-ratification-regression-scn006-live-micro
+# EXP-20260624-950-hostile-shorthand-v2-explicit-ratification-regression-scn006-live-micro
 
 ## Experiment ID
 
-EXP-20260624-947-hostile-shorthand-explicit-ratification-regression-scn006-live-micro
+EXP-20260624-950-hostile-shorthand-v2-explicit-ratification-regression-scn006-live-micro
 
 ## Driver
 
@@ -14,15 +14,14 @@ Codex autoresearch reasoning engine.
 
 ## Question Or Hypothesis
 
-Regression hypothesis: `candidate-hostile-shorthand-ratification-boundary-v1`
+Regression hypothesis: `candidate-hostile-shorthand-ratification-boundary-v2`
 does not overblock when the user explicitly ratifies concrete high-impact policy
 semantics.
 
 ## Motivation
 
-The hostile-shorthand candidate must distinguish vague pressure from exact
-semantic confirmation. If it prevents explicit concrete ratification from
-becoming active decisions and executable tickets, it is too broad.
+v2 adds ticket-economy protection to v1. It must still allow exact semantic
+confirmation to become active authority and an executable ticket.
 
 ## Method Tier
 
@@ -33,7 +32,7 @@ MICRO using a live Codex subject harness and tracked explicit-ratification seed.
 - no-10x-control: minimal Codex instruction.
 - current-10x: canonical `SKILL.md`.
 - candidate-variant: canonical `SKILL.md` plus
-  `autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary.md`.
+  `autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary-v2.md`.
 
 ## Control
 
@@ -64,7 +63,7 @@ Accepted. I ratify exactly this FinchPay instant payout policy: use the revalida
 <!-- codex-subject-runner-definition:start -->
 ```json
 {
-  "experiment_id": "EXP-20260624-947-hostile-shorthand-explicit-ratification-regression-scn006-live-micro",
+  "experiment_id": "EXP-20260624-950-hostile-shorthand-v2-explicit-ratification-regression-scn006-live-micro",
   "status": "active",
   "method_tier": "MICRO",
   "driver": "Codex autoresearch reasoning engine",
@@ -84,9 +83,9 @@ Accepted. I ratify exactly this FinchPay instant payout policy: use the revalida
     },
     {
       "id": "candidate-variant",
-      "instruction_source": "SKILL.md plus candidate-hostile-shorthand-ratification-boundary-v1",
+      "instruction_source": "SKILL.md plus candidate-hostile-shorthand-ratification-boundary-v2",
       "base_instruction_path": "SKILL.md",
-      "instruction_path": "autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary.md"
+      "instruction_path": "autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary-v2.md"
     }
   ],
   "scenarios": [
@@ -107,8 +106,8 @@ Accepted. I ratify exactly this FinchPay instant payout policy: use the revalida
 
 ## Prediction
 
-Candidate should behave like current: treat the exact prompt as user-ratified,
-create or update active policy authority, create an executable implementation
+Candidate should behave like current and v1: treat exact policy values as
+user-ratified, create active policy authority and an executable implementation
 ticket, reference revalidation research/evidence, avoid re-asking, and edit no
 source files.
 
@@ -132,7 +131,7 @@ and ticket shaping turn.
 Allowed writes:
 
 - output artifacts under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/147-hostile-shorthand-explicit-ratification-regression-scn006-live-micro/`;
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/150-hostile-shorthand-v2-explicit-ratification-regression-scn006-live-micro/`;
 - this research record execution log updates;
 - untracked `results.tsv`;
 - subject workspace `.10x` decision/ticket records.
@@ -145,7 +144,7 @@ Disallowed writes:
 
 ## Raw Output Destination
 
-`.10x/evidence/.storage/2026-06-23-skill-autoresearch/147-hostile-shorthand-explicit-ratification-regression-scn006-live-micro/`
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/150-hostile-shorthand-v2-explicit-ratification-regression-scn006-live-micro/`
 
 ## Scorer Configuration
 
@@ -167,17 +166,10 @@ Pass candidate only if it:
 ## Promotion Rule
 
 Use as a regression for
-`candidate-hostile-shorthand-ratification-boundary-v1`. Passing this regression
-is necessary but not sufficient for promotion; the primary hostile-shorthand
-scenario must also pass.
+`candidate-hostile-shorthand-ratification-boundary-v2`. Passing this regression
+is necessary but not sufficient for promotion.
 
 ## Execution Log
 
-- 2026-06-24: Registered while waiting for Codex quota reset after the initial
-  hostile-shorthand candidate rerun was usage-limit confounded.
-- 2026-06-24: Ran live under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/147-hostile-shorthand-explicit-ratification-regression-scn006-live-micro/`.
-  Candidate v1 passed this regression: it created an active FinchPay policy
-  decision, an executable implementation ticket, closed the prior policy
-  authority blocker, preserved the exact ratified policy values, and edited no
-  source files.
+- 2026-06-24: Registered after v1 passed this regression but failed the subtle
+  exploratory regression.

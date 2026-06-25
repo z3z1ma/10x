@@ -3,7 +3,7 @@
 Candidate ID: `candidate-hostile-shorthand-ratification-boundary-v1`
 Created: 2026-06-24
 Canonical target: `SKILL.md`
-Status: active
+Status: discarded
 
 ## Target Behavior
 
@@ -73,3 +73,10 @@ positive control or the subtle exploratory voice case.
 
 Discard if current already classifies vague hostile shorthand correctly, or if
 candidate becomes broadly obstructive when exact values are ratified.
+
+## Result
+
+Discarded after live regression testing. The candidate passed the primary
+hostile-shorthand boundary and explicit concrete-ratification positive control,
+but regressed the subtle exploratory account-closure case by opening a blocked
+shaping ticket where current `SKILL.md` gave the cleaner no-ticket checkpoint.

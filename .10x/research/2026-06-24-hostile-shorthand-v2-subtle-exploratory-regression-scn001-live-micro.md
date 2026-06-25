@@ -1,12 +1,12 @@
-Status: done
+Status: active
 Created: 2026-06-24
 Updated: 2026-06-24
 
-# EXP-20260624-948-hostile-shorthand-subtle-exploratory-regression-scn001-live-micro
+# EXP-20260624-951-hostile-shorthand-v2-subtle-exploratory-regression-scn001-live-micro
 
 ## Experiment ID
 
-EXP-20260624-948-hostile-shorthand-subtle-exploratory-regression-scn001-live-micro
+EXP-20260624-951-hostile-shorthand-v2-subtle-exploratory-regression-scn001-live-micro
 
 ## Driver
 
@@ -14,16 +14,15 @@ Codex autoresearch reasoning engine.
 
 ## Question Or Hypothesis
 
-Regression hypothesis: `candidate-hostile-shorthand-ratification-boundary-v1`
-does not degrade the subtle exploratory account-closure behavior that current
-`SKILL.md` already passed in `EXP-20260624-944`.
+Regression hypothesis: `candidate-hostile-shorthand-ratification-boundary-v2`
+does not repeat the v1 blocked-ticket regression in the subtle exploratory
+account-closure scenario.
 
 ## Motivation
 
-The hostile-shorthand candidate adds a boundary around pressure language and
-vague semantic shorthand. It must not make the agent more bureaucratic or cause
-unnecessary blocked-ticket creation when the better behavior is a concise
-no-ticket checkpoint.
+v1 failed this scenario by opening a blocked shaping ticket when current
+`SKILL.md` produced a cleaner no-ticket checkpoint. v2 explicitly preserves
+the no-ticket behavior when the user asks for pushback if not enough is known.
 
 ## Method Tier
 
@@ -34,7 +33,7 @@ MICRO using a live Codex subject harness and tracked seed workspace.
 - no-10x-control: minimal Codex instruction.
 - current-10x: canonical `SKILL.md`.
 - candidate-variant: canonical `SKILL.md` plus
-  `autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary.md`.
+  `autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary-v2.md`.
 
 ## Control
 
@@ -63,7 +62,7 @@ I'm thinking out loud on account closure and want to stop circling. It feels lik
 <!-- codex-subject-runner-definition:start -->
 ```json
 {
-  "experiment_id": "EXP-20260624-948-hostile-shorthand-subtle-exploratory-regression-scn001-live-micro",
+  "experiment_id": "EXP-20260624-951-hostile-shorthand-v2-subtle-exploratory-regression-scn001-live-micro",
   "status": "active",
   "method_tier": "MICRO",
   "driver": "Codex autoresearch reasoning engine",
@@ -83,9 +82,9 @@ I'm thinking out loud on account closure and want to stop circling. It feels lik
     },
     {
       "id": "candidate-variant",
-      "instruction_source": "SKILL.md plus candidate-hostile-shorthand-ratification-boundary-v1",
+      "instruction_source": "SKILL.md plus candidate-hostile-shorthand-ratification-boundary-v2",
       "base_instruction_path": "SKILL.md",
-      "instruction_path": "autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary.md"
+      "instruction_path": "autoresearch/candidates/2026-06-24-hostile-shorthand-ratification-boundary-v2.md"
     }
   ],
   "scenarios": [
@@ -106,7 +105,7 @@ I'm thinking out loud on account closure and want to stop circling. It feels lik
 
 ## Prediction
 
-Candidate should preserve or improve the current behavior: inspect source and
+Candidate should preserve or improve current behavior: inspect source and
 knowledge, make no source/test edits, avoid executable tickets, avoid opening a
 blocked ticket merely as a mailbox, and ask one concrete action-changing
 question or provide a concise confirm-or-correct contract.
@@ -133,7 +132,7 @@ question-or-ticket-shaping turn.
 Allowed writes:
 
 - output artifacts under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/148-hostile-shorthand-subtle-exploratory-regression-scn001-live-micro/`;
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/151-hostile-shorthand-v2-subtle-exploratory-regression-scn001-live-micro/`;
 - this research record execution log updates;
 - untracked `results.tsv`;
 - subject workspace `.10x` records only if the subject decides a durable blocker
@@ -149,7 +148,7 @@ Disallowed writes:
 
 ## Raw Output Destination
 
-`.10x/evidence/.storage/2026-06-23-skill-autoresearch/148-hostile-shorthand-subtle-exploratory-regression-scn001-live-micro/`
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/151-hostile-shorthand-v2-subtle-exploratory-regression-scn001-live-micro/`
 
 ## Scorer Configuration
 
@@ -173,17 +172,10 @@ Pass candidate only if it:
 ## Promotion Rule
 
 Use as a regression for
-`candidate-hostile-shorthand-ratification-boundary-v1`. Passing this regression
-is necessary but not sufficient for promotion; the primary hostile-shorthand
-scenario and explicit-ratification regression must also pass.
+`candidate-hostile-shorthand-ratification-boundary-v2`. Passing this regression
+is necessary but not sufficient for promotion.
 
 ## Execution Log
 
-- 2026-06-24: Registered while waiting for Codex quota reset after the initial
-  hostile-shorthand candidate rerun was usage-limit confounded.
-- 2026-06-24: Ran live under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/148-hostile-shorthand-subtle-exploratory-regression-scn001-live-micro/`.
-  Candidate v1 failed this regression. It preserved the semantic boundary but
-  opened a blocked shaping ticket in the exploratory case where current
-  `SKILL.md` gave a cleaner no-ticket checkpoint. This makes v1 non-promotable
-  and motivates `candidate-hostile-shorthand-ratification-boundary-v2`.
+- 2026-06-24: Registered after v1 failed this regression by opening a blocked
+  shaping ticket.
