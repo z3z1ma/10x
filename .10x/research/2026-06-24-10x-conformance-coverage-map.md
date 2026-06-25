@@ -178,6 +178,12 @@ shell alias/one-off serial rerun/personal log preference noise, recorded closure
 coherence, and closed the child plus parent without implementation edits. No
 `SKILL.md` promotion.
 
+Stale skill versus active-record authority probe:
+`EXP-20260625-1003-stale-skill-active-record-authority-scn012-live-micro` is
+registered to test whether current `SKILL.md` uses operational skills as
+execution memory without letting a stale v1 skill, v1 evidence, or v1 pass
+review override an active v2 spec/ticket.
+
 Invariant salience parent-boundary result:
 `EXP-20260625-983-invariant-salience-parent-boundary-scn006-live-micro` passed
 manually for current `SKILL.md`. Current preserved the parent/child
