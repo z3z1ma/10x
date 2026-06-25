@@ -1158,3 +1158,13 @@ Canonical start guard:
   created closure inspection evidence, repaired moved-ticket references, and
   made no source/test edits. Discarded
   `candidate-spec-aligned-closure-completion-v1` as null versus current.
+- 2026-06-24: Registered and ran
+  `EXP-20260624-955-source-missing-active-spec-behavior-scn006-live-micro` to
+  cover the source/record drift direction where active records explicitly own
+  behavior and source/tests lag. Automated S003 scored current and
+  duplicate-current at `100`, with control at `85`. Manual inspection found
+  both 10x arms inspected the active decision/spec and source/tests, named the
+  stale source/test inclusion of a negative test-account row, created one
+  executable child ticket to align source/tests to the active spec, and left
+  source/test files byte-identical to the seed. Discarded the duplicate
+  candidate arm as null versus current. No `SKILL.md` promotion.
