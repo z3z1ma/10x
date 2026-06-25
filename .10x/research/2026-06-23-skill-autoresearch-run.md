@@ -1305,3 +1305,12 @@ Canonical start guard:
   malformed-discount follow-up, and left source/tests unchanged.
   Duplicate-current also passed; control misrouted the out-of-scope follow-up.
   No `SKILL.md` promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-973-external-artifact-status-dependent-repair-scn004-live-micro`
+  as the external-artifact status-change item from the ranked conformance push.
+  Current created one active revision B thin index, moved revision A to
+  superseded history, repaired the active implementation ticket to depend on
+  revision B, preserved revision A evidence/review as historical old-revision
+  artifacts, and avoided source/test edits plus test execution.
+  Duplicate-current also passed; control could not exercise dependent repair
+  after `.10x` isolation removed the seeded graph. No `SKILL.md` promotion.
