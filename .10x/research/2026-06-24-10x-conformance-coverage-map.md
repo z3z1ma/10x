@@ -30,8 +30,8 @@ Inspected:
 
 Current candidate registry snapshot:
 
-- total candidates: 100
-- active: 0
+- total candidates: 101
+- active: 1
 - promoted: 35
 - discarded: 62
 - discarded-null: 2
@@ -800,6 +800,14 @@ edits in all five repetitions. No `SKILL.md` promotion is justified. The next
 skill lane should move to forward-use validation of generated skills or
 longer-horizon real subagent skill closure, not another terminal-hygiene
 paragraph.
+
+Active skill forward-use registration:
+`EXP-20260625-963-active-skill-forward-use-scn012-live-micro` is registered to
+test whether an agent actually uses an already-authored operational skill when
+asked to run the corresponding procedure. The seed contains a source skill,
+`.agents` exposure copy, open verification ticket, deterministic preview
+script, tracked CSV fixture, and stale historical note that tempts inline
+CSV/current-date/`externalId` behavior.
 
 Priority 1: conformance foundation.
 
