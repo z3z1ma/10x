@@ -1226,3 +1226,10 @@ Canonical start guard:
   proof because active spec coverage was not proven, recorded a subject closure
   review with `Verdict: fail`, and made no source/test edits. No `SKILL.md`
   promotion.
+- 2026-06-24: Registered and ran
+  `EXP-20260624-963-stale-pass-review-after-spec-change-scn009-live-micro` to
+  cover stale pass-review authority after an active spec update. Current
+  inspected active/superseded specs, old ticket/evidence/review, source, and
+  tests; refused closure; and opened a focused active-spec conformance ticket.
+  Duplicate-current refused closure safely but did less inspection. No
+  `SKILL.md` promotion.
