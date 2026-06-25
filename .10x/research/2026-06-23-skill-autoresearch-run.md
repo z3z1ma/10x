@@ -1240,3 +1240,10 @@ Canonical start guard:
   updated child and parent blockers; and made no source/test edits or test/build
   runs. Duplicate-current also blocked safely but did less source-level
   diagnosis. No `SKILL.md` promotion.
+- 2026-06-24: Registered and ran
+  `EXP-20260624-965-resolved-review-closure-positive-scn009-live-micro` as the
+  over-conservatism positive control for the review-behavior run cluster.
+  Current closed child and parent after later evidence/pass review resolved the
+  historical fail review, moved both tickets to `tickets/done/`, repaired
+  evidence/review references, and avoided source/test edits plus test/build
+  execution. No `SKILL.md` promotion.

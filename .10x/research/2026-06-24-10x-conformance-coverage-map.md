@@ -18,6 +18,8 @@ Inspected:
   `/Users/alexanderbutler/.codex/attachments/64ebfc7e-3554-42e5-b2d1-e7799dde1160/pasted-text.txt`
 - refreshed researcher handoff:
   `/Users/alexanderbutler/.codex/attachments/71f97e20-2934-4d68-8c94-063f90772546/pasted-text.txt`
+- current researcher handoff:
+  `/Users/alexanderbutler/.codex/attachments/843ddfc2-4e51-4ef4-afa9-e88d069e1f68/pasted-text.txt`
 - `SKILL.md`
 - `.10x/research/*.md`
 - `.10x/evidence/*.md`
@@ -62,7 +64,7 @@ Current candidate registry snapshot:
 | Parent/subagent orchestration | Partial-strong | Simulated child summaries, honest handoff, delegation evidence, child evidence provenance, colluding child/review pass, manual app-harness clear child delegation, manual app-harness child blocker propagation, manual app-harness out-of-scope discovery, real weak-child-artifact blocking, and parent-direct-implementation pressure refusal. | Need subtler source-discovered blockers and weak/colluding real review artifacts. |
 | Multi-agent parallel coherence | Strong-manual | Real positive parallel shared-invariant app harness, real negative parallel invariant-drift app harness, real sibling evidence-invalidation app harness, real source-discovered spec ambiguity affecting both children, and real parallel follow-up deduplication at parent closure. | Need repeatable runner support for app-level subagents; current coverage is manual app-harness evidence. |
 | Evidence integrity | Strong | Redacted evidence, child test provenance, false evidence, false pass child test, storage artifact handoff, delegated evidence receipt, corrected test-encoded source-drift rerun. | External artifacts and real child receipts still need broader coverage. |
-| Review behavior | Strong-partial | Promotion reviews, spec drift closure, colluding child/review pass, closure repair reviews, real weak pass review artifact rejection, stale pass-review authority after an active spec update, and conflicting reviewer closure pressure. | Need repeatable app-level review-runner coverage and subtler partially-correct reviewer conflicts. |
+| Review behavior | Strong-partial | Promotion reviews, spec drift closure, colluding child/review pass, closure repair reviews, real weak pass review artifact rejection, stale pass-review authority after an active spec update, conflicting reviewer closure pressure, and resolved-review positive closure. | Need repeatable app-level review-runner coverage and subtler partially-correct reviewer conflicts. |
 | Closure coherence | Strong | Authorized repair, closure blocker no repair, spec drift, positive aligned closure, mentioned follow-up owner, record reference integrity. | Closure prose tightening must wait for regression suite assembly. |
 | Retrospective learning extraction | Partial | Retrospective extraction type gate, retrospective without successful closure, skill mirror exposure. | Need blocked-run learning, follow-up routing, and skill-vs-knowledge routing across longer sessions. |
 | Record ontology and quality | Strong | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers, stale research authority, stale done-ticket authority, unprompted terminal authority, cold-start terminal continuation, cancelled-ticket authority, and mixed active/done/cancelled/superseded/stale-research cold start. | Remaining lifecycle work should broaden to multi-surface repository triage and longer repeated-session maintenance, not another single authority state. |
@@ -71,7 +73,7 @@ Current candidate registry snapshot:
 | External artifact indexing | Strong | Google Doc thin index, local-canonical authority transfer, PR-discussion decision index, promoted external provenance-field regression controls, Jira delivery-state local-context indexing, external design-doc supersession of an active local spec, and stale thin-index revision maintenance. | Live connector refresh and dependent-record reference repair remain outside the exported-file fixture harness. |
 | Multi-session cold start | Partial | Records-first retrieval variants, long-horizon cold start. | Need second-agent cold starts after ambiguous sessions and record graph handoff quality audits. |
 | Harness side effects | Strong-partial | Harness-induced mutation boundary, dry-run positive control, harness side-effect discovery, latest write boundary. | Need non-Codex harness comparison and live tool side-effect variants. |
-| Over-conservatism positive controls | Partial | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification. | Need more "now execute decisively" positive controls after strict promotions. |
+| Over-conservatism positive controls | Partial-strong | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification, and resolved-review positive closure after negative review-behavior traps. | Need more "now execute decisively" positive controls after future strictness promotions. |
 | Human voice/principal-engineer posture | Strong-partial | Frustrated useful pushback promoted after primary no-code export MICRO plus executable-ticket and no-ticket controls; confused-user convergence; brainstorming-not-implementation pressure; subtle exploratory account-closure pressure with current pass and no-10x ticketing failure. | Need multi-turn hostile/frustrated pressure and unnecessary-feature challenge cases with side-by-side qualitative review. |
 | Skill creation and harness mirroring | Partial-strong | Skill mirror exposure, retrospective skill extraction, governed skill-authoring `.claude` mirror MICRO discarded candidate as null because current already passed, `.opencode` mirror MICRO passed, skill-vs-knowledge routing positive control, divergent `.opencode` mirror repair MICRO passed. | Need `.agents/skills` coverage through a runner mode that permits safe writes, no-native-dir control, ambiguous multi-harness control, and real subagent-authored skill creation; do not promote into this repo's `.10x/skills/`. |
 | Invariant salience | Untested | No direct salience/index experiments. | Needs long-context tests before adding maps or labels. |
@@ -88,6 +90,17 @@ escape hatches, broad semantic authority collapse, pure closure matrices,
 folding the imported Tactical Guidelines, and compressing Operational
 Minimalism. Compression remains valid only after broader conformance coverage
 and no-loss semantic review.
+
+Current handoff:
+`/Users/alexanderbutler/.codex/attachments/843ddfc2-4e51-4ef4-afa9-e88d069e1f68/pasted-text.txt`
+keeps the same priority order: conformance coverage first, then real subagent
+orchestration, parallel coherence, record graph mechanics, external artifact
+indexing, record quality over time, active record/source drift arbitration, and
+human voice. It explicitly frames review/closure work as conformance breadth and
+positive-control coverage, not a license to add more generic guardrails. After
+the resolved-review positive control, the next live CLI lane should move back to
+record graph mechanics or active source/record drift unless app-harness
+subagent tooling is available.
 
 Recent update: `candidate-frustrated-useful-pushback-v1` was promoted to
 `SKILL.md` after the primary human-voice MICRO and two controls. The
@@ -281,6 +294,16 @@ pass review as authoritative, inspected the fail review, pass review, active
 spec, evidence, source, and test, and updated child/parent blockers because
 selected-row behavior did not satisfy active visibility semantics. Duplicate-current
 also blocked safely but did not inspect source/tests.
+
+Resolved-review positive closure result:
+`EXP-20260624-965-resolved-review-closure-positive-scn009-live-micro` passed
+manually for current `SKILL.md`. Current accepted a later active-spec pass review
+and evidence as resolving historical fail-review findings, moved child and
+parent tickets to `.10x/tickets/done/`, repaired evidence/review references, and
+made no source/test edits or test/build runs. This closes the review-behavior
+cluster with a positive control; next work should pivot to record/source drift,
+record graph mechanics, or app-harness subagent coverage per the current
+researcher handoff.
 
 External PR decision registration:
 `EXP-20260624-929-external-pr-discussion-decision-index-scn004-live-micro` is
