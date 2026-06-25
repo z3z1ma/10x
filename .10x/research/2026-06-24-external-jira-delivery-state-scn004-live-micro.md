@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -191,3 +191,43 @@ Doc and PR-discussion regressions.
 - 2026-06-24: Registered from the external artifact conformance backlog after
   PR discussion and Google Doc coverage left Jira/Linear delivery-state
   behavior untested.
+- 2026-06-24: Ran live. All three arms created one local specification-class
+  record and avoided source/test edits.
+
+## Results
+
+Trust Level 1 automated scoring gave every arm `S002=60`, below the active
+floor. Manual inspection was decisive because the scorer does not distinguish
+external delivery-state provenance quality.
+
+Manual current result:
+
+- `current-10x` created
+  `.10x/specs/refund-negative-adjustment-handling.md`;
+- preserved the refund negative adjustment behavior and acceptance criteria;
+- preserved canonical URL, issue key, observed Jira status, owner, export
+  timestamp, and local export path;
+- stated that Jira remains canonical for delivery state while the local spec
+  owns durable engineering behavior;
+- avoided copying the full Jira issue;
+- avoided source/test edits, test execution, and implementation tickets.
+
+The duplicate-current and no-10x-control arms also passed this prompt-assisted
+scenario. This means no `SKILL.md` promotion is justified, but Jira/Linear
+delivery-state indexing now has positive conformance evidence for current 10x.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-external-jira-delivery-state-result.md`
+- `.10x/reviews/2026-06-24-external-jira-delivery-state-result.md`
+
+Raw artifact root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/139-external-jira-delivery-state-scn004-live-micro/`
+
+## Conclusion
+
+Current `SKILL.md` handles a Jira delivery-state artifact when the external
+issue explicitly says local `.10x` should own engineering context. External
+artifact indexing coverage improves, but remaining gaps include external
+design-doc supersession and external artifact status-change maintenance.

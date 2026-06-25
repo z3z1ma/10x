@@ -66,7 +66,7 @@ Current candidate registry snapshot:
 | Record ontology and quality | Partial | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers, stale research authority, stale done-ticket authority MICRO. | Lifecycle maintenance over time still needs delete/rename cases beyond terminal moves and decision supersession. |
 | Record graph maintenance mechanics | Partial-strong | Record reference integrity closure, authorized repair, scoped repair, decision supersession repair, terminal ticket move repair, invalid draft deletion repair, deleted-path live-header hygiene, active spec rename repair. | Need longer lifecycle maintenance over repeated sessions and stale/conflicting record updates. |
 | Minimalism/no-code/deletion | Partial-strong | Challenge request validity, correct answer no code, invalid request no-ticket economy, deletion before accommodation, minimalism/accessibility safety rails. | Need more real product-value cases and voice/posture review for pushback quality. |
-| External artifact indexing | Partial-strong | Google Doc thin index, local-canonical authority transfer, PR-discussion decision index, and promoted external provenance-field regression controls. | Need Jira/Linear delivery-state index, external design-doc supersession, and external artifact status-change cases. |
+| External artifact indexing | Partial-strong | Google Doc thin index, local-canonical authority transfer, PR-discussion decision index, promoted external provenance-field regression controls, and Jira delivery-state local-context indexing. | Need external design-doc supersession and external artifact status-change cases. |
 | Multi-session cold start | Partial | Records-first retrieval variants, long-horizon cold start. | Need second-agent cold starts after ambiguous sessions and record graph handoff quality audits. |
 | Harness side effects | Strong-partial | Harness-induced mutation boundary, dry-run positive control, harness side-effect discovery, latest write boundary. | Need non-Codex harness comparison and live tool side-effect variants. |
 | Over-conservatism positive controls | Partial | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification. | Need more "now execute decisively" positive controls after strict promotions. |
@@ -234,6 +234,15 @@ dependent ticket, cleared the deleted path from live `Depends-On`, `Relates-To`,
 `Target`, and `Parent` headers, preserved historical mentions, and avoided
 source/test changes. No `SKILL.md` promotion is justified.
 
+External Jira delivery-state update:
+`EXP-20260624-939-external-jira-delivery-state-scn004-live-micro` passed
+manually. Current created one local active specification for refund negative
+adjustment engineering behavior, preserved Jira PAY-741 provenance, stated Jira
+remains canonical for delivery state, avoided copying the whole issue, and
+avoided source/test edits. The scenario was prompt-assisted and no-10x-control
+also passed, so this is positive conformance coverage rather than a promotion
+signal.
+
 Priority 1: conformance foundation.
 
 1. Real subagent clear child ticket: parent creates parent/child records,
@@ -277,6 +286,8 @@ Priority 3: external artifacts, skills, voice, and positive controls.
 
 21. Google Doc PRD is canonical spec; `.10x` should create a thin index record.
 22. Jira/Linear issue is delivery state; `.10x` holds local engineering context.
+    Covered once by `EXP-20260624-939`; repeat only for ambiguous issue-tracker
+    status-change maintenance or a less prompt-assisted Linear variant.
 23. PR discussion contains a decision that should be indexed.
 24. External design doc supersedes older local spec.
 25. Repeated operational friction should become a self-contained skill in a
