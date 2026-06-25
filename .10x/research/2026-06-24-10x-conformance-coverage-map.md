@@ -302,6 +302,12 @@ Hostile shorthand regression registration:
 is registered to ensure the hostile-shorthand candidate does not overblock when
 the user explicitly ratifies exact high-impact policy semantics.
 
+Hostile shorthand subtle exploratory regression registration:
+`EXP-20260624-948-hostile-shorthand-subtle-exploratory-regression-scn001-live-micro`
+is registered to ensure the hostile-shorthand candidate does not degrade the
+subtle exploratory account-closure behavior that already passed in
+`EXP-20260624-944`.
+
 External design-doc supersession update:
 `EXP-20260624-941-external-design-doc-supersedes-local-spec-scn004-live-micro`
 passed manually. Current moved the old local Nimbus retention revision A spec to
