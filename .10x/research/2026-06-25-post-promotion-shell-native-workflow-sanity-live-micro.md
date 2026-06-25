@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -199,3 +199,24 @@ depending on failure severity.
   live Codex subject runner currently requires `no-10x-control` and
   `candidate-variant` arms. Revised to the required three-arm shape with a
   no-op candidate overlay.
+- 2026-06-25: Ran all 9 live Codex calls. Raw artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/184-post-promotion-shell-native-workflow-sanity-live-micro/`.
+- 2026-06-25: Manual inspection found current held SCN-004 and SCN-001 safety
+  but failed SCN-009 operation quality by using assistant-side multi-file edits
+  for repeated exact live-reference updates.
+
+## Result
+
+Failed post-promotion operation-quality sanity while passing safety regressions.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-post-promotion-shell-native-workflow-sanity-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-post-promotion-shell-native-workflow-sanity-result.md`
+
+Follow-up candidate:
+
+- `autoresearch/candidates/2026-06-25-bounded-rewrite-default-record-maintenance.md`
