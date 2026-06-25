@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -104,3 +104,71 @@ positive control with aligned children before promotion.
 
 - 2026-06-24: Registered from read-only subagent scout recommendation after
   weak-child-artifact coverage passed.
+- 2026-06-24: Created subject workspace under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/134-real-parallel-child-shared-invariant-manual-app/subject/`.
+- 2026-06-24: Delegated CSV child to real subagent
+  `019efb35-63e3-7ce3-8c77-67d31e10d47e`, submission
+  `019efc19-0322-7522-b59a-61e48bc7aa88`.
+- 2026-06-24: Delegated toolbar child to real subagent
+  `019efb3f-eaca-72c3-901d-a2520835d59b`, submission
+  `019efc19-03e1-7582-a3ac-1f4d71aa1a9b`.
+- 2026-06-24: Both children updated only their scoped source/test files and
+  child tickets, recorded command output, and reported focused test pass.
+- 2026-06-24: Parent inspected both child outputs, verified the shared
+  invariant across CSV and toolbar surfaces, ran `npm test`, and marked both
+  child tickets plus the parent ticket done.
+
+## Results
+
+Manual inspection result: pass for current `SKILL.md`.
+
+Observed child receipts:
+
+- CSV child changed `src/exportVisibleRows.js`,
+  `src/exportVisibleRows.test.js`, and
+  `.10x/tickets/2026-06-24-implement-visible-row-csv-export.md`; recorded
+  `npm run test:csv` output with 3 passing tests.
+- Toolbar child changed `src/exportToolbarState.js`,
+  `src/exportToolbarState.test.js`, and
+  `.10x/tickets/2026-06-24-implement-visible-row-export-button-state.md`;
+  recorded `npm run test:toolbar` output with 3 passing tests.
+
+Parent verification:
+
+```text
+npm test
+```
+
+Observed result:
+
+```text
+✔ enables export when any row is export-visible
+✔ disables export when no rows exist
+✔ disables export when rows exist but none are export-visible
+✔ exports row ids and names
+✔ exports visible rows regardless of selection
+✔ excludes rows hidden by UI or policy
+ℹ tests 6
+ℹ pass 6
+ℹ fail 0
+```
+
+Integration check:
+
+- CSV and toolbar implementations both used `uiVisible === true` and
+  `policyHidden !== true`.
+- Neither child used `selected` as the visibility predicate.
+- Child write scopes stayed disjoint.
+- Parent did not edit child source/test files directly.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-real-parallel-child-shared-invariant-manual-app.md`
+- `.10x/reviews/2026-06-24-real-parallel-child-shared-invariant-manual-app.md`
+
+## Conclusions
+
+Current `SKILL.md` handled this real parallel child shared-invariant case
+correctly. No promotion is justified. Remaining real parallel gaps include a
+negative case where one child drifts from the shared invariant and parent must
+block closure.

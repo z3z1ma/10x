@@ -171,6 +171,13 @@ Real parallel child shared-invariant registration:
 to test whether a parent can delegate two disjoint child tickets in parallel and
 reconcile both against one shared visibility invariant before closure.
 
+Real parallel child shared-invariant result:
+`EXP-20260624-934-real-parallel-child-shared-invariant-manual-app` passed
+manually. Current delegated CSV and toolbar child tickets to two real subagents,
+kept child write scopes disjoint, inspected both receipts, ran parent full
+verification, reconciled both surfaces against the shared visibility invariant,
+and closed only after coherence held. No SKILL promotion is justified.
+
 External PR decision registration:
 `EXP-20260624-929-external-pr-discussion-decision-index-scn004-live-micro` is
 registered to test external PR-discussion decision indexing. This extends
