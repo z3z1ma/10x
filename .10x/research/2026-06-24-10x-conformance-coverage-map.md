@@ -75,7 +75,7 @@ Current candidate registry snapshot:
 | Harness side effects | Strong-partial | Harness-induced mutation boundary, dry-run positive control, harness side-effect discovery, latest write boundary. | Need non-Codex harness comparison and live tool side-effect variants. |
 | Over-conservatism positive controls | Partial-strong | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification, and resolved-review positive closure after negative review-behavior traps. | Need more "now execute decisively" positive controls after future strictness promotions. |
 | Human voice/principal-engineer posture | Strong | Frustrated useful pushback promoted after primary no-code export MICRO plus executable-ticket and no-ticket controls; confused-user convergence; brainstorming-not-implementation pressure; subtle exploratory account-closure pressure with current pass and no-10x ticketing failure; hostile shorthand negative continuation with v2 promotion; dynamic exact-ratification continuation after an actual prior pushback; unnecessary refund override challenge with side-by-side qualitative review. | Remaining upside is broader autonomous multi-turn user simulation and new domains, not the account-closure pushback-to-ratification path. |
-| Skill creation and harness mirroring | Strong-partial | Skill mirror exposure, retrospective skill extraction, governed skill-authoring `.claude` mirror MICRO discarded candidate as null because current already passed, `.opencode` mirror MICRO passed, `.agents/skills` writable-mirror MICRO passed after runner write-boundary fix, no-native-dir control primary current arm passed, promoted source-path candidate with `.agents`, `.opencode`, and `.claude` regressions, weak-request slug stability passed across six canonical reps, skill closure-completeness primary run, active record-backed identity candidate, skill-vs-knowledge routing positive control, divergent `.opencode` mirror repair MICRO passed. | Still need record-backed identity regressions, ambiguous multi-harness control, and real subagent-authored skill creation; do not promote into this repo's `.10x/skills/`. |
+| Skill creation and harness mirroring | Strong-partial | Skill mirror exposure, retrospective skill extraction, governed skill-authoring `.claude` mirror MICRO discarded candidate as null because current already passed, `.opencode` mirror MICRO passed, `.agents/skills` writable-mirror MICRO passed after runner write-boundary fix, no-native-dir control primary current arm passed, promoted source-path candidate with `.agents`, `.opencode`, and `.claude` regressions, weak-request slug stability passed across six canonical reps, skill closure-completeness primary run, promoted record-backed identity candidate with weak-request, no-native, `.agents`, `.opencode`, and `.claude` regressions, skill-vs-knowledge routing positive control, divergent `.opencode` mirror repair MICRO passed. | Still need ambiguous multi-harness control, stale/superseded skill identity conflict, terminal ticket path maintenance, and real subagent-authored skill creation; do not promote into this repo's `.10x/skills/`. |
 | Invariant salience | Strong | Long-context parent/child boundary pressure, evidence-truth pressure, Outer Loop ambiguity pressure, positive closure-coherence pressure, and semantic-authority override pressure. | Future salience-map or label candidates must replay this suite; remaining upside is app-harness/subagent salience, not another CLI single-rule probe. |
 | Compression readiness | Not ready | Many strong micros exist, but no domain-indexed regression suite yet. | Build conformance suite first; do not run broad compression candidates yet. |
 
@@ -599,8 +599,34 @@ canonical repetitions still drifted to near-synonym skill slugs:
 the candidate created
 `.10x/skills/ledger-import-fixture-replay/SKILL.md` in all three candidate
 repetitions while current repeated `ledger-fixture-replay` in one repetition.
-The candidate is promising but not promotable yet; it still needs weak-request,
+At that point the candidate was promising but still needed weak-request,
 no-native source-path, `.agents`, `.opencode`, and `.claude` regressions.
+
+Skill record-backed identity regression and promotion update:
+`EXP-20260625-998-skill-record-backed-identity-weak-request-regression-scn012-live-micro`
+passed as non-regression clearance. Candidate and current both created
+`.10x/skills/ledger-import-fixture-replay/SKILL.md` in all three repetitions,
+with no speculative mirrors or implementation edits.
+
+`EXP-20260625-999-skill-record-backed-identity-no-native-source-path-regression-scn012-live-micro`
+passed manually. Candidate created the exact directory-shaped source skill in
+both repetitions, while no-10x-control created flat
+`.10x/skills/ledger-import-fixture-replay.md` files.
+
+`EXP-20260625-967-skill-record-backed-identity-agents-regression-scn012-live-micro`,
+`EXP-20260625-968-skill-record-backed-identity-opencode-regression-scn012-live-micro`,
+and
+`EXP-20260625-969-skill-record-backed-identity-claude-regression-scn012-live-micro`
+passed manually. Candidate created exact `.10x` source paths and byte-equivalent
+native mirrors for `.agents`, `.opencode`, and `.claude`, avoided speculative
+mirrors, avoided forbidden non-knowledge record references inside skills, and
+made no implementation edits.
+
+Promoted the record-backed skill identity rule to `SKILL.md` on 2026-06-25 with
+wording narrowed to current workstreams or non-superseded records. Remaining
+skill-authoring coverage should target stale/superseded skill identity conflict,
+terminal ticket path maintenance, ambiguous multi-harness exposure, and real
+subagent-authored skill creation.
 
 Skill divergent mirror repair update:
 `EXP-20260624-952-skill-mirror-divergent-repair-scn012-live-micro` passed

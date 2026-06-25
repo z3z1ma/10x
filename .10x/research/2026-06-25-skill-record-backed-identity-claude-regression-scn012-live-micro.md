@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -149,3 +149,37 @@ candidate alive for final promotion review after the no-native, `.agents`, and
 - 2026-06-25: Reassigned from invalid four-digit sequence
   `EXP-20260625-1002-...` to legal three-digit sequence
   `EXP-20260625-969-...` before rerun.
+- 2026-06-25: Ran three live Codex subject samples under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/205-skill-record-backed-identity-claude-regression-scn012-live-micro/`.
+  Canonical guard reported `SKILL.md` and `autoresearch/program.md` unchanged.
+- 2026-06-25: Manual inspection found candidate created
+  `.10x/skills/ledger-import-fixture-replay/SKILL.md` and a byte-equivalent
+  `.claude/skills/ledger-import-fixture-replay/SKILL.md` mirror.
+
+## Result
+
+Pass. Candidate cleared the `.claude` mirror identity regression.
+
+Manual inspection found:
+
+- candidate-variant: exact source skill identity,
+  `.10x/skills/ledger-import-fixture-replay/SKILL.md`;
+- candidate-variant: exact `.claude` mirror identity,
+  `.claude/skills/ledger-import-fixture-replay/SKILL.md`;
+- candidate-variant: source and mirror files were byte-equivalent;
+- candidate-variant: no speculative `.agents` or `.opencode` mirrors;
+- candidate-variant: no forbidden non-knowledge `.10x` record references inside
+  generated skills;
+- candidate-variant: no implementation file edits.
+
+Automated Trust Level 1 telemetry:
+
+- candidate-variant: `S002=85`, `S006=85`;
+- current-10x: `S002=100`, `S006=85`;
+- no-10x-control: `S002=80`, `S006=20`.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-25-skill-record-backed-identity-regression-batch-result.md`
+- `.10x/reviews/2026-06-25-skill-record-backed-identity-regression-batch-result.md`
+- `.10x/reviews/2026-06-25-skill-record-backed-identity-promotion-review.md`

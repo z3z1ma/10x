@@ -3,7 +3,7 @@
 Candidate ID: `candidate-skill-record-backed-identity-v1`
 Created: 2026-06-25
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 
 ## Target Behavior
 
@@ -36,6 +36,16 @@ knowledge record, evidence record, review, prior skill, or parent workstream
 names a skill slug, skill path, or intended skill identity, use that identity
 exactly for the source skill and any harness-native exposure copy. Do not coin a
 near-synonym slug merely because it sounds clearer.
+```
+
+Promoted canonical wording uses the same behavior with narrower stale-record
+guarding:
+
+```text
+Preserve record-backed skill identity. If the current workstream or
+non-superseded records name a skill slug, skill path, or intended skill
+identity, use that identity exactly for the source skill and any harness-native
+exposure copy. Do not coin a near-synonym slug merely because it sounds clearer.
 ```
 
 ## Expected Score Movement
@@ -80,8 +90,8 @@ owners, or if candidate weakens self-contained skill quality.
 
 ## Result
 
-`EXP-20260625-997-skill-record-backed-identity-scn012-live-micro` is promising
-but not promotable yet.
+`EXP-20260625-997-skill-record-backed-identity-scn012-live-micro` was promising
+but not promotable alone.
 
 Manual inspection found candidate created
 `.10x/skills/ledger-import-fixture-replay/SKILL.md` in all three repetitions.
@@ -117,14 +127,31 @@ left done-status tickets at top-level in two repetitions, while current moved
 completed tickets into `done/` in all three repetitions. Treat that as a
 separate closure-maintenance concern, not as a failure of the identity overlay.
 
-Still required before promotion:
-
-- no-native source-path regression;
-- `.agents` writable mirror regression;
-- `.opencode` mirror regression;
-- `.claude` mirror regression.
-
 Additional supporting records:
 
 - `.10x/evidence/2026-06-25-skill-record-backed-identity-weak-request-regression-result.md`
 - `.10x/reviews/2026-06-25-skill-record-backed-identity-weak-request-regression-result.md`
+
+`EXP-20260625-999-skill-record-backed-identity-no-native-source-path-regression-scn012-live-micro`
+passed the no-native source-path identity regression. Candidate created
+`.10x/skills/ledger-import-fixture-replay/SKILL.md` in both repetitions,
+created no native mirrors, and made no implementation edits. No-10x-control
+created flat `.10x/skills/ledger-import-fixture-replay.md` files in both
+repetitions.
+
+`EXP-20260625-967-skill-record-backed-identity-agents-regression-scn012-live-micro`,
+`EXP-20260625-968-skill-record-backed-identity-opencode-regression-scn012-live-micro`,
+and
+`EXP-20260625-969-skill-record-backed-identity-claude-regression-scn012-live-micro`
+passed mirror identity regressions. Candidate created exact `.10x` source paths
+and byte-equivalent native mirrors for `.agents`, `.opencode`, and `.claude`.
+
+Promoted on 2026-06-25 as a narrow canonical `SKILL.md` paragraph. The
+canonical wording uses "current workstream or non-superseded records" to reduce
+the stale-slug risk identified during review.
+
+Promotion supporting records:
+
+- `.10x/evidence/2026-06-25-skill-record-backed-identity-regression-batch-result.md`
+- `.10x/reviews/2026-06-25-skill-record-backed-identity-regression-batch-result.md`
+- `.10x/reviews/2026-06-25-skill-record-backed-identity-promotion-review.md`

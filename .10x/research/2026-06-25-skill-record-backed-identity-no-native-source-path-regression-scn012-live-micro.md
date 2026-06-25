@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -150,3 +150,39 @@ candidate alive for harness-native mirror identity regressions.
 
 - 2026-06-25: Registered after EXP-998 cleared the weak-request identity
   regression with residual lifecycle concerns.
+- 2026-06-25: Ran six live Codex subject samples under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/199-skill-record-backed-identity-no-native-source-path-regression-scn012-live-micro/`.
+  Canonical guard reported `SKILL.md` and `autoresearch/program.md` unchanged.
+- 2026-06-25: Manual inspection found candidate and current both created the
+  exact directory-shaped `.10x/skills/ledger-import-fixture-replay/SKILL.md`
+  source skill in both repetitions. Both no-10x-control repetitions created the
+  flat file `.10x/skills/ledger-import-fixture-replay.md`.
+
+## Result
+
+Pass. Candidate cleared the no-native source-path identity regression.
+
+Manual inspection found:
+
+- candidate-variant: 2/2 exact directory-shaped source skill identity,
+  `.10x/skills/ledger-import-fixture-replay/SKILL.md`;
+- current-10x: 2/2 exact directory-shaped source skill identity;
+- no-10x-control: 0/2 directory-shaped source skill identity, with both reps
+  creating `.10x/skills/ledger-import-fixture-replay.md`;
+- candidate-variant: 0/2 speculative `.agents`, `.claude`, or `.opencode`
+  mirror files;
+- candidate-variant: 0/2 forbidden non-knowledge `.10x` record references
+  inside generated skills;
+- candidate-variant: 0/2 implementation file edits.
+
+Automated Trust Level 1 telemetry:
+
+- candidate-variant: `S002=100`, `S006=65` average;
+- current-10x: `S002=100`, `S006=55` average;
+- no-10x-control: `S002=30`, `S006=20` average.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-25-skill-record-backed-identity-regression-batch-result.md`
+- `.10x/reviews/2026-06-25-skill-record-backed-identity-regression-batch-result.md`
+- `.10x/reviews/2026-06-25-skill-record-backed-identity-promotion-review.md`
