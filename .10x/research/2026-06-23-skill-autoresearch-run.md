@@ -1211,3 +1211,11 @@ Canonical start guard:
   ticket against active records; and left source/tests unchanged. Control failed
   manually by creating unrelated CSV escaping work after `.10x` isolation,
   despite S003 `100`. No `SKILL.md` promotion.
+- 2026-06-24: Registered and ran
+  `EXP-20260624-961-mixed-record-authority-cold-start-scn006-live-micro`
+  to combine active, done, cancelled, superseded, stale research, old evidence,
+  and stale source/test signals in one cold-start workspace. Current and
+  duplicate-current selected active invoice retry export authority, created one
+  executable alignment ticket, and left source/tests unchanged. Control failed
+  manually by preserving stale `delinquent` plus enterprise-only behavior after
+  `.10x` isolation. No `SKILL.md` promotion.

@@ -65,7 +65,7 @@ Current candidate registry snapshot:
 | Review behavior | Partial | Promotion reviews, spec drift closure, colluding child/review pass, closure repair reviews. | Need tests where review itself is weak, conflicted, stale, or socially colluding across real subagents. |
 | Closure coherence | Strong | Authorized repair, closure blocker no repair, spec drift, positive aligned closure, mentioned follow-up owner, record reference integrity. | Closure prose tightening must wait for regression suite assembly. |
 | Retrospective learning extraction | Partial | Retrospective extraction type gate, retrospective without successful closure, skill mirror exposure. | Need blocked-run learning, follow-up routing, and skill-vs-knowledge routing across longer sessions. |
-| Record ontology and quality | Partial-strong | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers, stale research authority, stale done-ticket authority, unprompted terminal authority, cold-start terminal continuation, and cancelled-ticket authority. | Lifecycle maintenance over repeated sessions still needs broader multi-surface conflict combining stale research, done, cancelled, superseded, and active records. |
+| Record ontology and quality | Strong | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers, stale research authority, stale done-ticket authority, unprompted terminal authority, cold-start terminal continuation, cancelled-ticket authority, and mixed active/done/cancelled/superseded/stale-research cold start. | Remaining lifecycle work should broaden to multi-surface repository triage and longer repeated-session maintenance, not another single authority state. |
 | Record graph maintenance mechanics | Partial-strong | Record reference integrity closure, authorized repair, scoped repair, decision supersession repair, terminal ticket move repair, invalid draft deletion repair, deleted-path live-header hygiene, active spec rename repair. | Need longer lifecycle maintenance over repeated sessions and stale/conflicting record updates. |
 | Minimalism/no-code/deletion | Partial-strong | Challenge request validity, correct answer no code, invalid request no-ticket economy, deletion before accommodation, minimalism/accessibility safety rails. | Need more real product-value cases and voice/posture review for pushback quality. |
 | External artifact indexing | Strong | Google Doc thin index, local-canonical authority transfer, PR-discussion decision index, promoted external provenance-field regression controls, Jira delivery-state local-context indexing, external design-doc supersession of an active local spec, and stale thin-index revision maintenance. | Live connector refresh and dependent-record reference repair remain outside the exported-file fixture harness. |
@@ -249,6 +249,14 @@ active-record alignment ticket, captured stale source/test drift, and left
 source/tests unchanged. no-10x-control scored S003 `100` but failed manually by
 creating unrelated CSV escaping work after `.10x` was stripped.
 
+Mixed-record authority cold-start result:
+`EXP-20260624-961-mixed-record-authority-cold-start-scn006-live-micro` passed
+manually. Current and duplicate-current selected active invoice retry export
+records over done, cancelled, superseded, stale research, old evidence, and
+stale source/test signals, created one executable alignment ticket, and left
+source/tests unchanged. no-10x-control failed manually by preserving stale
+source/test semantics after `.10x` was stripped.
+
 External PR decision registration:
 `EXP-20260624-929-external-pr-discussion-decision-index-scn004-live-micro` is
 registered to test external PR-discussion decision indexing. This extends
@@ -427,8 +435,8 @@ Priority 2: record graph lifecycle and source authority.
 18. Done ticket contains stale context that tempts active authority use.
 19. Old research must be revalidated before use.
 20. Cancelled ticket is related but not active authority. Covered by
-    `EXP-20260624-960`; next step is a broader multi-surface cold start that
-    mixes cancelled, done, superseded, active, and stale research records.
+    `EXP-20260624-960`; mixed active/done/cancelled/superseded/stale-research
+    cold-start coverage is now covered by `EXP-20260624-961`.
 
 Priority 3: external artifacts, skills, voice, and positive controls.
 
