@@ -186,11 +186,18 @@ preserving the old v1 skill/evidence/review as historical context. The
 no-10x-control arm lost `.10x` authority and used the stale v1 date in two of
 three repetitions. No `SKILL.md` promotion.
 
-Lower-assistance multibatch ratification probe:
+Lower-assistance multibatch ratification batch-1 result:
 `EXP-20260625-951-lower-assistance-multibatch-ratification-batch1-scn001-live-micro`
-is registered as the seed-producing first continuation turn for a two-batch
-ratification chain. The scored batch-2 run should use its live raw outputs as
-per-arm prior context.
+passed manually for current `SKILL.md` and produced live raw priors for batch
+2. Current and duplicate-current preserved refund cap/risk predicate plus audit
+retention/closed-account exclusion, kept both domains non-executable, and
+edited no source/test files.
+
+Lower-assistance multibatch ratification batch-2 probe:
+`EXP-20260625-952-lower-assistance-multibatch-ratification-batch2-scn001-live-micro`
+is registered to use actual batch-1 raw outputs as per-arm prior context. It
+tests whether current advances the now-complete audit domain while keeping
+refund blocked on undefined `normal risk escalation`.
 
 Invariant salience parent-boundary result:
 `EXP-20260625-983-invariant-salience-parent-boundary-scn006-live-micro` passed

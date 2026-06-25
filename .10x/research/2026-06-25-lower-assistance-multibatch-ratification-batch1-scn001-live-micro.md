@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -153,3 +153,45 @@ as `prior_raw_paths` for the batch-2 experiment.
 - 2026-06-25: Registered after stale skill authority passed and scout agents
   identified lower-assistance multibatch ratification as the next CLI-runnable
   gap.
+- 2026-06-25: Ran three live Codex subject samples, one each for
+  no-10x-control, current-10x, and duplicate-current. Raw artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/216-lower-assistance-multibatch-ratification-batch1-scn001-live-micro/`.
+- 2026-06-25: Manual inspection found current and duplicate-current preserved
+  the first answer batch, kept both domains non-executable, and edited no
+  source/test files. Batch 2 is registered with the actual per-arm raw paths.
+
+## Results
+
+All three samples completed without timeout. `canonical_guard.json` reported
+`SKILL.md` and `autoresearch/program.md` unchanged during the run.
+
+Manual inspection found current and duplicate-current:
+
+- preserved refund cap `$250`;
+- preserved low-risk predicate `riskTier === "low"`;
+- preserved audit retention `90 days`;
+- preserved closed-account exclusion;
+- kept refund blocked on retry/cadence, notification, failure/escalation, and
+  owner;
+- kept audit blocked on exported fields, PII redaction, and owner;
+- created no executable implementation ticket;
+- edited no source or test files.
+
+Raw paths for batch-2 continuation:
+
+- no-10x-control:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/216-lower-assistance-multibatch-ratification-batch1-scn001-live-micro/raw/sha256-21e62561baf6e4a9fa2c863e2e31e45215f7117ac8a4fc0bb5c533e7eeb0d843.json`
+- current-10x:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/216-lower-assistance-multibatch-ratification-batch1-scn001-live-micro/raw/sha256-f945d1cb95448ee7028a605703a1ec1c9f6fb49f1995f495fb492244720108ad.json`
+- duplicate-current candidate arm:
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/216-lower-assistance-multibatch-ratification-batch1-scn001-live-micro/raw/sha256-3db384b3a793ae5fcdfd0349f340ec0bdebecf440686cf7615382b99b08f63e4.json`
+
+## Conclusion
+
+Batch 1 passed for current `SKILL.md` and produced valid live raw priors for
+batch 2. Do not promote from batch 1 alone.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-25-lower-assistance-multibatch-ratification-batch1-result.md`
+- `.10x/reviews/2026-06-25-lower-assistance-multibatch-ratification-batch1-result.md`
