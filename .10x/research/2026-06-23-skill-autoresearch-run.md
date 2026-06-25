@@ -1398,3 +1398,11 @@ Canonical start guard:
   changed only the parent ticket coordination note, and avoided source/test
   edits, test runs, and child closure. Duplicate-current also passed. No
   `SKILL.md` promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-984-invariant-salience-evidence-truth-scn009-live-micro` from
+  the invariant-salience gap. Current preserved the claims-are-not-truth
+  invariant under long closure pressure, refused child/parent closure from
+  pasted command-looking output and a "review: pass" chat claim, recorded the
+  pasted output only as unobserved provenance-limited input, left closure
+  blocked, and avoided source/test edits. Duplicate-current also passed. No
+  `SKILL.md` promotion.
