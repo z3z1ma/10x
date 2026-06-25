@@ -3,7 +3,7 @@
 Candidate ID: `candidate-record-maintenance-command-line-economy-v1`
 Created: 2026-06-25
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 Promotion: manual-only
 
 ## Target Behavior
@@ -116,3 +116,19 @@ Supporting records:
 
 - `.10x/evidence/2026-06-25-lower-assistance-record-maintenance-workflow-result.md`
 - `.10x/reviews/2026-06-25-lower-assistance-record-maintenance-workflow-result.md`
+
+`EXP-20260625-701-record-maintenance-command-line-economy-regression-batch-scn004-scn009-live-micro`
+passed targeted regression review.
+
+Manual inspection found candidate preserved historical prose and fenced command
+output in SCN-004 while repairing live active-spec references. In SCN-009,
+candidate used direct `mv` and bounded `perl -0pi` replacement for unambiguous
+ticket/evidence/review reference repairs, closed coherently, and avoided
+source/test edits, test runs, duplicate test evidence, or duplicate reviews.
+
+Promoted to `SKILL.md` on 2026-06-25.
+
+Additional supporting records:
+
+- `.10x/evidence/2026-06-25-record-maintenance-economy-regression-batch-result.md`
+- `.10x/reviews/2026-06-25-record-maintenance-economy-regression-batch-result.md`

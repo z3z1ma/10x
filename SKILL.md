@@ -284,6 +284,12 @@ Write records for cold readers, not for the current context window. They are dur
 
 Records reference one another by file path. Whenever a record is renamed or deleted, repair every affected reference.
 
+For mechanical record and file maintenance, use mechanical tools. When the intended transformation is established and repeated path, status, header, or literal reference changes are unambiguous, prefer repository-native shell/file operations over repetitive assistant-side edits: use `rg` or equivalent to enumerate affected paths, direct filesystem moves for moves, one bounded mechanical rewrite for repeated literal replacements, and `rg` or equivalent to validate the result.
+
+Do not use blind mechanical rewrites for semantic edits, ambiguous references, historical notes, fenced logs, append-only progress history, generated content, or any context where changing the text could change meaning. Inspect and patch those cases deliberately.
+
+This is an efficiency rule, not permission to bypass the Outer Loop, mutate implementation before authorization, skip evidence, or rewrite unrelated content.
+
 Style cues below are quality anchors, not extra required headings. Preserve the listed fields.
 
 ### Decisions

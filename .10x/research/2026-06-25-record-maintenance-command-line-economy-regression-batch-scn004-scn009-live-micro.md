@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -216,3 +216,39 @@ closure coherence, discard or rewrite the candidate.
 - 2026-06-25: Registered after EXP-700 found current operation-quality
   inconsistency and candidate improvement on lower-assistance dense record
   maintenance.
+- 2026-06-25: Ran all six live Codex samples. Raw artifacts are stored under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/177-record-maintenance-command-line-economy-regression-batch-scn004-scn009-live-micro/`.
+- 2026-06-25: Manual inspection recorded in
+  `.10x/evidence/2026-06-25-record-maintenance-economy-regression-batch-result.md`
+  and
+  `.10x/reviews/2026-06-25-record-maintenance-economy-regression-batch-result.md`.
+
+## Findings
+
+- SCN-004 current and candidate both safely moved the active payments retry spec
+  to `.10x/specs/payments-webhook-retry-policy.md`, repaired live references,
+  and preserved historical prose plus fenced command output mentioning the old
+  path.
+- SCN-004 candidate did not use a shell-native rewrite for selective content
+  updates. This is acceptable because the task required distinguishing live
+  authority from historical text.
+- SCN-009 current and candidate both closed the child and parent ticket
+  coherently after inspecting records, source, and tests.
+- SCN-009 candidate used direct `mv` and a bounded `perl -0pi` rewrite for the
+  unambiguous terminal ticket path and final evidence/review reference repairs.
+- SCN-009 current used assistant-side `file_change` edits for repeated
+  path/reference repairs.
+- No-10x-control was not informative because the no-10x cleanup removed the
+  fixture `.10x` task surface.
+- Trust Level 1 S002/S006 scores false-negatived current and candidate because
+  the scorer cannot distinguish preserved historical references from stale live
+  references or deeply judge closure sufficiency.
+
+## Conclusions
+
+`candidate-record-maintenance-command-line-economy-v1` passed the targeted
+historical-reference and closure-reference regressions. Combined with EXP-700,
+the evidence supports a narrow promotion into `SKILL.md`: 10x should itself
+encourage mechanical command-line/file-system operations for established,
+repeated, unambiguous record maintenance, while preserving deliberate inspection
+for semantic, historical, generated, or ambiguous text.
