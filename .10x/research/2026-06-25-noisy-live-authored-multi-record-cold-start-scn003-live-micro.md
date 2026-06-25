@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -185,3 +185,66 @@ pass, do not promote new `SKILL.md` language.
 - 2026-06-25: Registered after lower-assistance multibatch batch 2 passed and
   produced a live-authored current-10x workspace with multiple records,
   partial readiness, and cross-domain payout noise.
+- 2026-06-25: Ran nine live Codex subject samples, three each for
+  no-10x-control, current-10x, and duplicate-current. Raw artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/218-noisy-live-authored-multi-record-cold-start-scn003-live-micro/`.
+- 2026-06-25: Manual inspection found current and duplicate-current all passed:
+  they recovered existing owners, preserved all settled values, kept audit
+  executable, kept refund blocked, rejected payout records as cross-domain
+  noise, avoided source/test edits, and avoided duplicate specs/tickets.
+
+## Results
+
+All nine samples completed without timeout. `canonical_guard.json` reported
+`SKILL.md` and `autoresearch/program.md` unchanged during the run.
+
+Score vectors:
+
+- current-10x: S001=90, S002=90 in all three repetitions; S007 average 46.67.
+- duplicate-current candidate arm: S001=90, S002=90 in all three repetitions;
+  S007 average 30.
+- no-10x-control: S001=70 and S002=70 in all three repetitions.
+
+Manual inspection found all current and duplicate-current repetitions:
+
+- cited or used `.10x/tickets/2026-06-25-shape-refund-and-audit-rollout.md`;
+- cited or used `.10x/tickets/2026-06-25-implement-privacy-audit-export.md`;
+- cited or used `.10x/specs/refund-auto-approval.md` and
+  `.10x/specs/privacy-audit-export.md`;
+- identified audit export as ready through the existing executable audit
+  ticket;
+- preserved audit values: `accountId`, `createdAt`, `status`, `balanceCents`,
+  email omission, closed-account exclusion, 90-day retention, and Data Platform
+  ownership;
+- preserved refund values: `$250`, `riskTier === "low"`, `#refund-ops`,
+  Refund Ops ownership, and one retry after 30 minutes;
+- kept refund blocked on undefined `normal risk escalation`;
+- rejected payout retry decision, payout knowledge, and payout source behavior
+  as non-authoritative for refund escalation semantics;
+- created no duplicate tickets or specs;
+- edited no source or test files;
+- did not ask for prior chat.
+
+The only changed file in every canonical workspace was the existing shaping
+ticket, where agents appended a fresh-session handoff/revalidation note.
+
+## Conclusion
+
+Current `SKILL.md` passes this noisy live-authored multi-record cold-start
+probe. The existing protocol is strong enough for a cold-start agent to recover
+owners and settled values from a real live-authored record graph, reject
+cross-domain semantic noise, and avoid duplicate work. No `SKILL.md` promotion
+is justified.
+
+The next aligned experiments are:
+
+- a live-authored handoff review/audit MICRO using this result's current-10x
+  workspace;
+- a post-cold-start exact-ratification positive control that supplies the last
+  refund escalation semantics and expects exactly one refund implementation
+  ticket.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-25-noisy-live-authored-multi-record-cold-start-result.md`
+- `.10x/reviews/2026-06-25-noisy-live-authored-multi-record-cold-start-result.md`
