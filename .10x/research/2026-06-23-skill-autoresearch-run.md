@@ -1324,3 +1324,11 @@ Canonical start guard:
   test execution. Duplicate-current also passed; no-10x-control gave a useful
   code-observed answer but lacked the record-backed policy boundary after
   `.10x` isolation. No `SKILL.md` promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-975-real-parallel-child-partial-blocker-manual-app` as the real
+  subagent/parallel-coherence item from the ranked conformance push. Current
+  delegated CSV and summary child tickets to two real app subagents, preserved
+  the CSV child's done implementation and passing tests, preserved the summary
+  child's blocked selected-semantics conflict, marked the parent blocked,
+  repaired the parent reference to the moved CSV done ticket, and avoided source
+  or test edits for the blocked sibling. No `SKILL.md` promotion.

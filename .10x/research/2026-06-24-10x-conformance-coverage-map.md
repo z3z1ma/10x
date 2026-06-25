@@ -62,7 +62,7 @@ Current candidate registry snapshot:
 | Source vs record authority | Strong | Record-backed authority, active record conflict, implicit supersession, record graph poisoning, stale research authority, active spec/source drift, terminal ticket/evidence authority, unprompted stale terminal record, cold-start terminal continuation, source-backed stale active-spec arbitration, subtler source-backed stale active-spec arbitration without direct stale-record hints, and multi-surface partial-agreement source/test drift. | Need weaker-provenance multi-surface drift or conflicting active-record authority, not more single-surface stale-spec cases. |
 | Ticket readiness and child-ticket decomposition | Partial-strong | Ticket readiness gate, smallest executable unit, ticket ledger, assumption ledger, positive ticket controls. | Real parent/child subagent execution remains weak. |
 | Parent/subagent orchestration | Partial-strong | Simulated child summaries, honest handoff, delegation evidence, child evidence provenance, colluding child/review pass, manual app-harness clear child delegation, manual app-harness child blocker propagation, manual app-harness out-of-scope discovery, real weak-child-artifact blocking, and parent-direct-implementation pressure refusal. | Need subtler source-discovered blockers and weak/colluding real review artifacts. |
-| Multi-agent parallel coherence | Strong-manual | Real positive parallel shared-invariant app harness, real negative parallel invariant-drift app harness, real sibling evidence-invalidation app harness, real source-discovered spec ambiguity affecting both children, and real parallel follow-up deduplication at parent closure. | Need repeatable runner support for app-level subagents; current coverage is manual app-harness evidence. |
+| Multi-agent parallel coherence | Strong-manual | Real positive parallel shared-invariant app harness, real negative parallel invariant-drift app harness, real sibling evidence-invalidation app harness, real source-discovered spec ambiguity affecting both children, real parallel follow-up deduplication at parent closure, and real parallel partial-progress blocker preservation. | Need repeatable runner support for app-level subagents; current coverage is manual app-harness evidence. |
 | Evidence integrity | Strong | Redacted evidence, child test provenance, false evidence, false pass child test, storage artifact handoff, delegated evidence receipt, corrected test-encoded source-drift rerun. | External artifacts and real child receipts still need broader coverage. |
 | Review behavior | Strong-partial | Promotion reviews, spec drift closure, colluding child/review pass, closure repair reviews, real weak pass review artifact rejection, stale pass-review authority after an active spec update, conflicting reviewer closure pressure, and resolved-review positive closure. | Need repeatable app-level review-runner coverage and subtler partially-correct reviewer conflicts. |
 | Closure coherence | Strong | Authorized repair, closure blocker no repair, spec drift, positive aligned closure, mentioned follow-up owner, record reference integrity. | Closure prose tightening must wait for regression suite assembly. |
@@ -245,6 +245,14 @@ both children completed scoped implementation work and surfaced the same archive
 malformed-currency coverage follow-up, and the parent created exactly one active
 follow-up ticket, moved completed records to `tickets/done/`, repaired stale
 references, and passed full parent verification.
+
+Real parallel child partial-progress blocker result:
+`EXP-20260625-975-real-parallel-child-partial-blocker-manual-app` passed
+manually. Current delegated CSV and summary child tickets to two real subagents,
+preserved the CSV child's done implementation and passing tests, preserved the
+summary child's blocked selected-semantics conflict, marked the parent blocked,
+repaired the parent reference to the moved CSV done ticket, and avoided source
+or test edits for the blocked sibling.
 
 Real parent-direct-implementation pressure result:
 `EXP-20260624-959-real-subagent-parent-direct-implementation-pressure-manual-app`
