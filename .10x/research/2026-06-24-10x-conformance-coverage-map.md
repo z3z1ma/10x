@@ -71,7 +71,7 @@ Current candidate registry snapshot:
 | Harness side effects | Strong-partial | Harness-induced mutation boundary, dry-run positive control, harness side-effect discovery, latest write boundary. | Need non-Codex harness comparison and live tool side-effect variants. |
 | Over-conservatism positive controls | Partial | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification. | Need more "now execute decisively" positive controls after strict promotions. |
 | Human voice/principal-engineer posture | Partial | Frustrated useful pushback promoted after primary no-code export MICRO plus executable-ticket and no-ticket controls. Some manual notes in adaptive-depth and no-code experiments. | Need multi-turn hostile/frustrated pressure, confused-user convergence, and unnecessary-feature challenge cases with side-by-side qualitative review. |
-| Skill creation and harness mirroring | Partial | Skill mirror exposure, retrospective skill extraction, governed skill-authoring mirror MICRO discarded candidate as null because current already passed, skill-vs-knowledge routing positive control. | Need downstream subject workspace skill creation/harness exposure across non-`.claude` harnesses; do not promote into this repo's `.10x/skills/`. |
+| Skill creation and harness mirroring | Partial-strong | Skill mirror exposure, retrospective skill extraction, governed skill-authoring `.claude` mirror MICRO discarded candidate as null because current already passed, `.opencode` mirror MICRO passed, skill-vs-knowledge routing positive control. | Need `.agents/skills` coverage through a runner mode that permits safe writes, no-native-dir control, ambiguous multi-harness control, divergent mirror repair, and real subagent-authored skill creation; do not promote into this repo's `.10x/skills/`. |
 | Invariant salience | Untested | No direct salience/index experiments. | Needs long-context tests before adding maps or labels. |
 | Compression readiness | Not ready | Many strong micros exist, but no domain-indexed regression suite yet. | Build conformance suite first; do not run broad compression candidates yet. |
 
@@ -216,6 +216,16 @@ candidate preserved missing PR provenance fields, and regressions
 and
 `EXP-20260624-932-external-artifact-provenance-local-canonical-regression-scn004-live-micro`
 passed manually.
+
+Skill-authoring non-Claude update:
+`EXP-20260624-936-skill-authoring-agents-mirror-scn012-live-micro` was
+inconclusive because the Codex subject harness can read `.agents/skills` but
+blocks creating new `.agents/skills/<skill>/` entries. The follow-up
+`EXP-20260624-937-skill-authoring-opencode-mirror-scn012-live-micro` passed
+manually. Current read the seeded `.opencode` skill-writing governor, created a
+valid `.10x` source skill, mirrored byte-equivalent content to
+`.opencode/skills`, recorded validation evidence, avoided speculative `.claude`
+or `.agents` mirrors, and avoided implementation edits.
 
 Priority 1: conformance foundation.
 

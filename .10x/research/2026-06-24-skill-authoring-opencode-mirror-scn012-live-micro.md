@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-24
 Updated: 2026-06-24
 
@@ -207,3 +207,29 @@ showing `.claude` skill mirroring and skill-vs-knowledge routing still pass.
 
 - 2026-06-24: Registered after the `.agents` probe was marked inconclusive due
   to Codex subject harness write-boundary confounding.
+- 2026-06-24: Ran live under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/137-skill-authoring-opencode-mirror-scn012-live-micro/`.
+  Automated first-pass scores gave current and duplicate-current `S002=85` and
+  `S006=85`; no-10x-control got `S002=80` and `S006=20`.
+- 2026-06-24: Manual inspection found current `SKILL.md` passed the non-`.claude`
+  harness exposure behavior. It read the seeded OpenCode governor, created a
+  valid `.10x` skill, mirrored byte-equivalent content to `.opencode/skills`,
+  recorded validation evidence, updated the subject parent ticket, avoided
+  prohibited record references except allowed knowledge vocabulary, avoided
+  source edits, and created no speculative `.claude` or `.agents` mirrors.
+
+## Result
+
+Current `SKILL.md` passes this `.opencode` skill-authoring and harness-mirroring
+MICRO. The run broadens skill-creation conformance beyond `.claude/skills/`.
+No canonical `SKILL.md` change is justified.
+
+The no-10x-control arm also created source and mirror skill files because the
+prompt and seeded governor were explicit, but it did not preserve the broader
+closure record graph (`S006=20`). Current and duplicate-current preserved more
+10x context by adding validation evidence and updating the parent ticket.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-24-skill-authoring-opencode-mirror-result.md`
+- `.10x/reviews/2026-06-24-skill-authoring-opencode-mirror-result.md`
