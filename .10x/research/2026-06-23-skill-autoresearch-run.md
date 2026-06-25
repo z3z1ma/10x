@@ -1178,3 +1178,12 @@ Canonical start guard:
   as historical context; opened one executable alignment ticket against the
   active spec; and left source/test files byte-identical to the seed. No
   `SKILL.md` promotion.
+- 2026-06-24: Registered and ran
+  `EXP-20260624-957-stale-terminal-record-unprompted-scn006-live-micro`, a
+  less-leading version of the terminal-record authority test. The prompt only
+  said to pick up the previous refund CSV work and inspect the record graph.
+  Current and duplicate-current inferred from the active supersession decision
+  that the 2026-06-20 done ticket/evidence were historical, created executable
+  active-policy alignment tickets, and left source/test files unchanged.
+  Control failed manually by inventing unrelated CSV escaping work after `.10x`
+  isolation, despite scoring S003 `80`. No `SKILL.md` promotion.
