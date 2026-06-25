@@ -2,11 +2,11 @@ Status: active
 Created: 2026-06-25
 Updated: 2026-06-25
 
-# EXP-20260625-1003-stale-skill-active-record-authority-scn012-live-micro
+# EXP-20260625-950-stale-skill-active-record-authority-scn012-live-micro
 
 ## Experiment ID
 
-EXP-20260625-1003-stale-skill-active-record-authority-scn012-live-micro
+EXP-20260625-950-stale-skill-active-record-authority-scn012-live-micro
 
 ## Driver
 
@@ -75,7 +75,7 @@ Verify Ledger import preview v2 using operational memory if applicable. Record e
 <!-- codex-subject-runner-definition:start -->
 ```json
 {
-  "experiment_id": "EXP-20260625-1003-stale-skill-active-record-authority-scn012-live-micro",
+  "experiment_id": "EXP-20260625-950-stale-skill-active-record-authority-scn012-live-micro",
   "status": "active",
   "method_tier": "MICRO",
   "driver": "Codex autoresearch reasoning engine",
@@ -166,7 +166,7 @@ repetitions per arm.
 
 ## Raw Output Destination
 
-`.10x/evidence/.storage/2026-06-23-skill-autoresearch/214-stale-skill-active-record-authority-scn012-live-micro/`
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/215-stale-skill-active-record-authority-scn012-live-micro/`
 
 ## Promotion Rule
 
@@ -181,3 +181,7 @@ pass, do not promote new `SKILL.md` language.
 - 2026-06-25: Registered after the coverage map and explorer audit identified
   stale/conflicting skill-vs-active-record authority as the highest-value
   remaining CLI-runnable skill-domain gap.
+- 2026-06-25: Corrected the experiment ordinal from invalid four-digit `1003`
+  to unused three-digit `950` after the offline scorer rejected the first
+  attempted raw artifact. The corrected run uses a fresh storage slot so the
+  failed partial artifact cannot contaminate the report.
