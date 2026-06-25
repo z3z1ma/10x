@@ -68,7 +68,7 @@ Current candidate registry snapshot:
 | Closure coherence | Strong | Authorized repair, closure blocker no repair, spec drift, positive aligned closure, mentioned follow-up owner, record reference integrity. | Closure prose tightening must wait for regression suite assembly. |
 | Retrospective learning extraction | Partial | Retrospective extraction type gate, retrospective without successful closure, skill mirror exposure. | Need blocked-run learning, follow-up routing, and skill-vs-knowledge routing across longer sessions. |
 | Record ontology and quality | Strong | Record hardening, record economy, fish before opening, distinct near-duplicate owner, ticket ledgers, stale research authority, stale done-ticket authority, unprompted terminal authority, cold-start terminal continuation, cancelled-ticket authority, and mixed active/done/cancelled/superseded/stale-research cold start. | Remaining lifecycle work should broaden to multi-surface repository triage and longer repeated-session maintenance, not another single authority state. |
-| Record graph maintenance mechanics | Partial-strong | Record reference integrity closure, authorized repair, scoped repair, decision supersession repair, terminal ticket move repair, invalid draft deletion repair, deleted-path live-header hygiene, active spec rename repair. | Need longer lifecycle maintenance over repeated sessions and stale/conflicting record updates. |
+| Record graph maintenance mechanics | Strong-partial | Record reference integrity closure, authorized repair, scoped repair, decision supersession repair, terminal ticket move repair, invalid draft deletion repair, deleted-path live-header hygiene, active spec rename repair, and repeated-session stale spec repair continuation. | Need subtler repeated-session cases where the stale relationship is not named or a prior repair is partially wrong. |
 | Minimalism/no-code/deletion | Partial-strong | Challenge request validity, correct answer no code, invalid request no-ticket economy, deletion before accommodation, minimalism/accessibility safety rails. | Need more real product-value cases and voice/posture review for pushback quality. |
 | External artifact indexing | Strong | Google Doc thin index, local-canonical authority transfer, PR-discussion decision index, promoted external provenance-field regression controls, Jira delivery-state local-context indexing, external design-doc supersession of an active local spec, and stale thin-index revision maintenance. | Live connector refresh and dependent-record reference repair remain outside the exported-file fixture harness. |
 | Multi-session cold start | Partial | Records-first retrieval variants, long-horizon cold start. | Need second-agent cold starts after ambiguous sessions and record graph handoff quality audits. |
@@ -313,6 +313,17 @@ and tests; treated the newer decision as authority for source behavior; opened
 one minimal spec-repair ticket; and avoided source/test edits or source-revert
 work. This covers the reverse source/record drift direction with an explicit
 stale-spec hint; a subtler variant remains useful.
+
+Repeated-session stale spec repair result:
+`EXP-20260624-967-continue-stale-spec-repair-scn004-live-micro` passed manually
+for current `SKILL.md`. Current continued the existing repair ticket, preserved
+the stale CSV-only contract under `.10x/specs/superseded/`, replaced the active
+spec with the JSON API route contract, repaired evidence/review references,
+recorded bounded verification evidence, closed the repair ticket, and avoided
+source/test edits or test execution. This ties directly to the current
+researcher handoff's record graph maintenance lane. No promotion is justified;
+the next version should remove the explicit stale-spec hint or add a partial
+prior repair error.
 
 External PR decision registration:
 `EXP-20260624-929-external-pr-discussion-decision-index-scn004-live-micro` is

@@ -1254,3 +1254,12 @@ Canonical start guard:
   decision, done implementation ticket, evidence, source, and tests; treated the
   newer decision as authority; opened one minimal spec-repair ticket; and avoided
   source/test edits or source-revert work. No `SKILL.md` promotion.
+- 2026-06-24: Registered and ran
+  `EXP-20260624-967-continue-stale-spec-repair-scn004-live-micro` to continue
+  that researcher lane into repeated-session record graph maintenance. Current
+  reused the existing repair ticket, preserved the stale CSV-only spec as
+  superseded history, replaced the active spec with the JSON API route contract,
+  repaired evidence/review references, recorded bounded verification evidence,
+  closed the repair ticket, and avoided source/test edits plus test execution.
+  Duplicate-current passed with a lower-quality in-place replacement; control
+  blocked because `.10x` was intentionally stripped. No `SKILL.md` promotion.
