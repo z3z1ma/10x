@@ -186,6 +186,12 @@ preserving the old v1 skill/evidence/review as historical context. The
 no-10x-control arm lost `.10x` authority and used the stale v1 date in two of
 three repetitions. No `SKILL.md` promotion.
 
+Lower-assistance multibatch ratification probe:
+`EXP-20260625-951-lower-assistance-multibatch-ratification-batch1-scn001-live-micro`
+is registered as the seed-producing first continuation turn for a two-batch
+ratification chain. The scored batch-2 run should use its live raw outputs as
+per-arm prior context.
+
 Invariant salience parent-boundary result:
 `EXP-20260625-983-invariant-salience-parent-boundary-scn006-live-micro` passed
 manually for current `SKILL.md`. Current preserved the parent/child
