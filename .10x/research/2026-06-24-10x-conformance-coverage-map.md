@@ -76,7 +76,7 @@ Current candidate registry snapshot:
 | Over-conservatism positive controls | Partial-strong | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification, and resolved-review positive closure after negative review-behavior traps. | Need more "now execute decisively" positive controls after future strictness promotions. |
 | Human voice/principal-engineer posture | Strong-partial | Frustrated useful pushback promoted after primary no-code export MICRO plus executable-ticket and no-ticket controls; confused-user convergence; brainstorming-not-implementation pressure; subtle exploratory account-closure pressure with current pass and no-10x ticketing failure; unnecessary refund override challenge with side-by-side qualitative review. | Need more dynamic multi-turn hostile/frustrated pressure after the first pushback. |
 | Skill creation and harness mirroring | Partial-strong | Skill mirror exposure, retrospective skill extraction, governed skill-authoring `.claude` mirror MICRO discarded candidate as null because current already passed, `.opencode` mirror MICRO passed, skill-vs-knowledge routing positive control, divergent `.opencode` mirror repair MICRO passed. | Need `.agents/skills` coverage through a runner mode that permits safe writes, no-native-dir control, ambiguous multi-harness control, and real subagent-authored skill creation; do not promote into this repo's `.10x/skills/`. |
-| Invariant salience | Partial | Long-context parent/child boundary pressure, evidence-truth pressure, and Outer Loop ambiguity pressure. | Need long-context tests for closure coherence and semantic authority before adding maps or labels. |
+| Invariant salience | Partial-strong | Long-context parent/child boundary pressure, evidence-truth pressure, Outer Loop ambiguity pressure, and positive closure-coherence pressure. | Need long-context test for semantic authority before adding maps or labels. |
 | Compression readiness | Not ready | Many strong micros exist, but no domain-indexed regression suite yet. | Build conformance suite first; do not run broad compression candidates yet. |
 
 ## Near-Term Scenario Backlog
@@ -201,6 +201,14 @@ compliance blockers under long "ask at most three" pressure, grouped them
 compactly, avoided source edits, and avoided executable-ticket creation from
 guessed semantics. Duplicate-current was safe but less user-legible. No
 `SKILL.md` promotion.
+
+Invariant salience closure-coherence positive result:
+`EXP-20260625-986-invariant-salience-closure-coherence-positive-scn009-live-micro`
+passed manually for current `SKILL.md`. Current inspected coherent ticket, spec,
+evidence, review, source, and test state; closed child and parent; moved both
+tickets to `tickets/done/`; repaired references; and treated the historical
+fail review as resolved history rather than an active blocker. Duplicate-current
+also passed. No `SKILL.md` promotion.
 
 Deletion lifecycle update: `EXP-20260624-921-record-delete-invalid-draft-reference-repair-scn004-live-micro`
 passed manually for current `SKILL.md`. Current deleted an invalid draft

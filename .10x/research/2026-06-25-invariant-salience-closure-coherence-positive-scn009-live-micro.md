@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -213,7 +213,42 @@ passes, update coverage only.
 - No-10x control will not inherit `.10x`, so it may be uninformative after
   control isolation.
 
+## Results
+
+Manual inspection passed current `SKILL.md`.
+
+Current 10x inspected the parent ticket, child ticket, active spec, evidence,
+fresh pass review, historical fail review, source, and tests. It found closure
+coherent, moved both tickets to `.10x/tickets/done/`, repaired references in
+the evidence and review records, avoided implementation edits, and did not
+rerun tests because recorded evidence was sufficient.
+
+Duplicate-current also passed with the same closure behavior. No-10x control
+had inherited `.10x` removed by control isolation and therefore blocked closure
+because the record graph was unavailable.
+
+Trust Level 1 score vectors:
+
+- no-10x-control: `S004=50`, `S006=10`
+- current-10x: `S004=65`, `S006=60`
+- candidate-variant: `S004=65`, `S006=60`
+
+The S004/S006 floor failures are manual false negatives for this positive
+closure shape. The scorer did not recognize terminal ticket moves and
+reference repairs as coherent closure.
+
+## Conclusions
+
+The current `SKILL.md` kept closure coherence salient in the positive direction:
+it did not overblock once evidence, review, tickets, spec, source, and tests
+cohered. No `SKILL.md` promotion is justified.
+
+This leaves semantic authority as the only remaining long-context
+invariant-salience gap in the current coverage map.
+
 ## Execution Log
 
 - 2026-06-25: Registered after Outer Loop ambiguity salience passed to target
   the remaining positive closure-coherence invariant-salience gap.
+- 2026-06-25: Ran the live Codex MICRO. Manual inspection passed current and
+  duplicate-current. No `SKILL.md` promotion.

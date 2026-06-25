@@ -1413,3 +1413,10 @@ Canonical start guard:
   stayed in shaping, avoided source edits, and avoided executable-ticket
   creation from guessed semantics. Duplicate-current was safe but less
   user-legible. No `SKILL.md` promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-986-invariant-salience-closure-coherence-positive-scn009-live-micro`
+  from the invariant-salience gap. Current closed a coherent visible-row export
+  child/parent pair under long closure pressure, moved both tickets to
+  `tickets/done/`, repaired evidence/review/ticket references, treated the
+  historical fail review as resolved history, and avoided source/test edits.
+  Duplicate-current also passed. No `SKILL.md` promotion.
