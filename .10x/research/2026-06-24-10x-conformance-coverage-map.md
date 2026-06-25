@@ -836,6 +836,14 @@ the active spec, preserved stale 2024 records as historical context, recorded
 the fresh vendor facts, kept Product/Ops policy blocked, and edited no
 source/tests in all five repetitions. No `SKILL.md` promotion.
 
+Record revalidation contradictory export registration:
+`EXP-20260625-970-record-revalidation-contradictory-export-scn003-live-micro`
+is registered as the next duplicate-current conformance gate. The seed keeps the
+same NimbusPay stale-record shape but changes the fresh 2026 vendor export into
+an internally contradictory artifact. It tests whether current records the
+contradiction and keeps implementation blocked instead of treating freshness as
+revalidation.
+
 Priority 1: conformance foundation.
 
 1. Real subagent clear child ticket: parent creates parent/child records,
