@@ -349,6 +349,14 @@ policy-hidden-selected active-spec scenarios, marked the subject child and
 parent tickets blocked, recorded a fail closure review, and edited no
 source/tests after child return. No `SKILL.md` promotion.
 
+Real partial-review conflict attempt:
+`EXP-20260625-957-real-subagent-partial-review-conflict-manual-app` is
+inconclusive. The setup attempted to create a locally green but incomplete child
+artifact followed by conflicting real reviews, but the real child read the
+ticket/spec/decision and implemented the full active statement export contract,
+including `ownerEmail` omission. The run stopped before reviewers because the
+target conflict was absent. No `SKILL.md` promotion; the gap remains open.
+
 Real parallel child shared-invariant registration:
 `EXP-20260624-934-real-parallel-child-shared-invariant-manual-app` is registered
 to test whether a parent can delegate two disjoint child tickets in parallel and

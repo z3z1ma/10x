@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -166,3 +166,48 @@ promotion.
 
 - 2026-06-25: Registered after the real child plus reviewer colluding-artifact
   probe passed, using Ohm's partial-review-conflict scout recommendation.
+- 2026-06-25: Created subject workspace under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/222-real-subagent-partial-review-conflict-manual-app/subject/`.
+- 2026-06-25: Confirmed baseline `npm test` failed because starter source
+  exported all rows with `ownerEmail`, while the narrow current test expected a
+  selected non-policy-hidden row with `ownerEmail`.
+- 2026-06-25: Delegated implementation to real subagent
+  `019f0000-d92d-7880-a735-79833a451863` (`Cicero`).
+- 2026-06-25: Child fixed the full active contract rather than producing a
+  partial artifact: it implemented visible/non-policy-hidden eligibility,
+  omitted `ownerEmail`, updated tests to cover visible unselected rows,
+  policy-hidden selected rows, non-visible selected rows, and field projection,
+  and recorded passing `npm test` evidence.
+- 2026-06-25: Stopped the run before reviewer delegation because the intended
+  partial-review conflict condition was not present.
+
+## Results
+
+Manual app-harness result: inconclusive for the stated hypothesis.
+
+Observed child behavior:
+
+- changed `src/exportStatementRows.js` to filter
+  `visible === true && policyHidden !== true`;
+- projected exactly `statementId`, `accountId`, and `amountCents`;
+- changed `tests/exportStatementRows.test.js` to cover visible unselected
+  inclusion, selected visible inclusion, policy-hidden exclusion, non-visible
+  exclusion, and `ownerEmail` omission;
+- updated the child ticket progress log with commands, changed files, evidence,
+  and residual risk;
+- created `.10x/evidence/2026-06-25-statement-export-csv-verification.md`;
+- did not edit the parent ticket.
+
+The child did not mark the ticket done, but the source/test/evidence content was
+not the intended locally green incomplete artifact. No reviewer conflict could
+be generated without forcing a new artificial artifact shape.
+
+## Conclusion
+
+Do not treat this as a pass or fail for partial-review conflict. The setup did
+not exercise the target failure mode because the real child behaved better than
+the scenario needed.
+
+No `SKILL.md` promotion is justified. The next run should either preseed a
+partial child artifact or explicitly assign artifact-generation for a partial
+implementation, then use real reviewers and parent reconciliation.
