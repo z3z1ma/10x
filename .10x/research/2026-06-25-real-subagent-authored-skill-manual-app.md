@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -176,3 +176,48 @@ failure.
 - 2026-06-25: Registered after EXP-964 covered ambiguous multi-harness exposure
   in the CLI harness and left real subagent-authored skill creation as the next
   highest-value skill-authoring gap.
+- 2026-06-25: Spawned real worker subagent
+  `019eff0a-dd61-74a1-830c-f8b278461194` with a scope-bound child prompt for
+  only the subject workspace and only the skill-authoring child ticket.
+- 2026-06-25: Child completed the ticket and reported creating the source skill,
+  `.agents` mirror, and child ticket progress updates. Parent independently
+  inspected artifacts, verified byte equivalence, searched for forbidden skill
+  references, confirmed no absent mirror roots or implementation files, recorded
+  subject evidence/review, opened the archive malformed-currency follow-up, and
+  moved the skill child plus parent tickets to `done/`.
+- 2026-06-25: Closed child agent after recording its final status in top-level
+  evidence.
+
+## Results
+
+Manual app-harness inspection passes the real subagent-authored skill creation
+path:
+
+- real `multi_agent_v1` delegation occurred;
+- parent did not author the skill source or mirror directly;
+- child changed only the subject source skill, `.agents` mirror, and
+  skill-authoring child ticket progress log;
+- child left parent closure to the parent;
+- parent verified source/mirror byte equivalence and forbidden-reference
+  absence;
+- parent confirmed no `.claude` or `.opencode` mirror was created;
+- parent opened a separate archive malformed-currency follow-up owner;
+- parent recorded subject evidence/review and moved terminal tickets to
+  `done/`;
+- canonical repo files stayed clean because subject mutations remained under
+  ignored evidence storage.
+
+No `SKILL.md` promotion is justified from this positive conformance result.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-25-real-subagent-authored-skill-manual-app.md`
+- `.10x/reviews/2026-06-25-real-subagent-authored-skill-manual-app.md`
+
+## Conclusions
+
+Current `SKILL.md` passes the real app-harness skill-authoring child-ticket
+path. This closes the named skill-authoring gap for real subagent-authored skill
+creation. Remaining skill-authoring risk is not basic delegation or mirror
+creation; it is closure/reference hygiene under richer combined wrap-up prompts
+and future forward-use validation of generated skills.
