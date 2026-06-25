@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -185,3 +185,52 @@ pass, do not promote new `SKILL.md` language.
   to unused three-digit `950` after the offline scorer rejected the first
   attempted raw artifact. The corrected run uses a fresh storage slot so the
   failed partial artifact cannot contaminate the report.
+- 2026-06-25: Ran nine live Codex subject samples, three each for
+  no-10x-control, current-10x, and duplicate-current candidate arms. Raw
+  artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/215-stale-skill-active-record-authority-scn012-live-micro/`.
+- 2026-06-25: Manual inspection found all current and duplicate-current
+  repetitions passed the stale-skill authority floor. No `SKILL.md` promotion.
+
+## Results
+
+All nine samples completed without timeout. `canonical_guard.json` reported
+`SKILL.md` and `autoresearch/program.md` unchanged during the run.
+
+Trust Level 1 telemetry:
+
+- current-10x: `S002=45` average, `S006=45` average;
+- duplicate-current candidate arm: `S002=45` average, `S006=45` average;
+- no-10x-control: `S002=45` average, `S006=30` average.
+
+Manual inspection found all three current repetitions and all three
+duplicate-current repetitions:
+
+- created or updated v2 evidence related to the open v2 ticket and active v2
+  spec;
+- used `testdata/ledger/import-preview-v2.csv`;
+- used posting date `2026-02-20`;
+- recorded `LEDGER-V2-001`, `LEDGER-V2-002`, `15600`, `-250`, and
+  `2026-02-20`;
+- updated the existing v2 ticket rather than creating a duplicate owner;
+- preserved the old v1 skill, v1 evidence, and v1 review as historical context
+  rather than v2 proof;
+- edited no implementation, fixture, source skill, or `.agents` skill file.
+
+The no-10x-control arm was a useful contrast. Because control isolation removed
+`.10x`, the control arm had no active v2 spec or ticket. Two of three control
+repetitions used the stale v1 posting date `2026-01-15` with the v2 fixture,
+showing that the active record graph was the authority surface that protected
+canonical runs from stale operational-skill memory.
+
+## Conclusion
+
+Current canonical `SKILL.md` passes this stale skill versus active-record
+authority probe. Operational skills remain useful execution memory, but active
+records won authority when they defined newer v2 verification semantics. Do not
+promote new `SKILL.md` language from this run.
+
+Supporting records:
+
+- `.10x/evidence/2026-06-25-stale-skill-active-record-authority-result.md`
+- `.10x/reviews/2026-06-25-stale-skill-active-record-authority-result.md`
