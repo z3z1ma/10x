@@ -2,11 +2,11 @@ Status: active
 Created: 2026-06-25
 Updated: 2026-06-25
 
-# EXP-20260625-1001-skill-record-backed-identity-opencode-regression-scn012-live-micro
+# EXP-20260625-968-skill-record-backed-identity-opencode-regression-scn012-live-micro
 
 ## Experiment ID
 
-EXP-20260625-1001-skill-record-backed-identity-opencode-regression-scn012-live-micro
+EXP-20260625-968-skill-record-backed-identity-opencode-regression-scn012-live-micro
 
 ## Driver
 
@@ -66,7 +66,7 @@ Do not edit implementation files. This is a subject workspace only.
 <!-- codex-subject-runner-definition:start -->
 ```json
 {
-  "experiment_id": "EXP-20260625-1001-skill-record-backed-identity-opencode-regression-scn012-live-micro",
+  "experiment_id": "EXP-20260625-968-skill-record-backed-identity-opencode-regression-scn012-live-micro",
   "status": "active",
   "method_tier": "MICRO",
   "driver": "Codex autoresearch reasoning engine",
@@ -134,7 +134,7 @@ authoring turn.
 
 ## Raw Output Destination
 
-`.10x/evidence/.storage/2026-06-23-skill-autoresearch/201-skill-record-backed-identity-opencode-regression-scn012-live-micro/`
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/204-skill-record-backed-identity-opencode-regression-scn012-live-micro/`
 
 ## Promotion Rule
 
@@ -145,3 +145,6 @@ candidate alive for the remaining mirror regressions.
 
 - 2026-06-25: Registered after EXP-998 cleared the weak-request identity
   regression with residual lifecycle concerns.
+- 2026-06-25: Reassigned from invalid four-digit sequence
+  `EXP-20260625-1001-...` to legal three-digit sequence
+  `EXP-20260625-968-...` before rerun.
