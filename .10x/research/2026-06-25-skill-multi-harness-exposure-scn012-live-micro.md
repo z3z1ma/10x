@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -185,3 +185,39 @@ salient without changing skill record ontology or broad retrospective behavior.
 - 2026-06-25: Registered after EXP-965 removed terminal ticket path maintenance
   as a primary skill-authoring gap and left ambiguous multi-harness exposure as
   the next runnable CLI lane.
+- 2026-06-25: Ran 15 live Codex samples into
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/208-skill-multi-harness-exposure-scn012-live-micro/`.
+  `canonical_guard.json` reported `SKILL.md` and `autoresearch/program.md`
+  unchanged during the run.
+- 2026-06-25: Manual inspection found the multi-harness exposure target passed
+  in all current and duplicate-current repetitions: source skill plus `.agents`
+  and `.opencode` mirrors existed, all three were byte-equivalent, no `.claude`
+  mirror was invented, no alternate skill slug appeared, no forbidden
+  non-knowledge `.10x` references appeared inside skill bodies, `sourceRef`
+  knowledge and archive malformed-currency follow-up ownership were preserved,
+  and no implementation files changed.
+- 2026-06-25: Supporting lifecycle inspection found residual terminal movement
+  variance outside the primary floor. One current repetition and one
+  duplicate-current repetition closed the parent but left the already-done child
+  ticket at top-level `.10x/tickets/`; all repetitions created fresh closure or
+  validation evidence.
+
+## Result
+
+Current `SKILL.md` passes the ambiguous multi-harness exposure gate. It can
+mirror a governed source skill into more than one existing harness-native skill
+root while avoiding absent-root invention.
+
+This run does not justify a `SKILL.md` promotion. The duplicate-current arm
+matched current on the primary target, and the control also performed the
+mechanical mirror behavior because the seed and prompt contained explicit
+governance. The durable value is conformance breadth, not a candidate win.
+
+The run does preserve a residual lifecycle signal: terminal child-ticket
+movement and reference repair are still stochastic when the prompt combines
+skill authoring, multi-harness exposure, closure evidence, and parent wrap-up.
+
+## Evidence And Review
+
+- `.10x/evidence/2026-06-25-skill-multi-harness-exposure-result.md`
+- `.10x/reviews/2026-06-25-skill-multi-harness-exposure-result.md`
