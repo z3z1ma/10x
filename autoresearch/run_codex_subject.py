@@ -111,6 +111,7 @@ def build_plan(
                     arm,
                     user_message,
                     prior_context.get("transcript", []),
+                    _writable_add_dirs(definition),
                 )
                 samples.append(
                     {
@@ -143,6 +144,7 @@ def build_plan(
                         "planned_workspace_manifest_path": str(manifest_path),
                         "planned_turns": turns,
                         "planned_codex_argv": turns[0]["planned_codex_argv"],
+                        "writable_add_dirs": _writable_add_dirs(definition),
                         "timeout_seconds": budget["timeout_seconds_per_run"],
                         "control_isolation": _control_isolation(),
                         "live_codex_calls": 1,
@@ -323,7 +325,12 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
                 planned_turn["user_message"],
                 transcript,
             )
-            argv = _planned_codex_argv(workspace, prompt, last_message_path)
+            argv = _planned_codex_argv(
+                workspace,
+                prompt,
+                last_message_path,
+                sample.get("writable_add_dirs", []),
+            )
 
             prompt_path.parent.mkdir(parents=True, exist_ok=True)
             command_path.parent.mkdir(parents=True, exist_ok=True)
@@ -433,6 +440,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
         "pre_run_removed_control_record_dirs": pre_removed_control_record_dirs,
         "post_run_files": [item["path"] for item in file_outputs],
         "changed_files": [item["path"] for item in changed_file_outputs],
+        "writable_add_dirs": sample.get("writable_add_dirs", []),
         "workspace_contamination_present": bool(pre_present or post_present),
         "timed_out": timed_out,
         "timeout_seconds": sample["timeout_seconds"],
@@ -485,6 +493,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
             ],
             "control_isolation": sample["control_isolation"],
             "pre_run_removed_control_record_dirs": pre_removed_control_record_dirs,
+            "writable_add_dirs": sample.get("writable_add_dirs", []),
             "timed_out": timed_out,
             "timeout_seconds": sample["timeout_seconds"],
             "promotion_limit": "Live subject output is candidate-quality evidence, not promotion authority.",
@@ -755,6 +764,7 @@ def _planned_turns(
     arm: dict[str, Any],
     user_message: str,
     prior_transcript: list[dict[str, str]],
+    writable_add_dirs: list[str],
 ) -> list[dict[str, Any]]:
     turns = []
     prompt_path = artifact_dirs["prompts"] / f"{stem}.prompt.txt"
@@ -776,6 +786,7 @@ def _planned_turns(
                 workspace_dir,
                 prompt,
                 first_last_message_path,
+                writable_add_dirs,
             ),
         }
     )
@@ -803,8 +814,13 @@ def _turn_prompt(sample: dict[str, Any], user_message: str, transcript: list[dic
     )
 
 
-def _planned_codex_argv(workspace_dir: Path, prompt: str, last_message_path: Path) -> list[str]:
-    return [
+def _planned_codex_argv(
+    workspace_dir: Path,
+    prompt: str,
+    last_message_path: Path,
+    writable_add_dirs: list[str] | None = None,
+) -> list[str]:
+    argv = [
         "codex",
         "--ask-for-approval",
         "never",
@@ -821,8 +837,11 @@ def _planned_codex_argv(workspace_dir: Path, prompt: str, last_message_path: Pat
         "--ignore-user-config",
         "--sandbox",
         "workspace-write",
-        prompt,
     ]
+    for relative in writable_add_dirs or []:
+        argv.extend(["--add-dir", str(workspace_dir / relative)])
+    argv.append(prompt)
+    return argv
 
 
 def _control_isolation() -> dict[str, Any]:
@@ -835,6 +854,23 @@ def _control_isolation() -> dict[str, Any]:
         "record_graph_strategy": "Remove inherited .10x only from no-10x-control workspaces before execution; record graph files created during the run remain captured.",
         "limitation": "Codex system context and authenticated home remain outside this runner's control.",
     }
+
+
+def _writable_add_dirs(definition: dict[str, Any]) -> list[str]:
+    raw = definition.get("writable_add_dirs", [])
+    if raw is None:
+        return []
+    if not isinstance(raw, list):
+        raise ExperimentError("writable_add_dirs must be a list of relative paths")
+    result = []
+    for item in raw:
+        if not isinstance(item, str) or not item:
+            raise ExperimentError("writable_add_dirs entries must be non-empty strings")
+        path = Path(item)
+        if path == Path(".") or path.is_absolute() or ".." in path.parts:
+            raise ExperimentError("writable_add_dirs entries must stay inside the subject workspace")
+        result.append(str(path))
+    return result
 
 
 def _artifact_dirs(root: Path) -> dict[str, Path]:

@@ -32,6 +32,44 @@ class CodexSubjectRunnerTest(unittest.TestCase):
             self.assertIn("scenario_prompt", sample)
             self.assertTrue(sample["prompt_path"].endswith(".prompt.txt"))
 
+    def test_plan_adds_definition_writable_add_dirs_to_codex_argv(self):
+        definition = _definition()
+        definition["writable_add_dirs"] = [".agents/skills"]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            plan = run_codex_subject.build_plan(
+                definition,
+                repo_root=REPO_ROOT,
+                out_dir=Path(tmp),
+            )
+
+        for sample in plan["samples"]:
+            argv = sample["planned_codex_argv"]
+            add_dir_index = argv.index("--add-dir")
+            self.assertEqual([".agents/skills"], sample["writable_add_dirs"])
+            self.assertLess(add_dir_index, len(argv) - 1)
+            self.assertEqual(
+                str(Path(sample["planned_workspace_dir"]) / ".agents/skills"),
+                argv[add_dir_index + 1],
+            )
+
+    def test_rejects_unsafe_writable_add_dirs(self):
+        unsafe_values = [
+            "not-a-list",
+            [""],
+            ["."],
+            ["../outside"],
+            ["/tmp/outside"],
+        ]
+
+        for value in unsafe_values:
+            with self.subTest(value=value):
+                definition = _definition()
+                definition["writable_add_dirs"] = value
+
+                with self.assertRaises(run_codex_subject.ExperimentError):
+                    run_codex_subject.build_plan(definition, repo_root=REPO_ROOT)
+
     def test_live_run_writes_scoreable_raw_outputs_without_instruction_contamination(self):
         with tempfile.TemporaryDirectory() as tmp:
             with mock.patch("subprocess.run", side_effect=_fake_run):
@@ -85,6 +123,51 @@ class CodexSubjectRunnerTest(unittest.TestCase):
             )
             self.assertEqual([], no_10x_manifest["pre_run_present_suppressed_instruction_files"])
             self.assertEqual([], no_10x_manifest["post_run_present_suppressed_instruction_files"])
+
+    def test_live_run_applies_writable_add_dirs_to_actual_codex_argv(self):
+        observed_add_dirs = []
+
+        def fake_run(argv, stdout, stderr, text, timeout=None):
+            workspace = Path(argv[argv.index("--cd") + 1])
+            add_dir_index = argv.index("--add-dir")
+            observed_add_dirs.append(Path(argv[add_dir_index + 1]))
+            last_message = Path(argv[argv.index("--output-last-message") + 1])
+            last_message.parent.mkdir(parents=True, exist_ok=True)
+            last_message.write_text("Done.", encoding="utf-8")
+            self.assertEqual(workspace / ".agents/skills", observed_add_dirs[-1])
+            return mock.Mock(
+                returncode=0,
+                stdout='{"type":"turn.completed","usage":{"input_tokens":1,"output_tokens":1}}\n',
+                stderr="",
+            )
+
+        definition = _definition()
+        definition["writable_add_dirs"] = [".agents/skills"]
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch("subprocess.run", side_effect=fake_run):
+                run_codex_subject.run_live(
+                    definition,
+                    Path(tmp),
+                    repo_root=REPO_ROOT,
+                )
+
+            command_paths = sorted((Path(tmp) / "codex").glob("*.command.json"))
+            manifests = sorted((Path(tmp) / "workspaces").glob("*/workspace-manifest.json"))
+            command_argvs = [
+                json.loads(command_path.read_text(encoding="utf-8"))["argv"]
+                for command_path in command_paths
+            ]
+            manifest_add_dirs = [
+                json.loads(manifest_path.read_text(encoding="utf-8"))["writable_add_dirs"]
+                for manifest_path in manifests
+            ]
+
+        self.assertEqual(3, len(observed_add_dirs))
+        self.assertEqual(3, len(command_paths))
+        self.assertEqual(3, len(manifests))
+        for argv in command_argvs:
+            self.assertIn("--add-dir", argv)
+        self.assertEqual([[".agents/skills"], [".agents/skills"], [".agents/skills"]], manifest_add_dirs)
 
     def test_live_run_hides_sibling_arm_workspaces_during_execution(self):
         visible_sibling_markers = []
