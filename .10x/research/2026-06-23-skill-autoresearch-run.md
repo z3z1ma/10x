@@ -1272,3 +1272,11 @@ Canonical start guard:
   the hygiene ticket, and avoided source/test edits plus test execution.
   Duplicate-current also passed; control blocked after `.10x` isolation. No
   `SKILL.md` promotion.
+- 2026-06-24: Registered and ran
+  `EXP-20260624-969-source-backed-stale-active-spec-subtle-scn006-live-micro`
+  to remove the direct stale-record hint from the previous source-backed stale
+  active spec case. Current inferred the stale active spec relationship from the
+  newer active decision, done implementation ticket, evidence, source, and
+  tests; opened one minimal record-only reconciliation ticket; and avoided
+  source/test edits or source-revert work. Duplicate-current also passed;
+  control was weak contrast after `.10x` isolation. No `SKILL.md` promotion.
