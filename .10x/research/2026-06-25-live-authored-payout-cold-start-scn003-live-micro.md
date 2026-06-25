@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -204,3 +204,53 @@ promotion. If current passes, update coverage only.
 
 - 2026-06-25: Registered while `EXP-20260625-980` was running, using the
   current-10x output from `EXP-20260625-976` as a live-authored cold-start seed.
+- 2026-06-25: Ran all three live Codex subject arms in parallel with EXP-980.
+  Current `SKILL.md` passed manual inspection by preserving the existing blocked
+  owner, all settled values, and the unresolved failure/escalation branch.
+
+## Results
+
+Output root:
+
+- `.10x/evidence/.storage/2026-06-23-skill-autoresearch/181-live-authored-payout-cold-start-scn003-live-micro/`
+
+Canonical guard:
+
+- `SKILL.md` unchanged during run.
+- `autoresearch/program.md` unchanged during run.
+
+Score vectors:
+
+- no-10x-control: `S001=55`, `S002=50`, `S007=0`
+- current-10x: `S001=75`, `S002=70`, `S007=15`
+- candidate-variant: `S001=75`, `S002=70`, `S007=0`
+
+Manual inspection:
+
+- Current inspected the live-authored blocked ticket, governing decision,
+  knowledge record, and `src/payouts/retryQueue.js`.
+- Current preserved the existing blocked owner
+  `.10x/tickets/2026-06-25-payout-retry-auto-release.md` rather than opening a
+  duplicate executable implementation ticket.
+- Current recovered all five settled values: `#payouts-alerts`, `$500` /
+  `50000` cents, `riskTier === "low"`, `3` retries one hour apart, and Ops
+  ownership.
+- Current preserved source-backed constraints around `providerIdempotencyKey`
+  and `manualReviewRequired`.
+- Current preserved the unresolved failure/escalation branch: "same handling as
+  usual" does not define terminal state, retry-exhausted routing, alerting,
+  manual-review transition, owner action, or escalation handling.
+- Current made no source edits and did not claim implementation readiness.
+- Candidate-variant also passed with equivalent behavior.
+- No-10x-control had `.10x` removed by control isolation and therefore could
+  not recover the prior live-authored ratified values.
+
+## Conclusion
+
+Current `SKILL.md` passes this live-authored cold-start continuation case. The
+existing 10x record graph was sufficient for a second agent to reconstruct
+settled values, the unresolved blocker, and the owning ticket without prior chat.
+
+No `SKILL.md` promotion is justified. The next cold-start gap should use noisier
+live-authored records or a true multi-step handoff where multiple records were
+created and partially updated across turns.

@@ -1374,3 +1374,11 @@ Canonical start guard:
   rows plus `ownerEmail`, `openInvoices`, and `status`, and avoided source/test
   edits or active-record rewrites. Duplicate-current also passed. No
   `SKILL.md` promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-981-live-authored-payout-cold-start-scn003-live-micro` from the
+  multi-session cold-start gap. Current continued from a workspace copied from a
+  prior live current-10x run, recovered the settled payout retry values, reused
+  the existing blocked ticket, preserved the undefined failure/escalation branch
+  as the blocker, and avoided duplicate implementation tickets plus source
+  edits. Duplicate-current also passed; no-10x-control could not recover the
+  record graph after `.10x` isolation. No `SKILL.md` promotion.
