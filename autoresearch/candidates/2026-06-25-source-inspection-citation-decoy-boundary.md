@@ -3,7 +3,7 @@
 Candidate ID: `candidate-source-inspection-citation-decoy-boundary-v1`
 Created: 2026-06-25
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 Promotion: manual-only
 
 ## Target Behavior
@@ -78,4 +78,22 @@ mechanical behavior as strong evidence for this candidate.
 
 ## Result
 
-Pending.
+Promoted after
+`EXP-20260625-714-source-inspection-citation-decoy-boundary-candidate-batch-live-micro`.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-source-inspection-citation-decoy-boundary-candidate-batch-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-source-inspection-citation-decoy-boundary-candidate-batch-result.md`
+
+Promotion rationale:
+
+- candidate avoided citation-driven non-authority decoy reads in the
+  lower-assistance primary scenario;
+- candidate preserved answer correctness for source ownership, risk levels,
+  escalation semantics, and threshold semantics;
+- candidate held SCN-006 source/record drift handling and SCN-001
+  harness-induced mutation safety.

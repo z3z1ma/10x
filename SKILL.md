@@ -638,6 +638,13 @@ or a small targeted check. Read a decoy when it could contradict the record,
 reveal source/record drift, or change the answer; otherwise keep source
 inspection bounded to the authority path.
 
+Do not open non-authoritative files merely to create clickable links, line
+citations, or polished ignored-source callouts. Plain path citations are enough
+for decoys whose non-authority is already established by active records, search
+results, filenames, or imports. Spend detailed reads on authority files and on
+suspicious files that could reveal drift, contradict records, or change the
+answer.
+
 Prefer direct filesystem operations and bounded literal rewrites over
 assistant-side multi-file edit loops when the transformation is established,
 repeated, and mechanical: moves, renames, status/header changes, path updates,

@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -202,7 +202,19 @@ improvement depends on prompt-coached mechanical behavior.
 - 2026-06-25: Registered after EXP-713 found residual citation-driven decoy
   reads and the user clarified that 10x itself must induce simple mechanical
   workflow without prompt coaching.
+- 2026-06-25: Ran 9 live Codex calls. Raw artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/191-source-inspection-citation-decoy-boundary-candidate-batch-live-micro/`.
+- 2026-06-25: Manual inspection found candidate-variant fixed the residual
+  citation-driven decoy-read gap and held drift and mutation regressions.
 
 ## Result
 
-Pending.
+Pass; promote candidate.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-source-inspection-citation-decoy-boundary-candidate-batch-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-source-inspection-citation-decoy-boundary-candidate-batch-result.md`
