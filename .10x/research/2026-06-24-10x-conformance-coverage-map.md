@@ -178,6 +178,12 @@ kept child write scopes disjoint, inspected both receipts, ran parent full
 verification, reconciled both surfaces against the shared visibility invariant,
 and closed only after coherence held. No SKILL promotion is justified.
 
+Real parallel child invariant-drift registration:
+`EXP-20260624-935-real-parallel-child-invariant-drift-manual-app` is registered
+to test whether the parent blocks closure when one real child has local pass
+receipts but implements `selected` as visibility in conflict with the active
+shared invariant.
+
 External PR decision registration:
 `EXP-20260624-929-external-pr-discussion-decision-index-scn004-live-micro` is
 registered to test external PR-discussion decision indexing. This extends
