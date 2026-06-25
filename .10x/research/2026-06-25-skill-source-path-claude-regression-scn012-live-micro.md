@@ -2,11 +2,11 @@ Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
-# EXP-20260625-991-skill-source-path-agents-regression-scn012-live-micro
+# EXP-20260625-993-skill-source-path-claude-regression-scn012-live-micro
 
 ## Experiment ID
 
-EXP-20260625-991-skill-source-path-agents-regression-scn012-live-micro
+EXP-20260625-993-skill-source-path-claude-regression-scn012-live-micro
 
 ## Driver
 
@@ -15,15 +15,15 @@ Codex autoresearch reasoning engine.
 ## Question Or Hypothesis
 
 Hypothesis: `candidate-skill-source-path-shape-v1` preserves governed
-`.agents/skills` mirroring while making the `.10x` source skill path
+`.claude/skills` mirroring while making the `.10x` source skill path
 directory-shaped.
 
 ## Motivation
 
-The source-path candidate improved no-native-dir source path shape, but promotion
-requires regression controls for harness-native mirroring. `.agents` is the
-highest-value regression because it previously required scoped runner write
-support.
+The source-path candidate improved no-native-dir source path shape, but
+promotion requires regression controls for harness-native mirroring. Claude Code
+is one of the target harnesses for 10x skill exposure and was the first governed
+skill-authoring mirror scenario to pass under current canonical instructions.
 
 ## Method Tier
 
@@ -41,17 +41,16 @@ MICRO using a live Codex subject harness and tracked seed workspace.
 Per-sample private temporary execution workspaces, suppressed project instruction
 paths, inherited `.10x` cleanup for `no-10x-control`, tracked seed workspace
 copied as input but archived under this experiment's output root,
-`--disable plugins`, `--ignore-user-config`, and scoped
-`--add-dir <subject-workspace>/.agents/skills`.
+`--disable plugins`, and `--ignore-user-config`.
 
 ## Scenario Set
 
 - SCN-012: repeated Ledger import fixture replay procedure should become a
-  governed, self-contained skill and `.agents` mirror.
+  governed, self-contained skill and `.claude` mirror.
 
 Seed:
 
-- `autoresearch/fixtures/live-seeds/skill-authoring-agents-mirror/raw.json`
+- `autoresearch/fixtures/live-seeds/skill-authoring-governor-mirror/raw.json`
 
 Prompt:
 
@@ -68,16 +67,13 @@ Do not edit implementation files. This is a subject workspace only.
 <!-- codex-subject-runner-definition:start -->
 ```json
 {
-  "experiment_id": "EXP-20260625-991-skill-source-path-agents-regression-scn012-live-micro",
+  "experiment_id": "EXP-20260625-993-skill-source-path-claude-regression-scn012-live-micro",
   "status": "active",
   "method_tier": "MICRO",
   "driver": "Codex autoresearch reasoning engine",
   "model": "codex-cli-default",
   "harness": "codex-cli",
   "repetitions": 1,
-  "writable_add_dirs": [
-    ".agents/skills"
-  ],
   "arms": [
     {
       "id": "no-10x-control",
@@ -99,7 +95,7 @@ Do not edit implementation files. This is a subject workspace only.
   "scenarios": [
     {
       "id": "SCN-012",
-      "prior_raw_path": "autoresearch/fixtures/live-seeds/skill-authoring-agents-mirror/raw.json",
+      "prior_raw_path": "autoresearch/fixtures/live-seeds/skill-authoring-governor-mirror/raw.json",
       "prompt": "Preserve the repeated Ledger import fixture replay procedure as durable project capability if appropriate.\n\nBefore authoring any skill, inspect the subject workspace for existing skill-writing governance and follow it. Keep any authored skill self-contained. Do not reference unrelated .10x records from the skill; only knowledge records may be referenced when needed for shared vocabulary. Expose any active skill to the harness-native skills directory if one exists.\n\nDo not edit implementation files. This is a subject workspace only."
     }
   ],
@@ -116,20 +112,20 @@ Do not edit implementation files. This is a subject workspace only.
 
 Candidate should create
 `.10x/skills/ledger-import-fixture-replay/SKILL.md`, mirror equivalent content
-to `.agents/skills/ledger-import-fixture-replay/SKILL.md`, read the seeded
-governor, avoid prohibited `.10x` record references, and avoid speculative
-`.claude` or `.opencode` mirrors.
+to `.claude/skills/ledger-import-fixture-replay/SKILL.md`, read the seeded
+Claude governor, avoid prohibited `.10x` record references, and avoid
+speculative `.agents` or `.opencode` mirrors.
 
 ## Metrics To Score
 
-Primary: manual source-path and `.agents` mirror inspection. Supporting: S008,
+Primary: manual source-path and `.claude` mirror inspection. Supporting: S008,
 S002, and S006.
 
 ## Quality Floors
 
 Manual inspection is authoritative. Pass candidate only if it preserves every
 manual floor from
-`.10x/research/2026-06-25-skill-authoring-agents-writable-mirror-scn012-live-micro.md`
+`.10x/research/2026-06-24-skill-authoring-governor-mirror-scn012-live-micro.md`
 and uses the directory-shaped `.10x/skills/<slug>/SKILL.md` source path.
 
 ## Budget And Stop Conditions
@@ -139,36 +135,38 @@ authoring turn.
 
 ## Raw Output Destination
 
-`.10x/evidence/.storage/2026-06-23-skill-autoresearch/191-skill-source-path-agents-regression-scn012-live-micro/`
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/193-skill-source-path-claude-regression-scn012-live-micro/`
 
 ## Promotion Rule
 
 This regression alone cannot promote the candidate. It can only keep the
-candidate alive for `.opencode` and `.claude` mirror regressions.
+candidate alive for final promotion review after the `.agents` and `.opencode`
+regressions are inspected.
 
 ## Execution Log
 
-- 2026-06-25: Registered after the no-native-dir source-path candidate improved
-  path shape but remained pending mirror regressions.
+- 2026-06-25: Registered while EXP-991 was running, so the next mirror
+  regression can begin immediately if the `.agents` and `.opencode` gates pass.
 - 2026-06-25: Ran live under
-  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/191-skill-source-path-agents-regression-scn012-live-micro/`.
-  Automated first-pass scores gave candidate `S002=85` and `S006=85`, current
-  `S002=100` and `S006=85`, and no-10x-control `S002=80` and `S006=20`.
-- 2026-06-25: Manual inspection found candidate preserved the `.agents` mirror
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/193-skill-source-path-claude-regression-scn012-live-micro/`.
+  Automated first-pass scores gave candidate `S002=100` and `S006=85`, current
+  `S002=85` and `S006=85`, and no-10x-control `S002=80` and `S006=20`.
+- 2026-06-25: Manual inspection found candidate preserved the `.claude` mirror
   behavior: it read the seeded governor, created
   `.10x/skills/ledger-import-fixture-replay/SKILL.md`, mirrored byte-equivalent
-  content to `.agents/skills/ledger-import-fixture-replay/SKILL.md`, avoided
+  content to `.claude/skills/ledger-import-fixture-replay/SKILL.md`, avoided
   prohibited `.10x` record references inside the skill, created no speculative
-  `.claude` or `.opencode` mirrors, and made no implementation edits.
+  `.agents` or `.opencode` mirrors, and made no implementation edits.
 
 ## Result
 
-Pass this regression, but do not promote yet. Candidate preserved the governed
-`.agents` mirror behavior while using the directory-shaped source skill path.
-Current also passed the same mirror and source-path floor in this run, so this
-experiment is regression clearance rather than new net-positive proof.
+Pass this regression and clear the final promotion gate for
+`candidate-skill-source-path-shape-v1`. Candidate preserved the governed
+`.claude` mirror behavior while using the directory-shaped source skill path,
+and it outscored current on S002 in the automated first pass.
 
 Supporting records:
 
-- `.10x/evidence/2026-06-25-skill-source-path-agents-regression-result.md`
-- `.10x/reviews/2026-06-25-skill-source-path-agents-regression-result.md`
+- `.10x/evidence/2026-06-25-skill-source-path-claude-regression-result.md`
+- `.10x/reviews/2026-06-25-skill-source-path-claude-regression-result.md`
+- `.10x/reviews/2026-06-25-skill-source-path-promotion-review.md`

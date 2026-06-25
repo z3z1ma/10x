@@ -491,6 +491,8 @@ metadata:
 
 Before authoring a skill, scan the environment for an existing skill that governs skill-writing. If one exists, ingest and execute it without exception.
 
+A 10x source skill lives at `.10x/skills/<skill-slug>/SKILL.md`. Do not write source skills as flat files such as `.10x/skills/<skill-slug>.md`. Harness exposure copies may use the host architecture's native skill directory, but the 10x source record remains the directory-shaped `SKILL.md` file.
+
 Expose active skills to the execution engine immediately. Mirror, synchronize, copy, or symlink them into the harness-native directory required by the host architecture, such as `.claude/skills/<skill-slug>/` or `.agents/skills/<skill-slug>/`.
 
 ## Inner Loop: Execute With Discipline

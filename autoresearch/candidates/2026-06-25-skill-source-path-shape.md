@@ -3,7 +3,7 @@
 Candidate ID: `candidate-skill-source-path-shape-v1`
 Created: 2026-06-25
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 
 ## Target Behavior
 
@@ -76,12 +76,44 @@ speculative mirror directories. Current produced the correct source path in one
 repetition and repeated the flat-file `.10x/skills/<slug>.md` failure in the
 other. Candidate S002 averaged `100`; current S002 averaged `65`.
 
-Promotion remains pending because candidate rep 1 used a different
-directory-shaped slug, `.10x/skills/replay-ledger-import-fixtures/SKILL.md`, and
-the `.claude`, `.opencode`, and `.agents` mirror regressions have not yet been
-rerun with this overlay.
+`EXP-20260625-991-skill-source-path-agents-regression-scn012-live-micro` passed
+the `.agents` mirror regression. Candidate read the seeded governor, created
+`.10x/skills/ledger-import-fixture-replay/SKILL.md`, mirrored byte-equivalent
+content to `.agents/skills/ledger-import-fixture-replay/SKILL.md`, avoided
+prohibited record references inside the skill, created no speculative mirrors,
+and made no implementation edits. Current also passed this regression, so it is
+non-regression clearance rather than independent promotion proof.
+
+`EXP-20260625-992-skill-source-path-opencode-regression-scn012-live-micro`
+passed the `.opencode` mirror regression. Candidate read the seeded governor,
+created `.10x/skills/ledger-import-fixture-replay/SKILL.md`, mirrored
+byte-equivalent content to
+`.opencode/skills/ledger-import-fixture-replay/SKILL.md`, avoided prohibited
+record references inside the skill, created no speculative mirrors, and made no
+implementation edits. Current also passed this regression, so it is another
+non-regression clearance gate.
+
+`EXP-20260625-993-skill-source-path-claude-regression-scn012-live-micro` passed
+the `.claude` mirror regression. Candidate read the seeded governor, created
+`.10x/skills/ledger-import-fixture-replay/SKILL.md`, mirrored byte-equivalent
+content to `.claude/skills/ledger-import-fixture-replay/SKILL.md`, avoided
+prohibited record references inside the skill, created no speculative mirrors,
+and made no implementation edits. Candidate also improved S002 versus current
+in this run.
+
+Promoted on 2026-06-25 as a narrow canonical `SKILL.md` sentence. Promotion is
+limited to source-path shape. It does not claim to solve weak-request slug
+selection, because candidate rep 1 in EXP-990 used a different directory-shaped
+slug, `.10x/skills/replay-ledger-import-fixtures/SKILL.md`.
 
 Supporting records:
 
 - `.10x/evidence/2026-06-25-skill-source-path-shape-result.md`
 - `.10x/reviews/2026-06-25-skill-source-path-shape-result.md`
+- `.10x/evidence/2026-06-25-skill-source-path-agents-regression-result.md`
+- `.10x/reviews/2026-06-25-skill-source-path-agents-regression-result.md`
+- `.10x/evidence/2026-06-25-skill-source-path-opencode-regression-result.md`
+- `.10x/reviews/2026-06-25-skill-source-path-opencode-regression-result.md`
+- `.10x/evidence/2026-06-25-skill-source-path-claude-regression-result.md`
+- `.10x/reviews/2026-06-25-skill-source-path-claude-regression-result.md`
+- `.10x/reviews/2026-06-25-skill-source-path-promotion-review.md`
