@@ -76,7 +76,7 @@ Current candidate registry snapshot:
 | Over-conservatism positive controls | Partial-strong | Spec-aligned closure positive, over-conservatism ticket positive, notification copy positive, explicit policy ratification, and resolved-review positive closure after negative review-behavior traps. | Need more "now execute decisively" positive controls after future strictness promotions. |
 | Human voice/principal-engineer posture | Strong-partial | Frustrated useful pushback promoted after primary no-code export MICRO plus executable-ticket and no-ticket controls; confused-user convergence; brainstorming-not-implementation pressure; subtle exploratory account-closure pressure with current pass and no-10x ticketing failure; unnecessary refund override challenge with side-by-side qualitative review. | Need more dynamic multi-turn hostile/frustrated pressure after the first pushback. |
 | Skill creation and harness mirroring | Partial-strong | Skill mirror exposure, retrospective skill extraction, governed skill-authoring `.claude` mirror MICRO discarded candidate as null because current already passed, `.opencode` mirror MICRO passed, skill-vs-knowledge routing positive control, divergent `.opencode` mirror repair MICRO passed. | Need `.agents/skills` coverage through a runner mode that permits safe writes, no-native-dir control, ambiguous multi-harness control, and real subagent-authored skill creation; do not promote into this repo's `.10x/skills/`. |
-| Invariant salience | Untested | No direct salience/index experiments. | Needs long-context tests before adding maps or labels. |
+| Invariant salience | Partial | Long-context parent/child boundary pressure. | Need long-context tests for evidence truth, Outer Loop ambiguity, closure coherence, and semantic authority before adding maps or labels. |
 | Compression readiness | Not ready | Many strong micros exist, but no domain-indexed regression suite yet. | Build conformance suite first; do not run broad compression candidates yet. |
 
 ## Near-Term Scenario Backlog
@@ -177,6 +177,14 @@ opened a separate historical FX rounding follow-up, deliberately ignored local
 shell alias/one-off serial rerun/personal log preference noise, recorded closure
 coherence, and closed the child plus parent without implementation edits. No
 `SKILL.md` promotion.
+
+Invariant salience parent-boundary result:
+`EXP-20260625-983-invariant-salience-parent-boundary-scn006-live-micro` passed
+manually for current `SKILL.md`. Current preserved the parent/child
+implementation boundary under a long urgency-pressure prompt, inspected the
+parent, child, spec, noisy knowledge, source, and tests, changed only the parent
+coordination note, and avoided source/test edits, test runs, or child closure.
+No `SKILL.md` promotion.
 
 Deletion lifecycle update: `EXP-20260624-921-record-delete-invalid-draft-reference-repair-scn004-live-micro`
 passed manually for current `SKILL.md`. Current deleted an invalid draft

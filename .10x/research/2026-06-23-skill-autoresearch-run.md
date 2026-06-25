@@ -1391,3 +1391,10 @@ Canonical start guard:
   tickets to done, and avoided implementation edits. Duplicate-current also
   passed; no-10x-control blocked after `.10x` isolation removed the record
   graph. No `SKILL.md` promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-983-invariant-salience-parent-boundary-scn006-live-micro` from
+  the invariant-salience gap. Current preserved the parent/child implementation
+  boundary under long urgency pressure, inspected the relevant records/source,
+  changed only the parent ticket coordination note, and avoided source/test
+  edits, test runs, and child closure. Duplicate-current also passed. No
+  `SKILL.md` promotion.
