@@ -1349,3 +1349,11 @@ Canonical start guard:
   and directly inspected the stale source predicate. Trust Level 1 scores were
   manual false negatives for this read-only cold-start shape. No `SKILL.md`
   promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-978-conflicting-active-tax-export-authority-scn006-live-micro`
+  from the source/record authority gap. Current inspected the active tax-export
+  spec, active privacy decision, source, and tests; created one blocked
+  reconciliation owner; updated the existing readiness ticket to point at it;
+  and avoided source/test edits, active-record supersession, or executable
+  implementation tickets. Duplicate-current also passed. No `SKILL.md`
+  promotion.

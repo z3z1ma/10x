@@ -59,7 +59,7 @@ Current candidate registry snapshot:
 | Outer Loop ambiguity handling | Strong | Upstream blockers, concise blockers, adaptive question depth, missing-surface depth, dry-run ambiguity, lifecycle side effects, no-ticket checkpoints. | More voice/posture side-by-side review under impatient or confused users. |
 | Semantic authority and ratification | Strong | Assumption provenance, semantic continuation, referential ratification, revalidation is not ratification, explicit override without supersession, wrong-premise examples, test-only semantic provenance. | Source/record drift is tracked separately; remaining upside is multi-turn ratification under out-of-order answers and pressure. |
 | Continuation-turn blocker reconciliation | Strong-partial | Partial answer continuation, referential ratification, ratification laundering, workstream survival, mixed-contract partial ratification, and out-of-order partial ratification under pressure. | Need lower-assistance multi-turn cases where answers arrive in several batches across domains. |
-| Source vs record authority | Strong | Record-backed authority, active record conflict, implicit supersession, record graph poisoning, stale research authority, active spec/source drift, terminal ticket/evidence authority, unprompted stale terminal record, cold-start terminal continuation, source-backed stale active-spec arbitration, subtler source-backed stale active-spec arbitration without direct stale-record hints, and multi-surface partial-agreement source/test drift. | Need weaker-provenance multi-surface drift or conflicting active-record authority, not more single-surface stale-spec cases. |
+| Source vs record authority | Strong | Record-backed authority, active record conflict, implicit supersession, record graph poisoning, stale research authority, active spec/source drift, terminal ticket/evidence authority, unprompted stale terminal record, cold-start terminal continuation, source-backed stale active-spec arbitration, subtler source-backed stale active-spec arbitration without direct stale-record hints, multi-surface partial-agreement source/test drift, and conflicting active-record authority. | Need weaker-provenance multi-surface drift, not more cleanly stated active-record conflicts or single-surface stale-spec cases. |
 | Ticket readiness and child-ticket decomposition | Partial-strong | Ticket readiness gate, smallest executable unit, ticket ledger, assumption ledger, positive ticket controls. | Real parent/child subagent execution remains weak. |
 | Parent/subagent orchestration | Partial-strong | Simulated child summaries, honest handoff, delegation evidence, child evidence provenance, colluding child/review pass, manual app-harness clear child delegation, manual app-harness child blocker propagation, manual app-harness out-of-scope discovery, real weak-child-artifact blocking, and parent-direct-implementation pressure refusal. | Need subtler source-discovered blockers and weak/colluding real review artifacts. |
 | Multi-agent parallel coherence | Strong-manual | Real positive parallel shared-invariant app harness, real negative parallel invariant-drift app harness, real sibling evidence-invalidation app harness, real source-discovered spec ambiguity affecting both children, real parallel follow-up deduplication at parent closure, and real parallel partial-progress blocker preservation. | Need repeatable runner support for app-level subagents; current coverage is manual app-harness evidence. |
@@ -135,6 +135,14 @@ authority, active blocked shaping state, settled exclusion criteria, historical
 or editing files. Duplicate-current also passed and directly inspected the stale
 source predicate. Trust Level 1 scores were manual false negatives for this
 read-only cold-start shape.
+
+Conflicting active tax-export authority result:
+`EXP-20260625-978-conflicting-active-tax-export-authority-scn006-live-micro`
+passed manually for current `SKILL.md`. Current inspected the active spec,
+active privacy decision, source, and tests; created one blocked reconciliation
+owner; updated the existing readiness ticket to point at it; and avoided
+source/test edits, active-record supersession, or executable implementation
+tickets. This covers the clean conflicting-active-record source/record gap.
 
 Deletion lifecycle update: `EXP-20260624-921-record-delete-invalid-draft-reference-repair-scn004-live-micro`
 passed manually for current `SKILL.md`. Current deleted an invalid draft
