@@ -1263,3 +1263,12 @@ Canonical start guard:
   closed the repair ticket, and avoided source/test edits plus test execution.
   Duplicate-current passed with a lower-quality in-place replacement; control
   blocked because `.10x` was intentionally stripped. No `SKILL.md` promotion.
+- 2026-06-24: Registered and ran
+  `EXP-20260624-968-partial-bad-spec-repair-scn004-live-micro` as the harder
+  follow-up for record graph maintenance over time. Current inspected active
+  authority rather than trusting a done prior repair ticket or pass review,
+  removed a stale no-route acceptance criterion from the active spec, preserved
+  superseded CSV-only history, recorded bounded verification evidence, closed
+  the hygiene ticket, and avoided source/test edits plus test execution.
+  Duplicate-current also passed; control blocked after `.10x` isolation. No
+  `SKILL.md` promotion.
