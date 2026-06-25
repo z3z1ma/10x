@@ -1357,3 +1357,12 @@ Canonical start guard:
   and avoided source/test edits, active-record supersession, or executable
   implementation tickets. Duplicate-current also passed. No `SKILL.md`
   promotion.
+- 2026-06-25: Registered and ran
+  `EXP-20260625-979-lower-assistance-blocked-retrospective-scn012-live-micro`
+  from the retrospective learning extraction gap. Current inferred durable
+  learning from ticket/evidence notes without prompt enumeration, created the
+  ACME 429 fixture replay skill, created `vendorEventId` vocabulary, opened the
+  malformed-discount follow-up, left the child blocked and parent active, and
+  avoided source/test edits. Duplicate-current also passed; no-10x-control kept
+  the work blocked but misrouted ACME 429 replay into a follow-up ticket after
+  `.10x` isolation. No `SKILL.md` promotion.
