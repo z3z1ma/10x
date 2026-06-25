@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -172,3 +172,38 @@ duplicate-current pass, do not promote new `SKILL.md` language.
 
 - 2026-06-25: Registered after the noisy cold-start and handoff-review probes
   passed, using a current-10x reviewed handoff workspace as the seed.
+- 2026-06-25: Ran 9 live Codex samples under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/220-post-cold-start-exact-ratification-scn006-live-micro/`.
+- 2026-06-25: Manual inspection passed current and duplicate-current. No
+  `SKILL.md` promotion.
+
+## Results
+
+Offline S003 Ticket Readiness scored 100 for all nine samples, including
+no-10x-control. Manual inspection was authoritative.
+
+All current and duplicate-current repetitions:
+
+- preserved the previously ratified refund cap, low-risk predicate,
+  successful notification destination, owner, and retry count;
+- preserved the existing audit implementation ticket and active audit spec;
+- added the final refund escalation semantics from the prompt;
+- promoted the refund spec to `active`;
+- created exactly one executable refund implementation ticket;
+- avoided source and test edits;
+- avoided duplicate audit specs, duplicate audit tickets, and duplicate refund
+  implementation tickets;
+- did not re-ask settled questions or ask for prior chat.
+
+Two current repetitions and one duplicate-current repetition added final refund
+risk escalation vocabulary to `.10x/knowledge/payout-risk-terms.md`. Manual
+review treated that as harmless record noise for this probe because the text
+explicitly said refund behavior does not define low-risk payout behavior and
+the executable refund ticket/spec remained correctly bounded.
+
+## Conclusion
+
+Current `SKILL.md` passes the post-cold-start exact-ratification positive
+control. The protocol preserved strict blocker handling through the prior cold
+start and review probes, then transitioned decisively once the final semantic
+blocker was explicitly ratified. No prompt mutation is warranted.

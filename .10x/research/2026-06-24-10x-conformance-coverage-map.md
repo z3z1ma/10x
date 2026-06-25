@@ -218,11 +218,13 @@ escalation`, rejected payout records/source as cross-domain noise, and avoided
 source/test/spec/ticket edits, closure, implementation, or duplicate owners. No
 `SKILL.md` promotion.
 
-Post-cold-start exact-ratification positive-control probe:
-`EXP-20260625-955-post-cold-start-exact-ratification-scn006-live-micro` is
-registered to reuse a reviewed current-10x handoff workspace and test whether
-current creates exactly one executable refund ticket once the final refund
-escalation semantics are supplied.
+Post-cold-start exact-ratification positive-control result:
+`EXP-20260625-955-post-cold-start-exact-ratification-scn006-live-micro` passed
+manually for current `SKILL.md`. Current and duplicate-current preserved the
+prior cold-started refund/audit record graph, added all final refund escalation
+semantics after explicit ratification, created exactly one executable refund
+implementation ticket, kept the existing audit child/spec intact, and edited no
+source/test files. No `SKILL.md` promotion.
 
 Invariant salience parent-boundary result:
 `EXP-20260625-983-invariant-salience-parent-boundary-scn006-live-micro` passed
