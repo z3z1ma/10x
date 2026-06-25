@@ -3,7 +3,7 @@
 Candidate ID: `candidate-bounded-rewrite-default-record-maintenance-v1`
 Created: 2026-06-25
 Canonical target: `SKILL.md`
-Status: active
+Status: promoted
 Promotion: manual-only
 
 ## Target Behavior
@@ -81,4 +81,21 @@ preservation still outrank tool economy.
 
 ## Result
 
-Pending.
+Promoted after
+`EXP-20260625-708-bounded-rewrite-default-record-maintenance-candidate-batch-live-micro`.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-bounded-rewrite-default-record-maintenance-candidate-batch-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-bounded-rewrite-default-record-maintenance-candidate-batch-result.md`
+
+Promotion rationale:
+
+- improved SCN-009 operation quality over current with bounded shell-native
+  rewrite;
+- held SCN-004 historical-reference preservation;
+- held SCN-001 mutation boundary;
+- held SCN-005 record quality.

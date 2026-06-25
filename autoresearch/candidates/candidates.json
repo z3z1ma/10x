@@ -1035,7 +1035,7 @@
       "id": "candidate-bounded-rewrite-default-record-maintenance-v1",
       "path": "autoresearch/candidates/2026-06-25-bounded-rewrite-default-record-maintenance.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "promoted",
       "created": "2026-06-25",
       "target_scores": ["S002", "S005", "S006", "S001"],
       "target_scenarios": ["SCN-009", "SCN-004", "SCN-001", "SCN-005"],

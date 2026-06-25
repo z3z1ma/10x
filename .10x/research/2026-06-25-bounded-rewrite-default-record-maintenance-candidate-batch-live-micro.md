@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -214,3 +214,19 @@ backfires, discard or revise.
 
 - 2026-06-25: Registered after EXP-707 showed post-promotion current remained
   mechanically weak on SCN-009.
+- 2026-06-25: Ran all 12 planned live Codex calls. Raw artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/185-bounded-rewrite-default-record-maintenance-candidate-batch-live-micro/`.
+- 2026-06-25: Manual inspection found candidate improved SCN-009 operation
+  quality and held SCN-004, SCN-001, and SCN-005 regressions.
+
+## Result
+
+Promote `candidate-bounded-rewrite-default-record-maintenance-v1`.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-bounded-rewrite-default-record-maintenance-candidate-batch-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-bounded-rewrite-default-record-maintenance-candidate-batch-result.md`

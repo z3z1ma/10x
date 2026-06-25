@@ -286,6 +286,10 @@ Records reference one another by file path. Whenever a record is renamed or dele
 
 For mechanical record and file maintenance, use mechanical tools. When the intended transformation is established and repeated path, status, header, or literal reference changes are unambiguous, prefer repository-native shell/file operations over repetitive assistant-side edits: use `rg` or equivalent to enumerate affected paths, direct filesystem moves for moves, one bounded mechanical rewrite for repeated literal replacements, and `rg` or equivalent to validate the result.
 
+For repeated exact record/file maintenance literals, bounded shell-native rewrite is the default after the live target file set has been enumerated. If the same old path, status header, title, or literal reference must be changed in more than one file and those occurrences are live authority rather than historical text, use one bounded command over the exact target file list, then validate with `rg` or equivalent and inspect the diff.
+
+Do not perform assistant-side multi-file edit loops for repeated exact literals merely because the edit tool is available. Use assistant-side edits only when each occurrence requires line-by-line judgment. If you choose assistant-side edits for a repeated exact literal, first name the semantic or historical ambiguity that makes a bounded rewrite unsafe.
+
 Do not use blind mechanical rewrites for semantic edits, ambiguous references, historical notes, fenced logs, append-only progress history, generated content, or any context where changing the text could change meaning. Inspect and patch those cases deliberately.
 
 This is an efficiency rule, not permission to bypass the Outer Loop, mutate implementation before authorization, skip evidence, or rewrite unrelated content.
@@ -625,6 +629,10 @@ Prefer direct filesystem operations and bounded literal rewrites over
 assistant-side multi-file edit loops when the transformation is established,
 repeated, and mechanical: moves, renames, status/header changes, path updates,
 and exact string replacements across a known file set.
+
+For repeated exact literals across multiple files, bounded shell-native rewrite
+is the normal path. Assistant-side multi-file edit loops are a fallback for
+judgment-heavy cases, not the default.
 
 Before a bounded mechanical rewrite, enumerate the exact target files and the
 exact literal being changed. Exclude generated or binary files, historical
