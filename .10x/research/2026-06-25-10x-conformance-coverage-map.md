@@ -37,9 +37,9 @@ Current corpus shape:
 
 - `autoresearch/candidates`: 41 promoted, 62 discarded, 4 discarded-null, 1
   cancelled.
-- `.10x/research`: 242 done, 12 active, 1 open.
-- `.10x/evidence`: 255 recorded.
-- `.10x/reviews`: 173 recorded.
+- `.10x/research`: 243 done, 12 active, 1 open.
+- `.10x/evidence`: 256 recorded.
+- `.10x/reviews`: 174 recorded.
 
 The suite is no longer sparse. The remaining risk is unevenness: semantic
 authority, ratification, closure, skill path shape, and record mechanics have
@@ -51,7 +51,7 @@ safety remain less settled.
 
 | Domain | Coverage | Existing support | Gaps |
 | --- | --- | --- | --- |
-| Protocol activation and scale | Strong for Codex small-greenfield boundary and exact trivial-edit sanity; partial across phrasings and harnesses | `.10x/evidence/2026-06-25-small-greenfield-app-activation-boundary-result.md`; `.10x/evidence/2026-06-25-scaled-down-always-on-activation-candidate-batch-result.md`; `.10x/evidence/2026-06-25-post-promotion-scaled-down-activation-sanity-result.md`; `.10x/evidence/2026-06-25-exact-trivial-edit-after-activation-sanity-result.md`; promoted scaled-down activation rule in `SKILL.md` | Current canonical now treats vague small greenfield product creation as non-trivial and always-on while preserving no-code, executable-ticket, and exact typo-edit controls. Need more greenfield phrasings, one-line mechanical code edit controls, and non-Codex harness checks. |
+| Protocol activation and scale | Strong for Codex small-greenfield boundary, varied greenfield phrasings, and exact trivial-edit sanity; partial across harnesses | `.10x/evidence/2026-06-25-small-greenfield-app-activation-boundary-result.md`; `.10x/evidence/2026-06-25-scaled-down-always-on-activation-candidate-batch-result.md`; `.10x/evidence/2026-06-25-post-promotion-scaled-down-activation-sanity-result.md`; `.10x/evidence/2026-06-25-exact-trivial-edit-after-activation-sanity-result.md`; `.10x/evidence/2026-06-25-greenfield-activation-phrasing-result.md`; promoted scaled-down activation rule in `SKILL.md` | Current canonical now treats vague small greenfield product creation as non-trivial and always-on across app, CLI, and local-tool phrasing while preserving no-code, executable-ticket, and exact typo-edit controls. Need one-line mechanical code edit controls, multi-turn ratification after shaping, stronger implementation-pressure phrasings, and non-Codex harness checks. |
 | Outer Loop ambiguity handling | Strong | `.10x/evidence/2026-06-25-dynamic-ratified-hostile-continuation-result.md`; `.10x/evidence/2026-06-25-lower-assistance-multibatch-ratification-batch1-result.md`; `.10x/evidence/2026-06-25-lower-assistance-multibatch-ratification-batch2-result.md`; adaptive question-depth promotions | Need more true dynamic multi-turn follow-up where the subject asks unpredictable questions and the harness/reasoner supplies answers. |
 | Semantic authority and ratification | Strong | `.10x/evidence/2026-06-25-conflicting-active-tax-export-authority-result.md`; `.10x/evidence/2026-06-25-post-cold-start-exact-ratification-result.md`; `.10x/evidence/2026-06-25-record-revalidation-contradictory-export-result.md`; assumption-provenance and ratification candidates promoted | Continue positive controls so the protocol remains decisive once authority is concrete. |
 | Continuation-turn blocker reconciliation | Partial | `.10x/evidence/2026-06-25-dynamic-ratified-hostile-continuation-result.md`; `.10x/evidence/2026-06-25-out-of-order-partial-ratification-result.md`; partial-answer continuation promotions | Need richer live multi-turn harness support where answer order is not scripted and the reasoning engine decides when the turn is complete. |
@@ -169,9 +169,8 @@ continue.
    and bounded source inspection without record-maintenance path rewrites.
 42. One-line mechanical code edit positive control after always-on activation:
    exact code change should stay nearly invisible and not force records.
-43. Additional vague greenfield creation phrasings across small apps, scripts,
-   CLIs, and local tools to ensure activation generalizes beyond bookmark
-   tracker language.
+43. Stronger greenfield implementation-pressure phrasings and multi-turn
+   ratification after the initial shaping checkpoint.
 
 ## Conclusions
 
@@ -185,8 +184,8 @@ Near-term autoresearch should be a ranked conformance push:
 5. Design a source-code inspection economy scenario. Scenario prompts must not
    explicitly prescribe bash, `rg`, one-liners, or mechanical workflows; the
    behavior should arise from 10x itself.
-6. Run one-line mechanical code edit and additional greenfield activation
-   controls after the scaled-down activation promotion.
+6. Run one-line mechanical code edit, stronger greenfield pressure, and
+   multi-turn activation controls after the scaled-down activation promotion.
 7. Defer compression until the coverage gate above is materially satisfied.
 
 The next concrete run should target subagent orchestration if app-level
