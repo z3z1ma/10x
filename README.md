@@ -288,16 +288,26 @@ git clone https://github.com/z3z1ma/10x .claude/skills/10x
 ## When to use it
 
 A 10x developer doesn't pull out their full engineering discipline for a typo
-fix. Same principle. Use 10x when you'll touch the same codebase across
-multiple sessions and context matters. Architecture decisions that need to
-survive handoffs. Bug investigations where reproduction steps are the whole
-point. Multi-week features where four agents will touch the same subsystem.
+fix. Same principle: scale the ceremony, not the judgment.
+
+Once installed, 10x is always active. Small work should get smaller behavior:
+fewer sharper questions, the simplest mechanical workflow, and no durable
+records when the change is genuinely trivial and fully specified. A precise
+typo fix can stay a precise typo fix.
+
+Do not confuse that with opting out for vague greenfield work. Creating a new
+app, workflow, data store, API, UI surface, persistence behavior, or other
+testable product behavior is non-trivial even when it sounds small, personal,
+or likely to fit in one file. The right move is a lightweight outer loop:
+inspect the workspace, recommend the smallest simple shape, and confirm the
+execution-critical contract before implementation.
 
 The honest tradeoff: the skill is ~4000 words of instruction and the agent
 spends tokens on deliberation and record-keeping. For complex multi-session
 work, this pays for itself immediately - fewer rework cycles, fewer
-re-explanations, fewer "wait, didn't we already decide this?" moments. For
-one-shot scripts or throwaway prototypes, it's overhead you don't need.
+re-explanations, fewer "wait, didn't we already decide this?" moments. For exact
+one-shot edits, the protocol should disappear into disciplined minimalism. For
+ambiguous one-shot builds, it should prevent wrong-premise code.
 
 ## FAQ
 

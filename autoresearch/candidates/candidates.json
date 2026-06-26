@@ -1080,6 +1080,26 @@
       "target_scores": ["S001", "S002", "S003", "S005"],
       "target_scenarios": ["SCN-001", "SCN-006", "SCN-010"],
       "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-feature-category-shorthand-ratification-v1",
+      "path": "autoresearch/candidates/2026-06-25-feature-category-shorthand-ratification.md",
+      "target": "SKILL.md",
+      "status": "discarded",
+      "created": "2026-06-25",
+      "target_scores": ["S001", "S003", "S005", "S007"],
+      "target_scenarios": ["SCN-002", "SCN-006", "SCN-010"],
+      "promotion": "manual-only"
+    },
+    {
+      "id": "candidate-feature-category-shorthand-ratification-v2",
+      "path": "autoresearch/candidates/2026-06-25-feature-category-shorthand-ratification-v2.md",
+      "target": "SKILL.md",
+      "status": "promoted",
+      "created": "2026-06-25",
+      "target_scores": ["S001", "S003", "S005", "S007"],
+      "target_scenarios": ["SCN-002", "SCN-006", "SCN-010"],
+      "promotion": "manual-only"
     }
   ]
 }
