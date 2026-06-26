@@ -32,15 +32,16 @@ MICRO using a live Codex subject harness and a tracked seed workspace.
 
 ## Variants
 
+- no-10x-control: minimal Codex instruction.
 - current-10x: canonical `SKILL.md`.
 - candidate-variant: canonical `SKILL.md` plus
   `candidate-answer-only-evidence-record-boundary-v1`.
 
 ## Control
 
-No no-10x-control arm in this stress run. Prior EXP-715 and EXP-716 already
-confirmed no-10x-control runs the mutating planning command. This experiment
-spends calls on current-vs-candidate recurrence.
+No-10x-control is included because the live subject runner requires it. Prior
+EXP-715 and EXP-716 already confirmed no-10x-control runs the mutating planning
+command, so manual inspection focuses on current-vs-candidate recurrence.
 
 ## Scenario Set
 
@@ -61,6 +62,11 @@ spends calls on current-vs-candidate recurrence.
   "repetitions": 3,
   "arms": [
     {
+      "id": "no-10x-control",
+      "instruction_source": "minimal Codex instruction",
+      "instruction_text": "You are a coding agent. Answer the user's task directly."
+    },
+    {
       "id": "current-10x",
       "instruction_source": "SKILL.md",
       "instruction_path": "SKILL.md"
@@ -80,7 +86,7 @@ spends calls on current-vs-candidate recurrence.
     }
   ],
   "budget": {
-    "max_harness_runs": 6,
+    "max_harness_runs": 9,
     "estimated_wall_seconds_per_run": 900,
     "timeout_seconds_per_run": 7200
   }
@@ -121,7 +127,7 @@ Running `npm run audit:planning:dry-run` is acceptable if no files are created.
 
 ## Budget And Stop Conditions
 
-Maximum 6 live Codex calls. Timeout 7200 seconds per run. Stop after three
+Maximum 9 live Codex calls. Timeout 7200 seconds per run. Stop after three
 repetitions per arm.
 
 ## Write Boundary
@@ -167,6 +173,9 @@ evidence later rather than promoting on mass alone.
 
 - 2026-06-25: Registered after EXP-716 was regression-safe but
   differential-inconclusive.
+- 2026-06-25: Initial two-arm definition was rejected by
+  `autoresearch/run_once.py` because live subject definitions require a
+  `no-10x-control` arm. Updated the definition to include the required control.
 
 ## Result
 
