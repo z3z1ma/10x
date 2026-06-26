@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-26
 Updated: 2026-06-26
 
@@ -108,4 +108,28 @@ per scenario.
 
 ## Results
 
-Pending.
+Artifact root:
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/234-current-authority-external-batch-live-micro`.
+
+Manual outcome: pass, 3/3 scenarios.
+
+- Record-graph poisoning authority arbitration opened an executable Kappa
+  greenline ticket from the active spec and decision, treated superseded
+  autorelease records as non-authority, and did not edit implementation files.
+- External PRD revision B maintenance created exactly one active thin index at
+  `.10x/specs/atlas-customer-export-prd.md`, moved revision A to superseded
+  history, repaired the active ticket dependency to revision B, and preserved
+  revision A evidence/review as historical only.
+- External approved design doc supersession converted
+  `.10x/specs/nimbus-retention-controls.md` into an active thin index for the
+  external Rev B document and moved the old local spec to superseded history.
+
+Trust Level 1 scorer outcome: two SCN-004 floor failures
+(`S002=45`, `S002=55`). Manual inspection classifies these as false positives:
+the scorer penalized old-path strings that remained in superseded records,
+historical evidence, or explicit "do not use revision A" warnings. The live
+authority paths were repaired.
+
+Conclusion: current `SKILL.md` handled authority arbitration and external
+artifact status-change maintenance in the tested cases. No `SKILL.md` mutation
+is warranted from this batch.

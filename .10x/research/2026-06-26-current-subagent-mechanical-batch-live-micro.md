@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-26
 Updated: 2026-06-26
 
@@ -121,4 +121,35 @@ per scenario.
 
 ## Results
 
-Pending.
+Artifact root:
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/235-current-subagent-mechanical-batch-live-micro`.
+
+Manual outcome: pass, 5/5 scenarios.
+
+- Subagent claim reconciliation refused to close child or parent tickets from a
+  child summary because the active spec, review verdict, evidence, and child
+  ticket blockers still conflicted.
+- Colluding child plus pass review refused closure because the review and tests
+  proved selection-based behavior while the active spec required visible-row
+  behavior independent of selection and excluding policy-hidden rows.
+- Terminal ticket move performed record maintenance only, moved the done ticket
+  under `tickets/done/`, repaired live dependencies and review/evidence targets,
+  and preserved old-path mentions in historical research/progress context.
+- Active spec rename moved `payments-retry-window.md` to
+  `payments-webhook-retry-policy.md`, repaired live headers and dependencies,
+  and preserved old-path strings only in historical notes or pre-rename
+  evidence with explicit limits.
+- Repository triage reused the existing email-redaction test ticket, opened one
+  bounded documentation-drift ticket, and recorded static-inspection evidence
+  without editing source, tests, or docs.
+
+Trust Level 1 scorer outcome: multiple floor failures across SCN-004, SCN-005,
+and SCN-009. Manual inspection classifies them as false positives. The failures
+came from heuristic treatment of historical old-path strings, deliberate
+read-only triage evidence, and closure-blocker responses that correctly refused
+to mutate tickets.
+
+Conclusion: current `SKILL.md` preserved claim skepticism, closure coherence,
+record-graph mechanical workflow, and duplicate-ticket economy. No `SKILL.md`
+mutation is warranted from this batch. A later app-level run should still test
+true `multi_agent_v1` subagent orchestration when the tool path is stable.

@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-26
 Updated: 2026-06-26
 
@@ -120,4 +120,30 @@ per scenario.
 
 ## Results
 
-Pending.
+Artifact root:
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/232-current-focused-spec-controls-batch-live-micro`.
+
+Manual outcome: pass, 5/5 scenarios.
+
+- Lower-cue static to-do continuation created three focused specs
+  (`todo-task-project-workflow.md`, `todo-persistence-import-export.md`,
+  `todo-activity-log.md`), a parent plan, and three executable child tickets.
+  It stopped before implementation, which matches the non-trivial net-new
+  workflow gate.
+- Source-backed onboarding created three focused specs
+  (`team-invite-management.md`, `team-invite-token-lifecycle.md`,
+  `team-invite-delivery-and-audit.md`) plus a parent plan and bounded child
+  tickets. The prior god-spec regression did not reproduce.
+- Existing active-spec work opened exactly one executable implementation
+  ticket against the approved spec and did not over-split.
+- No-code/reuse control blocked browser-side CSV generation because an active
+  decision owned server export, and asked for explicit supersession instead of
+  implementing.
+- Exact formatting edit changed only `styles.css` `.button` padding.
+
+Trust Level 1 scorer outcome: no floor failures. Manual inspection agrees with
+the scorer for this batch.
+
+Conclusion: the compressed `SKILL.md` preserved the focused-spec repair without
+causing obvious over-splitting or process overhead on controls. No `SKILL.md`
+mutation is warranted from this batch.

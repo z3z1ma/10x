@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-26
 Updated: 2026-06-26
 
@@ -115,4 +115,29 @@ per scenario.
 
 ## Results
 
-Pending.
+Artifact root:
+`.10x/evidence/.storage/2026-06-23-skill-autoresearch/233-current-ratification-cold-start-batch-live-micro`.
+
+Manual outcome: pass, 4/4 scenarios.
+
+- First-batch ratification preserved only the concrete values supplied by the
+  user and kept refund/audit execution blocked on the remaining high-impact
+  policy values.
+- Second-batch ratification created an executable audit ticket because its
+  semantics were complete, but kept refunds blocked because "normal risk
+  escalation" had no inspected active-record or source-backed definition.
+- Out-of-order partial ratification preserved ratified payout values in a
+  blocked planning ticket and did not launder "same handling as usual" into
+  implementation semantics.
+- Long-horizon cold start recovered settled facts, active authority, source
+  context, unresolved Finance/Ops blockers, and the next safe action from
+  records only, without asking the user to restate prior chat or editing files.
+
+Trust Level 1 scorer outcome: one SCN-003 floor failure
+(`S001=75`, `S002=70`). Manual inspection classifies this as a false positive:
+the subject correctly answered from records and did not need to mutate `.10x`
+for a read-only cold-start continuation.
+
+Conclusion: dynamic ratification continuation and cold-start reconstruction
+remain salient after compression. No `SKILL.md` mutation is warranted from this
+batch.
