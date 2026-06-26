@@ -1,4 +1,4 @@
-Status: open
+Status: done
 Created: 2026-06-26
 Updated: 2026-06-26
 Parent: None
@@ -45,6 +45,16 @@ Excluded:
 - 2026-06-26: Opened from residual risk in
   `.10x/evidence/2026-06-26-multi-surface-spec-splitting-promotion.md` and
   `.10x/reviews/2026-06-26-promote-multi-surface-spec-splitting.md`.
+- 2026-06-26: Registered and ran
+  `.10x/research/2026-06-26-source-backed-split-spec-child-ticket-live-micro.md`.
+  Current-10x failed by creating one suite-wide spec and one broad executable
+  ticket. Candidate-variant passed with focused specs, a parent plan, bounded
+  child tickets, and no implementation mutation.
+- 2026-06-26: Promoted the narrow source-backed child-ticket rule into
+  `SKILL.md`. Evidence:
+  `.10x/evidence/2026-06-26-source-backed-split-spec-child-ticket-result.md`.
+  Review:
+  `.10x/reviews/2026-06-26-promote-source-backed-child-ticket-gate.md`.
 
 ## Blockers
 
