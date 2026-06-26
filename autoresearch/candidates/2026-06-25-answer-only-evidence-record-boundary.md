@@ -3,7 +3,7 @@
 Candidate ID: `candidate-answer-only-evidence-record-boundary-v1`
 Created: 2026-06-25
 Canonical target: `SKILL.md`
-Status: active
+Status: discarded-null
 Promotion: manual-only
 
 ## Target Behavior
@@ -109,4 +109,12 @@ Interim rationale:
 - current also avoided the SCN-001 evidence-record write in this batch, so
   differential improvement remains unproven.
 
-Next step: repeat SCN-001 primary stress before promotion.
+Second batch:
+
+- `.10x/evidence/2026-06-25-answer-only-evidence-boundary-repeat-stress-result.md`
+- `.10x/reviews/2026-06-25-answer-only-evidence-boundary-repeat-stress-result.md`
+
+Final decision: discarded-null. The candidate was safe on regressions and
+answer-only stress, but current matched it at zero subject workspace mutations
+across the repeat stress run, so the candidate did not prove a net positive
+effect worth adding to `SKILL.md`.

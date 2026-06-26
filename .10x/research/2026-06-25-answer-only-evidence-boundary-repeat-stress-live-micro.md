@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-06-25
 Updated: 2026-06-25
 
@@ -176,7 +176,20 @@ evidence later rather than promoting on mass alone.
 - 2026-06-25: Initial two-arm definition was rejected by
   `autoresearch/run_once.py` because live subject definitions require a
   `no-10x-control` arm. Updated the definition to include the required control.
+- 2026-06-25: Ran 9 live Codex calls. Raw artifacts are under
+  `.10x/evidence/.storage/2026-06-23-skill-autoresearch/194-answer-only-evidence-boundary-repeat-stress-live-micro/`.
+- 2026-06-25: Manual inspection found current and candidate both avoided all
+  subject workspace mutations across three repetitions, while no-10x-control
+  created generated artifacts in all three repetitions.
 
 ## Result
 
-Pending.
+Null result; discard candidate rather than promote.
+
+Evidence:
+
+- `.10x/evidence/2026-06-25-answer-only-evidence-boundary-repeat-stress-result.md`
+
+Review:
+
+- `.10x/reviews/2026-06-25-answer-only-evidence-boundary-repeat-stress-result.md`

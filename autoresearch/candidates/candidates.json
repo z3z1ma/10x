@@ -1065,7 +1065,7 @@
       "id": "candidate-answer-only-evidence-record-boundary-v1",
       "path": "autoresearch/candidates/2026-06-25-answer-only-evidence-record-boundary.md",
       "target": "SKILL.md",
-      "status": "active",
+      "status": "discarded-null",
       "created": "2026-06-25",
       "target_scores": ["S001", "S002", "S006"],
       "target_scenarios": ["SCN-001", "SCN-006", "SCN-012"],
