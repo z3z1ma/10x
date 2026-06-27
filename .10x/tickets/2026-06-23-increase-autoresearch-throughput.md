@@ -79,6 +79,12 @@ Excluded:
 - 2026-06-23: Used a second read-only scout result to queue an independent
   SCN-007 delegation-evidence MICRO after EXP-831 while parent retained all
   file edits, validation, commits, runs, and verdict authority.
+- 2026-06-27: Cross-harness seed baseline used independent `run_once.py`
+  invocations with an 8-worker cap, unique output directories, and parent-owned
+  scientist inspection. The parallel campaign completed 424 invocations and 522
+  live subject calls with no timeouts, no nonzero subject exits, and no
+  canonical guard drift. Evidence:
+  `.10x/evidence/2026-06-27-cross-harness-seed-experiment-baseline.md`.
 
 ## Blockers
 
