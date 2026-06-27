@@ -69,11 +69,6 @@ def run_once(
     else:
         raise RunOnceError("unsupported experiment definition")
 
-    report_path = None
-    if write_report:
-        report_path = output_root / "report.md"
-        report.write_report(output_root, report_path, campaign_path=campaign_path)
-
     if guard_before is not None and guard_path is not None:
         guard_after = canonical_guard.snapshot(repo_root)
         canonical_guard.write_guard_report(
@@ -87,6 +82,11 @@ def run_once(
             raise RunOnceError(
                 "canonical files changed during run: " + ", ".join(changed)
             )
+
+    report_path = None
+    if write_report:
+        report_path = output_root / "report.md"
+        report.write_report(output_root, report_path, campaign_path=campaign_path)
 
     return {
         "experiment_id": runner_summary.get("experiment_id", definition.get("experiment_id")),

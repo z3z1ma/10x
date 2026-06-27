@@ -59,6 +59,35 @@ class RunOnceTest(unittest.TestCase):
             self.assertEqual("autoresearch/run_subject.py", result["runner"])
             self.assertEqual(3, result["samples_written"])
 
+    def test_report_is_rendered_after_canonical_guard_exists(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+
+            def assert_guard_exists(artifacts_path, out_path, campaign_path=None):
+                del out_path, campaign_path
+                self.assertTrue((Path(artifacts_path) / "canonical_guard.json").exists())
+
+            with mock.patch("autoresearch.run_once.run_subject.run_live") as run_live:
+                run_live.return_value = {
+                    "experiment_id": "EXP-20260627-report-guard-order",
+                    "mode": "live",
+                    "samples_written": 1,
+                    "plan_path": str(root / "plan.json"),
+                    "raw_output_dir": str(root / "raw"),
+                    "live_subject_calls": 1,
+                }
+                with mock.patch(
+                    "autoresearch.run_once.report.write_report",
+                    side_effect=assert_guard_exists,
+                ):
+                    result = run_once.run_once(
+                        _live_subject_definition(),
+                        root,
+                        repo_root=REPO_ROOT,
+                    )
+
+            self.assertEqual(str(root / "canonical_guard.json"), result["canonical_guard_path"])
+
     def test_opencode_live_subject_run_uses_same_one_shot_runner(self):
         with tempfile.TemporaryDirectory() as tmp:
             with mock.patch("autoresearch.run_once.run_subject.run_live") as run_live:
