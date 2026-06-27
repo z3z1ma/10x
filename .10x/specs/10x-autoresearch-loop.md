@@ -188,15 +188,22 @@ subject harness.
 ## Runner Contract
 
 `autoresearch/run_once.py` MUST run exactly one registered MICRO or FULL trial.
-It delegates live subject execution to `autoresearch/run_codex_subject.py` and
-renders a report unless asked otherwise.
+It delegates live subject execution to the subject runner and renders a report
+unless asked otherwise.
+
+Supported live subject harness values are:
+
+- `codex-cli`: runs Codex CLI as the subject harness.
+- `opencode-cli`: runs OpenCode CLI as the subject harness. Model IDs MUST use
+  OpenCode's provider/model shape, for example `openai/gpt-5.5`.
 
 A successful run writes, at minimum:
 
 - `plan.json`;
 - `summary.json`;
 - `raw/*.json`;
-- command metadata and process output under `codex/`;
+- command metadata and process output under the harness artifact directory such
+  as `codex/` or `opencode/`;
 - prompt artifacts under `prompts/`;
 - workspace manifests and archived workspaces under `workspaces/`;
 - `canonical_guard.json`;

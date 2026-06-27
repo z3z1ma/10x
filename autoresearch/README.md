@@ -67,27 +67,36 @@ One iteration is:
 Python utilities do not own the loop. They run one trial, validate contracts,
 render artifact reports, or run diagnostics.
 
-## Codex Subject Runner
+## Live Subject Runner
 
-Run a registered MICRO or FULL experiment through live Codex subject-agent calls:
+Run a registered MICRO or FULL experiment through live subject-agent calls:
 
 ```bash
-python3 autoresearch/run_codex_subject.py --experiment path/to/experiment.md --run --out .10x/evidence/.storage/<run-tag>/<experiment-id>
+python3 autoresearch/run_subject.py --experiment path/to/experiment.md --run --out .10x/evidence/.storage/<run-tag>/<experiment-id>
 ```
 
 MICRO and FULL are scenario breadth tiers. MICRO uses narrow scenarios that
 target one behavior; FULL uses broader scenario coverage. Both can execute the
-same live harness. `codex-cli` prompt definitions are live subject runs.
+same live harness.
+
+Supported harness values:
+
+- `codex-cli`: runs Codex CLI in a private temporary workspace with the existing
+  Codex isolation flags.
+- `opencode-cli`: runs OpenCode CLI with `opencode run --format json --dir
+  <workspace> --model <provider/model>`. For the user's current subscription
+  setup, use `"model": "openai/gpt-5.5"`.
 
 The runner writes:
 
 - `<out>/plan.json`
 - `<out>/summary.json`
 - `<out>/raw/*.json`
-- `<out>/codex/*.command.json`
-- `<out>/codex/*.stdout.jsonl`
-- `<out>/codex/*.stderr`
-- `<out>/codex/*.last-message.txt`
+- `<out>/<harness>/*.command.json`, for example `<out>/codex/` or
+  `<out>/opencode/`
+- `<out>/<harness>/*.stdout.jsonl`
+- `<out>/<harness>/*.stderr`
+- `<out>/<harness>/*.last-message.txt`
 - `<out>/prompts/*.prompt.txt`
 - `<out>/workspaces/*/workspace-manifest.json`
 - archived subject workspaces under `<out>/workspaces/`
@@ -117,7 +126,7 @@ asked different questions:
 }
 ```
 
-Each continuation runs one new Codex turn against the prior transcript and
+Each continuation runs one new subject turn against the prior transcript and
 workspace. The researcher, not the runner, decides whether another continuation
 is needed or whether the turn is ready for a verdict.
 
@@ -129,7 +138,7 @@ Run exactly one registered MICRO or FULL experiment and write a report:
 python3 autoresearch/run_once.py --experiment path/to/experiment.json --out .10x/evidence/.storage/<run-tag>/<experiment-id> --require-clean-canonical
 ```
 
-`run_once.py` runs live subject experiments through `run_codex_subject.py`.
+`run_once.py` runs live subject experiments through the live subject runner.
 MICRO and FULL both execute the subject harness; the tier only changes scenario
 breadth. `run_once.py` writes runner artifacts under the output directory and
 renders `<out>/report.md` by default.
@@ -195,6 +204,20 @@ The required experiment definition fields are:
   }
 }
 ```
+
+For OpenCode, the same definition shape changes only the harness and model:
+
+```json
+{
+  "model": "openai/gpt-5.5",
+  "harness": "opencode-cli"
+}
+```
+
+OpenCode prerequisites are intentionally simple: the `opencode` executable must
+be on `PATH`, its provider credentials must already be configured, and the model
+must be usable by that account. The runner checks none of those by magic; failed
+commands are preserved as trial artifacts for scientist inspection.
 
 The `arms` array is exact. A one-arm smoke or current-skill regression lists one
 arm. A comparative experiment lists each control, baseline, current, and

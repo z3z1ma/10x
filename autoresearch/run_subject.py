@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
@@ -17,8 +18,10 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCENARIOS_PATH = REPO_ROOT / "autoresearch" / "catalogs" / "scenarios.json"
-MARKDOWN_DEFINITION_START = "<!-- codex-subject-runner-definition:start -->"
-MARKDOWN_DEFINITION_END = "<!-- codex-subject-runner-definition:end -->"
+MARKDOWN_DEFINITION_START = "<!-- subject-runner-definition:start -->"
+MARKDOWN_DEFINITION_END = "<!-- subject-runner-definition:end -->"
+LEGACY_MARKDOWN_DEFINITION_START = "<!-- codex-subject-runner-definition:start -->"
+LEGACY_MARKDOWN_DEFINITION_END = "<!-- codex-subject-runner-definition:end -->"
 SCIENTIFIC_CONTRACT_REQUIRED_TEXT = (
     "question",
     "hypothesis",
@@ -34,6 +37,33 @@ SUPPRESSED_INSTRUCTION_FILES = [
     ".agents/skills",
 ]
 SUPPRESSED_CONTROL_RECORD_DIRS = [".10x"]
+
+
+@dataclass(frozen=True)
+class SubjectHarness:
+    id: str
+    artifact_dir: str
+    kind: str
+    executable: str
+    json_stdout: bool
+
+
+SUPPORTED_HARNESSES = {
+    "codex-cli": SubjectHarness(
+        id="codex-cli",
+        artifact_dir="codex",
+        kind="codex-live-subject",
+        executable="codex",
+        json_stdout=True,
+    ),
+    "opencode-cli": SubjectHarness(
+        id="opencode-cli",
+        artifact_dir="opencode",
+        kind="opencode-live-subject",
+        executable="opencode",
+        json_stdout=True,
+    ),
+}
 
 
 class ExperimentError(ValueError):
@@ -64,6 +94,7 @@ def build_plan(
 ) -> dict[str, Any]:
     catalog = _load_scenario_catalog(repo_root)
     _validate_definition_shape(definition)
+    harness = _subject_harness(definition["harness"])
 
     scenario_by_id = {scenario["id"]: scenario for scenario in catalog["scenarios"]}
     scientific_contract = _scientific_contract(definition)
@@ -73,7 +104,7 @@ def build_plan(
     planned_calls = len(arms) * len(scenarios) * repetitions
     budget = _budget(definition, catalog, planned_calls)
     output_root = Path(out_dir) if out_dir else _default_output_dir(definition)
-    artifact_dirs = _artifact_dirs(output_root)
+    artifact_dirs = _artifact_dirs(output_root, harness)
 
     samples = []
     for scenario in scenarios:
@@ -98,17 +129,19 @@ def build_plan(
                 seed_workspace_kind = prior_context.get("workspace_kind")
                 workspace_dir = artifact_dirs["workspaces"] / stem
                 raw_path = artifact_dirs["raw"] / f"{stem}.json"
-                command_path = artifact_dirs["codex"] / f"{stem}.command.json"
-                stdout_path = artifact_dirs["codex"] / f"{stem}.stdout.jsonl"
-                stderr_path = artifact_dirs["codex"] / f"{stem}.stderr"
-                last_message_path = artifact_dirs["codex"] / f"{stem}.last-message.txt"
+                command_path = artifact_dirs[harness.artifact_dir] / f"{stem}.command.json"
+                stdout_path = artifact_dirs[harness.artifact_dir] / f"{stem}.stdout.jsonl"
+                stderr_path = artifact_dirs[harness.artifact_dir] / f"{stem}.stderr"
+                last_message_path = artifact_dirs[harness.artifact_dir] / f"{stem}.last-message.txt"
                 prompt_path = artifact_dirs["prompts"] / f"{stem}.prompt.txt"
                 manifest_path = workspace_dir / "workspace-manifest.json"
                 turns = _planned_turns(
+                    harness,
                     artifact_dirs,
                     stem,
                     workspace_dir,
                     last_message_path,
+                    definition["model"],
                     arm,
                     user_message,
                     prior_context.get("transcript", []),
@@ -122,7 +155,8 @@ def build_plan(
                         "rep": rep,
                         "model": definition["model"],
                         "harness": definition["harness"],
-                        "harness_kind": "codex-live-subject",
+                        "harness_kind": harness.kind,
+                        "harness_artifact_dir_name": harness.artifact_dir,
                         "scientific_contract": scientific_contract,
                         "instruction_source": arm["instruction_source"],
                         "instruction_path": arm.get("instruction_path"),
@@ -145,13 +179,16 @@ def build_plan(
                         "planned_last_message_path": str(last_message_path),
                         "planned_workspace_manifest_path": str(manifest_path),
                         "planned_turns": turns,
-                        "planned_codex_argv": turns[0]["planned_codex_argv"],
+                        "planned_subject_argv": turns[0]["planned_subject_argv"],
                         "writable_add_dirs": _writable_add_dirs(definition),
                         "timeout_seconds": budget["timeout_seconds_per_run"],
-                        "control_isolation": _control_isolation(),
-                        "live_codex_calls": 1,
+                        "control_isolation": _control_isolation(harness),
+                        "live_subject_calls": 1,
+                        "live_codex_calls": 1 if harness.id == "codex-cli" else 0,
                     }
                 )
+                sample_argv_key = f"planned_{harness.artifact_dir}_argv"
+                samples[-1][sample_argv_key] = turns[0]["planned_subject_argv"]
 
     return {
         "experiment_id": definition["experiment_id"],
@@ -161,7 +198,8 @@ def build_plan(
         "driver": definition.get("driver"),
         "model": definition["model"],
         "harness": definition["harness"],
-        "harness_kind": "codex-live-subject",
+        "harness_kind": harness.kind,
+        "harness_artifact_dir_name": harness.artifact_dir,
         "scientific_contract": scientific_contract,
         "arms": arms,
         "scenarios": scenarios,
@@ -170,9 +208,10 @@ def build_plan(
         "artifact_root": str(output_root),
         "artifact_dirs": {name: str(path) for name, path in artifact_dirs.items()},
         "samples": samples,
+        "live_subject_calls": sum(sample["live_subject_calls"] for sample in samples),
         "live_codex_calls": sum(sample["live_codex_calls"] for sample in samples),
         "promotion_decision": "not-performed",
-        "limits": _limits(),
+        "limits": _limits(harness),
     }
 
 
@@ -209,6 +248,7 @@ def run_live(
     repo_root: Path = REPO_ROOT,
 ) -> dict[str, Any]:
     plan = build_plan(definition, repo_root=repo_root, out_dir=out_dir)
+    harness = _subject_harness(plan["harness"])
     output_root = Path(out_dir)
     artifact_dirs = {name: Path(path) for name, path in plan["artifact_dirs"].items()}
     for path in artifact_dirs.values():
@@ -229,9 +269,13 @@ def run_live(
         "samples_written": len(written_samples),
         "raw_output_dir": plan["artifact_dirs"]["raw"],
         "workspace_dir": plan["artifact_dirs"]["workspaces"],
-        "codex_artifact_dir": plan["artifact_dirs"]["codex"],
+        "harness_artifact_dir": plan["artifact_dirs"][harness.artifact_dir],
+        f"{harness.artifact_dir}_artifact_dir": plan["artifact_dirs"][harness.artifact_dir],
         "prompt_dir": plan["artifact_dirs"]["prompts"],
         "plan_path": str(plan_path),
+        "harness": plan["harness"],
+        "harness_kind": plan["harness_kind"],
+        "live_subject_calls": sum(sample["live_subject_calls"] for sample in written_samples),
         "live_codex_calls": sum(sample["live_codex_calls"] for sample in written_samples),
         "promotion_decision": "not-performed",
         "budget": plan["budget"],
@@ -247,7 +291,7 @@ def run_live(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Run one live Codex subject-agent experiment from a registered definition."
+        description="Run one live subject-agent experiment from a registered definition."
     )
     parser.add_argument("--experiment", type=Path, required=True)
     parser.add_argument("--out", type=Path)
@@ -273,6 +317,7 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
+    harness = _subject_harness(sample["harness"])
     archive_workspace = Path(sample["planned_workspace_dir"])
     raw_path = Path(sample["planned_raw_output_path"])
     command_path = Path(sample["planned_command_path"])
@@ -294,8 +339,6 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
         workspace = Path(temp_root) / "workspace"
         if seed_workspace and seed_workspace.exists():
             shutil.copytree(seed_workspace, workspace)
-        elif archive_workspace.exists():
-            shutil.copytree(archive_workspace, workspace)
         else:
             workspace.mkdir(parents=True)
 
@@ -312,7 +355,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
         command_outputs = []
         raw_refs = [sample["prior_raw_path"]] if sample.get("prior_raw_path") else []
         all_events: list[dict[str, Any]] = []
-        usage = {"input_tokens": 0, "output_tokens": 0}
+        usage: dict[str, Any] = {}
         wall_seconds = 0.0
         timed_out = False
         exit_code = 0
@@ -328,10 +371,12 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
                 planned_turn["user_message"],
                 transcript,
             )
-            argv = _planned_codex_argv(
+            argv = _planned_subject_argv(
+                harness,
                 workspace,
                 prompt,
                 last_message_path,
+                sample["model"],
                 sample.get("writable_add_dirs", []),
             )
 
@@ -365,18 +410,19 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
 
             stdout_path.write_text(completed.stdout, encoding="utf-8")
             stderr_path.write_text(completed.stderr, encoding="utf-8")
-            last_message = last_message_path.read_text(encoding="utf-8") if last_message_path.exists() else ""
             events = _jsonl_events(completed.stdout)
+            last_message = _last_subject_message(harness, completed.stdout, last_message_path)
             turn_usage = _usage(events)
             all_events.extend(events)
-            usage["input_tokens"] += int(turn_usage.get("input_tokens") or 0)
-            usage["output_tokens"] += int(turn_usage.get("output_tokens") or 0)
+            _accumulate_usage(usage, turn_usage)
             wall_seconds += turn_wall_seconds
             timed_out = timed_out or turn_timed_out
             exit_code = completed.returncode
 
             command = {
                 "schema_version": 1,
+                "harness": sample["harness"],
+                "harness_kind": harness.kind,
                 "start_timestamp_utc": started,
                 "end_timestamp_utc": ended,
                 "turn_index": planned_turn["turn_index"],
@@ -386,6 +432,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
                 "stderr_path": str(stderr_path),
                 "last_message_path": str(last_message_path),
                 "prompt_path": str(prompt_path),
+                "working_directory": str(workspace),
                 "usage": turn_usage,
                 "timed_out": turn_timed_out,
                 "timeout_seconds": sample["timeout_seconds"],
@@ -425,6 +472,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
             output for output in file_outputs if output["path"] in changed_paths
         ]
         tool_invocations = _tool_invocations(all_events)
+        completed_new_turns = (len(transcript) - len(prior_transcript)) // 2
 
         archive_workspace.parent.mkdir(parents=True, exist_ok=True)
         if archive_workspace.exists():
@@ -447,7 +495,7 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
         "workspace_contamination_present": bool(pre_present or post_present),
         "timed_out": timed_out,
         "timeout_seconds": sample["timeout_seconds"],
-        "completed_new_turns": (len(transcript) - len(prior_transcript)) // 2,
+        "completed_new_turns": completed_new_turns,
         "transcript_turns": len(transcript) // 2,
         "planned_new_turns": len(sample["planned_turns"]),
         "control_isolation": sample["control_isolation"],
@@ -470,13 +518,16 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
         "command_outputs": command_outputs,
         "raw_artifact_refs": raw_refs + [str(archive_manifest_path), str(raw_path)],
         "wall_seconds": wall_seconds,
+        "usage": usage,
         "input_tokens": usage.get("input_tokens"),
         "output_tokens": usage.get("output_tokens"),
         "timed_out": timed_out,
         "timeout_seconds": sample["timeout_seconds"],
-        "live_codex_calls": (len(transcript) - len(prior_transcript)) // 2,
+        "live_subject_calls": completed_new_turns,
+        "live_codex_calls": completed_new_turns if harness.id == "codex-cli" else 0,
         "harness_metadata": {
-            "kind": "codex-live-subject",
+            "kind": harness.kind,
+            "harness_artifact_dir_name": harness.artifact_dir,
             "instruction_source": sample["instruction_source"],
             "instruction_path": sample.get("instruction_path"),
             "base_instruction_path": sample.get("base_instruction_path"),
@@ -517,7 +568,8 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
             "workspace_manifest_path": str(archive_manifest_path),
             "turns": sample["planned_turns"],
             "raw_output_path": str(raw_path),
-            "live_codex_calls": (len(transcript) - len(prior_transcript)) // 2,
+            "live_subject_calls": completed_new_turns,
+            "live_codex_calls": completed_new_turns if harness.id == "codex-cli" else 0,
             "prior_raw_path": sample.get("prior_raw_path"),
             "seed_workspace_dir": str(seed_workspace) if seed_workspace else None,
         }
@@ -534,13 +586,21 @@ def _load_scenario_catalog(repo_root: Path) -> dict[str, Any]:
 
 
 def _load_markdown_definition(text: str) -> dict[str, Any]:
-    start = text.find(MARKDOWN_DEFINITION_START)
-    end = text.find(MARKDOWN_DEFINITION_END)
-    if start == -1 or end == -1 or end <= start:
+    marker_pairs = (
+        (MARKDOWN_DEFINITION_START, MARKDOWN_DEFINITION_END),
+        (LEGACY_MARKDOWN_DEFINITION_START, LEGACY_MARKDOWN_DEFINITION_END),
+    )
+    block = None
+    for start_marker, end_marker in marker_pairs:
+        start = text.find(start_marker)
+        end = text.find(end_marker)
+        if start != -1 and end != -1 and end > start:
+            block = text[start + len(start_marker) : end].strip()
+            break
+    if block is None:
         raise ExperimentError(
-            "Markdown experiment records must include a codex-subject-runner-definition JSON block"
+            "Markdown experiment records must include a subject-runner-definition JSON block"
         )
-    block = text[start + len(MARKDOWN_DEFINITION_START) : end].strip()
     if block.startswith("```json"):
         block = block.removeprefix("```json").strip()
     if block.endswith("```"):
@@ -562,9 +622,8 @@ def _validate_definition_shape(definition: dict[str, Any]) -> None:
         if field not in definition:
             raise ExperimentError(f"experiment definition missing {field}")
     if definition["method_tier"] not in {"MICRO", "FULL"}:
-        raise ExperimentError("run_codex_subject only supports method_tier MICRO or FULL")
-    if "codex" not in str(definition["harness"]).lower():
-        raise ExperimentError("run_codex_subject requires a Codex harness")
+        raise ExperimentError("live subject runner only supports method_tier MICRO or FULL")
+    _subject_harness(definition["harness"])
     if "evaluation_only" in definition:
         raise ExperimentError(
             "evaluation_only is retired; list exactly the arms this experiment should run"
@@ -576,6 +635,17 @@ def _validate_definition_shape(definition: dict[str, Any]) -> None:
     _scientific_contract(definition)
     _validate_scenario_definitions(definition["scenarios"])
     _validate_budget_definition(definition["budget"])
+    if _subject_harness(definition["harness"]).id != "codex-cli" and definition.get("writable_add_dirs"):
+        raise ExperimentError("writable_add_dirs are currently supported only by codex-cli")
+
+
+def _subject_harness(value: Any) -> SubjectHarness:
+    harness_id = str(value).lower()
+    harness = SUPPORTED_HARNESSES.get(harness_id)
+    if harness is None:
+        supported = ", ".join(sorted(SUPPORTED_HARNESSES))
+        raise ExperimentError(f"unsupported subject harness {value!r}; supported: {supported}")
+    return harness
 
 
 def _scientific_contract(definition: dict[str, Any]) -> dict[str, Any]:
@@ -828,10 +898,12 @@ def _budget(
 
 
 def _planned_turns(
+    harness: SubjectHarness,
     artifact_dirs: dict[str, Path],
     stem: str,
     workspace_dir: Path,
     first_last_message_path: Path,
+    model: str,
     arm: dict[str, Any],
     user_message: str,
     prior_transcript: list[dict[str, str]],
@@ -839,10 +911,19 @@ def _planned_turns(
 ) -> list[dict[str, Any]]:
     turns = []
     prompt_path = artifact_dirs["prompts"] / f"{stem}.prompt.txt"
-    command_path = artifact_dirs["codex"] / f"{stem}.command.json"
-    stdout_path = artifact_dirs["codex"] / f"{stem}.stdout.jsonl"
-    stderr_path = artifact_dirs["codex"] / f"{stem}.stderr"
+    command_path = artifact_dirs[harness.artifact_dir] / f"{stem}.command.json"
+    stdout_path = artifact_dirs[harness.artifact_dir] / f"{stem}.stdout.jsonl"
+    stderr_path = artifact_dirs[harness.artifact_dir] / f"{stem}.stderr"
     prompt = _turn_prompt({"scenario_prompt": user_message, **arm}, user_message, prior_transcript)
+    argv = _planned_subject_argv(
+        harness,
+        workspace_dir,
+        prompt,
+        first_last_message_path,
+        model,
+        writable_add_dirs,
+    )
+    argv_key = f"planned_{harness.artifact_dir}_argv"
     turns.append(
         {
             "turn_index": len(prior_transcript) // 2,
@@ -853,12 +934,8 @@ def _planned_turns(
             "stdout_jsonl_path": str(stdout_path),
             "stderr_path": str(stderr_path),
             "last_message_path": str(first_last_message_path),
-            "planned_codex_argv": _planned_codex_argv(
-                workspace_dir,
-                prompt,
-                first_last_message_path,
-                writable_add_dirs,
-            ),
+            "planned_subject_argv": argv,
+            argv_key: argv,
         }
     )
     return turns
@@ -915,16 +992,69 @@ def _planned_codex_argv(
     return argv
 
 
-def _control_isolation() -> dict[str, Any]:
-    return {
+def _planned_subject_argv(
+    harness: SubjectHarness,
+    workspace_dir: Path,
+    prompt: str,
+    last_message_path: Path,
+    model: str,
+    writable_add_dirs: list[str] | None = None,
+) -> list[str]:
+    if harness.id == "codex-cli":
+        return _planned_codex_argv(
+            workspace_dir,
+            prompt,
+            last_message_path,
+            writable_add_dirs,
+        )
+    if harness.id == "opencode-cli":
+        if writable_add_dirs:
+            raise ExperimentError("writable_add_dirs are currently supported only by codex-cli")
+        return [
+            "opencode",
+            "run",
+            "--model",
+            model,
+            "--format",
+            "json",
+            "--dir",
+            str(workspace_dir),
+            "--dangerously-skip-permissions",
+            prompt,
+        ]
+    raise ExperimentError(f"unsupported subject harness {harness.id!r}")
+
+
+def _control_isolation(harness: SubjectHarness) -> dict[str, Any]:
+    isolation = {
         "suppress_instruction_files": SUPPRESSED_INSTRUCTION_FILES,
         "suppress_control_record_dirs": SUPPRESSED_CONTROL_RECORD_DIRS,
-        "codex_args": ["--disable", "plugins", "--ignore-user-config"],
         "workspace_strategy": "Run each sample in a private temporary workspace, then archive outputs under the experiment artifact directory.",
         "instruction_strategy": "Pass current and candidate instructions explicitly in the prompt; no-10x receives minimal instructions.",
         "record_graph_strategy": "Remove inherited .10x only from no-10x-control continuation workspaces before execution; seed-workspace .10x records remain available when they are the task surface.",
-        "limitation": "Codex system context and authenticated home remain outside this runner's control.",
     }
+    if harness.id == "codex-cli":
+        isolation.update(
+            {
+                "codex_args": ["--disable", "plugins", "--ignore-user-config"],
+                "limitation": "Codex system context and authenticated home remain outside this runner's control.",
+            }
+        )
+    elif harness.id == "opencode-cli":
+        isolation.update(
+            {
+                "opencode_args": [
+                    "run",
+                    "--format",
+                    "json",
+                    "--dir",
+                    "<workspace>",
+                    "--dangerously-skip-permissions",
+                ],
+                "limitation": "OpenCode authenticated home and provider configuration remain outside this runner's control; permission auto-approval is used only inside a private temporary workspace.",
+            }
+        )
+    return isolation
 
 
 def _writable_add_dirs(definition: dict[str, Any]) -> list[str]:
@@ -944,17 +1074,18 @@ def _writable_add_dirs(definition: dict[str, Any]) -> list[str]:
     return result
 
 
-def _artifact_dirs(root: Path) -> dict[str, Path]:
+def _artifact_dirs(root: Path, harness: SubjectHarness) -> dict[str, Path]:
     return {
         "raw": root / "raw",
         "workspaces": root / "workspaces",
-        "codex": root / "codex",
+        harness.artifact_dir: root / harness.artifact_dir,
         "prompts": root / "prompts",
     }
 
 
 def _default_output_dir(definition: dict[str, Any]) -> Path:
-    return REPO_ROOT / ".10x/evidence/.storage/codex-subject" / definition["experiment_id"]
+    harness = _subject_harness(definition["harness"])
+    return REPO_ROOT / f".10x/evidence/.storage/{harness.artifact_dir}-subject" / definition["experiment_id"]
 
 
 def _resolve_path(repo_root: Path, path: str) -> Path:
@@ -1074,12 +1205,133 @@ def _jsonl_events(text: str) -> list[dict[str, Any]]:
     return events
 
 
+def _last_subject_message(
+    harness: SubjectHarness,
+    stdout: str,
+    last_message_path: Path,
+) -> str:
+    if harness.id == "codex-cli":
+        return last_message_path.read_text(encoding="utf-8") if last_message_path.exists() else ""
+
+    message = _last_assistant_text(_jsonl_events(stdout))
+    if not message:
+        message = _non_json_stdout(stdout)
+    last_message_path.parent.mkdir(parents=True, exist_ok=True)
+    last_message_path.write_text(message, encoding="utf-8")
+    return message
+
+
+def _last_assistant_text(events: list[dict[str, Any]]) -> str:
+    for event in reversed(events):
+        text = _assistant_text_from_value(event)
+        if text:
+            return text
+    return ""
+
+
+def _assistant_text_from_value(value: Any) -> str:
+    if isinstance(value, str):
+        return value if value.strip() else ""
+    if isinstance(value, list):
+        parts = [_assistant_text_from_value(item) for item in value]
+        return "\n".join(part for part in parts if part)
+    if not isinstance(value, dict):
+        return ""
+
+    role = value.get("role")
+    if isinstance(role, str) and role.lower() not in {"assistant", "agent"}:
+        return ""
+
+    content = value.get("content")
+    if isinstance(content, str) and content.strip():
+        return content
+    if isinstance(content, list):
+        text = _assistant_text_from_value(content)
+        if text:
+            return text
+
+    for key in ("text", "message", "part", "delta", "snapshot"):
+        text = _assistant_text_from_value(value.get(key))
+        if text:
+            return text
+    return ""
+
+
+def _non_json_stdout(stdout: str) -> str:
+    lines = []
+    for line in stdout.splitlines():
+        try:
+            json.loads(line)
+        except json.JSONDecodeError:
+            if line.strip():
+                lines.append(line)
+    return "\n".join(lines)
+
+
 def _usage(events: list[dict[str, Any]]) -> dict[str, Any]:
     for event in reversed(events):
         usage = event.get("usage")
         if isinstance(usage, dict):
-            return usage
-    return {}
+            return _normalized_usage(usage)
+    return _usage_from_token_events(events)
+
+
+def _usage_from_token_events(events: list[dict[str, Any]]) -> dict[str, Any]:
+    usage: dict[str, Any] = {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_tokens": 0,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+        "cost": 0,
+    }
+    found = False
+    for event in events:
+        part = event.get("part") if isinstance(event.get("part"), dict) else {}
+        tokens = part.get("tokens") if isinstance(part.get("tokens"), dict) else event.get("tokens")
+        if not isinstance(tokens, dict):
+            continue
+        found = True
+        normalized = _normalized_usage(tokens)
+        for key, value in normalized.items():
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                usage[key] = usage.get(key, 0) + value
+        cost = part.get("cost")
+        if isinstance(cost, (int, float)) and not isinstance(cost, bool):
+            usage["cost"] += cost
+    return usage if found else {}
+
+
+def _accumulate_usage(total: dict[str, Any], item: dict[str, Any]) -> None:
+    for key, value in item.items():
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            total[key] = total.get(key, 0) + value
+
+
+def _normalized_usage(usage: dict[str, Any]) -> dict[str, Any]:
+    normalized: dict[str, Any] = {}
+    aliases = {
+        "input_tokens": ("input_tokens", "input", "prompt_tokens", "prompt"),
+        "output_tokens": ("output_tokens", "output", "completion_tokens", "completion"),
+        "reasoning_tokens": ("reasoning_tokens", "reasoning"),
+        "total_tokens": ("total_tokens", "total"),
+        "cost": ("cost",),
+    }
+    for target, source_keys in aliases.items():
+        for source_key in source_keys:
+            value = usage.get(source_key)
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                normalized[target] = value
+                break
+    cache = usage.get("cache")
+    if isinstance(cache, dict):
+        read = cache.get("read")
+        write = cache.get("write")
+        if isinstance(read, (int, float)) and not isinstance(read, bool):
+            normalized["cache_read_tokens"] = read
+        if isinstance(write, (int, float)) and not isinstance(write, bool):
+            normalized["cache_write_tokens"] = write
+    return normalized
 
 
 def _tool_invocations(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -1120,13 +1372,19 @@ def _command_output(stderr: str, stdout_path: Path) -> str:
     return f"stdout JSONL stored at {stdout_path}"
 
 
-def _limits() -> list[str]:
-    return [
+def _limits(harness: SubjectHarness) -> list[str]:
+    limits = [
         "This runner records live trial artifacts; the LLM researcher performs rubric inspection outside the runner.",
-        "Codex system context and authenticated home remain outside this runner's control.",
         "Manual inspection is required before promotion or durable verdicts.",
         "The runner executes one registered experiment and does not loop or generate candidates.",
     ]
+    if harness.id == "codex-cli":
+        limits.append("Codex system context and authenticated home remain outside this runner's control.")
+    elif harness.id == "opencode-cli":
+        limits.append(
+            "OpenCode authenticated home and provider configuration remain outside this runner's control; inspect command artifacts and workspace manifests."
+        )
+    return limits
 
 
 def _public_plan(plan: dict[str, Any]) -> dict[str, Any]:
@@ -1141,21 +1399,22 @@ def _public_plan(plan: dict[str, Any]) -> dict[str, Any]:
         if isinstance(sample, dict):
             sample.pop("instruction_text", None)
             sample.pop("prompt", None)
-            argv = sample.get("planned_codex_argv")
             prompt_path = sample.get("prompt_path")
-            if isinstance(argv, list) and isinstance(prompt_path, str):
-                sample["planned_codex_argv"] = _public_argv(argv, Path(prompt_path))
+            if isinstance(prompt_path, str):
+                _scrub_planned_argvs(sample, Path(prompt_path))
             for turn in sample.get("planned_turns", []):
                 if isinstance(turn, dict):
                     turn.pop("prompt", None)
-                    turn_argv = turn.get("planned_codex_argv")
                     turn_prompt_path = turn.get("prompt_path")
-                    if isinstance(turn_argv, list) and isinstance(turn_prompt_path, str):
-                        turn["planned_codex_argv"] = _public_argv(
-                            turn_argv,
-                            Path(turn_prompt_path),
-                        )
+                    if isinstance(turn_prompt_path, str):
+                        _scrub_planned_argvs(turn, Path(turn_prompt_path))
     return visible
+
+
+def _scrub_planned_argvs(item: dict[str, Any], prompt_path: Path) -> None:
+    for key, value in list(item.items()):
+        if key.startswith("planned_") and key.endswith("_argv") and isinstance(value, list):
+            item[key] = _public_argv(value, prompt_path)
 
 
 def _public_argv(argv: list[str], prompt_path: Path) -> list[str]:

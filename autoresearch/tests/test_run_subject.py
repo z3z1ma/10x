@@ -5,16 +5,16 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from autoresearch import run_codex_subject
+from autoresearch import run_subject
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
-class CodexSubjectRunnerTest(unittest.TestCase):
+class LiveSubjectRunnerTest(unittest.TestCase):
     def test_plan_records_live_subject_samples_without_score_artifacts(self):
         with tempfile.TemporaryDirectory() as tmp:
-            plan = run_codex_subject.build_plan(
+            plan = run_subject.build_plan(
                 _definition(),
                 repo_root=REPO_ROOT,
                 out_dir=Path(tmp),
@@ -37,7 +37,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
         definition["writable_add_dirs"] = [".agents/skills"]
 
         with tempfile.TemporaryDirectory() as tmp:
-            plan = run_codex_subject.build_plan(
+            plan = run_subject.build_plan(
                 definition,
                 repo_root=REPO_ROOT,
                 out_dir=Path(tmp),
@@ -67,13 +67,114 @@ class CodexSubjectRunnerTest(unittest.TestCase):
                 definition = _definition()
                 definition["writable_add_dirs"] = value
 
-                with self.assertRaises(run_codex_subject.ExperimentError):
-                    run_codex_subject.build_plan(definition, repo_root=REPO_ROOT)
+                with self.assertRaises(run_subject.ExperimentError):
+                    run_subject.build_plan(definition, repo_root=REPO_ROOT)
+
+    def test_opencode_plan_uses_provider_model_and_opencode_artifacts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            plan = run_subject.build_plan(
+                _opencode_definition(),
+                repo_root=REPO_ROOT,
+                out_dir=Path(tmp),
+            )
+
+        self.assertEqual("opencode-cli", plan["harness"])
+        self.assertEqual("opencode-live-subject", plan["harness_kind"])
+        self.assertEqual(1, plan["live_subject_calls"])
+        self.assertEqual(0, plan["live_codex_calls"])
+        self.assertIn("opencode", plan["artifact_dirs"])
+        self.assertNotIn("codex", plan["artifact_dirs"])
+
+        sample = plan["samples"][0]
+        argv = sample["planned_opencode_argv"]
+        self.assertEqual("openai/gpt-5.5", sample["model"])
+        self.assertEqual(["opencode", "run"], argv[:2])
+        self.assertEqual("openai/gpt-5.5", argv[argv.index("--model") + 1])
+        self.assertEqual("json", argv[argv.index("--format") + 1])
+        self.assertIn("--dir", argv)
+        self.assertIn("--dangerously-skip-permissions", argv)
+        self.assertIn("planned_subject_argv", sample)
+        self.assertTrue(sample["planned_command_path"].endswith(".command.json"))
+        self.assertIn("/opencode/", sample["planned_command_path"])
+
+    def test_opencode_rejects_writable_add_dirs_until_supported(self):
+        definition = _opencode_definition()
+        definition["writable_add_dirs"] = [".agents/skills"]
+
+        with self.assertRaisesRegex(run_subject.ExperimentError, "writable_add_dirs"):
+            run_subject.build_plan(definition, repo_root=REPO_ROOT)
+
+    def test_live_opencode_run_writes_parity_artifacts(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch("subprocess.run", side_effect=_fake_opencode_run):
+                summary = run_subject.run_live(
+                    _opencode_definition(),
+                    Path(tmp),
+                    repo_root=REPO_ROOT,
+                )
+
+            output_root = Path(tmp)
+            raw_paths = sorted((output_root / "raw").glob("*.json"))
+            command_paths = sorted((output_root / "opencode").glob("*.command.json"))
+            stdout_paths = sorted((output_root / "opencode").glob("*.stdout.jsonl"))
+            last_message_paths = sorted((output_root / "opencode").glob("*.last-message.txt"))
+            manifests = sorted((output_root / "workspaces").glob("*/workspace-manifest.json"))
+
+            self.assertEqual(1, summary["samples_written"])
+            self.assertEqual(1, summary["live_subject_calls"])
+            self.assertEqual(0, summary["live_codex_calls"])
+            self.assertEqual("opencode-cli", summary["harness"])
+            self.assertIn("opencode_artifact_dir", summary)
+            self.assertEqual(1, len(raw_paths))
+            self.assertEqual(1, len(command_paths))
+            self.assertEqual(1, len(stdout_paths))
+            self.assertEqual(1, len(last_message_paths))
+            self.assertEqual(1, len(manifests))
+
+            raw = json.loads(raw_paths[0].read_text(encoding="utf-8"))
+            command = json.loads(command_paths[0].read_text(encoding="utf-8"))
+
+        self.assertEqual("opencode-cli", raw["harness"])
+        self.assertEqual("opencode-live-subject", raw["harness_metadata"]["kind"])
+        self.assertEqual("opencode", raw["harness_metadata"]["harness_artifact_dir_name"])
+        self.assertEqual(1, raw["live_subject_calls"])
+        self.assertEqual(0, raw["live_codex_calls"])
+        self.assertIn("OpenCode completed the trial", raw["transcript"][1]["content"])
+        self.assertEqual(1, len(raw["tool_invocations"]))
+        self.assertEqual(["opencode", "run"], command["argv"][:2])
+        self.assertEqual("openai/gpt-5.5", command["argv"][command["argv"].index("--model") + 1])
+        self.assertIn("<prompt stored at", command["argv"][-1])
+        self.assertEqual("opencode-live-subject", command["harness_kind"])
+        self.assertIn("working_directory", command)
+
+    def test_live_rerun_without_prior_raw_does_not_reuse_archived_workspace(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            definition = _opencode_definition()
+            with mock.patch("subprocess.run", side_effect=_fake_opencode_run):
+                run_subject.run_live(definition, root / "out", repo_root=REPO_ROOT)
+
+            archived_workspace = next((root / "out" / "workspaces").glob("*"))
+            (archived_workspace / "stale.txt").write_text("stale", encoding="utf-8")
+
+            with mock.patch("subprocess.run", side_effect=_fake_opencode_run):
+                run_subject.run_live(definition, root / "out", repo_root=REPO_ROOT)
+
+            raw = json.loads(next((root / "out" / "raw").glob("*.json")).read_text(encoding="utf-8"))
+            manifest = json.loads(
+                next((root / "out" / "workspaces").glob("*/workspace-manifest.json")).read_text(
+                    encoding="utf-8"
+                )
+            )
+
+        self.assertEqual(["opencode-output.txt"], [item["path"] for item in raw["file_outputs"]])
+        self.assertEqual(["opencode-output.txt"], manifest["changed_files"])
+        self.assertNotIn("stale.txt", manifest["post_run_files"])
 
     def test_live_run_writes_trial_outputs_without_instruction_contamination(self):
         with tempfile.TemporaryDirectory() as tmp:
             with mock.patch("subprocess.run", side_effect=_fake_run):
-                summary = run_codex_subject.run_live(
+                summary = run_subject.run_live(
                     _definition(),
                     Path(tmp),
                     repo_root=REPO_ROOT,
@@ -146,7 +247,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
         definition["writable_add_dirs"] = [".agents/skills"]
         with tempfile.TemporaryDirectory() as tmp:
             with mock.patch("subprocess.run", side_effect=fake_run):
-                run_codex_subject.run_live(
+                run_subject.run_live(
                     definition,
                     Path(tmp),
                     repo_root=REPO_ROOT,
@@ -194,7 +295,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             with mock.patch("subprocess.run", side_effect=fake_run):
-                run_codex_subject.run_live(
+                run_subject.run_live(
                     _definition(),
                     Path(tmp),
                     repo_root=REPO_ROOT,
@@ -213,7 +314,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
         definition = _definition()
         definition["arms"] = definition["arms"][:2]
 
-        plan = run_codex_subject.build_plan(definition, repo_root=REPO_ROOT)
+        plan = run_subject.build_plan(definition, repo_root=REPO_ROOT)
 
         self.assertEqual(2, plan["live_codex_calls"])
         self.assertEqual(
@@ -237,7 +338,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
         definition["budget"]["max_harness_runs"] = 1
 
         with tempfile.TemporaryDirectory() as tmp:
-            plan = run_codex_subject.build_plan(
+            plan = run_subject.build_plan(
                 definition,
                 repo_root=REPO_ROOT,
                 out_dir=Path(tmp),
@@ -251,22 +352,22 @@ class CodexSubjectRunnerTest(unittest.TestCase):
         definition = _definition()
         definition["evaluation_only"] = True
 
-        with self.assertRaisesRegex(run_codex_subject.ExperimentError, "evaluation_only is retired"):
-            run_codex_subject.build_plan(definition, repo_root=REPO_ROOT)
+        with self.assertRaisesRegex(run_subject.ExperimentError, "evaluation_only is retired"):
+            run_subject.build_plan(definition, repo_root=REPO_ROOT)
 
     def test_scientific_contract_is_required(self):
         definition = _definition()
         del definition["scientific_contract"]
 
-        with self.assertRaisesRegex(run_codex_subject.ExperimentError, "scientific_contract"):
-            run_codex_subject.build_plan(definition, repo_root=REPO_ROOT)
+        with self.assertRaisesRegex(run_subject.ExperimentError, "scientific_contract"):
+            run_subject.build_plan(definition, repo_root=REPO_ROOT)
 
     def test_budget_is_required(self):
         definition = _definition()
         del definition["budget"]
 
-        with self.assertRaisesRegex(run_codex_subject.ExperimentError, "budget"):
-            run_codex_subject.build_plan(definition, repo_root=REPO_ROOT)
+        with self.assertRaisesRegex(run_subject.ExperimentError, "budget"):
+            run_subject.build_plan(definition, repo_root=REPO_ROOT)
 
     def test_timeout_writes_trial_artifact_instead_of_hanging(self):
         definition = _definition()
@@ -274,7 +375,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             with mock.patch("subprocess.run", side_effect=_fake_timeout):
-                summary = run_codex_subject.run_live(
+                summary = run_subject.run_live(
                     definition,
                     Path(tmp),
                     repo_root=REPO_ROOT,
@@ -311,7 +412,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
             ]
 
             with mock.patch("subprocess.run", side_effect=_fake_continuation_run):
-                summary = run_codex_subject.run_live(
+                summary = run_subject.run_live(
                     definition,
                     root / "out",
                     repo_root=REPO_ROOT,
@@ -399,7 +500,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
                 }
             ]
 
-            plan = run_codex_subject.build_plan(
+            plan = run_subject.build_plan(
                 definition,
                 repo_root=REPO_ROOT,
                 out_dir=root / "out",
@@ -453,7 +554,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
             ]
 
             with mock.patch("subprocess.run", side_effect=fake_run):
-                run_codex_subject.run_live(
+                run_subject.run_live(
                     definition,
                     root / "out",
                     repo_root=REPO_ROOT,
@@ -540,7 +641,7 @@ class CodexSubjectRunnerTest(unittest.TestCase):
             ]
 
             with mock.patch("subprocess.run", side_effect=fake_run):
-                run_codex_subject.run_live(
+                run_subject.run_live(
                     definition,
                     root / "out",
                     repo_root=REPO_ROOT,
@@ -619,6 +720,22 @@ def _definition():
     }
 
 
+def _opencode_definition():
+    definition = _definition()
+    definition["experiment_id"] = "EXP-20260627-902-opencode-subject"
+    definition["model"] = "openai/gpt-5.5"
+    definition["harness"] = "opencode-cli"
+    definition["arms"] = [
+        {
+            "id": "current-10x",
+            "instruction_source": "test current",
+            "instruction_text": "Non-scoring sentinel instruction for OpenCode current arm.",
+        }
+    ]
+    definition["budget"]["max_harness_runs"] = 1
+    return definition
+
+
 def _fake_run(argv, stdout, stderr, text, timeout=None):
     last_message = Path(argv[argv.index("--output-last-message") + 1])
     last_message.parent.mkdir(parents=True, exist_ok=True)
@@ -635,6 +752,20 @@ def _fake_run(argv, stdout, stderr, text, timeout=None):
             '{"type":"item.completed","item":{"type":"command_execution",'
             '"command":"rg --files","status":"completed","exit_code":0}}\n'
             '{"type":"turn.completed","usage":{"input_tokens":10,"output_tokens":20}}\n'
+        ),
+        stderr="",
+    )
+
+
+def _fake_opencode_run(argv, stdout, stderr, text, timeout=None):
+    workspace = Path(argv[argv.index("--dir") + 1])
+    (workspace / "opencode-output.txt").write_text("created by opencode", encoding="utf-8")
+    return mock.Mock(
+        returncode=0,
+        stdout=(
+            '{"type":"message.completed","role":"assistant","content":"OpenCode completed the trial."}\n'
+            '{"type":"tool.completed","tool":"edit","status":"completed"}\n'
+            '{"type":"turn.completed","usage":{"input_tokens":12,"output_tokens":24}}\n'
         ),
         stderr="",
     )

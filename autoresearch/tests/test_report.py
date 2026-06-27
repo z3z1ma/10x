@@ -136,16 +136,37 @@ class ReportTest(unittest.TestCase):
 
         self.assertNotIn("## Campaign Verdict", markdown)
 
+    def test_report_detects_opencode_artifact_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            raw_dir = root / "raw"
+            opencode_dir = root / "opencode"
+            raw_dir.mkdir()
+            opencode_dir.mkdir()
+            (opencode_dir / "sample.command.json").write_text("{}", encoding="utf-8")
+            (opencode_dir / "sample.stdout.jsonl").write_text("", encoding="utf-8")
+            (opencode_dir / "sample.stderr").write_text("", encoding="utf-8")
+            (opencode_dir / "sample.last-message.txt").write_text("done", encoding="utf-8")
+            _write_raw(raw_dir / "current.json", _artifact(harness="opencode-cli"))
 
-def _artifact(*, variant_id="current-10x"):
+            markdown = report.build_report(root)
+
+        self.assertIn("opencode command metadata", markdown)
+        self.assertIn("opencode stdout JSONL", markdown)
+        self.assertIn("live_subject_calls", markdown)
+
+
+def _artifact(*, variant_id="current-10x", harness="codex-cli"):
+    artifact_dir = "opencode" if harness == "opencode-cli" else "codex"
+    harness_kind = "opencode-live-subject" if harness == "opencode-cli" else "codex-live-subject"
     return {
         "schema_version": 1,
         "experiment_id": "EXP-20260627-001-reporting",
         "scenario_id": "SCN-001",
         "variant_id": variant_id,
         "rep": 0,
-        "model": "codex-test-model",
-        "harness": "codex-cli",
+        "model": "openai/gpt-5.5" if harness == "opencode-cli" else "codex-test-model",
+        "harness": harness,
         "instruction_digest": "sha256:test",
         "scientific_contract": _scientific_contract(),
         "transcript": [
@@ -155,14 +176,16 @@ def _artifact(*, variant_id="current-10x"):
         "tool_invocations": [{"type": "item.completed", "item": {"type": "command_execution"}}],
         "file_outputs": [{"path": "app.py", "action": "write", "content": "print('hi')"}],
         "command_outputs": [{"command": "python3 -m unittest", "exit_code": 0, "output": "OK"}],
-        "raw_artifact_refs": ["raw/current.json", "codex/current.command.json"],
+        "raw_artifact_refs": ["raw/current.json", f"{artifact_dir}/current.command.json"],
         "wall_seconds": 1.5,
         "input_tokens": 100,
         "output_tokens": 50,
         "timed_out": False,
-        "live_codex_calls": 1,
+        "live_subject_calls": 1,
+        "live_codex_calls": 1 if harness == "codex-cli" else 0,
         "harness_metadata": {
-            "kind": "codex-live-subject",
+            "kind": harness_kind,
+            "harness_artifact_dir_name": artifact_dir,
             "archived_workspace_dir": "workspaces/current",
             "workspace_manifest_path": "workspaces/current/workspace-manifest.json",
         },

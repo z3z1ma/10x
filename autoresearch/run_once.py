@@ -7,10 +7,10 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from autoresearch import canonical_guard, report, run_codex_subject
+    from autoresearch import canonical_guard, report, run_subject
 except ImportError:  # pragma: no cover - supports direct script execution.
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from autoresearch import canonical_guard, report, run_codex_subject
+    from autoresearch import canonical_guard, report, run_subject
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -29,11 +29,11 @@ def load_definition(path: str | Path) -> dict[str, Any]:
         return data
 
     errors = []
-    for loader in (run_codex_subject.load_definition,):
+    for loader in (run_subject.load_definition,):
         try:
             return loader(definition_path)
         except (
-            run_codex_subject.ExperimentError,
+            run_subject.ExperimentError,
             json.JSONDecodeError,
         ) as exc:
             errors.append(str(exc))
@@ -63,9 +63,9 @@ def run_once(
         guard_before = canonical_guard.snapshot(repo_root)
         guard_path = output_root / "canonical_guard.json"
 
-    if _uses_live_codex_subject(definition):
-        runner_summary = run_codex_subject.run_live(definition, output_root, repo_root=repo_root)
-        runner = "autoresearch/run_codex_subject.py"
+    if _uses_live_subject(definition):
+        runner_summary = run_subject.run_live(definition, output_root, repo_root=repo_root)
+        runner = "autoresearch/run_subject.py"
     else:
         raise RunOnceError("unsupported experiment definition")
 
@@ -141,7 +141,7 @@ def main(argv: list[str] | None = None) -> int:
         RunOnceError,
         canonical_guard.CanonicalGuardError,
         report.ReportError,
-        run_codex_subject.ExperimentError,
+        run_subject.ExperimentError,
     ) as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -149,8 +149,8 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
-def _uses_live_codex_subject(definition: dict[str, Any]) -> bool:
-    return str(definition.get("harness", "")).lower() == "codex-cli"
+def _uses_live_subject(definition: dict[str, Any]) -> bool:
+    return str(definition.get("harness", "")).lower() in {"codex-cli", "opencode-cli"}
 
 
 def _limits_for_runner(runner_summary: dict[str, Any]) -> list[str]:
@@ -162,7 +162,7 @@ def _limits_for_runner(runner_summary: dict[str, Any]) -> list[str]:
         limits.extend(
             [
                 "Live subject outputs are trial evidence; the LLM researcher performs rubric inspection outside the runner.",
-                "Codex system context and authenticated home state are outside complete runner control; inspect workspace manifests and command artifacts.",
+                "Subject CLI system context, authenticated home state, and provider configuration are outside complete runner control; inspect workspace manifests and command artifacts.",
             ]
         )
     return limits

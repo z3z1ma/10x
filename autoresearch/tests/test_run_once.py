@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 class RunOnceTest(unittest.TestCase):
     def test_live_subject_micro_run_uses_candidate_executing_runner(self):
         with tempfile.TemporaryDirectory() as tmp:
-            with mock.patch("autoresearch.run_once.run_codex_subject.run_live") as run_live:
+            with mock.patch("autoresearch.run_once.run_subject.run_live") as run_live:
                 run_live.return_value = {
                     "experiment_id": "EXP-20260623-703-run-once-live",
                     "mode": "live",
@@ -32,14 +32,14 @@ class RunOnceTest(unittest.TestCase):
                     )
 
             self.assertEqual("MICRO", result["method_tier"])
-            self.assertEqual("autoresearch/run_codex_subject.py", result["runner"])
+            self.assertEqual("autoresearch/run_subject.py", result["runner"])
             self.assertEqual(3, result["samples_written"])
             self.assertTrue(any("rubric inspection" in item for item in result["limits"]))
             self.assertNotIn("score_artifact_dir", result)
 
     def test_live_subject_full_run_uses_candidate_executing_runner(self):
         with tempfile.TemporaryDirectory() as tmp:
-            with mock.patch("autoresearch.run_once.run_codex_subject.run_live") as run_live:
+            with mock.patch("autoresearch.run_once.run_subject.run_live") as run_live:
                 run_live.return_value = {
                     "experiment_id": "EXP-20260623-704-run-once-live-full",
                     "mode": "live",
@@ -56,8 +56,32 @@ class RunOnceTest(unittest.TestCase):
                     )
 
             self.assertEqual("FULL", result["method_tier"])
-            self.assertEqual("autoresearch/run_codex_subject.py", result["runner"])
+            self.assertEqual("autoresearch/run_subject.py", result["runner"])
             self.assertEqual(3, result["samples_written"])
+
+    def test_opencode_live_subject_run_uses_same_one_shot_runner(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch("autoresearch.run_once.run_subject.run_live") as run_live:
+                run_live.return_value = {
+                    "experiment_id": "EXP-20260627-903-run-once-opencode",
+                    "mode": "live",
+                    "samples_written": 1,
+                    "plan_path": str(Path(tmp) / "plan.json"),
+                    "raw_output_dir": str(Path(tmp) / "raw"),
+                    "live_subject_calls": 1,
+                    "live_codex_calls": 0,
+                }
+                with mock.patch("autoresearch.run_once.report.write_report"):
+                    result = run_once.run_once(
+                        _live_subject_definition(harness="opencode-cli"),
+                        tmp,
+                        repo_root=REPO_ROOT,
+                    )
+
+            self.assertEqual("MICRO", result["method_tier"])
+            self.assertEqual("autoresearch/run_subject.py", result["runner"])
+            self.assertEqual(1, result["samples_written"])
+            self.assertTrue(any("Subject CLI" in item for item in result["limits"]))
 
     def test_unsupported_tier_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -72,7 +96,7 @@ class RunOnceTest(unittest.TestCase):
             experiment.write_text(json.dumps(_live_subject_definition()), encoding="utf-8")
             stdout = io.StringIO()
 
-            with mock.patch("autoresearch.run_once.run_codex_subject.run_live") as run_live:
+            with mock.patch("autoresearch.run_once.run_subject.run_live") as run_live:
                 run_live.return_value = {
                     "experiment_id": "EXP-20260623-703-run-once-live",
                     "mode": "live",
@@ -92,6 +116,22 @@ class RunOnceTest(unittest.TestCase):
             self.assertEqual("MICRO", result["method_tier"])
 
     def test_load_definition_accepts_live_subject_markdown_block(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "experiment.md"
+            path.write_text(
+                "<!-- subject-runner-definition:start -->\n"
+                "```json\n"
+                + json.dumps(_live_subject_definition())
+                + "\n```\n"
+                "<!-- subject-runner-definition:end -->\n",
+                encoding="utf-8",
+            )
+
+            definition = run_once.load_definition(path)
+
+        self.assertEqual("codex-cli", definition["harness"])
+
+    def test_load_definition_accepts_legacy_codex_markdown_block(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "experiment.md"
             path.write_text(
@@ -149,7 +189,7 @@ class RunOnceTest(unittest.TestCase):
                     "raw_output_dir": str(Path(out_dir) / "raw"),
                 }
 
-            with mock.patch("autoresearch.run_once.run_codex_subject.run_live", side_effect=mutate):
+            with mock.patch("autoresearch.run_once.run_subject.run_live", side_effect=mutate):
                 with mock.patch("autoresearch.run_once.report.write_report"):
                     with self.assertRaises(run_once.RunOnceError):
                         run_once.run_once(
@@ -178,7 +218,7 @@ class RunOnceTest(unittest.TestCase):
             )
             (root / "SKILL.md").write_text("dirty\n", encoding="utf-8")
 
-            with mock.patch("autoresearch.run_once.run_codex_subject.run_live"):
+            with mock.patch("autoresearch.run_once.run_subject.run_live"):
                 with self.assertRaises(run_once.canonical_guard.CanonicalGuardError):
                     run_once.run_once(
                         _live_subject_definition(),
@@ -188,14 +228,14 @@ class RunOnceTest(unittest.TestCase):
                     )
 
 
-def _live_subject_definition(*, method_tier="MICRO"):
+def _live_subject_definition(*, method_tier="MICRO", harness="codex-cli"):
     definition = {
         "experiment_id": "EXP-20260623-703-run-once-live",
         "status": "active",
         "method_tier": method_tier,
         "driver": "unit-test",
-        "model": "codex-cli-default",
-        "harness": "codex-cli",
+        "model": "openai/gpt-5.5" if harness == "opencode-cli" else "codex-cli-default",
+        "harness": harness,
         "repetitions": 1,
         "arms": _arms(),
         "scenarios": [{"id": "SCN-010", "prompt": "Add a framework."}],

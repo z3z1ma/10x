@@ -60,11 +60,14 @@ quality floor, and verdict record path before execution.
 ## Runner Definition
 
 For MICRO or FULL execution, fill this JSON block or provide an equivalent
-local JSON definition to `autoresearch/run_codex_subject.py`. MICRO and FULL
-are scenario breadth tiers. A MICRO can still call Codex; it is micro because
-the scenario isolates one behavior.
+local JSON definition to `autoresearch/run_once.py`. MICRO and FULL are scenario
+breadth tiers. A MICRO can still call a live subject harness; it is micro
+because the scenario isolates one behavior.
 
-<!-- codex-subject-runner-definition:start -->
+Supported harness values are `codex-cli` and `opencode-cli`. For OpenCode with
+the OpenAI provider, use model IDs such as `openai/gpt-5.5`.
+
+<!-- subject-runner-definition:start -->
 ```json
 {
   "experiment_id": "EXP-YYYYMMDD-NNN-short-slug",
@@ -118,7 +121,7 @@ the scenario isolates one behavior.
   }
 }
 ```
-<!-- codex-subject-runner-definition:end -->
+<!-- subject-runner-definition:end -->
 
 Continuation scenario shape:
 

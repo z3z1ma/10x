@@ -152,20 +152,33 @@ def _summary_section(
     )
     mode = _first_present(_dict(summary).get("mode"), _dict(plan).get("mode"))
     live_calls = _first_present(
+        _dict(summary).get("live_subject_calls"),
+        _dict(plan).get("live_subject_calls"),
+        sum(_subject_calls(artifact["data"]) for artifact in artifacts),
+    )
+    legacy_codex_calls = _first_present(
         _dict(summary).get("live_codex_calls"),
         _dict(plan).get("live_codex_calls"),
-        sum(_int(artifact["data"].get("live_codex_calls")) for artifact in artifacts),
     )
     rows = [
         ("experiment_id", experiment_id),
         ("mode", mode),
         ("raw_artifacts", len(artifacts)),
-        ("live_codex_calls", live_calls),
+        ("live_subject_calls", live_calls),
         ("summary", _present(_metadata_path(source, "summary.json"))),
         ("plan", _present(_metadata_path(source, "plan.json"))),
     ]
+    if legacy_codex_calls is not None:
+        rows.append(("live_codex_calls", legacy_codex_calls))
     if summary:
-        for field in ("raw_output_dir", "workspace_dir", "codex_artifact_dir", "prompt_dir"):
+        for field in (
+            "raw_output_dir",
+            "workspace_dir",
+            "harness_artifact_dir",
+            "codex_artifact_dir",
+            "opencode_artifact_dir",
+            "prompt_dir",
+        ):
             if field in summary:
                 rows.append((field, summary[field]))
     return [
@@ -266,7 +279,7 @@ def _trial_artifacts_section(artifacts: list[dict[str, Any]]) -> list[str]:
                 rep=_cell(data.get("rep")),
                 exits=_cell(_command_exits(data)),
                 timed_out=_cell(data.get("timed_out")),
-                turns=_cell(data.get("live_codex_calls")),
+                turns=_cell(_subject_calls(data)),
                 wall=_cell(_number(data.get("wall_seconds"))),
                 tokens=_cell(_tokens(data)),
                 workspace=_cell(metadata.get("archived_workspace_dir")),
@@ -287,14 +300,23 @@ def _artifact_inspection_checklist_section(
         ("plan.json", _present(root / "plan.json")),
         ("canonical_guard.json", _present(root / "canonical_guard.json")),
         ("raw trial artifacts", f"{len(artifacts)} found"),
-        ("codex command metadata", _count_files(root / "codex", "*.command.json")),
-        ("codex stdout JSONL", _count_files(root / "codex", "*.stdout.jsonl")),
-        ("codex stderr", _count_files(root / "codex", "*.stderr")),
-        ("last assistant messages", _count_files(root / "codex", "*.last-message.txt")),
-        ("prompts", _count_files(root / "prompts", "*.prompt.txt")),
-        ("workspace manifests", _count_files(root / "workspaces", "*/workspace-manifest.json")),
-        ("archived workspaces", _count_dirs(root / "workspaces")),
     ]
+    for harness_dir in _harness_artifact_dir_names(root, artifacts):
+        rows.extend(
+            [
+                (f"{harness_dir} command metadata", _count_files(root / harness_dir, "*.command.json")),
+                (f"{harness_dir} stdout JSONL", _count_files(root / harness_dir, "*.stdout.jsonl")),
+                (f"{harness_dir} stderr", _count_files(root / harness_dir, "*.stderr")),
+                (f"{harness_dir} last assistant messages", _count_files(root / harness_dir, "*.last-message.txt")),
+            ]
+        )
+    rows.extend(
+        [
+            ("prompts", _count_files(root / "prompts", "*.prompt.txt")),
+            ("workspace manifests", _count_files(root / "workspaces", "*/workspace-manifest.json")),
+            ("archived workspaces", _count_dirs(root / "workspaces")),
+        ]
+    )
     return [
         "## Artifact Inspection Checklist",
         "",
@@ -350,6 +372,34 @@ def _limits_section() -> list[str]:
         "- The runner does not replace the LLM researcher's rubric inspection.",
         "",
     ]
+
+
+def _subject_calls(data: dict[str, Any]) -> int:
+    value = data.get("live_subject_calls")
+    if value is None:
+        value = data.get("live_codex_calls")
+    return _int(value)
+
+
+def _harness_artifact_dir_names(root: Path, artifacts: list[dict[str, Any]]) -> list[str]:
+    names = set()
+    for artifact in artifacts:
+        data = artifact["data"]
+        metadata = _dict(data.get("harness_metadata"))
+        name = metadata.get("harness_artifact_dir_name")
+        if isinstance(name, str) and name:
+            names.add(name)
+            continue
+        harness = data.get("harness")
+        if isinstance(harness, str):
+            if harness == "codex-cli":
+                names.add("codex")
+            elif harness == "opencode-cli":
+                names.add("opencode")
+    if names:
+        return sorted(names)
+    existing = [name for name in ("codex", "opencode") if (root / name).exists()]
+    return existing or ["codex"]
 
 
 def _load_json_file(path: Path, label: str) -> dict[str, Any]:
