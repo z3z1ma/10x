@@ -156,10 +156,6 @@ def _summary_section(
         _dict(plan).get("live_subject_calls"),
         sum(_subject_calls(artifact["data"]) for artifact in artifacts),
     )
-    legacy_codex_calls = _first_present(
-        _dict(summary).get("live_codex_calls"),
-        _dict(plan).get("live_codex_calls"),
-    )
     rows = [
         ("experiment_id", experiment_id),
         ("mode", mode),
@@ -168,19 +164,13 @@ def _summary_section(
         ("summary", _present(_metadata_path(source, "summary.json"))),
         ("plan", _present(_metadata_path(source, "plan.json"))),
     ]
-    if legacy_codex_calls is not None:
-        rows.append(("live_codex_calls", legacy_codex_calls))
     if summary:
-        for field in (
-            "raw_output_dir",
-            "workspace_dir",
-            "harness_artifact_dir",
-            "codex_artifact_dir",
-            "opencode_artifact_dir",
-            "prompt_dir",
-        ):
+        for field in ("raw_output_dir", "workspace_dir", "prompt_dir"):
             if field in summary:
                 rows.append((field, summary[field]))
+        harness_artifact_dir = _harness_artifact_dir_value(summary)
+        if harness_artifact_dir:
+            rows.append(("harness_artifact_dir", harness_artifact_dir))
     return [
         "## Summary",
         "",
@@ -265,18 +255,19 @@ def _trial_artifacts_section(artifacts: list[dict[str, Any]]) -> list[str]:
     lines = [
         "## Trial Artifacts",
         "",
-        "| Artifact | Scenario | Arm | Rep | Command exits | Timed out | Turns | Wall seconds | Tokens | Archived workspace | Workspace manifest |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Artifact | Scenario | Arm | Rep | Instruction delivery | Command exits | Timed out | Turns | Wall seconds | Tokens | Archived workspace | Workspace manifest |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for artifact in artifacts:
         data = artifact["data"]
         metadata = _dict(data.get("harness_metadata"))
         lines.append(
-            "| {path} | {scenario} | {arm} | {rep} | {exits} | {timed_out} | {turns} | {wall} | {tokens} | {workspace} | {manifest} |".format(
+            "| {path} | {scenario} | {arm} | {rep} | {instruction} | {exits} | {timed_out} | {turns} | {wall} | {tokens} | {workspace} | {manifest} |".format(
                 path=_cell(artifact["relative_path"]),
                 scenario=_cell(data.get("scenario_id")),
                 arm=_cell(data.get("variant_id")),
                 rep=_cell(data.get("rep")),
+                instruction=_cell(_instruction_delivery(data)),
                 exits=_cell(_command_exits(data)),
                 timed_out=_cell(data.get("timed_out")),
                 turns=_cell(_subject_calls(data)),
@@ -313,6 +304,7 @@ def _artifact_inspection_checklist_section(
     rows.extend(
         [
             ("prompts", _count_files(root / "prompts", "*.prompt.txt")),
+            ("instruction artifacts", _count_files(root / "prompts", "*.instructions.txt")),
             ("workspace manifests", _count_files(root / "workspaces", "*/workspace-manifest.json")),
             ("archived workspaces", _count_dirs(root / "workspaces")),
         ]
@@ -379,6 +371,23 @@ def _subject_calls(data: dict[str, Any]) -> int:
     if value is None:
         value = data.get("live_codex_calls")
     return _int(value)
+
+
+def _harness_artifact_dir_value(summary: dict[str, Any]) -> Any:
+    return _first_present(
+        summary.get("harness_artifact_dir"),
+        summary.get("codex_artifact_dir"),
+        summary.get("opencode_artifact_dir"),
+    )
+
+
+def _instruction_delivery(data: dict[str, Any]) -> str:
+    metadata = _dict(data.get("harness_metadata"))
+    delivery = _dict(metadata.get("instruction_delivery"))
+    channel = delivery.get("channel")
+    if isinstance(channel, str) and channel:
+        return channel
+    return "unknown"
 
 
 def _harness_artifact_dir_names(root: Path, artifacts: list[dict[str, Any]]) -> list[str]:

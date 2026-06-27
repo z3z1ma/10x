@@ -4,6 +4,7 @@ import argparse
 import copy
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -17,7 +18,6 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCENARIOS_PATH = REPO_ROOT / "autoresearch" / "catalogs" / "scenarios.json"
 MARKDOWN_DEFINITION_START = "<!-- subject-runner-definition:start -->"
 MARKDOWN_DEFINITION_END = "<!-- subject-runner-definition:end -->"
 LEGACY_MARKDOWN_DEFINITION_START = "<!-- codex-subject-runner-definition:start -->"
@@ -37,6 +37,7 @@ SUPPRESSED_INSTRUCTION_FILES = [
     ".agents/skills",
 ]
 SUPPRESSED_CONTROL_RECORD_DIRS = [".10x"]
+OPENCODE_SUBJECT_AGENT = "autoresearch-subject"
 
 
 @dataclass(frozen=True)
@@ -44,8 +45,6 @@ class SubjectHarness:
     id: str
     artifact_dir: str
     kind: str
-    executable: str
-    json_stdout: bool
 
 
 SUPPORTED_HARNESSES = {
@@ -53,15 +52,11 @@ SUPPORTED_HARNESSES = {
         id="codex-cli",
         artifact_dir="codex",
         kind="codex-live-subject",
-        executable="codex",
-        json_stdout=True,
     ),
     "opencode-cli": SubjectHarness(
         id="opencode-cli",
         artifact_dir="opencode",
         kind="opencode-live-subject",
-        executable="opencode",
-        json_stdout=True,
     ),
 }
 
@@ -129,11 +124,13 @@ def build_plan(
                 seed_workspace_kind = prior_context.get("workspace_kind")
                 workspace_dir = artifact_dirs["workspaces"] / stem
                 raw_path = artifact_dirs["raw"] / f"{stem}.json"
-                command_path = artifact_dirs[harness.artifact_dir] / f"{stem}.command.json"
-                stdout_path = artifact_dirs[harness.artifact_dir] / f"{stem}.stdout.jsonl"
-                stderr_path = artifact_dirs[harness.artifact_dir] / f"{stem}.stderr"
-                last_message_path = artifact_dirs[harness.artifact_dir] / f"{stem}.last-message.txt"
+                command_path = artifact_dirs["harness"] / f"{stem}.command.json"
+                stdout_path = artifact_dirs["harness"] / f"{stem}.stdout.jsonl"
+                stderr_path = artifact_dirs["harness"] / f"{stem}.stderr"
+                last_message_path = artifact_dirs["harness"] / f"{stem}.last-message.txt"
                 prompt_path = artifact_dirs["prompts"] / f"{stem}.prompt.txt"
+                instruction_artifact_path = artifact_dirs["prompts"] / f"{stem}.instructions.txt"
+                harness_config_path = _harness_config_path(harness, artifact_dirs, stem)
                 manifest_path = workspace_dir / "workspace-manifest.json"
                 turns = _planned_turns(
                     harness,
@@ -141,6 +138,8 @@ def build_plan(
                     stem,
                     workspace_dir,
                     last_message_path,
+                    instruction_artifact_path,
+                    harness_config_path,
                     definition["model"],
                     arm,
                     user_message,
@@ -163,6 +162,8 @@ def build_plan(
                         "base_instruction_path": arm.get("base_instruction_path"),
                         "instruction_text": arm["instruction_text"],
                         "instruction_digest": arm["instruction_digest"],
+                        "instruction_artifact_path": str(instruction_artifact_path),
+                        "instruction_delivery": _instruction_delivery(harness, arm["instruction_text"]),
                         "live_run_key": live_run_key,
                         "scenario_prompt": user_message,
                         "prior_raw_path": prior_context.get("raw_path"),
@@ -177,18 +178,17 @@ def build_plan(
                         "planned_stdout_jsonl_path": str(stdout_path),
                         "planned_stderr_path": str(stderr_path),
                         "planned_last_message_path": str(last_message_path),
+                        "planned_harness_config_path": str(harness_config_path) if harness_config_path else None,
                         "planned_workspace_manifest_path": str(manifest_path),
                         "planned_turns": turns,
-                        "planned_subject_argv": turns[0]["planned_subject_argv"],
+                        "planned_argv": turns[0]["planned_argv"],
+                        "planned_env": turns[0]["planned_env"],
                         "writable_add_dirs": _writable_add_dirs(definition),
                         "timeout_seconds": budget["timeout_seconds_per_run"],
                         "control_isolation": _control_isolation(harness),
                         "live_subject_calls": 1,
-                        "live_codex_calls": 1 if harness.id == "codex-cli" else 0,
                     }
                 )
-                sample_argv_key = f"planned_{harness.artifact_dir}_argv"
-                samples[-1][sample_argv_key] = turns[0]["planned_subject_argv"]
 
     return {
         "experiment_id": definition["experiment_id"],
@@ -209,7 +209,6 @@ def build_plan(
         "artifact_dirs": {name: str(path) for name, path in artifact_dirs.items()},
         "samples": samples,
         "live_subject_calls": sum(sample["live_subject_calls"] for sample in samples),
-        "live_codex_calls": sum(sample["live_codex_calls"] for sample in samples),
         "promotion_decision": "not-performed",
         "limits": _limits(harness),
     }
@@ -256,7 +255,7 @@ def run_live(
 
     written_samples = []
     for sample in plan["samples"]:
-        written_samples.append(_run_sample(sample, repo_root=repo_root))
+        written_samples.append(_run_sample(sample))
 
     plan["mode"] = "live"
     plan["samples"] = written_samples
@@ -269,14 +268,12 @@ def run_live(
         "samples_written": len(written_samples),
         "raw_output_dir": plan["artifact_dirs"]["raw"],
         "workspace_dir": plan["artifact_dirs"]["workspaces"],
-        "harness_artifact_dir": plan["artifact_dirs"][harness.artifact_dir],
-        f"{harness.artifact_dir}_artifact_dir": plan["artifact_dirs"][harness.artifact_dir],
+        "harness_artifact_dir": plan["artifact_dirs"]["harness"],
         "prompt_dir": plan["artifact_dirs"]["prompts"],
         "plan_path": str(plan_path),
         "harness": plan["harness"],
         "harness_kind": plan["harness_kind"],
         "live_subject_calls": sum(sample["live_subject_calls"] for sample in written_samples),
-        "live_codex_calls": sum(sample["live_codex_calls"] for sample in written_samples),
         "promotion_decision": "not-performed",
         "budget": plan["budget"],
         "scientific_contract": plan["scientific_contract"],
@@ -316,13 +313,11 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
-def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
+def _run_sample(sample: dict[str, Any]) -> dict[str, Any]:
     harness = _subject_harness(sample["harness"])
     archive_workspace = Path(sample["planned_workspace_dir"])
     raw_path = Path(sample["planned_raw_output_path"])
     command_path = Path(sample["planned_command_path"])
-    stdout_path = Path(sample["planned_stdout_jsonl_path"])
-    stderr_path = Path(sample["planned_stderr_path"])
     prompt_path = Path(sample["prompt_path"])
     archive_manifest_path = Path(sample["planned_workspace_manifest_path"])
     seed_workspace = (
@@ -366,35 +361,53 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
             stdout_path = Path(planned_turn["stdout_jsonl_path"])
             stderr_path = Path(planned_turn["stderr_path"])
             last_message_path = Path(planned_turn["last_message_path"])
-            prompt = _turn_prompt(
-                sample,
-                planned_turn["user_message"],
-                transcript,
+            instruction_artifact_path = Path(planned_turn["instruction_artifact_path"])
+            harness_config_path = (
+                Path(planned_turn["harness_config_path"])
+                if planned_turn.get("harness_config_path")
+                else None
             )
-            argv = _planned_subject_argv(
+            prompt = _turn_prompt(planned_turn["user_message"], transcript)
+            argv = _planned_argv(
                 harness,
                 workspace,
                 prompt,
                 last_message_path,
                 sample["model"],
+                sample["instruction_text"],
                 sample.get("writable_add_dirs", []),
+            )
+            env_overrides = _planned_env(
+                harness,
+                sample["instruction_text"],
+                harness_config_path,
             )
 
             prompt_path.parent.mkdir(parents=True, exist_ok=True)
             command_path.parent.mkdir(parents=True, exist_ok=True)
             prompt_path.write_text(prompt, encoding="utf-8")
+            instruction_artifact_path.parent.mkdir(parents=True, exist_ok=True)
+            instruction_artifact_path.write_text(sample["instruction_text"], encoding="utf-8")
+            _write_harness_config(
+                harness,
+                sample["instruction_text"],
+                instruction_artifact_path,
+                harness_config_path,
+            )
 
             started = _now()
             start = time.monotonic()
             turn_timed_out = False
+            run_kwargs = {
+                "stdout": subprocess.PIPE,
+                "stderr": subprocess.PIPE,
+                "text": True,
+                "timeout": float(sample["timeout_seconds"]),
+            }
+            if env_overrides:
+                run_kwargs["env"] = {**os.environ, **env_overrides}
             try:
-                completed = subprocess.run(
-                    argv,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    timeout=float(sample["timeout_seconds"]),
-                )
+                completed = subprocess.run(argv, **run_kwargs)
             except subprocess.TimeoutExpired as exc:
                 turn_timed_out = True
                 completed = SimpleNamespace(
@@ -426,12 +439,16 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
                 "start_timestamp_utc": started,
                 "end_timestamp_utc": ended,
                 "turn_index": planned_turn["turn_index"],
-                "argv": _public_argv(argv, prompt_path),
+                "argv": _public_argv(argv, prompt_path, instruction_artifact_path),
+                "env": env_overrides,
                 "exit_code": completed.returncode,
                 "stdout_jsonl_path": str(stdout_path),
                 "stderr_path": str(stderr_path),
                 "last_message_path": str(last_message_path),
                 "prompt_path": str(prompt_path),
+                "instruction_artifact_path": str(instruction_artifact_path),
+                "harness_config_path": str(harness_config_path) if harness_config_path else None,
+                "instruction_delivery": sample["instruction_delivery"],
                 "working_directory": str(workspace),
                 "usage": turn_usage,
                 "timed_out": turn_timed_out,
@@ -445,20 +462,25 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
             transcript.append({"role": "assistant", "content": last_message})
             command_outputs.append(
                 {
-                    "command": " ".join(argv[:8]) + " ...",
+                    "command": " ".join(
+                        _public_argv(argv, prompt_path, instruction_artifact_path)[:8]
+                    )
+                    + " ...",
                     "exit_code": completed.returncode,
                     "output": _command_output(completed.stderr, stdout_path),
                 }
             )
-            raw_refs.extend(
-                [
-                    str(prompt_path),
-                    str(command_path),
-                    str(stdout_path),
-                    str(stderr_path),
-                    str(last_message_path),
-                ]
-            )
+            turn_refs = [
+                str(prompt_path),
+                str(instruction_artifact_path),
+                str(command_path),
+                str(stdout_path),
+                str(stderr_path),
+                str(last_message_path),
+            ]
+            if harness_config_path:
+                turn_refs.append(str(harness_config_path))
+            raw_refs.extend(turn_refs)
             if completed.returncode != 0:
                 break
 
@@ -524,13 +546,14 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
         "timed_out": timed_out,
         "timeout_seconds": sample["timeout_seconds"],
         "live_subject_calls": completed_new_turns,
-        "live_codex_calls": completed_new_turns if harness.id == "codex-cli" else 0,
         "harness_metadata": {
             "kind": harness.kind,
             "harness_artifact_dir_name": harness.artifact_dir,
             "instruction_source": sample["instruction_source"],
             "instruction_path": sample.get("instruction_path"),
             "base_instruction_path": sample.get("base_instruction_path"),
+            "instruction_artifact_path": sample.get("instruction_artifact_path"),
+            "instruction_delivery": sample["instruction_delivery"],
             "archived_workspace_dir": str(archive_workspace),
             "workspace_manifest_path": str(archive_manifest_path),
             "prior_raw_path": sample.get("prior_raw_path"),
@@ -544,6 +567,9 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
                     "stdout_jsonl_path": turn["stdout_jsonl_path"],
                     "stderr_path": turn["stderr_path"],
                     "last_message_path": turn["last_message_path"],
+                    "instruction_artifact_path": turn["instruction_artifact_path"],
+                    "harness_config_path": turn.get("harness_config_path"),
+                    "planned_env": turn.get("planned_env", {}),
                 }
                 for turn in sample["planned_turns"]
             ],
@@ -569,7 +595,6 @@ def _run_sample(sample: dict[str, Any], *, repo_root: Path) -> dict[str, Any]:
             "turns": sample["planned_turns"],
             "raw_output_path": str(raw_path),
             "live_subject_calls": completed_new_turns,
-            "live_codex_calls": completed_new_turns if harness.id == "codex-cli" else 0,
             "prior_raw_path": sample.get("prior_raw_path"),
             "seed_workspace_dir": str(seed_workspace) if seed_workspace else None,
         }
@@ -903,6 +928,8 @@ def _planned_turns(
     stem: str,
     workspace_dir: Path,
     first_last_message_path: Path,
+    instruction_artifact_path: Path,
+    harness_config_path: Path | None,
     model: str,
     arm: dict[str, Any],
     user_message: str,
@@ -911,19 +938,20 @@ def _planned_turns(
 ) -> list[dict[str, Any]]:
     turns = []
     prompt_path = artifact_dirs["prompts"] / f"{stem}.prompt.txt"
-    command_path = artifact_dirs[harness.artifact_dir] / f"{stem}.command.json"
-    stdout_path = artifact_dirs[harness.artifact_dir] / f"{stem}.stdout.jsonl"
-    stderr_path = artifact_dirs[harness.artifact_dir] / f"{stem}.stderr"
-    prompt = _turn_prompt({"scenario_prompt": user_message, **arm}, user_message, prior_transcript)
-    argv = _planned_subject_argv(
+    command_path = artifact_dirs["harness"] / f"{stem}.command.json"
+    stdout_path = artifact_dirs["harness"] / f"{stem}.stdout.jsonl"
+    stderr_path = artifact_dirs["harness"] / f"{stem}.stderr"
+    prompt = _turn_prompt(user_message, prior_transcript)
+    env = _planned_env(harness, arm["instruction_text"], harness_config_path)
+    argv = _planned_argv(
         harness,
         workspace_dir,
         prompt,
         first_last_message_path,
         model,
+        arm["instruction_text"],
         writable_add_dirs,
     )
-    argv_key = f"planned_{harness.artifact_dir}_argv"
     turns.append(
         {
             "turn_index": len(prior_transcript) // 2,
@@ -934,84 +962,69 @@ def _planned_turns(
             "stdout_jsonl_path": str(stdout_path),
             "stderr_path": str(stderr_path),
             "last_message_path": str(first_last_message_path),
-            "planned_subject_argv": argv,
-            argv_key: argv,
+            "instruction_artifact_path": str(instruction_artifact_path),
+            "harness_config_path": str(harness_config_path) if harness_config_path else None,
+            "planned_argv": argv,
+            "planned_env": env,
         }
     )
     return turns
 
 
-def _turn_prompt(sample: dict[str, Any], user_message: str, transcript: list[dict[str, str]]) -> str:
+def _turn_prompt(user_message: str, transcript: list[dict[str, str]]) -> str:
     transcript_block = ""
     if transcript:
         lines = ["Prior transcript:"]
         for item in transcript:
             lines.append(f"{item['role'].title()}: {item['content']}")
         transcript_block = "\n".join(lines) + "\n\n"
-    return (
-        "You are the subject agent in a 10x autoresearch evaluation.\n"
-        "Use only the instructions between <instructions> and </instructions> "
-        "as your project-level operating instructions for this run.\n"
-        "Do not discuss scoring, the benchmark, or these wrapper tags.\n\n"
-        "<instructions>\n"
-        f"{sample['instruction_text']}\n"
-        "</instructions>\n\n"
-        f"{transcript_block}"
-        "User message:\n"
-        f"{user_message}\n"
-    )
+    return f"{transcript_block}{user_message}\n"
 
 
-def _planned_codex_argv(
-    workspace_dir: Path,
-    prompt: str,
-    last_message_path: Path,
-    writable_add_dirs: list[str] | None = None,
-) -> list[str]:
-    argv = [
-        "codex",
-        "--ask-for-approval",
-        "never",
-        "--disable",
-        "plugins",
-        "exec",
-        "--cd",
-        str(workspace_dir),
-        "--skip-git-repo-check",
-        "--ephemeral",
-        "--json",
-        "--output-last-message",
-        str(last_message_path),
-        "--ignore-user-config",
-        "--sandbox",
-        "workspace-write",
-    ]
-    for relative in writable_add_dirs or []:
-        argv.extend(["--add-dir", str(workspace_dir / relative)])
-    argv.append(prompt)
-    return argv
-
-
-def _planned_subject_argv(
+def _planned_argv(
     harness: SubjectHarness,
     workspace_dir: Path,
     prompt: str,
     last_message_path: Path,
     model: str,
+    instruction_text: str,
     writable_add_dirs: list[str] | None = None,
 ) -> list[str]:
     if harness.id == "codex-cli":
-        return _planned_codex_argv(
-            workspace_dir,
-            prompt,
-            last_message_path,
-            writable_add_dirs,
-        )
+        argv = [
+            "codex",
+            "--ask-for-approval",
+            "never",
+            "--disable",
+            "plugins",
+            "exec",
+            "--cd",
+            str(workspace_dir),
+            "--skip-git-repo-check",
+            "--ephemeral",
+            "--json",
+            "--output-last-message",
+            str(last_message_path),
+            "--ignore-user-config",
+            "--ignore-rules",
+            "--sandbox",
+            "workspace-write",
+        ]
+        if instruction_text:
+            argv[5:5] = [
+                "--config",
+                f"developer_instructions={_toml_basic_string(instruction_text)}",
+            ]
+        for relative in writable_add_dirs or []:
+            argv.extend(["--add-dir", str(workspace_dir / relative)])
+        argv.append(prompt)
+        return argv
     if harness.id == "opencode-cli":
         if writable_add_dirs:
             raise ExperimentError("writable_add_dirs are currently supported only by codex-cli")
-        return [
+        argv = [
             "opencode",
+            "--pure",
             "run",
             "--model",
             model,
@@ -1020,9 +1033,95 @@ def _planned_subject_argv(
             "--dir",
             str(workspace_dir),
             "--dangerously-skip-permissions",
-            prompt,
         ]
+        if instruction_text:
+            argv.extend(["--agent", OPENCODE_SUBJECT_AGENT])
+        argv.append(prompt)
+        return argv
     raise ExperimentError(f"unsupported subject harness {harness.id!r}")
+
+
+def _planned_env(
+    harness: SubjectHarness,
+    instruction_text: str,
+    harness_config_path: Path | None,
+) -> dict[str, str]:
+    if harness.id == "opencode-cli" and instruction_text:
+        if harness_config_path is None:
+            raise ExperimentError("opencode instruction delivery requires a config path")
+        return {"OPENCODE_CONFIG": str(harness_config_path)}
+    return {}
+
+
+def _harness_config_path(
+    harness: SubjectHarness,
+    artifact_dirs: dict[str, Path],
+    stem: str,
+) -> Path | None:
+    if harness.id == "opencode-cli":
+        return artifact_dirs["harness"] / f"{stem}.opencode.json"
+    return None
+
+
+def _write_harness_config(
+    harness: SubjectHarness,
+    instruction_text: str,
+    instruction_artifact_path: Path,
+    harness_config_path: Path | None,
+) -> None:
+    if harness.id != "opencode-cli" or not instruction_text:
+        return
+    if harness_config_path is None:
+        raise ExperimentError("opencode instruction delivery requires a config path")
+    harness_config_path.parent.mkdir(parents=True, exist_ok=True)
+    prompt_ref = os.path.relpath(instruction_artifact_path, harness_config_path.parent)
+    config = {
+        "$schema": "https://opencode.ai/config.json",
+        "agent": {
+            OPENCODE_SUBJECT_AGENT: {
+                "mode": "primary",
+                "prompt": f"{{file:{prompt_ref}}}",
+                "permission": {
+                    "edit": "allow",
+                    "bash": "allow",
+                },
+            }
+        },
+    }
+    harness_config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
+
+
+def _instruction_delivery(harness: SubjectHarness, instruction_text: str) -> dict[str, Any]:
+    if not instruction_text:
+        return {
+            "channel": "none",
+            "runner_supplied_instructions": False,
+            "prompt_wrapper": False,
+            "base_system_prompt_replaced": False,
+            "description": "No runner-supplied instruction layer; the subject receives only the scenario prompt plus the harness defaults.",
+        }
+    if harness.id == "codex-cli":
+        return {
+            "channel": "codex-developer-instructions",
+            "runner_supplied_instructions": True,
+            "prompt_wrapper": False,
+            "base_system_prompt_replaced": False,
+            "description": "Arm instructions are supplied with Codex developer_instructions; the scenario prompt is passed separately.",
+        }
+    if harness.id == "opencode-cli":
+        return {
+            "channel": "opencode-agent-prompt",
+            "runner_supplied_instructions": True,
+            "prompt_wrapper": False,
+            "base_system_prompt_replaced": False,
+            "agent": OPENCODE_SUBJECT_AGENT,
+            "description": "Arm instructions are supplied as an OpenCode custom primary-agent prompt; the scenario prompt is passed separately.",
+        }
+    raise ExperimentError(f"unsupported subject harness {harness.id!r}")
+
+
+def _toml_basic_string(value: str) -> str:
+    return json.dumps(value, ensure_ascii=True)
 
 
 def _control_isolation(harness: SubjectHarness) -> dict[str, Any]:
@@ -1030,20 +1129,27 @@ def _control_isolation(harness: SubjectHarness) -> dict[str, Any]:
         "suppress_instruction_files": SUPPRESSED_INSTRUCTION_FILES,
         "suppress_control_record_dirs": SUPPRESSED_CONTROL_RECORD_DIRS,
         "workspace_strategy": "Run each sample in a private temporary workspace, then archive outputs under the experiment artifact directory.",
-        "instruction_strategy": "Pass current and candidate instructions explicitly in the prompt; no-10x receives minimal instructions.",
+        "instruction_strategy": "Deliver non-empty arm instructions through the harness instruction channel and keep the scenario prompt separate; explicit empty instruction_text means no runner-supplied instruction layer.",
         "record_graph_strategy": "Remove inherited .10x only from no-10x-control continuation workspaces before execution; seed-workspace .10x records remain available when they are the task surface.",
     }
     if harness.id == "codex-cli":
         isolation.update(
             {
-                "codex_args": ["--disable", "plugins", "--ignore-user-config"],
-                "limitation": "Codex system context and authenticated home remain outside this runner's control.",
+                "codex_args": [
+                    "--disable",
+                    "plugins",
+                    "--ignore-user-config",
+                    "--ignore-rules",
+                ],
+                "instruction_channel": "developer_instructions",
+                "limitation": "Codex built-in system context and authenticated home remain outside this runner's control; this runner appends arm instructions through developer_instructions when non-empty.",
             }
         )
     elif harness.id == "opencode-cli":
         isolation.update(
             {
                 "opencode_args": [
+                    "--pure",
                     "run",
                     "--format",
                     "json",
@@ -1051,7 +1157,8 @@ def _control_isolation(harness: SubjectHarness) -> dict[str, Any]:
                     "<workspace>",
                     "--dangerously-skip-permissions",
                 ],
-                "limitation": "OpenCode authenticated home and provider configuration remain outside this runner's control; permission auto-approval is used only inside a private temporary workspace.",
+                "instruction_channel": "custom primary-agent prompt",
+                "limitation": "OpenCode built-in system context, authenticated home, and provider configuration remain outside this runner's control; --pure suppresses external plugins but is not a blank-system-prompt switch.",
             }
         )
     return isolation
@@ -1078,7 +1185,7 @@ def _artifact_dirs(root: Path, harness: SubjectHarness) -> dict[str, Path]:
     return {
         "raw": root / "raw",
         "workspaces": root / "workspaces",
-        harness.artifact_dir: root / harness.artifact_dir,
+        "harness": root / harness.artifact_dir,
         "prompts": root / "prompts",
     }
 
@@ -1379,10 +1486,12 @@ def _limits(harness: SubjectHarness) -> list[str]:
         "The runner executes one registered experiment and does not loop or generate candidates.",
     ]
     if harness.id == "codex-cli":
-        limits.append("Codex system context and authenticated home remain outside this runner's control.")
+        limits.append(
+            "Codex built-in system context and authenticated home remain outside this runner's control; non-empty arm instructions use developer_instructions."
+        )
     elif harness.id == "opencode-cli":
         limits.append(
-            "OpenCode authenticated home and provider configuration remain outside this runner's control; inspect command artifacts and workspace manifests."
+            "OpenCode built-in system context, authenticated home, and provider configuration remain outside this runner's control; --pure suppresses external plugins, not built-in prompts."
         )
     return limits
 
@@ -1400,27 +1509,60 @@ def _public_plan(plan: dict[str, Any]) -> dict[str, Any]:
             sample.pop("instruction_text", None)
             sample.pop("prompt", None)
             prompt_path = sample.get("prompt_path")
+            instruction_path = sample.get("instruction_artifact_path")
             if isinstance(prompt_path, str):
-                _scrub_planned_argvs(sample, Path(prompt_path))
+                _scrub_planned_argvs(
+                    sample,
+                    Path(prompt_path),
+                    Path(instruction_path) if isinstance(instruction_path, str) else None,
+                )
             for turn in sample.get("planned_turns", []):
                 if isinstance(turn, dict):
                     turn.pop("prompt", None)
                     turn_prompt_path = turn.get("prompt_path")
+                    turn_instruction_path = turn.get("instruction_artifact_path")
                     if isinstance(turn_prompt_path, str):
-                        _scrub_planned_argvs(turn, Path(turn_prompt_path))
+                        _scrub_planned_argvs(
+                            turn,
+                            Path(turn_prompt_path),
+                            Path(turn_instruction_path)
+                            if isinstance(turn_instruction_path, str)
+                            else None,
+                        )
     return visible
 
 
-def _scrub_planned_argvs(item: dict[str, Any], prompt_path: Path) -> None:
+def _scrub_planned_argvs(
+    item: dict[str, Any],
+    prompt_path: Path,
+    instruction_path: Path | None = None,
+) -> None:
     for key, value in list(item.items()):
         if key.startswith("planned_") and key.endswith("_argv") and isinstance(value, list):
-            item[key] = _public_argv(value, prompt_path)
+            item[key] = _public_argv(value, prompt_path, instruction_path)
 
 
-def _public_argv(argv: list[str], prompt_path: Path) -> list[str]:
+def _public_argv(
+    argv: list[str],
+    prompt_path: Path,
+    instruction_path: Path | None = None,
+) -> list[str]:
     if not argv:
         return argv
     visible = list(argv)
+    instruction_ref = (
+        f"<instructions stored at {instruction_path}>"
+        if instruction_path
+        else "<runner instruction text redacted>"
+    )
+    for index, value in enumerate(visible):
+        if (
+            index > 0
+            and visible[index - 1] in {"--config", "-c"}
+            and isinstance(value, str)
+            and value.startswith("developer_instructions=")
+        ):
+            visible[index] = f"developer_instructions={instruction_ref}"
     visible[-1] = f"<prompt stored at {prompt_path}>"
     return visible
 

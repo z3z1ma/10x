@@ -81,11 +81,15 @@ same live harness.
 
 Supported harness values:
 
-- `codex-cli`: runs Codex CLI in a private temporary workspace with the existing
-  Codex isolation flags.
-- `opencode-cli`: runs OpenCode CLI with `opencode run --format json --dir
-  <workspace> --model <provider/model>`. For the user's current subscription
-  setup, use `"model": "openai/gpt-5.5"`.
+- `codex-cli`: runs Codex CLI in a private temporary workspace with plugins,
+  user config, and execpolicy rules disabled for the run. Non-empty arm
+  instructions are supplied through Codex `developer_instructions`; the runner
+  does not replace Codex built-in model instructions.
+- `opencode-cli`: runs OpenCode CLI with `opencode --pure run --format json
+  --dir <workspace> --model <provider/model>`. `--pure` suppresses external
+  plugins; it is not a blank-system-prompt switch. Non-empty arm instructions
+  are supplied through a custom primary-agent `prompt`. For the user's current
+  subscription setup, use `"model": "openai/gpt-5.5"`.
 
 The runner writes:
 
@@ -98,12 +102,27 @@ The runner writes:
 - `<out>/<harness>/*.stderr`
 - `<out>/<harness>/*.last-message.txt`
 - `<out>/prompts/*.prompt.txt`
+- `<out>/prompts/*.instructions.txt`
 - `<out>/workspaces/*/workspace-manifest.json`
 - archived subject workspaces under `<out>/workspaces/`
 
-Full prompts are kept as prompt artifacts. Raw trial transcripts contain only
-the scenario conversation, so quoted wrapper instructions are not mistaken for
-subject behavior.
+All harnesses use the same runner schema. Plans expose `planned_argv`.
+Summaries and raw artifacts expose `live_subject_calls` and
+`harness_artifact_dir`. Harness-specific details belong in `harness`,
+`harness_kind`, command metadata, and the physical artifact directory name.
+
+Scenario prompts and arm instructions are separate. Prompt artifacts contain
+only the scenario conversation plus any prior transcript. Instruction artifacts
+contain the exact arm instruction text delivered through the harness instruction
+channel. Raw trial transcripts contain only the scenario conversation and
+assistant responses, so runner instructions are not mistaken for subject
+behavior.
+
+An arm with explicit `"instruction_text": ""` receives no runner-supplied
+instruction layer beyond the subject harness defaults and the scenario prompt.
+Use that for a pure no-10x control. A non-empty current or candidate arm uses
+the same definition shape; only the harness-specific delivery mechanism changes
+under the hood.
 
 If a subject asks a clarifying question, the LLM researcher inspects the raw
 transcript and registers a one-turn continuation. Use `prior_raw_paths` to point
@@ -175,8 +194,8 @@ The required experiment definition fields are:
   "arms": [
     {
       "id": "no-10x-control",
-      "instruction_source": "minimal harness defaults",
-      "instruction_text": "You are a coding agent. Answer the user's task directly."
+      "instruction_source": "none",
+      "instruction_text": ""
     },
     {
       "id": "current-10x",

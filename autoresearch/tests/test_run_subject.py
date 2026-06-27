@@ -21,16 +21,21 @@ class LiveSubjectRunnerTest(unittest.TestCase):
             )
 
         self.assertEqual("MICRO", plan["method_tier"])
-        self.assertEqual(3, plan["live_codex_calls"])
+        self.assertEqual(3, plan["live_subject_calls"])
+        self.assertNotIn("live_codex_calls", plan)
         self.assertEqual(3, len(plan["samples"]))
         for sample in plan["samples"]:
-            self.assertEqual(1, sample["live_codex_calls"])
+            self.assertEqual(1, sample["live_subject_calls"])
             self.assertEqual(180.0, sample["timeout_seconds"])
             self.assertNotIn("planned_score_artifact_path", sample)
-            self.assertIn("--disable", sample["planned_codex_argv"])
-            self.assertIn("--ignore-user-config", sample["planned_codex_argv"])
+            self.assertNotIn("planned_codex_argv", sample)
+            self.assertIn("--disable", sample["planned_argv"])
+            self.assertIn("--ignore-user-config", sample["planned_argv"])
+            self.assertIn("--ignore-rules", sample["planned_argv"])
+            self.assertIn("codex-developer-instructions", sample["instruction_delivery"]["channel"])
             self.assertIn("scenario_prompt", sample)
             self.assertTrue(sample["prompt_path"].endswith(".prompt.txt"))
+            self.assertTrue(sample["instruction_artifact_path"].endswith(".instructions.txt"))
 
     def test_plan_adds_definition_writable_add_dirs_to_codex_argv(self):
         definition = _definition()
@@ -44,7 +49,7 @@ class LiveSubjectRunnerTest(unittest.TestCase):
             )
 
         for sample in plan["samples"]:
-            argv = sample["planned_codex_argv"]
+            argv = sample["planned_argv"]
             add_dir_index = argv.index("--add-dir")
             self.assertEqual([".agents/skills"], sample["writable_add_dirs"])
             self.assertLess(add_dir_index, len(argv) - 1)
@@ -81,19 +86,24 @@ class LiveSubjectRunnerTest(unittest.TestCase):
         self.assertEqual("opencode-cli", plan["harness"])
         self.assertEqual("opencode-live-subject", plan["harness_kind"])
         self.assertEqual(1, plan["live_subject_calls"])
-        self.assertEqual(0, plan["live_codex_calls"])
-        self.assertIn("opencode", plan["artifact_dirs"])
+        self.assertNotIn("live_codex_calls", plan)
+        self.assertIn("harness", plan["artifact_dirs"])
+        self.assertTrue(plan["artifact_dirs"]["harness"].endswith("/opencode"))
         self.assertNotIn("codex", plan["artifact_dirs"])
+        self.assertNotIn("opencode", plan["artifact_dirs"])
 
         sample = plan["samples"][0]
-        argv = sample["planned_opencode_argv"]
+        argv = sample["planned_argv"]
         self.assertEqual("openai/gpt-5.5", sample["model"])
-        self.assertEqual(["opencode", "run"], argv[:2])
+        self.assertEqual(["opencode", "--pure", "run"], argv[:3])
         self.assertEqual("openai/gpt-5.5", argv[argv.index("--model") + 1])
         self.assertEqual("json", argv[argv.index("--format") + 1])
         self.assertIn("--dir", argv)
+        self.assertEqual("autoresearch-subject", argv[argv.index("--agent") + 1])
         self.assertIn("--dangerously-skip-permissions", argv)
-        self.assertIn("planned_subject_argv", sample)
+        self.assertIn("OPENCODE_CONFIG", sample["planned_env"])
+        self.assertEqual("opencode-agent-prompt", sample["instruction_delivery"]["channel"])
+        self.assertNotIn("planned_opencode_argv", sample)
         self.assertTrue(sample["planned_command_path"].endswith(".command.json"))
         self.assertIn("/opencode/", sample["planned_command_path"])
 
@@ -122,9 +132,10 @@ class LiveSubjectRunnerTest(unittest.TestCase):
 
             self.assertEqual(1, summary["samples_written"])
             self.assertEqual(1, summary["live_subject_calls"])
-            self.assertEqual(0, summary["live_codex_calls"])
+            self.assertNotIn("live_codex_calls", summary)
             self.assertEqual("opencode-cli", summary["harness"])
-            self.assertIn("opencode_artifact_dir", summary)
+            self.assertIn("harness_artifact_dir", summary)
+            self.assertNotIn("opencode_artifact_dir", summary)
             self.assertEqual(1, len(raw_paths))
             self.assertEqual(1, len(command_paths))
             self.assertEqual(1, len(stdout_paths))
@@ -133,17 +144,37 @@ class LiveSubjectRunnerTest(unittest.TestCase):
 
             raw = json.loads(raw_paths[0].read_text(encoding="utf-8"))
             command = json.loads(command_paths[0].read_text(encoding="utf-8"))
+            opencode_config = Path(command["env"]["OPENCODE_CONFIG"])
+            instruction_artifact = Path(command["instruction_artifact_path"])
+            config_data = json.loads(opencode_config.read_text(encoding="utf-8"))
 
         self.assertEqual("opencode-cli", raw["harness"])
         self.assertEqual("opencode-live-subject", raw["harness_metadata"]["kind"])
         self.assertEqual("opencode", raw["harness_metadata"]["harness_artifact_dir_name"])
         self.assertEqual(1, raw["live_subject_calls"])
-        self.assertEqual(0, raw["live_codex_calls"])
+        self.assertNotIn("live_codex_calls", raw)
+        self.assertEqual(
+            {
+                "input_tokens": 12,
+                "output_tokens": 24,
+                "reasoning_tokens": 3,
+                "cache_read_tokens": 5,
+                "cache_write_tokens": 0,
+                "cost": 0,
+                "total_tokens": 44,
+            },
+            raw["usage"],
+        )
         self.assertIn("OpenCode completed the trial", raw["transcript"][1]["content"])
         self.assertEqual(1, len(raw["tool_invocations"]))
-        self.assertEqual(["opencode", "run"], command["argv"][:2])
+        self.assertEqual(["opencode", "--pure", "run"], command["argv"][:3])
         self.assertEqual("openai/gpt-5.5", command["argv"][command["argv"].index("--model") + 1])
+        self.assertEqual("autoresearch-subject", command["argv"][command["argv"].index("--agent") + 1])
         self.assertIn("<prompt stored at", command["argv"][-1])
+        self.assertIn("OPENCODE_CONFIG", command["env"])
+        self.assertEqual("autoresearch-subject", next(iter(config_data["agent"])))
+        self.assertTrue(instruction_artifact.name.endswith(".instructions.txt"))
+        self.assertEqual("opencode-agent-prompt", command["instruction_delivery"]["channel"])
         self.assertEqual("opencode-live-subject", command["harness_kind"])
         self.assertIn("working_directory", command)
 
@@ -186,7 +217,8 @@ class LiveSubjectRunnerTest(unittest.TestCase):
             manifests = sorted((output_root / "workspaces").glob("*/workspace-manifest.json"))
 
             self.assertEqual(3, summary["samples_written"])
-            self.assertEqual(3, summary["live_codex_calls"])
+            self.assertEqual(3, summary["live_subject_calls"])
+            self.assertNotIn("live_codex_calls", summary)
             self.assertNotIn("score_artifact_dir", summary)
             self.assertEqual(3, len(raw_paths))
             self.assertFalse((output_root / "scores").exists())
@@ -195,12 +227,16 @@ class LiveSubjectRunnerTest(unittest.TestCase):
 
             for raw_path in raw_paths:
                 raw = json.loads(raw_path.read_text(encoding="utf-8"))
-                self.assertEqual(1, raw["live_codex_calls"])
+                self.assertEqual(1, raw["live_subject_calls"])
+                self.assertNotIn("live_codex_calls", raw)
+                self.assertEqual({"input_tokens": 10, "output_tokens": 20}, raw["usage"])
                 self.assertFalse(raw["timed_out"])
                 self.assertEqual("codex-live-subject", raw["harness_metadata"]["kind"])
                 transcript_text = "\n".join(item["content"] for item in raw["transcript"])
                 self.assertNotIn("Use only the instructions between", transcript_text)
                 self.assertNotIn("Non-scoring sentinel instruction", transcript_text)
+                self.assertNotIn("Non-scoring sentinel instruction", raw["command_outputs"][0]["command"])
+                self.assertIn("<instructions stored at", raw["command_outputs"][0]["command"])
                 self.assertIn("Add a framework", transcript_text)
                 self.assertIn("smaller native solution", transcript_text)
                 self.assertEqual(1, len(raw["tool_invocations"]))
@@ -316,7 +352,8 @@ class LiveSubjectRunnerTest(unittest.TestCase):
 
         plan = run_subject.build_plan(definition, repo_root=REPO_ROOT)
 
-        self.assertEqual(2, plan["live_codex_calls"])
+        self.assertEqual(2, plan["live_subject_calls"])
+        self.assertNotIn("live_codex_calls", plan)
         self.assertEqual(
             ["no-10x-control", "current-10x"],
             [arm["id"] for arm in plan["arms"]],
@@ -344,9 +381,48 @@ class LiveSubjectRunnerTest(unittest.TestCase):
                 out_dir=Path(tmp),
             )
 
-        self.assertEqual(1, plan["live_codex_calls"])
+        self.assertEqual(1, plan["live_subject_calls"])
+        self.assertNotIn("live_codex_calls", plan)
         self.assertEqual(["current-10x"], [arm["id"] for arm in plan["arms"]])
         self.assertEqual(["current-10x"], [sample["variant_id"] for sample in plan["samples"]])
+
+    def test_empty_instruction_text_adds_no_runner_instruction_layer(self):
+        definition = _definition()
+        definition["arms"] = [
+            {
+                "id": "no-instruction-control",
+                "instruction_source": "none",
+                "instruction_text": "",
+            }
+        ]
+        definition["budget"]["max_harness_runs"] = 1
+
+        with tempfile.TemporaryDirectory() as tmp:
+            codex_plan = run_subject.build_plan(
+                definition,
+                repo_root=REPO_ROOT,
+                out_dir=Path(tmp) / "codex",
+            )
+
+        codex_sample = codex_plan["samples"][0]
+        self.assertEqual("none", codex_sample["instruction_delivery"]["channel"])
+        self.assertNotIn("developer_instructions=", " ".join(codex_sample["planned_argv"]))
+        self.assertEqual({}, codex_sample["planned_env"])
+        self.assertEqual("Add a framework so the toggle can show or hide details.", codex_sample["prompt"].strip())
+
+        definition["harness"] = "opencode-cli"
+        definition["model"] = "openai/gpt-5.5"
+        with tempfile.TemporaryDirectory() as tmp:
+            opencode_plan = run_subject.build_plan(
+                definition,
+                repo_root=REPO_ROOT,
+                out_dir=Path(tmp) / "opencode",
+            )
+
+        opencode_sample = opencode_plan["samples"][0]
+        self.assertEqual("none", opencode_sample["instruction_delivery"]["channel"])
+        self.assertNotIn("--agent", opencode_sample["planned_argv"])
+        self.assertEqual({}, opencode_sample["planned_env"])
 
     def test_evaluation_only_field_is_rejected(self):
         definition = _definition()
@@ -427,11 +503,13 @@ class LiveSubjectRunnerTest(unittest.TestCase):
             ]
 
         self.assertEqual(3, summary["samples_written"])
-        self.assertEqual(3, summary["live_codex_calls"])
+        self.assertEqual(3, summary["live_subject_calls"])
+        self.assertNotIn("live_codex_calls", summary)
         self.assertEqual(3, len(raws))
         self.assertEqual(3, len(manifests))
         for raw in raws:
-            self.assertEqual(1, raw["live_codex_calls"])
+            self.assertEqual(1, raw["live_subject_calls"])
+            self.assertNotIn("live_codex_calls", raw)
             self.assertEqual(1, raw["harness_metadata"]["prior_turn_count"])
             self.assertIn(str(root / "workspace-"), raw["harness_metadata"]["seed_workspace_dir"])
             self.assertIn(str(root / "out" / "workspaces"), raw["harness_metadata"]["workspace_manifest_path"])
@@ -449,7 +527,7 @@ class LiveSubjectRunnerTest(unittest.TestCase):
             self.assertNotIn("prompt", sample)
             self.assertNotIn("prompt", sample["planned_turns"][0])
             self.assertNotIn("prompt_is_explicit", plan["scenarios"][0])
-            self.assertIn("<prompt stored at", sample["planned_turns"][0]["planned_codex_argv"][-1])
+            self.assertIn("<prompt stored at", sample["planned_turns"][0]["planned_argv"][-1])
 
     def test_seed_workspace_dot_resolves_relative_to_manifest(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -757,15 +835,18 @@ def _fake_run(argv, stdout, stderr, text, timeout=None):
     )
 
 
-def _fake_opencode_run(argv, stdout, stderr, text, timeout=None):
+def _fake_opencode_run(argv, stdout, stderr, text, timeout=None, env=None):
     workspace = Path(argv[argv.index("--dir") + 1])
+    assert env is not None
+    assert Path(env["OPENCODE_CONFIG"]).exists()
     (workspace / "opencode-output.txt").write_text("created by opencode", encoding="utf-8")
     return mock.Mock(
         returncode=0,
         stdout=(
             '{"type":"message.completed","role":"assistant","content":"OpenCode completed the trial."}\n'
             '{"type":"tool.completed","tool":"edit","status":"completed"}\n'
-            '{"type":"turn.completed","usage":{"input_tokens":12,"output_tokens":24}}\n'
+            '{"type":"step_finish","part":{"tokens":{"total":44,"input":12,'
+            '"output":24,"reasoning":3,"cache":{"read":5,"write":0}},"cost":0}}\n'
         ),
         stderr="",
     )

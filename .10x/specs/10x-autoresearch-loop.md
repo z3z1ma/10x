@@ -193,9 +193,21 @@ unless asked otherwise.
 
 Supported live subject harness values are:
 
-- `codex-cli`: runs Codex CLI as the subject harness.
+- `codex-cli`: runs Codex CLI as the subject harness. Non-empty arm
+  instructions MUST be delivered with Codex `developer_instructions`; the
+  runner MUST NOT replace Codex built-in model instructions.
 - `opencode-cli`: runs OpenCode CLI as the subject harness. Model IDs MUST use
-  OpenCode's provider/model shape, for example `openai/gpt-5.5`.
+  OpenCode's provider/model shape, for example `openai/gpt-5.5`. Non-empty arm
+  instructions MUST be delivered through a custom primary-agent `prompt`, and
+  OpenCode runs MUST use `--pure` to suppress external plugins.
+
+The scenario prompt and the arm instruction layer are separate. New runs MUST
+NOT embed current-skill or candidate instructions in a prompt wrapper. New runs
+MUST write instruction artifacts under `prompts/`, record
+`instruction_delivery` metadata, and keep raw transcripts limited to the user
+scenario conversation and assistant responses. An explicitly empty
+`instruction_text` means the runner supplies no instruction layer beyond the
+subject harness defaults and the scenario prompt.
 
 A successful run writes, at minimum:
 
@@ -204,10 +216,16 @@ A successful run writes, at minimum:
 - `raw/*.json`;
 - command metadata and process output under the harness artifact directory such
   as `codex/` or `opencode/`;
-- prompt artifacts under `prompts/`;
+- prompt and instruction artifacts under `prompts/`;
 - workspace manifests and archived workspaces under `workspaces/`;
 - `canonical_guard.json`;
 - `report.md` when reporting is enabled.
+
+New runner outputs MUST use one harness-neutral schema: `planned_argv` for the
+subject command, `live_subject_calls` for completed subject turns, and
+`harness_artifact_dir` for command/process artifacts. Legacy report readers MAY
+normalize older Codex-specific fields into those names, but new runs MUST NOT
+emit duplicate harness-specific schema fields.
 
 The report is a secondary view. It MUST make the scientific contract, arm and
 scenario coverage, command results, raw artifact references, changed files, and

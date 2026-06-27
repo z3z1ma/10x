@@ -22,9 +22,9 @@ class ReportTest(unittest.TestCase):
                         "samples_written": 2,
                         "raw_output_dir": str(raw_dir),
                         "workspace_dir": str(root / "workspaces"),
-                        "codex_artifact_dir": str(root / "codex"),
+                        "harness_artifact_dir": str(root / "codex"),
                         "prompt_dir": str(root / "prompts"),
-                        "live_codex_calls": 2,
+                        "live_subject_calls": 2,
                     },
                     indent=2,
                 )
@@ -136,6 +136,20 @@ class ReportTest(unittest.TestCase):
 
         self.assertNotIn("## Campaign Verdict", markdown)
 
+    def test_report_reads_legacy_codex_call_count(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            raw_dir = Path(tmp) / "raw"
+            raw_dir.mkdir()
+            legacy = _artifact()
+            legacy.pop("live_subject_calls")
+            legacy["live_codex_calls"] = 1
+            _write_raw(raw_dir / "legacy.json", legacy)
+
+            markdown = report.build_report(raw_dir.parent)
+
+        self.assertIn("live_subject_calls", markdown)
+        self.assertIn("| live_subject_calls | 1 |", markdown)
+
     def test_report_detects_opencode_artifact_directory(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -182,7 +196,6 @@ def _artifact(*, variant_id="current-10x", harness="codex-cli"):
         "output_tokens": 50,
         "timed_out": False,
         "live_subject_calls": 1,
-        "live_codex_calls": 1 if harness == "codex-cli" else 0,
         "harness_metadata": {
             "kind": harness_kind,
             "harness_artifact_dir_name": artifact_dir,

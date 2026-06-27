@@ -22,7 +22,7 @@ class RunOnceTest(unittest.TestCase):
                     "samples_written": 3,
                     "plan_path": str(Path(tmp) / "plan.json"),
                     "raw_output_dir": str(Path(tmp) / "raw"),
-                    "live_codex_calls": 3,
+                    "live_subject_calls": 3,
                 }
                 with mock.patch("autoresearch.run_once.report.write_report"):
                     result = run_once.run_once(
@@ -46,7 +46,7 @@ class RunOnceTest(unittest.TestCase):
                     "samples_written": 3,
                     "plan_path": str(Path(tmp) / "plan.json"),
                     "raw_output_dir": str(Path(tmp) / "raw"),
-                    "live_codex_calls": 3,
+                    "live_subject_calls": 3,
                 }
                 with mock.patch("autoresearch.run_once.report.write_report"):
                     result = run_once.run_once(
@@ -69,7 +69,6 @@ class RunOnceTest(unittest.TestCase):
                     "plan_path": str(Path(tmp) / "plan.json"),
                     "raw_output_dir": str(Path(tmp) / "raw"),
                     "live_subject_calls": 1,
-                    "live_codex_calls": 0,
                 }
                 with mock.patch("autoresearch.run_once.report.write_report"):
                     result = run_once.run_once(
@@ -103,7 +102,7 @@ class RunOnceTest(unittest.TestCase):
                     "samples_written": 3,
                     "plan_path": str(out_dir / "plan.json"),
                     "raw_output_dir": str(out_dir / "raw"),
-                    "live_codex_calls": 3,
+                    "live_subject_calls": 3,
                 }
                 with mock.patch("autoresearch.run_once.report.write_report"):
                     with contextlib.redirect_stdout(stdout):

@@ -92,8 +92,8 @@ the OpenAI provider, use model IDs such as `openai/gpt-5.5`.
   "arms": [
     {
       "id": "no-10x-control",
-      "instruction_source": "minimal harness defaults",
-      "instruction_text": "You are a coding agent. Answer the user's task directly."
+      "instruction_source": "none",
+      "instruction_text": ""
     },
     {
       "id": "current-10x",
