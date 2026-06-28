@@ -155,79 +155,82 @@ Records reference each other by file path: a ticket cites its spec, evidence
 cites its ticket, a decision points to the research that informed it. Plain
 Markdown. Versioned by git. Greppable. Diffable. Reviewable in a PR.
 
-The records are intentionally richer than a thin ADR. A useful 10x record
-captures not just the decision, but the authority behind it, the evidence that
-supports it, the limits that still matter, and the next work it enables:
+Here is a real 10x decision from this repo:
 
 ```markdown
 Status: active
-Created: 2026-06-12
-Updated: 2026-06-12
-Relates-To: .10x/research/2026-06-10-auth-options.md, .10x/specs/mobile-auth.md
+Created: 2026-06-28
+Updated: 2026-06-28
 
-# Use Refresh Tokens For Mobile Auth
+# Equal First-Class Install Paths
 
 ## Context
 
-API authentication must support browser and mobile clients. Browser-only session
-cookies would simplify the web flow, but mobile clients need a first-class
-reauthentication path that does not depend on cookie behavior.
-
-Current source has email/password login and access-token middleware, but no
-refresh-token persistence, rotation, revocation list, or device session model.
+The public README needs to make 10x easy to try while preserving the product
+philosophy that the actual surface is Markdown instructions. The Vercel Skills
+CLI is useful because it automates placement across many agent harnesses.
+Direct copy-paste is equally important because it is more flexible,
+transparent, and faithful to the fact that 10x is English text, not a runtime
+or cloud marketplace dependency.
 
 ## Decision
 
-Use short-lived JWT access tokens plus rotating refresh tokens stored per device
-session. Refresh tokens are invalidated on rotation, logout, password reset, and
-explicit account revocation.
+Present Skills CLI and copy-paste as equal first-class install paths.
+
+The Skills CLI path is for automatic placement across supported harnesses. The
+copy-paste path is for maximum control: inspect, fork, splice, adapt, or append
+the Markdown wherever an agent reads instructions.
 
 ## Authority And Provenance
 
-- User ratified mobile support as in scope on 2026-06-12.
-- `.10x/research/2026-06-10-auth-options.md` compared session cookies, opaque
-  bearer tokens, and JWT plus refresh tokens.
-- `src/auth/middleware.ts` proves current access-token validation exists but
-  does not prove refresh lifecycle behavior.
+- User ratified the equal-path positioning in chat on 2026-06-28 after rejecting
+  README wording that implied copy-paste was secondary.
+- The current README install section is the active public expression of this
+  decision.
+- `SKILL.md` is the canonical instruction artifact; no root package manifest or
+  runtime entrypoint defines 10x as software that must be executed.
 
 ## Alternatives Considered
 
-- Session cookies: simpler browser implementation, rejected because mobile
-  support would require a parallel auth path.
-- Opaque bearer tokens: easier revocation, rejected because the current API
-  gateway already validates JWT claims locally.
+- Skills CLI as the recommended path, copy-paste as fallback. Rejected because
+  it misrepresents the product surface and undersells the intentional simplicity
+  of Markdown instructions.
+- Copy-paste as the only emphasized path. Rejected because the Skills CLI is a
+  real convenience layer and supports broad harness placement.
 
 ## Consequences
 
-- Requires refresh-token storage, rotation, replay detection, and revocation.
-- Login, logout, password reset, and account disable flows all need lifecycle
-  tests.
-- Token lifetime remains unratified and is blocked from implementation until
-  `.10x/tickets/2026-06-12-ratify-token-lifetimes.md` closes.
+- README copy must state that both install paths are first-class.
+- Claims about 70+ agent support must be attributed to the Vercel Skills CLI,
+  not to 10x as a runtime.
+- Instruction-file installs must tell users to omit YAML frontmatter.
+- Skill-directory installs must tell users to keep `SKILL.md` intact.
 
 ## Evidence And Limits
 
-- Source inspection observed JWT middleware only; no refresh-token table exists.
-- Research did not evaluate enterprise SSO. That remains explicitly out of
-  scope for this decision.
+- The Vercel Skills CLI README says it supports OpenCode, Claude Code, Codex,
+  Cursor, and 68 more.
+- This repository has no runtime package manifest at the root; the primary
+  product artifact is `SKILL.md`.
+- `npm` is not installed in the current container, so `npx skills add` was not
+  executed locally during README validation.
 ```
 
 The point is not paperwork. The point is that the next agent knows what is
-settled, who authorized it, what source proves, what source does not prove, and
-which unresolved semantics still block execution.
+settled, who authorized it, which alternatives were rejected, what limits still
+matter, and how future README or packaging work should preserve the decision.
 
 ## Before and after
 
-**Without 10x:** Monday morning. New session. "We decided on JWT with refresh
-tokens last week, remember?" It does not. You spend fifteen minutes digging
-through old chat history, chasing a decision that was already settled. Then the
-agent implements before clarifying two ambiguous requirements. You catch it
-three files deep. Start over.
+**Without 10x:** New session. "Didn't we decide copy-paste and `npx skills`
+were equal install paths?" The agent does not know. It re-litigates the
+positioning from chat, makes one path sound secondary, and accidentally weakens
+the project's core simplicity story.
 
-**With 10x:** Monday morning. New session. The agent reads the decision record,
-follows the link to the research, picks up the open question about rotation
-intervals, and asks about that specific decision with a recommendation and
-tradeoffs. One answer and real work starts.
+**With 10x:** New session. The agent reads the decision, sees what was
+ratified, why the alternatives were rejected, what evidence supports the 70+
+installer claim, and what limits remain. It preserves the decision while making
+the next README edit.
 
 ## How it is tested
 
@@ -259,9 +262,10 @@ current-vs-candidate batch recorded in
 
 ## Enhance your current workflow
 
-10x does not replace your tools. It gives them a project context layer: typed
-authority, provenance, lifecycle state, evidence, review, and follow-up
-ownership that other workflows can stand on.
+10x does not replace your tools. It tunes the agent's default behavior toward
+better software engineering, then gives existing workflows a project context
+layer: typed authority, provenance, lifecycle state, evidence, review, and
+follow-up ownership they can stand on.
 
 | Your workflow | What 10x adds |
 | --- | --- |
@@ -373,21 +377,6 @@ goal is to stop paying the same cost twice.
 Humans can read it. Agents can read it. Git can diff it. Grep can find it three
 years from now. No vendor lock-in. No proprietary format. The lowest common
 denominator that happens to be good enough.
-
-## Composition
-
-[`SKILL.md`](SKILL.md) is a single self-contained file. It combines an original
-10x protocol with incorporated tactical and minimalist guidance from the
-references below.
-
-| Component | Source | What it does |
-| --- | --- | --- |
-| 10x Protocol | Original | Outer/inner loop, record graph, retrospectives, evidence, review, and durable project context |
-| Tactical Guidelines | [Karpathy's LLM coding guidelines](references/KARPATHY.md) | Behavioral mechanics that reduce common LLM coding mistakes |
-| Operational Minimalism | Distilled from [ponytail](references/MINIMALIST.md) | Ruthless simplicity constraints and the execution ladder |
-
-The `references/` directory contains the standalone source material. The skill
-embeds the operating guidance so a single file is all any harness needs.
 
 ## For agents
 
