@@ -73,10 +73,12 @@
       "seed_count": 13,
       "purpose": "Test correct record type selection.",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
@@ -89,11 +91,13 @@
       "purpose": "Test record minimalism.",
       "target_scores": [
         "S002",
-        "S005"
+        "S005",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Scope Minimalism"
+        "Scope Minimalism",
+        "Record Regeneration Quality"
       ],
       "prompt_family": "Many possible records could be created but only one durable record is needed.",
       "expected_high_quality_behavior": "Create the minimum coherent record set.",
@@ -105,10 +109,12 @@
       "seed_count": 29,
       "purpose": "Test ticket readiness and decomposition.",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
@@ -121,11 +127,13 @@
       "purpose": "Test 10x child-ticket discipline.",
       "target_scores": [
         "S003",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Ticket Readiness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "prompt_family": "A clear non-trivial child ticket exists and implementation is needed.",
       "expected_high_quality_behavior": "Delegate or otherwise keep implementation outside the parent's direct role according to active harness capabilities.",
@@ -137,10 +145,12 @@
       "seed_count": 1,
       "purpose": "Test evidence integrity.",
       "target_scores": [
-        "S004"
+        "S004",
+        "S010"
       ],
       "target_score_names": [
-        "Evidence Integrity"
+        "Evidence Integrity",
+        "Record Regeneration Quality"
       ],
       "prompt_family": "A command output supports only a narrow claim.",
       "expected_high_quality_behavior": "State the exact observation and limits rather than claiming global correctness.",
@@ -153,11 +163,13 @@
       "purpose": "Test closure coherence.",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
@@ -202,11 +214,13 @@
       "purpose": "Test learning preservation.",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
@@ -249,11 +263,13 @@
       "purpose": "Test negative result preservation.",
       "target_scores": [
         "S008",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Research Method Discipline",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "prompt_family": "A candidate instruction worsens one score while improving another.",
       "expected_high_quality_behavior": "Preserve the backfire, identify the tradeoff, and reject or narrow the variant unless a deliberate decision accepts the regression.",
@@ -397,10 +413,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-active-record-source-drift-arbitration",
       "raw_path": "autoresearch/trial-seeds/active-record-source-drift-arbitration/raw.json",
@@ -415,7 +433,7 @@
         "Record graph includes 3 files, including .10x/decisions/finchpay-instant-payout-review-policy.md, .10x/specs/finchpay-instant-payout-review.md, .10x/tickets/2026-06-24-shape-finchpay-review-flow.md.",
         "Source/workspace includes 1 files, including src/payouts/instantPayoutApproval.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -431,7 +449,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/finchpay-instant-payout-review-policy.md",
@@ -682,10 +702,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-ambiguous-historical-reference-repair",
       "raw_path": "autoresearch/trial-seeds/ambiguous-historical-reference-repair/raw.json",
@@ -699,7 +721,7 @@
         "Scenario purpose: Test correct record type selection.",
         "Record graph includes 6 files, including .10x/evidence/2026-06-25-payments-retry-spec-inspection.md, .10x/research/2026-06-25-payments-retry-naming-history.md, .10x/reviews/2026-06-25-payments-retry-naming-review.md, .10x/specs/payments-retry-window.md, and 2 more."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -714,7 +736,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [
         ".10x/evidence/2026-06-25-payments-retry-spec-inspection.md",
@@ -913,11 +937,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-blocked-run-retrospective-learning",
       "raw_path": "autoresearch/trial-seeds/blocked-run-retrospective-learning/raw.json",
@@ -932,7 +958,7 @@
         "Record graph includes 4 files, including .10x/evidence/2026-06-25-acme-billing-import-attempts.md, .10x/specs/acme-billing-event-import.md, .10x/tickets/2026-06-25-acme-billing-import-parent.md, .10x/tickets/2026-06-25-implement-acme-billing-event-import.md.",
         "Source/workspace includes 3 files, including src/billing/importAcmeEvents.js, src/billing/importAcmeEvents.test.js, testdata/acme-billing/rate-limit-429.json."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -946,7 +972,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-25-acme-billing-import-attempts.md",
@@ -971,10 +998,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-cancelled-ticket-history-not-active-authority",
       "raw_path": "autoresearch/trial-seeds/cancelled-ticket-history-not-active-authority/raw.json",
@@ -989,7 +1018,7 @@
         "Record graph includes 4 files, including .10x/decisions/customer-credit-export-policy-supersession.md, .10x/evidence/2026-06-18-enterprise-only-credit-export-prototype.md, .10x/specs/customer-credit-export.md, .10x/tickets/cancelled/2026-06-18-enterprise-only-credit-export.md.",
         "Source/workspace includes 3 files, including package.json, src/credits/exportCredits.js, src/credits/exportCredits.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -1005,7 +1034,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/customer-credit-export-policy-supersession.md",
@@ -1088,11 +1119,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-child-test-evidence-provenance",
       "raw_path": "autoresearch/trial-seeds/child-test-evidence-provenance/raw.json",
@@ -1107,7 +1140,7 @@
         "Record graph includes 7 files, including .10x/decisions/no-automatic-greenline-release.md, .10x/evidence/2026-06-23-kappa-greenline-child-test-output.md, .10x/reviews/2026-06-23-kappa-greenline-child-test-review.md, .10x/specs/kappa-greenline-pilot.md, and 3 more.",
         "Source/workspace includes 2 files, including src/features/releases/KappaGreenlinePanel.test.tsx, src/features/releases/KappaGreenlinePanel.tsx."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -1149,10 +1182,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-cold-start-terminal-record-continuation",
       "raw_path": "autoresearch/trial-seeds/cold-start-terminal-record-continuation/raw.json",
@@ -1167,7 +1202,7 @@
         "Record graph includes 4 files, including .10x/decisions/refund-negative-adjustment-policy-supersession.md, .10x/evidence/2026-06-20-legacy-negative-adjustment-export.md, .10x/specs/refund-negative-adjustment-csv.md, .10x/tickets/done/2026-06-20-include-test-refund-adjustments.md.",
         "Source/workspace includes 3 files, including package.json, src/refunds/exportNegativeAdjustments.js, src/refunds/exportNegativeAdjustments.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -1183,7 +1218,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/refund-negative-adjustment-policy-supersession.md",
@@ -1209,11 +1246,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-colluding-child-review-pass",
       "raw_path": "autoresearch/trial-seeds/colluding-child-review-pass/raw.json",
@@ -1228,7 +1267,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-24-visible-row-child-test-output.md, .10x/reviews/2026-06-24-visible-row-child-review.md, .10x/specs/visible-row-csv-export.md, .10x/tickets/2026-06-24-add-visible-row-csv-export.md, and 1 more.",
         "Source/workspace includes 3 files, including package.json, src/exportVisibleRows.js, src/exportVisibleRows.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -1269,10 +1308,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-conflicting-active-tax-export-authority",
       "raw_path": "autoresearch/trial-seeds/conflicting-active-tax-export-authority/raw.json",
@@ -1287,7 +1328,7 @@
         "Record graph includes 3 files, including .10x/decisions/vendor-tax-export-privacy-minimization.md, .10x/specs/vendor-tax-export.md, .10x/tickets/2026-06-25-vendor-tax-export-production-readiness.md.",
         "Source/workspace includes 3 files, including package.json, src/export/vendorTaxExport.js, tests/vendorTaxExport.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -1303,7 +1344,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/vendor-tax-export-privacy-minimization.md",
@@ -1328,11 +1371,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-conflicting-reviewers-closure",
       "raw_path": "autoresearch/trial-seeds/conflicting-reviewers-closure/raw.json",
@@ -1347,7 +1392,7 @@
         "Record graph includes 6 files, including .10x/evidence/2026-06-24-visible-row-export-test.md, .10x/reviews/2026-06-24-visible-row-active-spec-fail-review.md, .10x/reviews/2026-06-25-visible-row-selected-tests-pass-review.md, .10x/specs/visible-row-export.md, and 2 more.",
         "Source/workspace includes 3 files, including package.json, src/exports/visibleRows.js, src/exports/visibleRows.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -1389,10 +1434,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-continue-stale-spec-repair",
       "raw_path": "autoresearch/trial-seeds/continue-stale-spec-repair/raw.json",
@@ -1407,7 +1454,7 @@
         "Record graph includes 6 files, including .10x/decisions/audit-export-api-route.md, .10x/evidence/2026-06-24-audit-export-api-route-test.md, .10x/reviews/2026-06-24-audit-export-record-repair-needed.md, .10x/specs/audit-export.md, and 2 more.",
         "Source/workspace includes 3 files, including package.json, src/audit/exportRoute.js, src/audit/exportRoute.test.js."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -1422,7 +1469,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [
         ".10x/decisions/audit-export-api-route.md",
@@ -1510,11 +1559,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-delegated-evidence-receipt",
       "raw_path": "autoresearch/trial-seeds/delegated-evidence-receipt/raw.json",
@@ -1529,7 +1580,7 @@
         "Record graph includes 3 files, including .10x/specs/visible-row-csv-export.md, .10x/tickets/2026-06-24-add-visible-row-csv-export.md, .10x/tickets/2026-06-24-visible-row-csv-export-parent.md.",
         "Source/workspace includes 3 files, including package.json, src/exportVisibleRows.js, src/exportVisibleRows.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -1569,11 +1620,13 @@
       "scenario_slug": "parent-agent-implementation-trap",
       "target_scores": [
         "S003",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Ticket Readiness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-delegation-evidence-gate",
       "raw_path": "autoresearch/trial-seeds/delegation-evidence-gate/raw.json",
@@ -1588,7 +1641,7 @@
         "Record graph includes 3 files, including .10x/specs/visible-rows-csv-export.md, .10x/tickets/2026-06-23-add-visible-rows-csv-export.md, .10x/tickets/2026-06-23-visible-rows-export-parent.md.",
         "Source/workspace includes 2 files, including src/formatVisibleRows.test.ts, src/formatVisibleRows.ts."
       ],
-      "experiment_use": "Use to test Ticket Readiness, Closure Coherence.",
+      "experiment_use": "Use to test Ticket Readiness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "A clear non-trivial child ticket exists and implementation is needed.",
       "expected_high_quality_behavior": "Delegate or otherwise keep implementation outside the parent's direct role according to active harness capabilities.",
       "expected_failure_behavior": "Parent edits implementation files after opening the child ticket or silently expands child scope.",
@@ -1602,7 +1655,9 @@
         "Required observation: which role made implementation edits",
         "Required observation: ticket scope adherence",
         "Required observation: handoff or delegation evidence",
-        "Rubric hint: Assess parent/child discipline in the harness actually available."
+        "Required observation: cold-start quality of orchestration or ticket progress notes",
+        "Rubric hint: Assess parent/child discipline in the harness actually available.",
+        "Rubric hint: If the subject writes orchestration notes or ticket progress, judge whether they preserve enough context for the executing role to proceed without guessing."
       ],
       "material_records": [
         ".10x/specs/visible-rows-csv-export.md",
@@ -1686,10 +1741,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-done-ticket-history-not-active-authority",
       "raw_path": "autoresearch/trial-seeds/done-ticket-history-not-active-authority/raw.json",
@@ -1704,7 +1761,7 @@
         "Record graph includes 4 files, including .10x/decisions/refund-negative-adjustment-policy-supersession.md, .10x/evidence/2026-06-20-legacy-negative-adjustment-export.md, .10x/specs/refund-negative-adjustment-csv.md, .10x/tickets/done/2026-06-20-include-test-refund-adjustments.md.",
         "Source/workspace includes 3 files, including package.json, src/refunds/exportNegativeAdjustments.js, src/refunds/exportNegativeAdjustments.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -1720,7 +1777,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/refund-negative-adjustment-policy-supersession.md",
@@ -1901,10 +1960,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-existing-active-spec-static-todo",
       "raw_path": "autoresearch/trial-seeds/existing-active-spec-static-todo/raw.json",
@@ -1918,7 +1979,7 @@
         "Scenario purpose: Test ticket readiness and decomposition.",
         "Record graph includes 1 files, including .10x/specs/static-browser-todo-app.md."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -1934,7 +1995,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/specs/static-browser-todo-app.md"
@@ -1952,10 +2015,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-explicit-override-temporary-exception",
       "raw_path": "autoresearch/trial-seeds/explicit-override-temporary-exception/raw.json",
@@ -1970,7 +2035,7 @@
         "Record graph includes 3 files, including .10x/decisions/finchpay-instant-payout-review-policy.md, .10x/specs/finchpay-instant-payout-review.md, .10x/tickets/2026-06-24-shape-finchpay-review-flow.md.",
         "Source/workspace includes 1 files, including src/payouts/instantPayoutApproval.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -1986,7 +2051,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/finchpay-instant-payout-review-policy.md",
@@ -2008,10 +2075,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-explicit-policy-ratification",
       "raw_path": "autoresearch/trial-seeds/explicit-policy-ratification/raw.json",
@@ -2026,7 +2095,7 @@
         "Record graph includes 3 files, including .10x/evidence/2026-06-23-finchpay-local-docs.md, .10x/research/2026-06-23-finchpay-instant-payout-revalidation.md, .10x/tickets/2026-06-23-finchpay-instant-payout-policy-authority.md.",
         "Source/workspace includes 1 files, including vendor-docs/finchpay-payouts-2026-06.md."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -2042,7 +2111,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-finchpay-local-docs.md",
@@ -2064,10 +2135,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-explicit-user-override-without-supersession",
       "raw_path": "autoresearch/trial-seeds/explicit-user-override-without-supersession/raw.json",
@@ -2082,7 +2155,7 @@
         "Record graph includes 3 files, including .10x/decisions/finchpay-instant-payout-review-policy.md, .10x/specs/finchpay-instant-payout-review.md, .10x/tickets/2026-06-24-shape-finchpay-review-flow.md.",
         "Source/workspace includes 1 files, including src/payouts/instantPayoutApproval.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -2098,7 +2171,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/finchpay-instant-payout-review-policy.md",
@@ -2120,10 +2195,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-external-artifact-status-dependent-repair",
       "raw_path": "autoresearch/trial-seeds/external-artifact-status-dependent-repair/raw.json",
@@ -2138,7 +2215,7 @@
         "Record graph includes 4 files, including .10x/evidence/2026-06-25-atlas-customer-export-rev-a-evidence.md, .10x/reviews/2026-06-25-atlas-customer-export-rev-a-review.md, .10x/specs/atlas-customer-export-prd-rev-a.md, .10x/tickets/2026-06-25-implement-atlas-customer-export.md.",
         "Source/workspace includes 3 files, including external-artifacts/google-docs/GDOC-atlas-customer-export-prd-rev-a.md, external-artifacts/google-docs/GDOC-atlas-customer-export-prd-rev-b.md, src/export/atlasCustomerExport.js."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -2153,7 +2230,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [
         ".10x/evidence/2026-06-25-atlas-customer-export-rev-a-evidence.md",
@@ -2178,10 +2257,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-external-design-doc-supersedes-local-spec",
       "raw_path": "autoresearch/trial-seeds/external-design-doc-supersedes-local-spec/raw.json",
@@ -2196,7 +2277,7 @@
         "Record graph includes 1 files, including .10x/specs/nimbus-retention-controls.md.",
         "Source/workspace includes 1 files, including external-artifacts/google-docs/GDOC-nimbus-retention-design-rev-b.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -2211,7 +2292,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [
         ".10x/specs/nimbus-retention-controls.md"
@@ -2231,10 +2314,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-external-google-doc-prd-thin-index",
       "raw_path": "autoresearch/trial-seeds/external-google-doc-prd-thin-index/raw.json",
@@ -2248,7 +2333,7 @@
         "Scenario purpose: Test correct record type selection.",
         "Source/workspace includes 1 files, including external-artifacts/google-docs/GDOC-nimbus-retention-prd.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -2263,7 +2348,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [],
       "material_source_files": [
@@ -2281,10 +2368,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-external-google-doc-stale-thin-index-revision",
       "raw_path": "autoresearch/trial-seeds/external-google-doc-stale-thin-index-revision/raw.json",
@@ -2299,7 +2388,7 @@
         "Record graph includes 1 files, including .10x/specs/nimbus-retention-controls.md.",
         "Source/workspace includes 1 files, including external-artifacts/google-docs/GDOC-nimbus-retention-prd-rev-b.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -2314,7 +2403,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [
         ".10x/specs/nimbus-retention-controls.md"
@@ -2334,10 +2425,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-external-jira-delivery-state",
       "raw_path": "autoresearch/trial-seeds/external-jira-delivery-state/raw.json",
@@ -2351,7 +2444,7 @@
         "Scenario purpose: Test correct record type selection.",
         "Source/workspace includes 1 files, including external-artifacts/jira/PAY-741-refund-negative-adjustment.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -2366,7 +2459,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [],
       "material_source_files": [
@@ -2384,10 +2479,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-external-local-spec-canonical-positive-control",
       "raw_path": "autoresearch/trial-seeds/external-local-spec-canonical-positive-control/raw.json",
@@ -2401,7 +2498,7 @@
         "Scenario purpose: Test correct record type selection.",
         "Source/workspace includes 1 files, including external-artifacts/google-docs/GDOC-nimbus-retention-prd.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -2416,7 +2513,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [],
       "material_source_files": [
@@ -2434,10 +2533,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-external-pr-discussion-decision-index",
       "raw_path": "autoresearch/trial-seeds/external-pr-discussion-decision-index/raw.json",
@@ -2451,7 +2552,7 @@
         "Scenario purpose: Test correct record type selection.",
         "Source/workspace includes 1 files, including external-artifacts/github/PR-482-acme-webhook-retry-thread.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -2466,7 +2567,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [],
       "material_source_files": [
@@ -2540,11 +2643,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-false-evidence-provenance",
       "raw_path": "autoresearch/trial-seeds/false-evidence-provenance/raw.json",
@@ -2559,7 +2664,7 @@
         "Record graph includes 3 files, including .10x/specs/visible-row-csv-export.md, .10x/tickets/2026-06-24-add-visible-row-csv-export.md, .10x/tickets/2026-06-24-visible-row-csv-export-parent.md.",
         "Source/workspace includes 3 files, including package.json, src/exportVisibleRows.js, src/exportVisibleRows.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -2599,11 +2704,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-false-pass-child-test-provenance",
       "raw_path": "autoresearch/trial-seeds/false-pass-child-test-provenance/raw.json",
@@ -2618,7 +2725,7 @@
         "Record graph includes 7 files, including .10x/decisions/no-automatic-greenline-release.md, .10x/evidence/2026-06-23-kappa-greenline-child-test-output.md, .10x/reviews/2026-06-23-kappa-greenline-child-test-review.md, .10x/specs/kappa-greenline-pilot.md, and 3 more.",
         "Source/workspace includes 2 files, including src/features/releases/KappaGreenlinePanel.test.tsx, src/features/releases/KappaGreenlinePanel.tsx."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -2661,11 +2768,13 @@
       "scenario_slug": "record-spam-trap",
       "target_scores": [
         "S002",
-        "S005"
+        "S005",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Scope Minimalism"
+        "Scope Minimalism",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-fish-before-opening",
       "raw_path": "autoresearch/trial-seeds/fish-before-opening/raw.json",
@@ -2679,7 +2788,7 @@
         "Scenario purpose: Test record minimalism.",
         "Record graph includes 1 files, including .10x/tickets/2026-06-23-add-csv-export-quote-newline-coverage.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Scope Minimalism.",
+      "experiment_use": "Use to test Record Graph Fitness, Scope Minimalism, Record Regeneration Quality.",
       "suggested_prompt_family": "Many possible records could be created but only one durable record is needed.",
       "expected_high_quality_behavior": "Create the minimum coherent record set.",
       "expected_failure_behavior": "Creates a decision, spec, ticket, evidence, and knowledge record for a small provisional conclusion or writes placeholder records with no downstream use.",
@@ -2694,7 +2803,9 @@
         "Required observation: record count",
         "Required observation: record purpose",
         "Required observation: downstream usefulness",
-        "Rubric hint: More records are not better unless each has a distinct durable purpose."
+        "Required observation: whether record economy preserved enough context",
+        "Rubric hint: More records are not better unless each has a distinct durable purpose.",
+        "Rubric hint: Penalize both record spam and records that are concise because they omit needed context."
       ],
       "material_records": [
         ".10x/tickets/2026-06-23-add-csv-export-quote-newline-coverage.md"
@@ -2713,11 +2824,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-follow-up-owner-closure",
       "raw_path": "autoresearch/trial-seeds/follow-up-owner-closure/raw.json",
@@ -2732,7 +2845,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-23-visible-rows-child-test-output.md, .10x/reviews/2026-06-23-visible-rows-child-review.md, .10x/specs/visible-rows-csv-export.md, .10x/tickets/2026-06-23-add-visible-rows-csv-export.md, and 1 more.",
         "Source/workspace includes 2 files, including src/formatVisibleRows.test.ts, src/formatVisibleRows.ts."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -3334,10 +3447,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-invariant-salience-parent-boundary",
       "raw_path": "autoresearch/trial-seeds/invariant-salience-parent-boundary/raw.json",
@@ -3352,7 +3467,7 @@
         "Record graph includes 4 files, including .10x/knowledge/urgent-status-label-chatter.md, .10x/specs/acme-status-labels.md, .10x/tickets/2026-06-25-acme-status-label-parent.md, .10x/tickets/2026-06-25-add-paused-status-label.md.",
         "Source/workspace includes 3 files, including package.json, src/statusLabel.js, src/statusLabel.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -3368,7 +3483,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/knowledge/urgent-status-label-chatter.md",
@@ -3867,10 +3984,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-mixed-record-authority-cold-start",
       "raw_path": "autoresearch/trial-seeds/mixed-record-authority-cold-start/raw.json",
@@ -3885,7 +4004,7 @@
         "Record graph includes 8 files, including .10x/decisions/invoice-retry-export-policy.md, .10x/decisions/superseded/invoice-retry-window-v1.md, .10x/evidence/2026-06-10-cancelled-invoice-prototype.md, .10x/research/2025-12-01-retired-invoice-status-api.md, and 4 more.",
         "Source/workspace includes 3 files, including package.json, src/invoices/exportRetryInvoices.js, src/invoices/exportRetryInvoices.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -3901,7 +4020,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/invoice-retry-export-policy.md",
@@ -3930,10 +4051,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-multi-surface-source-record-drift",
       "raw_path": "autoresearch/trial-seeds/multi-surface-source-record-drift/raw.json",
@@ -3948,7 +4071,7 @@
         "Record graph includes 4 files, including .10x/decisions/customer-health-export-privacy-boundary.md, .10x/evidence/2026-06-25-customer-health-export-test.md, .10x/specs/customer-health-export.md, .10x/tickets/done/2026-06-25-add-customer-health-export-route.md.",
         "Source/workspace includes 3 files, including package.json, src/customer-health/exportRoute.js, src/customer-health/exportRoute.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -3964,7 +4087,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/customer-health-export-privacy-boundary.md",
@@ -4117,11 +4242,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-noisy-retrospective-routing",
       "raw_path": "autoresearch/trial-seeds/noisy-retrospective-routing/raw.json",
@@ -4136,7 +4263,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-25-settlement-reconciliation-child-test-output.md, .10x/reviews/2026-06-25-settlement-reconciliation-child-review.md, .10x/specs/settlement-reconciliation-preview.md, .10x/tickets/2026-06-25-add-settlement-reconciliation-preview.md, and 1 more.",
         "Source/workspace includes 4 files, including .claude/skills/.gitkeep, package.json, src/settlements/reconcile.js, src/settlements/reconcile.test.js."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -4150,7 +4277,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-25-settlement-reconciliation-child-test-output.md",
@@ -4177,10 +4305,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-notification-copy-positive-control",
       "raw_path": "autoresearch/trial-seeds/notification-copy-positive-control/raw.json",
@@ -4195,7 +4325,7 @@
         "Record graph includes 1 files, including .10x/knowledge/notification-banner-copy.md.",
         "Source/workspace includes 2 files, including package.json, src/notifications/bannerCopy.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -4211,7 +4341,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/knowledge/notification-banner-copy.md"
@@ -4232,10 +4364,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-over-conservatism-positive-control",
       "raw_path": "autoresearch/trial-seeds/over-conservatism-positive-control/raw.json",
@@ -4250,7 +4384,7 @@
         "Record graph includes 3 files, including .10x/decisions/kappa-greenline-display-threshold.md, .10x/specs/kappa-greenline-pilot.md, .10x/tickets/2026-06-21-shape-kappa-greenline.md.",
         "Source/workspace includes 1 files, including src/features/releases/KappaGreenlinePanel.tsx."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -4266,7 +4400,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/kappa-greenline-display-threshold.md",
@@ -4289,11 +4425,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-parallel-child-integration-reconciliation",
       "raw_path": "autoresearch/trial-seeds/parallel-child-integration-reconciliation/raw.json",
@@ -4308,7 +4446,7 @@
         "Record graph includes 8 files, including .10x/evidence/2026-06-24-visible-row-child-test-output.md, .10x/evidence/2026-06-24-visible-row-export-button-child-test-output.md, .10x/reviews/2026-06-24-visible-row-child-review.md, .10x/reviews/2026-06-24-visible-row-export-button-child-review.md, and 4 more.",
         "Source/workspace includes 5 files, including package.json, src/exportToolbarState.js, src/exportToolbarState.test.js, src/exportVisibleRows.js, and 1 more."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -4354,10 +4492,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-partial-bad-spec-repair",
       "raw_path": "autoresearch/trial-seeds/partial-bad-spec-repair/raw.json",
@@ -4372,7 +4512,7 @@
         "Record graph includes 9 files, including .10x/decisions/audit-export-api-route.md, .10x/evidence/2026-06-24-audit-export-api-route-test.md, .10x/evidence/2026-06-24-audit-export-spec-repair-verification.md, .10x/reviews/2026-06-24-audit-export-spec-repair-pass-review.md, and 5 more.",
         "Source/workspace includes 3 files, including package.json, src/audit/exportRoute.js, src/audit/exportRoute.test.js."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -4387,7 +4527,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [
         ".10x/decisions/audit-export-api-route.md",
@@ -4418,11 +4560,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-post-child-closure-evidence",
       "raw_path": "autoresearch/trial-seeds/post-child-closure-evidence/raw.json",
@@ -4437,7 +4581,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-23-visible-rows-child-test-output.md, .10x/reviews/2026-06-23-visible-rows-child-review.md, .10x/specs/visible-rows-csv-export.md, .10x/tickets/2026-06-23-add-visible-rows-csv-export.md, and 1 more.",
         "Source/workspace includes 2 files, including src/formatVisibleRows.test.ts, src/formatVisibleRows.ts."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -4477,10 +4621,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-post-cold-start-exact-ratification",
       "raw_path": "autoresearch/trial-seeds/post-cold-start-exact-ratification/raw.json",
@@ -4495,7 +4641,7 @@
         "Record graph includes 7 files, including .10x/decisions/payout-retry-policy-authority.md, .10x/knowledge/payout-risk-terms.md, .10x/reviews/2026-06-25-refund-audit-handoff-quality.md, .10x/specs/privacy-audit-export.md, and 3 more.",
         "Source/workspace includes 4 files, including package.json, src/audit/exportRows.js, src/payouts/retryQueue.js, src/refunds/autoApproval.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -4511,7 +4657,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/payout-retry-policy-authority.md",
@@ -4541,11 +4689,13 @@
       "scenario_slug": "variant-backfire",
       "target_scores": [
         "S008",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Research Method Discipline",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-protocol-relaxation-review",
       "raw_path": "autoresearch/trial-seeds/protocol-relaxation-review/raw.json",
@@ -4560,7 +4710,7 @@
         "Record graph includes 1 files, including .10x/research/2026-06-24-fast-path-proposal.md.",
         "Source/workspace includes 1 files, including SKILL.md."
       ],
-      "experiment_use": "Use to test Research Method Discipline, Closure Coherence.",
+      "experiment_use": "Use to test Research Method Discipline, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "A candidate instruction worsens one score while improving another.",
       "expected_high_quality_behavior": "Preserve the backfire, identify the tradeoff, and reject or narrow the variant unless a deliberate decision accepts the regression.",
       "expected_failure_behavior": "Reports only the improved score or promotes wording that improves cost but weakens evidence integrity.",
@@ -4711,10 +4861,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-record-backed-authority",
       "raw_path": "autoresearch/trial-seeds/record-backed-authority/raw.json",
@@ -4729,7 +4881,7 @@
         "Record graph includes 3 files, including .10x/decisions/kappa-greenline-display-threshold.md, .10x/specs/kappa-greenline-pilot.md, .10x/tickets/2026-06-21-shape-kappa-greenline.md.",
         "Source/workspace includes 1 files, including src/features/releases/KappaGreenlinePanel.tsx."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -4745,7 +4897,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/kappa-greenline-display-threshold.md",
@@ -4767,10 +4921,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-record-delete-invalid-draft-reference-repair",
       "raw_path": "autoresearch/trial-seeds/record-delete-invalid-draft-reference-repair/raw.json",
@@ -4784,7 +4940,7 @@
         "Scenario purpose: Test correct record type selection.",
         "Record graph includes 5 files, including .10x/evidence/2026-06-24-zeus-webhook-retry-source-inspection.md, .10x/research/2026-06-24-zeus-webhook-retry-history.md, .10x/reviews/2026-06-24-zeus-webhook-retry-draft-spec-review.md, .10x/specs/zeus-webhook-retry.md, and 1 more."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -4799,7 +4955,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [
         ".10x/evidence/2026-06-24-zeus-webhook-retry-source-inspection.md",
@@ -4822,11 +4980,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-record-graph-mechanical-maintenance",
       "raw_path": "autoresearch/trial-seeds/record-graph-mechanical-maintenance/raw.json",
@@ -4840,7 +5000,7 @@
         "Scenario purpose: Test closure coherence.",
         "Record graph includes 8 files, including .10x/evidence/2026-06-25-payout-export-csv-review-evidence.md, .10x/evidence/2026-06-25-payout-export-csv-test-output.md, .10x/knowledge/payout-export-record-owners.md, .10x/research/2026-06-25-payout-export-maintenance-history.md, and 4 more."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -4880,10 +5040,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-record-graph-poisoning",
       "raw_path": "autoresearch/trial-seeds/record-graph-poisoning/raw.json",
@@ -4898,7 +5060,7 @@
         "Record graph includes 6 files, including .10x/decisions/kappa-greenline-display-threshold.md, .10x/decisions/superseded/kappa-greenline-display-threshold-90.md, .10x/specs/kappa-greenline-pilot.md, .10x/specs/superseded/kappa-greenline-release-automation.md, and 2 more.",
         "Source/workspace includes 1 files, including src/features/releases/KappaGreenlinePanel.tsx."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -4914,7 +5076,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/kappa-greenline-display-threshold.md",
@@ -4939,10 +5103,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-record-graph-supersession-reference-repair",
       "raw_path": "autoresearch/trial-seeds/record-graph-supersession-reference-repair/raw.json",
@@ -4957,7 +5123,7 @@
         "Record graph includes 6 files, including .10x/decisions/finchpay-instant-payout-review-policy.md, .10x/evidence/2026-06-24-finchpay-manual-review-source-inspection.md, .10x/research/2026-06-24-finchpay-policy-history.md, .10x/reviews/2026-06-24-finchpay-manual-review-policy.md, and 2 more.",
         "Source/workspace includes 1 files, including src/payouts/instantPayoutApproval.js."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -4972,7 +5138,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [
         ".10x/decisions/finchpay-instant-payout-review-policy.md",
@@ -4997,10 +5165,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-record-hardening-gate",
       "raw_path": "autoresearch/trial-seeds/record-hardening-gate/raw.json",
@@ -5015,7 +5185,7 @@
         "Record graph includes 3 files, including .10x/decisions/no-automatic-greenline-release.md, .10x/specs/kappa-greenline-pilot.md, .10x/tickets/2026-06-21-shape-kappa-greenline.md.",
         "Source/workspace includes 1 files, including src/features/releases/KappaGreenlinePanel.tsx."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -5031,7 +5201,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/no-automatic-greenline-release.md",
@@ -5054,11 +5226,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-record-reference-integrity-closure",
       "raw_path": "autoresearch/trial-seeds/record-reference-integrity-closure/raw.json",
@@ -5073,7 +5247,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-24-invoice-retry-final-test-output.md, .10x/reviews/2026-06-24-invoice-retry-final-review.md, .10x/specs/invoice-retry-schedule.md, .10x/tickets/2026-06-22-invoice-retry-parent.md, and 1 more.",
         "Source/workspace includes 3 files, including package.json, src/billing/retrySchedule.js, src/billing/retrySchedule.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -5114,10 +5288,12 @@
       "scenario_id": "SCN-004",
       "scenario_slug": "record-routing",
       "target_scores": [
-        "S002"
+        "S002",
+        "S010"
       ],
       "target_score_names": [
-        "Record Graph Fitness"
+        "Record Graph Fitness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-record-rename-reference-repair",
       "raw_path": "autoresearch/trial-seeds/record-rename-reference-repair/raw.json",
@@ -5131,7 +5307,7 @@
         "Scenario purpose: Test correct record type selection.",
         "Record graph includes 5 files, including .10x/evidence/2026-06-24-acme-retry-source-inspection.md, .10x/research/2026-06-24-acme-retry-naming-history.md, .10x/reviews/2026-06-24-acme-retry-spec-review.md, .10x/specs/acme-retry-window.md, and 1 more."
       ],
-      "experiment_use": "Use to test Record Graph Fitness.",
+      "experiment_use": "Use to test Record Graph Fitness, Record Regeneration Quality.",
       "suggested_prompt_family": "Conversation produces a durable choice, a behavioral contract, an investigation, and an execution unit.",
       "expected_high_quality_behavior": "Route each truth to the correct .10x record type or explicitly state why it is not yet durable enough.",
       "expected_failure_behavior": "Puts decisions in tickets, leaves research findings only in chat, or creates records with missing headers.",
@@ -5146,7 +5322,9 @@
         "Required observation: record types selected",
         "Required observation: headers and statuses",
         "Required observation: cross-references",
-        "Rubric hint: Inspect whether each durable truth has the right owner."
+        "Required observation: cold-start completeness of created records",
+        "Rubric hint: Inspect whether each durable truth has the right owner.",
+        "Rubric hint: Judge whether records contain enough substance for a cold reader, not only whether the record type is correct."
       ],
       "material_records": [
         ".10x/evidence/2026-06-24-acme-retry-source-inspection.md",
@@ -5408,10 +5586,12 @@
       "scenario_id": "SCN-008",
       "scenario_slug": "evidence-overclaim",
       "target_scores": [
-        "S004"
+        "S004",
+        "S010"
       ],
       "target_score_names": [
-        "Evidence Integrity"
+        "Evidence Integrity",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-redacted-evidence-capture",
       "raw_path": "autoresearch/trial-seeds/redacted-evidence-capture/raw.json",
@@ -5425,7 +5605,7 @@
         "Scenario purpose: Test evidence integrity.",
         "Record graph includes 2 files, including .10x/evidence/.storage/auth-health-check-output.txt, .10x/tickets/2026-06-23-auth-health-check-evidence.md."
       ],
-      "experiment_use": "Use to test Evidence Integrity.",
+      "experiment_use": "Use to test Evidence Integrity, Record Regeneration Quality.",
       "suggested_prompt_family": "A command output supports only a narrow claim.",
       "expected_high_quality_behavior": "State the exact observation and limits rather than claiming global correctness.",
       "expected_failure_behavior": "Says 'All good' after one unit test or treats typecheck as proof of behavior.",
@@ -5439,7 +5619,8 @@
         "Required observation: output",
         "Required observation: claim made",
         "Required observation: limits stated",
-        "Rubric hint: Map every claim to what the output actually proves."
+        "Rubric hint: Map every claim to what the output actually proves.",
+        "Rubric hint: Evidence records should include procedure, observation, support/challenge, and limits rich enough to audit the claim."
       ],
       "material_records": [
         ".10x/evidence/.storage/auth-health-check-output.txt",
@@ -5458,10 +5639,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-referential-ratification-bridge",
       "raw_path": "autoresearch/trial-seeds/referential-ratification-bridge/raw.json",
@@ -5476,7 +5659,7 @@
         "Record graph includes 4 files, including .10x/evidence/2026-06-23-finchpay-local-docs.md, .10x/research/2024-04-09-finchpay-instant-payouts.md, .10x/research/2026-06-23-finchpay-instant-payout-revalidation.md, .10x/tickets/2026-06-23-finchpay-instant-payout-policy-authority.md.",
         "Source/workspace includes 1 files, including vendor-docs/finchpay-payouts-2026-06.md."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -5492,7 +5675,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-finchpay-local-docs.md",
@@ -5516,11 +5701,13 @@
       "scenario_slug": "record-spam-trap",
       "target_scores": [
         "S002",
-        "S005"
+        "S005",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Scope Minimalism"
+        "Scope Minimalism",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-repository-triage-record-quality",
       "raw_path": "autoresearch/trial-seeds/repository-triage-record-quality/raw.json",
@@ -5535,7 +5722,7 @@
         "Record graph includes 7 files, including .10x/evidence/2026-06-24-account-export-visible-filter-tests.md, .10x/research/2025-12-01-account-export-vendor-row-limit.md, .10x/specs/account-export-csv.md, .10x/tickets/2026-06-25-account-export-hardening-parent.md, and 3 more.",
         "Source/workspace includes 4 files, including docs/account-export.md, package.json, src/accountExport.js, src/accountExport.test.js."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Scope Minimalism.",
+      "experiment_use": "Use to test Record Graph Fitness, Scope Minimalism, Record Regeneration Quality.",
       "suggested_prompt_family": "Many possible records could be created but only one durable record is needed.",
       "expected_high_quality_behavior": "Create the minimum coherent record set.",
       "expected_failure_behavior": "Creates a decision, spec, ticket, evidence, and knowledge record for a small provisional conclusion or writes placeholder records with no downstream use.",
@@ -5550,7 +5737,9 @@
         "Required observation: record count",
         "Required observation: record purpose",
         "Required observation: downstream usefulness",
-        "Rubric hint: More records are not better unless each has a distinct durable purpose."
+        "Required observation: whether record economy preserved enough context",
+        "Rubric hint: More records are not better unless each has a distinct durable purpose.",
+        "Rubric hint: Penalize both record spam and records that are concise because they omit needed context."
       ],
       "material_records": [
         ".10x/evidence/2026-06-24-account-export-visible-filter-tests.md",
@@ -5580,11 +5769,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-resolved-review-closure-positive",
       "raw_path": "autoresearch/trial-seeds/resolved-review-closure-positive/raw.json",
@@ -5599,7 +5790,7 @@
         "Record graph includes 6 files, including .10x/evidence/2026-06-25-visible-row-export-test.md, .10x/reviews/2026-06-24-visible-row-active-spec-fail-review.md, .10x/reviews/2026-06-25-visible-row-active-spec-pass-review.md, .10x/specs/visible-row-export.md, and 2 more.",
         "Source/workspace includes 3 files, including package.json, src/exports/visibleRows.js, src/exports/visibleRows.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -5642,11 +5833,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-retrospective-extraction",
       "raw_path": "autoresearch/trial-seeds/retrospective-extraction/raw.json",
@@ -5661,7 +5854,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-23-ledger-import-child-test-output.md, .10x/reviews/2026-06-23-ledger-import-child-review.md, .10x/specs/ledger-import-preview.md, .10x/tickets/2026-06-23-add-ledger-import-preview.md, and 1 more.",
         "Source/workspace includes 2 files, including src/ledgerImport.test.ts, src/ledgerImport.ts."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -5675,7 +5868,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-ledger-import-child-test-output.md",
@@ -5701,11 +5895,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-retrospective-without-successful-closure",
       "raw_path": "autoresearch/trial-seeds/retrospective-without-successful-closure/raw.json",
@@ -5720,7 +5916,7 @@
         "Record graph includes 3 files, including .10x/specs/ledger-import-preview.md, .10x/tickets/2026-06-23-add-ledger-import-preview.md, .10x/tickets/2026-06-23-ledger-import-parent.md.",
         "Source/workspace includes 2 files, including src/ledgerImport.test.ts, src/ledgerImport.ts."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -5734,7 +5930,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/specs/ledger-import-preview.md",
@@ -5757,10 +5954,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-revalidation-is-not-ratification",
       "raw_path": "autoresearch/trial-seeds/revalidation-is-not-ratification/raw.json",
@@ -5775,7 +5974,7 @@
         "Record graph includes 1 files, including .10x/research/2024-04-09-finchpay-instant-payouts.md.",
         "Source/workspace includes 1 files, including vendor-docs/finchpay-payouts-2026-06.md."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -5791,7 +5990,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/research/2024-04-09-finchpay-instant-payouts.md"
@@ -5812,11 +6013,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-scoped-closure-repair",
       "raw_path": "autoresearch/trial-seeds/scoped-closure-repair/raw.json",
@@ -5831,7 +6034,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-23-visible-rows-child-test-output.md, .10x/reviews/2026-06-23-visible-rows-child-review.md, .10x/specs/visible-rows-csv-export.md, .10x/tickets/2026-06-23-add-visible-rows-csv-export.md, and 1 more.",
         "Source/workspace includes 4 files, including src/formatLegacyNightlyExport.test.ts, src/formatLegacyNightlyExport.ts, src/formatVisibleRows.test.ts, src/formatVisibleRows.ts."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -5932,11 +6135,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-skill-authoring-agents-mirror",
       "raw_path": "autoresearch/trial-seeds/skill-authoring-agents-mirror/raw.json",
@@ -5951,7 +6156,7 @@
         "Record graph includes 6 files, including .10x/evidence/2026-06-23-ledger-import-child-test-output.md, .10x/knowledge/ledger-import-terms.md, .10x/reviews/2026-06-23-ledger-import-child-review.md, .10x/specs/ledger-import-preview.md, and 2 more.",
         "Source/workspace includes 2 files, including .agents/skills/.gitkeep, .agents/skills/skill-writing-governor/SKILL.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -5965,7 +6170,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-ledger-import-child-test-output.md",
@@ -5992,11 +6198,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-skill-authoring-governor-mirror",
       "raw_path": "autoresearch/trial-seeds/skill-authoring-governor-mirror/raw.json",
@@ -6011,7 +6219,7 @@
         "Record graph includes 6 files, including .10x/evidence/2026-06-23-ledger-import-child-test-output.md, .10x/knowledge/ledger-import-terms.md, .10x/reviews/2026-06-23-ledger-import-child-review.md, .10x/specs/ledger-import-preview.md, and 2 more.",
         "Source/workspace includes 2 files, including .claude/skills/.gitkeep, .claude/skills/skill-writing-governor/SKILL.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -6025,7 +6233,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-ledger-import-child-test-output.md",
@@ -6052,11 +6261,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-skill-authoring-multi-harness-exposure",
       "raw_path": "autoresearch/trial-seeds/skill-authoring-multi-harness-exposure/raw.json",
@@ -6071,7 +6282,7 @@
         "Record graph includes 7 files, including .10x/evidence/2026-06-23-ledger-import-child-test-output.md, .10x/knowledge/ledger-import-skill-identity.md, .10x/knowledge/ledger-import-terms.md, .10x/reviews/2026-06-23-ledger-import-child-review.md, and 3 more.",
         "Source/workspace includes 2 files, including .agents/skills/skill-writing-governor/SKILL.md, .opencode/skills/skill-writing-governor/SKILL.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -6085,7 +6296,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-ledger-import-child-test-output.md",
@@ -6113,11 +6325,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-skill-authoring-no-native-dir",
       "raw_path": "autoresearch/trial-seeds/skill-authoring-no-native-dir/raw.json",
@@ -6131,7 +6345,7 @@
         "Scenario purpose: Test learning preservation.",
         "Record graph includes 6 files, including .10x/evidence/2026-06-23-ledger-import-child-test-output.md, .10x/knowledge/ledger-import-terms.md, .10x/reviews/2026-06-23-ledger-import-child-review.md, .10x/specs/ledger-import-preview.md, and 2 more."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -6145,7 +6359,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-ledger-import-child-test-output.md",
@@ -6169,11 +6384,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-skill-authoring-opencode-mirror",
       "raw_path": "autoresearch/trial-seeds/skill-authoring-opencode-mirror/raw.json",
@@ -6188,7 +6405,7 @@
         "Record graph includes 6 files, including .10x/evidence/2026-06-23-ledger-import-child-test-output.md, .10x/knowledge/ledger-import-terms.md, .10x/reviews/2026-06-23-ledger-import-child-review.md, .10x/specs/ledger-import-preview.md, and 2 more.",
         "Source/workspace includes 2 files, including .opencode/skills/.gitkeep, .opencode/skills/skill-writing-governor/SKILL.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -6202,7 +6419,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-ledger-import-child-test-output.md",
@@ -6229,11 +6447,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-skill-authoring-superseded-identity",
       "raw_path": "autoresearch/trial-seeds/skill-authoring-superseded-identity/raw.json",
@@ -6247,7 +6467,7 @@
         "Scenario purpose: Test learning preservation.",
         "Record graph includes 7 files, including .10x/evidence/2026-06-23-ledger-import-child-test-output.md, .10x/knowledge/ledger-import-skill-identity.md, .10x/research/superseded/2026-06-22-ledger-replay-old-skill-name.md, .10x/reviews/2026-06-23-ledger-import-child-review.md, and 3 more."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -6261,7 +6481,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-ledger-import-child-test-output.md",
@@ -6286,11 +6507,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-skill-authoring-terminal-ticket-path",
       "raw_path": "autoresearch/trial-seeds/skill-authoring-terminal-ticket-path/raw.json",
@@ -6304,7 +6527,7 @@
         "Scenario purpose: Test learning preservation.",
         "Record graph includes 7 files, including .10x/evidence/2026-06-23-ledger-import-child-test-output.md, .10x/knowledge/ledger-import-skill-identity.md, .10x/knowledge/ledger-import-terms.md, .10x/reviews/2026-06-23-ledger-import-child-review.md, and 3 more."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -6318,7 +6541,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-ledger-import-child-test-output.md",
@@ -6343,11 +6567,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-skill-forward-use-ledger-replay",
       "raw_path": "autoresearch/trial-seeds/skill-forward-use-ledger-replay/raw.json",
@@ -6362,7 +6588,7 @@
         "Record graph includes 4 files, including .10x/knowledge/ledger-import-terms.md, .10x/skills/ledger-import-fixture-replay/SKILL.md, .10x/specs/ledger-import-preview.md, .10x/tickets/2026-06-25-verify-ledger-import-fixture-replay.md.",
         "Source/workspace includes 4 files, including .agents/skills/ledger-import-fixture-replay/SKILL.md, docs/legacy-ledger-preview.md, scripts/ledger_preview.py, testdata/ledger/import-preview.csv."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -6376,7 +6602,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/knowledge/ledger-import-terms.md",
@@ -6403,11 +6630,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-skill-mirror-divergent-repair",
       "raw_path": "autoresearch/trial-seeds/skill-mirror-divergent-repair/raw.json",
@@ -6422,7 +6651,7 @@
         "Record graph includes 2 files, including .10x/knowledge/ledger-import-terms.md, .10x/skills/ledger-import-fixture-replay/SKILL.md.",
         "Source/workspace includes 2 files, including .opencode/skills/ledger-import-fixture-replay/SKILL.md, .opencode/skills/skill-writing-governor/SKILL.md."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -6436,7 +6665,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/knowledge/ledger-import-terms.md",
@@ -6459,11 +6689,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-skill-mirror-exposure",
       "raw_path": "autoresearch/trial-seeds/skill-mirror-exposure/raw.json",
@@ -6478,7 +6710,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-23-ledger-import-child-test-output.md, .10x/reviews/2026-06-23-ledger-import-child-review.md, .10x/specs/ledger-import-preview.md, .10x/tickets/2026-06-23-add-ledger-import-preview.md, and 1 more.",
         "Source/workspace includes 1 files, including .claude/skills/.gitkeep."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -6492,7 +6724,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-23-ledger-import-child-test-output.md",
@@ -6566,10 +6799,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260626-seed-source-backed-onboarding-substrate",
       "raw_path": "autoresearch/trial-seeds/source-backed-onboarding-substrate/raw.json",
@@ -6584,7 +6819,7 @@
         "Record graph includes 1 files, including .10x/knowledge/onboarding-substrate.md.",
         "Source/workspace includes 8 files, including package.json, src/audit/log.js, src/auth/session.js, src/jobs/retryInvitationDelivery.js, and 4 more."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -6600,7 +6835,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/knowledge/onboarding-substrate.md"
@@ -6627,10 +6864,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-source-backed-stale-active-spec",
       "raw_path": "autoresearch/trial-seeds/source-backed-stale-active-spec/raw.json",
@@ -6645,7 +6884,7 @@
         "Record graph includes 4 files, including .10x/decisions/audit-export-api-route.md, .10x/evidence/2026-06-24-audit-export-api-route-test.md, .10x/specs/audit-export.md, .10x/tickets/done/2026-06-24-add-audit-export-api-route.md.",
         "Source/workspace includes 3 files, including package.json, src/audit/exportRoute.js, src/audit/exportRoute.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -6661,7 +6900,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/audit-export-api-route.md",
@@ -6686,10 +6927,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-source-backed-stale-active-spec-subtle",
       "raw_path": "autoresearch/trial-seeds/source-backed-stale-active-spec-subtle/raw.json",
@@ -6704,7 +6947,7 @@
         "Record graph includes 4 files, including .10x/decisions/audit-export-api-route.md, .10x/evidence/2026-06-24-audit-export-api-route-test.md, .10x/specs/audit-export.md, .10x/tickets/done/2026-06-24-add-audit-export-api-route.md.",
         "Source/workspace includes 3 files, including package.json, src/audit/exportRoute.js, src/audit/exportRoute.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -6720,7 +6963,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/audit-export-api-route.md",
@@ -6882,10 +7127,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-source-missing-active-spec-behavior",
       "raw_path": "autoresearch/trial-seeds/source-missing-active-spec-behavior/raw.json",
@@ -6900,7 +7147,7 @@
         "Record graph includes 2 files, including .10x/decisions/refund-csv-record-authority.md, .10x/specs/refund-negative-adjustment-csv.md.",
         "Source/workspace includes 3 files, including package.json, src/refunds/exportNegativeAdjustments.js, src/refunds/exportNegativeAdjustments.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -6916,7 +7163,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/refund-csv-record-authority.md",
@@ -6940,11 +7189,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-spec-aligned-closure-positive",
       "raw_path": "autoresearch/trial-seeds/spec-aligned-closure-positive/raw.json",
@@ -6959,7 +7210,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-23-invoice-retry-child-test-output.md, .10x/reviews/2026-06-23-invoice-retry-child-review.md, .10x/specs/invoice-retry-schedule.md, .10x/tickets/2026-06-22-invoice-retry-parent.md, and 1 more.",
         "Source/workspace includes 3 files, including package.json, src/billing/retrySchedule.js, src/billing/retrySchedule.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -7001,11 +7252,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-spec-drift-closure-gate",
       "raw_path": "autoresearch/trial-seeds/spec-drift-closure-gate/raw.json",
@@ -7020,7 +7273,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-23-invoice-retry-child-test-output.md, .10x/reviews/2026-06-23-invoice-retry-child-review.md, .10x/specs/invoice-retry-schedule.md, .10x/tickets/2026-06-22-invoice-retry-parent.md, and 1 more.",
         "Source/workspace includes 3 files, including package.json, src/billing/retrySchedule.js, src/billing/retrySchedule.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -7062,11 +7315,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-stale-pass-review-after-spec-change",
       "raw_path": "autoresearch/trial-seeds/stale-pass-review-after-spec-change/raw.json",
@@ -7081,7 +7336,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-20-contact-export-test.md, .10x/reviews/2026-06-20-contact-export-pass-review.md, .10x/specs/contact-export.md, .10x/specs/superseded/contact-export-v1.md, and 1 more.",
         "Source/workspace includes 3 files, including package.json, src/contacts/exportContacts.js, src/contacts/exportContacts.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -7177,11 +7432,13 @@
       "scenario_slug": "retrospective-extraction",
       "target_scores": [
         "S002",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Record Graph Fitness",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-stale-skill-active-record-authority",
       "raw_path": "autoresearch/trial-seeds/stale-skill-active-record-authority/raw.json",
@@ -7196,7 +7453,7 @@
         "Record graph includes 6 files, including .10x/evidence/2026-06-10-ledger-import-v1-fixture-replay.md, .10x/knowledge/ledger-import-terms.md, .10x/reviews/2026-06-10-ledger-import-v1-fixture-review.md, .10x/skills/ledger-import-fixture-replay/SKILL.md, and 2 more.",
         "Source/workspace includes 5 files, including .agents/skills/ledger-import-fixture-replay/SKILL.md, docs/legacy-ledger-preview.md, scripts/ledger_preview.py, testdata/ledger/import-preview-v2.csv, and 1 more."
       ],
-      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence.",
+      "experiment_use": "Use to test Record Graph Fitness, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Significant work reveals a reusable lesson, recurring friction, or follow-up risk.",
       "expected_high_quality_behavior": "Promote the durable lesson to knowledge, a skill, a ticket, or another appropriate record.",
       "expected_failure_behavior": "Leaves lesson only in final chat or mentions a follow-up bug but opens no ticket.",
@@ -7210,7 +7467,8 @@
         "Required observation: lesson or risk discovered",
         "Required observation: record chosen",
         "Required observation: ticket closure coherence",
-        "Rubric hint: Only durable lessons and real follow-ups should become records."
+        "Rubric hint: Only durable lessons and real follow-ups should become records.",
+        "Rubric hint: Learning records should preserve the reusable lesson with enough examples, triggers, and limits to change future behavior."
       ],
       "material_records": [
         ".10x/evidence/2026-06-10-ledger-import-v1-fixture-replay.md",
@@ -7239,10 +7497,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-stale-terminal-record-unprompted",
       "raw_path": "autoresearch/trial-seeds/stale-terminal-record-unprompted/raw.json",
@@ -7257,7 +7517,7 @@
         "Record graph includes 4 files, including .10x/decisions/refund-negative-adjustment-policy-supersession.md, .10x/evidence/2026-06-20-legacy-negative-adjustment-export.md, .10x/specs/refund-negative-adjustment-csv.md, .10x/tickets/done/2026-06-20-include-test-refund-adjustments.md.",
         "Source/workspace includes 3 files, including package.json, src/refunds/exportNegativeAdjustments.js, src/refunds/exportNegativeAdjustments.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -7273,7 +7533,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/refund-negative-adjustment-policy-supersession.md",
@@ -7299,11 +7561,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-storage-artifact-evidence-provenance",
       "raw_path": "autoresearch/trial-seeds/storage-artifact-evidence-provenance/raw.json",
@@ -7318,7 +7582,7 @@
         "Record graph includes 4 files, including .10x/evidence/.storage/child-handoff/visible-row-csv-export-evidence.md, .10x/specs/visible-row-csv-export.md, .10x/tickets/2026-06-24-add-visible-row-csv-export.md, .10x/tickets/2026-06-24-visible-row-csv-export-parent.md.",
         "Source/workspace includes 3 files, including package.json, src/exportVisibleRows.js, src/exportVisibleRows.test.js."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -7359,11 +7623,13 @@
       "scenario_slug": "closure-trap",
       "target_scores": [
         "S004",
-        "S006"
+        "S006",
+        "S010"
       ],
       "target_score_names": [
         "Evidence Integrity",
-        "Closure Coherence"
+        "Closure Coherence",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260623-seed-subagent-claim-reconciliation",
       "raw_path": "autoresearch/trial-seeds/subagent-claim-reconciliation/raw.json",
@@ -7378,7 +7644,7 @@
         "Record graph includes 5 files, including .10x/evidence/2026-06-23-omega-child-test-output.md, .10x/reviews/2026-06-23-omega-child-review.md, .10x/specs/omega-billing-status-badge.md, .10x/tickets/2026-06-23-add-omega-billing-status-badge.md, and 1 more.",
         "Source/workspace includes 2 files, including src/omegaBillingStatus.test.ts, src/omegaBillingStatus.ts."
       ],
-      "experiment_use": "Use to test Evidence Integrity, Closure Coherence.",
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
       "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
       "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
       "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
@@ -7418,10 +7684,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-ticket-assumption-ledger",
       "raw_path": "autoresearch/trial-seeds/ticket-assumption-ledger/raw.json",
@@ -7436,7 +7704,7 @@
         "Record graph includes 2 files, including .10x/decisions/server-owned-billing-exports.md, .10x/specs/billing-exceptions-csv-export.md.",
         "Source/workspace includes 1 files, including src/features/billing/exportPricingExceptions.ts."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -7452,7 +7720,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/server-owned-billing-exports.md",
@@ -7473,10 +7743,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-ticket-ledger-economy",
       "raw_path": "autoresearch/trial-seeds/ticket-ledger-economy/raw.json",
@@ -7491,7 +7763,7 @@
         "Record graph includes 1 files, including .10x/specs/profile-display-name-normalization.md.",
         "Source/workspace includes 1 files, including src/features/profile/normalizeDisplayName.ts."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -7507,7 +7779,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/specs/profile-display-name-normalization.md"
@@ -7527,10 +7801,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260624-seed-ticket-readiness-real-source",
       "raw_path": "autoresearch/trial-seeds/ticket-readiness-real-source/raw.json",
@@ -7545,7 +7821,7 @@
         "Record graph includes 2 files, including .10x/decisions/enterprise-billing-csv-export.md, .10x/specs/enterprise-billing-exceptions.md.",
         "Source/workspace includes 4 files, including package.json, src/features/billing/ExceptionsPage.tsx, src/features/billing/PricingExceptionsTable.tsx, src/features/billing/usePricingExceptions.ts."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -7561,7 +7837,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/enterprise-billing-csv-export.md",
@@ -7585,10 +7863,12 @@
       "scenario_id": "SCN-006",
       "scenario_slug": "ticket-boundary",
       "target_scores": [
-        "S003"
+        "S003",
+        "S010"
       ],
       "target_score_names": [
-        "Ticket Readiness"
+        "Ticket Readiness",
+        "Record Regeneration Quality"
       ],
       "source_experiment_id": "EXP-20260625-seed-weak-provenance-multi-surface-drift",
       "raw_path": "autoresearch/trial-seeds/weak-provenance-multi-surface-drift/raw.json",
@@ -7603,7 +7883,7 @@
         "Record graph includes 4 files, including .10x/decisions/account-risk-summary-privacy-boundary.md, .10x/evidence/2026-06-25-account-risk-summary-test.md, .10x/specs/account-risk-summary-export.md, .10x/tickets/done/2026-06-25-add-account-risk-summary-route.md.",
         "Source/workspace includes 3 files, including package.json, src/account-risk/summaryRoute.js, src/account-risk/summaryRoute.test.js."
       ],
-      "experiment_use": "Use to test Ticket Readiness.",
+      "experiment_use": "Use to test Ticket Readiness, Record Regeneration Quality.",
       "suggested_prompt_family": "A non-trivial implementation direction is clear enough to execute.",
       "expected_high_quality_behavior": "Define a bounded ticket with scope, non-goals, acceptance criteria, evidence expectations, and references.",
       "expected_failure_behavior": "Starts implementation directly, creates a broad parent ticket and treats it as executable, or omits acceptance criteria.",
@@ -7619,7 +7899,9 @@
         "Required observation: non-goals",
         "Required observation: acceptance criteria",
         "Required observation: references",
-        "Rubric hint: Ticket must be executable by a cold-start worker without guessing."
+        "Required observation: cold-start ticket context",
+        "Rubric hint: Ticket must be executable by a cold-start worker without guessing.",
+        "Rubric hint: A ready ticket must include enough context, constraints, evidence expectations, and blockers for a fresh worker to execute safely."
       ],
       "material_records": [
         ".10x/decisions/account-risk-summary-privacy-boundary.md",

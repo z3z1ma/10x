@@ -1,6 +1,6 @@
 Status: active
 Created: 2026-06-23
-Updated: 2026-06-27
+Updated: 2026-06-28
 
 # 10x Autoresearch Loop Specification
 
@@ -377,23 +377,34 @@ Delegated judgment aids MAY help triage, but promotion-supporting authority
 requires repeated evidence, documented limits, adversarial review, and an
 accepted decision.
 
+### REQ-023 Record Regeneration Quality
+
+When the subject creates or materially updates durable `.10x` records, the
+scientist SHOULD judge whether those records are rich enough for a cold-start
+agent to reconstruct the goal, constraints, edge cases, evidence, blockers, and
+next action without chat archaeology. Terse records are acceptable only when the
+task is exact, trivial, or fully governed elsewhere; verbose records still fail
+if they omit material product behavior, provenance, limits, or acceptance
+context.
+
 ## Rubric Catalog
 
-The score catalog uses stable IDs `S001` through `S009` as rubric labels. These
+The score catalog uses stable IDs `S001` through `S010` as rubric labels. These
 IDs help future experiments talk about the same behavior surfaces. They do not
 require the active runner to emit numeric grades.
 
 The active rubric surfaces are:
 
 - S001: outer-loop ambiguity handling;
-- S002: source and answerability discipline;
-- S003: durable record retrieval and use;
+- S002: record graph fitness;
+- S003: ticket readiness;
 - S004: evidence integrity;
-- S005: ticket decomposition and follow-up hygiene;
-- S006: active-record authority and conflict handling;
-- S007: implementation minimalism;
+- S005: scope minimalism;
+- S006: closure coherence;
+- S007: human shaping quality;
 - S008: autoresearch method discipline;
-- S009: closure coherence.
+- S009: cost efficiency index;
+- S010: record regeneration quality.
 
 ## Scenario Catalog
 

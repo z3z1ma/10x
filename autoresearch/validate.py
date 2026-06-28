@@ -9,9 +9,9 @@ from pathlib import Path
 from typing import Any
 
 
-EXPECTED_SCORE_IDS = tuple(f"S{i:03d}" for i in range(1, 10))
+EXPECTED_SCORE_IDS = tuple(f"S{i:03d}" for i in range(1, 11))
 EXPECTED_SCENARIO_IDS = tuple(f"SCN-{i:03d}" for i in range(1, 16))
-FALLBACK_REQUIREMENT_IDS = tuple(f"REQ-{i:03d}" for i in range(1, 23))
+FALLBACK_REQUIREMENT_IDS = tuple(f"REQ-{i:03d}" for i in range(1, 24))
 SKILL_BODY_CHAR_BUDGET = 40_000
 
 SCORE_REQUIRED_TEXT = (
@@ -685,7 +685,7 @@ def _validate_id_set(
 ) -> set[str]:
     found: list[str] = []
     seen: set[str] = set()
-    id_pattern = re.compile(r"^S00[1-9]$" if kind == "score" else r"^SCN-\d{3}$")
+    id_pattern = re.compile(r"^S0(?:0[1-9]|10)$" if kind == "score" else r"^SCN-\d{3}$")
 
     for index, record in enumerate(records):
         if not isinstance(record, dict):

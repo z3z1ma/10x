@@ -24,6 +24,7 @@ criteria while preserving the discipline 10x exists to enforce:
 
 - outer-loop ambiguity handling;
 - durable record creation;
+- regeneration-grade record richness;
 - ticket decomposition;
 - evidence integrity;
 - minimal implementation;

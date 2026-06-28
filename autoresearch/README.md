@@ -307,7 +307,7 @@ experiment output directory.
 ## Manual Scoring
 
 Manual scoring is scientist judgment, not runner output. Use
-`autoresearch/catalogs/scores.json` to choose the relevant S001-S009 rubric
+`autoresearch/catalogs/scores.json` to choose the relevant S001-S010 rubric
 labels, inspect the raw transcript and workspace artifacts, then record numeric
 or qualitative judgments with confidence, rationale, evidence references,
 unsupported assumptions, and any floor triggers.

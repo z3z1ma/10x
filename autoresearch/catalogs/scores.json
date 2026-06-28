@@ -762,7 +762,7 @@
       ],
       "formula": "100 * (Core10xQuality / baseline_Core10xQuality) * (CostRatio ^ 0.25)",
       "formula_notes": [
-        "Core10xQuality is the geometric mean of S001 through S006.",
+        "Core10xQuality is the geometric mean of S001-S006 and S010.",
         "CostRatio is baseline_normalized_cost divided by variant_normalized_cost.",
         "The 0.25 exponent is conservative and may change only through a decision record or accepted spec amendment.",
         "Human inspection time is tracked separately at first."
@@ -781,7 +781,8 @@
       ],
       "known_false_positives": [
         "Variant appears cheaper because it silently skips required process.",
-        "Subscription-backed usage hides operational time or quality cost."
+        "Subscription-backed usage hides operational time or quality cost.",
+        "Variant appears cheaper because it creates terse records that force future agents to reconstruct context."
       ],
       "known_false_negatives": [
         "A higher-cost variant can still be preferred if it materially improves core quality.",
@@ -797,6 +798,115 @@
       "inspection_support": {
         "status": "requires-cross-run-evidence",
         "reason": "Cost efficiency needs baseline-normalized cost telemetry, calibrated core quality, and cost policy."
+      }
+    },
+    {
+      "id": "S010",
+      "slug": "record_regeneration_quality",
+      "name": "Record Regeneration Quality",
+      "range": {
+        "minimum": 0,
+        "maximum": 100
+      },
+      "higher_is_better": true,
+      "quality_gated": true,
+      "active_floor": 80,
+      "summary_rubric": "Measures whether created or updated 10x records are rich, precise, and complete enough for a cold-start agent to reconstruct the goal, constraints, edge cases, provenance, blockers, and next action without chat or directory archaeology.",
+      "inputs": [
+        ".10x records",
+        "transcripts",
+        "source and artifact references",
+        "diffs",
+        "workspace manifests"
+      ],
+      "outputs": [
+        "numeric score",
+        "confidence",
+        "rationale",
+        "evidence_refs",
+        "unsupported_assumptions",
+        "floor_triggers"
+      ],
+      "sub_scores": [
+        {
+          "name": "Cold-start completeness",
+          "points": 20
+        },
+        {
+          "name": "Behavior and edge-case coverage",
+          "points": 15
+        },
+        {
+          "name": "Provenance and evidence grounding",
+          "points": 15
+        },
+        {
+          "name": "Ambiguity and blocker preservation",
+          "points": 15
+        },
+        {
+          "name": "Operational actionability",
+          "points": 15
+        },
+        {
+          "name": "Cross-record coherence",
+          "points": 10
+        },
+        {
+          "name": "Economy without thinness",
+          "points": 10
+        }
+      ],
+      "hard_floors": [
+        {
+          "condition": "A ticket, spec, research, evidence, decision, knowledge, or skill record leaves a material future action ambiguous even though the source information was available",
+          "cap": 60
+        },
+        {
+          "condition": "A record omits or blurs semantic authority so a future agent would have to invent product behavior, acceptance criteria, or evidence meaning",
+          "cap": 50
+        },
+        {
+          "condition": "Many records or long templates create an appearance of rigor while still lacking the context needed to continue safely",
+          "cap": 70
+        },
+        {
+          "condition": "Sensitive data or secrets are preserved unnecessarily in a record",
+          "cap": 20,
+          "requires": "immediate remediation"
+        }
+      ],
+      "manual_inspection_triggers": [
+        "tickets, specs, research, evidence, decisions, knowledge, or skills are created or materially updated",
+        "records are unusually terse or mostly template headings",
+        "future-agent handoff, child ticket, closure, or promotion claim depends on the record graph",
+        "source, transcript, or artifact context appears richer than the durable record"
+      ],
+      "known_false_positives": [
+        "A record has all expected headings but omits the actual behavior, edge cases, or provenance a cold reader needs.",
+        "A long record repeats process language but does not say what to do next or why.",
+        "Acceptance criteria exist but do not map to constraints, exclusions, or evidence expectations."
+      ],
+      "known_false_negatives": [
+        "A concise record can be complete when the task is exact, trivial, or fully governed elsewhere.",
+        "A thin index record is correct when it explicitly points to an external canonical artifact with status and revision.",
+        "A blocked record may be high quality when it preserves the exact unresolved decision instead of filling space."
+      ],
+      "related_requirements": [
+        "REQ-001",
+        "REQ-002",
+        "REQ-004",
+        "REQ-011",
+        "REQ-012",
+        "REQ-013",
+        "REQ-018",
+        "REQ-019",
+        "REQ-020",
+        "REQ-023"
+      ],
+      "inspection_support": {
+        "status": "inspectable",
+        "reason": "Scientist inspection can compare created records against the transcript, source files, raw artifacts, and scenario intent to judge whether future agents can continue without guessing."
       }
     }
   ]
