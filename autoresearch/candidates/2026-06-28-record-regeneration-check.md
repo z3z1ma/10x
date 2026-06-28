@@ -3,7 +3,7 @@
 Candidate ID: `candidate-record-regeneration-check-v1`
 Created: 2026-06-28
 Canonical target: `SKILL.md`
-Status: promoted-compressed
+Status: retained-candidate
 Promotion: manual-only
 
 ## Target Behavior
@@ -66,11 +66,12 @@ without floor triggers, extra implementation, record spam, or secret leakage.
 
 ## Result
 
-Promoted in compressed form after:
+Initially promoted in compressed form after:
 
 - `EXP-20260628-record-regeneration-check`
 - `EXP-20260628-record-regeneration-check-continuation`
 
-The full overlay was not promoted. The canonical change replaced the existing
-Record Graph cold-reader paragraph with a compact regeneration checklist that
-keeps the useful behavior while staying within the `SKILL.md` size budget.
+The full overlay was not promoted. The compressed canonical change was later
+rolled back because the evidence was not broad enough to conclude net
+improvement. This idea remains a retained candidate for broader comparison
+against alternative `S010` hypotheses.
