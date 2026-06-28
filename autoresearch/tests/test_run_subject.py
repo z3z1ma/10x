@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 import tempfile
 import unittest
@@ -116,7 +117,13 @@ class LiveSubjectRunnerTest(unittest.TestCase):
 
     def test_live_opencode_run_writes_parity_artifacts(self):
         with tempfile.TemporaryDirectory() as tmp:
-            with mock.patch("subprocess.run", side_effect=_fake_opencode_run):
+            with (
+                mock.patch(
+                    "autoresearch.run_subject.shutil.which",
+                    return_value="/usr/local/bin/opencode",
+                ),
+                mock.patch("subprocess.run", side_effect=_fake_opencode_run),
+            ):
                 summary = run_subject.run_live(
                     _opencode_definition(),
                     Path(tmp),
@@ -167,7 +174,7 @@ class LiveSubjectRunnerTest(unittest.TestCase):
         )
         self.assertIn("OpenCode completed the trial", raw["transcript"][1]["content"])
         self.assertEqual(1, len(raw["tool_invocations"]))
-        self.assertEqual(["opencode", "--pure", "run"], command["argv"][:3])
+        self.assertEqual(["/usr/local/bin/opencode", "--pure", "run"], command["argv"][:3])
         self.assertEqual("openai/gpt-5.5", command["argv"][command["argv"].index("--model") + 1])
         self.assertEqual("autoresearch-subject", command["argv"][command["argv"].index("--agent") + 1])
         self.assertIn("<prompt stored at", command["argv"][-1])
@@ -182,13 +189,25 @@ class LiveSubjectRunnerTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             definition = _opencode_definition()
-            with mock.patch("subprocess.run", side_effect=_fake_opencode_run):
+            with (
+                mock.patch(
+                    "autoresearch.run_subject.shutil.which",
+                    return_value="/usr/local/bin/opencode",
+                ),
+                mock.patch("subprocess.run", side_effect=_fake_opencode_run),
+            ):
                 run_subject.run_live(definition, root / "out", repo_root=REPO_ROOT)
 
             archived_workspace = next((root / "out" / "workspaces").glob("*"))
             (archived_workspace / "stale.txt").write_text("stale", encoding="utf-8")
 
-            with mock.patch("subprocess.run", side_effect=_fake_opencode_run):
+            with (
+                mock.patch(
+                    "autoresearch.run_subject.shutil.which",
+                    return_value="/usr/local/bin/opencode",
+                ),
+                mock.patch("subprocess.run", side_effect=_fake_opencode_run),
+            ):
                 run_subject.run_live(definition, root / "out", repo_root=REPO_ROOT)
 
             raw = json.loads(next((root / "out" / "raw").glob("*.json")).read_text(encoding="utf-8"))
@@ -201,6 +220,99 @@ class LiveSubjectRunnerTest(unittest.TestCase):
         self.assertEqual(["opencode-output.txt"], [item["path"] for item in raw["file_outputs"]])
         self.assertEqual(["opencode-output.txt"], manifest["changed_files"])
         self.assertNotIn("stale.txt", manifest["post_run_files"])
+
+    def test_live_opencode_discovers_home_binary_when_not_on_path(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fake_bin = root / "opencode"
+            fake_bin.write_text("#!/bin/sh\n", encoding="utf-8")
+            fake_bin.chmod(0o755)
+            with (
+                mock.patch("autoresearch.run_subject.shutil.which", return_value=None),
+                mock.patch(
+                    "autoresearch.run_subject._opencode_fallback_candidates",
+                    return_value=[fake_bin],
+                ),
+                mock.patch("subprocess.run", side_effect=_fake_opencode_run),
+            ):
+                run_subject.run_live(_opencode_definition(), root / "out", repo_root=REPO_ROOT)
+
+            command = json.loads(
+                next((root / "out" / "opencode").glob("*.command.json")).read_text(
+                    encoding="utf-8"
+                )
+            )
+
+        self.assertEqual(str(fake_bin), command["argv"][0])
+
+    def test_live_opencode_missing_binary_fails_fast(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with (
+                mock.patch.dict(os.environ, {}, clear=True),
+                mock.patch("autoresearch.run_subject.shutil.which", return_value=None),
+                mock.patch(
+                    "autoresearch.run_subject._opencode_fallback_candidates",
+                    return_value=[],
+                ),
+            ):
+                with self.assertRaisesRegex(
+                    run_subject.ExperimentError,
+                    "opencode executable not found",
+                ):
+                    run_subject.run_live(
+                        _opencode_definition(),
+                        Path(tmp),
+                        repo_root=REPO_ROOT,
+                    )
+
+    def test_live_opencode_suppresses_generated_dependency_changed_files(self):
+        def fake_run(argv, stdout, stderr, text, timeout=None, env=None):
+            workspace = Path(argv[argv.index("--dir") + 1])
+            assert env is not None
+            (workspace / ".opencode" / "node_modules" / "pkg").mkdir(parents=True)
+            (workspace / ".opencode" / "node_modules" / "pkg" / "index.js").write_text(
+                "generated dependency",
+                encoding="utf-8",
+            )
+            (workspace / ".opencode" / "skills" / "demo").mkdir(parents=True)
+            (workspace / ".opencode" / "skills" / "demo" / "SKILL.md").write_text(
+                "real opencode artifact",
+                encoding="utf-8",
+            )
+            return mock.Mock(
+                returncode=0,
+                stdout='{"type":"message.completed","role":"assistant","content":"Done."}\n',
+                stderr="",
+            )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            with (
+                mock.patch(
+                    "autoresearch.run_subject.shutil.which",
+                    return_value="/usr/local/bin/opencode",
+                ),
+                mock.patch("subprocess.run", side_effect=fake_run),
+            ):
+                run_subject.run_live(_opencode_definition(), root / "out", repo_root=REPO_ROOT)
+
+            raw = json.loads(next((root / "out" / "raw").glob("*.json")).read_text(encoding="utf-8"))
+            manifest = json.loads(
+                next((root / "out" / "workspaces").glob("*/workspace-manifest.json")).read_text(
+                    encoding="utf-8"
+                )
+            )
+            archived_workspace = Path(manifest["workspace"])
+            dependency_archived = (
+                archived_workspace / ".opencode/node_modules/pkg/index.js"
+            ).exists()
+
+        self.assertTrue(dependency_archived)
+        self.assertEqual([".opencode/skills/demo/SKILL.md"], manifest["changed_files"])
+        self.assertEqual([".opencode/skills/demo/SKILL.md"], [item["path"] for item in raw["file_outputs"]])
+        self.assertEqual(1, manifest["suppressed_changed_file_count"])
+        self.assertEqual([".opencode/node_modules/pkg/index.js"], manifest["suppressed_changed_file_sample"])
+        self.assertEqual(1, raw["suppressed_changed_file_count"])
 
     def test_live_run_writes_trial_outputs_without_instruction_contamination(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-06-27",
+  "updated": "2026-06-28",
   "source_decision": ".10x/decisions/autoresearch-live-trial-scientist-inspection.md",
   "source_spec": ".10x/specs/10x-autoresearch-loop.md",
   "source_scenarios": "autoresearch/catalogs/scenarios.json",
@@ -260,6 +260,28 @@
       "expected_failure_behavior": "Reports only the improved score or promotes wording that improves cost but weakens evidence integrity."
     }
   ],
+  "baseline_replay_scope": {
+    "inventory": "autoresearch/trial-seeds/index.json:seeds",
+    "included_seed_count": 129,
+    "included_policy": "Seed-backed baseline inventory is exactly the tracked seed packages listed in seeds[]. Each seed has raw_path, workspace_path, and workspace_procedure for deterministic run_once.py definitions.",
+    "historical_definition_exclusions_path": "autoresearch/trial-seeds/baseline-exclusions.json",
+    "excluded_historical_definition_count": 44,
+    "excluded_historical_definition_classes": [
+      {
+        "id": "missing-storage-prior-raw-continuation",
+        "count": 25,
+        "rationale": "Continuation definitions that depend on ignored .10x/evidence/.storage prior raw artifacts are not replayable from a fresh checkout.",
+        "promotion_path": "Create a tracked autoresearch/trial-seeds/<seed>/raw.json and workspace manifest, then point new experiment definitions at that seed raw_path."
+      },
+      {
+        "id": "historical-generated-workspace-no-seed",
+        "count": 19,
+        "rationale": "Older generated-workspace definitions without tracked seed provenance are historical research artifacts, not seed-backed baseline inputs.",
+        "promotion_path": "Create a tracked autoresearch/trial-seeds/<seed>/ workspace package and index entry before including it in all seed-backed scenarios."
+      }
+    ],
+    "excluded_policy": "Historical research definitions are outside the seed-backed baseline unless their current arm points at tracked trial-seed raw artifacts or a tracked seed workspace procedure."
+  },
   "seeds": [
     {
       "id": "accessibility-safety-rail",

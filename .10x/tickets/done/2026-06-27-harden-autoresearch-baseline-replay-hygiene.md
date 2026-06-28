@@ -1,6 +1,6 @@
-Status: open
+Status: done
 Created: 2026-06-27
-Updated: 2026-06-27
+Updated: 2026-06-28
 Depends-On: .10x/evidence/2026-06-27-cross-harness-seed-experiment-baseline.md
 
 # Harden Autoresearch Baseline Replay Hygiene
@@ -47,6 +47,24 @@ Excluded:
 - 2026-06-27: Opened from the cross-harness seed baseline. The campaign excluded
   44 registered definitions and observed six OpenCode changed-file manifests
   dominated by `.opencode/node_modules`.
+- 2026-06-28: Implemented the deterministic replay boundary in tracked seed
+  metadata: `autoresearch/trial-seeds/index.json` now records
+  `baseline_replay_scope`, and
+  `autoresearch/trial-seeds/baseline-exclusions.json` classifies the 25 ignored
+  storage-dependent continuation definitions and 19 older generated-workspace
+  definitions as outside the seed-backed baseline until promoted to tracked seed
+  packages.
+- 2026-06-28: Updated OpenCode live execution to resolve `OPENCODE_BIN`, `PATH`,
+  or `~/.opencode/bin/opencode` before calling the subject, with a clear
+  prerequisite error when unavailable.
+- 2026-06-28: Filtered `.opencode/node_modules/**` from changed-file and
+  `file_outputs` summaries while preserving archived workspaces plus suppression
+  count/sample metadata in raw artifacts and workspace manifests.
+- 2026-06-28: Recorded evidence in
+  `.10x/evidence/2026-06-28-autoresearch-baseline-replay-hygiene.md` and pass
+  review in
+  `.10x/reviews/2026-06-28-autoresearch-baseline-replay-hygiene-review.md`.
+  Closed this ticket.
 
 ## Blockers
 
@@ -55,6 +73,9 @@ None.
 ## References
 
 - `.10x/evidence/2026-06-27-cross-harness-seed-experiment-baseline.md`
+- `.10x/evidence/2026-06-28-autoresearch-baseline-replay-hygiene.md`
+- `.10x/reviews/2026-06-28-autoresearch-baseline-replay-hygiene-review.md`
 - `.10x/evidence/.storage/2026-06-27-cross-harness-seed-experiment-baseline/campaign_manifest.json`
 - `autoresearch/trial-seeds/index.json`
+- `autoresearch/trial-seeds/baseline-exclusions.json`
 - `autoresearch/run_subject.py`

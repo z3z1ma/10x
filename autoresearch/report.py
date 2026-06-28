@@ -325,16 +325,18 @@ def _workspace_changes_section(artifacts: list[dict[str, Any]]) -> list[str]:
     lines = [
         "## Workspace And Tool Trace",
         "",
-        "| Artifact | Changed files | Tool events | Raw references | Last assistant message |",
-        "| --- | --- | --- | --- | --- |",
+        "| Artifact | Changed files | Suppressed changed files | Tool events | Raw references | Last assistant message |",
+        "| --- | --- | --- | --- | --- | --- |",
     ]
     for artifact in artifacts:
         data = artifact["data"]
         changed_files = [item.get("path") for item in _list(data.get("file_outputs")) if isinstance(item, dict)]
+        suppressed_count = _int(data.get("suppressed_changed_file_count"))
         lines.append(
-            "| {path} | {files} | {tools} | {refs} | {message} |".format(
+            "| {path} | {files} | {suppressed} | {tools} | {refs} | {message} |".format(
                 path=_cell(artifact["relative_path"]),
                 files=_cell(changed_files or "none"),
+                suppressed=_cell(suppressed_count or "none"),
                 tools=_cell(len(_list(data.get("tool_invocations")))),
                 refs=_cell(len(_list(data.get("raw_artifact_refs")))),
                 message=_cell(_last_assistant_message(data)),

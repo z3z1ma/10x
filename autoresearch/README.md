@@ -234,9 +234,10 @@ For OpenCode, the same definition shape changes only the harness and model:
 ```
 
 OpenCode prerequisites are intentionally simple: the `opencode` executable must
-be on `PATH`, its provider credentials must already be configured, and the model
-must be usable by that account. The runner checks none of those by magic; failed
-commands are preserved as trial artifacts for scientist inspection.
+be discoverable, provider credentials must already be configured, and the model
+must be usable by that account. The runner resolves OpenCode from `OPENCODE_BIN`,
+then `PATH`, then `~/.opencode/bin/opencode`. If no executable is found, it
+fails before the subject call with a clear prerequisite message.
 
 The `arms` array is exact. A one-arm smoke or current-skill regression lists one
 arm. A comparative experiment lists each control, baseline, current, and
@@ -279,6 +280,12 @@ first-class registry for seed purpose, target scenario, target rubrics,
 conditions created, known traps, prompt family, material records, material
 source files, raw artifact path, workspace manifest path, and workspace
 procedure.
+
+For "all seed-backed scenarios", use exactly the `seeds[]` inventory in that
+index. Its `baseline_replay_scope` points to
+`autoresearch/trial-seeds/baseline-exclusions.json`, which documents historical
+live research definitions that are outside the seed-backed baseline until they
+are promoted into tracked seed packages.
 
 Regenerate the index after adding, removing, or materially changing seeds:
 

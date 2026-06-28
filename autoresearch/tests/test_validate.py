@@ -198,6 +198,10 @@ class copied_contract_root:
         )
         shutil.copytree(seed_source, seed_target)
         shutil.copy2(source / "trial-seeds" / "index.json", target / "trial-seeds" / "index.json")
+        shutil.copy2(
+            source / "trial-seeds" / "baseline-exclusions.json",
+            target / "trial-seeds" / "baseline-exclusions.json",
+        )
         self._keep_only_explicit_policy_seed(target / "trial-seeds" / "index.json")
         spec_target = root / ".10x" / "specs"
         spec_target.mkdir(parents=True)
@@ -217,6 +221,7 @@ class copied_contract_root:
         data["seeds"] = [
             seed for seed in data["seeds"] if seed["id"] == "explicit-policy-ratification"
         ]
+        data["baseline_replay_scope"]["included_seed_count"] = len(data["seeds"])
         for scenario in data.get("scenario_selection_guide", []):
             scenario["seed_count"] = (
                 1 if scenario["scenario_id"] == "SCN-006" else 0

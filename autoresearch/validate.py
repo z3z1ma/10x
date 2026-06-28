@@ -128,6 +128,9 @@ def validate_contracts(root: str | Path) -> ValidationResult:
     )
     split_path = repo_root / "autoresearch" / "splits" / "skill-improvement-v1.json"
     seed_index_path = repo_root / "autoresearch" / "trial-seeds" / "index.json"
+    baseline_exclusions_path = (
+        repo_root / "autoresearch" / "trial-seeds" / "baseline-exclusions.json"
+    )
 
     scores_data = _load_json(scores_path, "scores.json", errors)
     scenarios_data = _load_json(scenarios_path, "scenarios.json", errors)
@@ -169,6 +172,17 @@ def validate_contracts(root: str | Path) -> ValidationResult:
             seed_index_data,
             scenario_ids,
             score_ids,
+            errors,
+        )
+    baseline_exclusions_data = _load_json(
+        baseline_exclusions_path,
+        "trial-seeds/baseline-exclusions.json",
+        errors,
+    )
+    if isinstance(baseline_exclusions_data, dict):
+        _validate_baseline_exclusions(
+            seed_index_data if isinstance(seed_index_data, dict) else {},
+            baseline_exclusions_data,
             errors,
         )
     _validate_skill_size_budget(repo_root, errors)
@@ -250,6 +264,16 @@ def _validate_trial_seed_index(
         errors.append(f"{label}: source_scores must point to scores catalog")
     if not isinstance(data.get("selection_protocol"), list) or not data["selection_protocol"]:
         errors.append(f"{label}: selection_protocol must be a non-empty list")
+    replay_scope = data.get("baseline_replay_scope")
+    if not isinstance(replay_scope, dict):
+        errors.append(f"{label}: baseline_replay_scope must be an object")
+    else:
+        if replay_scope.get("inventory") != "autoresearch/trial-seeds/index.json:seeds":
+            errors.append(f"{label}: baseline_replay_scope.inventory must point to seeds")
+        if replay_scope.get("historical_definition_exclusions_path") != "autoresearch/trial-seeds/baseline-exclusions.json":
+            errors.append(
+                f"{label}: baseline_replay_scope historical exclusions path is invalid"
+            )
 
     seed_root = repo_root / "autoresearch" / "trial-seeds"
     actual_seed_ids = {
@@ -328,6 +352,85 @@ def _validate_trial_seed_index(
         errors.append(f"{label}: missing seed index entries: {', '.join(missing)}")
     if extra:
         errors.append(f"{label}: seed index entries without raw seed: {', '.join(extra)}")
+    if isinstance(replay_scope, dict) and replay_scope.get("included_seed_count") != len(seeds):
+        errors.append(
+            f"{label}: baseline_replay_scope included_seed_count must match seeds length"
+        )
+
+
+def _validate_baseline_exclusions(
+    seed_index: dict[str, Any],
+    exclusions: dict[str, Any],
+    errors: list[str],
+) -> None:
+    label = "trial-seeds/baseline-exclusions.json"
+    if exclusions.get("schema_version") != 1:
+        errors.append(f"{label}: schema_version must be 1")
+    classes = exclusions.get("classes")
+    definitions = exclusions.get("definitions")
+    if not isinstance(classes, list) or not classes:
+        errors.append(f"{label}: classes must be a non-empty list")
+        classes = []
+    if not isinstance(definitions, list):
+        errors.append(f"{label}: definitions must be a list")
+        definitions = []
+
+    class_counts: dict[str, int] = {}
+    for index, item in enumerate(classes):
+        item_label = f"{label}:classes[{index}]"
+        if not isinstance(item, dict):
+            errors.append(f"{item_label}: must be an object")
+            continue
+        class_id = item.get("id")
+        count = item.get("count")
+        if not _non_empty_string(class_id):
+            errors.append(f"{item_label}: id must be a non-empty string")
+            continue
+        if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+            errors.append(f"{item_label}: count must be a non-negative integer")
+            continue
+        class_counts[class_id] = count
+
+    seen_sources: set[str] = set()
+    observed_counts = {class_id: 0 for class_id in class_counts}
+    for index, item in enumerate(definitions):
+        item_label = f"{label}:definitions[{index}]"
+        if not isinstance(item, dict):
+            errors.append(f"{item_label}: must be an object")
+            continue
+        source_path = item.get("source_path")
+        classification = item.get("classification")
+        if not _non_empty_string(source_path):
+            errors.append(f"{item_label}: source_path must be a non-empty string")
+        elif source_path in seen_sources:
+            errors.append(f"{label}: duplicate source_path {source_path}")
+        else:
+            seen_sources.add(source_path)
+        if classification not in class_counts:
+            errors.append(f"{item_label}: unknown classification {classification}")
+        else:
+            observed_counts[classification] += 1
+        if not isinstance(item.get("scenario_ids"), list):
+            errors.append(f"{item_label}: scenario_ids must be a list")
+        if not isinstance(item.get("current_prior_refs"), list):
+            errors.append(f"{item_label}: current_prior_refs must be a list")
+        if not isinstance(item.get("missing_prior_refs"), list):
+            errors.append(f"{item_label}: missing_prior_refs must be a list")
+
+    for class_id, expected_count in class_counts.items():
+        if observed_counts.get(class_id, 0) != expected_count:
+            errors.append(
+                f"{label}: class {class_id} count {expected_count} does not match "
+                f"{observed_counts.get(class_id, 0)} definitions"
+            )
+
+    replay_scope = seed_index.get("baseline_replay_scope")
+    if isinstance(replay_scope, dict):
+        if replay_scope.get("excluded_historical_definition_count") != len(definitions):
+            errors.append(
+                "trial-seeds/index.json: baseline_replay_scope excluded count "
+                "does not match baseline-exclusions definitions"
+            )
 
 
 def _read_text(path: Path, label: str, errors: list[str]) -> str | None:

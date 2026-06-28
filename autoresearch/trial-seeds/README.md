@@ -15,6 +15,12 @@ Use `index.json` as the selection surface. Each entry records:
 - `raw_path`, `workspace_manifest_path`, and `workspace_procedure` for runner
   definitions.
 
+For "all seed-backed scenarios", use exactly `index.json` `seeds[]`.
+Historical live research definitions that are not replayable from tracked seed
+packages are documented in `baseline-exclusions.json`; they are not deleted, but
+they are outside the deterministic seed-backed baseline until promoted into
+tracked seeds.
+
 After adding, removing, or materially changing a seed, regenerate the index:
 
 ```bash

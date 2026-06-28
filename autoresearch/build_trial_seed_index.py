@@ -10,11 +10,13 @@ SEED_ROOT = REPO_ROOT / "autoresearch" / "trial-seeds"
 SCENARIO_CATALOG = REPO_ROOT / "autoresearch" / "catalogs" / "scenarios.json"
 SCORE_CATALOG = REPO_ROOT / "autoresearch" / "catalogs" / "scores.json"
 OUTPUT = SEED_ROOT / "index.json"
+BASELINE_EXCLUSIONS = SEED_ROOT / "baseline-exclusions.json"
 
 
 def main() -> int:
     scenarios_data = _load_json(SCENARIO_CATALOG)
     scores_data = _load_json(SCORE_CATALOG)
+    baseline_exclusions = _load_json(BASELINE_EXCLUSIONS)
     scenarios = {
         scenario["id"]: scenario for scenario in scenarios_data["scenarios"]
     }
@@ -82,7 +84,7 @@ def main() -> int:
 
     index = {
         "schema_version": 1,
-        "updated": "2026-06-27",
+        "updated": "2026-06-28",
         "source_decision": ".10x/decisions/autoresearch-live-trial-scientist-inspection.md",
         "source_spec": ".10x/specs/10x-autoresearch-loop.md",
         "source_scenarios": "autoresearch/catalogs/scenarios.json",
@@ -103,6 +105,10 @@ def main() -> int:
             scenarios,
             scores,
             scenario_counts,
+        ),
+        "baseline_replay_scope": _baseline_replay_scope(
+            seed_entries,
+            baseline_exclusions,
         ),
         "seeds": seed_entries,
     }
@@ -248,6 +254,31 @@ def _scenario_selection_guide(
             }
         )
     return guide
+
+
+def _baseline_replay_scope(
+    seed_entries: list[dict[str, Any]],
+    exclusions: dict[str, Any],
+) -> dict[str, Any]:
+    definitions = exclusions.get("definitions") if isinstance(exclusions, dict) else []
+    classes = exclusions.get("classes") if isinstance(exclusions, dict) else []
+    return {
+        "inventory": "autoresearch/trial-seeds/index.json:seeds",
+        "included_seed_count": len(seed_entries),
+        "included_policy": (
+            "Seed-backed baseline inventory is exactly the tracked seed packages "
+            "listed in seeds[]. Each seed has raw_path, workspace_path, and "
+            "workspace_procedure for deterministic run_once.py definitions."
+        ),
+        "historical_definition_exclusions_path": _rel(BASELINE_EXCLUSIONS),
+        "excluded_historical_definition_count": len(definitions) if isinstance(definitions, list) else 0,
+        "excluded_historical_definition_classes": classes if isinstance(classes, list) else [],
+        "excluded_policy": (
+            "Historical research definitions are outside the seed-backed baseline "
+            "unless their current arm points at tracked trial-seed raw artifacts "
+            "or a tracked seed workspace procedure."
+        ),
+    }
 
 
 def _complexity(counts: dict[str, int]) -> str:

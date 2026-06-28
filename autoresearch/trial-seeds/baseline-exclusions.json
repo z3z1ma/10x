@@ -1,0 +1,692 @@
+{
+  "schema_version": 1,
+  "updated": "2026-06-28",
+  "source_campaign_manifest": ".10x/evidence/.storage/2026-06-27-cross-harness-seed-experiment-baseline/campaign_manifest.json",
+  "purpose": "Tracked exclusion ledger for historical live research definitions that are outside the deterministic seed-backed baseline inventory.",
+  "baseline_policy": "The seed-backed baseline is exactly the tracked trial seed inventory in autoresearch/trial-seeds/index.json. Historical definitions listed here are not deleted; they are excluded until promoted to tracked trial-seed packages.",
+  "classes": [
+    {
+      "id": "missing-storage-prior-raw-continuation",
+      "count": 25,
+      "rationale": "Continuation definitions that depend on ignored .10x/evidence/.storage prior raw artifacts are not replayable from a fresh checkout.",
+      "promotion_path": "Create a tracked autoresearch/trial-seeds/<seed>/raw.json and workspace manifest, then point new experiment definitions at that seed raw_path."
+    },
+    {
+      "id": "historical-generated-workspace-no-seed",
+      "count": 19,
+      "rationale": "Older generated-workspace definitions without tracked seed provenance are historical research artifacts, not seed-backed baseline inputs.",
+      "promotion_path": "Create a tracked autoresearch/trial-seeds/<seed>/ workspace package and index entry before including it in all seed-backed scenarios."
+    }
+  ],
+  "definitions": [
+    {
+      "source_path": ".10x/research/2026-06-23-concise-blocking-decisions-scn001-live-micro.md",
+      "source_experiment_id": "EXP-20260623-809-concise-blocking-decisions-scn001-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-concise-blocking-decisions-scn002-live-micro.md",
+      "source_experiment_id": "EXP-20260623-810-concise-blocking-decisions-scn002-live-micro",
+      "scenario_ids": [
+        "SCN-002"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-explicit-concise-blockers-scn001-continuation-live-micro.md",
+      "source_experiment_id": "EXP-20260623-813-explicit-concise-blockers-scn001-continuation-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/012-explicit-concise-blockers-scn001-live-micro/raw/sha256-b5d409bb99b461ee2df7e83b60b32c6967a6015421e24be4885e8389aed3aa5c.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/012-explicit-concise-blockers-scn001-live-micro/raw/sha256-b5d409bb99b461ee2df7e83b60b32c6967a6015421e24be4885e8389aed3aa5c.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-explicit-concise-blockers-scn001-live-micro.md",
+      "source_experiment_id": "EXP-20260623-811-explicit-concise-blockers-scn001-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-explicit-concise-blockers-scn002-live-micro.md",
+      "source_experiment_id": "EXP-20260623-812-explicit-concise-blockers-scn002-live-micro",
+      "scenario_ids": [
+        "SCN-002"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-honest-subagent-handoff-scn007-live-micro.md",
+      "source_experiment_id": "EXP-20260623-825-honest-subagent-handoff-scn007-live-micro",
+      "scenario_ids": [
+        "SCN-007"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-information-gain-scn001-live-micro.md",
+      "source_experiment_id": "EXP-20260623-807-information-gain-scn001-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-information-gain-scn002-live-micro.md",
+      "source_experiment_id": "EXP-20260623-808-information-gain-scn002-live-micro",
+      "scenario_ids": [
+        "SCN-002"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-one-decisive-question-live-micro-rerun.md",
+      "source_experiment_id": "EXP-20260623-805-one-decisive-question-live-micro-rerun",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-one-decisive-question-live-micro.md",
+      "source_experiment_id": "EXP-20260623-804-one-decisive-question-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-one-decisive-question-v2-live-micro.md",
+      "source_experiment_id": "EXP-20260623-806-one-decisive-question-v2-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-outer-loop-readiness-ledger-scn001-live-micro.md",
+      "source_experiment_id": "EXP-20260623-824-outer-loop-readiness-ledger-scn001-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-partial-answer-continuation-exit-gate-scn001-live-micro.md",
+      "source_experiment_id": "EXP-20260623-833-partial-answer-continuation-exit-gate-scn001-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/031-answerability-gated-blockers-scn001-live-micro/raw/sha256-50f2d761e8d5606703ea90448ca0b6c1fcb0beb3a953948fba8c4a91bf6bc89d.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/031-answerability-gated-blockers-scn001-live-micro/raw/sha256-50f2d761e8d5606703ea90448ca0b6c1fcb0beb3a953948fba8c4a91bf6bc89d.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-record-economy-threshold-scn005-hard-live-micro.md",
+      "source_experiment_id": "EXP-20260623-823-record-economy-threshold-scn005-hard-live-micro",
+      "scenario_ids": [
+        "SCN-005"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-record-economy-threshold-scn005-live-micro.md",
+      "source_experiment_id": "EXP-20260623-822-record-economy-threshold-scn005-live-micro",
+      "scenario_ids": [
+        "SCN-005"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-records-first-retrieval-no-citation-scn003-live-micro.md",
+      "source_experiment_id": "EXP-20260623-827-records-first-retrieval-no-citation-scn003-live-micro",
+      "scenario_ids": [
+        "SCN-003"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/017-upstream-gated-blockers-scn001-continuation-live-micro/raw/sha256-36251b36d7e4da0fcd428f70410d8262286c1fef66cc7d7b194e4a8ad003ebdc.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/017-upstream-gated-blockers-scn001-continuation-live-micro/raw/sha256-36251b36d7e4da0fcd428f70410d8262286c1fef66cc7d7b194e4a8ad003ebdc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-records-first-retrieval-scn003-live-micro.md",
+      "source_experiment_id": "EXP-20260623-826-records-first-retrieval-scn003-live-micro",
+      "scenario_ids": [
+        "SCN-003"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/017-upstream-gated-blockers-scn001-continuation-live-micro/raw/sha256-36251b36d7e4da0fcd428f70410d8262286c1fef66cc7d7b194e4a8ad003ebdc.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/017-upstream-gated-blockers-scn001-continuation-live-micro/raw/sha256-36251b36d7e4da0fcd428f70410d8262286c1fef66cc7d7b194e4a8ad003ebdc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-smallest-executable-unit-live-subject.md",
+      "source_experiment_id": "EXP-20260623-803-smallest-executable-unit-live-subject",
+      "scenario_ids": [
+        "SCN-010"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-ticket-readiness-gate-scn006-handoff-isolated-live-micro.md",
+      "source_experiment_id": "EXP-20260623-821-ticket-readiness-gate-scn006-handoff-isolated-live-micro",
+      "scenario_ids": [
+        "SCN-006"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-ticket-readiness-gate-scn006-handoff-live-micro.md",
+      "source_experiment_id": "EXP-20260623-820-ticket-readiness-gate-scn006-handoff-live-micro",
+      "scenario_ids": [
+        "SCN-006"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-ticket-readiness-gate-scn006-live-micro.md",
+      "source_experiment_id": "EXP-20260623-819-ticket-readiness-gate-scn006-live-micro",
+      "scenario_ids": [
+        "SCN-006"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-upstream-gated-blockers-scn001-continuation-live-micro.md",
+      "source_experiment_id": "EXP-20260623-816-upstream-gated-blockers-scn001-continuation-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/015-upstream-gated-blockers-scn001-live-micro/raw/sha256-f22e875aa1ff0f27f48bd5c685ab2b8018b9a1e437d8a1d81702b66ba0fb3c7b.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/015-upstream-gated-blockers-scn001-live-micro/raw/sha256-f22e875aa1ff0f27f48bd5c685ab2b8018b9a1e437d8a1d81702b66ba0fb3c7b.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-upstream-gated-blockers-scn001-live-micro.md",
+      "source_experiment_id": "EXP-20260623-814-upstream-gated-blockers-scn001-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-upstream-gated-blockers-scn002-live-micro.md",
+      "source_experiment_id": "EXP-20260623-815-upstream-gated-blockers-scn002-live-micro",
+      "scenario_ids": [
+        "SCN-002"
+      ],
+      "classification": "historical-generated-workspace-no-seed",
+      "current_sample_count": 1,
+      "current_prior_refs": [],
+      "missing_prior_refs": [],
+      "rationale": "Excluded from the seed-backed baseline because it was generated from an older workspace definition with no tracked trial-seed prior_raw_path or workspace package. Promote it by creating a tracked trial seed."
+    },
+    {
+      "source_path": ".10x/research/2026-06-23-upstream-gated-blockers-scn003-record-retrieval-live-micro.md",
+      "source_experiment_id": "EXP-20260623-817-upstream-gated-blockers-scn003-record-retrieval-live-micro",
+      "scenario_ids": [
+        "SCN-003"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/017-upstream-gated-blockers-scn001-continuation-live-micro/raw/sha256-36251b36d7e4da0fcd428f70410d8262286c1fef66cc7d7b194e4a8ad003ebdc.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/017-upstream-gated-blockers-scn001-continuation-live-micro/raw/sha256-36251b36d7e4da0fcd428f70410d8262286c1fef66cc7d7b194e4a8ad003ebdc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-dynamic-ratified-hostile-continuation-scn001-live-micro.md",
+      "source_experiment_id": "EXP-20260625-994-dynamic-ratified-hostile-continuation-scn001-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/144-human-voice-subtle-exploratory-account-closure-scn001-live-micro/raw/sha256-8be46b2fc3d184b694644fcb7038ac97ad248193629fb4abc04d003cdea95dc8.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/144-human-voice-subtle-exploratory-account-closure-scn001-live-micro/raw/sha256-8be46b2fc3d184b694644fcb7038ac97ad248193629fb4abc04d003cdea95dc8.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-dynamic-small-greenfield-shorthand-continuation-live-micro.md",
+      "source_experiment_id": "EXP-20260625-733-dynamic-small-greenfield-shorthand-continuation-live-micro",
+      "scenario_ids": [
+        "SCN-002"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/209-dynamic-small-greenfield-activation-follow-up-live-micro/raw/sha256-999a684183e76d3883cd0e1ebefc660b134fe93401fdefec6cffdd832673cedd.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/209-dynamic-small-greenfield-activation-follow-up-live-micro/raw/sha256-999a684183e76d3883cd0e1ebefc660b134fe93401fdefec6cffdd832673cedd.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-feature-category-shorthand-ratification-candidate-batch-live-micro.md",
+      "source_experiment_id": "EXP-20260625-729-feature-category-shorthand-ratification-candidate-batch-live-micro",
+      "scenario_ids": [
+        "SCN-002",
+        "SCN-010",
+        "SCN-010"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 3,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/203-greenfield-pressure-activation-live-micro/raw/sha256-55fccb7cea37d2d52c04361cabb84bda7a291add8f9f2a5009584217b1128a59.json",
+        "autoresearch/trial-seeds/exact-one-line-code-edit/raw.json",
+        "autoresearch/trial-seeds/exact-formatting-edit/raw.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/203-greenfield-pressure-activation-live-micro/raw/sha256-55fccb7cea37d2d52c04361cabb84bda7a291add8f9f2a5009584217b1128a59.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-feature-category-shorthand-ratification-v2-candidate-batch-live-micro.md",
+      "source_experiment_id": "EXP-20260625-730-feature-category-shorthand-ratification-v2-candidate-batch-live-micro",
+      "scenario_ids": [
+        "SCN-002",
+        "SCN-010",
+        "SCN-010"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 3,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/203-greenfield-pressure-activation-live-micro/raw/sha256-55fccb7cea37d2d52c04361cabb84bda7a291add8f9f2a5009584217b1128a59.json",
+        "autoresearch/trial-seeds/exact-one-line-code-edit/raw.json",
+        "autoresearch/trial-seeds/exact-formatting-edit/raw.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/203-greenfield-pressure-activation-live-micro/raw/sha256-55fccb7cea37d2d52c04361cabb84bda7a291add8f9f2a5009584217b1128a59.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-greenfield-partial-ratification-continuation-live-micro.md",
+      "source_experiment_id": "EXP-20260625-728-greenfield-partial-ratification-continuation-live-micro",
+      "scenario_ids": [
+        "SCN-002"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/203-greenfield-pressure-activation-live-micro/raw/sha256-63a43e4b10abf3dc3e152d3ebae7cde55f6710fa03c700179bfd3b5e77adcd96.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/203-greenfield-pressure-activation-live-micro/raw/sha256-63a43e4b10abf3dc3e152d3ebae7cde55f6710fa03c700179bfd3b5e77adcd96.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-greenfield-spec-before-ticket-continuation-live-micro.md",
+      "source_experiment_id": "EXP-20260625-736-greenfield-spec-before-ticket-continuation-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-human-voice-dynamic-stock-override-turn2-scn002-live-micro.md",
+      "source_experiment_id": "EXP-20260625-961-human-voice-dynamic-stock-override-turn2-scn002-live-micro",
+      "scenario_ids": [
+        "SCN-002"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/225-human-voice-dynamic-stock-override-turn1-scn001-live-micro/raw/sha256-4087ee4a7546e1d8c46e706093773030c35331540880e24a11983d908a57defe.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/225-human-voice-dynamic-stock-override-turn1-scn001-live-micro/raw/sha256-4087ee4a7546e1d8c46e706093773030c35331540880e24a11983d908a57defe.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-lower-assistance-multibatch-ratification-batch2-scn001-live-micro.md",
+      "source_experiment_id": "EXP-20260625-952-lower-assistance-multibatch-ratification-batch2-scn001-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/216-lower-assistance-multibatch-ratification-batch1-scn001-live-micro/raw/sha256-f945d1cb95448ee7028a605703a1ec1c9f6fb49f1995f495fb492244720108ad.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/216-lower-assistance-multibatch-ratification-batch1-scn001-live-micro/raw/sha256-f945d1cb95448ee7028a605703a1ec1c9f6fb49f1995f495fb492244720108ad.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-net-new-spec-first-gate-candidate-batch-live-micro.md",
+      "source_experiment_id": "EXP-20260625-737-net-new-spec-first-gate-candidate-batch-live-micro",
+      "scenario_ids": [
+        "SCN-001",
+        "SCN-010",
+        "SCN-010"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 3,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json",
+        "autoresearch/trial-seeds/exact-one-line-code-edit/raw.json",
+        "autoresearch/trial-seeds/exact-formatting-edit/raw.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-post-promotion-feature-category-shorthand-sanity-live-micro.md",
+      "source_experiment_id": "EXP-20260625-731-post-promotion-feature-category-shorthand-sanity-live-micro",
+      "scenario_ids": [
+        "SCN-002",
+        "SCN-010",
+        "SCN-010"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 3,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/203-greenfield-pressure-activation-live-micro/raw/sha256-55fccb7cea37d2d52c04361cabb84bda7a291add8f9f2a5009584217b1128a59.json",
+        "autoresearch/trial-seeds/exact-one-line-code-edit/raw.json",
+        "autoresearch/trial-seeds/exact-formatting-edit/raw.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/203-greenfield-pressure-activation-live-micro/raw/sha256-55fccb7cea37d2d52c04361cabb84bda7a291add8f9f2a5009584217b1128a59.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-25-post-promotion-net-new-spec-first-sanity-live-micro.md",
+      "source_experiment_id": "EXP-20260625-739-post-promotion-net-new-spec-first-sanity-live-micro",
+      "scenario_ids": [
+        "SCN-001",
+        "SCN-010",
+        "SCN-010"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 3,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json",
+        "autoresearch/trial-seeds/exact-one-line-code-edit/raw.json",
+        "autoresearch/trial-seeds/exact-formatting-edit/raw.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-26-compressed-skill-current-greenfield-spec-salience-live-micro.md",
+      "source_experiment_id": "EXP-20260626-748-compressed-skill-current-greenfield-spec-salience-live-micro",
+      "scenario_ids": [
+        "SCN-001",
+        "SCN-001",
+        "SCN-001",
+        "SCN-006"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 4,
+      "current_prior_refs": [
+        "autoresearch/trial-seeds/small-greenfield-app-activation/raw.json",
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json",
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json",
+        "autoresearch/trial-seeds/source-backed-onboarding-substrate/raw.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json",
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-26-current-focused-spec-controls-batch-live-micro.md",
+      "source_experiment_id": "EXP-20260626-752-current-focused-spec-controls-batch-live-micro",
+      "scenario_ids": [
+        "SCN-001",
+        "SCN-006",
+        "SCN-006",
+        "SCN-010",
+        "SCN-010"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 5,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json",
+        "autoresearch/trial-seeds/source-backed-onboarding-substrate/raw.json",
+        "autoresearch/trial-seeds/existing-active-spec-static-todo/raw.json",
+        "autoresearch/trial-seeds/correct-answer-no-code/raw.json",
+        "autoresearch/trial-seeds/exact-formatting-edit/raw.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-26-current-ratification-cold-start-batch-live-micro.md",
+      "source_experiment_id": "EXP-20260626-753-current-ratification-cold-start-batch-live-micro",
+      "scenario_ids": [
+        "SCN-001",
+        "SCN-001",
+        "SCN-001",
+        "SCN-003"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 4,
+      "current_prior_refs": [
+        "autoresearch/trial-seeds/lower-assistance-multibatch-ratification/raw.json",
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/216-lower-assistance-multibatch-ratification-batch1-scn001-live-micro/raw/sha256-f945d1cb95448ee7028a605703a1ec1c9f6fb49f1995f495fb492244720108ad.json",
+        "autoresearch/trial-seeds/ratification-laundering-across-turns/raw.json",
+        "autoresearch/trial-seeds/long-horizon-cold-start/raw.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/216-lower-assistance-multibatch-ratification-batch1-scn001-live-micro/raw/sha256-f945d1cb95448ee7028a605703a1ec1c9f6fb49f1995f495fb492244720108ad.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-26-lower-cue-greenfield-multi-surface-splitting-live-micro.md",
+      "source_experiment_id": "EXP-20260626-743-lower-cue-greenfield-multi-surface-splitting-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-26-lower-cue-multi-surface-splitting-candidate-live-micro.md",
+      "source_experiment_id": "EXP-20260626-744-lower-cue-multi-surface-splitting-candidate-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-26-post-lower-cue-split-single-surface-control-live-micro.md",
+      "source_experiment_id": "EXP-20260626-745-post-lower-cue-split-single-surface-control-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-26-post-ticket-boundary-multi-surface-splitting-control-live-micro.md",
+      "source_experiment_id": "EXP-20260626-747-post-ticket-boundary-multi-surface-splitting-control-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    },
+    {
+      "source_path": ".10x/research/2026-06-26-ticket-boundary-corrective-single-surface-live-micro.md",
+      "source_experiment_id": "EXP-20260626-746-ticket-boundary-corrective-single-surface-live-micro",
+      "scenario_ids": [
+        "SCN-001"
+      ],
+      "classification": "missing-storage-prior-raw-continuation",
+      "current_sample_count": 1,
+      "current_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "missing_prior_refs": [
+        ".10x/evidence/.storage/2026-06-23-skill-autoresearch/212-generic-named-app-activation-live-micro/raw/sha256-55b8bac8e47596958c68dc5ceedc082799bbc590c7861460d0fdb718d141dfcc.json"
+      ],
+      "rationale": "Excluded from the seed-backed baseline because its current arm depends on an ignored .10x/evidence/.storage prior raw artifact. Promote it by creating a tracked trial-seed raw/workspace package."
+    }
+  ]
+}

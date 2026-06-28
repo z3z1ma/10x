@@ -169,6 +169,20 @@ class ReportTest(unittest.TestCase):
         self.assertIn("opencode stdout JSONL", markdown)
         self.assertIn("live_subject_calls", markdown)
 
+    def test_report_shows_suppressed_changed_file_count(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            raw_dir = root / "raw"
+            raw_dir.mkdir()
+            data = _artifact()
+            data["suppressed_changed_file_count"] = 42
+            _write_raw(raw_dir / "current.json", data)
+
+            markdown = report.build_report(root)
+
+        self.assertIn("Suppressed changed files", markdown)
+        self.assertIn("| current.json | app.py | 42 |", markdown)
+
 
 def _artifact(*, variant_id="current-10x", harness="codex-cli"):
     artifact_dir = "opencode" if harness == "opencode-cli" else "codex"
@@ -189,6 +203,7 @@ def _artifact(*, variant_id="current-10x", harness="codex-cli"):
         ],
         "tool_invocations": [{"type": "item.completed", "item": {"type": "command_execution"}}],
         "file_outputs": [{"path": "app.py", "action": "write", "content": "print('hi')"}],
+        "suppressed_changed_file_count": 0,
         "command_outputs": [{"command": "python3 -m unittest", "exit_code": 0, "output": "OK"}],
         "raw_artifact_refs": ["raw/current.json", f"{artifact_dir}/current.command.json"],
         "wall_seconds": 1.5,

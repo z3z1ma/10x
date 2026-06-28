@@ -38,6 +38,9 @@ SUPPRESSED_INSTRUCTION_FILES = [
 ]
 SUPPRESSED_CONTROL_RECORD_DIRS = [".10x"]
 OPENCODE_SUBJECT_AGENT = "autoresearch-subject"
+OPENCODE_BIN_ENV = "OPENCODE_BIN"
+SUPPRESSED_CHANGED_FILE_PREFIXES = (".opencode/node_modules/",)
+SUPPRESSED_CHANGED_FILE_SAMPLE_LIMIT = 50
 
 
 @dataclass(frozen=True)
@@ -368,7 +371,7 @@ def _run_sample(sample: dict[str, Any]) -> dict[str, Any]:
                 else None
             )
             prompt = _turn_prompt(planned_turn["user_message"], transcript)
-            argv = _planned_argv(
+            planned_argv = _planned_argv(
                 harness,
                 workspace,
                 prompt,
@@ -377,6 +380,7 @@ def _run_sample(sample: dict[str, Any]) -> dict[str, Any]:
                 sample["instruction_text"],
                 sample.get("writable_add_dirs", []),
             )
+            argv = _execution_argv(harness, planned_argv)
             env_overrides = _planned_env(
                 harness,
                 sample["instruction_text"],
@@ -485,14 +489,20 @@ def _run_sample(sample: dict[str, Any]) -> dict[str, Any]:
                 break
 
         post_present = _present_suppressed(workspace)
-        file_outputs = _workspace_file_outputs(workspace, run_manifest_path)
+        post_run_files = _workspace_file_paths(workspace, run_manifest_path)
         changed_paths = _changed_file_paths(
             baseline_file_digests,
             _workspace_file_digests(workspace, run_manifest_path),
         )
-        changed_file_outputs = [
-            output for output in file_outputs if output["path"] in changed_paths
-        ]
+        suppressed_changed_paths = sorted(
+            path for path in changed_paths if _suppressed_changed_file(path)
+        )
+        visible_changed_paths = changed_paths - set(suppressed_changed_paths)
+        changed_file_outputs = _workspace_file_outputs(
+            workspace,
+            run_manifest_path,
+            visible_changed_paths,
+        )
         tool_invocations = _tool_invocations(all_events)
         completed_new_turns = (len(transcript) - len(prior_transcript)) // 2
 
@@ -511,8 +521,13 @@ def _run_sample(sample: dict[str, Any]) -> dict[str, Any]:
         "pre_run_present_suppressed_instruction_files": pre_present,
         "post_run_present_suppressed_instruction_files": post_present,
         "pre_run_removed_control_record_dirs": pre_removed_control_record_dirs,
-        "post_run_files": [item["path"] for item in file_outputs],
+        "post_run_files": post_run_files,
         "changed_files": [item["path"] for item in changed_file_outputs],
+        "suppressed_changed_file_prefixes": list(SUPPRESSED_CHANGED_FILE_PREFIXES),
+        "suppressed_changed_file_count": len(suppressed_changed_paths),
+        "suppressed_changed_file_sample": suppressed_changed_paths[
+            :SUPPRESSED_CHANGED_FILE_SAMPLE_LIMIT
+        ],
         "writable_add_dirs": sample.get("writable_add_dirs", []),
         "workspace_contamination_present": bool(pre_present or post_present),
         "timed_out": timed_out,
@@ -537,6 +552,11 @@ def _run_sample(sample: dict[str, Any]) -> dict[str, Any]:
         "transcript": transcript,
         "tool_invocations": tool_invocations,
         "file_outputs": changed_file_outputs,
+        "suppressed_changed_file_prefixes": list(SUPPRESSED_CHANGED_FILE_PREFIXES),
+        "suppressed_changed_file_count": len(suppressed_changed_paths),
+        "suppressed_changed_file_sample": suppressed_changed_paths[
+            :SUPPRESSED_CHANGED_FILE_SAMPLE_LIMIT
+        ],
         "command_outputs": command_outputs,
         "raw_artifact_refs": raw_refs + [str(archive_manifest_path), str(raw_path)],
         "wall_seconds": wall_seconds,
@@ -1120,6 +1140,46 @@ def _instruction_delivery(harness: SubjectHarness, instruction_text: str) -> dic
     raise ExperimentError(f"unsupported subject harness {harness.id!r}")
 
 
+def _execution_argv(harness: SubjectHarness, argv: list[str]) -> list[str]:
+    if harness.id != "opencode-cli":
+        return argv
+    resolved = list(argv)
+    resolved[0] = _resolve_opencode_executable()
+    return resolved
+
+
+def _resolve_opencode_executable() -> str:
+    env_value = os.environ.get(OPENCODE_BIN_ENV)
+    if env_value:
+        candidate = Path(env_value).expanduser()
+        if _is_executable_file(candidate):
+            return str(candidate)
+        raise ExperimentError(
+            f"{OPENCODE_BIN_ENV} points to a non-executable file: {env_value}"
+        )
+
+    found = shutil.which("opencode")
+    if found:
+        return found
+
+    for candidate in _opencode_fallback_candidates():
+        if _is_executable_file(candidate):
+            return str(candidate)
+
+    raise ExperimentError(
+        "opencode executable not found; install OpenCode, set OPENCODE_BIN, "
+        "or add ~/.opencode/bin to PATH before running harness 'opencode-cli'"
+    )
+
+
+def _opencode_fallback_candidates() -> list[Path]:
+    return [Path.home() / ".opencode" / "bin" / "opencode"]
+
+
+def _is_executable_file(path: Path) -> bool:
+    return path.is_file() and os.access(path, os.X_OK)
+
+
 def _toml_basic_string(value: str) -> str:
     return json.dumps(value, ensure_ascii=True)
 
@@ -1256,16 +1316,18 @@ def _remove_inherited_control_records(
     return removed
 
 
-def _workspace_file_outputs(workspace: Path, manifest_path: Path) -> list[dict[str, str]]:
+def _workspace_file_paths(workspace: Path, manifest_path: Path) -> list[str]:
+    return [relative for relative, _ in _workspace_files(workspace, manifest_path)]
+
+
+def _workspace_file_outputs(
+    workspace: Path,
+    manifest_path: Path,
+    include_paths: set[str],
+) -> list[dict[str, str]]:
     outputs = []
-    for path in sorted(workspace.rglob("*")):
-        if not path.is_file() or path == manifest_path:
-            continue
-        try:
-            relative = path.relative_to(workspace)
-        except ValueError:
-            continue
-        if relative.parts and relative.parts[0] == ".git":
+    for relative, path in _workspace_files(workspace, manifest_path):
+        if relative not in include_paths:
             continue
         try:
             content = path.read_text(encoding="utf-8")
@@ -1283,6 +1345,13 @@ def _workspace_file_outputs(workspace: Path, manifest_path: Path) -> list[dict[s
 
 def _workspace_file_digests(workspace: Path, manifest_path: Path) -> dict[str, str]:
     digests = {}
+    for relative, path in _workspace_files(workspace, manifest_path):
+        digests[relative] = _digest_bytes(path.read_bytes())
+    return digests
+
+
+def _workspace_files(workspace: Path, manifest_path: Path) -> list[tuple[str, Path]]:
+    files = []
     for path in sorted(workspace.rglob("*")):
         if not path.is_file() or path == manifest_path:
             continue
@@ -1292,12 +1361,16 @@ def _workspace_file_digests(workspace: Path, manifest_path: Path) -> dict[str, s
             continue
         if relative.parts and relative.parts[0] == ".git":
             continue
-        digests[str(relative)] = _digest_bytes(path.read_bytes())
-    return digests
+        files.append((str(relative), path))
+    return files
 
 
 def _changed_file_paths(before: dict[str, str], after: dict[str, str]) -> set[str]:
     return {path for path, digest in after.items() if before.get(path) != digest}
+
+
+def _suppressed_changed_file(path: str) -> bool:
+    return any(path.startswith(prefix) for prefix in SUPPRESSED_CHANGED_FILE_PREFIXES)
 
 
 def _jsonl_events(text: str) -> list[dict[str, Any]]:
