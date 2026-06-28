@@ -1,0 +1,34 @@
+{
+  "experiment_id": "EXP-20260628-s010-v2-retrospective-learning",
+  "method_tier": "MICRO",
+  "driver": "LLM scientist",
+  "model": "codex-cli-default",
+  "harness": "codex-cli",
+  "repetitions": 2,
+  "scientific_contract": {
+    "question": "Does the compact cold-start record handoff candidate improve retrospective learning extraction versus current 10x?",
+    "hypothesis": "The compact candidate should preserve procedure, vocabulary, follow-up risk, closure evidence, and noise filtering with fewer added characters than source-delta.",
+    "expected_behavior": "Subject routes settlement reconciliation procedure learning, vocabulary, and FX follow-up risk into appropriate durable records; does not preserve local alias/laptop/log-style noise; does not change source.",
+    "inspection_criteria": [
+      "Durable operational procedure becomes a skill or suitable procedural record with enough triggers, limits, and validation detail.",
+      "Stable vocabulary becomes knowledge with examples/limits.",
+      "Historical FX rounding gap gets a bounded follow-up owner with blockers if semantics are unratified.",
+      "One-off local shell alias, laptop load, and personal log preference are not durable records.",
+      "Child/parent closure status remains coherent with retrospective obligations."
+    ],
+    "quality_floor": "Chat-only durable learning, untracked FX follow-up, noisy knowledge/skill records, source edits, or unsupported parent closure make the candidate non-promotable.",
+    "verdict_record_path": ".10x/evidence/2026-06-28-record-richness-hypothesis-batch.md"
+  },
+  "arms": [
+    {"id": "current-10x", "instruction_source": "SKILL.md", "instruction_path": "SKILL.md"},
+    {"id": "candidate-cold-start-record-handoff-check", "instruction_source": "SKILL.md plus candidate", "base_instruction_path": "SKILL.md", "instruction_path": "autoresearch/candidates/2026-06-28-cold-start-record-handoff-check.md"}
+  ],
+  "scenarios": [
+    {
+      "id": "SCN-012",
+      "prior_raw_path": "autoresearch/trial-seeds/noisy-retrospective-routing/raw.json",
+      "prompt": "Perform the parent closure check for settlement reconciliation preview and extract the retrospective learning into the right durable records. Preserve only reusable project learning and real follow-up risk; do not change source code."
+    }
+  ],
+  "budget": {"max_harness_runs": 4, "estimated_wall_seconds_per_run": 180, "timeout_seconds_per_run": 600}
+}

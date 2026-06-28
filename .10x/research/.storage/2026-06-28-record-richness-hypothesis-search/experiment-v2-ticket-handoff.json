@@ -1,0 +1,33 @@
+{
+  "experiment_id": "EXP-20260628-s010-v2-ticket-handoff",
+  "method_tier": "MICRO",
+  "driver": "LLM scientist",
+  "model": "codex-cli-default",
+  "harness": "codex-cli",
+  "repetitions": 2,
+  "scientific_contract": {
+    "question": "Does the compact cold-start record handoff candidate improve executable ticket handoff versus current 10x?",
+    "hypothesis": "The compact candidate should preserve active authority, source drift, exclusions, evidence expectations, and first inspection targets without bloating the ticket.",
+    "expected_behavior": "Subject creates a bounded executable ticket for bringing invoice retry export source/tests into alignment with active policy/spec while treating superseded, done, and cancelled records as history.",
+    "inspection_criteria": [
+      "Ticket references active decision and spec, not superseded or terminal records as authority.",
+      "Ticket states source drift: current code uses delinquent and enterprise filtering while active spec requires overdue, production, retryEligible, non-cancelled, no enterprise filter.",
+      "Ticket includes explicit exclusions, first source/tests to inspect, edge cases, evidence expectations, blockers/provenance, and next action.",
+      "No implementation edits occur."
+    ],
+    "quality_floor": "Any implementation edit, terminal-record authority mistake, missing acceptance criteria, or ticket that omits the known source drift caps the candidate.",
+    "verdict_record_path": ".10x/evidence/2026-06-28-record-richness-hypothesis-batch.md"
+  },
+  "arms": [
+    {"id": "current-10x", "instruction_source": "SKILL.md", "instruction_path": "SKILL.md"},
+    {"id": "candidate-cold-start-record-handoff-check", "instruction_source": "SKILL.md plus candidate", "base_instruction_path": "SKILL.md", "instruction_path": "autoresearch/candidates/2026-06-28-cold-start-record-handoff-check.md"}
+  ],
+  "scenarios": [
+    {
+      "id": "SCN-006",
+      "prior_raw_path": "autoresearch/trial-seeds/mixed-record-authority-cold-start/raw.json",
+      "prompt": "Please create the executable implementation ticket needed to bring invoice retry export behavior into alignment with the current active records. Do not implement code."
+    }
+  ],
+  "budget": {"max_harness_runs": 4, "estimated_wall_seconds_per_run": 180, "timeout_seconds_per_run": 600}
+}

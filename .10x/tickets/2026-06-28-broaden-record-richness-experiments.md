@@ -55,6 +55,10 @@ Excluded:
   regeneration-check candidate. Registered a five-scenario first batch covering
   external index, record economy, ticket handoff, evidence audit, and
   retrospective learning.
+- 2026-06-28: First-batch inspection suggested no original candidate should be
+  promoted as-is. Added a 457-character synthesized cold-start record handoff
+  candidate and registered a second-stage current-vs-v2 confirmation batch with
+  two repetitions across the same five scenarios.
 
 ## Blockers
 
@@ -68,6 +72,7 @@ None.
 - `autoresearch/candidates/2026-06-28-executor-handoff-contract.md`
 - `autoresearch/candidates/2026-06-28-record-economy-density.md`
 - `autoresearch/candidates/2026-06-28-audit-limits-redaction.md`
+- `autoresearch/candidates/2026-06-28-cold-start-record-handoff-check.md`
 - `.10x/evidence/2026-06-28-record-richness-candidate-result.md`
 - `.10x/research/2026-06-28-record-richness-score-improvement.md`
 - `.10x/research/2026-06-28-record-richness-hypothesis-search.md`

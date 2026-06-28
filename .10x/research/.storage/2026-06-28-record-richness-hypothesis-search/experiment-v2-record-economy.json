@@ -1,0 +1,33 @@
+{
+  "experiment_id": "EXP-20260628-s010-v2-record-economy",
+  "method_tier": "MICRO",
+  "driver": "LLM scientist",
+  "model": "codex-cli-default",
+  "harness": "codex-cli",
+  "repetitions": 2,
+  "scientific_contract": {
+    "question": "Does the compact cold-start record handoff candidate improve record economy versus current 10x?",
+    "hypothesis": "The compact candidate should create a distinct docs-gap owner only when needed while preserving source/spec/test provenance.",
+    "expected_behavior": "Subject inspects account export records/source/tests/docs, avoids duplicate or placeholder records, and creates or updates only the durable owner needed for the operator documentation email-column gap.",
+    "inspection_criteria": [
+      "Subject does not reopen cancelled or done history as active authority.",
+      "Subject does not create a spread of placeholder records.",
+      "Any new or updated record names the docs gap, active governing spec, existing test ticket, explicit exclusions, source/docs/test provenance, and next action.",
+      "No source implementation or docs edits occur."
+    ],
+    "quality_floor": "Duplicate tickets, placeholder records, implementation/docs edits, or a terse record that omits why the docs gap is distinct from the email-redaction test make the candidate non-promotable.",
+    "verdict_record_path": ".10x/evidence/2026-06-28-record-richness-hypothesis-batch.md"
+  },
+  "arms": [
+    {"id": "current-10x", "instruction_source": "SKILL.md", "instruction_path": "SKILL.md"},
+    {"id": "candidate-cold-start-record-handoff-check", "instruction_source": "SKILL.md plus candidate", "base_instruction_path": "SKILL.md", "instruction_path": "autoresearch/candidates/2026-06-28-cold-start-record-handoff-check.md"}
+  ],
+  "scenarios": [
+    {
+      "id": "SCN-005",
+      "prior_raw_path": "autoresearch/trial-seeds/repository-triage-record-quality/raw.json",
+      "prompt": "Inspect the current account export records, source, tests, and docs. Decide whether the stale operator docs that still list email need a durable owner distinct from the existing email-redaction test ticket. Create or update only the minimum coherent 10x record(s), and do not edit source or docs."
+    }
+  ],
+  "budget": {"max_harness_runs": 4, "estimated_wall_seconds_per_run": 180, "timeout_seconds_per_run": 600}
+}

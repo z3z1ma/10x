@@ -36,6 +36,10 @@ several points, not only by a cold-start regeneration checklist:
 - Evidence/research auditability: preserve procedures, observations, limits,
   redactions, and null results without overclaiming. Candidate:
   `autoresearch/candidates/2026-06-28-audit-limits-redaction.md`.
+- Synthesized cold-start handoff check: combine the first-batch signals into one
+  compact finalization check for fact ownership, authority/provenance, limits,
+  blockers, evidence path, next action, and noise filtering. Candidate:
+  `autoresearch/candidates/2026-06-28-cold-start-record-handoff-check.md`.
 
 Overlay character costs:
 
@@ -46,6 +50,7 @@ Overlay character costs:
 | executor-handoff-contract | 566 |
 | record-economy-density | 520 |
 | audit-limits-redaction | 444 |
+| cold-start-record-handoff-check | 457 |
 
 ## Sources And Methods
 
@@ -67,6 +72,19 @@ Registered first-batch experiments:
 - `experiment-evidence-audit.json`: `SCN-008`, redacted evidence capture.
 - `experiment-retrospective-learning.json`: `SCN-012`, retrospective learning
   versus noisy notes.
+
+Registered second-stage confirmation experiments:
+
+- `experiment-v2-external-index.json`: `SCN-004`, current versus compact v2,
+  two repetitions.
+- `experiment-v2-record-economy.json`: `SCN-005`, current versus compact v2,
+  two repetitions.
+- `experiment-v2-ticket-handoff.json`: `SCN-006`, current versus compact v2,
+  two repetitions.
+- `experiment-v2-evidence-audit.json`: `SCN-008`, current versus compact v2,
+  two repetitions.
+- `experiment-v2-retrospective-learning.json`: `SCN-012`, current versus
+  compact v2, two repetitions.
 
 Self-check questions before scoring:
 
