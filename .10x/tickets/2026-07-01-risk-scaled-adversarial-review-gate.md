@@ -54,6 +54,10 @@ Excluded:
   missing review with passable work, conflicting review repair, and trivial
   review exemption. Static validation, unit tests, diff check, and experiment
   dry-runs passed before live execution.
+- 2026-07-01: First live batch completed 16 samples. The passable missing-review
+  seed had a semantic confound around premium/retryable invoice preconditions,
+  so a clean pass seed and two lower-cue experiments were added before any
+  promotion decision.
 
 ## Blockers
 

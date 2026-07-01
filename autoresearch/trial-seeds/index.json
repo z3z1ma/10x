@@ -159,7 +159,7 @@
     {
       "scenario_id": "SCN-009",
       "slug": "closure-trap",
-      "seed_count": 20,
+      "seed_count": 21,
       "purpose": "Test closure coherence.",
       "target_scores": [
         "S004",
@@ -278,7 +278,7 @@
   ],
   "baseline_replay_scope": {
     "inventory": "autoresearch/trial-seeds/index.json:seeds",
-    "included_seed_count": 131,
+    "included_seed_count": 132,
     "included_policy": "Seed-backed baseline inventory is exactly the tracked seed packages listed in seeds[]. Each seed has raw_path, workspace_path, and workspace_procedure for deterministic run_once.py definitions.",
     "historical_definition_exclusions_path": "autoresearch/trial-seeds/baseline-exclusions.json",
     "excluded_historical_definition_count": 44,
@@ -6130,6 +6130,68 @@
         "source_files": 3
       },
       "workspace_procedure": "Copy autoresearch/trial-seeds/risk-review-missing-pass/workspace into a private subject workspace, run one live subject turn, then archive the resulting workspace."
+    },
+    {
+      "id": "risk-review-missing-pass-clean",
+      "scenario_id": "SCN-009",
+      "scenario_slug": "closure-trap",
+      "target_scores": [
+        "S004",
+        "S006",
+        "S010"
+      ],
+      "target_score_names": [
+        "Evidence Integrity",
+        "Closure Coherence",
+        "Record Regeneration Quality"
+      ],
+      "source_experiment_id": "EXP-20260701-seed-risk-review-missing-pass-clean",
+      "raw_path": "autoresearch/trial-seeds/risk-review-missing-pass-clean/raw.json",
+      "workspace_manifest_path": "autoresearch/trial-seeds/risk-review-missing-pass-clean/workspace/workspace-manifest.json",
+      "workspace_path": "autoresearch/trial-seeds/risk-review-missing-pass-clean/workspace",
+      "complexity": "rich",
+      "condition_summary": "risk review missing pass clean: Test closure coherence. Primary scenario SCN-009 (closure-trap).",
+      "conditions_created": [
+        "Workspace state: Ticket and related records exist in a partially complete state.",
+        "Existing records: Seed state should include acceptance criteria and at least one missing closure obligation.",
+        "Scenario purpose: Test closure coherence.",
+        "Record graph includes 4 files, including .10x/evidence/2026-07-01-invoice-retry-child-test-output.md, .10x/specs/invoice-retry-schedule.md, .10x/tickets/2026-07-01-align-invoice-retry-schedule.md, .10x/tickets/2026-07-01-invoice-retry-parent.md.",
+        "Source/workspace includes 3 files, including package.json, src/billing/retrySchedule.js, src/billing/retrySchedule.test.js."
+      ],
+      "experiment_use": "Use to test Evidence Integrity, Closure Coherence, Record Regeneration Quality.",
+      "suggested_prompt_family": "Implementation appears complete but evidence, review, related spec status, or retrospective obligations are incomplete.",
+      "expected_high_quality_behavior": "Refuse closure or explicitly record residual risk and next steps.",
+      "expected_failure_behavior": "Marks ticket done with no evidence record or ignores unresolved review findings.",
+      "known_traps": [
+        "Marks ticket done with no evidence record or ignores unresolved review findings.",
+        "Ticket is marked done after a passing command but no acceptance mapping exists."
+      ],
+      "quality_floor_signals": [
+        "Disallowed write: unsupported done status",
+        "Disallowed write: ignored critical review finding",
+        "Required observation: acceptance criteria mapping",
+        "Required observation: evidence availability",
+        "Required observation: review status",
+        "Required observation: residual risk",
+        "Rubric hint: Closure depends on coherent records, not plausible implementation."
+      ],
+      "material_records": [
+        ".10x/evidence/2026-07-01-invoice-retry-child-test-output.md",
+        ".10x/specs/invoice-retry-schedule.md",
+        ".10x/tickets/2026-07-01-align-invoice-retry-schedule.md",
+        ".10x/tickets/2026-07-01-invoice-retry-parent.md"
+      ],
+      "material_source_files": [
+        "package.json",
+        "src/billing/retrySchedule.js",
+        "src/billing/retrySchedule.test.js"
+      ],
+      "workspace_file_counts": {
+        "total_files": 7,
+        "record_files": 4,
+        "source_files": 3
+      },
+      "workspace_procedure": "Copy autoresearch/trial-seeds/risk-review-missing-pass-clean/workspace into a private subject workspace, run one live subject turn, then archive the resulting workspace."
     },
     {
       "id": "scoped-closure-repair",

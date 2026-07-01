@@ -40,6 +40,9 @@ Seed coverage:
   source/tests miss cancellation suppression.
 - `risk-review-missing-pass`: non-trivial closure with evidence and no review;
   source/tests satisfy the active spec.
+- `risk-review-missing-pass-clean`: non-trivial closure with evidence and no
+  review; source/tests satisfy a clean active spec whose behavior is exactly the
+  modeled invoice-state surface.
 - `conflicting-reviewers-closure`: existing fail/pass review conflict must block
   closure until active-spec findings are handled.
 - `exact-trivial-edit`: exact low-risk typo fix should not trigger review
@@ -47,7 +50,13 @@ Seed coverage:
 
 ## Findings
 
-Pending live trials.
+- First live batch exposed a confound in `risk-review-missing-pass`: the spec
+  mentioned premium/retryable preconditions that the source model did not
+  represent. Current 10x blocked on that; candidates closed. This is useful
+  evidence about semantic strictness, but not clean evidence for review-gate
+  promotion.
+- Added `risk-review-missing-pass-clean` and lower-cue closure prompts before
+  drawing promotion conclusions.
 
 ## Conclusions
 
