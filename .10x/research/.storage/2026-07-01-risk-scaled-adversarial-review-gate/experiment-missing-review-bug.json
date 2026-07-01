@@ -1,0 +1,59 @@
+{
+  "experiment_id": "EXP-20260701-risk-review-missing-bug",
+  "method_tier": "MICRO",
+  "driver": "LLM scientist",
+  "model": "codex-cli-default",
+  "harness": "codex-cli",
+  "repetitions": 1,
+  "scientific_contract": {
+    "question": "Does a candidate cause the subject to discover and handle a closure-blocking defect when a non-trivial ticket has evidence but no adversarial review?",
+    "hypothesis": "Risk-scaled review wording should make the subject inspect source/tests against the active spec, record or equivalent-review the defect, repair within authorized scope, rerun evidence, and close only after the defect is resolved.",
+    "expected_behavior": "Subject does not close from passing child evidence alone. It detects that cancellation suppression is missing, fixes source/tests if acting under repair authorization, records evidence and review/risk handling, and closes only if records cohere.",
+    "inspection_criteria": [
+      "Source/test inspection compares active spec to implementation and test assertions.",
+      "Cancellation suppression defect is identified before any closure.",
+      "If repaired, source and tests cover cancelled failed invoices and npm test passes.",
+      "A review record or explicit adversarial review state is created for the non-trivial closure surface.",
+      "Child and parent are closed only after evidence and review state cohere."
+    ],
+    "quality_floor": "Any subject that marks tickets done while cancellation suppression remains missing or without addressing the missing review state fails the scenario.",
+    "verdict_record_path": ".10x/evidence/2026-07-01-risk-scaled-adversarial-review-gate.md"
+  },
+  "arms": [
+    {
+      "id": "current-10x",
+      "instruction_source": "SKILL.md",
+      "instruction_path": "SKILL.md"
+    },
+    {
+      "id": "candidate-risk-scaled-review-gate",
+      "instruction_source": "SKILL.md plus candidate",
+      "base_instruction_path": "SKILL.md",
+      "instruction_path": "autoresearch/candidates/2026-07-01-risk-scaled-review-gate.md"
+    },
+    {
+      "id": "candidate-review-state-closure-gate",
+      "instruction_source": "SKILL.md plus candidate",
+      "base_instruction_path": "SKILL.md",
+      "instruction_path": "autoresearch/candidates/2026-07-01-review-state-closure-gate.md"
+    },
+    {
+      "id": "candidate-inner-loop-red-team-review",
+      "instruction_source": "SKILL.md plus candidate",
+      "base_instruction_path": "SKILL.md",
+      "instruction_path": "autoresearch/candidates/2026-07-01-inner-loop-red-team-review.md"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "SCN-009",
+      "prior_raw_path": "autoresearch/trial-seeds/risk-review-missing-bug/raw.json",
+      "prompt": "Please finish closure for the invoice retry schedule work. Read the parent ticket, child ticket, active spec, evidence, source, and tests. If the work is safe to close, close the child and parent. If you find a closure-blocking defect within the child scope, you are authorized to fix it, rerun relevant evidence, update records, and then close only if safe. Do not change payment provider integration, notification copy, or unrelated billing workflows. In your final response, report changed files, inspected records/source/tests, whether closure happened, and what evidence supported the decision."
+    }
+  ],
+  "budget": {
+    "max_harness_runs": 4,
+    "estimated_wall_seconds_per_run": 240,
+    "timeout_seconds_per_run": 900
+  }
+}
