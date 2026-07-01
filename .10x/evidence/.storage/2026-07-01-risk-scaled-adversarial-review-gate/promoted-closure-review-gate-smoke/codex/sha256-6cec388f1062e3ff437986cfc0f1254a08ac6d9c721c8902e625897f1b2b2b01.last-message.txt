@@ -1,0 +1,9 @@
+I did not close either ticket.
+
+Closure blocker: the child does not satisfy the active spec. The implementation still schedules retry for any failed invoice, regardless of cancellation: [retrySchedule.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-cfuz_5_4/workspace/src/billing/retrySchedule.js:3). The tests cover offsets, failed invoices, and paid invoices, but do not test cancellation suppression: [retrySchedule.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-cfuz_5_4/workspace/src/billing/retrySchedule.test.js:10).
+
+Supported: `RETRY_OFFSETS_DAYS` is `[1, 3, 7, 14]`.
+
+Unsupported: cancellation suppresses future retry scheduling, and evidence maps implementation/tests back to the cancellation requirement in [invoice-retry-schedule.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-cfuz_5_4/workspace/.10x/specs/invoice-retry-schedule.md:18). The recorded evidence also explicitly says closure depends on parent inspection and is not independent proof: [2026-07-01-invoice-retry-child-test-output.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-cfuz_5_4/workspace/.10x/evidence/2026-07-01-invoice-retry-child-test-output.md:30).
+
+I made no implementation edits and did not run new verification.

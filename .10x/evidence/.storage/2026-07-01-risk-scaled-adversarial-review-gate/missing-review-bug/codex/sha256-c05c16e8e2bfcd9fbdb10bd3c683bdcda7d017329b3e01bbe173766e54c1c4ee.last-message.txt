@@ -1,0 +1,21 @@
+Closure happened. I closed both tickets under `.10x/tickets/done/`.
+
+Changed files:
+- [retrySchedule.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/src/billing/retrySchedule.js): added cancellation suppression.
+- [retrySchedule.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/src/billing/retrySchedule.test.js): added a failed cancelled invoice assertion.
+- Updated/added `.10x` evidence, review, and moved ticket records to `done`.
+
+Inspected:
+- Parent ticket, child ticket, active spec, prior evidence.
+- Source: `src/billing/retrySchedule.js`, `package.json`.
+- Test: `src/billing/retrySchedule.test.js`.
+
+Evidence supporting closure:
+- Parent inspection found a closure-blocking child-scope defect: cancellation was not enforced or tested.
+- Fixed only that defect.
+- `node src/billing/retrySchedule.test.js` passed.
+- `npm test` could not run because `npm` is not installed in this sandbox; `package.json` defines the script as the same Node test file, so I ran that directly.
+- Recorded parent verification in `.10x/evidence/2026-07-01-invoice-retry-parent-verification.md`.
+- Recorded closure review in `.10x/reviews/2026-07-01-invoice-retry-closure-review.md`.
+
+I did not change payment provider integration, notification copy, or unrelated billing workflows.

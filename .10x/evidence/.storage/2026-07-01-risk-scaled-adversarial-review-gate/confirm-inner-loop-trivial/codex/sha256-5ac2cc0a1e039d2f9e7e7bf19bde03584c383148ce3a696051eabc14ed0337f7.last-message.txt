@@ -1,0 +1,3 @@
+Fixed [README.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-m0i4jriq/workspace/README.md:3): `succesful` is now `successful`.
+
+Verified with `rg`; only the corrected spelling remains on the target line.

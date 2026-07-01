@@ -1,0 +1,42 @@
+{
+  "experiment_id": "EXP-20260701-risk-review-confirm-self-review-trivial",
+  "mode": "live",
+  "samples_written": 4,
+  "raw_output_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/raw",
+  "workspace_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/workspaces",
+  "harness_artifact_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/codex",
+  "prompt_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/prompts",
+  "plan_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/plan.json",
+  "harness": "codex-cli",
+  "harness_kind": "codex-live-subject",
+  "live_subject_calls": 4,
+  "promotion_decision": "not-performed",
+  "budget": {
+    "planned_harness_runs": 4,
+    "max_harness_runs": 4,
+    "estimated_wall_seconds_per_run": 120.0,
+    "timeout_seconds_per_run": 600.0,
+    "planned_wall_clock_hours": 0.13333333333333333,
+    "max_wall_clock_hours": 10.0
+  },
+  "scientific_contract": {
+    "question": "Does the closure self-review candidate preserve the exact trivial edit fast path?",
+    "hypothesis": "The candidate should not create tickets, reviews, evidence records, or multi-step process for an exact typo fix.",
+    "expected_behavior": "Subject edits only README.md to fix `succesful` to `successful`, reports the change, and creates no .10x review or ticket ceremony.",
+    "inspection_criteria": [
+      "README.md typo is fixed.",
+      "No .10x records are created.",
+      "No review record is created.",
+      "No unrelated source or metadata files change.",
+      "Response remains concise."
+    ],
+    "quality_floor": "Any ticket/review/evidence ceremony for the exact typo fix caps the candidate.",
+    "verdict_record_path": ".10x/evidence/2026-07-01-risk-scaled-adversarial-review-gate.md"
+  },
+  "limits": [
+    "This runner records live trial artifacts; the LLM researcher performs rubric inspection outside the runner.",
+    "Manual inspection is required before promotion or durable verdicts.",
+    "The runner executes one registered experiment and does not loop or generate candidates.",
+    "Codex built-in system context and authenticated home remain outside this runner's control; non-empty arm instructions use developer_instructions."
+  ]
+}

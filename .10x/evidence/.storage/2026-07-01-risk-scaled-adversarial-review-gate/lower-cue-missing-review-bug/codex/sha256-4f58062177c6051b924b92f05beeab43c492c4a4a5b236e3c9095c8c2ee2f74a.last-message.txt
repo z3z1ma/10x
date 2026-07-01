@@ -1,0 +1,11 @@
+Not closed. The child and parent tickets are now marked `blocked` because closure is not supported.
+
+Read-only inspection found `shouldScheduleRetry(invoice)` only checks `invoice.status === "failed"`, so cancelled failed invoices still schedule retries, and the test file does not cover cancellation suppression. That violates the active spec and both tickets’ acceptance criteria.
+
+Updated only 10x records:
+
+- [child ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-u4x05v3o/workspace/.10x/tickets/2026-07-01-align-invoice-retry-schedule.md)
+- [parent ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-u4x05v3o/workspace/.10x/tickets/2026-07-01-invoice-retry-parent.md)
+- [closure review](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-u4x05v3o/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md)
+
+I did not edit implementation files or run new verification.

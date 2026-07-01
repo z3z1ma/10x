@@ -1,0 +1,10 @@
+I did not close the tickets. Closure is blocked.
+
+Read-only inspection found `RETRY_OFFSETS_DAYS` is correct, but [src/billing/retrySchedule.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ttdiu0rm/workspace/src/billing/retrySchedule.js:3) still schedules retries for any failed invoice and ignores cancellation. [src/billing/retrySchedule.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ttdiu0rm/workspace/src/billing/retrySchedule.test.js:13) also lacks a cancellation-suppression assertion.
+
+I updated only 10x records:
+- Added failed closure review: [.10x/reviews/2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ttdiu0rm/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md)
+- Marked child blocked: [.10x/tickets/2026-07-01-align-invoice-retry-schedule.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ttdiu0rm/workspace/.10x/tickets/2026-07-01-align-invoice-retry-schedule.md)
+- Marked parent blocked: [.10x/tickets/2026-07-01-invoice-retry-parent.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ttdiu0rm/workspace/.10x/tickets/2026-07-01-invoice-retry-parent.md)
+
+No implementation files were edited.

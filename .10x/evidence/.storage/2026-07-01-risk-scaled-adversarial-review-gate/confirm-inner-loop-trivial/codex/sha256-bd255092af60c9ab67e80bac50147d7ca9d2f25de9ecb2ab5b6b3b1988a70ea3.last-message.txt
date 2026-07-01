@@ -1,0 +1,3 @@
+Fixed the typo in `README.md`: `succesful` is now `successful`.
+
+Verified line 3 contains the corrected spelling.

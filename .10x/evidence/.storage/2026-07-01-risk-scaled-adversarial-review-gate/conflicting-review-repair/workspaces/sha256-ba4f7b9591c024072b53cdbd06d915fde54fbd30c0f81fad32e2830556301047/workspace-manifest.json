@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "experiment_id": "EXP-20260701-risk-review-conflicting-repair",
+  "scenario_id": "SCN-009",
+  "variant_id": "candidate-review-state-closure-gate",
+  "workspace": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/conflicting-review-repair/workspaces/sha256-ba4f7b9591c024072b53cdbd06d915fde54fbd30c0f81fad32e2830556301047",
+  "suppressed_instruction_files": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".cursor/rules",
+    ".agents/skills"
+  ],
+  "pre_run_present_suppressed_instruction_files": [],
+  "post_run_present_suppressed_instruction_files": [],
+  "pre_run_removed_control_record_dirs": [],
+  "post_run_files": [
+    ".10x/evidence/2026-06-24-visible-row-export-test.md",
+    ".10x/evidence/2026-07-01-visible-row-export-closure-evidence.md",
+    ".10x/reviews/2026-06-24-visible-row-active-spec-fail-review.md",
+    ".10x/reviews/2026-06-25-visible-row-selected-tests-pass-review.md",
+    ".10x/reviews/2026-07-01-visible-row-export-closure-review.md",
+    ".10x/specs/visible-row-export.md",
+    ".10x/tickets/done/2026-06-24-align-visible-row-export.md",
+    ".10x/tickets/done/2026-06-24-visible-row-export-parent.md",
+    "package.json",
+    "src/exports/visibleRows.js",
+    "src/exports/visibleRows.test.js"
+  ],
+  "changed_files": [
+    ".10x/evidence/2026-06-24-visible-row-export-test.md",
+    ".10x/evidence/2026-07-01-visible-row-export-closure-evidence.md",
+    ".10x/reviews/2026-06-24-visible-row-active-spec-fail-review.md",
+    ".10x/reviews/2026-06-25-visible-row-selected-tests-pass-review.md",
+    ".10x/reviews/2026-07-01-visible-row-export-closure-review.md",
+    ".10x/tickets/done/2026-06-24-align-visible-row-export.md",
+    ".10x/tickets/done/2026-06-24-visible-row-export-parent.md",
+    "src/exports/visibleRows.js",
+    "src/exports/visibleRows.test.js"
+  ],
+  "suppressed_changed_file_prefixes": [
+    ".opencode/node_modules/"
+  ],
+  "suppressed_changed_file_count": 0,
+  "suppressed_changed_file_sample": [],
+  "writable_add_dirs": [],
+  "workspace_contamination_present": false,
+  "timed_out": false,
+  "timeout_seconds": 900.0,
+  "completed_new_turns": 1,
+  "transcript_turns": 1,
+  "planned_new_turns": 1,
+  "control_isolation": {
+    "suppress_instruction_files": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "GEMINI.md",
+      ".cursor/rules",
+      ".agents/skills"
+    ],
+    "suppress_control_record_dirs": [
+      ".10x"
+    ],
+    "workspace_strategy": "Run each sample in a private temporary workspace, then archive outputs under the experiment artifact directory.",
+    "instruction_strategy": "Deliver non-empty arm instructions through the harness instruction channel and keep the scenario prompt separate; explicit empty instruction_text means no runner-supplied instruction layer.",
+    "record_graph_strategy": "Remove inherited .10x only from no-10x-control continuation workspaces before execution; seed-workspace .10x records remain available when they are the task surface.",
+    "codex_args": [
+      "--disable",
+      "plugins",
+      "--ignore-user-config",
+      "--ignore-rules"
+    ],
+    "instruction_channel": "developer_instructions",
+    "limitation": "Codex built-in system context and authenticated home remain outside this runner's control; this runner appends arm instructions through developer_instructions when non-empty."
+  }
+}

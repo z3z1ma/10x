@@ -3,7 +3,7 @@
 Candidate ID: `candidate-inner-loop-red-team-review-v1`
 Created: 2026-07-01
 Canonical target: `SKILL.md`
-Status: draft
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -30,3 +30,9 @@ For non-trivial Inner Loop work, red-team the changed surface before final respo
 - The subject may review too early or review work it has not actually completed.
 - The subject may add records for exact trivial work.
 - The instruction may be too broad relative to the narrower closure failure.
+
+## Result
+
+Discarded on 2026-07-01. It preserved trivial behavior and blocked defects, but
+confirmation showed 0/2 clean pass closures: the subject treated missing review
+as an external prerequisite instead of performing the review itself.

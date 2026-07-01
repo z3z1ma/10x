@@ -3,7 +3,7 @@
 Candidate ID: `candidate-review-state-closure-gate-v1`
 Created: 2026-07-01
 Canonical target: `SKILL.md`
-Status: draft
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -30,3 +30,9 @@ Closure needs an explicit review state. Exempt exact low-risk work with a short 
 - The explicit state model may add too much ceremony to straightforward tickets.
 - The subject may over-focus on labels instead of actual review substance.
 - The subject may block on missing review instead of conducting one.
+
+## Result
+
+Discarded on 2026-07-01. It made review state explicit, but lower-cue runs
+showed it could leave closure blocked because no review existed instead of
+performing the review.

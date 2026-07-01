@@ -1,0 +1,4 @@
+Reading additional input from stdin...
+2026-07-01T21:42:59.735440Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-01T21:44:14.179064Z  WARN codex_file_watcher: failed to unwatch /mnt/c/Users/butle/.codex/skills/.system: No watch was found. about ["/mnt/c/Users/butle/.codex/skills/.system"]
+2026-07-01T21:44:14.189354Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf("/mnt/c/Users/butle/.codex/shell_snapshots/019f1fa2-a17e-7331-8415-a74c74d62a69.1782942179725798431.sh"): Os { code: 2, kind: NotFound, message: "No such file or directory" }

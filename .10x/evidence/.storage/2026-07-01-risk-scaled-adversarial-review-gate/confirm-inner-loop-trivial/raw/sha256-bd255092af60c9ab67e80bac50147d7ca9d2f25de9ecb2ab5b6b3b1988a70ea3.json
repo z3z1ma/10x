@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "experiment_id": "EXP-20260701-risk-review-confirm-inner-loop-trivial",
+  "scenario_id": "SCN-010",
+  "variant_id": "candidate-inner-loop-red-team-review",
+  "rep": 1,
+  "model": "codex-cli-default",
+  "harness": "codex-cli",
+  "instruction_digest": "sha256:910d87961e2bca61e9815b3767f1c25eb58563cdaa715434a213a02fa61bf71a",
+  "scientific_contract": {
+    "question": "Does the leading Inner Loop red-team candidate preserve the exact trivial edit fast path?",
+    "hypothesis": "The candidate should not create tickets, reviews, evidence records, or multi-step process for an exact typo fix.",
+    "expected_behavior": "Subject edits only README.md to fix `succesful` to `successful`, reports the change, and creates no .10x review or ticket ceremony.",
+    "inspection_criteria": [
+      "README.md typo is fixed.",
+      "No .10x records are created.",
+      "No review record is created.",
+      "No unrelated source or metadata files change.",
+      "Response remains concise."
+    ],
+    "quality_floor": "Any ticket/review/evidence ceremony for the exact typo fix caps the candidate.",
+    "verdict_record_path": ".10x/evidence/2026-07-01-risk-scaled-adversarial-review-gate.md"
+  },
+  "transcript": [
+    {
+      "role": "user",
+      "content": "Fix the typo in README.md: change `succesful` to `successful`. This is the only requested change."
+    },
+    {
+      "role": "assistant",
+      "content": "Fixed the typo in `README.md`: `succesful` is now `successful`.\n\nVerified line 3 contains the corrected spelling."
+    }
+  ],
+  "tool_invocations": [
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_1",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'pwd && rg -n \"succesful|successful\" README.md && git status --short'",
+        "aggregated_output": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-l3397hab/workspace\n3:The import helper reports a succesful validation when every row is accepted.\nfatal: not a git repository (or any parent up to mount point /mnt)\nStopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).\n",
+        "exit_code": 128,
+        "status": "failed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_3",
+        "type": "file_change",
+        "changes": [
+          {
+            "path": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-l3397hab/workspace/README.md",
+            "kind": "update"
+          }
+        ],
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_4",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'rg -n \"succesful|successful\" README.md'",
+        "aggregated_output": "3:The import helper reports a successful validation when every row is accepted.\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    }
+  ],
+  "file_outputs": [
+    {
+      "path": "README.md",
+      "action": "write",
+      "content": "# Import Helper\n\nThe import helper reports a successful validation when every row is accepted.\n"
+    }
+  ],
+  "suppressed_changed_file_prefixes": [
+    ".opencode/node_modules/"
+  ],
+  "suppressed_changed_file_count": 0,
+  "suppressed_changed_file_sample": [],
+  "command_outputs": [
+    {
+      "command": "codex --ask-for-approval never --disable plugins --config developer_instructions=<instructions stored at .10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/prompts/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.instructions.txt> exec ...",
+      "exit_code": 0,
+      "output": "Reading additional input from stdin...\n2026-07-01T21:41:46.196071Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-01T21:42:02.061935Z  WARN codex_file_watcher: failed to unwatch /mnt/c/Users/butle/.codex/skills/.system: No watch was found. about [\"/mnt/c/Users/butle/.codex/skills/.system\"]\n"
+    }
+  ],
+  "raw_artifact_refs": [
+    "/home/alexb/code/personal/10x/autoresearch/trial-seeds/exact-trivial-edit/raw.json",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/prompts/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.prompt.txt",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/prompts/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.instructions.txt",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/codex/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.command.json",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/codex/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.stdout.jsonl",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/codex/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.stderr",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/codex/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.last-message.txt",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/workspaces/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3/workspace-manifest.json",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/raw/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.json"
+  ],
+  "wall_seconds": 16.74658502501552,
+  "usage": {
+    "input_tokens": 106894,
+    "output_tokens": 362
+  },
+  "input_tokens": 106894,
+  "output_tokens": 362,
+  "timed_out": false,
+  "timeout_seconds": 600.0,
+  "live_subject_calls": 1,
+  "harness_metadata": {
+    "kind": "codex-live-subject",
+    "harness_artifact_dir_name": "codex",
+    "instruction_source": "SKILL.md plus candidate",
+    "instruction_path": "autoresearch/candidates/2026-07-01-inner-loop-red-team-review.md",
+    "base_instruction_path": "SKILL.md",
+    "instruction_artifact_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/prompts/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.instructions.txt",
+    "instruction_delivery": {
+      "channel": "codex-developer-instructions",
+      "runner_supplied_instructions": true,
+      "prompt_wrapper": false,
+      "base_system_prompt_replaced": false,
+      "description": "Arm instructions are supplied with Codex developer_instructions; the scenario prompt is passed separately."
+    },
+    "archived_workspace_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/workspaces/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3",
+    "workspace_manifest_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/workspaces/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3/workspace-manifest.json",
+    "prior_raw_path": "/home/alexb/code/personal/10x/autoresearch/trial-seeds/exact-trivial-edit/raw.json",
+    "seed_workspace_dir": "/home/alexb/code/personal/10x/autoresearch/trial-seeds/exact-trivial-edit/workspace",
+    "prior_turn_count": 0,
+    "turns": [
+      {
+        "turn_index": 0,
+        "prompt_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/prompts/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.prompt.txt",
+        "command_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/codex/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.command.json",
+        "stdout_jsonl_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/codex/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.stdout.jsonl",
+        "stderr_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/codex/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.stderr",
+        "last_message_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/codex/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.last-message.txt",
+        "instruction_artifact_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-inner-loop-trivial/prompts/sha256-bd255092af60c9ab67e80bac50147d7ca9d2f25de9ecb2ab5b6b3b1988a70ea3.instructions.txt",
+        "harness_config_path": null,
+        "planned_env": {}
+      }
+    ],
+    "control_isolation": {
+      "suppress_instruction_files": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "GEMINI.md",
+        ".cursor/rules",
+        ".agents/skills"
+      ],
+      "suppress_control_record_dirs": [
+        ".10x"
+      ],
+      "workspace_strategy": "Run each sample in a private temporary workspace, then archive outputs under the experiment artifact directory.",
+      "instruction_strategy": "Deliver non-empty arm instructions through the harness instruction channel and keep the scenario prompt separate; explicit empty instruction_text means no runner-supplied instruction layer.",
+      "record_graph_strategy": "Remove inherited .10x only from no-10x-control continuation workspaces before execution; seed-workspace .10x records remain available when they are the task surface.",
+      "codex_args": [
+        "--disable",
+        "plugins",
+        "--ignore-user-config",
+        "--ignore-rules"
+      ],
+      "instruction_channel": "developer_instructions",
+      "limitation": "Codex built-in system context and authenticated home remain outside this runner's control; this runner appends arm instructions through developer_instructions when non-empty."
+    },
+    "pre_run_removed_control_record_dirs": [],
+    "writable_add_dirs": [],
+    "timed_out": false,
+    "timeout_seconds": 600.0,
+    "promotion_limit": "Live subject output is candidate-quality evidence, not promotion authority."
+  }
+}

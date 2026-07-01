@@ -1,0 +1,21 @@
+Closure is complete. I repaired the active-spec finding, recorded updated evidence and a fresh closure review, then moved both tickets to `done`.
+
+Changed files:
+- [visibleRows.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-v90wfs_t/workspace/src/exports/visibleRows.js)
+- [visibleRows.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-v90wfs_t/workspace/src/exports/visibleRows.test.js)
+- [visible-row-export-test.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-v90wfs_t/workspace/.10x/evidence/2026-06-24-visible-row-export-test.md)
+- [visible-row-export-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-v90wfs_t/workspace/.10x/reviews/2026-07-01-visible-row-export-closure-review.md)
+- Historical review target/header updates
+- Parent and child tickets moved to `.10x/tickets/done/`
+
+Inspected: parent ticket, child ticket, active spec, evidence, both prior reviews, `package.json`, `src/exports/visibleRows.js`, and `src/exports/visibleRows.test.js`.
+
+Closure happened:
+- Child: `.10x/tickets/done/2026-06-24-align-visible-row-export.md`
+- Parent: `.10x/tickets/done/2026-06-24-visible-row-export-parent.md`
+
+Verification:
+- `node src/exports/visibleRows.test.js` passed.
+- `npm test` could not run because `npm` is unavailable, recorded in evidence/review. Since `package.json` maps `npm test` directly to that Node command, the relevant test path was still exercised.
+
+The closure review passed because source now exports `visible === true && policyHidden !== true`, tests cover selected-but-not-visible exclusion and policy-hidden exclusion, and no dashboard rendering, delivery transport, or administrator notification copy was changed.

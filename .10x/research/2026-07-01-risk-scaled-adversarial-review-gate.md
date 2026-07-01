@@ -1,4 +1,4 @@
-Status: active
+Status: done
 Created: 2026-07-01
 Updated: 2026-07-01
 
@@ -70,7 +70,44 @@ Seed coverage:
   review is required and absent, the closing agent performs the review itself
   from records/source/tests and writes the `.10x/reviews/` record as closure
   bookkeeping.
+- `candidate-closure-self-review-gate` confirmed the sharper hypothesis. In
+  two clean pass repetitions, the candidate created fresh closure reviews,
+  closed child and parent, and made no implementation edits. In two defect
+  repetitions, it blocked closure; one run wrote a fail review and one used
+  explicit blocker state. In two trivial repetitions, it changed only
+  `README.md` and created no records.
 
 ## Conclusions
 
-Pending.
+Promote the closure self-review wording, not the broader Inner Loop wording.
+
+The final canonical edit belongs in `SKILL.md`'s Evidence, Review, and Closure
+section because the observed failure is specifically a closure failure: review
+is necessary before `done`, but missing review should become review work the
+closing agent performs, not an automatic blocker.
+
+The promoted behavior:
+
+- requires adversarial review for non-trivial behavior, data,
+  security/privacy, user-facing, multi-file, subagent, or ambiguous work;
+- skips exact trivial/no-code work;
+- makes the closing agent perform the review from records/source/tests when it
+  is required and absent;
+- treats the review record as closure bookkeeping, not implementation;
+- permits closure only when review findings, evidence, specs, statuses, and
+  references cohere.
+
+The first three candidates were insufficient:
+
+- `candidate-risk-scaled-review-gate-v1` expressed the risk gate, but could
+  overblock when review was missing.
+- `candidate-review-state-closure-gate-v1` made review state explicit, but
+  often treated missing review as a blocker instead of work to perform.
+- `candidate-inner-loop-red-team-review-v1` initially looked strongest, but
+  confirmation showed 0/2 clean pass closures because it still treated missing
+  review as an external prerequisite.
+
+`candidate-closure-self-review-gate-v1` produced the best score-to-token trade:
+it fixed the clean-pass closure failure, preserved defect blocking, preserved
+the trivial fast path, and the final canonical edit reduced total `SKILL.md`
+body size by 28 characters through adjacent compression.

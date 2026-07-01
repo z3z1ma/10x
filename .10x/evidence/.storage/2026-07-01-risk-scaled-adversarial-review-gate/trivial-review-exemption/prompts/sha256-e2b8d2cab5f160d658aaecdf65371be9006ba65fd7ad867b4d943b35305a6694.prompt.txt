@@ -1,0 +1,1 @@
+Fix the typo in README.md: change `succesful` to `successful`. This is the only requested change.

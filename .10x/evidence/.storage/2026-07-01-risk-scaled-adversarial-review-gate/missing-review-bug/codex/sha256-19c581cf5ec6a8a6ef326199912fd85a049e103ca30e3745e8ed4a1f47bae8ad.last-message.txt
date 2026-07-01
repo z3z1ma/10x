@@ -1,0 +1,25 @@
+Closed the invoice retry schedule work.
+
+Changed files:
+- [retrySchedule.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-708dw2dj/workspace/src/billing/retrySchedule.js): added cancellation suppression to `shouldScheduleRetry`.
+- [retrySchedule.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-708dw2dj/workspace/src/billing/retrySchedule.test.js): added the cancelled failed-invoice assertion.
+- [child ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-708dw2dj/workspace/.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md): marked `done`.
+- [parent ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-708dw2dj/workspace/.10x/tickets/done/2026-07-01-invoice-retry-parent.md): marked `done`.
+- [evidence](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-708dw2dj/workspace/.10x/evidence/2026-07-01-invoice-retry-child-test-output.md): updated with parent inspection and fresh test output.
+- [closure review](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-708dw2dj/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md): added pass review with the resolved defect noted.
+
+Inspected:
+- Parent ticket, child ticket, active spec, existing evidence, `package.json`, `src/billing/retrySchedule.js`, and `src/billing/retrySchedule.test.js`.
+
+Closure decision:
+- Closure happened for both child and parent.
+- I found one closure-blocking defect inside child scope: cancellation suppression was not implemented or tested. I fixed only that scoped defect.
+
+Evidence:
+- `RETRY_OFFSETS_DAYS` is `[1, 3, 7, 14]`.
+- `shouldScheduleRetry` now requires `invoice.status === "failed" && !invoice.cancelled`.
+- Test covers active failed, cancelled failed, paid invoice, and exact offsets.
+- `node src/billing/retrySchedule.test.js` passed.
+- `npm test` could not run because `npm` is unavailable here, but `package.json` maps it directly to the same Node test file.
+
+No payment provider integration, notification copy, or unrelated billing workflows were changed.

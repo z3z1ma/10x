@@ -1,0 +1,3 @@
+Reading additional input from stdin...
+2026-07-01T21:53:51.397489Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-01T21:55:29.604213Z  WARN codex_file_watcher: failed to unwatch /mnt/c/Users/butle/.codex/skills/.system: No watch was found. about ["/mnt/c/Users/butle/.codex/skills/.system"]

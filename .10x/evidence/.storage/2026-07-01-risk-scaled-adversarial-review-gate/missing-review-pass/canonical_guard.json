@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "canonical_paths": [
+    "SKILL.md",
+    "autoresearch/program.md"
+  ],
+  "require_clean_canonical": true,
+  "unchanged_during_run": true,
+  "changed_paths": [],
+  "before": {
+    "SKILL.md": {
+      "sha256": "3716721ed3a7c9bca0938f676e962ac114b31c90dffcbb29410ad1a800691102",
+      "byte_length": 40243
+    },
+    "autoresearch/program.md": {
+      "sha256": "6c5497a35565484cb83af04823f56a841e16d860938ac5f2cb92bd067784c68c",
+      "byte_length": 10040
+    }
+  },
+  "after": {
+    "SKILL.md": {
+      "sha256": "3716721ed3a7c9bca0938f676e962ac114b31c90dffcbb29410ad1a800691102",
+      "byte_length": 40243
+    },
+    "autoresearch/program.md": {
+      "sha256": "6c5497a35565484cb83af04823f56a841e16d860938ac5f2cb92bd067784c68c",
+      "byte_length": 10040
+    }
+  },
+  "limits": [
+    "This guard proves the checked canonical files did not change during this one command.",
+    "Use --require-clean-canonical after committing setup to fail if canonical files are dirty before a run."
+  ]
+}

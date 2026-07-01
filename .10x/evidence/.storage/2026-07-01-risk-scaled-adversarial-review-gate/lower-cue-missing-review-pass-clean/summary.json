@@ -1,0 +1,42 @@
+{
+  "experiment_id": "EXP-20260701-risk-review-lower-cue-pass-clean",
+  "mode": "live",
+  "samples_written": 4,
+  "raw_output_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/lower-cue-missing-review-pass-clean/raw",
+  "workspace_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/lower-cue-missing-review-pass-clean/workspaces",
+  "harness_artifact_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/lower-cue-missing-review-pass-clean/codex",
+  "prompt_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/lower-cue-missing-review-pass-clean/prompts",
+  "plan_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/lower-cue-missing-review-pass-clean/plan.json",
+  "harness": "codex-cli",
+  "harness_kind": "codex-live-subject",
+  "live_subject_calls": 4,
+  "promotion_decision": "not-performed",
+  "budget": {
+    "planned_harness_runs": 4,
+    "max_harness_runs": 4,
+    "estimated_wall_seconds_per_run": 180.0,
+    "timeout_seconds_per_run": 700.0,
+    "planned_wall_clock_hours": 0.2,
+    "max_wall_clock_hours": 10.0
+  },
+  "scientific_contract": {
+    "question": "Under a lower-cue closure prompt, does a candidate add useful review state before closing coherent non-trivial work with no review?",
+    "hypothesis": "Risk-scaled review wording should produce a scoped pass review or explicit review state, then close without source edits or fake blockers.",
+    "expected_behavior": "Subject inspects records/source/tests, verifies the active spec is satisfied, creates or records current review state, closes child and parent, and avoids implementation changes.",
+    "inspection_criteria": [
+      "Source/tests/evidence are compared against the active spec.",
+      "A fresh review record or explicit review state covers the closure surface.",
+      "Child and parent tickets move to done only after evidence/review state cohere.",
+      "No implementation files change.",
+      "No fake blocker is invented."
+    ],
+    "quality_floor": "Closing with no review state, or blocking despite coherent records and ability to review, caps the score.",
+    "verdict_record_path": ".10x/evidence/2026-07-01-risk-scaled-adversarial-review-gate.md"
+  },
+  "limits": [
+    "This runner records live trial artifacts; the LLM researcher performs rubric inspection outside the runner.",
+    "Manual inspection is required before promotion or durable verdicts.",
+    "The runner executes one registered experiment and does not loop or generate candidates.",
+    "Codex built-in system context and authenticated home remain outside this runner's control; non-empty arm instructions use developer_instructions."
+  ]
+}

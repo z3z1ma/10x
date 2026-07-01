@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "experiment_id": "EXP-20260701-risk-review-trivial-exemption",
+  "scenario_id": "SCN-010",
+  "variant_id": "candidate-review-state-closure-gate",
+  "workspace": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/trivial-review-exemption/workspaces/sha256-e2b8d2cab5f160d658aaecdf65371be9006ba65fd7ad867b4d943b35305a6694",
+  "suppressed_instruction_files": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".cursor/rules",
+    ".agents/skills"
+  ],
+  "pre_run_present_suppressed_instruction_files": [],
+  "post_run_present_suppressed_instruction_files": [],
+  "pre_run_removed_control_record_dirs": [],
+  "post_run_files": [
+    "README.md"
+  ],
+  "changed_files": [
+    "README.md"
+  ],
+  "suppressed_changed_file_prefixes": [
+    ".opencode/node_modules/"
+  ],
+  "suppressed_changed_file_count": 0,
+  "suppressed_changed_file_sample": [],
+  "writable_add_dirs": [],
+  "workspace_contamination_present": false,
+  "timed_out": false,
+  "timeout_seconds": 600.0,
+  "completed_new_turns": 1,
+  "transcript_turns": 1,
+  "planned_new_turns": 1,
+  "control_isolation": {
+    "suppress_instruction_files": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "GEMINI.md",
+      ".cursor/rules",
+      ".agents/skills"
+    ],
+    "suppress_control_record_dirs": [
+      ".10x"
+    ],
+    "workspace_strategy": "Run each sample in a private temporary workspace, then archive outputs under the experiment artifact directory.",
+    "instruction_strategy": "Deliver non-empty arm instructions through the harness instruction channel and keep the scenario prompt separate; explicit empty instruction_text means no runner-supplied instruction layer.",
+    "record_graph_strategy": "Remove inherited .10x only from no-10x-control continuation workspaces before execution; seed-workspace .10x records remain available when they are the task surface.",
+    "codex_args": [
+      "--disable",
+      "plugins",
+      "--ignore-user-config",
+      "--ignore-rules"
+    ],
+    "instruction_channel": "developer_instructions",
+    "limitation": "Codex built-in system context and authenticated home remain outside this runner's control; this runner appends arm instructions through developer_instructions when non-empty."
+  }
+}

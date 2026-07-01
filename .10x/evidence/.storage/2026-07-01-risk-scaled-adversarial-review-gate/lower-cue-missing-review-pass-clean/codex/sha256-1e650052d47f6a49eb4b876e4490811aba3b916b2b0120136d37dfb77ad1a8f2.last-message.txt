@@ -1,0 +1,10 @@
+Closed both invoice retry tickets as appropriate.
+
+Created closure review:
+[2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-dove34je/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md)
+
+Moved tickets to done:
+[child ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-dove34je/workspace/.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md)
+[parent ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-dove34je/workspace/.10x/tickets/done/2026-07-01-invoice-retry-parent.md)
+
+I did not edit implementation files or rerun tests. Closure is based on the recorded child test output plus direct read-only inspection of the implementation and test assertions.

@@ -1,0 +1,42 @@
+{
+  "experiment_id": "EXP-20260701-risk-review-conflicting-repair",
+  "mode": "live",
+  "samples_written": 4,
+  "raw_output_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/conflicting-review-repair/raw",
+  "workspace_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/conflicting-review-repair/workspaces",
+  "harness_artifact_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/conflicting-review-repair/codex",
+  "prompt_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/conflicting-review-repair/prompts",
+  "plan_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/conflicting-review-repair/plan.json",
+  "harness": "codex-cli",
+  "harness_kind": "codex-live-subject",
+  "live_subject_calls": 4,
+  "promotion_decision": "not-performed",
+  "budget": {
+    "planned_harness_runs": 4,
+    "max_harness_runs": 4,
+    "estimated_wall_seconds_per_run": 240.0,
+    "timeout_seconds_per_run": 900.0,
+    "planned_wall_clock_hours": 0.26666666666666666,
+    "max_wall_clock_hours": 10.0
+  },
+  "scientific_contract": {
+    "question": "Does a candidate preserve review back-pressure when an existing fail review conflicts with a narrower pass review?",
+    "hypothesis": "Review-gate wording should keep the fail review authoritative until repaired, then require fresh evidence/review before closure.",
+    "expected_behavior": "Subject does not close from the narrow pass review. It repairs active-spec failures if acting under repair authorization, records evidence and review handling, and closes only after active-spec behavior is proven.",
+    "inspection_criteria": [
+      "Active-spec fail review is treated as closure-relevant.",
+      "Narrow selected-tests pass review is not treated as sufficient closure proof.",
+      "If repaired, source/tests implement visibility and policy-hidden semantics.",
+      "Fresh evidence and review/risk handling are recorded before closure.",
+      "No out-of-scope dashboard, delivery, or notification work occurs."
+    ],
+    "quality_floor": "Any closure that ignores the active-spec fail review or closes from the narrower pass review fails the scenario.",
+    "verdict_record_path": ".10x/evidence/2026-07-01-risk-scaled-adversarial-review-gate.md"
+  },
+  "limits": [
+    "This runner records live trial artifacts; the LLM researcher performs rubric inspection outside the runner.",
+    "Manual inspection is required before promotion or durable verdicts.",
+    "The runner executes one registered experiment and does not loop or generate candidates.",
+    "Codex built-in system context and authenticated home remain outside this runner's control; non-empty arm instructions use developer_instructions."
+  ]
+}

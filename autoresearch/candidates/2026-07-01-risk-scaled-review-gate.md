@@ -3,7 +3,7 @@
 Candidate ID: `candidate-risk-scaled-review-gate-v1`
 Created: 2026-07-01
 Canonical target: `SKILL.md`
-Status: draft
+Status: discarded
 Promotion: manual-only
 
 ## Target Behavior
@@ -32,3 +32,8 @@ Before marking a ticket done, decide whether a fresh adversarial review would ma
 - The subject may treat "review required" as a blocker even when it can perform
   a scoped review itself.
 - The subject may write a pass review without actually inspecting source/tests.
+
+## Result
+
+Discarded on 2026-07-01. Lower-cue runs showed the risk gate alone could block
+on absent review instead of conducting the missing review.

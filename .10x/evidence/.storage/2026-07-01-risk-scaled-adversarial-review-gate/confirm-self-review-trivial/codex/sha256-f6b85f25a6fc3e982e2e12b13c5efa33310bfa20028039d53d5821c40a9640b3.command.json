@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "harness": "codex-cli",
+  "harness_kind": "codex-live-subject",
+  "start_timestamp_utc": "2026-07-01T21:48:39Z",
+  "end_timestamp_utc": "2026-07-01T21:48:56Z",
+  "turn_index": 0,
+  "argv": [
+    "codex",
+    "--ask-for-approval",
+    "never",
+    "--disable",
+    "plugins",
+    "--config",
+    "developer_instructions=<instructions stored at .10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/prompts/sha256-f6b85f25a6fc3e982e2e12b13c5efa33310bfa20028039d53d5821c40a9640b3.instructions.txt>",
+    "exec",
+    "--cd",
+    "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-7fukf4__/workspace",
+    "--skip-git-repo-check",
+    "--ephemeral",
+    "--json",
+    "--output-last-message",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/codex/sha256-f6b85f25a6fc3e982e2e12b13c5efa33310bfa20028039d53d5821c40a9640b3.last-message.txt",
+    "--ignore-user-config",
+    "--ignore-rules",
+    "--sandbox",
+    "workspace-write",
+    "<prompt stored at .10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/prompts/sha256-f6b85f25a6fc3e982e2e12b13c5efa33310bfa20028039d53d5821c40a9640b3.prompt.txt>"
+  ],
+  "env": {},
+  "exit_code": 0,
+  "stdout_jsonl_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/codex/sha256-f6b85f25a6fc3e982e2e12b13c5efa33310bfa20028039d53d5821c40a9640b3.stdout.jsonl",
+  "stderr_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/codex/sha256-f6b85f25a6fc3e982e2e12b13c5efa33310bfa20028039d53d5821c40a9640b3.stderr",
+  "last_message_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/codex/sha256-f6b85f25a6fc3e982e2e12b13c5efa33310bfa20028039d53d5821c40a9640b3.last-message.txt",
+  "prompt_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/prompts/sha256-f6b85f25a6fc3e982e2e12b13c5efa33310bfa20028039d53d5821c40a9640b3.prompt.txt",
+  "instruction_artifact_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/confirm-self-review-trivial/prompts/sha256-f6b85f25a6fc3e982e2e12b13c5efa33310bfa20028039d53d5821c40a9640b3.instructions.txt",
+  "harness_config_path": null,
+  "instruction_delivery": {
+    "channel": "codex-developer-instructions",
+    "runner_supplied_instructions": true,
+    "prompt_wrapper": false,
+    "base_system_prompt_replaced": false,
+    "description": "Arm instructions are supplied with Codex developer_instructions; the scenario prompt is passed separately."
+  },
+  "working_directory": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-7fukf4__/workspace",
+  "usage": {
+    "input_tokens": 106120,
+    "output_tokens": 462
+  },
+  "timed_out": false,
+  "timeout_seconds": 600.0,
+  "control_isolation": {
+    "suppress_instruction_files": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "GEMINI.md",
+      ".cursor/rules",
+      ".agents/skills"
+    ],
+    "suppress_control_record_dirs": [
+      ".10x"
+    ],
+    "workspace_strategy": "Run each sample in a private temporary workspace, then archive outputs under the experiment artifact directory.",
+    "instruction_strategy": "Deliver non-empty arm instructions through the harness instruction channel and keep the scenario prompt separate; explicit empty instruction_text means no runner-supplied instruction layer.",
+    "record_graph_strategy": "Remove inherited .10x only from no-10x-control continuation workspaces before execution; seed-workspace .10x records remain available when they are the task surface.",
+    "codex_args": [
+      "--disable",
+      "plugins",
+      "--ignore-user-config",
+      "--ignore-rules"
+    ],
+    "instruction_channel": "developer_instructions",
+    "limitation": "Codex built-in system context and authenticated home remain outside this runner's control; this runner appends arm instructions through developer_instructions when non-empty."
+  },
+  "pre_run_removed_control_record_dirs": []
+}

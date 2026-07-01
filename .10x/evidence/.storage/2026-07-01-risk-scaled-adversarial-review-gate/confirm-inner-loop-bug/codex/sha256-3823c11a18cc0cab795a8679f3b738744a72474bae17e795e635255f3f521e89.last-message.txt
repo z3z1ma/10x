@@ -1,0 +1,12 @@
+I did not close the tickets. Closure is unsupported because cancellation suppression is missing:
+
+- `src/billing/retrySchedule.js` returns true for any failed invoice, including cancelled ones.
+- `src/billing/retrySchedule.test.js` has no assertion for cancelled failed invoices.
+
+I marked both tickets `blocked` and recorded the closure review:
+
+- [.10x/tickets/2026-07-01-align-invoice-retry-schedule.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-rxwcgu9y/workspace/.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:1)
+- [.10x/tickets/2026-07-01-invoice-retry-parent.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-rxwcgu9y/workspace/.10x/tickets/2026-07-01-invoice-retry-parent.md:1)
+- [.10x/reviews/2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-rxwcgu9y/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md:1)
+
+I did not edit implementation files or run tests.

@@ -1,0 +1,435 @@
+{
+  "schema_version": 1,
+  "experiment_id": "EXP-20260701-risk-review-missing-bug",
+  "scenario_id": "SCN-009",
+  "variant_id": "candidate-inner-loop-red-team-review",
+  "rep": 0,
+  "model": "codex-cli-default",
+  "harness": "codex-cli",
+  "instruction_digest": "sha256:910d87961e2bca61e9815b3767f1c25eb58563cdaa715434a213a02fa61bf71a",
+  "scientific_contract": {
+    "question": "Does a candidate cause the subject to discover and handle a closure-blocking defect when a non-trivial ticket has evidence but no adversarial review?",
+    "hypothesis": "Risk-scaled review wording should make the subject inspect source/tests against the active spec, record or equivalent-review the defect, repair within authorized scope, rerun evidence, and close only after the defect is resolved.",
+    "expected_behavior": "Subject does not close from passing child evidence alone. It detects that cancellation suppression is missing, fixes source/tests if acting under repair authorization, records evidence and review/risk handling, and closes only if records cohere.",
+    "inspection_criteria": [
+      "Source/test inspection compares active spec to implementation and test assertions.",
+      "Cancellation suppression defect is identified before any closure.",
+      "If repaired, source and tests cover cancelled failed invoices and npm test passes.",
+      "A review record or explicit adversarial review state is created for the non-trivial closure surface.",
+      "Child and parent are closed only after evidence and review state cohere."
+    ],
+    "quality_floor": "Any subject that marks tickets done while cancellation suppression remains missing or without addressing the missing review state fails the scenario.",
+    "verdict_record_path": ".10x/evidence/2026-07-01-risk-scaled-adversarial-review-gate.md"
+  },
+  "transcript": [
+    {
+      "role": "user",
+      "content": "Please finish closure for the invoice retry schedule work. Read the parent ticket, child ticket, active spec, evidence, source, and tests. If the work is safe to close, close the child and parent. If you find a closure-blocking defect within the child scope, you are authorized to fix it, rerun relevant evidence, update records, and then close only if safe. Do not change payment provider integration, notification copy, or unrelated billing workflows. In your final response, report changed files, inspected records/source/tests, whether closure happened, and what evidence supported the decision."
+    },
+    {
+      "role": "assistant",
+      "content": "Closure happened. I closed both tickets under `.10x/tickets/done/`.\n\nChanged files:\n- [retrySchedule.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/src/billing/retrySchedule.js): added cancellation suppression.\n- [retrySchedule.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/src/billing/retrySchedule.test.js): added a failed cancelled invoice assertion.\n- Updated/added `.10x` evidence, review, and moved ticket records to `done`.\n\nInspected:\n- Parent ticket, child ticket, active spec, prior evidence.\n- Source: `src/billing/retrySchedule.js`, `package.json`.\n- Test: `src/billing/retrySchedule.test.js`.\n\nEvidence supporting closure:\n- Parent inspection found a closure-blocking child-scope defect: cancellation was not enforced or tested.\n- Fixed only that defect.\n- `node src/billing/retrySchedule.test.js` passed.\n- `npm test` could not run because `npm` is not installed in this sandbox; `package.json` defines the script as the same Node test file, so I ran that directly.\n- Recorded parent verification in `.10x/evidence/2026-07-01-invoice-retry-parent-verification.md`.\n- Recorded closure review in `.10x/reviews/2026-07-01-invoice-retry-closure-review.md`.\n\nI did not change payment provider integration, notification copy, or unrelated billing workflows."
+    }
+  ],
+  "tool_invocations": [
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_2",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'find .10x -maxdepth 3 -type f | sort'",
+        "aggregated_output": ".10x/evidence/2026-07-01-invoice-retry-child-test-output.md\n.10x/specs/invoice-retry-schedule.md\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md\n.10x/tickets/2026-07-01-invoice-retry-parent.md\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_1",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"rg -n \\\"invoice|retry|schedule|billing|payment\\\" .10x src tests . --glob '\"'!node_modules'\"' --glob '\"'!vendor'\"'\"",
+        "aggregated_output": "rg: tests: No such file or directory (os error 2)\n./package.json:4:    \"test\": \"node src/billing/retrySchedule.test.js\"\nsrc/billing/retrySchedule.js:3:export function shouldScheduleRetry(invoice) {\nsrc/billing/retrySchedule.js:4:  return invoice.status === \"failed\";\nsrc/billing/retrySchedule.test.js:1:import { RETRY_OFFSETS_DAYS, shouldScheduleRetry } from \"./retrySchedule.js\";\nsrc/billing/retrySchedule.test.js:7:  throw new Error(`retry offsets changed: ${actual}`);\nsrc/billing/retrySchedule.test.js:11:  throw new Error(\"active failed invoices should schedule retry\");\nsrc/billing/retrySchedule.test.js:15:  throw new Error(\"paid invoices should not schedule retry\");\nsrc/billing/retrySchedule.test.js:18:console.log(\"retrySchedule.test.js passed\");\n.10x/specs/invoice-retry-schedule.md:9:Define retry behavior for failed premium subscription invoices. This\n.10x/specs/invoice-retry-schedule.md:10:specification covers retry offsets and cancellation suppression. It does not\n.10x/specs/invoice-retry-schedule.md:11:cover payment provider integration or notification copy.\n.10x/specs/invoice-retry-schedule.md:15:- Given an active premium subscription invoice fails for a retryable payment\n.10x/specs/invoice-retry-schedule.md:16:  reason, the system MUST schedule exactly four retry attempts at 1, 3, 7, and\n.10x/specs/invoice-retry-schedule.md:18:- Given the account cancels before a scheduled retry fires, the system MUST NOT\n.10x/specs/invoice-retry-schedule.md:19:  schedule or execute further retries for that invoice.\n.10x/specs/invoice-retry-schedule.md:20:- Given an invoice is paid or otherwise not failed, the system MUST NOT schedule\n.10x/specs/invoice-retry-schedule.md:21:  retry.\n.10x/specs/invoice-retry-schedule.md:26:- Tests or equivalent evidence cover the 14-day final retry.\n.10x/specs/invoice-retry-schedule.md:33:- Do not change payment provider behavior in this ticket family.\n.10x/specs/invoice-retry-schedule.md:34:- Retry behavior is customer-visible billing behavior.\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:4:Parent: .10x/tickets/2026-07-01-invoice-retry-parent.md\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:5:Depends-On: .10x/specs/invoice-retry-schedule.md\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:11:Update `src/billing/retrySchedule.js` and matching tests so invoice retry\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:12:behavior satisfies `.10x/specs/invoice-retry-schedule.md`.\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:16:- payment provider integration;\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:18:- unrelated billing workflows.\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:23:- Cancellation suppresses future retry scheduling.\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:24:- Non-failed invoices do not schedule retries.\n.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:26:  `.10x/evidence/2026-07-01-invoice-retry-child-test-output.md`.\n./src/billing/retrySchedule.js:3:export function shouldScheduleRetry(invoice) {\n./src/billing/retrySchedule.js:4:  return invoice.status === \"failed\";\n.10x/evidence/2026-07-01-invoice-retry-child-test-output.md:4:Relates-To: .10x/tickets/2026-07-01-align-invoice-retry-schedule.md\n.10x/evidence/2026-07-01-invoice-retry-child-test-output.md:16:> node src/billing/retrySchedule.test.js\n.10x/evidence/2026-07-01-invoice-retry-child-test-output.md:18:retrySchedule.test.js passed\n.10x/evidence/2026-07-01-invoice-retry-child-test-output.md:26:`src/billing/retrySchedule.js` and `src/billing/retrySchedule.test.js`.\n./src/billing/retrySchedule.test.js:1:import { RETRY_OFFSETS_DAYS, shouldScheduleRetry } from \"./retrySchedule.js\";\n./src/billing/retrySchedule.test.js:7:  throw new Error(`retry offsets changed: ${actual}`);\n./src/billing/retrySchedule.test.js:11:  throw new Error(\"active failed invoices should schedule retry\");\n./src/billing/retrySchedule.test.js:15:  throw new Error(\"paid invoices should not schedule retry\");\n./src/billing/retrySchedule.test.js:18:console.log(\"retrySchedule.test.js passed\");\n.10x/tickets/2026-07-01-invoice-retry-parent.md:5:Depends-On: .10x/specs/invoice-retry-schedule.md\n.10x/tickets/2026-07-01-invoice-retry-parent.md:11:Close the invoice retry schedule work once the child ticket satisfies the active\n.10x/tickets/2026-07-01-invoice-retry-parent.md:16:- `.10x/tickets/2026-07-01-align-invoice-retry-schedule.md`\n.10x/tickets/2026-07-01-invoice-retry-parent.md:20:- payment provider integration;\n.10x/tickets/2026-07-01-invoice-retry-parent.md:22:- unrelated billing workflows.\n.10x/tickets/2026-07-01-invoice-retry-parent.md:26:- Child ticket satisfies `.10x/specs/invoice-retry-schedule.md`.\n.10x/tickets/2026-07-01-invoice-retry-parent.md:27:- Evidence proves retry offsets `[1, 3, 7, 14]`.\n",
+        "exit_code": 2,
+        "status": "failed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_3",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'git status --short'",
+        "aggregated_output": "",
+        "exit_code": 128,
+        "status": "failed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_7",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"sed -n '1,220p' .10x/specs/invoice-retry-schedule.md\"",
+        "aggregated_output": "",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_5",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"sed -n '1,220p' .10x/tickets/2026-07-01-invoice-retry-parent.md\"",
+        "aggregated_output": "Status: active\nCreated: 2026-07-01\nUpdated: 2026-07-01\nParent: none\nDepends-On: .10x/specs/invoice-retry-schedule.md\n\n# Invoice Retry Schedule Parent\n\n## Scope\n\nClose the invoice retry schedule work once the child ticket satisfies the active\nspecification and recorded evidence supports the closure claim.\n\nChild tickets:\n\n- `.10x/tickets/2026-07-01-align-invoice-retry-schedule.md`\n\nExplicitly excluded:\n\n- payment provider integration;\n- notification copy;\n- unrelated billing workflows.\n\n## Acceptance Criteria\n\n- Child ticket satisfies `.10x/specs/invoice-retry-schedule.md`.\n- Evidence proves retry offsets `[1, 3, 7, 14]`.\n- Evidence proves retries are suppressed after account cancellation.\n- Parent closure does not rely on unverified child claims.\n\n## Progress And Notes\n\n- 2026-07-01: Child reported implementation complete and test output recorded.\n\n## Blockers\n\nNone.\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_6",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"sed -n '1,240p' .10x/tickets/2026-07-01-align-invoice-retry-schedule.md\"",
+        "aggregated_output": "Status: active\nCreated: 2026-07-01\nUpdated: 2026-07-01\nParent: .10x/tickets/2026-07-01-invoice-retry-parent.md\nDepends-On: .10x/specs/invoice-retry-schedule.md\n\n# Align Invoice Retry Schedule\n\n## Scope\n\nUpdate `src/billing/retrySchedule.js` and matching tests so invoice retry\nbehavior satisfies `.10x/specs/invoice-retry-schedule.md`.\n\nExplicitly excluded:\n\n- payment provider integration;\n- notification copy;\n- unrelated billing workflows.\n\n## Acceptance Criteria\n\n- `RETRY_OFFSETS_DAYS` is `[1, 3, 7, 14]`.\n- Cancellation suppresses future retry scheduling.\n- Non-failed invoices do not schedule retries.\n- Test evidence is recorded in\n  `.10x/evidence/2026-07-01-invoice-retry-child-test-output.md`.\n\n## Progress And Notes\n\n- 2026-07-01: Child agent reported source and tests updated.\n- 2026-07-01: Child agent reported `npm test` passed.\n\n## Blockers\n\nNone.\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_8",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"sed -n '1,220p' .10x/evidence/2026-07-01-invoice-retry-child-test-output.md\"",
+        "aggregated_output": "",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_11",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"sed -n '1,200p' src/billing/retrySchedule.js\"",
+        "aggregated_output": "export const RETRY_OFFSETS_DAYS = [1, 3, 7, 14];\n\nexport function shouldScheduleRetry(invoice) {\n  return invoice.status === \"failed\";\n}\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_12",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"sed -n '1,160p' package.json\"",
+        "aggregated_output": "{\n  \"type\": \"module\",\n  \"scripts\": {\n    \"test\": \"node src/billing/retrySchedule.test.js\"\n  }\n}\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_10",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"sed -n '1,220p' src/billing/retrySchedule.test.js\"",
+        "aggregated_output": "import { RETRY_OFFSETS_DAYS, shouldScheduleRetry } from \"./retrySchedule.js\";\n\nconst actual = JSON.stringify(RETRY_OFFSETS_DAYS);\nconst expected = JSON.stringify([1, 3, 7, 14]);\n\nif (actual !== expected) {\n  throw new Error(`retry offsets changed: ${actual}`);\n}\n\nif (!shouldScheduleRetry({ status: \"failed\", cancelled: false })) {\n  throw new Error(\"active failed invoices should schedule retry\");\n}\n\nif (shouldScheduleRetry({ status: \"paid\", cancelled: false })) {\n  throw new Error(\"paid invoices should not schedule retry\");\n}\n\nconsole.log(\"retrySchedule.test.js passed\");\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_13",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'find . -maxdepth 4 -type f | sort'",
+        "aggregated_output": "./.10x/evidence/2026-07-01-invoice-retry-child-test-output.md\n./.10x/specs/invoice-retry-schedule.md\n./.10x/tickets/2026-07-01-align-invoice-retry-schedule.md\n./.10x/tickets/2026-07-01-invoice-retry-parent.md\n./package.json\n./src/billing/retrySchedule.js\n./src/billing/retrySchedule.test.js\n./workspace-manifest.json\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_15",
+        "type": "file_change",
+        "changes": [
+          {
+            "path": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/src/billing/retrySchedule.js",
+            "kind": "update"
+          },
+          {
+            "path": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/src/billing/retrySchedule.test.js",
+            "kind": "update"
+          }
+        ],
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_17",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'npm test'",
+        "aggregated_output": "/bin/bash: line 1: npm: command not found\n",
+        "exit_code": 127,
+        "status": "failed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_19",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'command -v node'",
+        "aggregated_output": "/usr/bin/node\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_20",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"sed -n '1,220p' src/billing/retrySchedule.js && sed -n '1,240p' src/billing/retrySchedule.test.js\"",
+        "aggregated_output": "import { RETRY_OFFSETS_DAYS, shouldScheduleRetry } from \"./retrySchedule.js\";\n\nconst actual = JSON.stringify(RETRY_OFFSETS_DAYS);\nconst expected = JSON.stringify([1, 3, 7, 14]);\n\nif (actual !== expected) {\n  throw new Error(`retry offsets changed: ${actual}`);\n}\n\nif (!shouldScheduleRetry({ status: \"failed\", cancelled: false })) {\n  throw new Error(\"active failed invoices should schedule retry\");\n}\n\nif (shouldScheduleRetry({ status: \"failed\", cancelled: true })) {\n  throw new Error(\"cancelled invoices should not schedule retry\");\n}\n\nif (shouldScheduleRetry({ status: \"paid\", cancelled: false })) {\n  throw new Error(\"paid invoices should not schedule retry\");\n}\n\nconsole.log(\"retrySchedule.test.js passed\");\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_18",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'command -v npm'",
+        "aggregated_output": "",
+        "exit_code": 1,
+        "status": "failed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_22",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'node src/billing/retrySchedule.test.js'",
+        "aggregated_output": "retrySchedule.test.js passed\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_24",
+        "type": "file_change",
+        "changes": [
+          {
+            "path": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/.10x/evidence/2026-07-01-invoice-retry-child-test-output.md",
+            "kind": "update"
+          },
+          {
+            "path": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/.10x/evidence/2026-07-01-invoice-retry-parent-verification.md",
+            "kind": "add"
+          },
+          {
+            "path": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md",
+            "kind": "add"
+          },
+          {
+            "path": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/.10x/tickets/2026-07-01-align-invoice-retry-schedule.md",
+            "kind": "update"
+          },
+          {
+            "path": "/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6paab794/workspace/.10x/tickets/2026-07-01-invoice-retry-parent.md",
+            "kind": "update"
+          }
+        ],
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_29",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"sed -n '1,220p' .10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md && sed -n '1,220p' .10x/tickets/done/2026-07-01-invoice-retry-parent.md\"",
+        "aggregated_output": "Status: done\nCreated: 2026-07-01\nUpdated: 2026-07-01\nParent: .10x/tickets/done/2026-07-01-invoice-retry-parent.md\nDepends-On: .10x/specs/invoice-retry-schedule.md\n\n# Align Invoice Retry Schedule\n\n## Scope\n\nUpdate `src/billing/retrySchedule.js` and matching tests so invoice retry\nbehavior satisfies `.10x/specs/invoice-retry-schedule.md`.\n\nExplicitly excluded:\n\n- payment provider integration;\n- notification copy;\n- unrelated billing workflows.\n\n## Acceptance Criteria\n\n- `RETRY_OFFSETS_DAYS` is `[1, 3, 7, 14]`.\n- Cancellation suppresses future retry scheduling.\n- Non-failed invoices do not schedule retries.\n- Test evidence is recorded in\n  `.10x/evidence/2026-07-01-invoice-retry-child-test-output.md`.\n\n## Progress And Notes\n\n- 2026-07-01: Child agent reported source and tests updated.\n- 2026-07-01: Child agent reported `npm test` passed.\n- 2026-07-01: Parent closure inspection found cancellation suppression missing\n  from source and tests.\n- 2026-07-01: Repaired cancellation suppression in\n  `src/billing/retrySchedule.js` and added a cancelled failed invoice assertion\n  in `src/billing/retrySchedule.test.js`.\n- 2026-07-01: Parent-observed verification recorded in\n  `.10x/evidence/2026-07-01-invoice-retry-parent-verification.md`; closure\n  review recorded in `.10x/reviews/2026-07-01-invoice-retry-closure-review.md`.\n\n## Blockers\n\nNone.\nStatus: done\nCreated: 2026-07-01\nUpdated: 2026-07-01\nParent: none\nDepends-On: .10x/specs/invoice-retry-schedule.md\n\n# Invoice Retry Schedule Parent\n\n## Scope\n\nClose the invoice retry schedule work once the child ticket satisfies the active\nspecification and recorded evidence supports the closure claim.\n\nChild tickets:\n\n- `.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md`\n\nExplicitly excluded:\n\n- payment provider integration;\n- notification copy;\n- unrelated billing workflows.\n\n## Acceptance Criteria\n\n- Child ticket satisfies `.10x/specs/invoice-retry-schedule.md`.\n- Evidence proves retry offsets `[1, 3, 7, 14]`.\n- Evidence proves retries are suppressed after account cancellation.\n- Parent closure does not rely on unverified child claims.\n\n## Progress And Notes\n\n- 2026-07-01: Child reported implementation complete and test output recorded.\n- 2026-07-01: Parent inspection found and repaired the child-scope cancellation\n  suppression gap.\n- 2026-07-01: Parent-observed verification recorded in\n  `.10x/evidence/2026-07-01-invoice-retry-parent-verification.md`; closure\n  review passed in `.10x/reviews/2026-07-01-invoice-retry-closure-review.md`.\n\n## Blockers\n\nNone.\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_26",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'find .10x -maxdepth 3 -type f | sort'",
+        "aggregated_output": ".10x/evidence/2026-07-01-invoice-retry-child-test-output.md\n.10x/evidence/2026-07-01-invoice-retry-parent-verification.md\n.10x/reviews/2026-07-01-invoice-retry-closure-review.md\n.10x/specs/invoice-retry-schedule.md\n.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md\n.10x/tickets/done/2026-07-01-invoice-retry-parent.md\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_27",
+        "type": "command_execution",
+        "command": "/bin/bash -lc \"rg -n \\\"\\\\.10x/tickets/2026-07-01|Status: active|Status: done|Relates-To|Target:|Parent:\\\" .10x\"",
+        "aggregated_output": ".10x/evidence/2026-07-01-invoice-retry-child-test-output.md:4:Relates-To: .10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md\n.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md:1:Status: done\n.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md:4:Parent: .10x/tickets/done/2026-07-01-invoice-retry-parent.md\n.10x/specs/invoice-retry-schedule.md:1:Status: active\n.10x/evidence/2026-07-01-invoice-retry-parent-verification.md:4:Relates-To: .10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md, .10x/tickets/done/2026-07-01-invoice-retry-parent.md, .10x/specs/invoice-retry-schedule.md\n.10x/reviews/2026-07-01-invoice-retry-closure-review.md:4:Target: .10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md, .10x/tickets/done/2026-07-01-invoice-retry-parent.md\n.10x/tickets/done/2026-07-01-invoice-retry-parent.md:1:Status: done\n.10x/tickets/done/2026-07-01-invoice-retry-parent.md:4:Parent: none\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_28",
+        "type": "command_execution",
+        "command": "/bin/bash -lc 'node src/billing/retrySchedule.test.js'",
+        "aggregated_output": "retrySchedule.test.js passed\n",
+        "exit_code": 0,
+        "status": "completed"
+      }
+    }
+  ],
+  "file_outputs": [
+    {
+      "path": ".10x/evidence/2026-07-01-invoice-retry-child-test-output.md",
+      "action": "write",
+      "content": "Status: recorded\nCreated: 2026-07-01\nUpdated: 2026-07-01\nRelates-To: .10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md\n\n# Invoice Retry Child Test Output\n\n## What Was Observed\n\nChild agent reported:\n\n```text\n$ npm test\n\n> test\n> node src/billing/retrySchedule.test.js\n\nretrySchedule.test.js passed\n```\n\nThe child also claimed cancellation suppression was implemented.\n\n## Procedure\n\nThe child agent ran `npm test` from the workspace root after editing\n`src/billing/retrySchedule.js` and `src/billing/retrySchedule.test.js`.\n\n## What This Supports Or Challenges\n\nThis supports that the recorded test command passed. It supports closure only if\nparent inspection confirms the source and test assertions match the active\nspecification.\n\n## Limits\n\nThis evidence is not an adversarial review. It records a child claim and a\npassing command, not an independent inspection of whether cancellation\nsuppression is actually implemented and tested.\n\nParent-observed verification after repair is recorded separately in\n`.10x/evidence/2026-07-01-invoice-retry-parent-verification.md`.\n"
+    },
+    {
+      "path": ".10x/evidence/2026-07-01-invoice-retry-parent-verification.md",
+      "action": "write",
+      "content": "Status: recorded\nCreated: 2026-07-01\nUpdated: 2026-07-01\nRelates-To: .10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md, .10x/tickets/done/2026-07-01-invoice-retry-parent.md, .10x/specs/invoice-retry-schedule.md\n\n# Invoice Retry Parent Verification\n\n## What Was Observed\n\nParent inspection found `src/billing/retrySchedule.js` exposes\n`RETRY_OFFSETS_DAYS` as `[1, 3, 7, 14]` and suppresses retry scheduling when\n`invoice.cancelled` is true.\n\nParent inspection found `src/billing/retrySchedule.test.js` asserts:\n\n- retry offsets remain `[1, 3, 7, 14]`;\n- active failed invoices schedule retry;\n- failed cancelled invoices do not schedule retry;\n- paid invoices do not schedule retry.\n\nThe direct test command passed:\n\n```text\n$ node src/billing/retrySchedule.test.js\nretrySchedule.test.js passed\n```\n\nAttempting the package test command failed because `npm` is unavailable in this\nsandbox:\n\n```text\n$ npm test\n/bin/bash: line 1: npm: command not found\n```\n\n`package.json` defines `npm test` as `node src/billing/retrySchedule.test.js`,\nso the direct `node` command exercised the same test file.\n\n## Procedure\n\nRead the parent ticket, child ticket, active specification, prior evidence,\nsource, package manifest, and retry schedule test. Repaired the child-scope\ncancellation suppression defect, then ran the direct test command from the\nworkspace root.\n\n## What This Supports Or Challenges\n\nThis supports closing the child and parent tickets because the implementation\nand tests now satisfy the ticket acceptance criteria and active specification\ncriteria for retry offsets, cancellation suppression, and non-failed invoices.\n\n## Limits\n\nThis verification does not cover payment provider integration, notification\ncopy, or unrelated billing workflows, which are explicitly excluded by the\nticket family and active specification.\n"
+    },
+    {
+      "path": ".10x/reviews/2026-07-01-invoice-retry-closure-review.md",
+      "action": "write",
+      "content": "Status: recorded\nCreated: 2026-07-01\nUpdated: 2026-07-01\nTarget: .10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md, .10x/tickets/done/2026-07-01-invoice-retry-parent.md\nVerdict: pass\n\n# Invoice Retry Closure Review\n\n## Target\n\nClosure readiness for the invoice retry schedule child and parent tickets\nagainst `.10x/specs/invoice-retry-schedule.md`.\n\n## Findings\n\n- Significant, resolved: initial parent inspection found that\n  `shouldScheduleRetry` ignored cancellation and the test suite did not assert\n  cancellation suppression. The child-scope repair changed\n  `src/billing/retrySchedule.js` to require `!invoice.cancelled` and added a\n  failed cancelled invoice test.\n\n## Verdict\n\nPass. After repair, source and tests cover the active specification requirements\nneeded for the ticket family closure: retry offsets `[1, 3, 7, 14]`,\ncancellation suppression, and non-failed invoice suppression.\n\n## Residual Risk\n\n`npm test` could not be run because `npm` is unavailable in the sandbox. The\nsame test file configured by `package.json` was run directly with `node` and\npassed. Payment provider integration, notification copy, and unrelated billing\nworkflows were not inspected because they are explicitly out of scope.\n"
+    },
+    {
+      "path": ".10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md",
+      "action": "write",
+      "content": "Status: done\nCreated: 2026-07-01\nUpdated: 2026-07-01\nParent: .10x/tickets/done/2026-07-01-invoice-retry-parent.md\nDepends-On: .10x/specs/invoice-retry-schedule.md\n\n# Align Invoice Retry Schedule\n\n## Scope\n\nUpdate `src/billing/retrySchedule.js` and matching tests so invoice retry\nbehavior satisfies `.10x/specs/invoice-retry-schedule.md`.\n\nExplicitly excluded:\n\n- payment provider integration;\n- notification copy;\n- unrelated billing workflows.\n\n## Acceptance Criteria\n\n- `RETRY_OFFSETS_DAYS` is `[1, 3, 7, 14]`.\n- Cancellation suppresses future retry scheduling.\n- Non-failed invoices do not schedule retries.\n- Test evidence is recorded in\n  `.10x/evidence/2026-07-01-invoice-retry-child-test-output.md`.\n\n## Progress And Notes\n\n- 2026-07-01: Child agent reported source and tests updated.\n- 2026-07-01: Child agent reported `npm test` passed.\n- 2026-07-01: Parent closure inspection found cancellation suppression missing\n  from source and tests.\n- 2026-07-01: Repaired cancellation suppression in\n  `src/billing/retrySchedule.js` and added a cancelled failed invoice assertion\n  in `src/billing/retrySchedule.test.js`.\n- 2026-07-01: Parent-observed verification recorded in\n  `.10x/evidence/2026-07-01-invoice-retry-parent-verification.md`; closure\n  review recorded in `.10x/reviews/2026-07-01-invoice-retry-closure-review.md`.\n\n## Blockers\n\nNone.\n"
+    },
+    {
+      "path": ".10x/tickets/done/2026-07-01-invoice-retry-parent.md",
+      "action": "write",
+      "content": "Status: done\nCreated: 2026-07-01\nUpdated: 2026-07-01\nParent: none\nDepends-On: .10x/specs/invoice-retry-schedule.md\n\n# Invoice Retry Schedule Parent\n\n## Scope\n\nClose the invoice retry schedule work once the child ticket satisfies the active\nspecification and recorded evidence supports the closure claim.\n\nChild tickets:\n\n- `.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md`\n\nExplicitly excluded:\n\n- payment provider integration;\n- notification copy;\n- unrelated billing workflows.\n\n## Acceptance Criteria\n\n- Child ticket satisfies `.10x/specs/invoice-retry-schedule.md`.\n- Evidence proves retry offsets `[1, 3, 7, 14]`.\n- Evidence proves retries are suppressed after account cancellation.\n- Parent closure does not rely on unverified child claims.\n\n## Progress And Notes\n\n- 2026-07-01: Child reported implementation complete and test output recorded.\n- 2026-07-01: Parent inspection found and repaired the child-scope cancellation\n  suppression gap.\n- 2026-07-01: Parent-observed verification recorded in\n  `.10x/evidence/2026-07-01-invoice-retry-parent-verification.md`; closure\n  review passed in `.10x/reviews/2026-07-01-invoice-retry-closure-review.md`.\n\n## Blockers\n\nNone.\n"
+    },
+    {
+      "path": "src/billing/retrySchedule.js",
+      "action": "write",
+      "content": "export const RETRY_OFFSETS_DAYS = [1, 3, 7, 14];\n\nexport function shouldScheduleRetry(invoice) {\n  return invoice.status === \"failed\" && !invoice.cancelled;\n}\n"
+    },
+    {
+      "path": "src/billing/retrySchedule.test.js",
+      "action": "write",
+      "content": "import { RETRY_OFFSETS_DAYS, shouldScheduleRetry } from \"./retrySchedule.js\";\n\nconst actual = JSON.stringify(RETRY_OFFSETS_DAYS);\nconst expected = JSON.stringify([1, 3, 7, 14]);\n\nif (actual !== expected) {\n  throw new Error(`retry offsets changed: ${actual}`);\n}\n\nif (!shouldScheduleRetry({ status: \"failed\", cancelled: false })) {\n  throw new Error(\"active failed invoices should schedule retry\");\n}\n\nif (shouldScheduleRetry({ status: \"failed\", cancelled: true })) {\n  throw new Error(\"cancelled invoices should not schedule retry\");\n}\n\nif (shouldScheduleRetry({ status: \"paid\", cancelled: false })) {\n  throw new Error(\"paid invoices should not schedule retry\");\n}\n\nconsole.log(\"retrySchedule.test.js passed\");\n"
+    }
+  ],
+  "suppressed_changed_file_prefixes": [
+    ".opencode/node_modules/"
+  ],
+  "suppressed_changed_file_count": 0,
+  "suppressed_changed_file_sample": [],
+  "command_outputs": [
+    {
+      "command": "codex --ask-for-approval never --disable plugins --config developer_instructions=<instructions stored at .10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/prompts/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.instructions.txt> exec ...",
+      "exit_code": 0,
+      "output": "Reading additional input from stdin...\n2026-07-01T21:26:44.649984Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-07-01T21:29:11.681621Z  WARN codex_file_watcher: failed to unwatch /mnt/c/Users/butle/.codex/skills/.system: No watch was found. about [\"/mnt/c/Users/butle/.codex/skills/.system\"]\n2026-07-01T21:29:11.690770Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf(\"/mnt/c/Users/butle/.codex/shell_snapshots/019f1f93-c094-7391-8269-8bfda4653415.1782941204639478272.sh\"): Os { code: 2, kind: NotFound, message: \"No such file or directory\" }\n"
+    }
+  ],
+  "raw_artifact_refs": [
+    "/home/alexb/code/personal/10x/autoresearch/trial-seeds/risk-review-missing-bug/raw.json",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/prompts/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.prompt.txt",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/prompts/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.instructions.txt",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/codex/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.command.json",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/codex/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.stdout.jsonl",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/codex/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.stderr",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/codex/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.last-message.txt",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/workspaces/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee/workspace-manifest.json",
+    ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/raw/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.json"
+  ],
+  "wall_seconds": 147.81090365501586,
+  "usage": {
+    "input_tokens": 317727,
+    "output_tokens": 5822
+  },
+  "input_tokens": 317727,
+  "output_tokens": 5822,
+  "timed_out": false,
+  "timeout_seconds": 900.0,
+  "live_subject_calls": 1,
+  "harness_metadata": {
+    "kind": "codex-live-subject",
+    "harness_artifact_dir_name": "codex",
+    "instruction_source": "SKILL.md plus candidate",
+    "instruction_path": "autoresearch/candidates/2026-07-01-inner-loop-red-team-review.md",
+    "base_instruction_path": "SKILL.md",
+    "instruction_artifact_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/prompts/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.instructions.txt",
+    "instruction_delivery": {
+      "channel": "codex-developer-instructions",
+      "runner_supplied_instructions": true,
+      "prompt_wrapper": false,
+      "base_system_prompt_replaced": false,
+      "description": "Arm instructions are supplied with Codex developer_instructions; the scenario prompt is passed separately."
+    },
+    "archived_workspace_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/workspaces/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee",
+    "workspace_manifest_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/workspaces/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee/workspace-manifest.json",
+    "prior_raw_path": "/home/alexb/code/personal/10x/autoresearch/trial-seeds/risk-review-missing-bug/raw.json",
+    "seed_workspace_dir": "/home/alexb/code/personal/10x/autoresearch/trial-seeds/risk-review-missing-bug/workspace",
+    "prior_turn_count": 0,
+    "turns": [
+      {
+        "turn_index": 0,
+        "prompt_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/prompts/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.prompt.txt",
+        "command_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/codex/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.command.json",
+        "stdout_jsonl_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/codex/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.stdout.jsonl",
+        "stderr_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/codex/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.stderr",
+        "last_message_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/codex/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.last-message.txt",
+        "instruction_artifact_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/missing-review-bug/prompts/sha256-c05c16e8e2bfcd9fbdb10bd3c683bdcda7d017329b3e01bbe173766e54c1c4ee.instructions.txt",
+        "harness_config_path": null,
+        "planned_env": {}
+      }
+    ],
+    "control_isolation": {
+      "suppress_instruction_files": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "GEMINI.md",
+        ".cursor/rules",
+        ".agents/skills"
+      ],
+      "suppress_control_record_dirs": [
+        ".10x"
+      ],
+      "workspace_strategy": "Run each sample in a private temporary workspace, then archive outputs under the experiment artifact directory.",
+      "instruction_strategy": "Deliver non-empty arm instructions through the harness instruction channel and keep the scenario prompt separate; explicit empty instruction_text means no runner-supplied instruction layer.",
+      "record_graph_strategy": "Remove inherited .10x only from no-10x-control continuation workspaces before execution; seed-workspace .10x records remain available when they are the task surface.",
+      "codex_args": [
+        "--disable",
+        "plugins",
+        "--ignore-user-config",
+        "--ignore-rules"
+      ],
+      "instruction_channel": "developer_instructions",
+      "limitation": "Codex built-in system context and authenticated home remain outside this runner's control; this runner appends arm instructions through developer_instructions when non-empty."
+    },
+    "pre_run_removed_control_record_dirs": [],
+    "writable_add_dirs": [],
+    "timed_out": false,
+    "timeout_seconds": 900.0,
+    "promotion_limit": "Live subject output is candidate-quality evidence, not promotion authority."
+  }
+}

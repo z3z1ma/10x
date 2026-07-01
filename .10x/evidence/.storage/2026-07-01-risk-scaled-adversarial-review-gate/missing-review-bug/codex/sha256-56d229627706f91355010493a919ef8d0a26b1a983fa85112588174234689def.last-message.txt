@@ -1,0 +1,17 @@
+Closure completed. I found and fixed one child-scope blocker: cancelled failed invoices were still eligible for retry. Both child and parent tickets are now `done`.
+
+Changed files:
+- [retrySchedule.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6p4payx8/workspace/src/billing/retrySchedule.js): now requires `status === "failed"` and `!invoice.cancelled`.
+- [retrySchedule.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6p4payx8/workspace/src/billing/retrySchedule.test.js): added cancellation suppression coverage.
+- Updated/moved 10x records under `.10x/evidence/`, `.10x/reviews/`, and `.10x/tickets/done/`.
+
+Inspected:
+- Parent: [.10x/tickets/done/2026-07-01-invoice-retry-parent.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6p4payx8/workspace/.10x/tickets/done/2026-07-01-invoice-retry-parent.md)
+- Child: [.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6p4payx8/workspace/.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md)
+- Spec, prior evidence, `package.json`, source, and test file.
+
+Evidence:
+- Recorded closure verification: [.10x/evidence/2026-07-01-invoice-retry-closure-verification.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6p4payx8/workspace/.10x/evidence/2026-07-01-invoice-retry-closure-verification.md)
+- Recorded review pass: [.10x/reviews/2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6p4payx8/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md)
+- Verification command run: `node src/billing/retrySchedule.test.js` passed.
+- `npm test` could not run because `npm` is not installed in this sandbox; the direct Node command exercises the same test entrypoint from `package.json`.

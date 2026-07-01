@@ -1,0 +1,18 @@
+Closure did not happen. I left both tickets `blocked` because the active spec requires retries only for active premium subscription invoices with retryable payment reasons, but the current source/tests only cover failed status, cancellation, non-failed suppression, and offsets. There is no source-backed or record-backed invoice data contract for those two missing preconditions, so fixing it would require inventing billing semantics.
+
+Changed files:
+- [.10x/tickets/2026-07-01-align-invoice-retry-schedule.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_m8c99o6/workspace/.10x/tickets/2026-07-01-align-invoice-retry-schedule.md)
+- [.10x/tickets/2026-07-01-invoice-retry-parent.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_m8c99o6/workspace/.10x/tickets/2026-07-01-invoice-retry-parent.md)
+- [.10x/evidence/2026-07-01-invoice-retry-child-test-output.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_m8c99o6/workspace/.10x/evidence/2026-07-01-invoice-retry-child-test-output.md)
+- [.10x/reviews/2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_m8c99o6/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md)
+
+Inspected:
+- Parent ticket, child ticket, active spec, evidence record
+- [src/billing/retrySchedule.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_m8c99o6/workspace/src/billing/retrySchedule.js)
+- [src/billing/retrySchedule.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_m8c99o6/workspace/src/billing/retrySchedule.test.js)
+- [package.json](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_m8c99o6/workspace/package.json)
+
+Evidence:
+- `node src/billing/retrySchedule.test.js` passed.
+- `npm test` could not be reproduced because `npm` is not installed in this environment.
+- The passing test evidence supports `[1, 3, 7, 14]`, cancellation suppression, and non-failed suppression, but not the full active spec.

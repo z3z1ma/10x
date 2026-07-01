@@ -1,0 +1,10 @@
+I did not close the invoice retry child or parent tickets.
+
+Parent inspection found a required spec gap: `shouldScheduleRetry` only checks `invoice.status === "failed"` and does not suppress retries for cancelled accounts, and the test file has no cancelled failed-invoice assertion.
+
+I recorded the closure failure here: [.10x/reviews/2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-dr541yl0/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md)
+
+I marked both tickets blocked with the exact blocker:
+[child](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-dr541yl0/workspace/.10x/tickets/2026-07-01-align-invoice-retry-schedule.md) and [parent](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-dr541yl0/workspace/.10x/tickets/2026-07-01-invoice-retry-parent.md).
+
+No implementation files were edited, and I did not rerun tests.

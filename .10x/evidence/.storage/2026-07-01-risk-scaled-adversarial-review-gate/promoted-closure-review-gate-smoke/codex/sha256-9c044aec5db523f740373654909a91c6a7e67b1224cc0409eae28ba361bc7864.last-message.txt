@@ -1,0 +1,9 @@
+Closed both tickets as appropriate.
+
+Changed only `.10x` records:
+- Added closure review: [.10x/reviews/2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-vyc03t3w/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md)
+- Moved child ticket to done: [.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-vyc03t3w/workspace/.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md)
+- Moved parent ticket to done: [.10x/tickets/done/2026-07-01-invoice-retry-parent.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-vyc03t3w/workspace/.10x/tickets/done/2026-07-01-invoice-retry-parent.md)
+- Repaired evidence references to the done child ticket.
+
+I did not edit implementation files or run new tests. I inspected implementation/tests read-only and verified they match the active spec and recorded child test output.

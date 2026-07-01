@@ -1,0 +1,20 @@
+Closure happened. I repaired the active-spec finding, reran relevant evidence via the direct package test payload, recorded a new pass review, and closed both tickets under `.10x/tickets/done/`.
+
+Changed files:
+- [visibleRows.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ldxlz9as/workspace/src/exports/visibleRows.js:3): exports `visible === true && policyHidden !== true`, no longer selection-based.
+- [visibleRows.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ldxlz9as/workspace/src/exports/visibleRows.test.js:3): covers visible inclusion, policy-hidden exclusion, selected-but-not-visible exclusion, and exact header.
+- Added [2026-07-01 evidence](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ldxlz9as/workspace/.10x/evidence/2026-07-01-visible-row-export-repair-test.md:1).
+- Added [2026-07-01 pass review](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ldxlz9as/workspace/.10x/reviews/2026-07-01-visible-row-active-spec-pass-review.md:1).
+- Closed/moved [child ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ldxlz9as/workspace/.10x/tickets/done/2026-06-24-align-visible-row-export.md:1) and [parent ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ldxlz9as/workspace/.10x/tickets/done/2026-06-24-visible-row-export-parent.md:1).
+- Updated older evidence/review target references to the moved done ticket paths.
+
+Inspected:
+- Parent ticket, child ticket, active spec, original evidence, both original reviews.
+- Source/test files: `src/exports/visibleRows.js`, `src/exports/visibleRows.test.js`, `package.json`.
+
+Evidence/review state:
+- `npm test` could not run because `npm` is unavailable in the container.
+- `package.json` defines `test` as `node src/exports/visibleRows.test.js`.
+- `node src/exports/visibleRows.test.js` passed.
+- The new active-spec review is `Verdict: pass`; it explicitly reconciles the old fail review and the selected-row-only pass review.
+- Dashboard rendering, delivery transport, and administrator notification copy were not changed.

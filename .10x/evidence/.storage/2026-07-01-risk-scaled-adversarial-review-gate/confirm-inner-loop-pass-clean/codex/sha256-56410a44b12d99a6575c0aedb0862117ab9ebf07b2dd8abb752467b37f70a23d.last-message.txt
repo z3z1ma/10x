@@ -1,0 +1,5 @@
+Closed both tickets as appropriate.
+
+I added a passing closure review at [.10x/reviews/2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-mpqi03ud/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md), marked the child and parent tickets `done`, moved them into `.10x/tickets/done/`, and repaired the evidence/parent references.
+
+I did not edit implementation files and did not rerun tests. I inspected `src/billing/retrySchedule.js` and `src/billing/retrySchedule.test.js` read-only to confirm the active spec mapping before closure.

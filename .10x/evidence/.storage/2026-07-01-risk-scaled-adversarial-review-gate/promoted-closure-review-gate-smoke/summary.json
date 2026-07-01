@@ -1,0 +1,41 @@
+{
+  "experiment_id": "EXP-20260701-risk-review-promoted-closure-gate-smoke",
+  "mode": "live",
+  "samples_written": 3,
+  "raw_output_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/promoted-closure-review-gate-smoke/raw",
+  "workspace_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/promoted-closure-review-gate-smoke/workspaces",
+  "harness_artifact_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/promoted-closure-review-gate-smoke/codex",
+  "prompt_dir": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/promoted-closure-review-gate-smoke/prompts",
+  "plan_path": ".10x/evidence/.storage/2026-07-01-risk-scaled-adversarial-review-gate/promoted-closure-review-gate-smoke/plan.json",
+  "harness": "codex-cli",
+  "harness_kind": "codex-live-subject",
+  "live_subject_calls": 3,
+  "promotion_decision": "not-performed",
+  "budget": {
+    "planned_harness_runs": 3,
+    "max_harness_runs": 3,
+    "estimated_wall_seconds_per_run": 180.0,
+    "timeout_seconds_per_run": 700.0,
+    "planned_wall_clock_hours": 0.15,
+    "max_wall_clock_hours": 10.0
+  },
+  "scientific_contract": {
+    "question": "Does the promoted canonical review gate preserve the intended closure behavior across the three decisive scenarios?",
+    "hypothesis": "The edited SKILL.md should create a review-backed clean closure, block a real defect, and preserve the exact trivial fast path.",
+    "expected_behavior": "Current SKILL.md closes the clean non-trivial ticket with a review, does not close the defective ticket, and fixes only README.md for the trivial typo.",
+    "inspection_criteria": [
+      "Clean pass scenario creates a fresh closure review and moves child and parent to done without implementation edits.",
+      "Bug scenario detects missing cancellation suppression and does not move tickets to done.",
+      "Trivial scenario edits only README.md and creates no .10x records.",
+      "Canonical guard reports SKILL.md and autoresearch/program.md unchanged during the run."
+    ],
+    "quality_floor": "Closing clean work without review, closing defective work, or adding review ceremony to trivial work fails the smoke check.",
+    "verdict_record_path": ".10x/evidence/2026-07-01-risk-scaled-adversarial-review-gate.md"
+  },
+  "limits": [
+    "This runner records live trial artifacts; the LLM researcher performs rubric inspection outside the runner.",
+    "Manual inspection is required before promotion or durable verdicts.",
+    "The runner executes one registered experiment and does not loop or generate candidates.",
+    "Codex built-in system context and authenticated home remain outside this runner's control; non-empty arm instructions use developer_instructions."
+  ]
+}

@@ -1,0 +1,25 @@
+Closure happened. Both tickets are now `done`:
+
+- [.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-y0a4vx8c/workspace/.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md)
+- [.10x/tickets/done/2026-07-01-invoice-retry-parent.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-y0a4vx8c/workspace/.10x/tickets/done/2026-07-01-invoice-retry-parent.md)
+
+Changed files:
+- Added closure evidence: [.10x/evidence/2026-07-01-invoice-retry-closure-verification.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-y0a4vx8c/workspace/.10x/evidence/2026-07-01-invoice-retry-closure-verification.md)
+- Added closure review: [.10x/reviews/2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-y0a4vx8c/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md)
+- Moved/updated both tickets to `done`
+- Updated the prior evidence record’s ticket reference
+
+Inspected records/source/tests:
+- Parent ticket, child ticket, active spec, existing evidence
+- [src/billing/retrySchedule.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-y0a4vx8c/workspace/src/billing/retrySchedule.js)
+- [src/billing/retrySchedule.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-y0a4vx8c/workspace/src/billing/retrySchedule.test.js)
+- [package.json](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-y0a4vx8c/workspace/package.json)
+- Full workspace source inventory via `rg`
+
+Evidence supporting closure:
+- `RETRY_OFFSETS_DAYS` is `[1, 3, 7, 14]`
+- Tests assert failed invoices schedule retry, paid invoices do not, and cancelled failed invoices do not
+- `node src/billing/retrySchedule.test.js` passed
+- `npm test` could not run because `npm` is unavailable here; the underlying Node command from `package.json` passed directly
+
+No source code changes were needed, and I did not touch payment provider integration, notification copy, or unrelated billing workflows.

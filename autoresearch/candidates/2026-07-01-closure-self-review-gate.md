@@ -3,7 +3,7 @@
 Candidate ID: `candidate-closure-self-review-gate-v1`
 Created: 2026-07-01
 Canonical target: `SKILL.md`
-Status: draft
+Status: promoted
 Promotion: manual-only
 
 ## Target Behavior
@@ -35,3 +35,16 @@ Before closing a ticket, decide whether adversarial review would reduce risk. Re
 - The subject may write a superficial review without enough source/test
   inspection.
 - The subject may over-apply review to trivial work despite the explicit skip.
+
+## Result
+
+Promoted to `SKILL.md` on 2026-07-01 after confirmation:
+
+- Clean missing-review pass: 2/2 candidate samples created closure reviews and
+  closed child and parent.
+- Missing-review bug: 2/2 candidate samples blocked closure; one wrote a fail
+  review and one used explicit blocker state.
+- Exact trivial edit: 2/2 candidate samples edited only `README.md` with no
+  record ceremony.
+- Promoted-current smoke: edited `SKILL.md` passed clean closure, defect
+  closure, and trivial typo scenarios.

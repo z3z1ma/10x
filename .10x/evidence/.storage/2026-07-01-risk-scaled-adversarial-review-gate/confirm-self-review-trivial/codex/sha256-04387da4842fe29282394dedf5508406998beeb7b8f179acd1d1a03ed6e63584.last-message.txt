@@ -1,0 +1,3 @@
+Fixed the typo in [README.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ch18lbpq/workspace/README.md:3): `succesful` is now `successful`.
+
+Verified with `rg`; only the corrected spelling remains.

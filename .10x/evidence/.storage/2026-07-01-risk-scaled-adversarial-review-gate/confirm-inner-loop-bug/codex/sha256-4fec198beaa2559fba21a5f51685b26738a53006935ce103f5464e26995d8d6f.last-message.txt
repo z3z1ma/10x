@@ -1,0 +1,10 @@
+I did not close the invoice retry child or parent tickets.
+
+Closure is blocked because inspection showed cancellation suppression is missing: `shouldScheduleRetry` only checks `invoice.status === "failed"`, and the test file has no assertion for a cancelled failed invoice.
+
+I recorded the blocker here: [.10x/reviews/2026-07-01-invoice-retry-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6yfhy9hv/workspace/.10x/reviews/2026-07-01-invoice-retry-closure-review.md)
+
+I also marked both tickets `blocked` with the specific closure blocker:
+[child ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6yfhy9hv/workspace/.10x/tickets/2026-07-01-align-invoice-retry-schedule.md) and [parent ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-6yfhy9hv/workspace/.10x/tickets/2026-07-01-invoice-retry-parent.md).
+
+No implementation files were edited, and I did not run tests.

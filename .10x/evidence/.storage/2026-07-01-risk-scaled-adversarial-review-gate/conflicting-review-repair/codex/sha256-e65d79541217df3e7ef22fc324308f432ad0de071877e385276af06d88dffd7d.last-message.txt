@@ -1,0 +1,18 @@
+Closure happened.
+
+Changed files:
+- [visibleRows.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-4793g_go/workspace/src/exports/visibleRows.js:1): export now filters `visible === true && policyHidden !== true`.
+- [visibleRows.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-4793g_go/workspace/src/exports/visibleRows.test.js:1): test now covers visible inclusion, policy-hidden exclusion, selected-but-not-visible exclusion, and exact header.
+- Added [2026-07-01-visible-row-export-spec-test.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-4793g_go/workspace/.10x/evidence/2026-07-01-visible-row-export-spec-test.md:1).
+- Added [2026-07-01-visible-row-export-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-4793g_go/workspace/.10x/reviews/2026-07-01-visible-row-export-closure-review.md:1).
+- Moved/closed child and parent under `.10x/tickets/done/`, and repaired ticket references in evidence/review records.
+
+Inspected:
+- Parent ticket, child ticket, active spec, both prior reviews, prior evidence.
+- Source/test: `src/exports/visibleRows.js`, `src/exports/visibleRows.test.js`, `package.json`.
+
+Evidence/review state:
+- The active-spec fail review finding was real, repaired in child scope, and reconciled by the new closure review with `Verdict: pass`.
+- The selected-tests pass review remains only scoped to old selected-row behavior and was not used as spec closure proof.
+- `node src/exports/visibleRows.test.js` passed.
+- `npm test` could not run because `npm` is not installed in this shell; recorded evidence notes that `package.json` maps it to the same Node entrypoint.

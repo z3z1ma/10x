@@ -1,0 +1,7 @@
+I did not close the tickets. Closure is not appropriate because the active spec requires cancellation suppression, but [retrySchedule.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ibiochvi/workspace/src/billing/retrySchedule.js:3) currently returns true for any failed invoice, and [retrySchedule.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ibiochvi/workspace/src/billing/retrySchedule.test.js:1) does not test a cancelled failed invoice.
+
+I updated only the `.10x` ticket records:
+- [child ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ibiochvi/workspace/.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:1) marked `blocked`
+- [parent ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-ibiochvi/workspace/.10x/tickets/2026-07-01-invoice-retry-parent.md:1) marked `blocked`
+
+No implementation files were edited, and I did not run tests or create new evidence.

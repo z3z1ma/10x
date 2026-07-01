@@ -1,0 +1,5 @@
+Reading additional input from stdin...
+2026-07-01T21:43:47.126993Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back
+2026-07-01T21:44:47.007923Z  WARN codex_file_watcher: failed to unwatch /mnt/c/Users/butle/.codex/skills/.system: No watch was found. about ["/mnt/c/Users/butle/.codex/skills/.system"]
+2026-07-01T21:44:47.016941Z  WARN codex_core::shell_snapshot: Failed to delete shell snapshot at AbsolutePathBuf("/mnt/c/Users/butle/.codex/shell_snapshots/019f1fa3-5a9f-7183-94a8-add3c2dcb323.1782942227115399613.sh"): Os { code: 2, kind: NotFound, message: "No such file or directory" }
+2026-07-01T21:44:47.264066Z  WARN codex_analytics::client: failed to send events request: error sending request for url (https://chatgpt.com/backend-api/codex/analytics-events/events)

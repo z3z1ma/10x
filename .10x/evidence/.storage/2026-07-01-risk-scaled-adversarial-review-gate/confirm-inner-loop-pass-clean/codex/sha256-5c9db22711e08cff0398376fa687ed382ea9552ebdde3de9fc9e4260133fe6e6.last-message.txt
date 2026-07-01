@@ -1,0 +1,6 @@
+Closed both tickets as appropriate:
+
+- Child: [.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-fa86_d_c/workspace/.10x/tickets/done/2026-07-01-align-invoice-retry-schedule.md)
+- Parent: [.10x/tickets/done/2026-07-01-invoice-retry-parent.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-fa86_d_c/workspace/.10x/tickets/done/2026-07-01-invoice-retry-parent.md)
+
+I repaired the evidence reference to point at the moved child ticket. I did not edit implementation files and did not rerun tests; closure is based on the recorded passing test evidence plus read-only inspection of `retrySchedule.js` and `retrySchedule.test.js`.

@@ -1,0 +1,10 @@
+I did not close the tickets. Closure is blocked.
+
+Read-only inspection found `src/billing/retrySchedule.js` returns `invoice.status === "failed"` and does not check cancellation, and `src/billing/retrySchedule.test.js` has no cancellation-suppression assertion. That fails both the child acceptance criteria and the parent’s requirement that evidence prove retries are suppressed after cancellation.
+
+I updated only the `.10x` ticket records, not implementation files:
+
+- [child ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-hufytrv7/workspace/.10x/tickets/2026-07-01-align-invoice-retry-schedule.md:1): `Status: blocked`
+- [parent ticket](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-hufytrv7/workspace/.10x/tickets/2026-07-01-invoice-retry-parent.md:1): `Status: blocked`
+
+I did not run tests, because the closure blocker was visible from source and test inspection, and you asked not to edit implementation files.

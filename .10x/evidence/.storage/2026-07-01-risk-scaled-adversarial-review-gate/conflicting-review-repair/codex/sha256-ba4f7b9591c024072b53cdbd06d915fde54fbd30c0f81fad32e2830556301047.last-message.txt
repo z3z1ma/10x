@@ -1,0 +1,18 @@
+Closure is complete. I repaired the active-spec gap, recorded current evidence and review state, and moved both tickets to `done`.
+
+Changed files:
+- [visibleRows.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_h2gtiks/workspace/src/exports/visibleRows.js:3): exports rows where `visible === true && policyHidden !== true`.
+- [visibleRows.test.js](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_h2gtiks/workspace/src/exports/visibleRows.test.js:3): covers visible-not-selected inclusion, selected-not-visible exclusion, policy-hidden exclusion, and header output.
+- Added closure evidence: [.10x/evidence/2026-07-01-visible-row-export-closure-evidence.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_h2gtiks/workspace/.10x/evidence/2026-07-01-visible-row-export-closure-evidence.md:1)
+- Added closure review: [.10x/reviews/2026-07-01-visible-row-export-closure-review.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_h2gtiks/workspace/.10x/reviews/2026-07-01-visible-row-export-closure-review.md:1)
+- Closed child: [.10x/tickets/done/2026-06-24-align-visible-row-export.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_h2gtiks/workspace/.10x/tickets/done/2026-06-24-align-visible-row-export.md:1)
+- Closed parent: [.10x/tickets/done/2026-06-24-visible-row-export-parent.md](/mnt/c/Users/butle/AppData/Local/Temp/10x-autoresearch-_h2gtiks/workspace/.10x/tickets/done/2026-06-24-visible-row-export-parent.md:1)
+
+Inspected: parent ticket, child ticket, active spec, prior evidence, both prior reviews, `package.json`, source, and test file.
+
+Evidence/review state:
+- The 2026-06-24 fail review was still real and within child scope, so I repaired it.
+- The 2026-06-25 pass review was scoped only to selected-row behavior and was not sufficient for closure.
+- Current closure review is `Verdict: pass`.
+- `node src/exports/visibleRows.test.js` passes.
+- `npm test` could not run because `npm` is unavailable in this environment; this limit is recorded in the new evidence and review.
